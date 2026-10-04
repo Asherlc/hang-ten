@@ -1,0 +1,1196 @@
+{
+  "schemaVersion": 1,
+  "recordType": "combinedDeliveryIntegrity",
+  "owner": "placid-badger-cad-second-half",
+  "recordedUTC": "2026-10-03T22:54:36Z",
+  "scope": {
+    "kind": "offline-working-tree-integrity",
+    "assetRegeneration": false,
+    "legacyLockRecreated": false,
+    "installationOrHumanAcceptanceEstablished": false,
+    "fileCoverage": "All 66 current native packages: FCStd sources, model descriptors, USDZ assets, and existing suspension/physics authoring metadata; checksum manifest is evidence, not a build lock.",
+    "generatedBoardJSONWritten": false,
+    "geometryOrMeshExportPerformed": false
+  },
+  "counts": {
+    "bundledPackages": 66,
+    "modelPackages": 66,
+    "CADSources": 66,
+    "ODRModelAssets": 68
+  },
+  "currentFiles": [
+    {
+      "path": "Hangboards/aelith-cyclops-011/aelith-cyclops-011.FCStd",
+      "sha256": "6caa7db79f8c92ff3801c15e7cf42016b92808ac312dbb99b7e3dbfedf4e32da",
+      "bytes": 60610
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/assets/primary.model.json",
+      "sha256": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7",
+      "bytes": 842
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/assets/primary.usdz",
+      "sha256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+      "bytes": 212839
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/suspension.json",
+      "sha256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+      "bytes": 2373
+    },
+    {
+      "path": "Hangboards/beastmaker-1000/assets/primary.model.json",
+      "sha256": "9154697f07e1d38366a860bf917add63d86fb3b98b83aab7639bae4ab26ccd6a",
+      "bytes": 67127
+    },
+    {
+      "path": "Hangboards/beastmaker-1000/assets/primary.usdz",
+      "sha256": "67780905b46597c78c696be449c2e2ab6836ed98f7feb037803ec8e04ce033c7",
+      "bytes": 1219440
+    },
+    {
+      "path": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
+      "sha256": "de2bd04820b49ab077828234c2199f28b6a45b18ae2369f2b97096880ba48723",
+      "bytes": 1520085
+    },
+    {
+      "path": "Hangboards/beastmaker-2000/assets/primary.model.json",
+      "sha256": "02b7f12b9c675025fc4c91e8175f53aaf8a648d6530e3de132b9691f7704ef1d",
+      "bytes": 99654
+    },
+    {
+      "path": "Hangboards/beastmaker-2000/assets/primary.usdz",
+      "sha256": "ebf9267920d7d6103030efd78a0aedd7ce052c6ad26bf0fbb1f96faf4911b9cc",
+      "bytes": 1018509
+    },
+    {
+      "path": "Hangboards/beastmaker-2000/beastmaker-2000.FCStd",
+      "sha256": "217a5431eca468092a2fb7daafefbe7084d8e1618a82afff9381cd5ab7a1df7d",
+      "bytes": 457687
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/assets/primary.model.json",
+      "sha256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+      "bytes": 2249
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/assets/primary.usdz",
+      "sha256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+      "bytes": 406675
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/captain-fingerfood-dual.FCStd",
+      "sha256": "10b254fc3e2ad3c3b4c25b2876c2c0fc086d9ed4f634025d42397352e0e5cd8e",
+      "bytes": 148224
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/suspension.json",
+      "sha256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+      "bytes": 7696
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-pocket/assets/primary.model.json",
+      "sha256": "4d85ca566ef83d8dbad2b6e5f9677f98e5e4559fe1e2b20f0152450f51747b28",
+      "bytes": 3292
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-pocket/assets/primary.usdz",
+      "sha256": "cea629d95bcef7fe9270a2b44114588193fb136706d1bfc17b3276437d9f45c9",
+      "bytes": 58766
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
+      "sha256": "3165dc49577a93e82cd2b1ec3f8ea4a24965b89ac0b2d4c00ccfb7a36c8c7ff6",
+      "bytes": 1725173
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/assets/primary.model.json",
+      "sha256": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89",
+      "bytes": 2264
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/assets/primary.usdz",
+      "sha256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+      "bytes": 438993
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/captain-fingerfood-unlevel.FCStd",
+      "sha256": "b4e8941017237f1196ab8c29632e0c19b7c9301ed92b5fd2011bb3229cb05e87",
+      "bytes": 292706
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/suspension.json",
+      "sha256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+      "bytes": 7442
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/assets/primary.model.json",
+      "sha256": "0e344ccdc6529eccb4b94e1c05ba835388f1a6fe1e9394d47e637ee55ab9818e",
+      "bytes": 6088
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/assets/primary.physics.json",
+      "sha256": "c60fbd6dfaf59bfd5fb7e6aa8d806f78af7e828a7f64074d326865e08f13e853",
+      "bytes": 989598
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/assets/primary.usdz",
+      "sha256": "35417e90919ff4bb75c2e4faaffe04547457e67032de8601451d799d789ca64d",
+      "bytes": 201254
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/clavellium-training-block.FCStd",
+      "sha256": "62fd932ed815fe02041cc1f798da08348827b0f69a8abbc273213bb2b2d2627b",
+      "bytes": 157440
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/rope-physics.json",
+      "sha256": "f61f74d80079172a3273b18b9bad47aaffb88aa99d66120f6364b91bc1792b8f",
+      "bytes": 2075
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/suspension.json",
+      "sha256": "514366d1579ad467b0c6ef761f1841aa8f5147fa2b868b1007b12ad23b08d85c",
+      "bytes": 4383
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/assets/primary.model.json",
+      "sha256": "8527910cc401c516a5585c0bdeb9907a0654405e323c43d12b835fc8731b0911",
+      "bytes": 13605
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/assets/primary.usdz",
+      "sha256": "c4106a959aa9265717a6c20f928a9b018f048912a66b1ee56e46a6f114be22d1",
+      "bytes": 469524
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/crimptonite-helium-mobile.FCStd",
+      "sha256": "95885d03bebd378a25c91230d8cace2b2d904a8412fe0396342a7b1e6e56fb2c",
+      "bytes": 49249
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/suspension.json",
+      "sha256": "e37139047d86f44e5c5987c97e6b940874471e008a10b1bf16f9505fe6b8aa56",
+      "bytes": 10328
+    },
+    {
+      "path": "Hangboards/dewoodstok-woodbord/assets/primary.model.json",
+      "sha256": "f81201b61af8ffb544af5687708c720ad2ebca7b80b9e1daf23e34cce01977ae",
+      "bytes": 27880
+    },
+    {
+      "path": "Hangboards/dewoodstok-woodbord/assets/primary.usdz",
+      "sha256": "62a43523b873e2c4fc87d9a0c41bf4be862720eed499d5635236822bbb709a52",
+      "bytes": 887767
+    },
+    {
+      "path": "Hangboards/dewoodstok-woodbord/dewoodstok-woodbord.FCStd",
+      "sha256": "02c55948ebbec3e32f3fe9c206ac21d9917f749da33117ff35c8503eb638ee01",
+      "bytes": 482081
+    },
+    {
+      "path": "Hangboards/escape-beta-22/assets/primary.model.json",
+      "sha256": "2797e436006385608aa7fb11bc8ec2a3786ecf8d29e00182b5e64f4e66658d2e",
+      "bytes": 16055
+    },
+    {
+      "path": "Hangboards/escape-beta-22/assets/primary.usdz",
+      "sha256": "014497a1d2a399d4aec12e7d0b97dcec22c0c6cf4cf43aa5d6cfba28cc407c23",
+      "bytes": 2747612
+    },
+    {
+      "path": "Hangboards/escape-beta-22/escape-beta-22.FCStd",
+      "sha256": "4bd4b717970805ebfe58005f9d2659dc94927f39cac31ae736a1f5338067a528",
+      "bytes": 697871
+    },
+    {
+      "path": "Hangboards/escape-unlimited/assets/primary.model.json",
+      "sha256": "905db88c97f4ed2ae64cfe853c351d284f1c0417768a4e0f4b119e1cf7ff45f3",
+      "bytes": 11038
+    },
+    {
+      "path": "Hangboards/escape-unlimited/assets/primary.usdz",
+      "sha256": "3eb450c3a42648c8d6c4522bc3220471b298d8cb0f2cf944453ea1ac0f1e4e82",
+      "bytes": 997868
+    },
+    {
+      "path": "Hangboards/escape-unlimited/escape-unlimited.FCStd",
+      "sha256": "f9ee95e5a53230d579a97a3c69613003d1526ae7028b8f7a573ea430e5dba2ff",
+      "bytes": 71688
+    },
+    {
+      "path": "Hangboards/evolv-kilter-basic-long/assets/primary.model.json",
+      "sha256": "d218e19200d50e63b18b92de027445454fa6c6f28fd60947535411de2d270d46",
+      "bytes": 3175
+    },
+    {
+      "path": "Hangboards/evolv-kilter-basic-long/assets/primary.usdz",
+      "sha256": "ac2399e6477942eed730d4e16c78f3021f26228cc52b168c03884b120f165700",
+      "bytes": 18305
+    },
+    {
+      "path": "Hangboards/evolv-kilter-basic-long/evolv-kilter-basic-long.FCStd",
+      "sha256": "b18d962a2366682d558666169be2363efa53a9e914df7baa922799ccc6536a2e",
+      "bytes": 119798
+    },
+    {
+      "path": "Hangboards/frictitious-doormount-pro-7/assets/primary.model.json",
+      "sha256": "e78def2362000903d34a4fa09b8afb3e4ae629bef45dab28d6e68844352d576d",
+      "bytes": 16297
+    },
+    {
+      "path": "Hangboards/frictitious-doormount-pro-7/assets/primary.usdz",
+      "sha256": "eac54ae185cc0d62db3f421ca0c3bb39fdac50d76fc24824a8b24720f3042777",
+      "bytes": 397954
+    },
+    {
+      "path": "Hangboards/frictitious-doormount-pro-7/frictitious-doormount-pro-7.FCStd",
+      "sha256": "82a27ae8dae37228c30918873cb39bfc03e14ae2d3b2897f84a0ce5ded852b72",
+      "bytes": 267951
+    },
+    {
+      "path": "Hangboards/frictitious-megalith/assets/primary.model.json",
+      "sha256": "cfe53835cc918b3250e98630d5e03aff9297049188ce08a4bf24b08913678b27",
+      "bytes": 18533
+    },
+    {
+      "path": "Hangboards/frictitious-megalith/assets/primary.usdz",
+      "sha256": "23a2e9078d2351710006cab3752dc57cfa33538499343e09d9d29a1887dbb4f9",
+      "bytes": 568903
+    },
+    {
+      "path": "Hangboards/frictitious-megalith/frictitious-megalith.FCStd",
+      "sha256": "75d4def0edafe8bfc95004d9928f029520e2d4240941c52761563188f609b9e5",
+      "bytes": 403205
+    },
+    {
+      "path": "Hangboards/frictitious-nug/assets/primary.model.json",
+      "sha256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+      "bytes": 2889
+    },
+    {
+      "path": "Hangboards/frictitious-nug/assets/primary.usdz",
+      "sha256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+      "bytes": 763201
+    },
+    {
+      "path": "Hangboards/frictitious-nug/frictitious-nug.FCStd",
+      "sha256": "b01c9692af21073b1e0a67af4fd7fcea350decd87fe24fbced569ce3a830e2fa",
+      "bytes": 227189
+    },
+    {
+      "path": "Hangboards/frictitious-nug/suspension.json",
+      "sha256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+      "bytes": 42636
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/assets/primary.model.json",
+      "sha256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+      "bytes": 4099
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/assets/primary.usdz",
+      "sha256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+      "bytes": 944430
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/frictitious-port-a-board.FCStd",
+      "sha256": "45ca78a21b1f0f25f1c471a0e1244bfd8a77ca57abac37dcc99cde034e29a289",
+      "bytes": 272837
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/suspension.json",
+      "sha256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+      "bytes": 21684
+    },
+    {
+      "path": "Hangboards/j-bryant-ftg-32/assets/primary.model.json",
+      "sha256": "7a9160b0061ce21448f81afd387f7c4191ce07fccfd702d90f953b99e665dac8",
+      "bytes": 1245
+    },
+    {
+      "path": "Hangboards/j-bryant-ftg-32/assets/primary.usdz",
+      "sha256": "dbc50905cb93ee432da5a6ba39fb9c558d7bdf5d40c09cf26ecb4ab6db434d9a",
+      "bytes": 225849
+    },
+    {
+      "path": "Hangboards/j-bryant-ftg-32/j-bryant-ftg-32.FCStd",
+      "sha256": "1eb35bba2fb9c337efaa3ee599d08f02fedde61d34f9ee4de2241d669d12db22",
+      "bytes": 110030
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/assets/primary.model.json",
+      "sha256": "ac71e805e654fa789329c7c4d0511b3bda5823ddb69a460142dce1987bb98c6c",
+      "bytes": 3066
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/assets/primary.usdz",
+      "sha256": "4b4e9950b01fa303f36b27ad2841ea697cc4ed93f5dff61827b11a6f3fcfa2ca",
+      "bytes": 920572
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd",
+      "sha256": "ae4e480cd1d26c02c0f89c085b2921b45413c904c0c47d5aaaa47c89c37fbe2b",
+      "bytes": 260450
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/suspension.json",
+      "sha256": "45481d896ccbe73ed2f89c77cea8d56391da3aecc1ed434c7b55aba0739cee14",
+      "bytes": 111410
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-large/assets/primary.model.json",
+      "sha256": "1ca240e56f63b6cb6aabf19c3a7b99e02c07a4611c05ac82f2123dc89f74ba63",
+      "bytes": 2246
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-large/assets/primary.usdz",
+      "sha256": "9b4af116becef393118923d91be2c42f46c9538b7e61679c4e908d7e6ac017b9",
+      "bytes": 50263
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-large/lattice-mxedge-lift-large.FCStd",
+      "sha256": "a44dc7de549c3a9c1f9dddafcba983bd1ea095443f63cad58b147e0d86960720",
+      "bytes": 791417
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-small/assets/primary.model.json",
+      "sha256": "041bf64dcafe95c9ddd84a3dc48cf9e54905be5e9d7f0deca70132a2a46181dd",
+      "bytes": 2209
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-small/assets/primary.usdz",
+      "sha256": "8f78fb29efb6f10ab72fdbbc7fbeca8accf60cce757ff8e2183f5dd9f582fc8e",
+      "bytes": 90894
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-small/lattice-mxedge-lift-small.FCStd",
+      "sha256": "6724c8548eaa71235f75e924e4306448c02cf47e6d822e22967abb61e50d009e",
+      "bytes": 2929019
+    },
+    {
+      "path": "Hangboards/lattice-triple-rung/assets/primary.model.json",
+      "sha256": "3080f13c98c959e0d6e162ce8ba8f55f5b4357f18e151a64e0a225dcc755ac8d",
+      "bytes": 2488
+    },
+    {
+      "path": "Hangboards/lattice-triple-rung/assets/primary.usdz",
+      "sha256": "05aab8f7aba9bd97acb7ae14b9026d53a698d7a162de56b2115d95232ec89d3c",
+      "bytes": 25945
+    },
+    {
+      "path": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
+      "sha256": "821beadb22810a96da35b2952e9932f60796202a8782ca5275eaa37498d96786",
+      "bytes": 200345
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/assets/primary.model.json",
+      "sha256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
+      "bytes": 7708
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/assets/primary.usdz",
+      "sha256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+      "bytes": 2423319
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/mammut-diamond-finger.FCStd",
+      "sha256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "bytes": 2967446
+    },
+    {
+      "path": "Hangboards/metolius-climbers-edge/assets/primary.model.json",
+      "sha256": "3cd49d64e8c8dc5bbd8d5f3fefdf784f24ea1e444de2c4276fa0f1af5fb0efce",
+      "bytes": 12924
+    },
+    {
+      "path": "Hangboards/metolius-climbers-edge/assets/primary.usdz",
+      "sha256": "4de00eb9e9d60dd70fbcbd0f1e9cd141c09b74470dbb72755847ac1a333fd341",
+      "bytes": 449193
+    },
+    {
+      "path": "Hangboards/metolius-climbers-edge/metolius-climbers-edge.FCStd",
+      "sha256": "183559334d57680c01268973d7af4f29257d209c1055ed81062f4b9c659f0ece",
+      "bytes": 350083
+    },
+    {
+      "path": "Hangboards/metolius-contact/assets/primary.model.json",
+      "sha256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+      "bytes": 15351
+    },
+    {
+      "path": "Hangboards/metolius-contact/assets/primary.usdz",
+      "sha256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+      "bytes": 1097512
+    },
+    {
+      "path": "Hangboards/metolius-contact/metolius-contact.FCStd",
+      "sha256": "732ee95e7b434e188708b96f974bd3afdacdd62fedc93d382f66e7401a480be1",
+      "bytes": 4217769
+    },
+    {
+      "path": "Hangboards/metolius-foundry/assets/primary.model.json",
+      "sha256": "11c745e4a015de265d2e47bc233f8a3cd7d643d3ce608bb6a1055b6ef926d4e1",
+      "bytes": 25758
+    },
+    {
+      "path": "Hangboards/metolius-foundry/assets/primary.usdz",
+      "sha256": "6fd19aaa5d28b8fbd0b76ee0195f5b2f877b30c3f1746bf9bf057b8e0255a251",
+      "bytes": 784436
+    },
+    {
+      "path": "Hangboards/metolius-foundry/metolius-foundry.FCStd",
+      "sha256": "a3bc8f2e5ada0957c37b4b39a848a8866d6595cb6deea2fc57f6c5597c00eb90",
+      "bytes": 3035054
+    },
+    {
+      "path": "Hangboards/metolius-light-rail-2/assets/primary.model.json",
+      "sha256": "70e9e992c8ce12077bc98c3a74646452d53a4fef1bda51a26d930108d455ef8e",
+      "bytes": 2335
+    },
+    {
+      "path": "Hangboards/metolius-light-rail-2/assets/primary.usdz",
+      "sha256": "9b4e233f87685e2f39faef82f73af2edae3644a5d61bb87d2f3188930242db1d",
+      "bytes": 376855
+    },
+    {
+      "path": "Hangboards/metolius-light-rail-2/metolius-light-rail-2.FCStd",
+      "sha256": "7dd18930697bba18079fc0328a3254072ee5b0bbe8d73d31f9fe0d9d75a50ddb",
+      "bytes": 139436
+    },
+    {
+      "path": "Hangboards/metolius-prime-rib/assets/primary.model.json",
+      "sha256": "5a90c32758ed7521a86dabe85e655ddb6b62925b17fe6e6d822b0c5610a72ecb",
+      "bytes": 2519
+    },
+    {
+      "path": "Hangboards/metolius-prime-rib/assets/primary.usdz",
+      "sha256": "66a8f958b3b6dde6766a70c547d336a11969c6ec3b1e9fefa5fd2972f49c6125",
+      "bytes": 1062034
+    },
+    {
+      "path": "Hangboards/metolius-prime-rib/metolius-prime-rib.FCStd",
+      "sha256": "481381c0bbc020d6a48c6c0d76b796b306d7faab64e362335697d2f688377117",
+      "bytes": 81027
+    },
+    {
+      "path": "Hangboards/metolius-project/assets/primary.model.json",
+      "sha256": "4f3a52b8cd9e556323d96632c5bd9c612a25ad16b3958c2d35fa5d188f628e78",
+      "bytes": 15102
+    },
+    {
+      "path": "Hangboards/metolius-project/assets/primary.usdz",
+      "sha256": "060ba08fd0ea183f59166c34387004efbef8de247956f6e60ba72550ff11cec7",
+      "bytes": 454954
+    },
+    {
+      "path": "Hangboards/metolius-project/metolius-project.FCStd",
+      "sha256": "85914eac2bd23cf99fdaf3dfea39345377f94318da0bcd502e72b2a2aa269999",
+      "bytes": 164036
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/assets/primary.model.json",
+      "sha256": "c4ae39b8806b2da0e396ea242379810cc62054feb4ec1110858894e2f6485bb5",
+      "bytes": 7763
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/assets/primary.usdz",
+      "sha256": "b89eec5ba9949af876e4d9565c2455719c0a925ccd2c294dd6d0ae5bde92355d",
+      "bytes": 2098157
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/metolius-rock-rings-3d.FCStd",
+      "sha256": "b6f6d5a8ae57289c838ca409eae01bee5995ad562d21b3bd2762d15f0f0142db",
+      "bytes": 7578127
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/suspension.json",
+      "sha256": "1504f218cc69eb8a09259a23c4bf7458e93a3bab03e468a974d1727a2b8dad1b",
+      "bytes": 7176
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/assets/primary.model.json",
+      "sha256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+      "bytes": 13957
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/assets/primary.usdz",
+      "sha256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+      "bytes": 1908779
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/metolius-simulator-3d.FCStd",
+      "sha256": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e",
+      "bytes": 9896244
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-compact-ii/assets/primary.model.json",
+      "sha256": "132f23e40eef8e0fcbd642b0e6c3da2ab46f3c4d11fc61cb0ef8544b94073588",
+      "bytes": 34401
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-compact-ii/assets/primary.usdz",
+      "sha256": "2f90c3e3e0d97dba8c771391fa63659156ab954facbbfa1a74750a57615f40fa",
+      "bytes": 352760
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-compact-ii/metolius-wood-grips-compact-ii.FCStd",
+      "sha256": "1caf7bccda3892a816c7eb9f47589aab0e334fd3751b982bec3be047e78b234b",
+      "bytes": 13210800
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-deluxe-ii/assets/primary.model.json",
+      "sha256": "4dc67f2f95351e6320aa9ce2fbec68b0d3a6df03475b3d15b8fbee2ebb12b8c0",
+      "bytes": 74643
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-deluxe-ii/assets/primary.usdz",
+      "sha256": "1225ab7bbf8261e69b57401bcba1d26985614ad8db8468b0526dc35286c6b391",
+      "bytes": 720205
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-deluxe-ii/metolius-wood-grips-deluxe-ii.FCStd",
+      "sha256": "0e13ed6ecd996c735ead7344fb2d7f5a6fef4d247c7c4deb8aea8b57d5c64cfe",
+      "bytes": 1170541
+    },
+    {
+      "path": "Hangboards/moon-armstrong/assets/primary.model.json",
+      "sha256": "c4791fcc5908aa76745b0a3022e3e1fa9de040d5f3a48ea64740e57911c17c11",
+      "bytes": 70599
+    },
+    {
+      "path": "Hangboards/moon-armstrong/assets/primary.usdz",
+      "sha256": "0a2fdcfd4178b98ca1170a807f33c92dc30ac60dd5795ab315d2fec6b3153f9c",
+      "bytes": 1886355
+    },
+    {
+      "path": "Hangboards/moon-armstrong/moon-armstrong.FCStd",
+      "sha256": "cdb73bb79c0d971b179e246dce75c8f7332f1e0353f2f53a44f0ce249efbede7",
+      "bytes": 663400
+    },
+    {
+      "path": "Hangboards/nature-stoak-board-iii/assets/primary.model.json",
+      "sha256": "2463629f60efb6ad6e6d904ce125cd4a654eb7e9395a517bea7ea338c174773e",
+      "bytes": 14693
+    },
+    {
+      "path": "Hangboards/nature-stoak-board-iii/assets/primary.usdz",
+      "sha256": "03f28c204e52ecfb623635c047b82f2a66971d8fe469f6a79f4e6d9db833ade2",
+      "bytes": 855570
+    },
+    {
+      "path": "Hangboards/nature-stoak-board-iii/nature-stoak-board-iii.FCStd",
+      "sha256": "8755cf56a180400b8641ae24dd6a39d1b884af64c775a1837e4f283f871bfeee",
+      "bytes": 336992
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.model.json",
+      "sha256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+      "bytes": 1784
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.usdz",
+      "sha256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+      "bytes": 597494
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd",
+      "sha256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+      "bytes": 1121360
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/suspension.json",
+      "sha256": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc",
+      "bytes": 7071
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+      "bytes": 2420
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+      "bytes": 641979
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+      "bytes": 1200922
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/suspension.json",
+      "sha256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f",
+      "bytes": 7417
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/assets/primary.model.json",
+      "sha256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+      "bytes": 4276
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/assets/primary.usdz",
+      "sha256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+      "bytes": 687505
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd",
+      "sha256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+      "bytes": 1909138
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/suspension.json",
+      "sha256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
+      "bytes": 18591
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/assets/primary.model.json",
+      "sha256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+      "bytes": 16823
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/assets/primary.usdz",
+      "sha256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "bytes": 2044005
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd",
+      "sha256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+      "bytes": 4249025
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json",
+      "sha256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+      "bytes": 988
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz",
+      "sha256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+      "bytes": 35467
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json",
+      "sha256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+      "bytes": 988
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz",
+      "sha256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+      "bytes": 35467
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/primary.model.json",
+      "sha256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+      "bytes": 904
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/primary.usdz",
+      "sha256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "bytes": 34044
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+      "sha256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "bytes": 122324
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/suspension.json",
+      "sha256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
+      "bytes": 10649
+    },
+    {
+      "path": "Hangboards/soill-iron-palm-2/assets/primary.model.json",
+      "sha256": "d3fede4f790c74dce3192ac7f05a864819a8a5aa1d9dceaf46bd0cf7591e1329",
+      "bytes": 3872
+    },
+    {
+      "path": "Hangboards/soill-iron-palm-2/assets/primary.usdz",
+      "sha256": "851e8d66a5fb82909212c7f135862aaded63948dbc14ba392a932e565382877f",
+      "bytes": 2056794
+    },
+    {
+      "path": "Hangboards/soill-iron-palm-2/soill-iron-palm-2.FCStd",
+      "sha256": "ba86f4813c7d42f846608a0b89c2610db3a3f83753d04e63f4b0bbb5f0139a4d",
+      "bytes": 23836577
+    },
+    {
+      "path": "Hangboards/soill-split-palm/assets/primary.model.json",
+      "sha256": "42c0bde7b2b7da3210d59e40de3fa938bb5cce8284379d7ab1ce58f2dbcaf70b",
+      "bytes": 3609
+    },
+    {
+      "path": "Hangboards/soill-split-palm/assets/primary.usdz",
+      "sha256": "f5f5a89398d6efa1581ba42d692b038a05676757823707186a02a72201ff2455",
+      "bytes": 1524079
+    },
+    {
+      "path": "Hangboards/soill-split-palm/soill-split-palm.FCStd",
+      "sha256": "cb7e592fd903612db83e15b37280eeb466d98018e735c821b19db0e7b95e78e7",
+      "bytes": 1227716
+    },
+    {
+      "path": "Hangboards/soill-training-tiles/assets/primary.model.json",
+      "sha256": "77e09d850ee66d2f50bbbd2c2709121a64f54d834af6d5d2fd49ff8a8fa78a7d",
+      "bytes": 9916
+    },
+    {
+      "path": "Hangboards/soill-training-tiles/assets/primary.usdz",
+      "sha256": "0e137f91f2cc0283c144a19d052bbd7b8a89bd1706fa7b1b29677deaa3c33cbb",
+      "bytes": 7723399
+    },
+    {
+      "path": "Hangboards/soill-training-tiles/soill-training-tiles.FCStd",
+      "sha256": "3b47e3f69514c8a3ebb12dce2659b40e809798630fc6e2ff3ed2c262048390ac",
+      "bytes": 51185448
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2011/assets/primary.model.json",
+      "sha256": "0a88a427dbf6fc69815b674892f56bbff6c7efdb533dbd133f4c7d26d3ab480a",
+      "bytes": 4030
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2011/assets/primary.usdz",
+      "sha256": "5bc89aaee14f81bcd100d1f8d056f6d097e3a44623b0f77d8c281bda06c81b30",
+      "bytes": 72298
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2011/surfaces-for-climbing-transgression-2011.FCStd",
+      "sha256": "a5042032b5e7b01306608fdc6690ce097ed2bd4bc34bbc84a3313596524b7f67",
+      "bytes": 47932
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2013/assets/primary.model.json",
+      "sha256": "3099e966644924baaf59ca29ceb9757f67730aa245358a4fad0cec25ffbecb2d",
+      "bytes": 4019
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2013/assets/primary.usdz",
+      "sha256": "e7d127e72145a93d1ba9eadf2fde53fa2348f2c8afbba2faa69ec0c5ab33f078",
+      "bytes": 72332
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2013/surfaces-for-climbing-transgression-2013.FCStd",
+      "sha256": "00990671ccb446a3d6b6293df6cfcc5ca4d63fc98238a49b51d5ebe771ca578d",
+      "bytes": 47888
+    },
+    {
+      "path": "Hangboards/target10a-linebreaker-base/assets/primary.model.json",
+      "sha256": "69cb77178c02bb78ebdbe612ebc61285a634f1c409a3d32869b7d671be1dfba1",
+      "bytes": 77284
+    },
+    {
+      "path": "Hangboards/target10a-linebreaker-base/assets/primary.usdz",
+      "sha256": "b1c08983d2b353442a9cd0131ad5a1e4255a2e6c3222bc26ea5b0fd44ef3e8df",
+      "bytes": 838248
+    },
+    {
+      "path": "Hangboards/target10a-linebreaker-base/target10a-linebreaker-base.FCStd",
+      "sha256": "393be4f238e6cfa3584c642d6373f575fa5f11823502fe04d8a6a9e6a780d6ac",
+      "bytes": 501476
+    },
+    {
+      "path": "Hangboards/tension-flash-board/assets/primary.model.json",
+      "sha256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+      "bytes": 3578
+    },
+    {
+      "path": "Hangboards/tension-flash-board/assets/primary.usdz",
+      "sha256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+      "bytes": 1032332
+    },
+    {
+      "path": "Hangboards/tension-flash-board/suspension.json",
+      "sha256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
+      "bytes": 176754
+    },
+    {
+      "path": "Hangboards/tension-flash-board/tension-flash-board.FCStd",
+      "sha256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+      "bytes": 1732633
+    },
+    {
+      "path": "Hangboards/tension-grindstone-original/assets/primary.model.json",
+      "sha256": "bac999d9366e25abdf1403bebf8a5147e847e6f563a989722551f6229ba3d50b",
+      "bytes": 5786
+    },
+    {
+      "path": "Hangboards/tension-grindstone-original/assets/primary.usdz",
+      "sha256": "9137b9b5620286ccc0c0f7f49c7e4d448037b56ec8f9882090b4779f8d0dba0e",
+      "bytes": 2121055
+    },
+    {
+      "path": "Hangboards/tension-grindstone-original/tension-grindstone-original.FCStd",
+      "sha256": "f67e4056da41ed3076ff7688a0d3bba4e02e6e880ef2d8cf34c0cecd965ee95f",
+      "bytes": 1238736
+    },
+    {
+      "path": "Hangboards/tension-grindstone-pro/assets/primary.model.json",
+      "sha256": "d926095165b5c401a84a7cffddf5fda5219efeed42a02acddc2bcce26e1f8a98",
+      "bytes": 37364
+    },
+    {
+      "path": "Hangboards/tension-grindstone-pro/assets/primary.usdz",
+      "sha256": "63cd2673a47c38fa1bcf63e40c7ca16eb4e0a873b5062611a09e4ba6ed5628e2",
+      "bytes": 1389627
+    },
+    {
+      "path": "Hangboards/tension-grindstone-pro/tension-grindstone-pro.FCStd",
+      "sha256": "84b1e281a13c2a65f7b7efcf949a3fc22ad009c5d86a5f7a301d9a7d0665ffcf",
+      "bytes": 287433
+    },
+    {
+      "path": "Hangboards/tension-grindstone/assets/primary.model.json",
+      "sha256": "2527466044e82c32bf5271cc48f4a909eb303146d8f951215d248a1ae18ef0d4",
+      "bytes": 32295
+    },
+    {
+      "path": "Hangboards/tension-grindstone/assets/primary.usdz",
+      "sha256": "d69795c0f0c65e0c2070e3dc0c84fcfa7480a03c627157be4b8ed65cffcf5495",
+      "bytes": 198069
+    },
+    {
+      "path": "Hangboards/tension-grindstone/tension-grindstone.FCStd",
+      "sha256": "3ef21f4328ea2b0f2f6d6f7714c9ceb72d4725f563fae664f22b5d3783cedabd",
+      "bytes": 540146
+    },
+    {
+      "path": "Hangboards/tension-honestone/assets/primary.model.json",
+      "sha256": "9b1579618fe247e79a755ec4a1ce3ef8e71de4dc33e9a571805f15c181e80d09",
+      "bytes": 7192
+    },
+    {
+      "path": "Hangboards/tension-honestone/assets/primary.usdz",
+      "sha256": "321a039d39299aca7213cb351bec05043a71493f5f48129717874f3f8e9f86c5",
+      "bytes": 2361159
+    },
+    {
+      "path": "Hangboards/tension-honestone/tension-honestone.FCStd",
+      "sha256": "9b647d84fc3258c3cf3657c1f045519ac0906669f0d17803c9d14c35d7da2c1e",
+      "bytes": 480573
+    },
+    {
+      "path": "Hangboards/tension-whetstone/assets/primary.model.json",
+      "sha256": "76af62059693284df52bb25afbf48c6fab6bdb48667a87ae6abba63dd2e41f62",
+      "bytes": 5563
+    },
+    {
+      "path": "Hangboards/tension-whetstone/assets/primary.usdz",
+      "sha256": "2e93891153367ca3921bcbbd562571cd14a9f8c7b91da60e32b0fc1a9c4604ca",
+      "bytes": 1091577
+    },
+    {
+      "path": "Hangboards/tension-whetstone/tension-whetstone.FCStd",
+      "sha256": "42834773e456df1f97a9e8cac75cbab3313556aa13f14d0f0370cc381ad1ac48",
+      "bytes": 1995823
+    },
+    {
+      "path": "Hangboards/the-hangboard/assets/primary.model.json",
+      "sha256": "6d0d41548748408a8a4b0d5c0037a498f17589aafddb1817cab83a221f75444b",
+      "bytes": 18330
+    },
+    {
+      "path": "Hangboards/the-hangboard/assets/primary.usdz",
+      "sha256": "baa39c97ac15c6ad5775af55801eb6a0419df6e251aca81c2624046cba49c2e9",
+      "bytes": 345120
+    },
+    {
+      "path": "Hangboards/the-hangboard/the-hangboard.FCStd",
+      "sha256": "a57761033e8706e3ec759bc006a2c48860141673a90e308e0e1c49e41f0945e5",
+      "bytes": 562333
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/assets/primary.model.json",
+      "sha256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+      "bytes": 9662
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+      "sha256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+      "bytes": 645855
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd",
+      "sha256": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124",
+      "bytes": 2560292
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-natural/assets/primary.model.json",
+      "sha256": "37240a099ac7d80fc8251b7e86bdab6418e0628c259fff0baecaf832cd54dcef",
+      "bytes": 15344
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-natural/assets/primary.usdz",
+      "sha256": "8177ca86217b281e62a72ee2d27a5312b6f447b91974d4e1b08d08fd236539c9",
+      "bytes": 2428693
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-natural/trango-rock-prodigy-natural.FCStd",
+      "sha256": "886faa151410caaffa57ecad9a9c14591f6951cc874d89542b87b9fe601b51f8",
+      "bytes": 369779
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-pivot/assets/primary.model.json",
+      "sha256": "b7c97e44c37c0d521a5ac991bb9ccd54fca2301d6b3ea8446cc48ce86eac3005",
+      "bytes": 27854
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-pivot/assets/primary.usdz",
+      "sha256": "027c17024235b0340e6513fbda000d081bc7d0d81e618ee75d9f3e5516cae746",
+      "bytes": 2023538
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-pivot/trango-rock-prodigy-pivot.FCStd",
+      "sha256": "6ef486646953db5c692d6fd7b24ebb4dc9dd98f4f278f9f51e69bfed4edacd75",
+      "bytes": 1379087
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-training-center/assets/primary.model.json",
+      "sha256": "d9dc714ea3111dd8166ce48a0c9b17e56dbdd3f2a44efc4d749c38b3294d86b1",
+      "bytes": 82096
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-training-center/assets/primary.usdz",
+      "sha256": "7b1988e9fd280a26c4c8d086355f36d1e825e045a2f3265632760ca9f5f2c92e",
+      "bytes": 1599390
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-training-center/trango-rock-prodigy-training-center.FCStd",
+      "sha256": "6002324b42f5bf49d119bf32c52607ebd5c797fb12557f851f5de0378de86f4d",
+      "bytes": 592102
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.model.json",
+      "sha256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+      "bytes": 9232
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.usdz",
+      "sha256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+      "bytes": 636587
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/suspension.json",
+      "sha256": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282",
+      "bytes": 74670
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd",
+      "sha256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "bytes": 4904495
+    },
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.model.json",
+      "sha256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934",
+      "bytes": 2788
+    },
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.usdz",
+      "sha256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea",
+      "bytes": 1552947
+    },
+    {
+      "path": "Hangboards/yy-baguette/suspension.json",
+      "sha256": "c69c11dc9708bc1e2dc9f235004f55a7c0ecd524fdf5b073c40dda1d9b0c956f",
+      "bytes": 114727
+    },
+    {
+      "path": "Hangboards/yy-baguette/yy-baguette.FCStd",
+      "sha256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "bytes": 231688
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.model.json",
+      "sha256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+      "bytes": 3408
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.usdz",
+      "sha256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+      "bytes": 1531074
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/suspension.json",
+      "sha256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97",
+      "bytes": 84593
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+      "sha256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "bytes": 1224598
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.model.json",
+      "sha256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+      "bytes": 2866
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.usdz",
+      "sha256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+      "bytes": 1432139
+    },
+    {
+      "path": "Hangboards/yy-travelboard/suspension.json",
+      "sha256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4",
+      "bytes": 31173
+    },
+    {
+      "path": "Hangboards/yy-travelboard/yy-travelboard.FCStd",
+      "sha256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "bytes": 223596
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-evo/assets/primary.model.json",
+      "sha256": "a023dcf8bdc428623dbbcd27edf7343df3e59f75c4debc1c80d523dae2310a17",
+      "bytes": 11797
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-evo/assets/primary.usdz",
+      "sha256": "32fb8cb84cff35023e4321e36881f6a3762ae25e73f8ac1bcfab89e965b0d345",
+      "bytes": 1235830
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-evo/yy-verticalboard-evo.FCStd",
+      "sha256": "40416fa721ae1f9b89ace5bd20273136ed2678b284f4e51f3bfe12d68dfb18ca",
+      "bytes": 2184287
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-first/assets/primary.model.json",
+      "sha256": "bb05c99b3a03682b3ae08e72244ef34d4b361da409658912a4943a3859a92eff",
+      "bytes": 7686
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-first/assets/primary.usdz",
+      "sha256": "c945d2fa6433a0416367f80372b3aa4060a7a7c777c80cb58bb0951b2dc664c4",
+      "bytes": 794699
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-first/yy-verticalboard-first.FCStd",
+      "sha256": "7272fc88543714d4fca319648f973dd57c017440d8da9283f8cd361e0bf7205b",
+      "bytes": 1062729
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-light/assets/primary.model.json",
+      "sha256": "85b340f6d282b46f704b365b1fe6a953fa76f19541a062534084efd7ad6745dd",
+      "bytes": 5520
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-light/assets/primary.usdz",
+      "sha256": "1fa575d728b9063446451392db0c618de6ba7106801f8a304c9d70fe9c529876",
+      "bytes": 513237
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-light/yy-verticalboard-light.FCStd",
+      "sha256": "348106184e4a84094f3a071eebfed521ac39e1d5847c40d325d6ca77314f6b98",
+      "bytes": 396909
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-one/assets/primary.model.json",
+      "sha256": "a2f6ccff8286c3bf0ea048394a1bef4e47179a0c9c461615042aef0e1f8522ea",
+      "bytes": 9423
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-one/assets/primary.usdz",
+      "sha256": "57e63588b4671fc4ac0e6556dd8c499b131575dce096c380f0a5d3e54d7c93c5",
+      "bytes": 1377400
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-one/yy-verticalboard-one.FCStd",
+      "sha256": "860f16dc5af25ee834e6f3b282f0e51fd6d404ce6693581896abde1c7066f33e",
+      "bytes": 1925184
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.model.json",
+      "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+      "bytes": 10140
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.usdz",
+      "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "bytes": 1020310
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/zlagboard-evo.FCStd",
+      "sha256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+      "bytes": 1000365
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "bytes": 13417
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.usdz",
+      "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+      "bytes": 1284438
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
+      "sha256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "bytes": 1412874
+    }
+  ],
+  "currentSHA256Manifest": "af5c7ca4edfdf5420625c75b53279547a949d69d4dd04259e1c1279e8b2c5c6b",
+  "checks": {
+    "realFCStdArchivesPassed": true,
+    "generatedBoardManifestsPassed": true,
+    "descriptorModelHashesPassed": true,
+    "unboundUSDZMetadataPassed": true
+  },
+  "historicalRecords": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/parent/delivery-checksums.txt",
+      "sha256": "c2963fa7e5e8a39c7f1011c24ed5bac2b887d11ad48ab2f9f822ba66a0b593c8",
+      "bytes": 16633
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/parent/delivery-validation.json",
+      "sha256": "b23abe4ab8931d42370c72badba0255218aace611cbf5703efba2c843db2777b",
+      "bytes": 5042
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/parent/installed-delivery-validation.json",
+      "sha256": "d21273afd4a19f79e55527dcadcb8c00646cc851f4928de9bff545dc818ee083",
+      "bytes": 43597
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/second-half/delivery-checksums.txt",
+      "sha256": "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42",
+      "bytes": 16633
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/second-half/delivery-validation.json",
+      "sha256": "60ede16153821967ae5219954d41316f018bfa8bca7a2dac1697ed0b0835e457",
+      "bytes": 2040
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/second-half/installed-delivery-validation.json",
+      "sha256": "fe6c089dcfe52939b27edad27f73675459e86e59d26d1b252cdf8402111a6bf8",
+      "bytes": 31816
+    }
+  ],
+  "runtimeEvidence": {
+    "status": "not-established-by-this-offline-audit",
+    "freshCombinedReport": null,
+    "historicalAcceptanceExtended": false
+  },
+  "fieldRules": {
+    "passed": "An optional integrityPassed field may reflect these current checks; never import inherited passed=true as runtime validation.",
+    "assetCommit": "Set only after a concrete committed combined tree is identified; otherwise record both integration refs and current file identities.",
+    "installedDelivery": "Reference fresh combined install/staging evidence with its exact build, manifest, descriptor and model hashes. Preserve inherited fields only under historicalRecords.",
+    "legacyPathList": "Retain the 135-path comparisons as reconciliation evidence; do not write hashes for the retired generated board.json or reactivate docs/model-delivery-lock.json."
+  },
+  "integrationRefs": {
+    "currentHEAD": "0972d85585f763ebca8b37c483539f8a53d518e1",
+    "parentOriginal": "4d010a76003a24c8f6d22f02e5b159eea1ee7d92",
+    "secondHalfOriginal": "1ead8834f744fcaba2ce4d53b07545841b2d6927",
+    "incorporatedParentNextTip": "7e12907150374f722446a0e8725123d1bc52b650"
+  },
+  "integrityPassed": true,
+  "historicalRecordsMeaning": "Retained raw files preserve every original field byte-for-byte; their inherited passed/count/simulator/review fields are not promoted into current claims.",
+  "recordedAssetIntegrationRef": "0972d85585f763ebca8b37c483539f8a53d518e1",
+  "checksumEvidencePath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/current-delivery-checksums.txt",
+  "checksumEvidenceSHA256": "af5c7ca4edfdf5420625c75b53279547a949d69d4dd04259e1c1279e8b2c5c6b",
+  "validationStatus": "Offline integrity passes. Clean integrated final runtime and full iOS tests remain pending; this does not replace their result.",
+  "historicalTopLevelRecords": "Retained byte-for-byte; the inherited installation and delivery counts/statuses describe earlier refs. See inherited-record-hashes.json for both originals."
+}

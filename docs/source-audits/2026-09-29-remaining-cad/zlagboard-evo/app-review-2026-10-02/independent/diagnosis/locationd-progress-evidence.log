@@ -1,0 +1,3 @@
+2026-10-01 22:21:06.401 Df locationd[56411:24996] [com.apple.xpc:connection] [0x1090f4480] activating connection: mach=false listener=false peer=true name=com.apple.locationd.synchronous.peer[56626].0x1090f4480
+2026-10-01 22:21:06.410 Df locationd[56411:24996] [com.apple.locationd.Core:Client] {"msg":"#Spi, triggered migration", "event":elapsed, "begin_mach":36974816133, "end_mach":36974816386, "elapsed_s":"0.000010542", "clientName":[mobile]com.apple.migrationpluginwrapper}
+2026-10-01 22:21:06.584 Df locationd[56411:266e3] [com.apple.locationd.Utility:Utility] Notifying clients that CLClientManager has completed its migration steps.

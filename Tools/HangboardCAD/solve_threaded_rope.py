@@ -450,6 +450,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--package", required=True)
     parser.add_argument("--solid", type=Path, required=True)
+    parser.add_argument("--presentation", help="select a schema-2 sidecar entry")
+    parser.add_argument("--equipment-object", help="select a reusable unit's sidecar entry")
+    parser.add_argument("--report", type=Path, help="retain generated length and native-clearance results")
     action = parser.add_mutually_exclusive_group(required=True)
     action.add_argument(
         "--apply", action="store_true", help="update generated poses in suspension.json"
@@ -462,7 +465,6 @@ def main():
     arguments = parser.parse_args()
     package = ROOT / "Hangboards" / arguments.package
     sidecar = package / "suspension.json"
-    descriptor = package / "assets" / "primary.model.json"
     source = json.loads(arguments.solid.read_text())
     if source.get("sourcePackage") != arguments.package:
         raise ValueError("collision solid belongs to another package")
@@ -472,38 +474,86 @@ def main():
         != hashlib.sha256(cad_source.read_bytes()).hexdigest()
     ):
         raise ValueError("collision solid is stale relative to the native CAD source")
-    data = json.loads(sidecar.read_text())
+    document = json.loads(sidecar.read_text())
+    if document.get("schemaVersion") == 2 and "entries" in document:
+        selected = [entry for entry in document["entries"] if entry["presentationID"] == arguments.presentation
+                    and entry.get("equipmentObjectID") == arguments.equipment_object]
+        if len(selected) != 1:
+            raise ValueError("select exactly one sidecar entry with --presentation and optional --equipment-object")
+        data = selected[0]
+    else:
+        data = document
+        if arguments.presentation is not None and arguments.presentation != data.get("presentationID"):
+            raise ValueError("--presentation does not match the sidecar presentation")
+        if arguments.equipment_object is not None and "instanceSuspensions" not in data:
+            raise ValueError("--equipment-object requires an instance sidecar")
+    import use_hangboard_packages
+    from hangboard_packages import cad_source as source_metadata
+    board = source_metadata.load_board(cad_source)
+    presentation = next(item for item in board["presentations"] if item["id"] == data["presentationID"])
+    descriptor = package / presentation["media"]["descriptorPath"]
     model = json.loads(descriptor.read_text())
     if data["modelSHA256"] != model["modelSHA256"]:
         raise ValueError("suspension and model hashes differ")
     mesh = trimesh.Trimesh(
         vertices=source["vertices"], faces=source["triangles"], process=False
     )
+    native_routes = data.get("ropeSolver", {}).get("method") == "nativeRoutes"
     setups = data.get("instanceSuspensions", {"single": data.get("suspension")})
-    if any(setup["type"] == "threadedLoopCord" for setup in setups.values()):
-        try:
-            import FreeCAD as App
-        except ImportError as error:
-            raise ValueError("run the single-loop solve with FreeCAD Python for exact native-solid clearance") from error
-        document = App.openDocument(str(cad_source.resolve()))
-        native = document.getObject(source["sourceFeature"]).Shape
-        if not native.isValid() or len(native.Solids) != 1:
-            raise ValueError("collision source is not one valid native CAD solid")
-        mesh.metadata["nativeSolid"] = native
-    for equipment_id, setup in setups.items():
-        import copy
-        local_setup = copy.deepcopy(setup)
-        solved = solve_package(arguments.package, mesh, {"suspension": local_setup, "ropeSolver": data.get("ropeSolver", {})}, model)
-        for pose_id, result in solved.items():
-            pose = setup["canonicalPoses"][pose_id]
-            if arguments.check:
-                if abs(pose["translation"][1] - result["height"]) > 1e-8 or pose.get("cordContactPoints") != result["contacts"]:
-                    raise ValueError(f"{equipment_id}/{pose_id}: generated route cache is stale")
+    if "instanceSuspensions" in data and arguments.equipment_object is not None:
+        if arguments.equipment_object not in setups:
+            raise ValueError("--equipment-object must identify a sidecar instance")
+        setups = {arguments.equipment_object: setups[arguments.equipment_object]}
+    native_document = None
+    results = {}
+    try:
+        if any(setup["type"] == "threadedLoopCord" for setup in setups.values()):
+            try:
+                import FreeCAD as App
+            except ImportError as error:
+                raise ValueError("run the single-loop solve with FreeCAD Python for exact native-solid clearance") from error
+            native_document = App.openDocument(str(cad_source.resolve()))
+            feature = native_document.getObject(source["sourceFeature"])
+            if feature is None or not feature.Shape.isValid() or len(feature.Shape.Solids) != 1:
+                raise ValueError("collision source is not one valid native CAD solid")
+            mesh.metadata["nativeSolid"] = feature.Shape
+        for equipment_id, setup in setups.items():
+            import copy
+            local_data = dict(data, suspension=copy.deepcopy(setup))
+            if native_routes:
+                from native_cord_routes import solve_native_routes
+                solved = solve_native_routes(mesh, local_data, model, source_metadata=source)
             else:
-                pose["translation"][1] = result["height"]
-                pose["cordContactPoints"] = result["contacts"]
+                solved = solve_package(arguments.package, mesh, local_data, model)
+            results[equipment_id] = solved
+            cache_key = "wrappedRoutes" if native_routes else "cordContactPoints"
+            result_key = "routes" if native_routes else "contacts"
+            for pose_id, result in solved.items():
+                pose = setup["canonicalPoses"][pose_id]
+                if arguments.check:
+                    if (abs(pose["translation"][1] - result["height"]) > 1e-8
+                            or pose.get(cache_key) != result[result_key]):
+                        raise ValueError(f"{equipment_id}/{pose_id}: generated route cache is stale")
+                else:
+                    pose["translation"][1] = result["height"]
+                    pose[cache_key] = result[result_key]
+    finally:
+        if native_document is not None:
+            App.closeDocument(native_document.Name)
+    if arguments.report:
+        arguments.report.parent.mkdir(parents=True, exist_ok=True)
+        report = {"package": arguments.package, "presentationID": data["presentationID"],
+            "modelSHA256": model["modelSHA256"], "sourceSHA256": source["sourceSHA256"],
+            "method": "nativeRoutes" if native_routes else "internalLoop"}
+        if "instanceSuspensions" in data:
+            report["instances"] = results
+        else:
+            report["poses"] = results["single"]
+        if data.get("ropeSolver", {}).get("grooveGuides"):
+            report["collisionSolidSHA256"] = hashlib.sha256(arguments.solid.read_bytes()).hexdigest()
+        arguments.report.write_text(json.dumps(report, indent=2) + "\n")
     if arguments.apply:
-        formatted = json.dumps(data, indent=2)
+        formatted = json.dumps(document, indent=2)
         number = r"-?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?"
         triplet = re.compile(
             rf"\[\n\s+({number}),\n\s+({number}),\n\s+({number})\n\s+\]"
@@ -511,7 +561,7 @@ def main():
         formatted = triplet.sub(
             lambda match: f"[{match[1]}, {match[2]}, {match[3]}]", formatted
         )
-        if json.loads(formatted) != data:
+        if json.loads(formatted) != document:
             raise AssertionError("route formatting changed the JSON data")
         sidecar.write_text(formatted + "\n")
 

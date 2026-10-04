@@ -1,0 +1,44 @@
+{
+  "status": "pass",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "nativeBodyMeshSHA256": "7d5e212155ad184a77946b0074ef166b0997a86ddf11e4a6521c54388716b495",
+  "coordinateBasis": "Verified writer native millimetres (X,Y,Z) -> runtime metres (X,Z,-Y)/1000; native rear Y=0,+Y outward maps runtime rear Z=0,-Z outward.",
+  "planeToleranceM": 1e-08,
+  "allStoredVerticesOnRearPlane": 816,
+  "nativeRearTriangleCount": 583,
+  "exportRearTriangleCount": 583,
+  "nativeRearAreaMM2": 105796.83949861102,
+  "exportRearUnionAreaMM2": 105796.83882672167,
+  "missingRearAreaMM2": 0.00216235750075827,
+  "extraRearAreaMM2": 0.001490468175103444,
+  "lowerCenterWatchWindowNativeMM": {
+    "x": [
+      -50,
+      50
+    ],
+    "z": [
+      0,
+      60
+    ]
+  },
+  "lowerCenterMissingRearAreaMM2": 1.5918202171208776e-05,
+  "rows": [
+    {
+      "node": "body_board_001",
+      "rearTriangles": 583,
+      "rearTriangleAreaMM2": 105796.83882672165,
+      "rearNormalMinimumWallCosine": 1.0,
+      "nonWallNormalTriangleCount": 0,
+      "opposedNormalTriangleCount": 0,
+      "opposedNormalTriangleAreaMM2": 0.0,
+      "geometricNormalsAllWallFacing": true,
+      "largestNonWallNormalTriangles": []
+    }
+  ],
+  "limits": [
+    "All rear-plane facets and their authored corner normals inspected; normal checks exclude non-rear side facets which legitimately share rear edge positions.",
+    "Planar triangle union is compared to pinned native body tessellation; this is not an assertion of exact welded topology elsewhere.",
+    "Actual app rear view remains the appearance authority; CPU preview shading is not used as geometry evidence."
+  ]
+}

@@ -1,0 +1,18 @@
+ReliefAndPocketLipRounds: BRep_API: command not done
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/shape-review/native-refinement/placid-badger-flash14-relief-author-v1-tmp/hangten-freecad-9fjy5n8y/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/shape-review/native-refinement/author_relief.py", line 32, in <module>
+    assert not fil.Shape.isNull() and fil.Shape.isValid() and len(fil.Shape.Solids)==1,'Native fillet failed'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native fillet failed
+
+Selected relief/lip edge count 60
+Fillet state ['Touched', 'Invalid'] null True
+
+								
+								
+								
+								
+								
+								

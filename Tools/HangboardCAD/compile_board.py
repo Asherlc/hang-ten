@@ -90,6 +90,9 @@ CURVED_REGION_PARTITION = "HangTenCurvedRegionPartition"
 # triangle meets a tangent fillet's many small ones, which shades a band across
 # the flat face. Opt-in so existing sources keep reproducing their bytes.
 SURFACE_NORMALS = "HangTenSurfaceNormals"
+# Optional acceleration of that same analytic-normal policy. Existing sources
+# never inspect the native UV cache and keep the original evaluator.
+UV_NODE_SURFACE_NORMALS = "HangTenUVNodeSurfaceNormals"
 
 
 class BuildError(RuntimeError):
@@ -119,14 +122,25 @@ def _document_properties(document) -> dict:
     for name in DOCUMENT_PROPERTIES:
         if name not in document.PropertiesList:
             raise BuildError(f"source document is missing required property {name}")
+    if UV_NODE_SURFACE_NORMALS in document.PropertiesList:
+        if document.getTypeIdOfProperty(UV_NODE_SURFACE_NORMALS) != "App::PropertyBool":
+            raise BuildError(f"{UV_NODE_SURFACE_NORMALS} must be App::PropertyBool")
+        if document.getPropertyByName(UV_NODE_SURFACE_NORMALS) and (
+            SURFACE_NORMALS not in document.PropertiesList
+            or document.getTypeIdOfProperty(SURFACE_NORMALS) != "App::PropertyBool"
+            or not document.getPropertyByName(SURFACE_NORMALS)
+        ):
+            raise BuildError(f"{UV_NODE_SURFACE_NORMALS} requires {SURFACE_NORMALS}")
     return {name: document.getPropertyByName(name) for name in DOCUMENT_PROPERTIES}
 
 
-def _bound_objects(document) -> list:
+def _bound_objects(document, presentation_id: str | None = None) -> list:
     return [
         obj
         for obj in document.Objects
         if "NodeID" in obj.PropertiesList and getattr(obj, "NodeID", "")
+        and (presentation_id is None or
+             (getattr(obj, "HangTenPresentationID", "") or document.HangTenPresentationID) == presentation_id)
     ]
 
 
@@ -175,6 +189,17 @@ def _node_specification(obj, version: int) -> dict:
     if role not in {"body", "contact", "attachment"}:
         raise BuildError(f"{obj.Name} has an invalid NodeRole {role!r}")
     spec = {"id": obj.NodeID, "role": role}
+    if "AdditionalContactIDs" in obj.PropertiesList:
+        if version != 1 or role != "contact":
+            raise BuildError("AdditionalContactIDs requires a v1 contact node")
+        if obj.getTypeIdOfProperty("AdditionalContactIDs") != "App::PropertyStringList":
+            raise BuildError("AdditionalContactIDs requires App::PropertyStringList")
+        extra = obj.AdditionalContactIDs
+        if (not isinstance(extra, list) or not extra
+                or any(not isinstance(item, str) or not item for item in extra)
+                or extra != sorted(set(extra)) or _contact_binding(obj) in extra):
+            raise BuildError("AdditionalContactIDs must be sorted, nonempty, unique and exclude primary")
+        spec["additionalContactIDs"] = list(extra)
     if role == "contact":
         # The binding key is fixed by the schema: v2-or-later sources use
         # "slot", v1 sources use "contact". Resolve it once here so the slot
@@ -436,7 +461,112 @@ def _triangle_area(points, facets, indices) -> float:
     return total
 
 
-def _surface_normals(shape, points, triangles, deflection: float):
+def _uv_node_normal_cache(shape, points, triangles, deflection: float):
+    """Find unique *actual face facets* with safely matched native UV vertices.
+
+    Three vertices on a face do not establish triangle ownership. Require an
+    exact unordered facet signature from that face's cached tessellation too.
+    UV-node order is independent of tessellation vertex order, so match UV
+    evaluations spatially within 0.00002 mm, rejecting multiple matches. All
+    uncertain cases remain with the original inverse-surface evaluator.
+    """
+    from itertools import product
+
+    tolerance = 0.00002
+    offsets = tuple(product((-1, 0, 1), repeat=3))
+
+    def xyz(point):
+        return (point.x, point.y, point.z)
+
+    def cell(point):
+        return tuple(math.floor(value / tolerance) for value in xyz(point))
+
+    point_keys = [xyz(point) for point in points]
+    signatures = [tuple(sorted(point_keys[i] for i in triangle)) for triangle in triangles]
+    wanted = set(signatures)
+    owners = {}
+    normals_by_face = {}
+    for face_index, face in enumerate(shape.Faces):
+        try:
+            face_points, face_triangles = face.tessellate(deflection)
+        except Exception:
+            # An uninspectable face could also own a supposedly unique facet.
+            return {}
+        face_keys = [xyz(point) for point in face_points]
+        needed = set()
+        for triangle in face_triangles:
+            signature = tuple(sorted(face_keys[i] for i in triangle))
+            if signature in wanted:
+                owners.setdefault(signature, set()).add(face_index)
+                needed.update(triangle)
+        if not needed:
+            continue
+        try:
+            surface = face.Surface
+            nonsmooth_knots = []
+            for axis in ("U", "V"):
+                if not hasattr(surface, f"get{axis}Knots"):
+                    nonsmooth_knots.append(((), 0.0))
+                    continue
+                knots = getattr(surface, f"get{axis}Knots")()
+                multiplicities = getattr(surface, f"get{axis}Multiplicities")()
+                degree = getattr(surface, f"{axis}Degree")
+                nonsmooth_knots.append((
+                    tuple(k for k, m in zip(knots[1:-1], multiplicities[1:-1]) if m >= degree),
+                    max(1e-12, abs(knots[-1] - knots[0]) * 1e-9),
+                ))
+            grid = {}
+            for uv in face.getUVNodes():
+                # At an internal C0 knot, coincident positions have two
+                # derivatives. Inverse projection can land on the opposite
+                # side by one floating-point ULP: retain that legacy choice.
+                unsafe = any(
+                    abs(value - knot) <= epsilon
+                    for value, (knots, epsilon) in zip(uv, nonsmooth_knots)
+                    for knot in knots
+                )
+                point = surface.value(*uv)
+                if not all(math.isfinite(v) for v in xyz(point)):
+                    raise ValueError("Nonfinite UV-node position")
+                normal = None if unsafe else face.normalAt(*uv)
+                if normal is not None and (
+                    not all(math.isfinite(v) for v in xyz(normal)) or normal.Length <= 1e-12
+                ):
+                    normal = None
+                # Unusable normals still count as spatial witnesses. Dropping
+                # them could turn an ambiguous match into a false unique one.
+                grid.setdefault(cell(point), []).append((point, normal))
+            matched = {}
+            for index in needed:
+                point = face_points[index]
+                key = cell(point)
+                matches = [
+                    normal
+                    for offset in offsets
+                    for candidate, normal in grid.get(tuple(a + b for a, b in zip(key, offset)), ())
+                    if (point - candidate).Length <= tolerance
+                ]
+                if len(matches) == 1 and matches[0] is not None:
+                    matched[face_keys[index]] = matches[0]
+            normals_by_face[face_index] = matched
+        except Exception:
+            # Ownership was recorded first: missing UV data cannot make a
+            # coincident second face look like the unique owner.
+            continue
+    cache = {}
+    for index, (triangle, signature) in enumerate(zip(triangles, signatures)):
+        candidates = owners.get(signature, ())
+        if len(candidates) != 1:
+            continue
+        owner = next(iter(candidates))
+        normals = normals_by_face.get(owner, {})
+        keys = [point_keys[i] for i in triangle]
+        if all(key in normals for key in keys):
+            cache[index] = (owner, tuple(normals[key] for key in keys))
+    return cache
+
+
+def _surface_normals(shape, points, triangles, deflection: float, *, uv_nodes=False):
     """Shade each triangle with the analytic normal of the B-rep face it tessellates.
 
     Each triangle is assigned to the face whose surface its centroid lies on
@@ -459,14 +589,16 @@ def _surface_normals(shape, points, triangles, deflection: float):
     out_normals: list = []
     out_triangles: list = []
     remap: dict[tuple[int, int], int] = {}
+    uv_cache = _uv_node_normal_cache(shape, points, triangles, deflection) if uv_nodes else {}
     for triangle_index, triangle in enumerate(triangles):
         a, b, c = (points[index] for index in triangle)
         flat = (b - a).cross(c - a)
         if flat.Length > 1e-12:
             flat.normalize()
         centroid = (a + b + c) * (1.0 / 3.0)
-        owner, best = None, None
-        for face_index, (face, box) in enumerate(faces):
+        cached = uv_cache.get(triangle_index)
+        owner, best = (cached[0] if cached is not None else None), None
+        for face_index, (face, box) in (() if cached is not None else enumerate(faces)):
             if not box.isInside(centroid):
                 continue
             u, v = face.Surface.parameter(centroid)
@@ -479,7 +611,7 @@ def _surface_normals(shape, points, triangles, deflection: float):
             if best is None or key < best:
                 owner, best = face_index, key
         corners = []
-        for index in triangle:
+        for corner_index, index in enumerate(triangle):
             if owner is None:
                 key = (index, -1 - triangle_index)
                 normal = flat
@@ -489,7 +621,10 @@ def _surface_normals(shape, points, triangles, deflection: float):
             if key not in remap:
                 if normal is None:
                     face = faces[owner][0]
-                    normal = face.normalAt(*face.Surface.parameter(points[index]))
+                    normal = (
+                        cached[1][corner_index] if cached is not None
+                        else face.normalAt(*face.Surface.parameter(points[index]))
+                    )
                     if normal.Length > 1e-12:
                         normal.normalize()
                     if normal.dot(flat) < 0:
@@ -502,9 +637,15 @@ def _surface_normals(shape, points, triangles, deflection: float):
     return out_points, out_triangles, out_normals
 
 
-def _build_mesh(node_id, points, triangles, material, model_box, surface=None, deflection=None):
+def _build_mesh(
+    node_id, points, triangles, material, model_box, surface=None, deflection=None,
+    uv_node_surface_normals=False,
+):
     if surface is not None:
-        points, triangles, normals = _surface_normals(surface, points, triangles, deflection)
+        if uv_node_surface_normals:
+            points, triangles, normals = _surface_normals(surface, points, triangles, deflection, uv_nodes=True)
+        else:
+            points, triangles, normals = _surface_normals(surface, points, triangles, deflection)
     else:
         points, triangles, normals = _crease_normals(points, triangles, CREASE_DEGREES)
     return usdz_writer.Mesh(
@@ -544,7 +685,7 @@ def _validate_partition(body_points, body_facets, triangles_by_node, region_surf
             )
 
 
-def _declared_depths(board, version: int) -> dict:
+def _declared_depths(board, version: int, presentation_id: str | None = None) -> dict:
     """Published grip depth keyed by region identity (contact id or slot id).
 
     v1 names a physical contact directly; v2 names a reusable slot that each
@@ -553,24 +694,70 @@ def _declared_depths(board, version: int) -> dict:
     must fail rather than silently pick one.
     """
     declared: dict[str, float] = {}
+    effective = {}
+    if presentation_id is not None:
+        for position in board.get("positions", []):
+            if position.get("presentationID") != presentation_id:
+                continue
+            for contact_id, depth in position.get("effectiveDepths", {}).items():
+                if contact_id in effective and effective[contact_id] != depth:
+                    raise BuildError(f"contact {contact_id} declares conflicting configured depths")
+                effective[contact_id] = depth
     if version == 1:
         for contact in board.get("contacts", []):
-            span = ((contact.get("depth") or {}).get("range") or {})
+            span = ((effective.get(contact["id"], contact.get("depth")) or {}).get("range") or {})
             low, high = span.get("minimum"), span.get("maximum")
             if isinstance(low, (int, float)) and isinstance(high, (int, float)) and low == high:
                 declared[contact["id"]] = float(low)
         return declared
     by_id = {contact["id"]: contact for contact in board.get("contacts", [])}
     for presentation in board.get("presentations", []):
+        if presentation_id is not None and presentation.get("id") != presentation_id:
+            continue
         for instance in presentation.get("media", {}).get("instances", []):
             for slot, contact_id in instance.get("contactIDsBySlotID", {}).items():
-                span = ((by_id.get(contact_id) or {}).get("depth") or {}).get("range") or {}
+                span = (effective.get(contact_id, (by_id.get(contact_id) or {}).get("depth")) or {}).get("range") or {}
                 low, high = span.get("minimum"), span.get("maximum")
                 if isinstance(low, (int, float)) and isinstance(high, (int, float)) and low == high:
                     if slot in declared and abs(declared[slot] - low) > 1e-6:
                         raise BuildError(f"slot {slot} declares conflicting published depths")
                     declared[slot] = float(low)
     return declared
+
+
+def _depth_regions(contact_objects, version):
+    """Keep legacy per-node checks; explicitly shared grips measure all members."""
+    if not any("AdditionalContactIDs" in obj.PropertiesList for obj in contact_objects):
+        return [(obj, [obj]) for obj in contact_objects]
+    groups, primaries, shared_ids = {}, {}, set()
+    for obj in contact_objects:
+        spec = _node_specification(obj, version)
+        key = _contact_binding(obj)
+        primaries.setdefault(key, []).append(obj)
+        shared_ids.update(spec.get("additionalContactIDs", []))
+        for member_id in (key, *spec.get("additionalContactIDs", [])):
+            groups.setdefault(member_id, []).append(obj)
+
+    def metadata(obj):
+        witnesses = tuple(
+            (name, tuple(float(getattr(getattr(obj, name), axis)) for axis in "xyz"))
+            for name in ("HangTenGripDepthStart", "HangTenGripDepthEnd")
+            if name in obj.PropertiesList
+        )
+        return str(getattr(obj, "HangTenDepthAxis", "y")).lower(), witnesses
+
+    result = []
+    for key, members in groups.items():
+        if key not in shared_ids:
+            result.extend((obj, [obj]) for obj in members)
+            continue
+        owners = primaries.get(key, [])
+        if not owners:
+            raise BuildError(f"{key} shared depth requires a primary contact object")
+        if any(metadata(obj) != metadata(owners[0]) for obj in owners[1:]):
+            raise BuildError(f"{key} has conflicting primary grip-depth metadata")
+        result.append((owners[0], members))
+    return result
 
 
 def _validate_published_depths(
@@ -589,12 +776,30 @@ def _validate_published_depths(
     a 38 mm rail), the region must instead span the body's full extent.
     """
     measured = {}
-    for obj in contact_objects:
+    for obj, members in _depth_regions(contact_objects, version):
         key = _contact_binding(obj)
         axis = str(getattr(obj, "HangTenDepthAxis", "y")).lower()
         if axis not in {"x", "y", "z"}:
             raise BuildError(f"{key} has invalid HangTenDepthAxis {axis!r}")
-        measured[key] = round(float(getattr(obj.Shape.BoundBox, axis.upper() + "Length")), 3)
+        witness_names = {"HangTenGripDepthStart", "HangTenGripDepthEnd"}
+        authored_witnesses = witness_names & set(obj.PropertiesList)
+        if authored_witnesses:
+            if authored_witnesses != witness_names:
+                raise BuildError(f"{key} grip-depth witness requires both native lip and floor points")
+            import Part
+            points = [getattr(obj, name) for name in sorted(witness_names)]
+            if any(not math.isfinite(value) for point in points for value in (point.x, point.y, point.z)):
+                raise BuildError(f"{key} grip-depth witness must be finite")
+            if any(min(member.Shape.distToShape(Part.Vertex(point))[0] for member in members) > 0.25
+                   for point in points):
+                raise BuildError(f"{key} grip-depth witness must lie on the native contact surface")
+            measured[key] = round(float((points[1] - points[0]).Length), 3)
+        elif len(members) == 1:
+            measured[key] = round(float(getattr(obj.Shape.BoundBox, axis.upper() + "Length")), 3)
+        else:
+            low = min(float(getattr(member.Shape.BoundBox, axis.upper() + "Min")) for member in members)
+            high = max(float(getattr(member.Shape.BoundBox, axis.upper() + "Max")) for member in members)
+            measured[key] = round(high - low, 3)
         if key not in declared:
             continue
         tolerance = max(0.25, 3.0 * deflection)
@@ -644,6 +849,7 @@ def build(
     out_dir: Path,
     publish: bool,
     allow_faceted_import: bool = False,
+    presentation_id: str | None = None,
 ) -> dict:
     board, board_origin = load_board(source, board_path)
     if not isinstance(board, dict) or board.get("schemaVersion") != 3:
@@ -683,6 +889,15 @@ def build(
         raise BuildError("source HangTenBoardID does not match board.json id")
     if properties["HangTenPresentationID"] not in presentations:
         raise BuildError("source HangTenPresentationID is not a declared presentation")
+    presentation_id = presentation_id or properties["HangTenPresentationID"]
+    from presentation_targets import model_targets
+    try:
+        targets = model_targets(board)
+    except ValueError as error:
+        raise BuildError(str(error)) from error
+    if presentation_id not in targets:
+        raise BuildError("selected presentation is not a declared model presentation")
+    asset_name, descriptor_name = targets[presentation_id]
     if properties["HangTenCoordinateFrame"] != "freecad-mm-z-up-front-negative-y":
         raise BuildError("source declares an unexpected coordinate frame")
     if properties["HangTenSourceKind"] not in {SOURCE_KIND_NATIVE, SOURCE_KIND_FACETED}:
@@ -698,7 +913,7 @@ def build(
         raise BuildError("source tessellation deflection is out of range")
 
     print("[3/10] extracting bound components and semantic regions")
-    objects = _bound_objects(document)
+    objects = _bound_objects(document, presentation_id)
     if not objects:
         raise BuildError("source declares no bound nodes")
     version = int(properties["HangTenSchemaVersion"])
@@ -770,6 +985,10 @@ def build(
             SURFACE_NORMALS in document.PropertiesList
             and document.getPropertyByName(SURFACE_NORMALS)
         )
+        uv_node_surface_normals = bool(
+            UV_NODE_SURFACE_NORMALS in document.PropertiesList
+            and document.getPropertyByName(UV_NODE_SURFACE_NORMALS)
+        )
 
         meshes = [
             _build_mesh(
@@ -779,16 +998,28 @@ def build(
                 model_box=model_box,
                 surface=body_object.Shape if surface_normals and not faceted else None,
                 deflection=deflection,
+                uv_node_surface_normals=uv_node_surface_normals,
             )
         ]
         print(f"      {body_object.NodeID}: {len(body_indices)} triangles, role={body_object.NodeRole}")
 
         region_surface_areas = {}
-        for obj in region_objects:
+        for region_index, obj in enumerate(region_objects):
             # Each region object's own CAD surface is its exported mesh — the CAD is
             # the source of truth for hold geometry. The body was partitioned around
             # the same surface, so the two never overlap.
-            if faceted and obj.NodeID in source_meshes:
+            if bool(getattr(obj, "HangTenUseBodyTriangles", False)):
+                if faceted or obj.TypeId != "PartDesign::SubShapeBinder":
+                    raise BuildError("HangTenUseBodyTriangles requires a native face SubShapeBinder")
+                # A binder owns exact final-body faces. Meshing that face again
+                # may pick a different triangulation from its body's OCCT mesh.
+                # Export the already classified body triangles, so both sides
+                # of the semantic seam share the same vertices and edges.
+                indices = [i for i, owner in assignment.items() if owner == region_index]
+                if not indices:
+                    raise BuildError(f"{obj.NodeID}: native face binder owns no body triangles")
+                points, facets = _subset_mesh(body_points, body_facets, indices)
+            elif faceted and obj.NodeID in source_meshes:
                 points, facets = source_meshes[obj.NodeID]
             else:
                 points, facets = obj.Shape.tessellate(deflection)
@@ -806,6 +1037,7 @@ def build(
                     model_box=model_box,
                     surface=obj.Shape if surface_normals and not faceted else None,
                     deflection=deflection,
+                    uv_node_surface_normals=uv_node_surface_normals,
                 )
             )
             print(f"      {obj.NodeID}: {len(facets)} triangles, role={obj.NodeRole}")
@@ -842,7 +1074,7 @@ def build(
         else:
             measured_depths = _validate_published_depths(
                 contact_objects,
-                _declared_depths(board, version),
+                _declared_depths(board, version, presentation_id),
                 version,
                 deflection,
                 board_depth={axis: float(getattr(body_object.Shape.BoundBox, axis.upper() + "Length"))
@@ -882,7 +1114,8 @@ def build(
             descriptor = compile_descriptor(
                 model_bytes,
                 [
-                    NodeBinding(spec["id"], spec["role"], spec.get("contact"))
+                    NodeBinding(spec["id"], spec["role"], spec.get("contact"),
+                                tuple(spec.get("additionalContactIDs", [])))
                     for spec in specifications
                 ],
                 {node_id: reopened["nodes"][node_id]["points_m"] for node_id in reopened["nodes"]},
@@ -912,6 +1145,7 @@ def build(
 
         result = {
             "package": package,
+            "presentationID": presentation_id,
             "source": _display(source),
             "board": board_origin,
             "sourceSHA256": source_digest,
@@ -938,8 +1172,8 @@ def build(
         print("[10/10] publishing the asset and descriptor set")
         assets = out_dir
         assets.mkdir(parents=True, exist_ok=True)
-        asset_target = assets / "primary.usdz"
-        descriptor_target = assets / "primary.model.json"
+        asset_target = assets / asset_name
+        descriptor_target = assets / descriptor_name
         descriptor_temp = assets / f".{descriptor_target.name}.staged"
         asset_temp = assets / f".{asset_target.name}.staged"
         shutil.copyfile(descriptor_path, descriptor_temp)
@@ -991,6 +1225,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--assets", help="defaults to Hangboards/<package>/assets")
     parser.add_argument("--check", action="store_true", help="validate and stage only")
+    parser.add_argument("--presentation", help="select an authored model configuration; defaults to the document presentation")
     parser.add_argument(
         "--allow-faceted-import",
         action="store_true",
@@ -1028,6 +1263,7 @@ def main(argv: list[str] | None = None) -> int:
         assets,
         publish=not arguments.check,
         allow_faceted_import=arguments.allow_faceted_import,
+        presentation_id=arguments.presentation,
     )
     print(json.dumps(result, indent=2, sort_keys=True))
     if arguments.report:

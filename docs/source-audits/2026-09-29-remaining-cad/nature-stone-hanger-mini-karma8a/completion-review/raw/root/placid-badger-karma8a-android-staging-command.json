@@ -1,0 +1,18 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma8a-review11/refinement-2026-10-02/root/check_android_staging.py"
+  ],
+  "startedUTC": "2026-10-02T14:06:43.858213+00:00",
+  "timeoutSeconds": 600,
+  "ownedTemporaryDirectory": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/root/placid-badger-karma8a-android-staging-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 30790,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 2.5970684589992743
+}

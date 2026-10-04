@@ -1,0 +1,167 @@
+{
+  "reason": "makeCameraFraming rotates stored model-space camera by pose; recommendation directions were intended world-space. Apply inverse pose before storage. Rotations/routes unchanged.",
+  "poses": [
+    {
+      "positionID": "paired-10-15",
+      "intendedWorldDirection": [
+        0,
+        -0.342020143,
+        -0.939692621
+      ],
+      "storedModelDirection": [
+        0.0,
+        -0.342020143,
+        -0.939692621
+      ],
+      "actualPosedDirection": [
+        0.0,
+        -0.342020143,
+        -0.939692621
+      ]
+    },
+    {
+      "positionID": "paired-25-20-15-10",
+      "intendedWorldDirection": [
+        0,
+        -0.342020143,
+        0.939692621
+      ],
+      "storedModelDirection": [
+        0.0,
+        0.342020143,
+        -0.939692621
+      ],
+      "actualPosedDirection": [
+        0.0,
+        -0.342020143,
+        0.939692621
+      ]
+    },
+    {
+      "positionID": "paired-12-8-6",
+      "intendedWorldDirection": [
+        0,
+        -0.342020143,
+        -0.939692621
+      ],
+      "storedModelDirection": [
+        0.0,
+        -0.939692621,
+        0.342020143
+      ],
+      "actualPosedDirection": [
+        0.0,
+        -0.34202014299999994,
+        -0.9396926210000001
+      ]
+    },
+    {
+      "positionID": "paired-8-6",
+      "intendedWorldDirection": [
+        0,
+        -0.342020143,
+        0.939692621
+      ],
+      "storedModelDirection": [
+        0.0,
+        -0.939692621,
+        -0.342020143
+      ],
+      "actualPosedDirection": [
+        0.0,
+        -0.34202014299999994,
+        0.9396926210000001
+      ]
+    },
+    {
+      "positionID": "central-25",
+      "intendedWorldDirection": [
+        0,
+        -0.342020143,
+        0.939692621
+      ],
+      "storedModelDirection": [
+        0.0,
+        -0.342020143,
+        0.939692621
+      ],
+      "actualPosedDirection": [
+        0.0,
+        -0.342020143,
+        0.939692621
+      ]
+    },
+    {
+      "positionID": "central-30-25",
+      "intendedWorldDirection": [
+        0,
+        -0.342020143,
+        -0.939692621
+      ],
+      "storedModelDirection": [
+        0.0,
+        0.342020143,
+        0.939692621
+      ],
+      "actualPosedDirection": [
+        0.0,
+        -0.342020143,
+        -0.939692621
+      ]
+    },
+    {
+      "positionID": "central-20-6",
+      "intendedWorldDirection": [
+        0,
+        -0.342020143,
+        -0.939692621
+      ],
+      "storedModelDirection": [
+        0.0,
+        -0.939692621,
+        0.342020143
+      ],
+      "actualPosedDirection": [
+        0.0,
+        -0.34202014299999994,
+        -0.9396926210000001
+      ]
+    },
+    {
+      "positionID": "central-6",
+      "intendedWorldDirection": [
+        0,
+        -0.342020143,
+        0.939692621
+      ],
+      "storedModelDirection": [
+        0.0,
+        -0.939692621,
+        -0.342020143
+      ],
+      "actualPosedDirection": [
+        0.0,
+        -0.34202014299999994,
+        0.9396926210000001
+      ]
+    },
+    {
+      "positionID": "rounded-tray",
+      "intendedWorldDirection": [
+        0,
+        -0.5,
+        -0.866025404
+      ],
+      "storedModelDirection": [
+        0.0,
+        0.5,
+        0.866025404
+      ],
+      "actualPosedDirection": [
+        0.0,
+        -0.5,
+        -0.866025404
+      ]
+    }
+  ]
+}

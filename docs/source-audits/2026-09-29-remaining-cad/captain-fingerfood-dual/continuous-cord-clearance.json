@@ -1,0 +1,33 @@
+{
+  "package": "captain-fingerfood-dual",
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+  "sidecarSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+  "validatorSHA256": "40d23e454d8790fd4769a7e6713a831e810a1ae3756c786776203b915cc6ffd1",
+  "method": "continuous-distance certificate on exact rounded runtime cache, including world support endpoints",
+  "fullPathSelfAndInterstrandTubeGate": "passed",
+  "entries": [
+    {
+      "presentationID": "primary",
+      "equipmentObjectID": null,
+      "poses": {
+        "curved-lip-front": {
+          "left-lead": 0.0020362793110580966,
+          "right-lead": 0.0020362793110580966
+        },
+        "exterior-jug-back": {
+          "left-lead": 0.002155011449426316,
+          "right-lead": 0.0021550114494263166
+        },
+        "left-pocket-vertical": {
+          "left-lead": 0.001992914022465911,
+          "right-lead": 0.0019988142880295393
+        },
+        "straight-lip-inverted": {
+          "left-lead": 0.0019909504342835566,
+          "right-lead": 0.001990609503687943
+        }
+      }
+    }
+  ]
+}

@@ -2,6 +2,22 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineDraftTests: XCTestCase {
+    func testConfiguredTargetReopensItsModelAndChangingDepthKeepsTheContact() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        var step = CustomRoutineStepDraft(id: "configured", title: "", instruction: "", accessory: "", duration: 10,
+            phase: .hang, targets: [.edge(depth: .range(.init(minimum: 10, maximum: 10)))],
+            timing: .fixed, handUse: .single, side: .left)
+        XCTAssertEqual(CustomRoutineBoardPreview.presentationID(for: step, on: board), "depth-10mm")
+        XCTAssertEqual(CustomRoutineBoardPreview.contactIDs(for: step, on: board), ["edge-18"])
+        let deeper = try XCTUnwrap(board.contacts(inPosition: "depth-18mm").first)
+        CustomRoutineBoardPreview.toggle(deeper, in: &step, on: board)
+        XCTAssertEqual(step.targets.first?.contactID, "edge-18")
+        XCTAssertEqual(step.targets.first?.depth, .range(.init(minimum: 18, maximum: 18)))
+        XCTAssertEqual(CustomRoutineBoardPreview.presentationID(for: step, on: board), "depth-18mm")
+        CustomRoutineBoardPreview.toggle(deeper, in: &step, on: board)
+        XCTAssertTrue(step.targets.isEmpty)
+    }
+
     func testEitherHandBoardPreviewAllowsRemovingItsSelectedAlternative() {
         let board = mirroredBoard()
         var step = CustomRoutineStepDraft(

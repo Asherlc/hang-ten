@@ -1,0 +1,25 @@
+{
+  "status": "pass",
+  "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+  "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+  "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+  "totalExportedVerticesChecked": 18874,
+  "originalUnflaggedVerticesWithinTolerance": 18846,
+  "flaggedVerticesResolved": 28,
+  "independentExactNativeFaceFacetWitnesses": 106,
+  "uniqueNativeFacetWitnesses": 90,
+  "normalToleranceUnchanged": 5e-06,
+  "positionToleranceMMUnchanged": 0.0002,
+  "maximumResolvedNormalVectorError": 3.026965410505641e-08,
+  "maximumSerializationQuantizationMM": 1.4736576014029186e-05,
+  "maximumOriginalNativeSurfaceResidualMM": 1.9940447820315227e-08,
+  "originalFailure": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-normal-check.json",
+    "sha256": "46a4ccceb2d7c4c3424f3e2beb14859a8eb54b52fdff13ae409fa836217c373d"
+  },
+  "strictOwnedDiagnostic": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/flagged-native-normal-diagnostic.json",
+    "sha256": "4e2fda16c258d4099ae955bdc8aef874a585f1244edc19c6dfdc2479c60ad662"
+  },
+  "disposition": "All28 inverse-rounded-point misses resolve through exact serialized native face facets, original native corners and actual native UV normals; projection/rounding candidate failures, no bad producer direction. Original failed run and exits retained. No nearest-face acceptance, compiler normal function oracle, asset/source/compiler edits or tolerance changes."
+}

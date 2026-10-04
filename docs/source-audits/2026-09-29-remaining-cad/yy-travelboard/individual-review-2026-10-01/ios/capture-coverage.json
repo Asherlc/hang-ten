@@ -1,0 +1,73 @@
+{
+  "contactCount": 6,
+  "poseCount": 2,
+  "contacts": [
+    "edge-10",
+    "edge-15",
+    "edge-25",
+    "mono-left",
+    "mono-right",
+    "tray"
+  ],
+  "rawCaptureRecords": [
+    {
+      "image": "default.png",
+      "contactID": null,
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": false
+    },
+    {
+      "image": "edge-25.png",
+      "contactID": "edge-25",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "edge-10.png",
+      "contactID": "edge-10",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "reverse-10-primary-orbit.png",
+      "contactID": "edge-10",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "edge-15.png",
+      "contactID": "edge-15",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "tray.png",
+      "contactID": "tray",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "front-25-15-primary-orbit.png",
+      "contactID": "tray",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "mono-left.png",
+      "contactID": "mono-left",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "mono-right.png",
+      "contactID": "mono-right",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true
+    }
+  ],
+  "rawSuccessfulRecord": "captures-retry/validation.json",
+  "retainedFirstFailure": "captures/failure.txt",
+  "humanAcceptance": "pending user review"
+}

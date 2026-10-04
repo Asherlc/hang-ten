@@ -1,0 +1,131 @@
+[
+  {
+    "helper": "check-cpu-semantics.py",
+    "command": [
+      "rtk",
+      "proxy",
+      "python3",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-cpu-semantics.py",
+      "hand-image-muted-workout-live-b-landscape"
+    ],
+    "startEpoch": 1791016766.956251,
+    "limitSeconds": 20,
+    "pid": 91214,
+    "exitStatus": 1,
+    "endEpoch": 1791016767.039986
+  },
+  {
+    "helper": "check-frames.py",
+    "command": [
+      "rtk",
+      "proxy",
+      "python3",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-frames.py",
+      "hand-image-muted-workout-live-b-landscape"
+    ],
+    "startEpoch": 1791016767.040559,
+    "limitSeconds": 20,
+    "pid": 91217,
+    "exitStatus": 0,
+    "endEpoch": 1791016767.1258008
+  },
+  {
+    "helper": "check-constructors.py",
+    "command": [
+      "rtk",
+      "proxy",
+      "python3",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-constructors.py",
+      "hand-image-muted-workout-live-b-landscape"
+    ],
+    "startEpoch": 1791016767.1263921,
+    "limitSeconds": 20,
+    "pid": 91219,
+    "exitStatus": 0,
+    "endEpoch": 1791016767.2028558
+  },
+  {
+    "helper": "check-ownership.py",
+    "command": [
+      "rtk",
+      "proxy",
+      "python3",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-ownership.py"
+    ],
+    "startEpoch": 1791016767.203385,
+    "limitSeconds": 20,
+    "pid": 91221,
+    "exitStatus": 0,
+    "endEpoch": 1791016767.2844732
+  },
+  {
+    "helper": "check-navigation.py",
+    "command": [
+      "rtk",
+      "proxy",
+      "python3",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-navigation.py"
+    ],
+    "startEpoch": 1791016767.2850492,
+    "limitSeconds": 20,
+    "pid": 91223,
+    "exitStatus": 0,
+    "endEpoch": 1791016767.36944
+  },
+  {
+    "helper": "check-real-hands.py",
+    "command": [
+      "rtk",
+      "proxy",
+      "python3",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-real-hands.py"
+    ],
+    "startEpoch": 1791016767.370085,
+    "limitSeconds": 20,
+    "pid": 91225,
+    "exitStatus": 0,
+    "endEpoch": 1791016767.45059
+  },
+  {
+    "helper": "check-weak-hand-census.py",
+    "command": [
+      "rtk",
+      "proxy",
+      "python3",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-weak-hand-census.py"
+    ],
+    "startEpoch": 1791016767.451207,
+    "limitSeconds": 20,
+    "pid": 91227,
+    "exitStatus": 0,
+    "endEpoch": 1791016767.536321
+  },
+  {
+    "helper": "check-sync-counters.py",
+    "command": [
+      "rtk",
+      "proxy",
+      "python3",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-sync-counters.py"
+    ],
+    "startEpoch": 1791016767.536913,
+    "limitSeconds": 20,
+    "pid": 91229,
+    "exitStatus": 0,
+    "endEpoch": 1791016767.62361
+  },
+  {
+    "helper": "check-muted-current-hands.py",
+    "command": [
+      "rtk",
+      "proxy",
+      "python3",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-muted-current-hands.py"
+    ],
+    "startEpoch": 1791016767.624191,
+    "limitSeconds": 20,
+    "pid": 91231,
+    "exitStatus": 0,
+    "endEpoch": 1791016767.698071
+  }
+]

@@ -1,0 +1,9 @@
+# TravelBoard independent package audit
+
+Parser, actual USD inspection and narrow production iOS/Android staging pass. Current FCStd is a real 223,580-byte ZIP with native sketches/extrusions/cuts/fillets and six SubShapeBinders. All four package files remain exact initial-migration bytes. Source hash matches native reopen/recompute, meaningful dimension edit/contact update and independent export-reproduction proofs; unchanged exports were not rerun. Seven meshes /80,692 triangles; actual composed USD contact depth spans match10/15/25 mm plus30 mm full-depth features. No USD material, shader, texture or binding. Both staged generated boards and assets match source; authoring files omitted; correct iOS ODR/Android placement. All five retained maker source bytes match their registered hashes.
+
+Demonstrated correction: embedded display has no surfaceFinish. Whole retained reverse maker image visibly shows wood grain; existing renderer surfaceFinish=wood is appropriate, without adding USD materials.
+
+Visual/physics review items, not new geometry judgments: four visible lead strands terminate in deliberately shallow side wells; hidden rear joins are explicitly unknown. Native authoring notes state estimated upper/lower section inclinations, not sourced concealed connections. Historical continuous certificate is hash-bound through an explicit camera-only sidecar rebind; lower-bound1.49603 mm versus1.5 mm radius passes retained0.01 mm tolerance, not a strictly positive physical gap. Two upper lead paths are355.6112 mm versus380 mm declared rest; lower leads are380.0000 mm. Thus existing max-length settling certificate does not establish all four strands are individually taut. Confirm display topology and short cord presentation with authoritative visual review.
+
+Historical source acceptance does not constitute human review acceptance. No package/shared/queue files edited.

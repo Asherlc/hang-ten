@@ -1,0 +1,16 @@
+{
+  "build.log": "35521bf724912241f0bcc35eff99e505378b9836985d3f42ae4da6dfedd1013e",
+  "cleanup-verification.json": "95b9c5e60718e3ddc5e3c1c79e197bab8a1370e3d84be54752a0e6dd24864581",
+  "cleanup.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "failure-status.json": "17582754a44dac73d63f5f9685e50913b5e8f66d14f98fbb0077f22faab2b868",
+  "generated-board-at-build.json": "6a25dcf5c4784043c43582f48024e306aaa276ad4221dcf4c6497851e60fb560",
+  "launch-services.log": "85267d05ff280c70f12a5315cfc5820fdc0089b9f283ccc348d4056102c69b3c",
+  "ownership.json": "8152c91f32d8f03b0edbed70562b7ae339c5f036b96133e6eee54fa802304179",
+  "simulator-uuid": "41f1138a079b2832f54d294caa6d7654c6a059e301fb591b693611b8454669ad",
+  "source-package-sha256-before-build.json": "a9f83b7eb1e18696ffb546f6039cbcfde31bde03ea645fbfdc7ae59ff4e1d0bc",
+  "test-results-summary-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "test-results-summary.json": "a425c841dc04f60650292ef9a3ae032e89f3411ee0a3d8c9aee164f4c89ea0d2",
+  "test-runner-startup.png": "72a301b61411350d980264b1ed2dbfe1948faf77c457bb0cb24d6ab36d84360e",
+  "tests-exit-status.txt": "979b894f2d91bf199766571d58024f020d1a44a417da5f48e1fa1cdf554a14f5",
+  "tests.log": "9f64177236dc3035f058b480cc2805e6ccf9488a9aef6c3f3147ba2dc3294057"
+}

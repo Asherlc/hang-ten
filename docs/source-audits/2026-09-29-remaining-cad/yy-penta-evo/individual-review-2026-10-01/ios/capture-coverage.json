@@ -1,0 +1,246 @@
+{
+  "contactCount": 14,
+  "poseCount": 7,
+  "instanceCount": 2,
+  "instancePoseOrbitCount": 14,
+  "contacts": [
+    "duo-left",
+    "duo-right",
+    "edge-10-left",
+    "edge-10-right",
+    "edge-15-left",
+    "edge-15-right",
+    "edge-20-left",
+    "edge-20-right",
+    "edge-25-left",
+    "edge-25-right",
+    "mono-left",
+    "mono-right",
+    "tray-left",
+    "tray-right"
+  ],
+  "resolvedPositionByContact": {
+    "edge-25-left": "primary",
+    "edge-20-left": "edge-20",
+    "mono-left": "mono",
+    "duo-left": "duo",
+    "edge-15-left": "edge-15",
+    "edge-10-left": "reverse",
+    "tray-left": "tray",
+    "edge-20-right": "edge-20",
+    "edge-25-right": "primary",
+    "edge-10-right": "reverse",
+    "edge-15-right": "edge-15",
+    "mono-right": "mono",
+    "duo-right": "duo",
+    "tray-right": "tray"
+  },
+  "orbitRepresentatives": {
+    "edge-25-left": "primary-left-penta",
+    "edge-20-left": "edge-20-left-penta",
+    "mono-left": "mono-left-penta",
+    "duo-left": "duo-left-penta",
+    "edge-15-left": "edge-15-left-penta",
+    "edge-10-left": "reverse-left-penta",
+    "tray-left": "tray-left-penta",
+    "edge-20-right": "edge-20-right-penta",
+    "edge-25-right": "primary-right-penta",
+    "edge-10-right": "reverse-right-penta",
+    "edge-15-right": "edge-15-right-penta",
+    "mono-right": "mono-right-penta",
+    "duo-right": "duo-right-penta",
+    "tray-right": "tray-right-penta"
+  },
+  "rawCaptureRecords": [
+    {
+      "image": "default.png",
+      "contactID": null,
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": false
+    },
+    {
+      "image": "edge-25-left.png",
+      "contactID": "edge-25-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "primary-left-penta-orbit.png",
+      "contactID": "edge-25-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "edge-10-left.png",
+      "contactID": "edge-10-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "reverse-left-penta-orbit.png",
+      "contactID": "edge-10-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "edge-20-left.png",
+      "contactID": "edge-20-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "edge-20-left-penta-orbit.png",
+      "contactID": "edge-20-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "mono-left.png",
+      "contactID": "mono-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "mono-left-penta-orbit.png",
+      "contactID": "mono-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "duo-left.png",
+      "contactID": "duo-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "duo-left-penta-orbit.png",
+      "contactID": "duo-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "edge-15-left.png",
+      "contactID": "edge-15-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "edge-15-left-penta-orbit.png",
+      "contactID": "edge-15-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "tray-left.png",
+      "contactID": "tray-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "tray-left-penta-orbit.png",
+      "contactID": "tray-left",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "edge-20-right.png",
+      "contactID": "edge-20-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "edge-20-right-penta-orbit.png",
+      "contactID": "edge-20-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "edge-25-right.png",
+      "contactID": "edge-25-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "primary-right-penta-orbit.png",
+      "contactID": "edge-25-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "edge-10-right.png",
+      "contactID": "edge-10-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "reverse-right-penta-orbit.png",
+      "contactID": "edge-10-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "edge-15-right.png",
+      "contactID": "edge-15-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "edge-15-right-penta-orbit.png",
+      "contactID": "edge-15-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "mono-right.png",
+      "contactID": "mono-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "mono-right-penta-orbit.png",
+      "contactID": "mono-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "duo-right.png",
+      "contactID": "duo-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "duo-right-penta-orbit.png",
+      "contactID": "duo-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "tray-right.png",
+      "contactID": "tray-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "tray-right-penta-orbit.png",
+      "contactID": "tray-right",
+      "contactsAvailable": 14,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    }
+  ],
+  "evidence": "captures/validation.json",
+  "humanAcceptance": "pending user review"
+}

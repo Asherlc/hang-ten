@@ -1,0 +1,29 @@
+{
+  "status": "prepared-awaiting-immutable-new-sixteen-route-inputs",
+  "finalReady": false,
+  "expectedSourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "expectedColliderSHA256": "9f1c7afee52db277aaef76ea3c92fcc8ceae8223b95fd43847314a9545466d77",
+  "expectedModelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+  "expectedDescriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+  "expectedPoseCount": 8,
+  "expectedRouteCount": 16,
+  "scriptSHA256": "5a086ff34180b9886cd6a18245bb7b2bd05424ede5825bd736762273d8511133",
+  "implementationReviewSHA256": "c22760cebd08533fa2ac163c9e0c1013fce14a07c78ff344dc046aada4a216f1",
+  "deferredInterface": [
+    "--report PATH --report-sha SHA",
+    "--sidecar PATH --sidecar-sha SHA",
+    "--freeze PATH --freeze-sha SHA",
+    "optional --expected-canonical-sidecar-sha SHA (default prior 7c248)",
+    "optional --output unique-report.json"
+  ],
+  "arithmeticSyntaxChecked": true,
+  "helpInterfaceChecked": true,
+  "final16AuditRun": false,
+  "newSolveOrResource": false,
+  "canonicalMutation": false,
+  "missing": [
+    "Immutable final certificate, candidate sidecar and final loaded-helper/code-freeze hashes",
+    "Fresh all-eight regeneration and visual proof",
+    "New-shape actual app/test/cleanup and human review"
+  ]
+}

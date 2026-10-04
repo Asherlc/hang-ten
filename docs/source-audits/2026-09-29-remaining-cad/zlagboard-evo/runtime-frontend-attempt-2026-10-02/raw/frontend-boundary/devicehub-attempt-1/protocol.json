@@ -1,0 +1,20 @@
+{
+  "status": "PREPARED_NOT_LAUNCHED",
+  "scriptSHA256": "28086714e3d86618b82dfb737c5fd811a3f8ce5e101a4c03cac1db988701f9a0",
+  "command": "rtk proxy python3 .context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/frontend-controller.py --launch-reviewed",
+  "actualFrontendArgv": [
+    "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DeviceHub",
+    "-PaseoWorkspaceOwner",
+    "placid-badger-cad-second-half-devicehub-frontend-boundary-2026-10-02"
+  ],
+  "intendedUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "intendedName": "Hang Ten Paseo placid-badger-cad-second-half Review Pro MigrationDiagnosis20261002 96137",
+  "selectionGate": "UUID/name verified read-only before launch and recorded as intended. No CLI selection flag. Root must select/verify exact owned name+UUID through sky and verify live screen before measurement. No other devices.",
+  "ownership": "Pending before Popen, exact direct child PID+controllerPPID+executable+marker immediately after. Exit/INT/TERM cleanup only unreaped exact child; no device/DD/shared-service cleanup.",
+  "preflight": "Abort if any process executable named Simulator, DeviceHub, Devices, DevicesTrampoline, or legacy/current app executable paths exists.",
+  "evidencePrivacy": "Only filtered frontend rows and exact owned UUID retained; full inventory in-memory only.",
+  "entryPointQualification": "Official Apple contract is DeviceHub UI device selection/View Screen. Direct actual DeviceHub executable entry is a local static inference from shipped NSApplication executable, not a documented CLI selection API. No trampoline or invented CurrentDeviceUDID/deeplink arguments.",
+  "priorAttempt": "Original prepared scripts, rev2 attempted failure and cleanup immutable in parent directory.",
+  "runtimeHeldBy": "root",
+  "ASTPassed": true
+}

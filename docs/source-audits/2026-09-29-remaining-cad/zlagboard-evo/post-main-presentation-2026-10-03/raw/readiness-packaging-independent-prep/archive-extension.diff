@@ -1,0 +1,28 @@
+--- .context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/prep/archive-presentation-evidence.py
++++ archive-presentation-evidence-v2.py
+@@ -42,8 +42,16 @@
+    c=folder/'completion.json';q=folder/'cleanup.json'
+    if not c.exists() or not q.exists():deferred[folder.name]='Capture not finalized: completion/cleanup absent.'
+    elif json.loads(q.read_text()).get('passed') is not True:deferred[folder.name]='Exact per-run cleanup not verified.'
+- # Final archive cannot omit the currently designated active comparison once frozen.
+- if args.final:assert 'hand-policy-control' not in deferred,'Hand control not finalized'
++ # Test logs are only frozen after raw bundle archive+deletion are retained.
++ for folder in ROOT.glob('readiness-*'):
++  if folder.is_dir() and (folder/'command.json').exists() and (folder/'stdout.log').exists():
++   required=['exit.json','bundle-archive.json','bundle-deletion.json']
++   if not all((folder/name).exists() for name in required):
++    deferred[folder.name]='Readiness test result lifecycle not frozen; require exit, exact bundle archive and deletion records.'
++  if folder.is_dir() and (folder/'build.command.json').exists() and not (folder/'build.exit.json').exists():
++   deferred[folder.name]='Readiness build still active; completed exit record absent.'
++ # Final snapshot cannot silently omit any pending comparison or test evidence.
++ if args.final:assert not deferred,'Final archive has unfinished evidence: '+str(deferred)
+  def walk(folder):
+   for path in sorted(folder.iterdir()):
+    rel=path.relative_to(ROOT)
+@@ -56,5 +64,5 @@
+    if path.is_dir():walk(path)
+    elif path.is_file():files.append({'relativePath':str(rel),'bytes':path.stat().st_size,'sha256':sha(path)})
+  walk(ROOT)
+- plan={'schemaVersion':1,'owner':OWNER,'sourceRoot':str(ROOT),'destinationRoot':str(DEST),'finalSnapshot':args.final,'files':files,'exclusions':excluded,'rawStatusesPreserved':True,'sourceTimingQualification':'Retain layer-receipts-build/source-timing-qualification.json exactly; its failed-source timing scope must not be relabeled as the later final source build.','reviewScope':'Board-only candidate failed. Full hand-policy comparison remains pending until separately completed and reviewed. No inferred pass from archive completion.'}
++ plan={'schemaVersion':1,'owner':OWNER,'sourceRoot':str(ROOT),'destinationRoot':str(DEST),'finalSnapshot':args.final,'files':files,'exclusions':excluded,'rawStatusesPreserved':True,'sourceTimingQualification':'Retain layer-receipts-build/source-timing-qualification.json exactly; its failed-source timing scope must not be relabeled as the later final source build.','reviewScope':'Board-only candidate failed; later hand-policy/readiness outcomes require their own complete raw reviews. Readiness82tests passing is not rendered-frame or full-workflow proof. Preserve all earlier red/green/revised statuses. No inferred pass from archive completion.'}
+  print(json.dumps(plan,indent=2))

@@ -1,0 +1,27 @@
+{
+  "hardBoundSeconds": 300,
+  "role": "live",
+  "plannedPhases": [
+    "active",
+    "preview",
+    "active"
+  ],
+  "captureOffsetsAfterActualMutation": [
+    0.25,
+    1,
+    3,
+    5
+  ],
+  "captureStartToleranceSeconds": 0.15,
+  "missedCapturePolicy": "Record missed window and stop; never backfill",
+  "initialDiscoveryBoundSecondsAfterRecordedAppearance": 30,
+  "methodDifference": "External polling continues during the unchanged initial screenshot command",
+  "afterLaunchUIAccess": "screenshots only; no AX/touches/Skip",
+  "routineUnchanged": true,
+  "branchContract": "Live attached pair versus current image publication; no capture delay for hand readiness",
+  "semanticLimit": [
+    "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+    "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+    "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-native-route-check-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-native-route-check-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-native-route-check-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 9152,
+      "pgid": 9152,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/solve_threaded_rope.py",
+        "--package",
+        "nature-stone-hanger-mini",
+        "--solid",
+        ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/candidate-native-collider.json",
+        "--check",
+        "--report",
+        ".context/placid-badger/mini-finger-contact-2026-10-02/root/native-route-check.json"
+      ]
+    }
+  ]
+}

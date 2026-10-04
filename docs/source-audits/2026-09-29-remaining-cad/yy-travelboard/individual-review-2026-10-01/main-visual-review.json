@@ -1,0 +1,27 @@
+{
+  "reviewer": "workspace primary agent visual inspection",
+  "timestampUTC": "2026-10-02T01:48:41.121981+00:00",
+  "humanAcceptance": "pending",
+  "findings": [
+    "All six intended selections highlight their visible contact surfaces; mono bores select separately.",
+    "Both front and reverse poses display complete wood board and short visible cord presentation.",
+    "Obliques preserve tray round coverage and rear contact selection.",
+    "Unchanged bundled Horst example resolves to 15 mm edge: red during active hang, blue during settled rest."
+  ],
+  "limitations": [
+    "Display shape, appearance and static routing review; no manufacturing, ergonomic or dynamic safety claim.",
+    "Human acceptance requires the user reply."
+  ],
+  "images": {
+    "ios/captures-retry/edge-25.png": "8548892da52e0e5d4106f6f83f1222850c5a3c14878574c8816e31711ecbb116",
+    "ios/captures-retry/edge-15.png": "9c28967bd77b8568382052f2aac60fa8c77e7306533eb01f5e0d3f87fbb2432f",
+    "ios/captures-retry/edge-10.png": "07ed1784c49a3f254e73852673ae2694e591133561c38bb7f29da5a9de5a1f15",
+    "ios/captures-retry/mono-left.png": "621dd5d175d4b0cd25692ea27b3ce57adbd01f7f8469e40831fb72066a28ac24",
+    "ios/captures-retry/mono-right.png": "2a6ac7f8928dfc37b3cec39893203d74887553df0c898447581414ce2e909972",
+    "ios/captures-retry/tray.png": "72b6355c75569c6ae6d4db8a0a26cfdfa56efd5a7333a8d2ad0d78e5c5aa0ef1",
+    "ios/captures-retry/front-25-15-primary-orbit.png": "5d1bcf51edf57fe46fe0a789ec2d6dcf1d40207aab561e58f404494563b769d2",
+    "ios/captures-retry/reverse-10-primary-orbit.png": "d4cef6d9f706576128c8a2c0282cb6942be48b25de92a12c863cc949749a3145",
+    "ios/workout-settled/active-settled.png": "4bccb0d4b994e4dedcb6b6cd8a7de0c9fc5d371c5442ec56b329c136ed64d6af",
+    "ios/workout-settled/following-rest-settled.png": "c6a6adb3bd58b150a211672fbec4c152490be40da46c121859715ba59dda845f"
+  }
+}

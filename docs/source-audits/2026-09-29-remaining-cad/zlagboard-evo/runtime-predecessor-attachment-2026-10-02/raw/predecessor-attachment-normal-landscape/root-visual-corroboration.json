@@ -1,0 +1,27 @@
+{
+  "reviewer": "/root",
+  "source": "Explicit parent message after direct whole-image inspection",
+  "scope": "Only these two whole images; no claim root viewed all 12.",
+  "captures": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-1-preview-plus-1.png",
+      "sha256": "f89720fdecdc4cbb8b0698254ee99732f4c7b54ce09b4328bd3e9cceec94c8b6",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "timer": "02:59",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/predecessor-attachment-normal-landscape/phase-2-active-plus-1.png",
+      "sha256": "08a754dfa2bad8f0dee1a1c326135b861f5d2dd9fe1fb33aacd558db39ddc092",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "timer": "00:06",
+      "handsVisible": false,
+      "runningPauseControlVisible": true
+    }
+  ]
+}

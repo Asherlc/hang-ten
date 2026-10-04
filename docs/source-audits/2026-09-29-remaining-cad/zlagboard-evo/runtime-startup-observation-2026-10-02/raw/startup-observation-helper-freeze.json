@@ -1,0 +1,44 @@
+{
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-runtime-prep-v2/capture.py",
+      "sha256": "0a1eba05a5b797c3a9c63a47c0df28b3275b4d7273facf3ebee8919c8248c5b5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-runtime-prep-v2/check-observation.py",
+      "sha256": "d5e3fba0d95593fcceb94995c69a72d1d803296f334fe80a7a7e6771cc32bc97"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-runtime-prep-v2/marker-schema-draft.json",
+      "sha256": "e35067d48dbf707c320a08d637b72f06709e06245f054e8acd9be625c904df75"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-runtime-prep-v2/marker-schema.json",
+      "sha256": "a4a9065f46d9a8f018dfd47ccf5a13c9d9c8eb4b6b22554e701e3fa678d23707"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-runtime-prep-v2/marker_correlations.py",
+      "sha256": "edfdd6480f5054c53607cc5bdbf2420feb80cf606138698a55551bb1b023a0cc"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-runtime-prep-v2/prior-capture.py.txt",
+      "sha256": "301d619992de07d5eb64c512e84a0421fa0205be1abc4803394c40889de3de64"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-runtime-prep-v2/prior-check-observation.py.txt",
+      "sha256": "8792a02d465782bcefb1c16462c22ea2c44b3f3defa4e858b342ef558afe0d32"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-runtime-prep-v2/release-proposal.json",
+      "sha256": "cb19321b9360c27afbdb9e336b57acef51b115629e653469d8e53d92bcdf43c3"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-runtime-prep-v2/report.json",
+      "sha256": "56a1ca3b6680f636eb9ec1a79107edc8db2a2096b384f25f9867288ad271633c"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-runtime-prep-v2/static-checks.json",
+      "sha256": "cb8b960333f0e3b78ad3192aaa21b3f8502098e2ad49aa45169d022d86968b14"
+    }
+  ]
+}

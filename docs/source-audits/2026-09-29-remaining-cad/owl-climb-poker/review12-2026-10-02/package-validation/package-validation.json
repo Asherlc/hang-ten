@@ -1,0 +1,372 @@
+{
+  "owner": "placid-badger",
+  "status": "passed-package-and-compile-only",
+  "startedUTC": "2026-10-02T15:29:54.721910+00:00",
+  "frozenInputPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/frozen-input.json",
+  "frozenCanonical": {
+    "owner": "placid-badger",
+    "package": "owl-climb-poker",
+    "frozenSHA256": {
+      "owl-climb-poker.FCStd": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+      "assets/primary.usdz": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "assets/primary.model.json": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+    },
+    "observedSHA256": {
+      "owl-climb-poker.FCStd": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+      "assets/primary.usdz": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "assets/primary.model.json": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+    },
+    "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+    "generatedManifestBytes": 10019,
+    "surfaceFinish": "wood",
+    "contactIDs": [
+      "face-a-left-outer-slot",
+      "face-a-left-single-pocket",
+      "face-a-left-dual-pocket",
+      "face-a-center-pull-up-slot",
+      "face-a-right-dual-pocket",
+      "face-a-right-single-pocket",
+      "face-a-right-outer-slot",
+      "face-b-left-outer-slot",
+      "face-b-left-single-pocket",
+      "face-b-left-dual-pocket",
+      "face-b-left-deep-sloper",
+      "face-b-center-pull-up-slot",
+      "face-b-right-deep-sloper",
+      "face-b-right-dual-pocket",
+      "face-b-right-single-pocket",
+      "face-b-right-outer-slot",
+      "face-c-left-outer-slot",
+      "face-c-left-single-pocket",
+      "face-c-left-dual-pocket",
+      "face-c-left-shallow-half-round",
+      "face-c-center-pull-up-slot",
+      "face-c-right-shallow-half-round",
+      "face-c-right-dual-pocket",
+      "face-c-right-single-pocket",
+      "face-c-right-outer-slot",
+      "face-d-left-outer-slot",
+      "face-d-left-single-pocket",
+      "face-d-left-dual-pocket",
+      "face-d-left-deep-rounded-recess",
+      "face-d-center-pull-up-slot",
+      "face-d-right-deep-rounded-recess",
+      "face-d-right-dual-pocket",
+      "face-d-right-single-pocket",
+      "face-d-right-outer-slot"
+    ],
+    "contactCount": 34,
+    "positions": [
+      {
+        "id": "face-a",
+        "presentationID": "primary",
+        "contactIDs": [
+          "face-a-left-outer-slot",
+          "face-a-left-single-pocket",
+          "face-a-left-dual-pocket",
+          "face-a-center-pull-up-slot",
+          "face-a-right-dual-pocket",
+          "face-a-right-single-pocket",
+          "face-a-right-outer-slot"
+        ]
+      },
+      {
+        "id": "face-b",
+        "presentationID": "primary",
+        "contactIDs": [
+          "face-b-left-outer-slot",
+          "face-b-left-single-pocket",
+          "face-b-left-dual-pocket",
+          "face-b-left-deep-sloper",
+          "face-b-center-pull-up-slot",
+          "face-b-right-deep-sloper",
+          "face-b-right-dual-pocket",
+          "face-b-right-single-pocket",
+          "face-b-right-outer-slot"
+        ]
+      },
+      {
+        "id": "face-c",
+        "presentationID": "primary",
+        "contactIDs": [
+          "face-c-left-outer-slot",
+          "face-c-left-single-pocket",
+          "face-c-left-dual-pocket",
+          "face-c-left-shallow-half-round",
+          "face-c-center-pull-up-slot",
+          "face-c-right-shallow-half-round",
+          "face-c-right-dual-pocket",
+          "face-c-right-single-pocket",
+          "face-c-right-outer-slot"
+        ]
+      },
+      {
+        "id": "face-d",
+        "presentationID": "primary",
+        "contactIDs": [
+          "face-d-left-outer-slot",
+          "face-d-left-single-pocket",
+          "face-d-left-dual-pocket",
+          "face-d-left-deep-rounded-recess",
+          "face-d-center-pull-up-slot",
+          "face-d-right-deep-rounded-recess",
+          "face-d-right-dual-pocket",
+          "face-d-right-single-pocket",
+          "face-d-right-outer-slot"
+        ]
+      }
+    ],
+    "orientation": {
+      "pivot": "modelBoundsCenter",
+      "rotations": {
+        "face-a": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "face-b": [
+          0.707106781,
+          0,
+          0,
+          0.707106781
+        ],
+        "face-c": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "face-d": [
+          -0.707106781,
+          0,
+          0,
+          0.707106781
+        ]
+      }
+    },
+    "allFactualContactsAndPositionsMatchBaseline": true,
+    "soleManifestChange": "/presentations/0/media/display/surfaceFinish: wood",
+    "suspensionAbsent": true
+  },
+  "steps": [
+    {
+      "name": "model-tools-pytest",
+      "status": "passed",
+      "command": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest-TMP/placid-badger-pytest",
+        "--junitxml",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest-junit.xml",
+        "Tools/HangboardModels/test_contact_model_descriptor.py",
+        "Tools/HangboardModels/test_contact_model_package.py",
+        "Tools/HangboardModels/test_import_contact_model_source.py",
+        "Tools/HangboardModels/test_verify_yy_baguette_evo.py"
+      ],
+      "exitCode": 0,
+      "junit": {
+        "tests": 24,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "junitSHA256": "ce5309f4985ffafdb04558dbe72c3e51a13c3eb332f8b59e0559bfff42ab826b",
+      "cleanup": {
+        "owner": "placid-badger",
+        "jobName": "placid-badger-poker12-model-tools-pytest",
+        "resources": [
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest-TMP",
+            "absent": true
+          }
+        ],
+        "errors": [],
+        "remainingProcesses": [],
+        "processGroupAbsent": true,
+        "allResourcesAbsent": true,
+        "passed": true,
+        "finishedUTC": "2026-10-02T15:29:57.357850+00:00"
+      },
+      "elapsedSeconds": 2.311216500005685,
+      "logSHA256": "d7762caef79dec0d631144d5906d3f708c0c435d7368e36bdae3938e5c314489"
+    },
+    {
+      "name": "manifest-package-pytest",
+      "status": "passed",
+      "command": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-manifest-package-pytest-TMP/placid-badger-pytest",
+        "--junitxml",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-manifest-package-pytest-junit.xml",
+        "Tools/HangboardCAD/tests/test_board_manifest.py",
+        "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+        "Tools/HangboardPackages/tests/test_board_catalog.py",
+        "Tools/HangboardPackages/tests/test_pose_camera_facing.py"
+      ],
+      "exitCode": 0,
+      "junit": {
+        "tests": 171,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "junitSHA256": "85084f876433cc6a7759affd9bf871dd50e19ed47eba78b3f204de5d54af5dfa",
+      "cleanup": {
+        "owner": "placid-badger",
+        "jobName": "placid-badger-poker12-manifest-package-pytest",
+        "resources": [
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-manifest-package-pytest-TMP",
+            "absent": true
+          }
+        ],
+        "errors": [],
+        "remainingProcesses": [],
+        "processGroupAbsent": true,
+        "allResourcesAbsent": true,
+        "passed": true,
+        "finishedUTC": "2026-10-02T15:30:07.384310+00:00"
+      },
+      "elapsedSeconds": 9.65447512499668,
+      "logSHA256": "0d7dd2967952583776af4f23cee6b80f452d24ffa26a7b094a90d9be02577d1d"
+    },
+    {
+      "name": "canonical-cli",
+      "status": "passed",
+      "command": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "-m",
+        "hangboard_packages.cli",
+        "validate",
+        "--root",
+        "Hangboards",
+        "--final-inventory"
+      ],
+      "exitCode": 0,
+      "cleanup": {
+        "owner": "placid-badger",
+        "jobName": "placid-badger-poker12-canonical-cli",
+        "resources": [
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-canonical-cli-TMP",
+            "absent": true
+          }
+        ],
+        "errors": [],
+        "remainingProcesses": [],
+        "processGroupAbsent": true,
+        "allResourcesAbsent": true,
+        "passed": true,
+        "finishedUTC": "2026-10-02T15:30:09.861022+00:00"
+      },
+      "elapsedSeconds": 2.1515625410029315,
+      "logSHA256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc"
+    },
+    {
+      "name": "android-staging",
+      "status": "passed",
+      "command": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "scripts/stage-board-packages.py",
+        "--repository-root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--target",
+        "android",
+        "--destination",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-android-stage/Hangboards"
+      ],
+      "exitCode": 0,
+      "byteParity": {
+        "generatedManifest": true,
+        "descriptor": true,
+        "inlineModel": true,
+        "CADExcluded": true,
+        "suspensionSidecarExcluded": true
+      },
+      "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+      "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+      "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "target": "android",
+      "modelInline": true,
+      "cleanup": {
+        "owner": "placid-badger",
+        "jobName": "placid-badger-poker12-android-staging",
+        "resources": [
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-android-staging-TMP",
+            "absent": true
+          },
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-android-stage",
+            "absent": true
+          }
+        ],
+        "errors": [],
+        "remainingProcesses": [],
+        "processGroupAbsent": true,
+        "allResourcesAbsent": true,
+        "passed": true,
+        "finishedUTC": "2026-10-02T15:30:12.466493+00:00"
+      },
+      "elapsedSeconds": 2.2523123749997467,
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "appFramesCaptured": 0,
+  "iosUnitTestCasesExecuted": 0,
+  "simulatorsCreated": 0,
+  "simulatorsBooted": 0,
+  "appsInstalled": 0,
+  "appsLaunched": 0,
+  "runtimeEnvironment": "Previously blocked; no guest operations attempted",
+  "currentAppearanceVerified": false,
+  "geometryAcceptance": false,
+  "iosBuild": {
+    "status": "passed-compile-and-staging",
+    "exitCode": 0,
+    "elapsedSeconds": 47.9227661670011,
+    "cleanup": {
+      "owner": "placid-badger",
+      "jobName": "placid-badger-poker12-ios-build",
+      "resources": [
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-build-TMP",
+          "absent": true
+        },
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-DD",
+          "absent": true
+        }
+      ],
+      "errors": [],
+      "remainingProcesses": [],
+      "processGroupAbsent": true,
+      "allResourcesAbsent": true,
+      "passed": true,
+      "finishedUTC": "2026-10-02T15:31:02.382586+00:00"
+    },
+    "error": null
+  },
+  "frozenFilesUnchanged": true,
+  "finishedUTC": "2026-10-02T15:31:02.493167+00:00"
+}

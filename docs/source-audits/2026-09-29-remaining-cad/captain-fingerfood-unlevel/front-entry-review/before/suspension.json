@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "presentationID": "primary",
+  "modelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+  "suspension": {
+    "type": "cadRoutedCord",
+    "bodyNodeID": "Body_EditableSkin_001",
+    "strands": [
+      {
+        "id": "left-lead",
+        "kind": "lead",
+        "restLength": 0.4,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+      },
+      {
+        "id": "right-lead",
+        "kind": "lead",
+        "restLength": 0.4,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+      }
+    ],
+    "anchor": {
+      "offsetFromBoardBounds": [0, 0.15, 0],
+      "visibility": "invisible",
+      "provenance": "displayEstimate; compact shared overhead convergence shortened 50% after user visual review"
+    },
+    "canonicalPoses": {
+      "edge20-front": {
+        "rotation": [
+          0.207911694,
+          0,
+          0,
+          0.9781476
+        ],
+        "translation": [0, -0.211619148, 0],
+        "camera": {
+          "viewDirection": [0, 0, -1],
+          "fitPadding": 0.1
+        },
+        "wrappedRoutes": {
+          "left-lead": [
+            [-0.028827854, 0.002150816, -0.01703251],
+            [-0.028858201, 0.001771657, -0.016829178],
+            [-0.0288848, 0.001439328, -0.016555541],
+            [-0.028906628, 0.001166603, -0.016222116],
+            [-0.028922846, 0.000963966, -0.01584172],
+            [-0.028932832, 0.000839203, -0.015428971],
+            [-0.028936201, 0.00079711, -0.014999734],
+            [-0.029, 0.0, -0.0067]
+          ],
+          "right-lead": [
+            [0.028827852, 0.002150833, -0.017032516],
+            [0.028858199, 0.001771679, -0.016829193],
+            [0.028884798, 0.001439353, -0.016555567],
+            [0.028906626, 0.001166628, -0.016222154],
+            [0.028922845, 0.000963986, -0.015841769],
+            [0.028932831, 0.000839215, -0.015429033],
+            [0.028936201, 0.00079711, -0.014999807],
+            [0.029, 0.0, -0.0067]
+          ]
+        }
+      },
+      "edge25-inverted": {
+        "rotation": [
+          9e-09,
+          0.207911694,
+          -0.9781476,
+          4.3e-08
+        ],
+        "translation": [0, -0.211619142, 0],
+        "camera": {
+          "viewDirection": [0, 0, -1],
+          "fitPadding": 0.1
+        },
+        "wrappedRoutes": {
+          "left-lead": [
+            [-0.028827852, -0.002150839, -0.017032519],
+            [-0.028858199, -0.001771686, -0.016829198],
+            [-0.028884797, -0.001439362, -0.016555575],
+            [-0.028906625, -0.001166637, -0.016222166],
+            [-0.028922844, -0.000963993, -0.015841786],
+            [-0.028932831, -0.000839219, -0.015429053],
+            [-0.028936201, -0.00079711, -0.01499983],
+            [-0.029, 0.0, -0.0067]
+          ],
+          "right-lead": [
+            [0.028827853, -0.002150824, -0.017032513],
+            [0.0288582, -0.001771667, -0.016829185],
+            [0.028884799, -0.001439339, -0.016555553],
+            [0.028906627, -0.001166615, -0.016222133],
+            [0.028922846, -0.000963975, -0.015841742],
+            [0.028932832, -0.000839208, -0.015428999],
+            [0.028936201, -0.00079711, -0.014999767],
+            [0.029, 0.0, -0.0067]
+          ]
+        }
+      },
+      "jug-reverse": {
+        "rotation": [
+          9e-09,
+          0.9781476,
+          0.207911694,
+          4.3e-08
+        ],
+        "translation": [0, -0.208792558, 0],
+        "camera": {
+          "viewDirection": [0, 0, -1],
+          "fitPadding": 0.1
+        },
+        "wrappedRoutes": {
+          "left-lead": [
+            [-0.027134912, 0.023136562, 0.017021223],
+            [-0.027166216, 0.022748231, 0.016804626],
+            [-0.027193369, 0.02241139, 0.016513946],
+            [-0.029, 0.0, -0.0067]
+          ],
+          "right-lead": [
+            [0.027135967, 0.023123496, 0.017018076],
+            [0.027167469, 0.022732713, 0.016797793],
+            [0.027194713, 0.022394742, 0.016502393],
+            [0.029, 0.0, -0.0067]
+          ]
+        }
+      },
+      "pocket-right-end": {
+        "rotation": [
+          0.147015774,
+          0.147015759,
+          -0.691654772,
+          0.691654831
+        ],
+        "translation": [0, -0.185578355, 0],
+        "camera": {
+          "viewDirection": [0, 0, -1],
+          "fitPadding": 0.1
+        },
+        "wrappedRoutes": {
+          "left-lead": [
+            [-0.031158096, 0.0, -0.017032535],
+            [-0.030777745, 0.0, -0.016829233],
+            [-0.030444365, 0.0, -0.016555635],
+            [-0.030170767, 0.0, -0.016222255],
+            [-0.029967465, 0.0, -0.015841904],
+            [-0.029842272, 0.0, -0.015429199],
+            [-0.0298, 0.0, -0.015],
+            [-0.029, 0.0, -0.0067]
+          ],
+          "right-lead": [
+            [0.026841904, 0.0, -0.017032535],
+            [0.027222255, 0.0, -0.016829233],
+            [0.027555635, 0.0, -0.016555635],
+            [0.027829233, 0.0, -0.016222255],
+            [0.028032535, 0.0, -0.015841904],
+            [0.028157728, 0.0, -0.015429199],
+            [0.0282, 0.0, -0.015],
+            [0.029, 0.0, -0.0067]
+          ]
+        }
+      }
+    }
+  },
+  "ropeSolver": {
+    "method": "nativeRoutes",
+    "clearance": 0.0002,
+    "supportDirection": 1,
+    "terminalsByStrandID": {
+      "left-lead": {
+        "points": [
+          [-0.029, 0, -0.0067]
+        ],
+        "planeNormal": [1, 0, 0],
+        "planeAxis": [0, 0, 1]
+      },
+      "right-lead": {
+        "points": [
+          [0.029, 0, -0.0067]
+        ],
+        "planeNormal": [1, 0, 0],
+        "planeAxis": [0, 0, 1]
+      }
+    },
+    "sectionPlane": "anchor"
+  }
+}

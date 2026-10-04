@@ -1,0 +1,15 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"success\": true,\n  \"status\": \"running\",\n  \"lastMessage\": null,\n  \"permission\": null,\n  \"guidance\": \"You will get notified when the prompted agent finishes, errors, or needs permission. Do not poll for status; continue with other work until the notification arrives.\"\n}"
+    }
+  ],
+  "structuredContent": {
+    "success": true,
+    "status": "running",
+    "lastMessage": null,
+    "permission": null,
+    "guidance": "You will get notified when the prompted agent finishes, errors, or needs permission. Do not poll for status; continue with other work until the notification arrives."
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "authority": "Existing applied snapshot only; no live source or runtime reads.",
+  "createdUTC": "2026-10-02T23:44:00.455984+00:00",
+  "files": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "retained": "frozen-applied-source/HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 89007,
+      "sha256": "eb00001d1215aa25f02f62e80340bc905203f0deecd730fbff02fd276fc638e6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-applied/source/HangTen/Views/BoardModelView.swift",
+      "retained": "frozen-applied-source/HangTen/Views/BoardModelView.swift",
+      "bytes": 22063,
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-applied/source/HangTen/Views/GripHandModelView.swift",
+      "retained": "frozen-applied-source/HangTen/Views/GripHandModelView.swift",
+      "bytes": 47424,
+      "sha256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-applied/source/HangTen/Views/RootView.swift",
+      "retained": "frozen-applied-source/HangTen/Views/RootView.swift",
+      "bytes": 149223,
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-applied/applied.patch",
+      "retained": "frozen-applied-source/applied.patch",
+      "bytes": 12643,
+      "sha256": "103c25dd368f4a819f6cd84f289d577e68154d5741d8e44090e81243a3b2c9e4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-applied/provenance.json",
+      "retained": "frozen-applied-source/provenance.json",
+      "bytes": 1259,
+      "sha256": "066c7c30583d960f156e9e7b1307b91d5a605038873347c606fb723571731381"
+    }
+  ]
+}

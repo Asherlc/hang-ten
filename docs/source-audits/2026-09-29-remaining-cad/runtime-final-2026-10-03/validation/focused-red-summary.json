@@ -1,0 +1,54 @@
+{
+  "devicesAndConfigurations": [
+    {
+      "device": {
+        "architecture": "arm64",
+        "deviceId": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+        "deviceName": "Hang Ten Paseo placid-badger Review RuntimeFinal20261003",
+        "modelName": "iPhone 17 Pro",
+        "osBuildNumber": "23F77",
+        "osVersion": "26.5",
+        "platform": "iOS Simulator"
+      },
+      "expectedFailures": 0,
+      "failedTests": 2,
+      "passedTests": 0,
+      "skippedTests": 0,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription": "HangTen \u00b7 Built with macOS 27.0.1",
+  "expectedFailures": 0,
+  "failedTests": 2,
+  "finishTime": 1791050839.226,
+  "passedTests": 0,
+  "result": "Failed",
+  "runtimeWarnings": [],
+  "skippedTests": 0,
+  "startTime": 1791050831.849,
+  "statistics": [],
+  "testFailures": [
+    {
+      "failureText": "XCTAssertEqual failed: (\"[plans[6].blocks[1].steps[6].segments[0].target.tasks[0]: The hand targets cannot resolve together on declared board \"metolius.simulator-3d\"., plans[7].blocks[1].steps[2].segments[0].target.tasks[1]: The hand targets cannot resolve together on declared board \"metolius.simulator-3d\"., plans[7].blocks[1].steps[8].segments[0].target.tasks[1]: The hand targets cannot resolve together on declared board \"metolius.simulator-3d\"., plans[8].blocks[1].steps[8].segments[0].target.tasks[1]: The hand targets cannot resolve together on declared board \"metolius.simulator-3d\".]\") is not equal to (\"[]\")",
+      "targetName": "HangTenTests",
+      "testIdentifier": 2,
+      "testIdentifierString": "PlanStorageTests/testBundledPlanLibraryValidatesAgainstPackagedBoards()",
+      "testIdentifierURL": "test://com.apple.xcode/HangTen/HangTenTests/PlanStorageTests/testBundledPlanLibraryValidatesAgainstPackagedBoards",
+      "testName": "testBundledPlanLibraryValidatesAgainstPackagedBoards()"
+    },
+    {
+      "failureText": "XCTAssertEqual failed: (\"4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b\") is not equal to (\"13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97\")",
+      "targetName": "HangTenTests",
+      "testIdentifier": 1,
+      "testIdentifierString": "BoardPackageStoreTests/testFlashBoardExposesUprightAndInvertedConfigurationsForBothFaces()",
+      "testIdentifierURL": "test://com.apple.xcode/HangTen/HangTenTests/BoardPackageStoreTests/testFlashBoardExposesUprightAndInvertedConfigurationsForBothFaces",
+      "testName": "testFlashBoardExposesUprightAndInvertedConfigurationsForBothFaces()"
+    }
+  ],
+  "title": "Test - HangTen",
+  "topInsights": [],
+  "totalTestCount": 2
+}

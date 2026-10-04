@@ -1,0 +1,19 @@
+{
+  "owner": "placid-badger",
+  "label": "portrait-raw-sim-shot",
+  "command": [
+    "xcrun",
+    "simctl",
+    "io",
+    "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+    "screenshot",
+    ".context/placid-badger/runtime-final-2026-10-03/app-captures/10-portrait-workout-unresponsive-raw.png"
+  ],
+  "timeoutSeconds": 20.0,
+  "ownedProcessGroup": 67243,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 0.4797975410037907
+}

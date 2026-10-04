@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/solve.py", line 5, in <module>
+    from native_cord_routes import solve_native_routes
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py", line 13, in <module>
+    from hangboard_packages.cord_paths import validate_cord_paths
+ModuleNotFoundError: No module named 'hangboard_packages'

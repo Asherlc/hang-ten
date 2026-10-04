@@ -1,0 +1,19 @@
+{
+  "name": "placid-badger-karma8a-model-tool-tests",
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "Tools/HangboardModels/test_contact_model_descriptor.py",
+    "Tools/HangboardModels/test_contact_model_package.py",
+    "Tools/HangboardModels/test_import_contact_model_source.py",
+    "Tools/HangboardModels/test_verify_yy_baguette_evo.py",
+    "--basetemp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma8a-review11/refinement-2026-10-02/root/placid-badger-karma8a-model-tool-tests-tmp/pytest"
+  ],
+  "timeoutSeconds": 600,
+  "environment": {
+    "PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardModels"
+  }
+}

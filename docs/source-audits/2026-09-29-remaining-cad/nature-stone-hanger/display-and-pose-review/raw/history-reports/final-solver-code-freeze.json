@@ -1,0 +1,11 @@
+{
+  "files": {
+    "Tools/HangboardCAD/native_cord_guides.py": "c1e078bf654614fc3b70f35158b360d0baed7a165ac97505fe8d3e2817a51d83",
+    "Tools/HangboardCAD/native_cord_features.py": "586ee5628088e29556f1dd27d340cb413dc601c578ecf1c2716435963a5aaaa2",
+    "Tools/HangboardCAD/native_cord_routes.py": "307a4db1b44c80396f2e42638f0fbc0ff6ea588d9b96829bebce9c014da45e5a",
+    "Tools/HangboardCAD/solve_threaded_rope.py": "bcd7531950cc198ce8e5ad146d999dca3b11e7901076a8af2d08b5b1bf638f71",
+    "Tools/HangboardCAD/export_rope_collision_solid.py": "b0ccac8584d701c645befb8d049c8e0202326a43e906a603f0ddba8f0bda3152",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "fe7b137ffd758f70240689ef2c260c30ac4db6174aa06c579263a79dcf370637"
+  },
+  "note": "Frozen before final whole-cache regeneration; no source or runtime geometry changes."
+}

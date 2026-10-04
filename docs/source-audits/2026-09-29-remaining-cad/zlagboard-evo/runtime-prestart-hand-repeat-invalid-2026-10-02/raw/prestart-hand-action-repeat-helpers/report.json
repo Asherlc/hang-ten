@@ -1,0 +1,69 @@
+{
+  "scope": "One unchanged repeat only; exact binary/protocol/flags except unique run identifier and output paths. Original failed trial preserved. No retry after this repeat without new investigation.",
+  "files": {
+    "check-real-hands.py": {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-real-hands.py",
+      "sourceSHA256": "c2d6a88a244290229a24d262d3b710d03bf0d649125d5749bbca0126b389c1f1",
+      "sha256": "ff287cb4e1b87d05b07421f62454059a59cd44cc06cfdff2ea93d9f8dac130e4"
+    },
+    "check-cpu-semantics.py": {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-cpu-semantics.py",
+      "sourceSHA256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    "check-navigation.py": {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-navigation.py",
+      "sourceSHA256": "0ee28cbbd99bb81457ee776337925f802cee1a404cb6522a1c434aaf39101c22",
+      "sha256": "8f27d1992281f3468b29457510047fd6917636c2b90dd1e3fba41074d20dd2f7"
+    },
+    "check-sync-counters.py": {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-sync-counters.py",
+      "sourceSHA256": "feab2da3f76303f00d4e4f96a998eca8a4d7bcd10ec292065fae31a23e477ba8",
+      "sha256": "8fc211c010205c037ba9deee860209eb4504259658800285e2f8e0b490ea86f1"
+    },
+    "check-weak-hand-census.py": {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-weak-hand-census.py",
+      "sourceSHA256": "08692559d22fa395a9451a901793d04381ab9c0b10a88af560696973cdee501a",
+      "sha256": "c2d2298e7f8b09ab2555568bbbb198ac87698e6bb277ecee416edb61b17f1cb0"
+    },
+    "check-frames.py": {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-frames.py",
+      "sourceSHA256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    "check-ownership.py": {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-ownership.py",
+      "sourceSHA256": "0a0e562903606f406d229483ed8b4475b8e4186525fe542ec6e3239a32658d1d",
+      "sha256": "82e226618d6767943197d0bd34064e3c8f1cb0096639423d331c8a9922f733a7"
+    },
+    "check-prestart-hands.py": {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-prestart-hands.py",
+      "sourceSHA256": "8f780e261d5fe843676805afb4c42968fdf2f211842fb8a55dba1c9447742f40",
+      "sha256": "f007f8c2f649030b6fe3a26c3d848e845f0cf35c951c58f18d2abe8dc31589de"
+    },
+    "compare.py": {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/compare.py",
+      "sourceSHA256": "b5858d64deba556c9a1a86b20c0cdc2ad02d9c98717739ed9dc051154fad2556",
+      "sha256": "036f455bc050198a450ba7f7b20cbbb8bf868d6f8d706fdbe6ed3a88eb8e37ee"
+    },
+    "check-constructors.py": {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-constructors.py",
+      "sourceSHA256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+    },
+    "capture.py": {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-supplemental-runtime-prep/capture-action.py",
+      "sourceSHA256": "54e3e6a5f06e5ce8f61108d56e3997e0f6f1c88ef1adcf471fc3603c384bcfca",
+      "sha256": "50858c43dced3f368ae696d55dbd57c7619dfd1de8687b34b9caec35e4749c45"
+    },
+    "check-supplemental-timing.py": {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-supplemental-runtime-prep/check-supplemental-timing.py",
+      "sourceSHA256": "cd6e98044a0afb60116cf58b592476c7780f6d941f302bef9f350338b5090c1c",
+      "sha256": "18d1260ccfaee9e3018c22cd76032ca9aaaf427d06fb640bd8ca922018603d9b"
+    }
+  },
+  "ASTPassed": true,
+  "reason": "First action lacked initial countdown/first Hang evidence; initial screenshot command11.09s vscontrol.48s; delayed scene initialization cause unknown.",
+  "rootAuthorization": true,
+  "sourceOrRuntimeChanged": false
+}

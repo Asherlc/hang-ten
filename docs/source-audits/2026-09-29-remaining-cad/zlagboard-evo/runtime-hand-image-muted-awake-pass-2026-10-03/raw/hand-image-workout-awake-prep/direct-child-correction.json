@@ -1,0 +1,7 @@
+{
+  "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-awake-prep/awake_capture.py",
+  "corrected": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-awake-prep/awake_capture_direct.py",
+  "sha256": "35d7662b4e1ddbc827ea787940a44f08689322df4d17fe77c494f38fe190045f",
+  "change": "Directly own Python capture child instead of RTK intermediary; outer shell command still starts rtk. Current LIVE-c running script unmodified.",
+  "status": "PREPARED_NOT_EXECUTED"
+}

@@ -1,0 +1,62 @@
+{
+  "owner": "placid-badger",
+  "simulator": "43FADF46-7A23-4A88-8EF8-20E572101661",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS 26.5",
+  "boardID": "frictitious.port-a-board",
+  "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "suspensionSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+  "presentations": {
+    "primary": {
+      "descriptorSHA256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+      "modelSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273"
+    }
+  },
+  "builtBinarySHA256": "a7e3a667d2c5b485ce202b840640948241a04e78931311d2809a936e64b107fd",
+  "checks": [
+    {
+      "positionID": "front-upright",
+      "contactID": "edge-30",
+      "front": "front-upright-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "front-inverted",
+      "contactID": "edge-20",
+      "front": "front-inverted-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "reverse-upright",
+      "contactID": "edge-12",
+      "front": "reverse-upright-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "reverse-inverted",
+      "contactID": "edge-15",
+      "front": "reverse-inverted-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "outer-upper",
+      "contactID": "jug-outer-rim",
+      "front": "outer-upper-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "pinch-side",
+      "contactID": "pinch-body",
+      "front": "pinch-side-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    }
+  ],
+  "humanGeometryAcceptance": "pending Port-A-Board review",
+  "limits": "App screenshots and accessibility checks establish current-source rendering; manufacturer fidelity remains under individual human review. Physical Port-A-Board orbit capture remains unverified; only these canonical views are claimed."
+}

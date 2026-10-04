@@ -1,0 +1,37 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "scope": "Lossless preparation/preservation only. Original run failures and preflight scopes remain unchanged; no new runtime, acceptance, or source/test-correction claim.",
+  "recordedCompletedUnitRun": {
+    "testsExecuted": 1518,
+    "testsSkipped": 3,
+    "failures": 1,
+    "actualProcessExitStatus": 65,
+    "rawSummaryLines": [
+      "\t Executed 1518 tests, with 3 tests skipped and 1 failure (0 unexpected) in 257.186 (257.758) seconds",
+      "\t Executed 1518 tests, with 3 tests skipped and 1 failure (0 unexpected) in 257.186 (257.759) seconds"
+    ],
+    "failureScope": "The preserved raw log contains the real handwritten app source/resource boundary audit failure for package-owned literals. This remains a test failure in this packet.",
+    "stdout": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-compatibility/full-unit-compatibility-integration/tests.stdout",
+    "exitRecord": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-compatibility/full-unit-compatibility-integration/tests.exit.json"
+  },
+  "recordedCompletedUIRun": {
+    "testsExecuted": 6,
+    "failures": 2,
+    "actualProcessExitStatus": 65,
+    "rawSummaryLines": [
+      "\t Executed 6 tests, with 2 failures (0 unexpected) in 108.772 (108.776) seconds",
+      "\t Executed 6 tests, with 2 failures (0 unexpected) in 108.772 (108.776) seconds",
+      "\t Executed 6 tests, with 2 failures (0 unexpected) in 108.772 (108.777) seconds"
+    ],
+    "qualification": "Both actual failed hittability assertions remain recorded. The unchanged UI audit and raw recordings attribute obstruction to system dialogs; this packaging step does not dismiss assertions or establish corrected-run behavior.",
+    "audit": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-compatibility/ui-hittable-failure-audit.json",
+    "stdout": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-compatibility/board-ui-reviewed-corrections/tests.stdout"
+  },
+  "preflightScope": {
+    "firstAttempt": "The unchanged failure/completion records retain the missing optional debug dylib helper failure before launch.",
+    "binaryAttempt": "The unchanged whole-image assessment records a normal Train screen without a modal; the empty AX output is retained and does not independently prove absence. No tap was issued.",
+    "firstCompletion": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-compatibility/ui-modal-preflight/completion.json",
+    "binaryWholeImageAssessment": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-compatibility/ui-modal-preflight-binary/whole-image-assessment.json"
+  },
+  "excluded": "Active board-ui-clean-modal-setup; frame exporter compiler module-cache; canonical packages/assets, sources/tests, queues/history, index/refs, and resource actions."
+}

@@ -820,15 +820,6 @@ struct BoardPackageStore {
                 reason: "packages may not mix model and raster presentations"
             )
         }
-        guard document.presentations.filter({
-            if case .model = $0.media { return true }
-            return false
-        }).count <= 1 else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: document.id,
-                reason: "packages may contain only one model presentation"
-            )
-        }
         let documentsByPresentationID = Dictionary(
             uniqueKeysWithValues: document.presentations.map { ($0.id, $0) }
         )
@@ -876,10 +867,10 @@ struct BoardPackageStore {
         var originalRasterOwnershipCounts = Dictionary(
             uniqueKeysWithValues: contactIDs.map { ($0, 0) }
         )
-        let declaredPositionIDs = Set(
-            (document.positions?.map(\.id) ?? document.presentations.map(\.id))
-        )
         for presentation in document.presentations {
+            let declaredPositionIDs = Set(document.positions?.filter {
+                $0.presentationID == presentation.id
+            }.map(\.id) ?? [presentation.id])
             let media: BoardPresentationMedia
             switch presentation.media {
             case .raster(let assetPath, let geometryDocuments):
@@ -941,6 +932,9 @@ struct BoardPackageStore {
                 }
                 media = .raster(BoardRasterMedia(assetPath: assetPath, contactGeometry: contactGeometry))
             case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument, let orientationDocument, let instanceDocuments, let physicsDescriptorPath):
+                guard !declaredPositionIDs.isEmpty else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: document.id, reason: "every model presentation must own at least one position")
+                }
                 let loadedDescriptor = try loadModelDescriptor(
                     at: packageURL.appendingPathComponent(descriptorPath),
                     modelURL: modelAssetMode == .bundled
@@ -1105,13 +1099,6 @@ struct BoardPackageStore {
             )
         }
         if hasModel {
-            guard let modelMedia = presentations.compactMap({ presentation -> BoardModelMedia? in
-                guard case .model(let media) = presentation.media else { return nil }
-                return media
-            }).first else {
-                throw BoardPackageStoreError.invalidPackage(boardID: document.id, reason: "model presentation is missing media")
-            }
-            let descriptorContactIDs = Set(modelMedia.descriptor.contacts.keys)
             let hasAuthoredInventory = positions.contains(where: \.contactIDsWereExplicitlyAuthored)
             let hasImplicitInventory = positions.contains { !$0.contactIDsWereExplicitlyAuthored }
             guard !(hasAuthoredInventory && hasImplicitInventory) else {
@@ -1126,17 +1113,39 @@ struct BoardPackageStore {
                     : BoardPosition(
                         id: position.id,
                         presentationID: position.presentationID,
-                        contactIDs: contacts.map(\.id)
+                        contactIDs: contacts.map(\.id),
+                        effectiveDepths: position.effectiveDepths
                     )
             }
-            try validateModelPositionInventories(
-                positions,
-                descriptorContactIDs: descriptorContactIDs,
-                canonicalContactIDs: contacts.map(\.id),
-                orientation: modelMedia.orientation,
-                requiresExactPartition: hasAuthoredInventory || modelMedia.orientation != nil,
-                boardID: document.id
-            )
+            for presentation in presentations {
+                guard case .model(let modelMedia) = presentation.media else { continue }
+                try validateModelPositionInventories(
+                    positions.filter { $0.presentationID == presentation.id },
+                    descriptorContactIDs: Set(modelMedia.descriptor.contacts.keys),
+                    canonicalContactIDs: contacts.map(\.id),
+                    orientation: modelMedia.orientation,
+                    requiresExactPartition: hasAuthoredInventory || modelMedia.orientation != nil,
+                    boardID: document.id
+                )
+            }
+        }
+        let configuredIDs = Set(positions.flatMap { $0.effectiveDepths.keys })
+        for position in positions {
+            let availableIDs = Set(position.contactIDsWereExplicitlyAuthored ? position.contactIDs : contacts.map(\.id))
+            guard Set(position.effectiveDepths.keys).isSubset(of: availableIDs),
+                  configuredIDs.intersection(availableIDs).isSubset(of: Set(position.effectiveDepths.keys)) else {
+                throw BoardPackageStoreError.invalidPackage(boardID: document.id, reason: "effectiveDepths must configure available contacts in every affected position")
+            }
+            for (identifier, depth) in position.effectiveDepths {
+                guard case .range(let actual) = depth,
+                      actual.minimum.isFinite, actual.minimum > 0, actual.minimum == actual.maximum,
+                      let contact = contacts.first(where: { $0.id == identifier }),
+                      let baseDepth = contact.depth, case .range(let base) = baseDepth,
+                      base.minimum.isFinite, base.minimum > 0, base.minimum == base.maximum,
+                      actual.maximum <= base.maximum else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: document.id, reason: "effectiveDepths must be exact positive depths no greater than the base contact depth")
+                }
+            }
         }
         let transitions = document.positionTransitions?.map(\.boardPositionTransition) ?? []
         let positionIDs = Set(positions.map(\.id))
@@ -1383,8 +1392,21 @@ struct BoardPackageStore {
                       contactID.isBoardPackageIdentifier else {
                     throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor contact node has invalid contactID")
                 }
-                nodeIDsByContact[contactID, default: []].append(node.nodeID)
-                nodes.append(.init(nodeID: node.nodeID, role: .contact, contactID: contactID))
+                if let additional = node.additionalContactIDs {
+                    guard !additional.isEmpty,
+                          additional == additional.sorted(),
+                          Set(additional).count == additional.count,
+                          !additional.contains(contactID),
+                          additional.allSatisfy({ $0.isBoardPackageIdentifier }) else {
+                        throw BoardPackageStoreError.invalidPackage(
+                            boardID: boardID, reason: "model descriptor additionalContactIDs must be nonempty, unique, sorted identifiers excluding the primary contactID")
+                    }
+                }
+                for member in [contactID] + (node.additionalContactIDs ?? []) {
+                    nodeIDsByContact[member, default: []].append(node.nodeID)
+                }
+                nodes.append(.init(nodeID: node.nodeID, role: .contact, contactID: contactID,
+                                   additionalContactIDs: node.additionalContactIDs))
             case "attachment":
                 guard node.contactID == nil else {
                     throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor attachment node may not declare contactID")
@@ -1392,6 +1414,7 @@ struct BoardPackageStore {
                 let maximumAttachmentCount: Int = {
                     guard let suspension = suspensionDocument else { return 1 }
                     switch suspension {
+                    case .cadRoutedCord: return 8
                     case .twoBranchCord: return 4
                     case .pairedLeadCord: return 2
                     default: return 1
@@ -1418,9 +1441,14 @@ struct BoardPackageStore {
                 reason: "model descriptor contact IDs must be sorted"
             )
         }
+        let sharedContactIDs = Set(document.nodes.flatMap { $0.additionalContactIDs ?? [] })
         var contacts: [String: BoardModelContactDescriptor] = [:]
         for contactID in physicalContactIDs.sorted() {
             guard let contact = document.contacts[contactID] else { continue }
+            guard !sharedContactIDs.contains(contactID) || contact.outline == nil else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID, reason: "model descriptor shared contact may not declare an outline")
+            }
             let expectedNodes = (nodeIDsByContact[contactID] ?? []).sorted()
             guard !contact.nodeIDs.isEmpty, contact.nodeIDs == expectedNodes else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor contact nodeIDs do not match bound nodes")
@@ -1813,6 +1841,8 @@ struct BoardPackageStore {
         boardID: String
     ) throws -> BoardModelSuspension {
         switch document {
+        case .cadRoutedCord(let routed):
+            return try makeCADRoutedCord(routed, descriptor: descriptor, positionIDs: positionIDs, boardID: boardID)
         case .singleCord(let single):
             return try makeSingleCordSuspension(single, descriptor: descriptor, positionIDs: positionIDs, boardID: boardID)
         case .pairedLeadCord(let pairedLead):
@@ -1820,10 +1850,64 @@ struct BoardPackageStore {
         case .twoBranchCord(let twoBranch):
             return try makeTwoBranchSuspension(twoBranch, descriptor: descriptor, positionIDs: positionIDs, boardID: boardID)
         case .unsupported(let type):
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension type must be singleCord, pairedLeadCord, or twoBranchCord: \(type)")
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension type must be singleCord, pairedLeadCord, twoBranchCord, or cadRoutedCord: \(type)")
         case .shapeMismatch(let type):
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension type \(type) does not match its members")
         }
+    }
+
+    private static func makeCADRoutedCord(
+        _ document: BoardPackageCADRoutedCordDocument,
+        descriptor: BoardModelDescriptor,
+        positionIDs: Set<String>,
+        boardID: String
+    ) throws -> BoardModelSuspension {
+        guard (1...8).contains(document.strands.count),
+              Set(document.strands.map(\.id)).count == document.strands.count,
+              Set(document.strands.map(\.radius)).count == 1,
+              document.strands.allSatisfy({ $0.id.isBoardPackageIdentifier && ["lead", "loop", "segment"].contains($0.kind)
+                  && $0.radius.isFinite && $0.radius > 0 && $0.restLength.isFinite && $0.restLength > 0
+                  && !$0.material.isEmpty && !$0.provenance.isEmpty }),
+              descriptor.nodes.contains(where: { $0.nodeID == document.bodyNodeID && ($0.role == .body || $0.role == .attachment) }),
+              Set(document.canonicalPoses.keys) == positionIDs,
+              document.anchor.offsetFromBoardBounds.count == 3,
+              document.anchor.offsetFromBoardBounds.allSatisfy(\.isFinite),
+              document.anchor.visibility == "invisible",
+              !document.anchor.provenance.isEmpty else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "cadRoutedCord topology or anchor is invalid")
+        }
+        let bounds = descriptor.modelBounds
+        let anchorPosition = [
+            (bounds.minimum[0] + bounds.maximum[0]) / 2 + document.anchor.offsetFromBoardBounds[0],
+            bounds.maximum[1] + document.anchor.offsetFromBoardBounds[1],
+            (bounds.minimum[2] + bounds.maximum[2]) / 2 + document.anchor.offsetFromBoardBounds[2]]
+        var poses: [String: BoardModelCanonicalPose] = [:]
+        for (identifier, pose) in document.canonicalPoses {
+            guard pose.rotation.count == 4, pose.rotation.allSatisfy(\.isFinite),
+                  abs(sqrt(pose.rotation.reduce(0) { $0 + $1*$1 }) - 1) <= 1e-6,
+                  pose.translation.count == 3, pose.translation.allSatisfy(\.isFinite),
+                  pose.camera.viewDirection.count == 3, pose.camera.viewDirection.allSatisfy(\.isFinite),
+                  pose.camera.viewDirection.contains(where: { $0 != 0 }),
+                  pose.camera.fitPadding.isFinite, pose.camera.fitPadding > 0,
+                  pose.attachmentPoints == nil, pose.cordContactPoints == nil,
+                  let routes = pose.wrappedRoutes, Set(routes.keys) == Set(document.strands.map(\.id)),
+                  routes.values.allSatisfy({ $0.count >= 3 && $0.allSatisfy { $0.count == 3 && $0.allSatisfy(\.isFinite) }
+                      && zip($0, $0.dropFirst()).allSatisfy { $0.0 != $0.1 } }) else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "cadRoutedCord requires an exact native-generated wrappedRoutes cache")
+            }
+            poses[identifier] = BoardModelCanonicalPose(rotation: pose.rotation, translation: pose.translation,
+                camera: BoardModelCanonicalCamera(viewDirection: pose.camera.viewDirection, fitPadding: pose.camera.fitPadding), wrappedRoutes: routes)
+        }
+        let routed = BoardModelCADRoutedCord(bodyNodeID: document.bodyNodeID,
+            strands: document.strands.map { BoardModelCADCordStrand(id: $0.id, kind: $0.kind, restLength: $0.restLength,
+                radius: $0.radius, material: $0.material, provenance: $0.provenance) },
+            anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: document.anchor.offsetFromBoardBounds,
+                visibility: document.anchor.visibility, provenance: document.anchor.provenance, position: anchorPosition), canonicalPoses: poses)
+        for pose in poses.values {
+            do { _ = try SuspendedBoardPresentation.solve(pose: pose, suspension: routed, bounds: bounds) }
+            catch { throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "cadRoutedCord has an invalid native route: \(error)") }
+        }
+        return .cadRoutedCord(routed)
     }
 
     private static func makeSingleCordSuspension(
@@ -3153,6 +3237,7 @@ enum BoardPackageSuspensionDocument: Decodable, Equatable {
     case singleCord(BoardPackageSingleCordSuspensionDocument)
     case pairedLeadCord(BoardPackagePairedLeadCordSuspensionDocument)
     case twoBranchCord(BoardPackageTwoBranchSuspensionDocument)
+    case cadRoutedCord(BoardPackageCADRoutedCordDocument)
     case unsupported(String)
     case shapeMismatch(String)
 
@@ -3160,6 +3245,8 @@ enum BoardPackageSuspensionDocument: Decodable, Equatable {
         let container = try decoder.container(keyedBy: SuspensionCodingKey.self)
         let type = try container.decode(String.self, forKey: .type)
         switch type {
+        case "cadRoutedCord":
+            self = .cadRoutedCord(try BoardPackageCADRoutedCordDocument(from: decoder))
         case "singleCord":
             if container.allKeys.contains(where: {
                 ["attachments", "passages", "branches"].contains($0.stringValue)
@@ -3191,6 +3278,44 @@ enum BoardPackageSuspensionDocument: Decodable, Equatable {
 
     private enum SuspensionCodingKey: String, CodingKey {
         case type, attachment, attachments, anchor, cord, canonicalPoses, passages, branches
+    }
+}
+
+struct BoardPackageCADCordStrandDocument: Decodable, Equatable {
+    let id: String
+    let kind: String
+    let restLength: Double
+    let radius: Double
+    let material: String
+    let provenance: String
+    private enum CodingKeys: String, CodingKey { case id, kind, restLength, radius, material, provenance }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["id", "kind", "restLength", "radius", "material", "provenance"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        kind = try container.decode(String.self, forKey: .kind)
+        restLength = try container.decode(Double.self, forKey: .restLength)
+        radius = try container.decode(Double.self, forKey: .radius)
+        material = try container.decode(String.self, forKey: .material)
+        provenance = try container.decode(String.self, forKey: .provenance)
+    }
+}
+
+struct BoardPackageCADRoutedCordDocument: Decodable, Equatable {
+    let type: String
+    let bodyNodeID: String
+    let strands: [BoardPackageCADCordStrandDocument]
+    let anchor: BoardPackageAnchorDocument
+    let canonicalPoses: [String: BoardPackageCanonicalPoseDocument]
+    private enum CodingKeys: String, CodingKey { case type, bodyNodeID, strands, anchor, canonicalPoses }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["type", "bodyNodeID", "strands", "anchor", "canonicalPoses"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = try container.decode(String.self, forKey: .type)
+        bodyNodeID = try container.decode(String.self, forKey: .bodyNodeID)
+        strands = try container.decode([BoardPackageCADCordStrandDocument].self, forKey: .strands)
+        anchor = try container.decode(BoardPackageAnchorDocument.self, forKey: .anchor)
+        canonicalPoses = try container.decode([String: BoardPackageCanonicalPoseDocument].self, forKey: .canonicalPoses)
     }
 }
 
@@ -3652,16 +3777,20 @@ private struct BoardPackageModelNodeDocument: Decodable {
     let nodeID: String
     let role: String
     let contactID: String?
-    private enum CodingKeys: String, CodingKey { case nodeID, role, contactID }
+    let additionalContactIDs: [String]?
+    private enum CodingKeys: String, CodingKey { case nodeID, role, contactID, additionalContactIDs }
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         role = try container.decode(String.self, forKey: .role)
         if role == "contact" {
-            try decoder.rejectUnknownKeys(["nodeID", "role", "contactID"])
+            try decoder.rejectUnknownKeys(["nodeID", "role", "contactID", "additionalContactIDs"])
             contactID = try container.decode(String.self, forKey: .contactID)
+            additionalContactIDs = container.contains(.additionalContactIDs)
+                ? try container.decode([String].self, forKey: .additionalContactIDs) : nil
         } else {
             try decoder.rejectUnknownKeys(["nodeID", "role"])
             contactID = nil
+            additionalContactIDs = nil
         }
         nodeID = try container.decode(String.self, forKey: .nodeID)
     }
@@ -3687,28 +3816,35 @@ private struct BoardPackagePositionDocument: Decodable {
     let id: String
     let presentationID: String
     let contactIDs: [String]?
+    let effectiveDepths: [String: HoldDepth]?
 
     private enum CodingKeys: String, CodingKey {
         case id
         case presentationID
         case contactIDs
+        case effectiveDepths
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["id", "presentationID", "contactIDs"])
+        try decoder.rejectUnknownKeys(["id", "presentationID", "contactIDs", "effectiveDepths"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         presentationID = try container.decode(String.self, forKey: .presentationID)
         contactIDs = container.contains(.contactIDs)
             ? try container.decode([String].self, forKey: .contactIDs)
             : nil
+        effectiveDepths = container.contains(.effectiveDepths)
+            ? try container.decode([String: HoldDepth].self, forKey: .effectiveDepths) : nil
+        if let effectiveDepths, effectiveDepths.isEmpty {
+            throw DecodingError.dataCorruptedError(forKey: .effectiveDepths, in: container, debugDescription: "effectiveDepths must not be empty")
+        }
     }
 
     var boardPosition: BoardPosition {
         guard let contactIDs else {
-            return BoardPosition(id: id, presentationID: presentationID)
+            return BoardPosition(id: id, presentationID: presentationID, effectiveDepths: effectiveDepths ?? [:])
         }
-        return BoardPosition(id: id, presentationID: presentationID, contactIDs: contactIDs)
+        return BoardPosition(id: id, presentationID: presentationID, contactIDs: contactIDs, effectiveDepths: effectiveDepths ?? [:])
     }
 }
 

@@ -1,0 +1,27 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "pytest",
+    "Tools/HangboardPackages/tests",
+    "Tools/HangboardModels/tests",
+    "Tools/HangboardCAD/tests",
+    "-q",
+    "-k",
+    "not test_committed_asset_rebuilds_byte_identically"
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 148.26278666697908,
+  "fileSHA256": {
+    "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+    "Tools/HangboardCAD/tests/test_native_cord_tightening.py": "362679227649f45dbfab39a7eda39a7c648de4e928d3904e93750e51f2ab60e7",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "31a4896a3e423f23199907fabd8d63481d1890beca90307394e28c1cfac20661",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py": "31d1262891ed33ad28fa1cf5fb459015701044b03a9a77ea3344deb29a63a2c7",
+    "Hangboards/captain-fingerfood-dual/suspension.json": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf"
+  },
+  "sourceUnchangedDuringRun": true,
+  "summary": "2 failed, 592 passed, 9 skipped, 1 deselected in 147.06s (0:02:27)",
+  "deselected": "Full-catalog native byte-identical rebuild; CAD sources/model/descriptor unchanged from independently proved batch."
+}

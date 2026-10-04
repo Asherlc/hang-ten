@@ -1,0 +1,92 @@
+{
+  "retrievedUTC": "2026-10-01T20:02:22.984592+00:00",
+  "pageURL": "https://natureclimbing.com/pages/stone-hanger-intro",
+  "videoURL": "https://www.youtube.com/watch?v=Ohzbif5YZtU",
+  "publisher": "Nature Climbing",
+  "inspection": "All ten complete provider storyboard sheets physically viewed. No extraction/crop/alignment/pixel measurement.",
+  "use": "Mechanism only: maker demonstrates rope adjustment at side grooves and changes board orientation around 36\u201352 s. Multiple product variants appear; do not infer exact-revision dimensions or hidden channel topology.",
+  "limitations": [
+    "Web video opens throttled.",
+    "Watch HTML/player metadata retrieved successfully.",
+    "Direct automatic-caption request returned zero bytes; no transcript interpreted.",
+    "No complete playable video stream was obtained."
+  ],
+  "files": {
+    "1GNCxUO9ibs-oembed.json": {
+      "sha256": "0df80bb4da275efe5a5dfaa3a4915b2dd11f5963bd853e03ce94bcfcf40c056a",
+      "bytes": 826
+    },
+    "Ohzbif5YZtU-auto-captions.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "Ohzbif5YZtU-oembed.json": {
+      "sha256": "9823a334bda63032017bd7d444f8c71ccd9509d225449e49415cacfb6b9c2026",
+      "bytes": 816
+    },
+    "Ohzbif5YZtU-player.json": {
+      "sha256": "d61799cb13ca8dfc3839c289256ae622fe1a8e70332f845a731503e53c8404f1",
+      "bytes": 78024
+    },
+    "Ohzbif5YZtU-watch.html": {
+      "sha256": "2cdde9cce198a2b753105ad86c3a69ec63bfa2f818ce4051750f298e206ab676",
+      "bytes": 1163568
+    },
+    "source-register.json": {
+      "sha256": "a62f709f38d0c4ffc4901b3af8a0b3f0e957ca9d24a72e436d11bc2bce41c83a",
+      "bytes": 500
+    },
+    "stKU0lqaV0E-oembed.json": {
+      "sha256": "153a01c8536bfcabb255035564f3fa128e3bdf8d3cc8214ee56154fd61ecd5fa",
+      "bytes": 844
+    },
+    "stone-hanger-intro.html": {
+      "sha256": "1e4d0b7fa3c596ff9b9f24daf7a2f6cecdade25c4240335bbf54da12871a2451",
+      "bytes": 312174
+    },
+    "storyboard-register.json": {
+      "sha256": "aa7dd09dc6e20e9f9e64d6388b5457f10ffe1c49f0075f90b801aceb4826c0f4",
+      "bytes": 7655
+    },
+    "walkthrough-storyboard-0.jpg": {
+      "sha256": "616c7a1c31e071ab69d5c9f4e4b29e3e994d076568051a1481127a81ad469582",
+      "bytes": 44996
+    },
+    "walkthrough-storyboard-1.jpg": {
+      "sha256": "ae370bf06bcf3690c4ac672217710377b992fa61d3b85ad66f63416ca7582418",
+      "bytes": 40949
+    },
+    "walkthrough-storyboard-2.jpg": {
+      "sha256": "d7b871534947bf10c422d3af17fb82d39a3fd27c7a51159d0e8ad32cf7543589",
+      "bytes": 41761
+    },
+    "walkthrough-storyboard-3.jpg": {
+      "sha256": "cebc5945781e45a7f74887f347c2a47bef938a32013bc9bde074a0de78124776",
+      "bytes": 43618
+    },
+    "walkthrough-storyboard-4.jpg": {
+      "sha256": "2a7edfcf7ca49fa368f44840fd12f34207d3a3a47e0833c339108698c896fb6a",
+      "bytes": 42538
+    },
+    "walkthrough-storyboard-5.jpg": {
+      "sha256": "33a7205e1e17bee887c254772b52929f78bdb0a244b4dfcb90b1f185fe066446",
+      "bytes": 42553
+    },
+    "walkthrough-storyboard-6.jpg": {
+      "sha256": "561d59aa45879c41f02de2e4139adcc168c0eea2a6f8608c7c858b063f56022e",
+      "bytes": 49289
+    },
+    "walkthrough-storyboard-7.jpg": {
+      "sha256": "a6c93964ef05cd708ff43b98119eabd15ca90528394ead03c6a0bcb6ad133873",
+      "bytes": 38808
+    },
+    "walkthrough-storyboard-8.jpg": {
+      "sha256": "906f625fd37802a3a2c9ff95b0576aa3bb343e4d58154ffb28fc588ce8b044f9",
+      "bytes": 40848
+    },
+    "walkthrough-storyboard-9.jpg": {
+      "sha256": "9703fb105e4864b0feab1aa4786789f20c7c5236c68fc7d254e7525b37959a8b",
+      "bytes": 41662
+    }
+  }
+}

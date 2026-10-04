@@ -1,0 +1,135 @@
+{
+  "result": "PASS",
+  "all12WholeImagesReviewed": true,
+  "frames": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-0-active-plus-0.25.png",
+      "sha256": "d9765eca14b7c473c19e588c57d7e0786bc2179292a6dc75ed9c90ec3cbb4246",
+      "expected": "red",
+      "observed": "red",
+      "wholeImageReviewed": true,
+      "handsVisible": true,
+      "handCue": "upright paired hands with four red fingertips each",
+      "passed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-0-active-plus-1.png",
+      "sha256": "72e963701d75be031d8c6f119c8f0ec96df29f3fc2229d39639b33f6a99e872f",
+      "expected": "red",
+      "observed": "red",
+      "wholeImageReviewed": true,
+      "handsVisible": true,
+      "handCue": "upright paired hands with four red fingertips each",
+      "passed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-0-active-plus-3.png",
+      "sha256": "986bd7d21750958289d894bb9404e7f807e750bda9b65b3baa4052a4ce9588bd",
+      "expected": "red",
+      "observed": "red",
+      "wholeImageReviewed": true,
+      "handsVisible": true,
+      "handCue": "upright paired hands with four red fingertips each",
+      "passed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-0-active-plus-5.png",
+      "sha256": "6a3f16b1575fae543b1da2f0cbd3894ccc415f708cb133fdd3afedac7936acea",
+      "expected": "red",
+      "observed": "red",
+      "wholeImageReviewed": true,
+      "handsVisible": true,
+      "handCue": "upright paired hands with four red fingertips each",
+      "passed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-1-preview-plus-0.25.png",
+      "sha256": "6eb7cf125c35a3f0dd283c6968c05a39058030aaa5440f42c9941c8db92e46c0",
+      "expected": "blue",
+      "observed": "blue",
+      "wholeImageReviewed": true,
+      "handsVisible": true,
+      "handCue": "upright paired hands with four red fingertips each",
+      "passed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-1-preview-plus-1.png",
+      "sha256": "f6ed36980e7d9f75eea6a4220854660d6ca76f21bbca62f5c8555302aa073e01",
+      "expected": "blue",
+      "observed": "blue",
+      "wholeImageReviewed": true,
+      "handsVisible": true,
+      "handCue": "upright paired hands with four red fingertips each",
+      "passed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-1-preview-plus-3.png",
+      "sha256": "b882fa169ddf3f273eb5aa0b48f1a686c4e693705549dda975cd17d81589335c",
+      "expected": "blue",
+      "observed": "blue",
+      "wholeImageReviewed": true,
+      "handsVisible": true,
+      "handCue": "upright paired hands with four red fingertips each",
+      "passed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-1-preview-plus-5.png",
+      "sha256": "b73cc92a2620918a189e9ea44c99def3deb3ef05c297d671e4dc220fbfa6fe61",
+      "expected": "blue",
+      "observed": "blue",
+      "wholeImageReviewed": true,
+      "handsVisible": true,
+      "handCue": "upright paired hands with four red fingertips each",
+      "passed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "b827d23aa836a993728d05830baa19f4ea8dafc3ed26e7d2bfe7357f8e86838f",
+      "expected": "red",
+      "observed": "red",
+      "wholeImageReviewed": true,
+      "handsVisible": true,
+      "handCue": "upright paired hands with four red fingertips each",
+      "passed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-2-active-plus-1.png",
+      "sha256": "29645b5e10e947984fbc436efea0292214af911d5d1724db49ee6153a31c09e5",
+      "expected": "red",
+      "observed": "red",
+      "wholeImageReviewed": true,
+      "handsVisible": true,
+      "handCue": "upright paired hands with four red fingertips each",
+      "passed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-2-active-plus-3.png",
+      "sha256": "36495dd2cab1c7046df7421b2bd0fea5b0f408780ffef917e52c0bb8ab4fb613",
+      "expected": "red",
+      "observed": "red",
+      "wholeImageReviewed": true,
+      "handsVisible": true,
+      "handCue": "upright paired hands with four red fingertips each",
+      "passed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-2-active-plus-5.png",
+      "sha256": "1a1db0c856c2f8a0d8839fb03c6ed688a8c63fd465e3d933842d5dabf06091a9",
+      "expected": "red",
+      "observed": "red",
+      "wholeImageReviewed": true,
+      "handsVisible": true,
+      "handCue": "upright paired hands with four red fingertips each",
+      "passed": true
+    }
+  ],
+  "imageTrialAuthorized": false,
+  "decision": "Stop image comparison: current live-hand control did not reproduce failure.",
+  "limits": [
+    "Muted existing audio setting through volatile launch arguments.",
+    "Temporary idle-system-sleep assertion; stable recorded clocks do not prove cause of prior discontinuities.",
+    "Temporary Train structural unmount and diagnostic instrumentation remain in tested binary.",
+    "First capture lacks preceding current-hand ownership census; amended timing criterion and other23 observations pass.",
+    "No production repair or PR-readiness claim."
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "status": "PROSPECTIVE_HELPERS_ONLY_NOT_RUN",
+  "sourceSchemaPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/v2/event-schema.json",
+  "sourceSchemaSHA256": "ee895ad76f0a4ed48b6ade3c0e4ad83b018e9418b1a0dd849606a7df480f3b8e",
+  "pythonASTPass": true,
+  "rejectedPrototypeV1NotProvenance": true,
+  "runtimeAuthorizedByThisPreparation": false,
+  "revision": "v4 narrow PID-query-status and retained binary-proof refinements; v3 preserved",
+  "checksImplemented": [
+    "Explicit same owned Simulator/controller and role/release/code/package binding.",
+    "30s readiness,2s settle,one screenshot,3s idle,40s postlaunch cap.",
+    "Image publication requires matching current request/submission/callback/eager conversion; orthographic pair, actual texture metadata, zero live hand makes/public ARViews.",
+    "At most one in-flight submission derived from actual event sequence; no continued image events during static idle.",
+    "Same current publication or live pair spans screenshot.",
+    "Exact registered artifact directory and hash/size validation; no pixel processing.",
+    "Cleanup failure/nonzero preserves original failure; final retained raw newline/completeness/contiguity/time/hash checks after copy."
+  ],
+  "limits": [
+    "Static recipe not executed or validated on device. No source/build edits by preparer.",
+    "Prototype remains unapplied pending root/worker approval; no frozen installed binary exists in this helper.",
+    "GPU command-buffer status unavailable in schema; do not claim status success from callback alone.",
+    "Cream-only backing and whole-image visual review do not prove every transparency/composition/gesture/workout requirement."
+  ],
+  "files": {
+    "capture.py": "eead1c47f3a9c6532bf3695b9f7878dade7bea1ce44fc46ab70edd390b746a7a",
+    "event-schema.json": "ee895ad76f0a4ed48b6ade3c0e4ad83b018e9418b1a0dd849606a7df480f3b8e",
+    "protocol.md": "414a7a7aaedf8cc8a1cc869ffa04c2cd9ca7be585302bcee1e4d6cd4d8f2019b",
+    "prototype_schema.py": "0251ad283cd39e8c4489b45b476efa5ebf38e06c602ea30b5623258956311f7c"
+  }
+}

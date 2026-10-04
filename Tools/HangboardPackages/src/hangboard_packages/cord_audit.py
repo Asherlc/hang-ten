@@ -15,6 +15,7 @@ from urllib.parse import urlsplit
 
 from .board_catalog import (
     BoardInventory,
+    BoardModelCADRoutedCord,
     BoardModelPairedLeadCord,
     BoardModelSingleCordSuspension,
     BoardModelTwoBranchSuspension,
@@ -24,7 +25,7 @@ from .board_catalog import (
 
 
 _DECISIONS = frozenset({"represented", "excluded"})
-_TOPOLOGIES = frozenset({"singleCord", "pairedLeadCord", "twoBranchCord", "threadedLoopCord"})
+_TOPOLOGIES = frozenset({"singleCord", "pairedLeadCord", "twoBranchCord", "cadRoutedCord", "threadedLoopCord"})
 _SOURCE_FACTS = frozenset({"documentedSuspension", "noDocumentedSuspension"})
 _SOURCE_TIERS = frozenset({"independent", "manufacturer", "manufacturer-instruction", "retailer"})
 _SHA256 = re.compile(r"^[0-9a-fA-F]{64}$")
@@ -371,6 +372,8 @@ def _suspension_topology(suspension: object | None) -> str | None:
         return "pairedLeadCord"
     if isinstance(suspension, BoardModelTwoBranchSuspension):
         return "threadedLoopCord" if suspension.internal_loop_channel_points_by_branch_id is not None else "twoBranchCord"
+    if isinstance(suspension, BoardModelCADRoutedCord):
+        return "cadRoutedCord"
     raise CordAuditError("model package has unsupported suspension topology")
 
 
@@ -413,11 +416,12 @@ def _model_package_topologies(inventory: BoardInventory) -> dict[str, str | None
             continue
         if package.board.id in result:
             raise CordAuditError(f"duplicate model package ID in inventory: {package.board.id}")
-        if len(model_media) != 1:
+        topologies = tuple(_model_media_topology(media) for media in model_media)
+        if len(set(topologies)) != 1:
             raise CordAuditError(
-                f"model package must contain exactly one model presentation: {package.board.id}"
+                f"model presentations must all declare the same suspension topology: {package.board.id}"
             )
-        result[package.board.id] = _model_media_topology(model_media[0])
+        result[package.board.id] = topologies[0]
     return result
 
 

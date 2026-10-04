@@ -1,0 +1,31 @@
+{
+  "assetMatches": true,
+  "bytes": 604234,
+  "committedAssetSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+  "descriptorBindsCommittedAsset": true,
+  "descriptorMatches": true,
+  "package": "trango-rock-prodigy-forge",
+  "presentations": [
+    {
+      "assetMatches": true,
+      "bytes": 604234,
+      "committedAssetSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+      "descriptorBindsCommittedAsset": true,
+      "descriptorMatches": true,
+      "presentationID": "primary",
+      "rebuiltAssetSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+      "committedDescriptorSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef",
+      "rebuiltDescriptorSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef",
+      "descriptorBytesMatch": true
+    }
+  ],
+  "rebuiltAssetSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+  "checkedAt": "2026-09-30T02:15:51.456832+00:00",
+  "sourceSHA256Before": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+  "sourceSHA256After": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+  "sourceUnchanged": true,
+  "verifier": "Tools/HangboardCAD/verify_reproducible.py",
+  "freecad": "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+  "sourceMutationAllowed": false,
+  "method": "Fresh FreeCAD process, source-native build, byte-exact USDZ comparison and complete descriptor equality."
+}

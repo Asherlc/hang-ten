@@ -1,0 +1,17 @@
+{
+  "status": "pass",
+  "packageSHA256": {
+    "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+    "Hangboards/nature-stone-hanger/assets/primary.usdz": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+    "Hangboards/nature-stone-hanger/assets/primary.model.json": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+    "Hangboards/nature-stone-hanger/suspension.json": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a"
+  },
+  "otherPackageFilesUnchanged": 202,
+  "comparisonsReviewed": [
+    "front",
+    "side",
+    "top",
+    "oblique"
+  ],
+  "nativeAndExportOverlap": 0
+}

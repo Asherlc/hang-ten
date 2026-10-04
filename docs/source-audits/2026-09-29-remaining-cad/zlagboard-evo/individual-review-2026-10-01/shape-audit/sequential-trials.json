@@ -1,0 +1,36 @@
+[
+  {
+    "name": "side2-front2",
+    "error": "15StdFail_NotDone BRep_API: command not done",
+    "traceback": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/sequential-trials.py\", line 10, in <module>\n    sh=side.makeFillet(frontR,[side.Edges[i-1] for i in ids]);row={'name':name,'frontEdges':ids,'valid':sh.isValid(),'solids':len(sh.Solids),'volume':sh.Volume,'seconds':time.monotonic()-t}\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nPart.OCCError: 15StdFail_NotDone BRep_API: command not done\n",
+    "seconds": 0.6894965420360677
+  },
+  {
+    "name": "side2-front1",
+    "frontEdges": [
+      4,
+      10,
+      16,
+      22,
+      25
+    ],
+    "valid": true,
+    "solids": 1,
+    "volume": 2672702.717300137,
+    "seconds": 1.070086874999106
+  },
+  {
+    "name": "side1-front1",
+    "frontEdges": [
+      4,
+      10,
+      16,
+      22,
+      25
+    ],
+    "valid": true,
+    "solids": 1,
+    "volume": 2672527.029458403,
+    "seconds": 0.8921860830159858
+  }
+]

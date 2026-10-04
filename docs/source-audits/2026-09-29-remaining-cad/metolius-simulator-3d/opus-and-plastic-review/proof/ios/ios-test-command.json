@@ -1,0 +1,29 @@
+{
+  "owner": "placid-badger",
+  "simulator": "72312582-DB46-44A7-9C61-D8C0E9F75876",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=72312582-DB46-44A7-9C61-D8C0E9F75876",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "-parallel-testing-enabled",
+    "NO",
+    "-only-testing:HangTenTests",
+    "-collect-test-diagnostics",
+    "never",
+    "-resultBundlePath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-plastic-review/ios/placid-badger-simulator-plastic-tests.xcresult",
+    "test-without-building"
+  ],
+  "timeoutSeconds": 900,
+  "resultBundle": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-plastic-review/ios/placid-badger-simulator-plastic-tests.xcresult",
+  "exitCode": 0,
+  "elapsedSeconds": 39.809865916962735
+}

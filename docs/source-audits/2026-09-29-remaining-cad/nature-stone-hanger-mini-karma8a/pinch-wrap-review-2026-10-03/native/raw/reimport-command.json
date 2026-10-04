@@ -1,0 +1,40 @@
+{
+  "argv": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/verify-reimport.py",
+    "--repo",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "--package",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3",
+    "--report",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-proof.json",
+    "--mesh-output",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/actual-reimport-meshes.json",
+    "--native-report",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-author-proof.json"
+  ],
+  "script": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/verify-reimport.py",
+  "arguments": [
+    "--repo",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "--package",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3",
+    "--report",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-proof.json",
+    "--mesh-output",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/actual-reimport-meshes.json",
+    "--native-report",
+    ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-author-proof.json"
+  ],
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-reimport-config",
+    "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-reimport-cache",
+    "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-reimport-tmp",
+    "FREECAD_USER_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-reimport-config",
+    "QT_QPA_PLATFORM": "offscreen",
+    "HANGTEN_CAD_PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311"
+  }
+}

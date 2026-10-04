@@ -1,0 +1,10 @@
+{
+  "status": "inconclusive for orbit-caused refresh",
+  "finding": "By the later STEP4 rest, before-orbit screenshot already shows blue bilateral20mm highlights. The small swipe did not visibly alter board pose; after-orbit remains blue. This does not erase the two reproducible first-rest red frames at STEP2 or prove an orbit-triggered update.",
+  "before": "before-orbit.png",
+  "after": "after-orbit.png",
+  "earlierFailures": [
+    "../workout-landscape/following-rest-settled.png",
+    "../workout-landscape-longer-settle/following-rest-settled.png"
+  ]
+}

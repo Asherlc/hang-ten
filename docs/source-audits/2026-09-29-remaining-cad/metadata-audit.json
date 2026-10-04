@@ -1,0 +1,196 @@
+{
+  "packages": [
+    {
+      "package": "aelith-cyclops-011",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "aelith-cyclops-011/metadata-diff.json"
+    },
+    {
+      "package": "captain-fingerfood-dual",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "captain-fingerfood-dual/metadata-diff.json"
+    },
+    {
+      "package": "captain-fingerfood-unlevel",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "captain-fingerfood-unlevel/metadata-diff.json"
+    },
+    {
+      "package": "frictitious-nug",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "frictitious-nug/metadata-diff.json"
+    },
+    {
+      "package": "frictitious-port-a-board",
+      "boardFields": [],
+      "removedContacts": [
+        "pocket-30-two-finger-mono"
+      ],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "frictitious-port-a-board/metadata-diff.json"
+    },
+    {
+      "package": "mammut-diamond-finger",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "mammut-diamond-finger/metadata-diff.json",
+      "reviewRevisions": [
+        {
+          "date": "2026-09-30",
+          "revision": "geometry-and-wood",
+          "onlyBoardFieldChange": "presentations[primary].media.display.surfaceFinish: wood",
+          "allOtherBoardFieldsEqual": true,
+          "contactsUnchanged": 16,
+          "report": "mammut-diamond-finger/geometry-and-wood-review/runtime-proof/final-metadata-comparison.json"
+        }
+      ]
+    },
+    {
+      "package": "metolius-contact",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "metolius-contact/metadata-diff.json"
+    },
+    {
+      "package": "metolius-simulator-3d",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "metolius-simulator-3d/metadata-diff.json"
+    },
+    {
+      "package": "nature-stone-hanger",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "nature-stone-hanger/metadata-diff.json"
+    },
+    {
+      "package": "nature-stone-hanger-mini",
+      "boardFields": [
+        "productURL"
+      ],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "nature-stone-hanger-mini/metadata-diff.json"
+    },
+    {
+      "package": "nature-stone-hanger-mini-karma8a",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "nature-stone-hanger-mini-karma8a/metadata-diff.json"
+    },
+    {
+      "package": "owl-climb-poker",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [
+        "face-c-right-shallow-half-round",
+        "face-c-left-shallow-half-round"
+      ],
+      "report": "owl-climb-poker/metadata-diff.json"
+    },
+    {
+      "package": "plateau-lifting-edge",
+      "boardFields": [],
+      "removedContacts": [
+        "blocker-edge-10",
+        "blocker-edge-15"
+      ],
+      "addedContacts": [],
+      "changedContacts": [
+        "edge-18"
+      ],
+      "report": "plateau-lifting-edge/metadata-diff.json"
+    },
+    {
+      "package": "tension-flash-board",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "tension-flash-board/metadata-diff.json"
+    },
+    {
+      "package": "trango-rock-prodigy-forge",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "trango-rock-prodigy-forge/metadata-diff.json"
+    },
+    {
+      "package": "yy-baguette",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "yy-baguette/metadata-diff.json"
+    },
+    {
+      "package": "yy-baguette-evo",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "yy-baguette-evo/metadata-diff.json"
+    },
+    {
+      "package": "yy-penta-evo",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "yy-penta-evo/metadata-diff.json"
+    },
+    {
+      "package": "yy-travelboard",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "yy-travelboard/metadata-diff.json"
+    },
+    {
+      "package": "zlagboard-evo",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "zlagboard-evo/metadata-diff.json"
+    },
+    {
+      "package": "zlagboard-pro",
+      "boardFields": [],
+      "removedContacts": [],
+      "addedContacts": [],
+      "changedContacts": [],
+      "report": "zlagboard-pro/metadata-diff.json"
+    }
+  ],
+  "trainingRoutinesChanged": false,
+  "scope": "Exact retained metadata and position diff; geometry and presentation authoring are documented in each source audit."
+}

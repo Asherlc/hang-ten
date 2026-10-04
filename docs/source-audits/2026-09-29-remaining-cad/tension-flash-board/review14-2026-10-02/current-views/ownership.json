@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "task": "flash-board-review14/human-inline-preview-preparation",
+  "recordedAt": "2026-10-02T23:00:37.506765+00:00",
+  "temporaryResources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-inline-previews-20261002T160037/placid-badger-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-inline-previews-20261002T160037/placid-badger-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-inline-previews-20261002T160037/placid-badger-tmp"
+  ],
+  "externalResources": [],
+  "canonicalMutation": false,
+  "runtimeVerified": false
+}

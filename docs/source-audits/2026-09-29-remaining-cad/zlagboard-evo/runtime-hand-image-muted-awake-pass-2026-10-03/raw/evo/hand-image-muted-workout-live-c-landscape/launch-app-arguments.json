@@ -1,0 +1,8 @@
+{
+  "audioMuted": true,
+  "appArguments": [
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "scope": "Separate supported muted workflow; not an audio-enabled transfer. Argument-domain override only."
+}

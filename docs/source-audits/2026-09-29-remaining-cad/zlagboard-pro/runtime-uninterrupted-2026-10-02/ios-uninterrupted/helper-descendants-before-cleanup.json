@@ -1,0 +1,18 @@
+[
+  {
+    "pid": 84840,
+    "identity": "84840 84652 rtk"
+  },
+  {
+    "pid": 84841,
+    "identity": "84841 84840 /opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python"
+  },
+  {
+    "pid": 84842,
+    "identity": "84842 84841 rtk"
+  },
+  {
+    "pid": 84843,
+    "identity": "84843 84842 /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl"
+  }
+]

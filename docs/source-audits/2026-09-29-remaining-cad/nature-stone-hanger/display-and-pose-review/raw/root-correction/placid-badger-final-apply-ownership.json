@@ -1,0 +1,14 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "placid-badger-final-apply",
+  "mode": "apply",
+  "timeoutSeconds": 1800,
+  "startedUTC": "2026-10-01T23:43:36.614349+00:00",
+  "ownedTmp": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/vertical-groove-correction/placid-badger-final-apply-tmp",
+  "state": "closed",
+  "ownedProcessGroup": 56868,
+  "exitCode": 1,
+  "ownedProcessGroupAbsent": true,
+  "ownedTmpAbsent": true,
+  "elapsedSeconds": 0.04166620795149356
+}

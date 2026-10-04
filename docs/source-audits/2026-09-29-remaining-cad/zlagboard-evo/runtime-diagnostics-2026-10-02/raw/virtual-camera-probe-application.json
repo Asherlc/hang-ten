@@ -1,0 +1,7 @@
+{
+  "authorization": "Root explicit separate default/virtual diagnostic probe; keep hands ON",
+  "beforeSHA256": "aaf5fdaa7d24865c2bf20f5c6fd7c05db59e41cb1b4da2893fb9fbf7edec078f",
+  "afterSHA256": "9393df190a056ca79f45dacba4855240f3c1a1670529cd4936247ecc1e9bedab",
+  "patchSHA256": "3b4d40c0a698434a27b1240df0e8797174bd9ddf9e1d10bf23e7c4d9d94899d4",
+  "productionFix": false
+}

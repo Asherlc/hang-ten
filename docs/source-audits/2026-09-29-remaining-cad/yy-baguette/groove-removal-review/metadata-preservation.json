@@ -1,0 +1,9 @@
+{
+  "embeddedManifestPreservedExactlyFromWoodFinishRevision": true,
+  "contactsPreserved": true,
+  "positionsPreserved": true,
+  "cordTopologyPreserved": true,
+  "cordRadiusAndRestLengthsPreserved": true,
+  "poseRotationsAndCamerasPreserved": true,
+  "humanAcceptance": "pending"
+}

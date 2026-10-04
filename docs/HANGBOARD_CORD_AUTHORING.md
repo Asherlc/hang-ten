@@ -311,3 +311,225 @@ These sections do not replace the curved mouth geometry. The source spine
 between those sections supplies the initial channel traversal. Export support
 alone does not enable live physics for a package; it still needs an accepted
 initial state, numerical transition checks and visual review.
+
+## Evidenced exterior wraps and incomplete passage evidence
+
+The [remaining-board source audits](source-audits/2026-09-29-remaining-cad/)
+include a single eye (Cyclops), an open curl (Plateau), end wraps (Baguette),
+four independent bores with exposed rear returns (Flash Board and Baguette
+Evo), and visible mouths whose interior connection is unknown (Captain,
+Frictitious, Nature, Travelboard). Do not turn these into hidden U channels or
+two independent loops. The connected-channel method above remains the method
+for boards whose evidence supports that topology.
+
+For these other graphs, `cadRoutedCord` declares one to eight visible strands.
+A `lead` runs from the fixed support to one evidenced mouth, a `loop` runs
+from that support through two exterior bearing stations and back, and a
+`segment` joins two evidenced stations. Unknown joins remain unspecified.
+Each strand records its length, radius, material and provenance; estimated
+visible lengths are display estimates, not claims about the unseen full cord.
+
+The authoring-only `ropeSolver` has `method: "nativeRoutes"`, a positive
+`clearance`, and `terminalsByStrandID`. Each entry supplies one terminal for a
+lead or two bearing stations for a loop/segment, plus a `planeNormal` selected
+from the native geometry. These are attachment facts, not drawn routes. The
+solver extracts native-solid sections, retains their holes and separate
+pieces, solves paths around rope-offset boundaries, and settles hanging height.
+`sectionPlane: "anchor"` makes each free lead's section contain its actual
+support and terminal; it iterates with height for tapered or varying sections.
+An optional `pathSearch: "aStar"` searches the same native visibility graph
+using the actual three-dimensional distance to the finish as its lower bound.
+It changes search order, not obstacles, stations, edge costs or clearance gates.
+The endpoint bound uses the actual support even when its projection lies off
+the section plane. Omitting this setting preserves the original Dijkstra
+search. The setting accepts only this value and is removed from the generated
+runtime manifest. A* also reuses a certified result for exactly identical
+rotation and horizontal-translation inputs within one solve; it still solves
+height from the cord lengths. It does not infer symmetry or equivalent poses.
+The [Port-A-Board cord review](source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/cord-physics-review/review.md)
+records the actual-support correction and native path comparison. Use anchor
+sections when the support-to-mouth span needs a lateral component: projecting
+the support into a fixed-X section can introduce a sideways bend that a smooth
+rim cannot support.
+An optional `planeAxis` selects the native axis that the preferred section
+contains. Certified conflict recovery may rotate the free-span section around
+its support-to-derived-collar chord as described below; it does not rotate the
+actual bore's `mouthAxis`.
+For a lead whose bore direction is established by the native solid and retained
+manufacturer evidence, `mouthAxis` keeps the terminal at the real opening and
+derives a short outward exit beyond the solid's support plane. The solver
+certifies the axis segment and includes it in the available-length calculation;
+the operator never draws that collar or the resulting centerline.
+If the rounded-cache certificate finds a collision on a collar lead, the solver
+may retry up to five times, increasing only that lead's section margin by a
+quarter of its unchanged cord radius per attempt. Return segments retain their
+original margin. The selected margin, derived exit and attempt appear in the
+report's `mouthCollars`; they are derived diagnostics rather than authored route
+stations. Every attempt retains the same full-solid and tube-intersection gates.
+
+Multiple collared leads must also clear each other. A shortest path through an
+empty CAD bore can be invalid once another lead occupies that bore. After an
+actual tube conflict, the solver can reserve the other generated collar tubes
+as section obstacles. Parallel capsule sections use their actual distance from
+the plane and a conservative polygon; unsupported oblique reservations fail
+explicitly. Already-valid preferred routes are preserved exactly.
+
+In a rotated grip, independent preferred planes may bring both leads onto the
+same lip. If strict checks still reject those routes, the solver searches a
+bounded, deterministic set of section rotations around each support-to-derived
+collar chord. Each candidate recomputes the native section, settles height and
+passes the complete rounded-route solid and tube checks. The mouths and axial
+entry directions stay fixed. Candidate angles and failures appear in
+`sectionOrientationRecovery`; they are generated diagnostics, not hand-authored
+stations. Exhausted searches fail without updating the package. This is a
+bounded route approximation, not a global minimum or dynamic rope simulation.
+The DUAL front-entry review retains the motivating occupied-bore and lip-contact
+regressions.
+
+For evidenced front-entry leads in anchor sections, the optional authoring
+setting `tightening: "coupled3D"` releases the seed's exterior collar as a
+mandatory bend. It generates that seed from the native solid and attachment
+facts, then shortens the visible paths together in three dimensions. The actual
+mouth and fixed support remain fixed during each pass; the final segment must
+approach from the positive `mouthAxis` half-space and clear the complete native
+solid. Every accepted move shortens the path and passes the unchanged solid and
+self/interstrand tube checks. The solver re-settles hanging height, repeats
+within bounded iteration limits, and certifies the exact rounded runtime cache.
+It fails on nonconvergence. This is deterministic local shortening, not a proof
+of global minimum or physical equilibrium; no authored route cache seeds the
+solve. The setting is authoring-only, accepts only this value and topology, and
+its omission preserves the existing section solver exactly.
+
+For an evidenced open adjustment groove that guides a lead into a separate
+visible bore, the optional `ropeSolver.grooveGuides` contract selects existing
+native cylinder features, never route points. It is restricted to independent
+leads in anchor sections and cannot be combined with `tightening`. Its
+`sourceSHA256` must match the actual collider/CAD source. `byPoseID` must name
+every canonical pose and every strand; each selection contains only `feature`
+(the groove), `boreFeature`, and `exitSign` (`-1` or `1` along the native groove
+axis). Different native groove choices, pose pitches and anchor offsets require
+an explicit evidence/estimate disposition; they are not manufacturer facts.
+
+Export that offline collider with `HANGTEN_ROPE_GROOVE_FEATURES` and
+`HANGTEN_ROPE_BORE_FEATURES` set to comma-separated existing cylinder names.
+The exporter records finite final-solid wall faces, exact geometry-only axial
+bounds and the actual local bore aperture plane. A cutting cylinder's overshoot
+is not an exterior mouth. The plane must meet that bore's finite outer wall
+boundary, and its finite face must be adjacent to the aperture circle. Opposite
+coaxial bores remain separate. With neither variable set, the exporter keeps
+its original output exactly. Unsupported cylinder orientations fail explicitly.
+
+When a selected longitudinal guide merges with a transverse notch and bore,
+the circular rim may end inward from the exterior side plane. The extractor
+then requires intersecting perpendicular native tools, shared final bore/guide
+wall edges, a connected native void, an outward exterior face adjacent to the
+guide, and zero-material aperture-disk and finite axis-crossing witnesses.
+The recorded exterior mouth remains that actual side plane; the separately
+recorded cylindrical-wall extent is not substituted for it. Missing or opposite
+guides and remote parallel planes cannot certify this merged opening.
+
+When the selected guide and bore axes, terminal and fixed support are
+analytically coplanar, the bounded search retains that native axis-aligned
+plane for its first search phase to avoid numerical drift in an unnecessary
+degree of freedom. The plane is then always released and the native-derived
+seed is checked and settled in full 3D. A bounded unit-tension chain Jacobian
+step can correct small residuals from the independently reconstructed actual
+facet forces:
+endpoints stay fixed, at most five corrections of at most 10 micrometres are
+allowed, and every trial recomputes full 3D clearance and material support.
+These are numerical search bounds, not relaxed acceptance tolerances. Parallel,
+inconsistent and noncoplanar cases retain the full 3D search from the start.
+This search constraint is not a physical certificate: the final full 3D
+solid/tube, seating, entry and actual-facet force gates still apply unchanged.
+
+The guide solver generates section seeds through the selected native groove,
+then releases those seed stations during bounded three-dimensional shortening
+and hanging-height settling. It never reads an existing route cache as a seed.
+The final nine-decimal cache must pass the unchanged full-radius continuous
+solid and tube checks, finite groove traversal, finite bore/end-cap entry,
+settled length and an active-material reaction check. An endpoint touch or a
+clear route outside the groove is insufficient. If evidence authorizes entry
+into an existing visible bore, a terminal may be inset only within its audited
+finite clearance interval; no connection beyond its native display cutoff is
+implied.
+
+Different presentation rotations can resolve to exactly the same native
+support origin and height direction. The solver may reuse that calculation
+within one fresh invocation when the guide selections also match, but it
+independently recertifies every output pose. It never uses a saved route cache
+for this calculation. Reports distinguish presentation rotations from the
+distinct native physics frames.
+
+The reaction check is discrete frictionless feasibility at the numerical cord
+offset, not an exact continuous rope model, global minimum, friction model or
+safety claim. Its force scale is unit tension. Contacts contribute only to their
+own segment endpoints with barycentric weights. The contact envelope is the
+actual radius plus the existing 20 micrometre proposal margin and 10 micrometre
+numerical allowance. A separate 10 micrometre closest-feature tie allowance
+accounts for opposing triangulated junction features. Every direction needs a
+nonempty cone of actual incident outward facet normals; nearby triangle radial
+vectors alone are not material normals. The solver independently recomputes
+both cone and nodal residuals and rejects unsupported forces. It additionally
+recomposes the fitted forces from actual incident-facet cone coefficients,
+checks that nodal residual at the same limit, and records the force-weighted
+cone-error bound. Both the reconstructed nodal residual and the weighted bound
+must be at most 1e-5; cancelling direction errors cannot hide amplified force
+errors. Reports retain facet IDs, closest-distance gaps, cone coefficients and active contact forces
+so those claims can be checked against the exact retained collision mesh.
+All guide metadata remains authoring-only and is removed from generated
+`board.json`; runtime still reads ordinary `cadRoutedCord`/`wrappedRoutes`.
+
+Without groove guidance, the default `tightening: "fixed"` uses the selected
+section plane. Every route mode certifies visible segments against the full
+closed CAD solid using adaptive signed-distance
+Lipschitz bounds, with a 10 micrometre numerical tolerance and bounded work.
+Uncertifiable intervals fail. The same check covers the rounded runtime cache,
+its actual terminal and reconstructed fixed support. Self-crossings, retracing
+and nonlocal tube intersections also fail; intentional endpoint joins remain
+valid. A radius that fills a mouth cannot also provide clearance: use an audited
+cord display estimate when warranted, and preserve the evidenced native solid.
+
+Run `solve_threaded_rope.py --apply`, then `--check --report <owned-path>`.
+The cache contains only body-space `wrappedRoutes`. For this cached
+`cadRoutedCord` path, apps transform those points and add the fixed world
+support; they render transient non-pickable tubes without inferring missing
+topology or solving live physics. Separately authored live-physics packages
+use the physics-descriptor contract described above. The offline report
+retains native clearance and length ratios for every pose.
+
+For several model assets or reusable equipment instances, sidecar schema 2
+contains an `entries` array. Each entry names `presentationID`, optionally
+`equipmentObjectID`, its exact `modelSHA256`, `suspension`, and optional
+authoring `ropeSolver`. Each target occurs once. Generation validates every
+descriptor hash, preserves manifest number spelling, and stages only the
+merged `board.json`. Pass `--presentation` and/or `--equipment-object` to the
+solver to select the exact entry. Keep the sidecar hash-bound to every referenced descriptor.
+
+Schema 2 also retains the single-presentation `instanceSuspensions` form used by
+threaded-loop reusable pairs: `presentationID`, `modelSHA256`, and the exact
+map of both equipment IDs to suspension setups, with optional shared
+`ropeSolver` settings. The `entries` and `instanceSuspensions` forms are
+mutually exclusive. Each form validates its model hash and native instance
+identity; authoring solver settings are never staged into the runtime board.
+The offline solver handles both forms. `--equipment-object` may select one
+instance from a shared map; omitting it solves both. `--presentation` selects
+an entry in the multi-presentation form.
+
+
+## Pose-specific exterior loop bearings
+
+`nativeRoutes` may include authoring-only `terminalsByPoseID`, mapping an
+existing canonical pose ID to a complete `terminalsByStrandID`-shaped map.
+Every override retains the declared strand IDs, station counts and axis rules.
+Poses without an override use the global terminal map. Unknown poses, malformed
+stations and a combination with `grooveGuides` are rejected. The optional
+field is stripped with the other solver authoring settings before staging.
+
+Penta Evo uses this for its source-supported rotation: the selected grip moves
+to the lower band, so its exterior loop must bear against the newly upper
+band. Stations are deliberately derived from the actual native bearing surface
+plus the estimated cord radius and clearance. They are not hand-authored route
+vertices or evidence of hidden passages. The existing native solver generates
+and certifies each complete route and hanging height. Each pose is solved with
+its effective station map before pose or section caching, even when rotations
+match. These constrained display routes do not claim dynamic equilibrium.

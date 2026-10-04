@@ -1,0 +1,29 @@
+{
+  "package": "yy-baguette",
+  "beforeSidecarSHA256": "8678ecb04120073cb6bb5d347c02d77f21891415f77ccccbbe004f95fe5b0840",
+  "afterSidecarSHA256": "7765417f4b49ff1efeded274a70a5c69907a3126aeb73f4a7d12d2fec14c688b",
+  "changes": [
+    {
+      "presentationID": "primary",
+      "positionID": "reverse-10-15-30",
+      "beforeViewDirection": [
+        0,
+        -0.3,
+        -1
+      ],
+      "afterViewDirection": [
+        0,
+        -0.3,
+        1
+      ]
+    }
+  ],
+  "allNonCameraSidecarValuesIdentical": true,
+  "immutableNativeAndModelFilesSHA256": {
+    "yy-baguette.FCStd": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+    "assets/primary.usdz": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+    "assets/primary.model.json": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5"
+  },
+  "reason": "Canonical camera directions are native-local and rotate with the board. Front/rear mouth selection and underside visibility must be expressed before the pose rotation.",
+  "unchangedNumericRoutesSHA256": "01dca84230f302d34729816c5ac0b1081cfe127f966f7b5f5ce7ccb3abe958b8"
+}

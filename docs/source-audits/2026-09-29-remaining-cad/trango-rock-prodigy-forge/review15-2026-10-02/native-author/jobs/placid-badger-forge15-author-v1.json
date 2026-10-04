@@ -1,0 +1,11 @@
+{
+  "name": "placid-badger-forge15-author-v1",
+  "command": [
+    "python3",
+    "Tools/HangboardCAD/run_freecad.py",
+    "--freecad",
+    ".context/placid-badger/forge-review15/native-author/placid-badger-freecadcmd",
+    ".context/placid-badger/forge-review15/native-author/author-wing-recess.py"
+  ],
+  "timeoutSeconds": 300
+}

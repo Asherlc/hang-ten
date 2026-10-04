@@ -1,0 +1,19 @@
+{
+  "classification": "PASS_FOR_CAPTURED_COLORS_AND_HAND_CUES",
+  "captureCount": 14,
+  "imageHashesVerified": true,
+  "publishedSourceCommit": "fa46c015bba7456f887ba46fc4049bdfcf697c24",
+  "binarySHA256": "92411c81d2a3cc4bf8fbb019c3022f77337e74a07ad31c7090f18e315e624fb3",
+  "reviewPath": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced-whole-image-review-all14.json",
+  "reviewSHA256": "c72ace3ae0f79aeed157e5915c32046b02fc5a3c63ecb7779d42be9246947701",
+  "scope": "Additional shared-renderer smokecheck. Out-of-scope nativeMini remains unmodified and nohumanapprovaladded. ActualmodernMaxHangs two-hand tasks and normal two-board UI adaptation retained.",
+  "limits": [
+    "Tiny board scale relative to hands and surrounding layout",
+    "One displayed authored unit with explicit two-physical-board instruction",
+    "Black rounded left-edge pill visible at+190 without board/hand/timer obstruction; cause unassigned",
+    "14 spaced whole captures, not continuous frame visibility",
+    "No CPU/GPU/app-phase bracket or hardware certification"
+  ],
+  "rawCompletionUntouched": true,
+  "exactAppCleanupVerified": true
+}

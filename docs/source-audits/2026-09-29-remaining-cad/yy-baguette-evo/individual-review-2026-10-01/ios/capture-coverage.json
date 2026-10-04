@@ -1,0 +1,285 @@
+{
+  "contactCount": 19,
+  "poseCount": 9,
+  "contacts": [
+    "edge-10-left",
+    "edge-10-right",
+    "edge-12-left",
+    "edge-12-right",
+    "edge-15-left",
+    "edge-15-right",
+    "edge-20-left",
+    "edge-20-right",
+    "edge-25-left",
+    "edge-25-right",
+    "edge-6-lower",
+    "edge-6-upper",
+    "edge-8-left",
+    "edge-8-right",
+    "edge-central-20",
+    "edge-central-25",
+    "edge-central-30",
+    "edge-central-6",
+    "rounded-tray"
+  ],
+  "poseOrbitEvidence": {
+    "paired-25-20-15-10": "captures-review-obliques/paired-25-20-15-10-orbit.png",
+    "paired-10-15": "captures/paired-10-15-orbit.png",
+    "paired-12-8-6": "captures/paired-12-8-6-orbit.png",
+    "paired-8-6": "captures/paired-8-6-orbit.png",
+    "central-30-25": "captures/central-30-25-orbit.png",
+    "central-25": "captures/central-25-orbit.png",
+    "central-20-6": "captures/central-20-6-orbit.png",
+    "central-6": "captures-continuation/central-6-orbit.png",
+    "rounded-tray": "captures-review-obliques/rounded-tray-orbit.png"
+  },
+  "rawCaptureRecords": [
+    {
+      "image": "default.png",
+      "contactID": null,
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": false,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-20-left.png",
+      "contactID": "edge-20-left",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "paired-25-20-15-10-orbit.png",
+      "contactID": "edge-20-left",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-10-left.png",
+      "contactID": "edge-10-left",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "paired-10-15-orbit.png",
+      "contactID": "edge-10-left",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-25-left.png",
+      "contactID": "edge-25-left",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-15-left.png",
+      "contactID": "edge-15-left",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-15-right.png",
+      "contactID": "edge-15-right",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-25-right.png",
+      "contactID": "edge-25-right",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-10-right.png",
+      "contactID": "edge-10-right",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-20-right.png",
+      "contactID": "edge-20-right",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-12-left.png",
+      "contactID": "edge-12-left",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "paired-12-8-6-orbit.png",
+      "contactID": "edge-12-left",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-12-right.png",
+      "contactID": "edge-12-right",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-8-left.png",
+      "contactID": "edge-8-left",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "paired-8-6-orbit.png",
+      "contactID": "edge-8-left",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-8-right.png",
+      "contactID": "edge-8-right",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-6-upper.png",
+      "contactID": "edge-6-upper",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-6-lower.png",
+      "contactID": "edge-6-lower",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-central-30.png",
+      "contactID": "edge-central-30",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "central-30-25-orbit.png",
+      "contactID": "edge-central-30",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-central-25.png",
+      "contactID": "edge-central-25",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "central-25-orbit.png",
+      "contactID": "edge-central-25",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-central-20.png",
+      "contactID": "edge-central-20",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures"
+    },
+    {
+      "image": "central-20-6-orbit.png",
+      "contactID": "edge-central-20",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true,
+      "folder": "captures"
+    },
+    {
+      "image": "edge-central-6.png",
+      "contactID": "edge-central-6",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures-continuation"
+    },
+    {
+      "image": "central-6-orbit.png",
+      "contactID": "edge-central-6",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true,
+      "folder": "captures-continuation"
+    },
+    {
+      "image": "rounded-tray.png",
+      "contactID": "rounded-tray",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures-continuation"
+    },
+    {
+      "image": "rounded-tray-orbit.png",
+      "contactID": "rounded-tray",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true,
+      "folder": "captures-continuation"
+    },
+    {
+      "image": "edge-20-left.png",
+      "contactID": "edge-20-left",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures-review-obliques"
+    },
+    {
+      "image": "paired-25-20-15-10-orbit.png",
+      "contactID": "edge-20-left",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true,
+      "folder": "captures-review-obliques"
+    },
+    {
+      "image": "rounded-tray.png",
+      "contactID": "rounded-tray",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "folder": "captures-review-obliques"
+    },
+    {
+      "image": "rounded-tray-orbit.png",
+      "contactID": "rounded-tray",
+      "contactsAvailable": 19,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true,
+      "folder": "captures-review-obliques"
+    }
+  ],
+  "retainedFailures": [
+    "captures/failure.txt (AXe139)",
+    "runtime-probes/interrupted-status.json"
+  ],
+  "humanAcceptance": "pending user review"
+}

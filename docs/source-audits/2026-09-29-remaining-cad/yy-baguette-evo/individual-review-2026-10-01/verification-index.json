@@ -1,0 +1,19 @@
+{
+  "humanReview": "pending",
+  "finalAssets": {
+    "Hangboards/yy-baguette-evo/assets/primary.model.json": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+    "Hangboards/yy-baguette-evo/assets/primary.usdz": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+    "Hangboards/yy-baguette-evo/suspension.json": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282",
+    "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448"
+  },
+  "checks": {
+    "nativeGeometry": "rounded-ends/independent-audit/summary.json",
+    "sourceAndContactFacts": "package-checks/rounded-final/final-source-facts.json",
+    "actualExportAndStaging": "package-checks/rounded-final/published-package-verification.json",
+    "compilerReproducibility": "rounded-export/reproducibility.json",
+    "nativeCordCache": "rounded-export/cord-check.json",
+    "runtime": "ios/final-runtime-validation.json",
+    "deliveryLock": "delivery-validation.json"
+  },
+  "historicalEvidence": "Intermediate and failed run records are preserved separately with original bytes/status."
+}

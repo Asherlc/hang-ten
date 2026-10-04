@@ -356,6 +356,8 @@ enum SuspendedBoardPresentation {
             throw SuspendedPresentationError.invalidPose
         }
         switch suspension {
+        case .cadRoutedCord(let profile):
+            return .twoBranch(try solve(pose: pose, suspension: profile, bounds: bounds, modelTransform: transform))
         case .pairedLeadCord(let profile):
             return .pairedLead(try solve(pose: pose, suspension: profile, bounds: bounds,
                 modelTransform: transform, preserveAuthoredAnchor: true))
@@ -447,6 +449,8 @@ enum SuspendedBoardPresentation {
 
         let profile: BoardModelSingleCordSuspension
         switch suspension {
+        case .cadRoutedCord:
+            throw SuspendedPresentationError.invalidSuspension
         case .singleCord(let single):
             profile = single
         case .pairedLeadCord:
@@ -466,6 +470,50 @@ enum SuspendedBoardPresentation {
             profile: profile,
             bounds: bounds
         )
+    }
+
+    /// Routes are generated against the closed native CAD solid. Runtime only
+    /// applies the canonical rigid pose and builds transient unpickable tubes.
+    static func solve(pose: BoardModelCanonicalPose, suspension: BoardModelCADRoutedCord,
+                      bounds: BoardModelBounds, modelTransform: simd_float4x4? = nil) throws -> SuspendedTwoBranchSolvedPresentation {
+        // Instance placement already includes its bounds-centered rotation and
+        // reflection. Native caches still require their canonical world pose;
+        // replacing that pose with the base drops the solved hanging height.
+        let transform = try boardTransform(for: pose) * (modelTransform ?? matrix_identity_float4x4)
+        let (minimum, maximum) = try validatedBounds(bounds)
+        guard let routes = pose.wrappedRoutes,
+              Set(routes.keys) == Set(suspension.strands.map(\.id)),
+              !suspension.strands.isEmpty,
+              Set(suspension.strands.map(\.id)).count == suspension.strands.count,
+              Set(suspension.strands.map(\.radius)).count == 1,
+              suspension.strands.allSatisfy({ $0.radius.isFinite && $0.radius > 0
+                  && $0.restLength.isFinite && $0.restLength > 0 }),
+              suspension.anchor.position.count == 3,
+              suspension.anchor.position.allSatisfy(\.isFinite) else { throw SuspendedPresentationError.invalidSuspension }
+        let anchor = SIMD3<Float>(suspension.anchor.position.map(Float.init))
+        var branches: [SuspendedBranchSolution] = []
+        var framingPoints = transformedBoundsCorners(minimum: minimum, maximum: maximum, transform: transform) + [anchor]
+        for strand in suspension.strands {
+            guard let route = routes[strand.id], route.count >= 3,
+                  route.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }) else { throw SuspendedPresentationError.invalidSuspension }
+            var points = route.map { transformPoint(transform, SIMD3<Float>($0.map(Float.init))) }
+            if strand.kind == "lead" || strand.kind == "loop" { points.insert(anchor, at: 0) }
+            if strand.kind == "loop" { points.append(anchor) }
+            guard ["lead", "loop", "segment"].contains(strand.kind),
+                  points.allSatisfy(\.allFinite) else { throw SuspendedPresentationError.invalidSuspension }
+            let deltas = zip(points, points.dropFirst()).map { $1 - $0 }
+            let length = deltas.reduce(Float.zero) { $0 + simd_length($1) }
+            guard deltas.allSatisfy({ simd_length($0) > 1e-7 }), length <= Float(strand.restLength) + 0.00002 else {
+                throw SuspendedPresentationError.invalidCord
+            }
+            branches.append(SuspendedBranchSolution(id: strand.id, passageIDs: [], spans: [points],
+                centerlineSamples: points, tangentSamples: tangentSamples(for: points), arcLength: length))
+            framingPoints += points
+        }
+        try SuspendedCordSolver.validateNativeCordPaths(branches.map(\.centerlineSamples))
+        return SuspendedTwoBranchSolvedPresentation(boardTransform: transform, fixedAnchor: anchor, branches: branches,
+            cameraFraming: try makeCameraFraming(pose: pose, transform: transform, points: framingPoints),
+            tubeRadius: Float(suspension.strands[0].radius), requiredClearance: additionalClearance)
     }
 
     static func solve(

@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "final-author-check",
+  "script": ".context/placid-badger/metolius-simulator-3d-front-fairing/extract_final_native.py",
+  "timeoutSeconds": 180,
+  "startedUTC": "2026-10-01T18:17:52.064577+00:00",
+  "ownedProcessGroup": 61366,
+  "elapsedSeconds": 1.4252276250044815,
+  "exitCode": 3,
+  "ownedProcessGroupExited": true
+}

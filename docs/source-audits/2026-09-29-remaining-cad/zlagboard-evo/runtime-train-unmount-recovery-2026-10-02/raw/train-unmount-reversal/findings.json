@@ -1,0 +1,14 @@
+{
+  "status": "Invalid setup before launch; no visual reversal result",
+  "captureProcessExitStatus": 1,
+  "firstCommandExitStatus": 149,
+  "simulatorError": "CoreSimulator SimError405: Unable to lookup in current state: Shutdown",
+  "rawRun": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape",
+  "appLaunched": false,
+  "noRetry": true,
+  "noBootBuildInstallOrSourceMutation": true,
+  "prior230FilesExact": true,
+  "appTermination": "No new app launched; original pair exact app termination already verified. No further simctl action attempted.",
+  "ownership": "Runtime/source/DD handed back to root; existing root lifecycle owns resource cleanup.",
+  "productionInference": false
+}

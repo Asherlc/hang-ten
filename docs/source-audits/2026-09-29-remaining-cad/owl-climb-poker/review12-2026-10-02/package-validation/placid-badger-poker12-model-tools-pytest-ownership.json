@@ -1,0 +1,51 @@
+{
+  "owner": "placid-badger",
+  "jobName": "placid-badger-poker12-model-tools-pytest",
+  "status": "cleaned",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest-TMP"
+  ],
+  "processGroup": 34571,
+  "registeredUTC": "2026-10-02T15:29:54.829347+00:00",
+  "simulatorsCreated": 0,
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest-TMP/placid-badger-pytest",
+    "--junitxml",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest-junit.xml",
+    "Tools/HangboardModels/test_contact_model_descriptor.py",
+    "Tools/HangboardModels/test_contact_model_package.py",
+    "Tools/HangboardModels/test_import_contact_model_source.py",
+    "Tools/HangboardModels/test_verify_yy_baguette_evo.py"
+  ],
+  "timeoutSeconds": 300,
+  "logPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest.log",
+  "startedUTC": "2026-10-02T15:29:54.832478+00:00",
+  "exitCode": 0,
+  "elapsedSeconds": 2.311216500005685,
+  "logSHA256": "d7762caef79dec0d631144d5906d3f708c0c435d7368e36bdae3938e5c314489",
+  "cleanup": {
+    "owner": "placid-badger",
+    "jobName": "placid-badger-poker12-model-tools-pytest",
+    "resources": [
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest-TMP",
+        "absent": true
+      }
+    ],
+    "errors": [],
+    "remainingProcesses": [],
+    "processGroupAbsent": true,
+    "allResourcesAbsent": true,
+    "passed": true,
+    "finishedUTC": "2026-10-02T15:29:57.357850+00:00"
+  }
+}

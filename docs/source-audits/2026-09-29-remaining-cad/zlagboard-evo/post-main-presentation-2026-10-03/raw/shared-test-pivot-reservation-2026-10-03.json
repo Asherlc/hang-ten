@@ -1,0 +1,17 @@
+{
+  "parentHEAD": "f9554600c1e5d94d027346ca5d6ca7343d71a7e7",
+  "localHEAD": "a314f39c03121465b493da6f45e49fa7c928b1cc",
+  "noLocalDiff": [
+    "HangTenTests/BoardModelRealityTests.swift",
+    "HangTen/Models/BoardModelRealityTypes.swift"
+  ],
+  "parentReservedMethods": [
+    "testMirroredBoardNormalsAgreeWithRenderedTriangleWinding",
+    "testRockProdigyPairsPreserveSpacingAndIndependentContactEntities",
+    "testSharedContactMeshUsesPrimaryPickingAndUnionHighlight",
+    "testNUGPinchHighlightsBothOpposingSurfacesAndKeepsJugPicking",
+    "testLiveScenePausesThenPublishesAcceptedSettledFrame (diagnostic only if needed)",
+    "makeGeometricCordPose"
+  ],
+  "scope": "No overlap confirmed. Existing local cadRoutedCord returns nil and native route orbit test must be substantively reconciled at explicit future integration. No implicit merge."
+}

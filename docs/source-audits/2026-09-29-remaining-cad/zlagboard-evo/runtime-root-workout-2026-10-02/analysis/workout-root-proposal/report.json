@@ -1,0 +1,150 @@
+{
+  "scope": "Read-only root-launch diagnostic design, conditional on parent gate after H0/H1. No implementation, new runtime, source mutation or fix claim.",
+  "recommendation": "Mount the actual existing WorkoutView through its existing WorkoutAccessGate directly in RootView before normalBody/TabView under one DEBUG-only environment gate. Do not recreate landscapeSession around synthetic8-second phases. In this checkout the actual type is WorkoutView, not WorkoutSessionView.",
+  "existingRoute": {
+    "directWorkoutAvailable": false,
+    "facts": [
+      "RootView:201\u2013210 currently bypasses TabView only for StandaloneBoardHighlightProbe. There is no direct workout-root gate.",
+      "Existing hangten://plan/research.max-hangs/workout route passes RootView TabView -> TrainView NavigationStack -> navigationDestination -> WorkoutAccessGate -> WorkoutView (TrainView:47,92\u201395).",
+      "HANGTEN_REVIEW_PLAN routes to PlanDetailView; HANGTEN_REVIEW_AUTOSTART controls WorkoutView startup once mounted, not its containment."
+    ]
+  },
+  "smallestOwnedChange": {
+    "path": "HangTen/Views/RootView.swift only; within current reservation. No BoardMapView, TrainView, AppStore, app entry, plan data, renderer or hand file edit.",
+    "gate": "Add mutually exclusive DEBUG-only HANGTEN_REVIEW_WORKOUT_AT_ROOT branch before normalBody; standalone gate must be off. Resolve the explicitly requested HANGTEN_REVIEW_PLAN_ID in store.plans and validate requested boardID matches store.selectedBoard.id and store.board(for:plan).id. Fail visibly on mismatch/missing plan rather than featuredPlan fallback.",
+    "child": "WorkoutAccessGate(plan: existingPlan) uses its launchesOnAppear=true EmptyView initializer. This preserves real purchase/launch decision and only replaces Color.clear with WorkoutView when allowed; no navigationDestination is created in that access-gate branch. Keep access-store review environment identical to normal capture; no new access bypass.",
+    "environment": "App entry already injects AppStore, MotherboardBluetoothService and MotherboardSettingsStore above RootView (HangTenApp:93\u201395). The normal TabView injects workoutAudioCoach and deepLinkManager at RootView:230\u2013231; direct branch must inject the SAME root-owned instances, especially WorkoutView required audioCoach. Preserve scenePhase/dismiss from environment; dismiss has no navigation target in this test.",
+    "orientation": "NormalBody owns current review orientation onAppear (RootView:238\u2013258), so bypassing it loses landscape request. Attach same requested landscape geometry update to the diagnostic root branch, with no new timer/state. Verify actual landscape before interpreting screenshots; startup rotation/layout remains a measured difference.",
+    "startup": "Reuse existing HANGTEN_REVIEW_BOARD_ID=zlagboard.evo and HANGTEN_REVIEW_PLAN_ID=research.max-hangs plus HANGTEN_REVIEW_AUTOSTART=1. Leave HANGTEN_REVIEW_STEP unset. Keep real WorkoutView configureRecorder, hand preference, countdown/audio preparation, timeline/resolvers and complete layout. No second script to drive highlight modes.",
+    "lifecycle": "WorkoutView owns idleTimer disable/restore, audio stop and recorder cleanup on appear/disappear. Retain existing resource lifecycle worker/traps; root route adds no external resources itself. Do not exercise End/Routine sheet as part of this boundary since navigation dismissal context intentionally differs."
+  },
+  "naturalCapture": {
+    "plan": "Bundled research.max-hangs unchanged: work7s/rest180s in PlanLibrary:4597\u20134621 and4636\u20134675; existing metadata labels it adapted. No shortened source durations, invented training cues or transformed plan.",
+    "sequence": "Capture initial clear/countdown, first7s Hang, early and late natural180s Rest, next7s Hang and following Rest. No Skip/seek/step override. Reuse passive bounded normal-cycle capture so board IDs/mode/phase come only from real WorkoutTimeline.",
+    "comparison": "Normal navigated passive failure already provides reference; direct-root arm should use same binary/environment except the new root gate, with same hands/material/camera/diagnostic flags. If direct-root passes, run normal reference under that same new binary before attributing a containment distinction.",
+    "evidence": "Actual whole screenshots and semantic/material brackets; full view-make/disappear census/root/camera identity and UIKit frame. Record every mounted board host, early navigation ancestors absent, exact source/codepayload/package parity. Runtime schedule follows actual app phase rather than only wall-clock7/180 estimates."
+  },
+  "faithfulnessVsEightSecondRecreation": [
+    "Actual WorkoutView preserves production GeometryReader, TimelineView, changing header/progress/controls, cue insertions and hands, BoardMap state/animation and current layout proposals. An8-second reproduction would require copying many private helpers and wiring session-dependent conditions, creating more uncontrolled differences.",
+    "Existing plan/auto-start is already implemented. Additional scope is one RootView branch plus shared environment/orientation delivery, substantially smaller than making landscapeSession reusable or synthesizing WorkoutStep values.",
+    "Do not shorten phases for convenience. If a future shortened run is explicitly chosen it must be labeled diagnostic adaptation and cannot replace natural-cycle proof."
+  ],
+  "confounders": [
+    "No navigation bar/tab containment changes safe-area proposals, toolbar visibility and board placement. This arm tests the aggregate navigation/ancestor-host boundary; it does not isolate navigation controller internals from geometry. Measure rather than fake a toolbar spacer.",
+    "Train selectedBoardCard creates a prior board host in the normal route; direct root avoids that lifecycle/history. A pass could implicate ancestor/previous-host lifetime rather than sibling rendering.",
+    "Root direct launch skips normalBody onOpenURL/session persistence subscriptions; they are unrelated to observed within-session material values but should be documented as bypassed debug route. Do not present this as production navigation rewrite.",
+    "Gate startup timing may differ because no deep link/navigation transition; retain readiness and initial board loading/countdown trace, do not delay/synchronize source state silently.",
+    "Missing required environment objects crashes rather than reproduces; same root audioCoach must be explicitly delivered. Access refusal or prep prompt is not a rendering failure.",
+    "If direct root also fails, production layout/session itself is sufficient without navigation, but no individual cause/fix follows. If it passes and matched normal fails, next smallest boundary is root with NavigationStack alone versus full normal ancestor route, not renderer replacement."
+  ],
+  "sourceEvidence": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "3d139f8b078e14e253ee1b9b3133fbd1c6c09cd9a9f1e19e7cc68dae1400a9a8",
+      "lineRanges": [
+        [
+          193,
+          231
+        ],
+        [
+          238,
+          258
+        ],
+        [
+          1866,
+          1896
+        ],
+        [
+          1925,
+          1948
+        ],
+        [
+          1950,
+          2032
+        ],
+        [
+          2085,
+          2115
+        ],
+        [
+          2163,
+          2201
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+      "lineRanges": [
+        [
+          46,
+          50
+        ],
+        [
+          88,
+          98
+        ],
+        [
+          135,
+          141
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Views/WorkoutAccessGate.swift",
+      "sha256": "a5f98213be6ada0f2e509b8097006e4d85730b8aee90e8e63e1dabfd9decb179",
+      "lineRanges": [
+        [
+          28,
+          68
+        ],
+        [
+          87,
+          100
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/HangTenApp.swift",
+      "sha256": "ce691d0d9a5360452f3704a64918f5a6af6c20d2608450aa532bf346bd101efd",
+      "lineRanges": [
+        [
+          80,
+          99
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Models/AppStore.swift",
+      "sha256": "45cb3ec1e065dcf9e08a65e9c16727c4dc79f99a7bc50d48da6a97df06d3c5db",
+      "lineRanges": [
+        [
+          57,
+          64
+        ],
+        [
+          315,
+          326
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Resources/PlanLibrary.json",
+      "sha256": "b203917f19e792e2d39abf15bbac96a6119ca0a7aa5384618fd1bb3978de2c6b",
+      "lineRanges": [
+        [
+          4580,
+          4628
+        ],
+        [
+          4631,
+          4676
+        ],
+        [
+          19831,
+          19858
+        ]
+      ]
+    }
+  ]
+}

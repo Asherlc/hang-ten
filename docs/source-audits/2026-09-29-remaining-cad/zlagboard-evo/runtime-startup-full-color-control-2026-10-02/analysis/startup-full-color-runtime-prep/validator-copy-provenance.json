@@ -1,0 +1,148 @@
+[
+  {
+    "role": "control",
+    "name": "check-real-hands.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/control/check-real-hands.py",
+    "sourceSHA256": "11c09feed0bc8bb805e873bb739ab4c51de86eef0226cf32e4d1371b2629454a",
+    "sha256": "012acaef4cee2bc734bb7524da7a5186df02c7d130c27ed1b2ae0f877e23cc18"
+  },
+  {
+    "role": "control",
+    "name": "check-cpu-semantics.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/control/check-cpu-semantics.py",
+    "sourceSHA256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+    "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+  },
+  {
+    "role": "control",
+    "name": "check-navigation.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/control/check-navigation.py",
+    "sourceSHA256": "f9b58b2543c458f054aa631132a4599e95994dc828dfaeb41238ecd86aa57e1c",
+    "sha256": "deda8bf3a760533892b428fce4f9810667eefcc1346a8585268adf1369235907"
+  },
+  {
+    "role": "control",
+    "name": "check-sync-counters.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/control/check-sync-counters.py",
+    "sourceSHA256": "ab7d331b27814b9bd743ee8adb115d130a5bff8f0aa4ad981f8bc8345f67158d",
+    "sha256": "850061ffc495b5c4cf786589f6cdf52880067a47c7d4779606f31e5fab48c650"
+  },
+  {
+    "role": "control",
+    "name": "check-weak-hand-census.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/control/check-weak-hand-census.py",
+    "sourceSHA256": "f19b318e67d09fcf34028c820976e955bec635326d3b9bc65cd03896f849ba55",
+    "sha256": "f0217e87e33c4ef3ea58315e27ea0cbcbffcece80ecdcab6f8393ba5d6ed7567"
+  },
+  {
+    "role": "control",
+    "name": "check-frames.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/control/check-frames.py",
+    "sourceSHA256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+    "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+  },
+  {
+    "role": "control",
+    "name": "check-ownership.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/control/check-ownership.py",
+    "sourceSHA256": "807d63dc37cf4c99edd1e4e4277fe35d597bc77a4c6e18332bc83e791a88a2a4",
+    "sha256": "2208c5c389d1bac54122d72a77500773a593742dddac3a260ac81f688fa5ced9"
+  },
+  {
+    "role": "control",
+    "name": "check-prestart-hands.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/control/check-prestart-hands.py",
+    "sourceSHA256": "327ccf1d2252fe5260393705c72f50d596a7c1d3a7c091d927dc1e72553f1f4a",
+    "sha256": "03f591bd6ed7a49fe6d53d6dd298dd4c8bcf7842f6e0485a875568d4045644a0"
+  },
+  {
+    "role": "control",
+    "name": "compare.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/control/compare.py",
+    "sourceSHA256": "813f0fb323e4e114e6dcac239a436012bb9c94a4e4c85a15a4f4874330db7608",
+    "sha256": "2a95246c411ddccfc8b2b5bd9803454fe3ca1a5b4a84971618ad39e88a2dcbbf"
+  },
+  {
+    "role": "control",
+    "name": "check-constructors.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/control/check-constructors.py",
+    "sourceSHA256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+    "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+  },
+  {
+    "role": "action",
+    "name": "check-real-hands.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-real-hands.py",
+    "sourceSHA256": "c2d6a88a244290229a24d262d3b710d03bf0d649125d5749bbca0126b389c1f1",
+    "sha256": "b512f11cf03f78d468123b768166123508d38ad7ff85d1f6eff2f4444ce21277"
+  },
+  {
+    "role": "action",
+    "name": "check-cpu-semantics.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-cpu-semantics.py",
+    "sourceSHA256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+    "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+  },
+  {
+    "role": "action",
+    "name": "check-navigation.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-navigation.py",
+    "sourceSHA256": "0ee28cbbd99bb81457ee776337925f802cee1a404cb6522a1c434aaf39101c22",
+    "sha256": "f10795e290a7eccb7076d0922f0ee4628de9cc33ccd512c1ad57ab0a9717a78d"
+  },
+  {
+    "role": "action",
+    "name": "check-sync-counters.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-sync-counters.py",
+    "sourceSHA256": "feab2da3f76303f00d4e4f96a998eca8a4d7bcd10ec292065fae31a23e477ba8",
+    "sha256": "5c8248232023d0a62bf77ef2bff380cbc27d826f6e3c49fb56e4a0e95f6aab20"
+  },
+  {
+    "role": "action",
+    "name": "check-weak-hand-census.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-weak-hand-census.py",
+    "sourceSHA256": "08692559d22fa395a9451a901793d04381ab9c0b10a88af560696973cdee501a",
+    "sha256": "301db2caee1541b429be526a1c50699dca8d2b470129c59bf01ed2dabc408efd"
+  },
+  {
+    "role": "action",
+    "name": "check-frames.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-frames.py",
+    "sourceSHA256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+    "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+  },
+  {
+    "role": "action",
+    "name": "check-ownership.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-ownership.py",
+    "sourceSHA256": "0a0e562903606f406d229483ed8b4475b8e4186525fe542ec6e3239a32658d1d",
+    "sha256": "c99d436af6038ecd6a20754b80655839d126fe863c12711baef163f6ada883ed"
+  },
+  {
+    "role": "action",
+    "name": "check-prestart-hands.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-prestart-hands.py",
+    "sourceSHA256": "8f780e261d5fe843676805afb4c42968fdf2f211842fb8a55dba1c9447742f40",
+    "sha256": "bb61b0a2c6d136a6a4c68b7132a3d165e39f97ad20cbcca09fe0c2a75e203b7f"
+  },
+  {
+    "role": "action",
+    "name": "compare.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/compare.py",
+    "sourceSHA256": "b5858d64deba556c9a1a86b20c0cdc2ad02d9c98717739ed9dc051154fad2556",
+    "sha256": "e2df83e187e7b6bb5ddf50f030131e7239f9879c47640f41c11b1437eb029669"
+  },
+  {
+    "role": "action",
+    "name": "check-constructors.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/action/check-constructors.py",
+    "sourceSHA256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+    "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+  },
+  {
+    "name": "check-supplemental-timing.py",
+    "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-supplemental-runtime-prep/check-supplemental-timing.py",
+    "sourceSHA256": "cd6e98044a0afb60116cf58b592476c7780f6d941f302bef9f350338b5090c1c",
+    "sha256": "ba62ecddd10c4515fd84cf0049fc96c6e2c16a7f139fccabfdc1d014baec37a0"
+  }
+]

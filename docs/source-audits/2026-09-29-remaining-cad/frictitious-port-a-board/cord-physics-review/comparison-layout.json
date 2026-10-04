@@ -1,0 +1,17 @@
+{
+  "method": "Full source images pasted without cropping, source registration or geometry edits; uniform scaling only in six-pose overview.",
+  "outputs": {
+    "front-side-top-comparison.png": "eea56d4c28ea6123a61a7cc0b9128f1c7d9e34f98291f65d7ed4640dba21dc50",
+    "app-before-after.png": "ec330f53931b5160bdbd5ac6fc268ed3189d95c3649317fec913b04b71220979",
+    "six-pose-comparison-overview.png": "6301cfe9f13cfba2fe7e2fe684f69af35f1a53e1065eb5ba322f699154689316"
+  },
+  "appInputs": {
+    "before": "75e85336ec2c059a395f438e9927aefbf3eb36b890f925f03fc30ef8455df635",
+    "after": "bec97d4819ab86ce17a65960523a2f65b8ea2ea6fd4e8cbbcab3847580e96383"
+  },
+  "threeViewInputs": {
+    "front": "13ef4901e97dbd68c77f4068fdb790407397f0ca291e291e48a121f3598f49ef",
+    "side": "294752cada35a392d797d39e7b61f1ff44cbcf06cffd6c0a0d8f429a39c1384d",
+    "top": "fad7a7aa91e6e7958d76fa7437a3024adeaba30a4ec47931fe5d8352b5ecd141"
+  }
+}

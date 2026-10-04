@@ -1,18 +1,19 @@
 {
+  "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
   "modelBounds": {
-    "max": [
-      0.059999999,
-      0.035,
-      0.015
-    ],
     "min": [
       -0.059999999,
       -0.035,
       -0.015
+    ],
+    "max": [
+      0.059999999,
+      0.035,
+      0.015
     ]
   },
-  "modelSHA256": "46f7602121b3cf3f31d2f5040d33491e1f748dc477c9fe543a13a612f2b09c74",
   "nodes": [
     {
       "nodeID": "Body_EditableSkin_001",
@@ -39,82 +40,81 @@
       "contactID": "outer-jug"
     }
   ],
-  "schemaVersion": 1,
   "contacts": {
     "curved-edge-20": {
-      "center": [
-        0.5,
-        0.21448432
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.829268948,
-          0.299999995
-        ],
-        "min": [
-          0.170731052,
-          0.128968645
-        ]
-      },
       "nodeIDs": [
         "Hold_Curved20_EditableSkin_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.048061834,
+          0.128914655
+        ],
+        "max": [
+          0.951928884,
+          0.357142861
+        ]
+      },
+      "center": [
+        0.499995359,
+        0.243028758
       ]
     },
     "curved-edge-25": {
-      "center": [
-        0.5,
-        0.78551568
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.829268948,
-          0.871031355
-        ],
-        "min": [
-          0.170731052,
-          0.700000005
-        ]
-      },
       "nodeIDs": [
         "Hold_Curved25_EditableSkin_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.048071116,
+          0.642857139
+        ],
+        "max": [
+          0.951938166,
+          0.871085345
+        ]
+      },
+      "center": [
+        0.500004641,
+        0.756971242
       ]
     },
     "outer-jug": {
-      "center": [
-        0.5,
-        0.95714285
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.910467923,
-          1.0
-        ],
-        "min": [
-          0.089532077,
-          0.914285701
-        ]
-      },
       "nodeIDs": [
         "Hold_OuterJug_EditableSkin_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.066666648,
+          1.0
+        ],
+        "max": [
+          0.933333352,
+          1.0
+        ]
+      },
+      "center": [
+        0.5,
+        1.0
       ]
     },
     "pocket-end-wall-20-25": {
-      "center": [
-        0.87027471,
-        0.5
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.925000002,
-          0.871428578
-        ],
-        "min": [
-          0.815549418,
-          0.128571422
-        ]
-      },
       "nodeIDs": [
         "Hold_EndPocket_EditableSkin_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.904166688,
+          0.341945286
+        ],
+        "max": [
+          0.950000022,
+          0.658054714
+        ]
+      },
+      "center": [
+        0.927083355,
+        0.5
       ]
     }
   }

@@ -1,0 +1,822 @@
+{
+  "owner": "placid-badger",
+  "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+  "capturedUTC": "2026-10-02T18:51:52.600814+00:00",
+  "gitHEAD": "8b1bbd0858ca3e81bc7c43ad842a80ff9ca2138b",
+  "statusAtCapture": "",
+  "codegraphPresent": false,
+  "canonicalFiles": {
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json": {
+      "sha256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e",
+      "bytes": 822
+    },
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz": {
+      "sha256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+      "bytes": 34602
+    },
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json": {
+      "sha256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477",
+      "bytes": 822
+    },
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz": {
+      "sha256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+      "bytes": 34594
+    },
+    "Hangboards/plateau-lifting-edge/assets/primary.model.json": {
+      "sha256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
+      "bytes": 822
+    },
+    "Hangboards/plateau-lifting-edge/assets/primary.usdz": {
+      "sha256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+      "bytes": 33622
+    },
+    "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd": {
+      "sha256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+      "bytes": 100099
+    },
+    "Hangboards/plateau-lifting-edge/suspension.json": {
+      "sha256": "accd4b12ac09f4de1213c06b783de736117fd44e94b12918b38c86467dd2aa9f",
+      "bytes": 9623
+    }
+  },
+  "generatedManifest": {
+    "path": ".context/placid-badger/plateau-review13/preflight-2026-10-02/board.generated.json",
+    "sha256": "1ee55d14fdadc6ebc38373d2c059eaa3c82d25a45eca4ede028378b4552b3b94",
+    "bytes": 11668
+  },
+  "facts": {
+    "id": "plateau.lifting-edge",
+    "name": "Lifting Edge",
+    "manufacturer": "Plateau Climbing",
+    "revisionID": "2026-09-contact-first",
+    "contacts": [
+      {
+        "id": "edge-18",
+        "equipmentObjectID": "primary",
+        "name": "Wood edge",
+        "kind": "edge",
+        "handCapacity": 1,
+        "depth": {
+          "range": {
+            "minimum": 18,
+            "maximum": 18
+          }
+        },
+        "gripTypes": []
+      }
+    ],
+    "positions": [
+      {
+        "id": "depth-18mm",
+        "presentationID": "depth-18mm",
+        "contactIDs": [
+          "edge-18"
+        ],
+        "effectiveDepths": {
+          "edge-18": {
+            "range": {
+              "minimum": 18,
+              "maximum": 18
+            }
+          }
+        }
+      },
+      {
+        "id": "depth-15mm",
+        "presentationID": "depth-15mm",
+        "contactIDs": [
+          "edge-18"
+        ],
+        "effectiveDepths": {
+          "edge-18": {
+            "range": {
+              "minimum": 15,
+              "maximum": 15
+            }
+          }
+        }
+      },
+      {
+        "id": "depth-10mm",
+        "presentationID": "depth-10mm",
+        "contactIDs": [
+          "edge-18"
+        ],
+        "effectiveDepths": {
+          "edge-18": {
+            "range": {
+              "minimum": 10,
+              "maximum": 10
+            }
+          }
+        }
+      }
+    ],
+    "equipmentObjects": [
+      {
+        "id": "primary"
+      }
+    ]
+  },
+  "presentations": [
+    {
+      "id": "depth-18mm",
+      "asset": {
+        "sha256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+        "bytes": 33622
+      },
+      "descriptor": {
+        "sha256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
+        "bytes": 822
+      },
+      "descriptorPath": "Hangboards/plateau-lifting-edge/assets/primary.model.json",
+      "assetPath": "Hangboards/plateau-lifting-edge/assets/primary.usdz",
+      "nodes": [
+        {
+          "nodeID": "plateau_body",
+          "role": "body"
+        },
+        {
+          "nodeID": "plateau_edge_18",
+          "role": "contact",
+          "contactID": "edge-18"
+        }
+      ],
+      "contactID": "edge-18",
+      "publishedEffectiveDepthMM": 18,
+      "actualContactMeshDepthMM": 17.999999225139618,
+      "meshTriangles": {
+        "plateau_body": 858,
+        "plateau_edge_18": 66
+      },
+      "display": {
+        "camera": {
+          "type": "orthographic",
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "up": [
+            0,
+            1,
+            0
+          ],
+          "fitPadding": 0.12
+        }
+      },
+      "suspensionSummary": {
+        "bodyNodeID": "plateau_body",
+        "strandID": "curl-loop",
+        "strandKind": "loop",
+        "radiusMM": 2.0,
+        "estimatedRestLengthMM": 420.0,
+        "method": "nativeRoutes"
+      },
+      "readOnlyChecks": {
+        "descriptorModelHashMatches": true,
+        "actualMeshNodeIDsEqualDescriptor": true,
+        "singleContactIdentity": true,
+        "sameBodyAndContactNodes": true,
+        "effectiveDepthMatchesActualMeshBounds": true,
+        "cordEntryBindsActualAsset": true,
+        "nativeRoutesRetained": true,
+        "sidecarSuspensionEqualsGenerated": true,
+        "currentFinishMetadataAbsent": true,
+        "materialFree": true,
+        "textureFilesAbsent": true,
+        "noAuthoredDisplayColors": true
+      }
+    },
+    {
+      "id": "depth-15mm",
+      "asset": {
+        "sha256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+        "bytes": 34594
+      },
+      "descriptor": {
+        "sha256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477",
+        "bytes": 822
+      },
+      "descriptorPath": "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json",
+      "assetPath": "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz",
+      "nodes": [
+        {
+          "nodeID": "plateau_body",
+          "role": "body"
+        },
+        {
+          "nodeID": "plateau_edge_18",
+          "role": "contact",
+          "contactID": "edge-18"
+        }
+      ],
+      "contactID": "edge-18",
+      "publishedEffectiveDepthMM": 15,
+      "actualContactMeshDepthMM": 14.999999199062586,
+      "meshTriangles": {
+        "plateau_body": 882,
+        "plateau_edge_18": 66
+      },
+      "display": {
+        "camera": {
+          "type": "orthographic",
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "up": [
+            0,
+            1,
+            0
+          ],
+          "fitPadding": 0.12
+        }
+      },
+      "suspensionSummary": {
+        "bodyNodeID": "plateau_body",
+        "strandID": "curl-loop",
+        "strandKind": "loop",
+        "radiusMM": 2.0,
+        "estimatedRestLengthMM": 420.0,
+        "method": "nativeRoutes"
+      },
+      "readOnlyChecks": {
+        "descriptorModelHashMatches": true,
+        "actualMeshNodeIDsEqualDescriptor": true,
+        "singleContactIdentity": true,
+        "sameBodyAndContactNodes": true,
+        "effectiveDepthMatchesActualMeshBounds": true,
+        "cordEntryBindsActualAsset": true,
+        "nativeRoutesRetained": true,
+        "sidecarSuspensionEqualsGenerated": true,
+        "currentFinishMetadataAbsent": true,
+        "materialFree": true,
+        "textureFilesAbsent": true,
+        "noAuthoredDisplayColors": true
+      }
+    },
+    {
+      "id": "depth-10mm",
+      "asset": {
+        "sha256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+        "bytes": 34602
+      },
+      "descriptor": {
+        "sha256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e",
+        "bytes": 822
+      },
+      "descriptorPath": "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json",
+      "assetPath": "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz",
+      "nodes": [
+        {
+          "nodeID": "plateau_body",
+          "role": "body"
+        },
+        {
+          "nodeID": "plateau_edge_18",
+          "role": "contact",
+          "contactID": "edge-18"
+        }
+      ],
+      "contactID": "edge-18",
+      "publishedEffectiveDepthMM": 10,
+      "actualContactMeshDepthMM": 9.999998845160006,
+      "meshTriangles": {
+        "plateau_body": 882,
+        "plateau_edge_18": 66
+      },
+      "display": {
+        "camera": {
+          "type": "orthographic",
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "up": [
+            0,
+            1,
+            0
+          ],
+          "fitPadding": 0.12
+        }
+      },
+      "suspensionSummary": {
+        "bodyNodeID": "plateau_body",
+        "strandID": "curl-loop",
+        "strandKind": "loop",
+        "radiusMM": 2.0,
+        "estimatedRestLengthMM": 420.0,
+        "method": "nativeRoutes"
+      },
+      "readOnlyChecks": {
+        "descriptorModelHashMatches": true,
+        "actualMeshNodeIDsEqualDescriptor": true,
+        "singleContactIdentity": true,
+        "sameBodyAndContactNodes": true,
+        "effectiveDepthMatchesActualMeshBounds": true,
+        "cordEntryBindsActualAsset": true,
+        "nativeRoutesRetained": true,
+        "sidecarSuspensionEqualsGenerated": true,
+        "currentFinishMetadataAbsent": true,
+        "materialFree": true,
+        "textureFilesAbsent": true,
+        "noAuthoredDisplayColors": true
+      }
+    }
+  ],
+  "nativeObjectCount": 47,
+  "nativeObjectTypeCounts": {
+    "Part::Box": 16,
+    "Part::Cylinder": 6,
+    "Part::Cut": 6,
+    "Part::Fuse": 13,
+    "Part::Fillet": 3,
+    "PartDesign::SubShapeBinder": 3
+  },
+  "nativeSketcherObjectCount": 0,
+  "sourceEvidence": [
+    {
+      "ref": "PL-1",
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/product-page-current.html",
+      "url": "https://www.plateauclimbing.com/products/plateau-lifting-edge",
+      "sha256": "8638b5d9ede3bc42bc06e693e2586674253c39a766f5a2213cde71f4b483a3a7",
+      "matchesRecordedActualSHA256": true,
+      "matchesApprovedHistoricalSHA256": false,
+      "humanApproval": {
+        "approved": false,
+        "researchAuthorized": true,
+        "authorizationDate": "2026-09-29",
+        "notes": "Exact September20 HTML bytes were unavailable; this current primary HTML snapshot differs from the approved historical SHA. User expressly authorized additional primary research on September29. Approval of the exact unchanged visual sources is separate."
+      },
+      "supportClaim": "Exact identity, one physical oak edge, 18 mm base, reversible 15/10 mm blocker configurations, loading use, and gallery provenance."
+    },
+    {
+      "ref": "PL-2",
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/front.png",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1171.png?v=1773212075&width=3840",
+      "sha256": "7a854f73c876dffdff07251e4ab4cd5128014c3f51a3d31e14ecf00ac36fe7a7",
+      "matchesRecordedActualSHA256": true,
+      "matchesApprovedHistoricalSHA256": true,
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      },
+      "supportClaim": "Front assembly, one oak edge, metal body, lower curled section, and cord loop emerging from both open ends."
+    },
+    {
+      "ref": "PL-3",
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/oblique.png",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1166.png?v=1773212075&width=3840",
+      "sha256": "bb12d65453f77a917e048eb7ed09582c0ee4d96d6cf265973748f99cfc39191d",
+      "matchesRecordedActualSHA256": true,
+      "matchesApprovedHistoricalSHA256": true,
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      },
+      "supportClaim": "Oak edge/metal backing side profile and cord route through the lower curled extrusion."
+    },
+    {
+      "ref": "PL-4",
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/blocker-15.png",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1168.png?v=1773212075&width=3840",
+      "sha256": "4e666f921ffebdb287f383eb1330d5eb8aafab591cea5cfc488667368ee312b0",
+      "matchesRecordedActualSHA256": true,
+      "matchesApprovedHistoricalSHA256": true,
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      },
+      "supportClaim": "Reversible blocker installed for 15 mm effective depth on the same board/cord assembly."
+    },
+    {
+      "ref": "PL-5",
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/blocker-10.png",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1161.png?v=1773212075&width=3840",
+      "sha256": "b2a474441847de209fa85307383d0822f462801650f1f188bd0b1d8d8d49e243",
+      "matchesRecordedActualSHA256": true,
+      "matchesApprovedHistoricalSHA256": true,
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      },
+      "supportClaim": "Blocker reversed for 10 mm effective depth while preserving one physical oak contact."
+    },
+    {
+      "ref": "PL-6",
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/oak-blocker-in-use.jpg",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/45_edited.jpg?v=1773212075&width=3840",
+      "sha256": "a4a037eccdd1de212333f3f4482fab309ff385720768bb60c61606a9fb209e75",
+      "matchesRecordedActualSHA256": true,
+      "matchesApprovedHistoricalSHA256": true,
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      },
+      "supportClaim": "Scale in hand, oak edge/blocker as one configurable grip, paired lead-cord loading setup, and outdoor use context."
+    }
+  ],
+  "retainedProofs": {
+    "validation.json": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/validation.json",
+      "sha256": "6111746bb3148732f905df3ba7ba1d893492ad7306a812f395e08d803f61d97b",
+      "record": {
+        "package": "plateau-lifting-edge",
+        "currentSourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+        "nativeReopenEditSourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+        "modelSHA256ByPresentation": {
+          "depth-10mm": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+          "depth-15mm": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+          "depth-18mm": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
+        },
+        "fullPackageSchemaPassed": true,
+        "nativeCordCacheCheckPassed": true,
+        "minimumNativeCordClearanceMM": 2.1999999999999984,
+        "metadataOnlyCompileRebindings": [
+          {
+            "presentationID": "depth-10mm",
+            "compiledSourceSHA256": "8b538abb1ad3bbdc607d41a06d6deac43ef3bfc437aba8d846b4ab9b3b1e6ef7",
+            "currentSourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+            "compiledAssetSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+            "changesSinceCompile": [
+              "edge-18 canonical name corrected to Wood edge"
+            ],
+            "geometryUnchangedEvidence": "Supported set_board_manifest.py changes only the HangTenBoardManifest XML value and asserts all other archive members remain byte-identical. Native body/region features, export flags, placements, tessellation and contact/depth contracts were unchanged. Current source separately passes native reopen/edit validation and full package validation. Raw compile report is retained with its actual executed source hash.",
+            "additionalArchiveProof": "name-correction-proof.json"
+          },
+          {
+            "presentationID": "depth-15mm",
+            "compiledSourceSHA256": "8b538abb1ad3bbdc607d41a06d6deac43ef3bfc437aba8d846b4ab9b3b1e6ef7",
+            "currentSourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+            "compiledAssetSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+            "changesSinceCompile": [
+              "edge-18 canonical name corrected to Wood edge"
+            ],
+            "geometryUnchangedEvidence": "Supported set_board_manifest.py changes only the HangTenBoardManifest XML value and asserts all other archive members remain byte-identical. Native body/region features, export flags, placements, tessellation and contact/depth contracts were unchanged. Current source separately passes native reopen/edit validation and full package validation. Raw compile report is retained with its actual executed source hash.",
+            "additionalArchiveProof": "name-correction-proof.json"
+          },
+          {
+            "presentationID": "depth-18mm",
+            "compiledSourceSHA256": "8b538abb1ad3bbdc607d41a06d6deac43ef3bfc437aba8d846b4ab9b3b1e6ef7",
+            "currentSourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+            "compiledAssetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+            "changesSinceCompile": [
+              "edge-18 canonical name corrected to Wood edge"
+            ],
+            "geometryUnchangedEvidence": "Supported set_board_manifest.py changes only the HangTenBoardManifest XML value and asserts all other archive members remain byte-identical. Native body/region features, export flags, placements, tessellation and contact/depth contracts were unchanged. Current source separately passes native reopen/edit validation and full package validation. Raw compile report is retained with its actual executed source hash.",
+            "additionalArchiveProof": "name-correction-proof.json"
+          }
+        ],
+        "humanCADReview": "pending requested one-at-a-time review after whole batch",
+        "externalResourcesCreated": false,
+        "continuousRoundedRuntimeCordClearancePassed": true,
+        "minimumCertifiedRuntimeCordClearanceMM": 2.0023670868258923,
+        "continuousClearanceReport": "cord-continuous-clearance.json"
+      }
+    },
+    "reproducibility.json": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/reproducibility.json",
+      "sha256": "b2783fb0a38e9b27bf94ae49bed4ed8fef7adf9f717faddd49594e5639f621d5",
+      "record": {
+        "verification": "Fresh pinned FreeCAD process compiled each presentation from current native source; runtime output compared against checked-in package assets.",
+        "sourceSHA256Before": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+        "sourceSHA256After": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+        "sourceUnchanged": true,
+        "command": "Tools/HangboardCAD/verify_reproducible.py --package plateau-lifting-edge --freecad /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd --extra-python-path .context/placid-badger/pxr311 --keep-rebuild .context/placid-badger/cad-raster-boards/reproducibility",
+        "verifierSHA256": "5dba947d12ad284d286e7c87682d7d09010ae41c4b66e8f96755574b6033690a",
+        "result": {
+          "assetMatches": true,
+          "bytes": 102818,
+          "committedAssetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+          "descriptorBindsCommittedAsset": true,
+          "descriptorMatches": true,
+          "package": "plateau-lifting-edge",
+          "presentations": [
+            {
+              "assetMatches": true,
+              "bytes": 33622,
+              "committedAssetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+              "descriptorBindsCommittedAsset": true,
+              "descriptorMatches": true,
+              "presentationID": "depth-18mm",
+              "rebuiltAssetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
+            },
+            {
+              "assetMatches": true,
+              "bytes": 34594,
+              "committedAssetSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+              "descriptorBindsCommittedAsset": true,
+              "descriptorMatches": true,
+              "presentationID": "depth-15mm",
+              "rebuiltAssetSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53"
+            },
+            {
+              "assetMatches": true,
+              "bytes": 34602,
+              "committedAssetSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+              "descriptorBindsCommittedAsset": true,
+              "descriptorMatches": true,
+              "presentationID": "depth-10mm",
+              "rebuiltAssetSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41"
+            }
+          ],
+          "rebuiltAssetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
+        }
+      }
+    },
+    "native-checks.json": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/native-checks.json",
+      "sha256": "1a65a851ecdb2eafcf0106b57d21b5584cfbfa6ef0157acc94d09247673bdefe",
+      "record": {
+        "package": "plateau-lifting-edge",
+        "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+        "editedFeature": "Depth18OakRail",
+        "reopenRecompute": true,
+        "fullyConstrainedSketches": true,
+        "validBoundShapes": true,
+        "contactVerticesOnActualBodySurface": true,
+        "dimensionalEditChangesSolid": true,
+        "dimensionalEditChangesContacts": [
+          "Depth18OakContact"
+        ],
+        "bodyVolumeBeforeMM3": 241529.20065876975,
+        "bodyVolumeAfterMM3": 245109.88649347553,
+        "sourceBytesUnchanged": true,
+        "note": "Native source acceptance only. Suspension and app acceptance remain separate."
+      }
+    },
+    "contact-contract.json": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/contact-contract.json",
+      "sha256": "018f32f8a11ef0c650fa9f055cfcefbcf61f365657482701119035bd2c16815a",
+      "record": {
+        "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+        "retainedContactFieldsUnchanged": false,
+        "contactFieldCorrections": [
+          {
+            "contactID": "edge-18",
+            "field": "name",
+            "before": "18 mm wood edge",
+            "after": "Wood edge",
+            "reason": "One physical edge has18/15/10mm effective configurations."
+          }
+        ],
+        "retainedContactIDs": [
+          "edge-18"
+        ],
+        "removedContactIDs": [
+          "blocker-edge-15",
+          "blocker-edge-10"
+        ],
+        "positions": [
+          {
+            "id": "depth-18mm",
+            "presentationID": "depth-18mm",
+            "contactIDs": [
+              "edge-18"
+            ],
+            "effectiveDepths": {
+              "edge-18": {
+                "range": {
+                  "minimum": 18,
+                  "maximum": 18
+                }
+              }
+            }
+          },
+          {
+            "id": "depth-15mm",
+            "presentationID": "depth-15mm",
+            "contactIDs": [
+              "edge-18"
+            ],
+            "effectiveDepths": {
+              "edge-18": {
+                "range": {
+                  "minimum": 15,
+                  "maximum": 15
+                }
+              }
+            }
+          },
+          {
+            "id": "depth-10mm",
+            "presentationID": "depth-10mm",
+            "contactIDs": [
+              "edge-18"
+            ],
+            "effectiveDepths": {
+              "edge-18": {
+                "range": {
+                  "minimum": 10,
+                  "maximum": 10
+                }
+              }
+            }
+          }
+        ],
+        "metadataDecision": "Removed blocker-edge-15 and blocker-edge-10 as independent contact identities. Three native presentations share edge-18 with exact position-scoped effectiveDepths18/15/10. Canonical name corrected from18 mm wood edge toWood edge so15/10mm configurations retain a truthful physical name; base depth18 and IDedge-18 remain unchanged. Hardware omitted; blocker is functional geometry and retained."
+      }
+    },
+    "native-cord-evidence.json": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/native-cord-evidence.json",
+      "sha256": "39f7c34476a533640a7dffb755e1f7c6f94a103b82ad0439636ae1d60433e03d",
+      "record": {
+        "nativeSource": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+        "nativeFrame": "mm; x right, y depth (front negative), z up",
+        "runtimeFrame": "metres; x=native x/1000, y=native z/1000, z=-native y/1000",
+        "solidFeature": {
+          "depth-18mm": "Depth18WoodAndBacking",
+          "depth-15mm": "Depth15BlockerAttached",
+          "depth-10mm": "Depth10BlockerAttached"
+        },
+        "attachmentNodeID": "plateau_body",
+        "evidencedGraph": "One open C-shaped curl across full width; loop enters exposed ends and has visible exterior return below body.",
+        "nativeFeatures": {
+          "curl": {
+            "axis": [
+              1,
+              0,
+              0
+            ],
+            "axisPoint": [
+              0,
+              -12,
+              -31
+            ],
+            "xExtent": [
+              -50,
+              50
+            ],
+            "innerRadiusMM": 6,
+            "outerRadiusMM": 9,
+            "openQuadrant": "positive native y and positive native z",
+            "dimensionStatus": "display estimates; topology observed"
+          }
+        },
+        "positions": [
+          {
+            "id": "depth-18mm",
+            "presentationID": "depth-18mm",
+            "contactIDs": [
+              "edge-18"
+            ],
+            "effectiveDepths": {
+              "edge-18": {
+                "range": {
+                  "minimum": 18,
+                  "maximum": 18
+                }
+              }
+            }
+          },
+          {
+            "id": "depth-15mm",
+            "presentationID": "depth-15mm",
+            "contactIDs": [
+              "edge-18"
+            ],
+            "effectiveDepths": {
+              "edge-18": {
+                "range": {
+                  "minimum": 15,
+                  "maximum": 15
+                }
+              }
+            }
+          },
+          {
+            "id": "depth-10mm",
+            "presentationID": "depth-10mm",
+            "contactIDs": [
+              "edge-18"
+            ],
+            "effectiveDepths": {
+              "edge-18": {
+                "range": {
+                  "minimum": 10,
+                  "maximum": 10
+                }
+              }
+            }
+          }
+        ],
+        "notes": "Identical upright suspension setup across three actual CAD configurations. All three share scoped plateau_body NodeID. Cord route through open curl must use native collision checks; C-mouth is not a closed pair of bores.",
+        "sourceRegister": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/sources.json",
+        "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+        "modelSHA256ByPresentation": {
+          "depth-10mm": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+          "depth-15mm": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+          "depth-18mm": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
+        }
+      }
+    },
+    "cord-continuous-clearance.json": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/cord-continuous-clearance.json",
+      "sha256": "3e9f90edb06056578069cf79c3e8d7afce520fc28b54d96534dab08d51fb0e16",
+      "record": {
+        "package": "plateau-lifting-edge",
+        "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+        "sidecarSHA256": "accd4b12ac09f4de1213c06b783de736117fd44e94b12918b38c86467dd2aa9f",
+        "algorithm": "Tools/HangboardCAD/native_cord_routes.py",
+        "algorithmSHA256": "98f73d58191ef3f99f612222723c7d1d0e59b886de4ad5a833448d788c2f3de7",
+        "method": "adaptive signed-distance 1-Lipschitz lower bound on each complete rounded runtime polyline",
+        "numericalToleranceMM": 0.01,
+        "runtimeSupportReconstructed": true,
+        "presentations": {
+          "depth-18mm": {
+            "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+            "collisionFixtureSHA256": "1f63b262a2d23edc299c34405487d8afd508b6018747980bcb2d8d8eaaf64e2a",
+            "poses": {
+              "depth-18mm": {
+                "strands": {
+                  "curl-loop": {
+                    "certifiedMinimumClearanceMM": 2.0023670868258923,
+                    "radiusMM": 2.0,
+                    "runtimeRouteLengthMM": 419.9999938274051,
+                    "restLengthMM": 420.0,
+                    "vertexCountWithSupport": 11
+                  }
+                }
+              }
+            }
+          },
+          "depth-15mm": {
+            "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+            "collisionFixtureSHA256": "9e23d8aec286a331bc2d94c4c6377e7575476c33bada9cf7e9919d20dfe6ade1",
+            "poses": {
+              "depth-15mm": {
+                "strands": {
+                  "curl-loop": {
+                    "certifiedMinimumClearanceMM": 2.0023670868258923,
+                    "radiusMM": 2.0,
+                    "runtimeRouteLengthMM": 419.9999938274051,
+                    "restLengthMM": 420.0,
+                    "vertexCountWithSupport": 11
+                  }
+                }
+              }
+            }
+          },
+          "depth-10mm": {
+            "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+            "collisionFixtureSHA256": "83fe9d6c31e6c1abedfb8f212d8d1bc9676eaef4d50ffb905f536d636584dfde",
+            "poses": {
+              "depth-10mm": {
+                "strands": {
+                  "curl-loop": {
+                    "certifiedMinimumClearanceMM": 2.0023670868258923,
+                    "radiusMM": 2.0,
+                    "runtimeRouteLengthMM": 419.9999938274051,
+                    "restLengthMM": 420.0,
+                    "vertexCountWithSupport": 11
+                  }
+                }
+              }
+            }
+          }
+        },
+        "minimumCertifiedClearanceMM": 2.0023670868258923
+      }
+    }
+  },
+  "reservedPathHashes": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "HangTen/Views/RootView.swift": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "HangTenTests/BoardModelRealityTests.swift": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+    "HangTenTests/BoardModelTests.swift": "89d5778a9b85181315bf281921f493ec771c6c8ddd92ef1106ec643fd6ec1fd7"
+  },
+  "findings": [
+    "No ID, declared/effective depth, descriptor pairing, material binding, sidecar pairing, or source-identity mismatch detected by these read-only checks.",
+    "plateau_body combines exposed aluminium and oak plus blockers in 15/10mm configurations; whole-board wood finish would be incorrect.",
+    "Retained PL-1 publishes 6mm cord; current explicitly estimated radius is 2mm (4mm diameter). Root has authorized Astra scratch-only source-backed 3mm-radius/seated-loop correction.",
+    "Actual native source uses 47 primitive/fusion/fillet/binder objects and zero Sketcher objects; generic native-authoring constrained-Sketcher wording does not describe this package literally."
+  ],
+  "boundaries": {
+    "freshNativeRecomputePerformed": false,
+    "freshCompilePerformed": false,
+    "testsRun": 0,
+    "buildsRun": 0,
+    "simulatorGuestOperations": 0,
+    "currentAppFrames": 0,
+    "currentIOSCases": 0,
+    "HTTPResources": 0,
+    "canonicalEdits": 0,
+    "sharedRendererEdits": 0,
+    "geometryJudgment": "Astra owns authoritative physical shape/source/cord review.",
+    "humanAcceptance": "pending"
+  }
+}

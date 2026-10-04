@@ -1,0 +1,9 @@
+{
+  "name": "placid-badger-flash14-fillet-diagnosis",
+  "command": [
+    "python3",
+    "Tools/HangboardCAD/run_freecad.py",
+    ".context/placid-badger/flash-board-review14/shape-review/native-refinement/diagnose_fillet.py"
+  ],
+  "timeoutSeconds": 180
+}

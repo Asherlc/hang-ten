@@ -1,0 +1,9 @@
+{
+  "changedCollisionFields": [
+    "sourceSHA256"
+  ],
+  "verticesAndTrianglesByteValuesIdentical": true,
+  "sourceSHA256BeforeSorting": "b07ab992ec2ed39e3b299f205a9d0865a5249659ec88cffad5e6c37d4a785de5",
+  "sourceSHA256AfterSorting": "7f1a6c34c92984b7f8ac89007051ce49ed3cd358290293018cdb8cb2ec8d69a7",
+  "explanation": "Only embedded JSON rotation key order changed; collision export geometry identical."
+}

@@ -1,0 +1,17 @@
+{
+  "restoredOnlyOwnTemporaryChanges": true,
+  "files": [
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "priorSHA256": "b37ab303d8637519fe4bcd0f2b3a0569cbb13ca0bcaeecf6d7af9200b9759b98",
+      "restoredSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "matchesHEAD": true
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "priorSHA256": "7937b3fdd976749eaa5493a4063058b5b9af439a3ec380f7aeff74041ca7dd43",
+      "restoredSHA256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+      "matchesHEAD": true
+    }
+  ]
+}

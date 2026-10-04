@@ -1,0 +1,122 @@
+{
+  "result": "INVALID_MISSING_INITIAL_SEQUENCE",
+  "validCompleteAction": false,
+  "comparisonConclusive": false,
+  "visualResult": "NOT_EVALUABLE",
+  "productionFix": false,
+  "additionalRuntimeAuthorized": false,
+  "sourceRuntimeDDHandbackToRoot": true,
+  "binarySHA256": "09310b53114826e1e9c39a499846b2e57a6b464e576aa7bf879b56709d267854",
+  "captureSession": 82413,
+  "captureExitStatus": 1,
+  "prospectiveStop": "No eligible initialHang within30seconds of recorded workout appearance",
+  "elapsedAppearanceSeconds": 30.03144121170044,
+  "timedCaptures": 0,
+  "traceRecords": 19,
+  "completeContiguous": true,
+  "firstHangOrRestVisualClaims": false,
+  "initialImage": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-action-landscape/launch-initial.png",
+    "sha256": "2df62e7fe7ee45d41c932680a6a5e236fea9cbcab36ee87f15258ad71a43a3fa",
+    "durationSeconds": 0.47191810607910156,
+    "directWholeImageViewed": true,
+    "judgment": "Train screen with nativeboard visible; early image only, not evidence of later workout UI."
+  },
+  "startupObservation": {
+    "beforeSequence": 19,
+    "secondsAfterAppearance": 0.007704257965087891,
+    "rightCensoredSecondsToEndpoint": 30.02373695373535,
+    "prepareAfterObserved": false,
+    "requestCount": 1,
+    "associationErrors": []
+  },
+  "validatorStatuses": [
+    {
+      "helper": "check-cpu-semantics.py",
+      "exitStatus": 1
+    },
+    {
+      "helper": "check-frames.py",
+      "exitStatus": 1
+    },
+    {
+      "helper": "check-constructors.py",
+      "exitStatus": 1
+    },
+    {
+      "helper": "check-ownership.py",
+      "exitStatus": 1
+    },
+    {
+      "helper": "check-navigation.py",
+      "exitStatus": 1
+    },
+    {
+      "helper": "check-real-hands.py",
+      "exitStatus": 1
+    },
+    {
+      "helper": "check-weak-hand-census.py",
+      "exitStatus": 1
+    },
+    {
+      "helper": "check-sync-counters.py",
+      "exitStatus": 1
+    },
+    {
+      "helper": "check-prestart-hands.py",
+      "exitStatus": 1
+    },
+    {
+      "helper": "check-supplemental-timing.py",
+      "exitStatus": 1
+    },
+    {
+      "helper": "compare.py",
+      "exitStatus": 1
+    }
+  ],
+  "interpretation": "All full-sequence validators and comparison statuses are retained. Missing phases/brackets make this action unevaluable; no original or supplemental criterion was relaxed.",
+  "prelaunchFinal27ParityPassed": true,
+  "exactAppPID": 67318,
+  "exactAppTerminatedAndVerifiedAbsent": true,
+  "priorFreezeVerification": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-frozen-manifest.json",
+      "sha256": "82a4d5509ab9de6ffa8ab659b0d6fa1355cb150045f65ca92698a75da8298189",
+      "count": 162,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-frozen-manifest.json",
+      "sha256": "f16c7ce3df36d1ea6e4f1d3c22c66df6f85f303a702fdf606673ec6abe23ee65",
+      "count": 114,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-repeat-frozen-manifest.json",
+      "sha256": "a44d5f1bc0841bfbd7968257e2792045c7c90d449cb1a33d9e6055f4c7c038b3",
+      "count": 76,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-frozen-manifest.json",
+      "sha256": "2b7052ebde5e5bca2b6950675d749aafa6ae8f080805e33051c1314740567ab1",
+      "count": 44,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-frozen-manifest.json",
+      "sha256": "625345549e35d3231fdbb9f8222d7a46d6cc0b9b54f02e976e6ac61106e8b1eb",
+      "count": 152,
+      "allExact": true
+    }
+  ],
+  "limits": [
+    "The before-marker was emitted immediately before the existing preparation call in source. No after-marker was recorded by this bounded observation endpoint. This locates an unfinished instrumented region, not an independently measured internal audio API duration or deadlock.",
+    "Record absence is not proof of why execution or delivery stalled. The app was later terminated as required. No claim of eventual completion or never-started workout.",
+    "Unlike earlier invalid actions, no later selected CPU transition is observed in this shorter30second window. No longer observation is inferred.",
+    "No repeat/reversal or renewed startup investigation was performed."
+  ],
+  "completedEpoch": 1791004513.796541
+}

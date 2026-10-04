@@ -1,0 +1,57 @@
+{
+  "package": "yy-baguette-evo",
+  "sourceSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+  "modelSHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+  "sidecarSHA256": "a8268c4df7ce4eced116b692ad92276394d064aa858b83e5c00b84fd43f75678",
+  "validatorSHA256": "309cffb89d3955298aefab71bc1e57098fbc7beb14596aef1b8064cf83b77171",
+  "method": "continuous-distance certificate on exact rounded runtime cache, including world support endpoints",
+  "fullPathSelfAndInterstrandTubeGate": "passed",
+  "entries": [
+    {
+      "presentationID": "primary",
+      "equipmentObjectID": null,
+      "poses": {
+        "central-20-6": {
+          "mouth-1-lead": 0.0020133688127905447,
+          "mouth-2-lead": 0.0019914990011826255,
+          "mouth-3-lead": 0.001991499001182596,
+          "mouth-4-lead": 0.002013368812790537,
+          "left-rear-return": 0.0021874999984499727,
+          "right-rear-return": 0.0021874999984499866
+        },
+        "central-30-25": {
+          "mouth-1-lead": 0.002022034170079771,
+          "mouth-2-lead": 0.002022034170126908,
+          "mouth-3-lead": 0.00202203417012632,
+          "mouth-4-lead": 0.002022034170079915,
+          "left-rear-return": 0.0021874999984499727,
+          "right-rear-return": 0.0021874999984499866
+        },
+        "paired-12-8-6": {
+          "mouth-1-lead": 0.001994666996582475,
+          "mouth-2-lead": 0.001992752394897051,
+          "mouth-3-lead": 0.0019994144498503216,
+          "mouth-4-lead": 0.002006603371938113,
+          "left-rear-return": 0.0021874999984499727,
+          "right-rear-return": 0.0021874999984499866
+        },
+        "paired-25-20-15-10": {
+          "mouth-1-lead": 0.002022034170079771,
+          "mouth-2-lead": 0.002022034170126908,
+          "mouth-3-lead": 0.00202203417012632,
+          "mouth-4-lead": 0.002022034170079915,
+          "left-rear-return": 0.0021874999984499727,
+          "right-rear-return": 0.0021874999984499866
+        },
+        "rounded-tray": {
+          "mouth-1-lead": 0.002022034170079771,
+          "mouth-2-lead": 0.002022034170126908,
+          "mouth-3-lead": 0.00202203417012632,
+          "mouth-4-lead": 0.002022034170079915,
+          "left-rear-return": 0.0021874999984499727,
+          "right-rear-return": 0.0021874999984499866
+        }
+      }
+    }
+  ]
+}

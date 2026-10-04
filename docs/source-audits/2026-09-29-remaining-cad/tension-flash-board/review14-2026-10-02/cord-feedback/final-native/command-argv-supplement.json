@@ -1,0 +1,146 @@
+{
+  "owner": "placid-badger",
+  "recordedAt": "2026-10-03T00:36:39.326385+00:00",
+  "rawCommands": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/commands.json",
+    "sha256": "19a26a118fc62dd4ec999630ec7b02677207d0b4917f12c9c3cac7ef94ac4587"
+  },
+  "rawOwnership": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/ownership.json",
+    "sha256": "1b3661fdc948318c158f6bbcd2d1c59139d1b33bb2ad8725284849195ae0f20a"
+  },
+  "runner": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/run-final-astar.py",
+    "sha256": "3bf6d82bbfade08fcee104d84b5c61de8d036314353bdd8aff6c3ac330df42b5"
+  },
+  "defect": "run stores the same argv list in command/ownership records; the subsequent check mutation changes the first historical entry after execution",
+  "affectedFields": [
+    "commands[0].argv",
+    "ownership.processGroups[0].argv"
+  ],
+  "rawFilesPreserved": true,
+  "applyArgvScope": "reconstructed from executed retained runner, not independently captured live process argv",
+  "executedApplyEvidence": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-native-apply.json",
+      "sha256": "0b929594a2c6d224f31da70028f2f1c37c01b9d15a995283de0e5a3747ccbf8b"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/apply-output-for-review.json",
+      "sha256": "98a83eaafe3187adf91c03b53a9c515a3d931af31f39d58c9bfcb027fa41ea21"
+    }
+  ],
+  "reportsCacheExitCodesProcessGroupsAndCleanupAffected": false,
+  "correctedCommands": [
+    {
+      "name": "final-native-apply",
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-candidate-repository/Tools/HangboardCAD/solve_threaded_rope.py",
+        "--package",
+        "tension-flash-board",
+        "--solid",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-native-solid.json",
+        "--apply",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-native-apply.json"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-candidate-repository",
+      "startedAt": "2026-10-03T00:12:29.588152+00:00",
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-config",
+        "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-cache",
+        "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-tmp"
+      },
+      "exitCode": 0,
+      "completedAt": "2026-10-03T00:17:51.170931+00:00",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "argvEvidence": "reconstructed from immutable retained runner source; raw final receipt aliases a list later mutated for check"
+    },
+    {
+      "name": "conditional-native-diagnostics",
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/post-handoff-preparation/diagnose-conditional-wrap.py",
+        "--package",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-final-package/Hangboards/tension-flash-board",
+        "--solid",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-native-solid.json",
+        "--native-report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-native-apply.json",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/conditional-native-diagnostics.json"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-candidate-repository",
+      "startedAt": "2026-10-03T00:17:51.181156+00:00",
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-config",
+        "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-cache",
+        "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-tmp"
+      },
+      "exitCode": 0,
+      "completedAt": "2026-10-03T00:17:52.368286+00:00",
+      "logSHA256": "94b5a865239123505a1bd94b370b74f28e26f65a3045bb7dbf48ef1379df80ce"
+    },
+    {
+      "name": "final-native-check",
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-candidate-repository/Tools/HangboardCAD/solve_threaded_rope.py",
+        "--package",
+        "tension-flash-board",
+        "--solid",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-native-solid.json",
+        "--check",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-native-check.json"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-candidate-repository",
+      "startedAt": "2026-10-03T00:17:52.368644+00:00",
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-config",
+        "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-cache",
+        "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-tmp"
+      },
+      "exitCode": 0,
+      "completedAt": "2026-10-03T00:23:14.295968+00:00",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "generated-manifest",
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-candidate-repository/Tools/HangboardCAD/board_manifest.py",
+        "--root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-candidate-repository",
+        "--package",
+        "tension-flash-board",
+        "--output",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/generated-board.json"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-candidate-repository",
+      "startedAt": "2026-10-03T00:23:14.296542+00:00",
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-config",
+        "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-cache",
+        "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-tmp"
+      },
+      "exitCode": 0,
+      "completedAt": "2026-10-03T00:23:14.385093+00:00",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "nativeSolveOrCheckRerun": false
+}

@@ -1,0 +1,6 @@
+{
+  "nonar": "https://developer.apple.com/documentation/realitykit/arview/cameramode-swift.enum/nonar.md",
+  "perspectivecamera": "https://developer.apple.com/documentation/realitykit/perspectivecamera.md",
+  "entity-at": "https://developer.apple.com/documentation/realitykit/arview/entity(at:).md",
+  "background-color": "https://developer.apple.com/documentation/realitykit/arview/environment-swift.struct/background-swift.struct/color(_:).md"
+}

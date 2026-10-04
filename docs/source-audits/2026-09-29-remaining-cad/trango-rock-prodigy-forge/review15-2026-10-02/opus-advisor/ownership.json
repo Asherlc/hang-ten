@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "task": "Forge #15 Opus advisory",
+  "agentId": "4c95fae2-5c9d-4734-b3f5-a47ad77aeaa7",
+  "workspaceId": "wks_d4a549643389e3ab",
+  "provider": "claude/claude-opus-5-5",
+  "thinkingOptionId": "high",
+  "modeId": "bypassPermissions",
+  "recordedUTC": "2026-10-03T02:29:46.592Z",
+  "profileCount": 0,
+  "profileFallback": "Explicit user request for Opus; discovered available Claude Opus 5.5",
+  "readOnlyTask": true,
+  "notifyOnFinish": true,
+  "cleanupAction": "Archive this exact advisor after retaining its final answer",
+  "cleanupStatus": "archived; verified closed",
+  "parallelWorkspaceInspected": false,
+  "shownAssetCommit": "d236fb655406763d44875f49404107aba3591791"
+}

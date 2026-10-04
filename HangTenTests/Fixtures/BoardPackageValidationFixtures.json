@@ -1660,9 +1660,9 @@
       ]
     },
     {
-      "name": "second-model",
+      "name": "model-with-wrong-pose-position",
       "pythonException": "ValueError",
-      "pythonError": "only one model",
+      "pythonError": "canonical poses must exactly match",
       "swiftError": "invalidPackage",
       "mutations": [
         {

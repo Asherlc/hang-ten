@@ -1,0 +1,46 @@
+{
+  "anchorRuntime": [
+    0.0,
+    0.129999999,
+    0.0
+  ],
+  "leadLengthsAtBoardTranslationZero": {
+    "front-25": {
+      "left-front": 0.1465065479367522,
+      "left-rear": 0.14650488197386688,
+      "right-front": 0.14650488197386688,
+      "right-rear": 0.14650488197386688
+    },
+    "front-inverted-20": {
+      "left-front": 0.14650488197386688,
+      "left-rear": 0.1465065479367522,
+      "right-front": 0.14650654793675216,
+      "right-rear": 0.1465065479367522
+    },
+    "reverse-13": {
+      "left-front": 0.1465065479367522,
+      "left-rear": 0.14650488197386688,
+      "right-front": 0.14650488197386688,
+      "right-rear": 0.14650488197386688
+    },
+    "reverse-inverted-8": {
+      "left-front": 0.14650488197386688,
+      "left-rear": 0.1465065479367522,
+      "right-front": 0.14650654793675216,
+      "right-rear": 0.1465065479367522
+    },
+    "outer-upper": {
+      "left-front": 0.1465065479367522,
+      "left-rear": 0.14650488197386688,
+      "right-front": 0.14650488197386688,
+      "right-rear": 0.14650488197386688
+    },
+    "outer-lower": {
+      "left-front": 0.1465065479367522,
+      "left-rear": 0.14650488197386688,
+      "right-front": 0.14650488197386688,
+      "right-rear": 0.14650488197386688
+    }
+  },
+  "minimumVerticalBoardTopGapMM": 100
+}

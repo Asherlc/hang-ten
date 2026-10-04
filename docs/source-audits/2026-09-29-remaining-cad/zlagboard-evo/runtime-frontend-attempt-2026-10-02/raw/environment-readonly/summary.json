@@ -1,0 +1,11 @@
+{
+  "records": 47,
+  "realities": [
+    "physical",
+    "simulated"
+  ],
+  "connectedPhysicalDevices": 0,
+  "connectedOwnedSimulatorOnly": true,
+  "simulatorFrontendProcessCount": 0,
+  "correction": "Initial tool text called all47 records physical; metadata shows simulated records. No physical availability inferred. Raw local inventory contains unrelated identifiers and remains scratch only."
+}

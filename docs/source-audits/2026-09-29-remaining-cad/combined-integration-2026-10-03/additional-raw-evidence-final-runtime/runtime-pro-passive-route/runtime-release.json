@@ -1,0 +1,62 @@
+{
+  "publishedSourceBindingPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/posttests-runtime-install/published-source-binding.json",
+  "publishedSourceBindingSHA256": "5585ed98716c5976908459e6184698e8a6d790047876fe4e5678bf1f239a3977",
+  "publishedSourceCommit": "fa46c015bba7456f887ba46fc4049bdfcf697c24",
+  "runtimeAuthorized": true,
+  "exclusiveRuntimeOwnership": true,
+  "owner": "placid-badger-cad-second-half",
+  "mode": "pro",
+  "boardID": "zlagboard.pro",
+  "boardName": "Zlagboard.Pro 2.0",
+  "planID": "research.max-hangs",
+  "simulatorUUID": "055BDCE2-3263-470D-89DF-04B967EF7790",
+  "controllerPID": 37186,
+  "ownershipPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/ownership.json",
+  "ownershipSHA256": "8dcc1631b0c6479032ebd213a927f6ca9ef2295e43f04d03b9c732e7e3be2e1f",
+  "proofDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/posttests-runtime-install",
+  "successfulCommandProofs": {
+    "build": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/posttests-runtime-install/build.exit.json",
+      "sha256": "3411af234420fc8207ca6de549a12e45e88e63ef7055eb463f53b60036d3deec"
+    },
+    "install": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/posttests-runtime-install/install.exit.json",
+      "sha256": "29896a7c8f133afe74ddb5a4e71921f6d434c637570daf74f54a2d582d5a4816"
+    },
+    "container": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/posttests-runtime-install/container.exit.json",
+      "sha256": "4ce3cba8aa89f77186fc22338755a5b0a6666c36cab1b025d48466c4cc9579b9"
+    }
+  },
+  "sourceCommit": "3497b01405386ce388cb478d60c8e915cafc5dc6",
+  "sourceReferencePath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/posttests-runtime-install/source-reference.json",
+  "sourceReferenceSHA256": "50327ed1b8eb201d12d53b6657dd5216244b6689d144960bc168aaf827ef096c",
+  "parityPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/posttests-runtime-install/parity.json",
+  "paritySHA256": "258452357cffe83b35c6de235917251fb571930f7be96092189a5bc5ab6097c3",
+  "parityCheckCount": 205,
+  "canonicalPreservationPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/postmerge-canonical-preservation.json",
+  "canonicalPreservationSHA256": "6cd16210b6356c123447aeb7d8920d8042cf7889038cd615d0b53538a65264d3",
+  "binaryRelativePath": "HangTen",
+  "binarySHA256": "92411c81d2a3cc4bf8fbb019c3022f77337e74a07ad31c7090f18e315e624fb3",
+  "installedApp": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/055BDCE2-3263-470D-89DF-04B967EF7790/data/Containers/Bundle/Application/6BEDC9BA-9074-4156-9EBF-4D759839EAE4/HangTen.app",
+  "helperSHA256": "9b5d490bfb16db82b1f02858d222294402d5e19d73cf31fcbf186a290147d4cb",
+  "scheduleSHA256": "dd2bc031af8536239615d8350649df11f62ac57ca6517c2ace13b233443d0f4c",
+  "planLibrarySHA256": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1",
+  "routineReferencePath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-pro-passive-route-routine-reference.json",
+  "routineReferenceSHA256": "a19671942e346747543ce59c586632121997d65abfb416416eaf1a15868611a2",
+  "runID": "placid-badger-cad-second-half-combined-pro-passive-route",
+  "runLabel": "pro-passive-route",
+  "runSuffix": "passive-route",
+  "systemConfirmationSetup": null,
+  "outputDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-pro-passive-route",
+  "appArguments": [
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "launchReviewFlags": {
+    "HANGTEN_REVIEW_BOARD_ID": "zlagboard.pro",
+    "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+    "HANGTEN_REVIEW_LANDSCAPE": "1"
+  },
+  "miniSetupAuthorized": false
+}

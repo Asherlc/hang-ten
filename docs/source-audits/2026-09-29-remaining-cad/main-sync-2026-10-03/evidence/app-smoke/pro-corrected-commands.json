@@ -1,0 +1,39 @@
+[
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "terminate",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "com.hangten.training"
+    ],
+    "startUTC": 1791042375.0341702,
+    "endUTC": 1791042375.237123,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "launch",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "com.hangten.training"
+    ],
+    "startUTC": 1791042375.2373881,
+    "endUTC": 1791042375.517405,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "io",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/main-sync-2026-10-03/app-smoke/zlagboard.pro.png"
+    ],
+    "startUTC": 1791042380.527661,
+    "endUTC": 1791042380.977012,
+    "exitStatus": 0
+  }
+]

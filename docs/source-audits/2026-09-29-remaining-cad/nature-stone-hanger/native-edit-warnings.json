@@ -1,0 +1,9 @@
+{
+  "scope": "Meaningful edit test only; source reopened and compiled successfully.",
+  "observedWarnings": [
+    "BodySkin.Support missing element reference Port_RightVisibleMouth Face161",
+    "BodySkin.Support missing element reference Port_RightVisibleMouth Face162"
+  ],
+  "context": "FreeCAD topological naming emitted these warnings while FrontDepthScale changed 1\u21921.025. Every bound contact shape stayed open/valid and the body remained one valid solid; dimensions/volume restored and source bytes were unchanged.",
+  "limitation": "Further edits that change face topology should recheck the explicit face binder support lists before recompilation."
+}

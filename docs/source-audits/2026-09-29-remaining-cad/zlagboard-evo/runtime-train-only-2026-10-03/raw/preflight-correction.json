@@ -1,0 +1,5 @@
+{
+  "initialPreparationFailed": "KeyError installedApp in normalized report; followed by relative/absolute path ValueError.",
+  "prematureCaptureInvocation": "Missing release JSON failed before resource creation; no runtime occurred.",
+  "correction": "Use original report for app roots and resolved absolute paths; all27 verified."
+}

@@ -1,0 +1,2220 @@
+{
+  "checks": {
+    "observationsPresent": true,
+    "exactCommonEndpoints": true,
+    "oneMatchingBoardARView": true,
+    "sameAffineSegment": true,
+    "monotoneObservedProgress": true,
+    "intermediatesOnlyInitialActiveBeforeFirstCapture": true,
+    "firstPostCaptureCensusFinalByPlus1CaptureEnd": true,
+    "allLaterFramesFinal": true,
+    "boardRootTransformsEqual": true,
+    "boardCameraTransformsEqual": true,
+    "viewportEndpointValuesEqual": true,
+    "lifecycleCountsEqual": true,
+    "creationOrderEqual": true,
+    "handCameraTransformsEqual": true,
+    "handDepthsEqual": true
+  },
+  "rule": "Root-authorized prospective endpoint/affine-path/semantic-window correspondence; original exact-set failure untouched.",
+  "observations": [
+    {
+      "sequence": 11,
+      "epoch": 1790984601.568249,
+      "frame": [
+        232,
+        143.33333333333331,
+        410,
+        70
+      ],
+      "lambda": -0.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        410,
+        70.28571428571429
+      ]
+    },
+    {
+      "sequence": 12,
+      "epoch": 1790984602.3862262,
+      "frame": [
+        232,
+        143.33333333333331,
+        410,
+        70
+      ],
+      "lambda": -0.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        410,
+        70.28571428571429
+      ]
+    },
+    {
+      "sequence": 13,
+      "epoch": 1790984602.395949,
+      "frame": [
+        232,
+        143.33333333333331,
+        410,
+        70
+      ],
+      "lambda": -0.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        410,
+        70.28571428571429
+      ]
+    },
+    {
+      "sequence": 20,
+      "epoch": 1790984602.588373,
+      "frame": [
+        239.1429967880249,
+        154.57164827982584,
+        395.7140064239502,
+        67.61900107065836
+      ],
+      "lambda": 0.2857198715209961,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 21,
+      "epoch": 1790984603.602507,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 22,
+      "epoch": 1790984604.6592212,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 23,
+      "epoch": 1790984605.715732,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 24,
+      "epoch": 1790984606.780715,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 25,
+      "epoch": 1790984607.802635,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 26,
+      "epoch": 1790984608.808371,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 27,
+      "epoch": 1790984609.172318,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 28,
+      "epoch": 1790984609.184535,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 31,
+      "epoch": 1790984609.825566,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 32,
+      "epoch": 1790984610.8725982,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 33,
+      "epoch": 1790984611.8789392,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 34,
+      "epoch": 1790984612.881875,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 35,
+      "epoch": 1790984613.890707,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 36,
+      "epoch": 1790984614.908628,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 37,
+      "epoch": 1790984615.962563,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 38,
+      "epoch": 1790984616.9896898,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 39,
+      "epoch": 1790984617.9922261,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 40,
+      "epoch": 1790984619.0118818,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 41,
+      "epoch": 1790984620.542595,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 42,
+      "epoch": 1790984621.55408,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 43,
+      "epoch": 1790984622.563364,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 44,
+      "epoch": 1790984623.567343,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 45,
+      "epoch": 1790984624.570766,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 46,
+      "epoch": 1790984625.583352,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 47,
+      "epoch": 1790984627.594154,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 48,
+      "epoch": 1790984628.603302,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 49,
+      "epoch": 1790984629.6169271,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 50,
+      "epoch": 1790984631.6247501,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 51,
+      "epoch": 1790984633.628663,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 52,
+      "epoch": 1790984634.644639,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 53,
+      "epoch": 1790984635.648839,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 54,
+      "epoch": 1790984636.6576052,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 55,
+      "epoch": 1790984637.666319,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 56,
+      "epoch": 1790984638.676873,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 57,
+      "epoch": 1790984639.689122,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 58,
+      "epoch": 1790984641.692054,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 59,
+      "epoch": 1790984643.7045488,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 60,
+      "epoch": 1790984644.7180119,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 61,
+      "epoch": 1790984646.721329,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 62,
+      "epoch": 1790984647.731732,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 63,
+      "epoch": 1790984648.742923,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 64,
+      "epoch": 1790984649.7478042,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 65,
+      "epoch": 1790984650.754743,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 66,
+      "epoch": 1790984651.765523,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 67,
+      "epoch": 1790984652.772202,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 68,
+      "epoch": 1790984654.782553,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 69,
+      "epoch": 1790984655.7906651,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 70,
+      "epoch": 1790984656.801498,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 71,
+      "epoch": 1790984657.811665,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 72,
+      "epoch": 1790984659.8113852,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 73,
+      "epoch": 1790984660.8250961,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 74,
+      "epoch": 1790984661.838925,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 75,
+      "epoch": 1790984662.8474178,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 76,
+      "epoch": 1790984663.852381,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 77,
+      "epoch": 1790984664.862109,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 78,
+      "epoch": 1790984665.868438,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 79,
+      "epoch": 1790984666.8793669,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 80,
+      "epoch": 1790984667.885391,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 81,
+      "epoch": 1790984669.9017239,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 82,
+      "epoch": 1790984670.9049191,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 83,
+      "epoch": 1790984671.911443,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 84,
+      "epoch": 1790984672.921864,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 85,
+      "epoch": 1790984673.9289331,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 86,
+      "epoch": 1790984674.941508,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 87,
+      "epoch": 1790984675.947371,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 88,
+      "epoch": 1790984676.9523401,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 89,
+      "epoch": 1790984677.9601588,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 90,
+      "epoch": 1790984678.9676418,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 91,
+      "epoch": 1790984679.9794378,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 92,
+      "epoch": 1790984680.9829412,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 93,
+      "epoch": 1790984681.995676,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 94,
+      "epoch": 1790984683.0004869,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 95,
+      "epoch": 1790984685.0176358,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 96,
+      "epoch": 1790984686.024115,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 97,
+      "epoch": 1790984687.0278192,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 98,
+      "epoch": 1790984688.041335,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 99,
+      "epoch": 1790984689.04864,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 100,
+      "epoch": 1790984690.056329,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 101,
+      "epoch": 1790984691.062021,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 102,
+      "epoch": 1790984692.105699,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 103,
+      "epoch": 1790984693.173812,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 104,
+      "epoch": 1790984694.21259,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 105,
+      "epoch": 1790984695.2728329,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 106,
+      "epoch": 1790984696.31319,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 107,
+      "epoch": 1790984697.375745,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 108,
+      "epoch": 1790984698.40946,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 109,
+      "epoch": 1790984699.453573,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 110,
+      "epoch": 1790984700.522495,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 111,
+      "epoch": 1790984701.579283,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 112,
+      "epoch": 1790984702.602861,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 113,
+      "epoch": 1790984703.6667662,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 114,
+      "epoch": 1790984704.701518,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 115,
+      "epoch": 1790984705.7568998,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 116,
+      "epoch": 1790984707.086945,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 117,
+      "epoch": 1790984708.10356,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 118,
+      "epoch": 1790984710.103384,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 119,
+      "epoch": 1790984711.110385,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 120,
+      "epoch": 1790984712.116955,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 121,
+      "epoch": 1790984714.125201,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 122,
+      "epoch": 1790984715.130887,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 123,
+      "epoch": 1790984716.132709,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 124,
+      "epoch": 1790984717.137162,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 125,
+      "epoch": 1790984718.153853,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 126,
+      "epoch": 1790984719.164247,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 127,
+      "epoch": 1790984721.165609,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 128,
+      "epoch": 1790984722.183877,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 129,
+      "epoch": 1790984724.19304,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 130,
+      "epoch": 1790984725.206104,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 131,
+      "epoch": 1790984727.2217379,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 132,
+      "epoch": 1790984728.224998,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 133,
+      "epoch": 1790984730.225847,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 134,
+      "epoch": 1790984732.247381,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 135,
+      "epoch": 1790984733.252408,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 136,
+      "epoch": 1790984734.264792,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 137,
+      "epoch": 1790984736.265291,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 138,
+      "epoch": 1790984738.27124,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 139,
+      "epoch": 1790984739.273077,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 140,
+      "epoch": 1790984740.285198,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 141,
+      "epoch": 1790984741.287465,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 142,
+      "epoch": 1790984742.295611,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 144,
+      "epoch": 1790984789.249655,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 145,
+      "epoch": 1790984789.2596989,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 148,
+      "epoch": 1790984796.276964,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    },
+    {
+      "sequence": 149,
+      "epoch": 1790984796.287132,
+      "frame": [
+        257,
+        182.66666666666666,
+        360,
+        61.66666666666666
+      ],
+      "lambda": 1.0,
+      "maximumAffineResidualPoints": 0.0,
+      "viewID": "ObjectIdentifier(0x0000000103b80000)",
+      "viewportPoints": [
+        359.72222222222223,
+        61.66666666666667
+      ]
+    }
+  ],
+  "firstPostFirstCaptureCensus": {
+    "sequence": 21,
+    "epoch": 1790984603.602507,
+    "frame": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ],
+    "lambda": 1.0,
+    "maximumAffineResidualPoints": 0.0,
+    "viewID": "ObjectIdentifier(0x0000000103b80000)",
+    "viewportPoints": [
+      359.72222222222223,
+      61.66666666666667
+    ]
+  },
+  "limits": [
+    "No identical animation timing claim or assertion first screenshot settled.",
+    "Projection configuration includes initialization/workload timing.",
+    "Only sampled frames are evaluated; no claim about unobserved motion."
+  ]
+}

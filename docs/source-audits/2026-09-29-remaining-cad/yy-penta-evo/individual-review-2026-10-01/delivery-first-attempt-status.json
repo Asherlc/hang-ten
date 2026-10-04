@@ -1,0 +1,7 @@
+{
+  "status": "failed",
+  "exitCode": 1,
+  "error": "ValueError: model/descriptor/metadata checksum mismatch",
+  "cause": "Verification started while the lock/checksum update was still running. This attempt is retained; rerun follows after update completion.",
+  "outputProvenance": "Exact output string from exec session 48144 completion, transcribed from tool response; command did not redirect stdout/stderr to a file."
+}

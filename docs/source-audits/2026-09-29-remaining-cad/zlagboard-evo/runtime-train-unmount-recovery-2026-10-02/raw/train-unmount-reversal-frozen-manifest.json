@@ -1,0 +1,60 @@
+{
+  "fileCount": 11,
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/000-stderr.txt",
+      "sha256": "5a76947209a96086c83c0e238a53a5b1c3a4941c23ad3f3525ce11ebfaed5bd8",
+      "bytes": 145
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/000-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/captures.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/commands.json",
+      "sha256": "7723bd80cf078f8a5470ea769e2e44a757ea8b494dcc89a5f4bacdccded9afda",
+      "bytes": 303
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/failure.txt",
+      "sha256": "faab5e80875df5598159f95006edd0303948bb8a16f7dee9d419853fd7a595c8",
+      "bytes": 1549
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/runtime-release.json",
+      "sha256": "c2205cd378b09ae41f17f17eea46baa5e1eaccf82b84ae05135213ace59ed077",
+      "bytes": 515
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-control-b-landscape/trace-copy.json",
+      "sha256": "77b84f5734f055f633bd349208d479add2dfbfb06d00251567b80bed3b9ab674",
+      "bytes": 133
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal/findings.json",
+      "sha256": "0a32565e6d088edbc892ac691e215bbc70c808acab06f673a5770d3857085cc5",
+      "bytes": 745
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal/helper-only-output-identity.patch",
+      "sha256": "61ac6c72d1fba22b35b85934b99cf4933ef3c903cbbaee36206cca30e4d4098a",
+      "bytes": 1926
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal/runtime-release.json",
+      "sha256": "c2205cd378b09ae41f17f17eea46baa5e1eaccf82b84ae05135213ace59ed077",
+      "bytes": 515
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal/workout-control-b.py",
+      "sha256": "26653696c56cfc1fae90ae9ff6fb9ab5c528749fcb8d2b8e432db3d9968d5427",
+      "bytes": 11421
+    }
+  ]
+}

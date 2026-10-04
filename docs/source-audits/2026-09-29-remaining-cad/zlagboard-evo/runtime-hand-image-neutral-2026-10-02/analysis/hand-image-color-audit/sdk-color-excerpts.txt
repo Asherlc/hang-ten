@@ -1,0 +1,120 @@
+FILE /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CIImage.h
+95: typedef NSString * CIImageOption NS_TYPED_ENUM;
+96: 
+97: /* A CGColorSpaceRef defining the color space of the image. This value
+98:  * overrides the image's implicit color space.
+99:  * If [NSNull null] then don't color manage the image. */
+100: CORE_IMAGE_EXPORT CIImageOption const kCIImageColorSpace;
+338: /* Creates a new image referencing the contents of the Metal texture object.
+339:  * The texture type must be MTLTextureType2D and the texture format must be unsigned normalized or floating-point.
+340:  * When rendering a CIImage referencing this Metal texture, there should not be any uncommitted Metal comand buffers writing to the texture. */
+341: + (nullable CIImage *)imageWithMTLTexture:(id<MTLTexture>)texture
+342:                                   options:(nullable NSDictionary<CIImageOption, id> *)options NS_AVAILABLE(10_11, 9_0);
+424: // initWithMTLTexture will return nil if textureType is not MTLTextureType2D.
+425: - (nullable instancetype)initWithMTLTexture:(id<MTLTexture>)texture
+426:                                     options:(nullable NSDictionary<CIImageOption, id> *)options NS_AVAILABLE(10_11, 9_0);
+456: /* Returns a new image representing the original image with the transform
+457:  * 'matrix' appended to it. */
+458: - (CIImage *)imageByApplyingTransform:(CGAffineTransform)matrix;
+459: 
+460: // specifying true or false here will override the context's kCIContextHighQualityDownsample setting.
+461: - (CIImage *)imageByApplyingTransform:(CGAffineTransform)matrix
+462:                 highQualityDownsample:(BOOL)highQualityDownsample NS_AVAILABLE(10_12, 10_0);
+463: 
+464: /* Returns a new image representing the original image with a transform applied to it based on an orientation value.
+465:  * CGImagePropertyOrientation enum values from 1 to 8 as defined in the TIFF spec are supported.
+466:  * Returns original image if the image is of infinite extent. */
+467: - (CIImage *)imageByApplyingOrientation:(int)orientation NS_AVAILABLE(10_10, 8_0);
+468: 
+469: /* Returns a CGAffineTransform for an orientation value that can be applied to an image.
+470:  * CGImagePropertyOrientation enum values from 1 to 8 as defined in the TIFF spec are supported.
+471:  * Returns CGAffineTransformIdentity if the image is of infinite extent.*/
+472: - (CGAffineTransform)imageTransformForOrientation:(int)orientation NS_AVAILABLE(10_10, 8_0);
+473: 
+474: /* Returns a new image representing the original image transformeded for the given CGImagePropertyOrientation */
+475: - (CIImage *)imageByApplyingCGOrientation:(CGImagePropertyOrientation)orientation NS_AVAILABLE(10_13, 11_0);
+476: 
+477: /* Returns a CGAffineTransform for the CGImagePropertyOrientation value that can be applied to an image.*/
+478: - (CGAffineTransform)imageTransformForCGOrientation:(CGImagePropertyOrientation)orientation NS_AVAILABLE(10_13, 11_0);
+
+FILE /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CIContext.h
+38: /// You can also use a `CIContext` with the ``CIDetector`` class to analyze images — for example, to detect faces 
+39: /// or barcodes.
+40: /// 
+41: /// Contexts support automatic color management by performing all processing operations in a working color space.
+42: /// This means that unless told otherwise:
+43: /// * All input images are color matched from the input's color space to the working space.
+44: /// * All renders are color matched from the working space to the destination space.
+45: /// (For more information on `CGColorSpace` see <doc://com.apple.documentation/documentation/coregraphics/cgcolorspace>)
+89: /// A Core Image context option key to specify the working color space for rendering.
+90: /// 
+91: /// Contexts support automatic color management by performing all processing operations 
+92: /// in a working color space. This means that unless told otherwise:
+93: /// * All input images are color matched from the input's color space to the working space.
+94: /// * All renders are color matched from the working space to the destination's color space.
+95: /// 
+96: /// The default working space is the extended sRGB color space with linear gamma.
+97: /// On macOS before 10.10, the default is extended Generic RGB with linear gamma. 
+98: /// 
+99: /// The value of this option can be either:
+100: /// * A `CGColorSpace` instance with an RGB color model that supports output.
+101: /// * An `NSNull` instance to request that Core Image perform no color management.
+102: /// 
+103: /// If this option is not specified, then the default working space is used.
+104: /// 
+105: CORE_IMAGE_EXPORT CIContextOption const kCIContextWorkingColorSpace;
+144: /// A Boolean value to control how a Core Image context render produces alpha-premultiplied pixels.
+145: ///
+146: /// This option only affects how a context is rendered when using methods where the destination's
+147: /// alpha mode cannot be determined such as:
+148: /// *  ``/CIContext/render:toBitmap:rowBytes:bounds:format:colorSpace:``
+149: /// *  ``/CIContext/render:toCVPixelBuffer:``
+150: /// *  ``/CIContext/render:toIOSurface:bounds:colorSpace:``
+151: /// *  ``/CIContext/render:toMTLTexture:commandBuffer:bounds:colorSpace:``
+152: /// *  ``/CIContext/createCGImage:fromRect:``
+153: /// 
+154: /// If the value for this option is:
+155: /// * True: The output will produce alpha-premultiplied pixels. 
+156: /// * False: The output will produce un-premultiplied pixels. 
+157: /// * Not specified: the default behavior True. 
+158: /// 
+159: /// This option does not affect how a context is rendered to a ``CIRenderDestination`` because
+509: /// Creates a Core Graphics image from a region of a Core Image image instance
+510: /// with an option for controlling when the image is rendered.
+511: ///
+512: /// - Parameters:
+513: ///    - image: A ``CIImage`` image instance for which to create a `CGImage`.
+514: ///    - fromRect: The `CGRect` region of the `image` to use. 
+515: ///        This region relative to the cartesean coordinate system of `image`.
+516: ///        This region will be intersected with integralized and intersected with `image.extent`.
+517: ///    - format: A ``CIFormat`` to specify the pixel format of the created `CGImage`.
+518: ///        For example, if `kCIFormatRGBX16` is specified, then the created `CGImage` will 
+519: ///        be 16 bits-per-component and opaque.
+520: ///    - colorSpace: The `CGColorSpace` for the output image. 
+521: ///        This color space must have either `CGColorSpaceModel.rgb` or `CGColorSpaceModel.monochrome` 
+522: ///        and be compatible with the specified pixel format.
+523: ///    - deferred: Controls when Core Image renders `image`.
+524: ///        * True: rendering of `image` is deferred until the created `CGImage` rendered. 
+525: ///        * False: the `image` is rendered immediately.
+526: ///
+527: /// - Returns:
+528: ///    Returns a new `CGImage` instance. 
+529: ///    You are responsible for releasing the returned image when you no longer need it. 
+530: ///    The returned value will be `null` if the extent is empty or too big.
+531: ///
+532: - (nullable CGImageRef)createCGImage:(CIImage *)image
+533:                             fromRect:(CGRect)fromRect
+534:                               format:(CIFormat)format
+535:                           colorSpace:(nullable CGColorSpaceRef)colorSpace
+536:                             deferred:(BOOL)deferred
+537: CF_RETURNS_RETAINED NS_AVAILABLE(10_12,10_0);
+
+FILE /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLPixelFormat.h
+97:     MTLPixelFormatRGBA8Unorm      = 70,
+98:     MTLPixelFormatRGBA8Unorm_sRGB = 71,
+99:     MTLPixelFormatRGBA8Snorm      = 72,
+100:     MTLPixelFormatRGBA8Uint       = 73,
+101:     MTLPixelFormatRGBA8Sint       = 74,
+102:     
+103:     MTLPixelFormatBGRA8Unorm      = 80,
+104:     MTLPixelFormatBGRA8Unorm_sRGB = 81,

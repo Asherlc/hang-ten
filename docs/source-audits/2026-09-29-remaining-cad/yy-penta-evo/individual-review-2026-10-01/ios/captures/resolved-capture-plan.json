@@ -1,0 +1,34 @@
+{
+  "resolvedPositionByContact": {
+    "edge-25-left": "primary",
+    "edge-20-left": "edge-20",
+    "mono-left": "mono",
+    "duo-left": "duo",
+    "edge-15-left": "edge-15",
+    "edge-10-left": "reverse",
+    "tray-left": "tray",
+    "edge-20-right": "edge-20",
+    "edge-25-right": "primary",
+    "edge-10-right": "reverse",
+    "edge-15-right": "edge-15",
+    "mono-right": "mono",
+    "duo-right": "duo",
+    "tray-right": "tray"
+  },
+  "orbitRepresentatives": {
+    "edge-25-left": "primary-left-penta",
+    "edge-20-left": "edge-20-left-penta",
+    "mono-left": "mono-left-penta",
+    "duo-left": "duo-left-penta",
+    "edge-15-left": "edge-15-left-penta",
+    "edge-10-left": "reverse-left-penta",
+    "tray-left": "tray-left-penta",
+    "edge-20-right": "edge-20-right-penta",
+    "edge-25-right": "primary-right-penta",
+    "edge-10-right": "reverse-right-penta",
+    "edge-15-right": "edge-15-right-penta",
+    "mono-right": "mono-right-penta",
+    "duo-right": "duo-right-penta",
+    "tray-right": "tray-right-penta"
+  }
+}

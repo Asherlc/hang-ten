@@ -73,10 +73,9 @@ def _normalized(vector: tuple[float, ...]) -> tuple[float, ...] | None:
     return tuple(component / length for component in vector)
 
 
-def _contact_centroids(package_root: Path, descriptor: dict) -> dict[str, tuple[float, float, float]]:
+def _contact_centroids(usdz_path: Path, descriptor: dict) -> dict[str, tuple[float, float, float]]:
     from hangboard_packages.usd_mesh_chain import extract_world_extents, read_usda_text
 
-    usdz_path = package_root / "assets" / "primary.usdz"
     digest = hashlib.sha256(usdz_path.read_bytes()).hexdigest()
     assert digest == descriptor["modelSHA256"], (
         f"{usdz_path} sha256 does not match descriptor (asset drifted underneath the test)"
@@ -109,6 +108,76 @@ def _iter_suspended_presentations(module, package):
             yield presentation, media.suspension
 
 
+@pytest.mark.parametrize(
+    ("slug", "position_id", "camera_z_sign"),
+    [
+        ("frictitious-nug", "front-25", -1),
+        ("frictitious-nug", "front-inverted-20", -1),
+        ("frictitious-nug", "reverse-13", 1),
+        ("frictitious-nug", "reverse-inverted-8", 1),
+        ("frictitious-port-a-board", "front-upright", -1),
+        ("frictitious-port-a-board", "front-inverted", -1),
+        ("frictitious-port-a-board", "reverse-upright", 1),
+        ("frictitious-port-a-board", "reverse-inverted", 1),
+        ("yy-baguette", "front-20-25", -1),
+        ("yy-baguette", "reverse-10-15-30", 1),
+        ("yy-travelboard", "front-25-15", -1),
+        ("yy-travelboard", "reverse-10", 1),
+    ],
+)
+def test_native_front_and_reverse_positions_select_the_evidenced_face(
+    slug: str, position_id: str, camera_z_sign: int
+) -> None:
+    """Retained front/reverse evidence is recorded in each remaining-CAD audit.
+
+    These native sources place front mouths at +Z and rear mouths at -Z.
+    A deep floor can cross the body center, so its centroid is not a reliable
+    substitute for the documented opening side. Keep that semantic regression
+    explicit alongside the general centroid check.
+    """
+    module = load_board_catalog_module()
+    package = module.load_board_package(HANGBOARDS_ROOT / slug)
+    poses = [
+        suspension.canonical_poses[position_id]
+        for _, suspension in _iter_suspended_presentations(module, package)
+        if position_id in suspension.canonical_poses
+    ]
+    assert len(poses) == 1
+    direction = _normalized(tuple(poses[0].camera["viewDirection"]))
+    assert direction is not None
+    assert direction[2] * camera_z_sign > _MIN_OPPOSING_DOT
+
+
+
+def _assert_native_baguette_central_pose(board, pose) -> None:
+    # The reviewed native bearing is rotated upward; the camera is stored
+    # in model coordinates. A deep-floor centroid is not its opening normal.
+    # yy-baguette-evo/individual-review-2026-10-01/review.md:39 and its
+    # orientation-audit/recommendation.json + actual-camera-sidecar-check.json.
+    assert board.contact_ids_for_position("central-20-6") == ("edge-central-20",)
+    assert pose.rotation == pytest.approx((math.sqrt(.5), 0, 0, math.sqrt(.5)), abs=1e-8)
+    assert pose.rotation[0] > 0 and pose.rotation[3] > 0
+    camera = tuple(pose.camera["viewDirection"])
+    assert camera == pytest.approx((0, -.939692621, .342020143), abs=1e-9)
+    x, y, z, w = pose.rotation
+    # Quaternion rotation, q * v * inverse(q), normalized for serialized q.
+    norm2 = x*x + y*y + z*z + w*w
+    world = (
+        ((w*w+x*x-y*y-z*z)*camera[0] + 2*(x*y-w*z)*camera[1] + 2*(x*z+w*y)*camera[2])/norm2,
+        (2*(x*y+w*z)*camera[0] + (w*w-x*x+y*y-z*z)*camera[1] + 2*(y*z-w*x)*camera[2])/norm2,
+        (2*(x*z-w*y)*camera[0] + 2*(y*z+w*x)*camera[1] + (w*w-x*x-y*y+z*z)*camera[2])/norm2,
+    )
+    assert world == pytest.approx((0, -.342020143, -.939692621), abs=1e-8)
+    assert world[1] < 0 and world[2] < -_MIN_OPPOSING_DOT
+
+
+def test_native_baguette_central_pose_retains_bearing_and_camera_frame() -> None:
+    module = load_board_catalog_module()
+    package = module.load_board_package(HANGBOARDS_ROOT / "yy-baguette-evo")
+    pose = package.board.presentations[0].media.suspension.canonical_poses["central-20-6"]
+    _assert_native_baguette_central_pose(package.board, pose)
+
+
 def test_suspended_canonical_poses_face_the_camera() -> None:
     from hangboard_packages.usd_mesh_chain import UsdcatUnavailable
 
@@ -126,13 +195,19 @@ def test_suspended_canonical_poses_face_the_camera() -> None:
             body_max = descriptor["modelBounds"]["max"]
             body_center = tuple((body_min[axis] + body_max[axis]) / 2 for axis in range(3))
             try:
-                centroids = _contact_centroids(package.root, descriptor)
+                centroids = _contact_centroids(
+                    package.root / presentation.media.asset_path, descriptor
+                )
             except UsdcatUnavailable as error:
                 skip_reason = str(error)
                 continue
 
             for pose_id, pose in suspension.canonical_poses.items():
                 contact_ids = package.board.contact_ids_for_position(pose_id)
+                if package.board.id == "yy.baguette-evo" and pose_id == "central-20-6":
+                    _assert_native_baguette_central_pose(package.board, pose)
+                    checked += 1
+                    continue
                 offsets = [
                     tuple(centroids[cid][axis] - body_center[axis] for axis in range(3))
                     for cid in contact_ids

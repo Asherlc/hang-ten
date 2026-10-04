@@ -1,0 +1,25 @@
+{
+  "sourceCommitBaseline": "current canonical source 3ff3; original prior committed9449 separately retained",
+  "files": {
+    "bounded_native.py": "0ec3ac866f735902526356902a4f2d90bf05a42576e83dcb33ab700587d09aa9",
+    "frozen-3ff3/assets/primary.model.json": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+    "frozen-3ff3/assets/primary.usdz": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+    "frozen-3ff3/metolius-simulator-3d.FCStd": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+    "prior-authoring-proofs/author-disposition.md": "f60298520c0dd513c9eedd587b3b1ca601042e429f629df1dca8cf5ae5635ead",
+    "prior-authoring-proofs/author-report.json": "4d52a00ffe51bbb0feb73cfcd51ca92b975584e2d8080cfd2c6a939eabc4741a",
+    "prior-authoring-proofs/author_functional_probe.py": "35317647562764cc6a71ab46df5d766f2dd3edf29d961bbf4b30b2a7bf761cef",
+    "prior-authoring-proofs/authored-design.json": "0b0f96ef2d7aaeb14254b92673927b27af60cb400012259f695c5e02b4f54a0a",
+    "prior-authoring-proofs/final-independent-export-review-3ff3.json": "d8cfd5544aa3a37514d312ae2a0cb39516d11d87e04a07884174426ddf89a359",
+    "prior-authoring-proofs/final-normal-comparison.json": "64b2394c3640d5b1caa230ce260031f34bfa902c3171dc03557c9171bf853ea9",
+    "prior-authoring-proofs/finish_native_contacts.py": "ffbfd0325d4de9deb7937dd4e31fa1b70b57dbd7ad34c34746dcae9afa7b8283",
+    "prior-authoring-proofs/functional-sections-3ff3.json": "3071cf33a5fec611b69f3533d34116c45dfb1144539cab746d660965a11c5bcc",
+    "prior-authoring-proofs/local-contact-joins-3ff3.json": "a46cc5e397af5714eb08b5a2df24812df28deb36257ecc7b8b4221b454c9f817",
+    "prior-authoring-proofs/native-check-3ff3.json": "094f051ddf77a64f4960c40fd86c99bdc719fcbd69753a08d3c84ad6acd59394",
+    "prior-authoring-proofs/native-preview-provenance.json": "bae94192212a62f7a9f1a898d4b4f4bb443c7ef0d9a8865de0b555e18a3b2d8f",
+    "prior-authoring-proofs/native-review-3ff3.json": "66a0fa39e932cd03fefc35fe2137630815d01a0976479cc5285fec40c22b388c",
+    "prior-authoring-proofs/probe-design.json": "a99dadc42fa9cab243feb365d61358c3c36c0d788891f813a501b7bc61e88a1d",
+    "prior-authoring-proofs/reproducibility.json": "a5eb794179150b324ee87cffe7c1f6f738edd118f9ae7f1732c7fbf16316d08e",
+    "prior-authoring-proofs/source-audit.json": "2b58ee14e26bcc5c76b72d3c1559b655e2bf8583460017cc1fabe88db823db4b",
+    "prior-authoring-proofs/source-freeze.json": "603b29dfe346cc329cd9ed5fab373f7a4d0cfb3ef7b6307dd3f8df98e39f9eef"
+  }
+}

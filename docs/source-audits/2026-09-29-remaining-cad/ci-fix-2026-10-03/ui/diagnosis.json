@@ -1,0 +1,54 @@
+{
+  "owner": "placid-badger",
+  "agent": "/root/flash_board_shape_review",
+  "runID": 37151709739,
+  "jobID": 111286912623,
+  "logSHA256": "acf9b7a2d6845e65626157c362027a61a9e4b29f5844212b7c6422047d12e89d",
+  "failingTest": "OwlClimbPokerBoardMapInteractionUITests.testLandscapeMultiPresentationSquareBoardDetailKeepsMapInViewport",
+  "assertionLocation": "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests.swift:231",
+  "locator": "boardDetail.presentationSelector",
+  "runtimeEvidence": "The intended Stone Hanger Mini name, navigation bar, map and viewport checks all succeeded; only the presentation selector existence assertion failed.",
+  "cause": "Stale fixture: Mini migrated to one presentation while test still requires a multi-presentation selector.",
+  "productionCondition": "HangTen/Views/BoardMapView.swift:421: board.presentations.count > 1",
+  "nativeManifestFacts": {
+    "nature-stone-hanger-mini": {
+      "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+      "name": "Stone Hanger Mini",
+      "aspectRatio": 1.0,
+      "presentations": [
+        {
+          "id": "primary",
+          "name": "3D model",
+          "aspectRatio": 1.0
+        }
+      ]
+    },
+    "plateau-lifting-edge": {
+      "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "name": "Lifting Edge",
+      "aspectRatio": 1.5,
+      "presentations": [
+        {
+          "id": "depth-18mm",
+          "name": "18 mm configuration",
+          "aspectRatio": 1.5
+        },
+        {
+          "id": "depth-15mm",
+          "name": "15 mm configuration",
+          "aspectRatio": 1.5
+        },
+        {
+          "id": "depth-10mm",
+          "name": "10 mm configuration",
+          "aspectRatio": 1.5
+        }
+      ]
+    }
+  },
+  "proposedPatch": "stale-presentation-fixture.patch",
+  "patchScope": "Rename test to remove obsolete Square qualifier and use Plateau Lifting Edge, preserving every existing timeout and assertion. The separate square-board viewport test remains unchanged.",
+  "regressionEvidence": "Exact CI assertion failure reproduces stale fixture. Direct native XML manifest inspection proves old fixture has 1 presentation and new fixture has 3. No simulator/build authorized in this lane; rerun exact UITest in CI after integration.",
+  "trackedEditsApplied": false,
+  "externalResourcesCreated": []
+}

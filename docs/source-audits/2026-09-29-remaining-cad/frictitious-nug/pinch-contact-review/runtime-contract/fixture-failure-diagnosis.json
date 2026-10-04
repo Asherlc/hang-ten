@@ -1,0 +1,27 @@
+{
+  "createdAt": "2026-09-30T23:45:04.337027+00:00",
+  "status": "fixture corrected; root-owned XCTest rerun pending",
+  "failingTest": "BoardModelRealityTests.testSharedContactMeshUsesPrimaryPickingAndUnionHighlight",
+  "rootCause": "Synthetic test used reusable v2 Pivot descriptor but omitted media.instances. Reusable parsing deliberately leaves node.contactID nil; without instances the scene uses v1 primary-node binding and binds no entities. Failure at original test line252 precedes highlighting.",
+  "evidence": [
+    "Pivot primary.model.json schemaVersion=2/contactSlotID; BoardPackageStore.loadReusableModelDescriptor produces contact nodes with contactID=nil.",
+    "BoardModelRealityLoader passes media.instances; synthetic scene omitted them.",
+    "Real NUG shared-membership test and normal Pivot load/bind test passed in the same full run."
+  ],
+  "change": "Only generic fixture changed to single-instance v1 Metolius Contact, asserts schema and absent instances, sets additionalContactIDs coherently and derives secondary union bounds. Existing behavioral assertions and actual NUG regression preserved.",
+  "productionChanged": false,
+  "checks": {
+    "swiftSyntaxParse": "passed",
+    "scopedDiffWhitespace": "passed",
+    "XCTestAfterCorrection": "pending root rerun"
+  },
+  "fileSHA256": {
+    "HangTenTests/BoardModelRealityTests.swift": "a839cd0a584b3e0cd6dcd25e295fe29a89aba78dc96833b236bc0cdb0ef00fad",
+    "HangTen/Models/BoardModelRealityTypes.swift": "07cd4392567103ae157c2bea2d5470d45bac8824b3a946911b14a13bbb7c9e7f",
+    "HangTen/Models/BoardPackageStore.swift": "af66408a5ea48e0381a5b443790367f7cc2a2712d44dc5c6ecfb992ef797639a",
+    "Hangboards/trango-rock-prodigy-pivot/assets/primary.model.json": "b7c97e44c37c0d521a5ac991bb9ccd54fca2301d6b3ea8446cc48ce86eac3005",
+    "Hangboards/metolius-contact/assets/primary.model.json": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7",
+    ".context/placid-badger/nug-pinch-review/ios-summary.json": "67e8eef4295c57ce846ab981f7707b47bfdbc87547f52b50e5eaaba0dc72e7bb",
+    ".context/placid-badger/nug-pinch-review/ios-tests.log": "0e469f964685f4faf5b2f4cdf9ab22ba93b8d9f493f4c73ff1357bce2feea725"
+  }
+}

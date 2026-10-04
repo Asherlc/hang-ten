@@ -1,0 +1,35 @@
+{
+  "status": "prepared-awaiting-stable-author-candidate-and-previews",
+  "baselineSHA256": {
+    "metolius-simulator-3d.FCStd": "3c516ec27da90e124fd8397470cbba0f127d5929a1fa49c62c4c611992570777",
+    "assets/primary.usdz": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+    "assets/primary.model.json": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d"
+  },
+  "rawManifestSHA256": "07d2eb6277beee925f45c15d561f1e124c687914ce0f2e933c33e4446dd46bf1",
+  "scope": "Read-only independent technical checks; source geometry/visual acceptance remain author+Opus/user decisions",
+  "inheritedChecks": [
+    "30contacts/exact logicalmanifest plus plastic finish",
+    "27depth checks including24published cavities",
+    "711x222mm face envelope; report unsourced measured display thickness separately",
+    "Single valid finalbody/native recompute/contact membership/nonoverlap",
+    "14\u219216\u219214mm intended cavity edit+restore without source save",
+    "Native mirror symmetry and actual export triangle/unitnormal/unboundmaterial gates",
+    "203other packagefiles unchanged"
+  ],
+  "newSpecificChecks": [
+    "Center jug core surface and cross-sectional widths versus original9449, retaining near-vertical sides above deliberate root blend bound",
+    "Quantify BRep differences outside author-declared center-root blend region; do not accept a renewed narrowing/tent apex",
+    "Dense native roof cross-sections across declared flat/round transition intervals; identify localized height minima relative neighboring samples and report magnitude/location",
+    "Where author claims no local dips, test interval endpoints and shrinking/adaptive samples; distinguish intended broad contour from new localized extremum",
+    "Compare same corrected sections on final actual exported triangle geometry",
+    "Never substitute these finite probes for whole-source/fullview Opus visual verdict"
+  ],
+  "candidateConfigurationRequired": [
+    "Finalbody name",
+    "Center root blend ceiling/extent and expected unchanged dome core",
+    "Transition intervals and explicit no-dip claims",
+    "Finalimmutable source/model/descriptor hashes"
+  ],
+  "jobs": "No native or export processes started during preparation; future runs bounded in an exact owned processgroup with cleanup before temp removal",
+  "historicalReports": "Prior jagged-review proofs remain unchanged and are not rebound to newgeometry"
+}

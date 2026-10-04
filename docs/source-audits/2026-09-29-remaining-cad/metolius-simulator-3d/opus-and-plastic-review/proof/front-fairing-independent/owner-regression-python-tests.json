@@ -1,0 +1,17 @@
+{
+  "command": [
+    ".context/placid-badger/venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "Tools/HangboardCAD/tests/test_cli_guards.py",
+    "Tools/HangboardCAD/tests/test_contract.py",
+    "Tools/HangboardCAD/tests/test_compile_v2_depths.py",
+    "Tools/HangboardCAD/tests/test_shared_contact_membership_cad.py",
+    "Tools/HangboardCAD/tests/test_usdz_writer.py",
+    "Tools/HangboardCAD/tests/test_uv_node_normals.py"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 2.5805450409534387,
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d"
+}

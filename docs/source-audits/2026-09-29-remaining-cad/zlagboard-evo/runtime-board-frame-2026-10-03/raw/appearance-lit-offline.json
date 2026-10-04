@@ -1,0 +1,184 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "fixed18Schedule",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "releaseAuthorization",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scheduleReleaseHash",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "bound28PathParity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "rawCompletion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exactCleanup",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "appBinary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "onlyBoardRendererArmReviewFlags",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "boundSourceReference",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "volatileMuteArguments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "all18RawHashesAndFixedStartDeadlines",
+      "passed": true,
+      "detail": [
+        {
+          "offset": 1,
+          "passed": true,
+          "latenessSeconds": 0.0011538329999893904
+        },
+        {
+          "offset": 2,
+          "passed": true,
+          "latenessSeconds": 0.0037697080115322024
+        },
+        {
+          "offset": 3,
+          "passed": true,
+          "latenessSeconds": 0.0007458330073859543
+        },
+        {
+          "offset": 4,
+          "passed": true,
+          "latenessSeconds": 0.001720167012535967
+        },
+        {
+          "offset": 5,
+          "passed": true,
+          "latenessSeconds": 0.0047138330119196326
+        },
+        {
+          "offset": 6,
+          "passed": true,
+          "latenessSeconds": 0.002308667011675425
+        },
+        {
+          "offset": 7,
+          "passed": true,
+          "latenessSeconds": 0.0009330000029876828
+        },
+        {
+          "offset": 8,
+          "passed": true,
+          "latenessSeconds": 0.0007389580132439733
+        },
+        {
+          "offset": 9,
+          "passed": true,
+          "latenessSeconds": 0.00513150000188034
+        },
+        {
+          "offset": 10,
+          "passed": true,
+          "latenessSeconds": 0.0016747080080676824
+        },
+        {
+          "offset": 11,
+          "passed": true,
+          "latenessSeconds": 0.005104083000333048
+        },
+        {
+          "offset": 12,
+          "passed": true,
+          "latenessSeconds": 0.0026771670090965927
+        },
+        {
+          "offset": 13,
+          "passed": true,
+          "latenessSeconds": 0.00036308300332166255
+        },
+        {
+          "offset": 14,
+          "passed": true,
+          "latenessSeconds": 0.004663125000661239
+        },
+        {
+          "offset": 15,
+          "passed": true,
+          "latenessSeconds": 0.0037916670116828755
+        },
+        {
+          "offset": 16,
+          "passed": true,
+          "latenessSeconds": 0.0036060000129509717
+        },
+        {
+          "offset": 17,
+          "passed": true,
+          "latenessSeconds": 0.0006800420087529346
+        },
+        {
+          "offset": 18,
+          "passed": true,
+          "latenessSeconds": 0.0017541670094942674
+        }
+      ]
+    },
+    {
+      "name": "reconstructedHostClockGate",
+      "passed": true,
+      "detail": {
+        "spreadSeconds": 0.0008866786956787109,
+        "thresholdSeconds": 0.1
+      }
+    },
+    {
+      "name": "oneProductionRoute",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "noMeasurementAXOrInput",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "noRecordedCommandFailureBeforeCleanup",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "noFailureRecord",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "scope": "Appearance-only18: offline schedule, hashes, provenance and cleanup only; no full workout claim",
+  "visualJudgment": "NOT_PERFORMED",
+  "CPUBracketsAvailable": false,
+  "actualAppPhaseBoundariesMeasured": false,
+  "originalRecordsRewritten": false
+}

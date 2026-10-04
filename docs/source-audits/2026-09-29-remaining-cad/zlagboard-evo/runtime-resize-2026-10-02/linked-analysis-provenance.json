@@ -1,0 +1,20 @@
+{
+  "initialResizeAudit": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/initial-resize-audit/evidence-rows.jsonl",
+      "retainedPath": "../runtime-passive-workout-2026-10-02/analysis/initial-resize-audit/evidence-rows.jsonl",
+      "sha256": "e01547dbbe813f71d72f99f8ddaef3545a1a5ad32dce606a3a0470916efe419a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/initial-resize-audit/report.json",
+      "retainedPath": "../runtime-passive-workout-2026-10-02/analysis/initial-resize-audit/report.json",
+      "sha256": "ed3910f714463f2ada3e321c4eb2a2de15426034c4bc82efbb97d4c0cb1359e8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/initial-resize-audit/source-excerpts.txt",
+      "retainedPath": "../runtime-passive-workout-2026-10-02/analysis/initial-resize-audit/source-excerpts.txt",
+      "sha256": "b379281c7129f3d10998c01686adeb06ef647793acd7b807a188b466afe15407"
+    }
+  ],
+  "allLinkedBytesMatch": true
+}

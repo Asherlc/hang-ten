@@ -1,0 +1,21 @@
+{
+  "status": "PROSPECTIVE_HELPERS_READY_FOR_ROOT_REVIEW",
+  "files": {
+    "compare-prior-orthographic.py": "6f1280f0011d558c102baf533cfd76801b83815867a59280101132235317961c",
+    "check-real-hands.py": "1a8ef910cc55f648780626bcbbc595d6ce8b3e6e0b4a032dd42697a69fe2e1e7",
+    "check-cpu-semantics.py": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+    "initial-static-failure.json": "0d61223586d2de9a14b4f9305bf45047d427bf53a863e3fcabbc7f75ddcc6951",
+    "workout-sync-delivery-counter.py": "0d48cc0edae3141616f577fc000dac1aef39f6abbf3fc55f84a579fb9261147b",
+    "check-navigation.py": "33337814f19f44712b2acc0b0b250152976de38ee5ea741684dde3cb9528b80a",
+    "check-sync-counters.py": "3d6f54188a1fae8ed2260d8018b29472d558c47c9a4c8da64820715d143dc43f",
+    "check-weak-hand-census.py": "8e2900b5413ddbd534006210940043f18c3b9ec303bb334fbde23a0d85a0b6aa",
+    "workout-sync-delivery-counter.py.initial-syntax-failure": "44f56d865c4889b29421db02404030ba16a6688722917ba4bb9d044799833a6a",
+    "check-frames.py": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+    "check-ownership.py": "c3fb78f8017cfb7ad7ef8b7729c2b5d9d298f59f83cfe22f3330b6a608a89289",
+    "check-constructors.py": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+  },
+  "sourcePatchSHA256": "735b6cbd4ecb07e2347822e5af2c3bb5fc1eacb572330108e8a186d4a9ae568a",
+  "protocol": "One new-binary orthographic counter reproduction, same O readiness/natural passive12 capture schedule. Counter flag and run ID only environment changes. No added arm.",
+  "counterValidation": "Monotone nonnegative scalar counts/times; stable first times; latest bounded by record uptime; zero mismatches; entry-completion=depth; highlight-before one unclassified request; view sums <= scene; exact endpoint capture bracket deltas. No GPU or continuous activity claim.",
+  "staticASTPassed": true
+}

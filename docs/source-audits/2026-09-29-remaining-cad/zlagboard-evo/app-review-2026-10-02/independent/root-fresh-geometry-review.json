@@ -1,0 +1,27 @@
+{
+  "reviewer": "root/Astra",
+  "scope": "Fresh iOS26.4 geometry and contact selection only",
+  "reviewedImages": [
+    "ios-26-4/review-montages/selections-1.png",
+    "ios-26-4/review-montages/selections-2.png",
+    "ios-26-4/review-montages/selections-3.png",
+    "ios-26-4/review-montages/selections-4.png",
+    "ios-26-4/review-montages/selections-5.png",
+    "ios-26-4/review-montages/selections-6.png",
+    "ios-26-4/review-montages/selections-7.png",
+    "ios-26-4/app-review.png",
+    "ios-26-4/elevated-jugs-gentle/left-elevated.png",
+    "ios-26-4/elevated-jugs-gentle/right-elevated.png",
+    "ios-26-4/physical-probes/03-contact-reset/view.png"
+  ],
+  "observations": [
+    "All21 visible selected regions agree with their hold labels.",
+    "Whole board remains visible with existing wood finish.",
+    "Both gently elevated jug views show selected crests and outer rounded corners.",
+    "Reset image restores canonical framing and selected left20mm pocket."
+  ],
+  "readyForHumanGeometryReview": true,
+  "humanAccepted": false,
+  "appWorkflowPassed": false,
+  "limitation": "Workout red/blue refresh failures reproduced on26.5 and26.4; no app fix shipped."
+}

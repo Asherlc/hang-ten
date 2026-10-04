@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "functional-sections-b722",
+  "timeoutSeconds": 180,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_functional_sections.py",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/metolius-simulator-3d.FCStd",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/functional-sections-b722.json"
+  ],
+  "ownedProcessGroup": 70117,
+  "exitCode": 0,
+  "elapsedSeconds": 52.944489417015575,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

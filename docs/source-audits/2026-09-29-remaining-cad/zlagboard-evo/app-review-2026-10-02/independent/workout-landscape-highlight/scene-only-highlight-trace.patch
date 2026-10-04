@@ -1,0 +1,50 @@
+diff --git a/HangTen/Models/BoardModelRealityTypes.swift b/HangTen/Models/BoardModelRealityTypes.swift
+index 9d268157d..9f6c0ea80 100644
+--- a/HangTen/Models/BoardModelRealityTypes.swift
++++ b/HangTen/Models/BoardModelRealityTypes.swift
+@@ -715,7 +715,34 @@ final class BoardModelRealityScene {
+     }
+ 
+     func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
+-        guard contactIDs != lastHighlightedContactIDs || mode != lastHighlightMode else { return }
++        #if DEBUG
++        let traceEnabled = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HIGHLIGHT_TRACE"] == "1"
++        let priorIDs = lastHighlightedContactIDs
++        let priorMode = lastHighlightMode
++        func trace(_ stage: String) {
++            guard traceEnabled else { return }
++            let colors = contactIDs.union(priorIDs ?? []).sorted().map { id in
++                let values = (contactEntities[id] ?? []).map { entity in
++                    let attached = entity.scene != nil
++                    guard let material = entity.model?.materials.first as? PhysicallyBasedMaterial else {
++                        return "\(entity.name):attached=\(attached):baseline"
++                    }
++                    var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
++                    material.baseColor.tint.getRed(&r, green: &g, blue: &b, alpha: &a)
++                    return "\(entity.name):attached=\(attached):\(r),\(g),\(b),\(a)"
++                }
++                return "\(id)=\(values)"
++            }
++            print("[BoardSceneHighlightTrace] t=\(ProcessInfo.processInfo.systemUptime) stage=\(stage) scene=\(ObjectIdentifier(self)) model=\(descriptor.modelSHA256) requestedMode=\(mode) requestedIDs=\(contactIDs.sorted()) priorMode=\(String(describing: priorMode)) priorIDs=\(String(describing: priorIDs?.sorted())) colors=\(colors)")
++        }
++        trace("before")
++        #endif
++        guard contactIDs != lastHighlightedContactIDs || mode != lastHighlightMode else {
++            #if DEBUG
++            trace("cached-noop")
++            #endif
++            return
++        }
+         lastHighlightedContactIDs = contactIDs
+         lastHighlightMode = mode
+         // A shared mesh is selected when any of its logical contacts is selected.
+@@ -727,6 +754,9 @@ final class BoardModelRealityScene {
+                 ? (mode == .active ? Color.holdActive : Color.restBlue) : .clear
+             applyHighlight(to: entity, color: highlightColor, mode: mode)
+         }
++        #if DEBUG
++        trace("after")
++        #endif
+     }
+ 
+     func contactID(for entity: Entity) -> String? {

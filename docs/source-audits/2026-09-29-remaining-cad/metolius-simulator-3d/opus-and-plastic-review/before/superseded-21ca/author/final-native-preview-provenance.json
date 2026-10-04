@@ -1,0 +1,48 @@
+{
+  "original-9449": {
+    "triangleCount": 34634,
+    "nodeCount": 31
+  },
+  "rejected-8fa": {
+    "triangleCount": 254961,
+    "nodeCount": 31
+  },
+  "native-correction": {
+    "triangleCount": 251432,
+    "nodeCount": 1
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top",
+    "oblique",
+    "raking"
+  ],
+  "renderer": "Shared preview.py Lambert triangle-face rendering at matching view and size; oblique applies fixed orthographic rotation.",
+  "sourceSHA256": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+  "nativeMeshSHA256": "2e5efd03383a420aff35824ff694a029f5a9c592711b23492d5f065d772d7509",
+  "imageHashes": {
+    "comparison-side.png": "41a569b47ff609d2b377bd663c00b8454dfd5e73b0b889f0456d8b9f6327bfe0",
+    "comparison-raking.png": "c747d2de1a436e9e363fddc552d8a19d57c592cee52881ec33f22cd3fe503da1",
+    "comparison-oblique.png": "53259d9b2d70ba8e0772f165d02efe7a3513c78095433566c4e2fc00a3850408",
+    "original-9449-raking.png": "efe3cf3b36bdf265a10b5747938de73719c2ab27212e7e7d0ceafa363402f7ae",
+    "native-correction-front.png": "115ac10d7b6b4259f6bff6dbe2fa5696ab8b62045a413af40fd809f328fc6586",
+    "rejected-8fa-front.png": "8746bc3b05cce598a4c5742e8505dee6fa2e35847f67ba3064c147ffc3f07443",
+    "native-correction-raking.png": "804384315ef544ca71ad16113a769d8416163aff8f1f829222d2f0bd71f5748f",
+    "comparison-top.png": "f763f8a99b9cd7d2d25c76d09ad5d5cfbf03a6ffb35d608cd70f0537878039a6",
+    "native-correction-oblique.png": "ef65eb356690b610aee1bd0c149b864b83e16a6111085ffcc5afdbaa5d1a3861",
+    "rejected-8fa-raking.png": "ab14b02d96c8d75941ec56906597a9bd436b55e663dc0efd056371a407e7a4dd",
+    "native-correction-side.png": "68eef1d71a2832631a086515ba8f39ec25b3ee731cdfed529673c4c880fa7bcc",
+    "original-9449-oblique.png": "0195e673d789e0fd38e1b58f86e3ef7e8cbb5e908125187d47e293e3d739aeaf",
+    "native-correction-top.png": "47875fd8b850fe1f2881ceff9ebe9e815084170db166eb591ff42de7eaf962fa",
+    "original-9449-front.png": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+    "comparison-front.png": "49e2d27a8eed62eb56a413dede633bfc15d9bc040b3731f4469d10ef44cfc9b5",
+    "rejected-8fa-oblique.png": "9bef7da75ee2e4547a0f8f7b971588bc45456f099a85373ac2037c0f047a6250",
+    "original-9449-side.png": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+    "rejected-8fa-side.png": "0cff71e6a0db501f5e9cfeb4d556aa6ba1891c93d8b246c9c432d5b44130606c",
+    "rejected-8fa-top.png": "2acb1cb6e393b86840c04f2534f8464290143161b0baf6ceebc194a5e8c5c862",
+    "original-9449-top.png": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860"
+  },
+  "allFiveWholeAfterImagesInspected": true,
+  "authorDisposition": "Rounded dome and broad continuous roof retained. CPU facet bands and dark edge slivers remain app-review watch items; no geometry blocker found. Exact exported previews follow."
+}

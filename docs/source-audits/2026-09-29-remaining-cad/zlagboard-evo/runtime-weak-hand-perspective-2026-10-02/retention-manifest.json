@@ -1,0 +1,818 @@
+{
+  "scope": "Perspective after orthographic failure; no reversal",
+  "originalFrozenFileCount": 134,
+  "rawFiles": 135,
+  "rawBytes": 8095838,
+  "entries": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-app-termination-verification.json",
+      "retained": "raw/weak-hand-perspective-app-termination-verification.json",
+      "bytes": 300,
+      "sha256": "1cabfa4850b871ed897a7f11c1a7948a5b4933dcaeff6db3335de15074bbe0b2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-before-parity.json",
+      "retained": "raw/weak-hand-perspective-before-parity.json",
+      "bytes": 12855,
+      "sha256": "6eef9132a6b466830d30272ccb53d3b0708765eb010e2e06dcf751ff8b32d0e5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-final-parity.json",
+      "retained": "raw/weak-hand-perspective-final-parity.json",
+      "bytes": 12855,
+      "sha256": "6eef9132a6b466830d30272ccb53d3b0708765eb010e2e06dcf751ff8b32d0e5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-final-parity.stderr",
+      "retained": "raw/weak-hand-perspective-final-parity.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-final-parity.stdout",
+      "retained": "raw/weak-hand-perspective-final-parity.stdout",
+      "bytes": 32,
+      "sha256": "4e4a2d1eb8b1835aa4cef37309d0d8016bf1f05e01855b5f48594f8cf5972e41"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-findings.json",
+      "retained": "raw/weak-hand-perspective-findings.json",
+      "bytes": 9497,
+      "sha256": "712262e802427e49fb2cfdc8494afac2ffb4ea28cdd4f10ad1d7fdddfd4fc575"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-frozen-manifest.json",
+      "retained": "raw/weak-hand-perspective-frozen-manifest.json",
+      "bytes": 35308,
+      "sha256": "c28f39a336000fb76156af64e5d5af9fef7c196ccb004b93af645abaa984a113"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/000-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/000-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/000-stdout.txt",
+      "bytes": 176,
+      "sha256": "0ecb13a96980460ce4907658335d7387e1cec57f6363f155dd233d50d7dc8f27"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/001-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/001-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/001-stdout.txt",
+      "bytes": 162,
+      "sha256": "ac770b187b47dc5ec0fbf55e2b8962dd7764b403ba73bf7fd811c3278631bb4b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/002-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/002-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/002-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/002-stdout.txt",
+      "bytes": 27,
+      "sha256": "d7ba55a1b633d3cc445774665426136023942ddf21935b411f61d7b7f287b112"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/003-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/003-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/003-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/004-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/004-stderr.txt",
+      "bytes": 369,
+      "sha256": "0e6a3c194d09338837f51a8e6c0ec30269a210e1f7d1f77447e57e2b633b59a0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/004-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/005-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/005-stderr.txt",
+      "bytes": 379,
+      "sha256": "ed30d6a69dbe57e4aae704206c456d3dc3e7a1721e3e0504e1cf2bf0150ba70a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/005-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/006-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/006-stderr.txt",
+      "bytes": 376,
+      "sha256": "30f972f2961afa57a418e65c8c70d2cf1d677677772453b828b7f7d49427a8fe"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/006-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/007-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/007-stderr.txt",
+      "bytes": 376,
+      "sha256": "bd4f213fb2ff4c8b0d2be7d9acf05cfd9430e24a9d20dcbf0e23fa7dd6c4bc29"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/007-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/008-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/008-stderr.txt",
+      "bytes": 376,
+      "sha256": "0fb88cbe40870a79fd722805af44088893f02ef615b7d7f7119632bb9463df5e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/008-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/008-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/009-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/009-stderr.txt",
+      "bytes": 380,
+      "sha256": "b095ab00e3b012629c18025117619a5168f78511bbf44e3b46ffacfb5fada26f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/009-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/009-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/010-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/010-stderr.txt",
+      "bytes": 377,
+      "sha256": "7da787192b78175e56428e4a5d81f878445d9609c682b34242ca769ff9b5d38f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/010-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/010-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/011-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/011-stderr.txt",
+      "bytes": 377,
+      "sha256": "d87a44d5a9250f287c04afa87b01ad88d92c5fedfc69dce51e3f5cb90010a91c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/011-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/011-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/012-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/012-stderr.txt",
+      "bytes": 377,
+      "sha256": "008fafc6f059be49a143c6e00cd6c0ac570ea71d997440161e8ac44f9a663c6d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/012-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/012-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/013-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/013-stderr.txt",
+      "bytes": 379,
+      "sha256": "a30a85d20bbc495afb3a7e6228c51ccbc90c9f85780a9e3a07e641d11d89b92a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/013-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/013-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/014-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/014-stderr.txt",
+      "bytes": 376,
+      "sha256": "91c8dce655239da238c73cf9fc26124617b2789b916d1de028eedfdba43c6801"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/014-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/014-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/015-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/015-stderr.txt",
+      "bytes": 376,
+      "sha256": "c00c62acca48a503e004f0a0f1b9ed039026405c6c31606058cfbc3c3febb4e2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/015-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/015-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/016-stderr.txt",
+      "retained": "raw/weak-hand-perspective-landscape/016-stderr.txt",
+      "bytes": 376,
+      "sha256": "d3cf22a0e84b454829266f15111f763a55f361bc07871e29ee48d1c0178e8f65"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/016-stdout.txt",
+      "retained": "raw/weak-hand-perspective-landscape/016-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/capture-process-status.json",
+      "retained": "raw/weak-hand-perspective-landscape/capture-process-status.json",
+      "bytes": 117,
+      "sha256": "74bb8ce9cb00b4f636a338b6a7b4a0435677bb75113261c0c4ff9bb1c9d1eba9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/captures.json",
+      "retained": "raw/weak-hand-perspective-landscape/captures.json",
+      "bytes": 7879,
+      "sha256": "8ec96f094b6e853f49326523ecb4a021fcf2da646771d13cef0e10e07a6d784e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-constructors.py.stderr",
+      "retained": "raw/weak-hand-perspective-landscape/check-constructors.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-constructors.py.stdout",
+      "retained": "raw/weak-hand-perspective-landscape/check-constructors.py.stdout",
+      "bytes": 423,
+      "sha256": "ead9b3d7bb8fc863e0258fef33269be5cd16591ed1e0e899394036056c0df326"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-cpu-semantics.py.stderr",
+      "retained": "raw/weak-hand-perspective-landscape/check-cpu-semantics.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-cpu-semantics.py.stdout",
+      "retained": "raw/weak-hand-perspective-landscape/check-cpu-semantics.py.stdout",
+      "bytes": 448,
+      "sha256": "457967fdc2905c46debfdec0c475cf1b50035c8ac633b8ce195bd2bf3f278272"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-frames.py.stderr",
+      "retained": "raw/weak-hand-perspective-landscape/check-frames.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-frames.py.stdout",
+      "retained": "raw/weak-hand-perspective-landscape/check-frames.py.stdout",
+      "bytes": 594,
+      "sha256": "b73c361ccd09a19cb10982567c5aa99e489077656bb69b188a53f05588da1e71"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-navigation.py.stderr",
+      "retained": "raw/weak-hand-perspective-landscape/check-navigation.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-navigation.py.stdout",
+      "retained": "raw/weak-hand-perspective-landscape/check-navigation.py.stdout",
+      "bytes": 627,
+      "sha256": "024b507109b6d9f74081ddb4294db78b2ba8c70b31cd881572b1154800a9a82a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-ownership.py.stderr",
+      "retained": "raw/weak-hand-perspective-landscape/check-ownership.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-ownership.py.stdout",
+      "retained": "raw/weak-hand-perspective-landscape/check-ownership.py.stdout",
+      "bytes": 998,
+      "sha256": "71c06012c25073345b627590c6cf52bc7b5445dfdbbd17f029d9270d32ce0a90"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-real-hands.py.stderr",
+      "retained": "raw/weak-hand-perspective-landscape/check-real-hands.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-real-hands.py.stdout",
+      "retained": "raw/weak-hand-perspective-landscape/check-real-hands.py.stdout",
+      "bytes": 844,
+      "sha256": "7304e8d9207e0550dbdd8f89cf9c9c8b5e8525724efe0ab67a350664daf3cf29"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-weak-hand-census.py.stderr",
+      "retained": "raw/weak-hand-perspective-landscape/check-weak-hand-census.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/check-weak-hand-census.py.stdout",
+      "retained": "raw/weak-hand-perspective-landscape/check-weak-hand-census.py.stdout",
+      "bytes": 394,
+      "sha256": "9bf163d7107e977226ae6fa73dfd7e89999dbcd06cca5480ec019373eb010dca"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/commands.json",
+      "retained": "raw/weak-hand-perspective-landscape/commands.json",
+      "bytes": 6448,
+      "sha256": "8060eb41ca487527b5f9f318b93b8ef7b8fa262faf217bde6846bd1bb8760a0d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/compare-O-P.py.stderr",
+      "retained": "raw/weak-hand-perspective-landscape/compare-O-P.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/compare-O-P.py.stdout",
+      "retained": "raw/weak-hand-perspective-landscape/compare-O-P.py.stdout",
+      "bytes": 334,
+      "sha256": "641b7cfa88ecca6d6409ed107edfb2f378f79ca3912da3ee9f3681bdfedf105c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/events-BFDA1690-1523-4DCC-A759-B4ACE9DA7D26.jsonl",
+      "retained": "raw/weak-hand-perspective-landscape/events-BFDA1690-1523-4DCC-A759-B4ACE9DA7D26.jsonl",
+      "bytes": 1224186,
+      "sha256": "6c03631449b2da54eb05ebc50549164a4433cda97ad30f1df6ab815d18ab9820"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/first-eight-visual-review.json",
+      "retained": "raw/weak-hand-perspective-landscape/first-eight-visual-review.json",
+      "bytes": 7327,
+      "sha256": "01bf1b94213ddb32966fce62f4a0a417efd884eda556cba448617995cb0d92cd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/following-preview-tail.json",
+      "retained": "raw/weak-hand-perspective-landscape/following-preview-tail.json",
+      "bytes": 14343,
+      "sha256": "9ae5c1c6a0f21f4bfea847ad9264297e1ef13735fc65d126efa919ff66846a1d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/installed-binary-gate.json",
+      "retained": "raw/weak-hand-perspective-landscape/installed-binary-gate.json",
+      "bytes": 374,
+      "sha256": "02c1599f157340b036be2d66b27755035256a97c621d6978510ab1d0cf8fcb5f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/launch-initial-capture.json",
+      "retained": "raw/weak-hand-perspective-landscape/launch-initial-capture.json",
+      "bytes": 151,
+      "sha256": "a11f19630c235156761d2791d03122b095ec31b2879e0f671b763bedbc71633a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/launch-initial.png",
+      "retained": "raw/weak-hand-perspective-landscape/launch-initial.png",
+      "bytes": 725294,
+      "sha256": "166d0855e25cbff662ab2588f04ad6c8ad631a66d65ae1cea082bde13cf43e3a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/launch-review-environment.json",
+      "retained": "raw/weak-hand-perspective-landscape/launch-review-environment.json",
+      "bytes": 565,
+      "sha256": "b334b8cd647c10e443d51418c0b05da02e8e044fbbc223b1ceec46a098f88b7b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/normal-host-frame-validation.json",
+      "retained": "raw/weak-hand-perspective-landscape/normal-host-frame-validation.json",
+      "bytes": 358548,
+      "sha256": "f39d6c7bcc8541275944b64d6143c4b822a9d16462c28425d04b377dc3a3c5fe"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-0-active-plus-0.25.png",
+      "retained": "raw/weak-hand-perspective-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 330256,
+      "sha256": "f83486bfc00110c12f2c153167afe1faca3f4fad35516949868bd56df2b0fb7f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-0-active-plus-1.png",
+      "retained": "raw/weak-hand-perspective-landscape/phase-0-active-plus-1.png",
+      "bytes": 331634,
+      "sha256": "1ef59746366798f437d2825c309b6155f8e3f9e607f324de892ce5b708be8bff"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-0-active-plus-3.png",
+      "retained": "raw/weak-hand-perspective-landscape/phase-0-active-plus-3.png",
+      "bytes": 332173,
+      "sha256": "3ab442cf6b7d04dd6a4d067dc64ffef25ecb605be3b8815b053db57c68b59fd7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-0-active-plus-5.png",
+      "retained": "raw/weak-hand-perspective-landscape/phase-0-active-plus-5.png",
+      "bytes": 332497,
+      "sha256": "2a097682eedf16d2ee361b8cfb133f79f3d9597480aac8d67325c531fa506e35"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-0.25.png",
+      "retained": "raw/weak-hand-perspective-landscape/phase-1-preview-plus-0.25.png",
+      "bytes": 298033,
+      "sha256": "0f842098fc1f611393217a0fc90f7015bbfb02e40312503bf08af00cbeff72c1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-1.png",
+      "retained": "raw/weak-hand-perspective-landscape/phase-1-preview-plus-1.png",
+      "bytes": 302310,
+      "sha256": "012e58de9bf1a3d9023efc8ff2c29a391599b9f52081ab4ca58fbd8fe9da6ac8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-3.png",
+      "retained": "raw/weak-hand-perspective-landscape/phase-1-preview-plus-3.png",
+      "bytes": 300797,
+      "sha256": "99f6a8878ad3c88637582bc8325efb139d4edbbe1826657e50afa9e2263ef786"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-5.png",
+      "retained": "raw/weak-hand-perspective-landscape/phase-1-preview-plus-5.png",
+      "bytes": 299128,
+      "sha256": "21852d9f24c1bc4ec66838d9f6e45d7f9f7660acda129c0c0bfd5190f9a6db7e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-0.25.png",
+      "retained": "raw/weak-hand-perspective-landscape/phase-2-active-plus-0.25.png",
+      "bytes": 332897,
+      "sha256": "04fa46327dbf82e1f267569cc9dc33d71609f694bf6f18545e2bf45eeadbdd8d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-1.png",
+      "retained": "raw/weak-hand-perspective-landscape/phase-2-active-plus-1.png",
+      "bytes": 334545,
+      "sha256": "3e12ae25c8e18e70916a4a814ffcb586a53821a1d5613009795b2af124c95c6e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-3.png",
+      "retained": "raw/weak-hand-perspective-landscape/phase-2-active-plus-3.png",
+      "bytes": 333160,
+      "sha256": "8ae1b080a3a679f1b721e88b75ba340bd7d09b16003d9f7cc4ca7d60ffca3137"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-5.png",
+      "retained": "raw/weak-hand-perspective-landscape/phase-2-active-plus-5.png",
+      "bytes": 333488,
+      "sha256": "70057ad71fc0677088b8b144a7c4e432e755e919485d2ab54b18d226f11b4a6c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/protocol.json",
+      "retained": "raw/weak-hand-perspective-landscape/protocol.json",
+      "bytes": 1152,
+      "sha256": "420932a7928302d8a4cede93363eb48bb62d50ba87306a8b857ddc1172554b91"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/real-hand-lifetime-camera-validation.json",
+      "retained": "raw/weak-hand-perspective-landscape/real-hand-lifetime-camera-validation.json",
+      "bytes": 19637,
+      "sha256": "76fdd3df679e50b17237ddc6ab171a199e04a428313257f83928f25bc3eaf068"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/runtime-release.json",
+      "retained": "raw/weak-hand-perspective-landscape/runtime-release.json",
+      "bytes": 1424,
+      "sha256": "717e467bf967b087d9c7a4b63e331d8c51d43f47600373b27bbeb793d0067c42"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/structural-correspondence.json",
+      "retained": "raw/weak-hand-perspective-landscape/structural-correspondence.json",
+      "bytes": 382629,
+      "sha256": "e350f93e42dc5f030abfc55a082fab815a1e7155acef9e5d89bdcc171d497a8c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/structural-dependency-navigation.json",
+      "retained": "raw/weak-hand-perspective-landscape/structural-dependency-navigation.json",
+      "bytes": 52139,
+      "sha256": "3301c60cf91ebac0a553248d73d1680ab72c80d10b01766d54839dd8670d11de"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/structural-dependency-ownership.json",
+      "retained": "raw/weak-hand-perspective-landscape/structural-dependency-ownership.json",
+      "bytes": 227325,
+      "sha256": "e5dba5558ffb1cd656862983c69b23a950928fd7ac6b290907b1129e87e20ca9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/trace-copy.json",
+      "retained": "raw/weak-hand-perspective-landscape/trace-copy.json",
+      "bytes": 717,
+      "sha256": "7320da47e6114019e9486e210e562aead4a9ef0886ed2072e727a91638ac2ed0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/train-constructor-validation.json",
+      "retained": "raw/weak-hand-perspective-landscape/train-constructor-validation.json",
+      "bytes": 314189,
+      "sha256": "9ec44c36f07bf7060263199c1cd025f30616d2868f11cfe4b06cf29c3fe9dbec"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/train-startup-readiness.json",
+      "retained": "raw/weak-hand-perspective-landscape/train-startup-readiness.json",
+      "bytes": 14231,
+      "sha256": "1964bcfb57a9a186fea549febaf1ad785a88b63b8b2434f47e71ed958180f948"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/transition-observations.json",
+      "retained": "raw/weak-hand-perspective-landscape/transition-observations.json",
+      "bytes": 42775,
+      "sha256": "b09f9d8558d1094c1bd52c294df28d50a012d2e404056fcb5a4d1fe718e06439"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/validator-command-results.json",
+      "retained": "raw/weak-hand-perspective-landscape/validator-command-results.json",
+      "bytes": 532,
+      "sha256": "e4984fefa573619dad9c194a98616cd4cc27fa54085f1c9929b813e45be35b30"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/visual-review.json",
+      "retained": "raw/weak-hand-perspective-landscape/visual-review.json",
+      "bytes": 11094,
+      "sha256": "551d5490b965f426dc73c96532f49ba4d310522891aea2857a3766a24655338e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/weak-hand-census-validation.json",
+      "retained": "raw/weak-hand-perspective-landscape/weak-hand-census-validation.json",
+      "bytes": 423528,
+      "sha256": "7d24d54dbf4f48fc49bca2287bd60065e0a683dfde6340fea9c88edeae3a54f8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/workout-openurl-timing.json",
+      "retained": "raw/weak-hand-perspective-landscape/workout-openurl-timing.json",
+      "bytes": 153,
+      "sha256": "04336527d317c32bf566391aa485ed84ea4abe8cb13659f4f6cabe6455d2b824"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-lifetime-summary.json",
+      "retained": "raw/weak-hand-perspective-lifetime-summary.json",
+      "bytes": 66821,
+      "sha256": "46792c30fb58275cf677b57bf99e71e7d7c0496a25134f3413cc87508de3d637"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/PROTOCOL.md",
+      "retained": "raw/weak-hand-perspective-prepared/PROTOCOL.md",
+      "bytes": 4287,
+      "sha256": "c24992fa4e28e9dd7c7e96bdb00b9e2a026fb4d859b75d08636fb0bef57383d1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/PROTOCOL.md.before-root-gate-binding",
+      "retained": "raw/weak-hand-perspective-prepared/PROTOCOL.md.before-root-gate-binding",
+      "bytes": 4112,
+      "sha256": "58472805506943bc1124ae326f6925f45f07236a37c94a8b4b41655e7aa0081c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/before/PROTOCOL.md",
+      "retained": "raw/weak-hand-perspective-prepared/before/PROTOCOL.md",
+      "bytes": 2178,
+      "sha256": "5d05639c936fd3c4cc0cab0dc65a208c013cfb61ec96e61acae624e692f7f72b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/before/check-constructors.py",
+      "retained": "raw/weak-hand-perspective-prepared/before/check-constructors.py",
+      "bytes": 2828,
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/before/check-cpu-semantics.py",
+      "retained": "raw/weak-hand-perspective-prepared/before/check-cpu-semantics.py",
+      "bytes": 3958,
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/before/check-frames.py",
+      "retained": "raw/weak-hand-perspective-prepared/before/check-frames.py",
+      "bytes": 3729,
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/before/check-navigation.py",
+      "retained": "raw/weak-hand-perspective-prepared/before/check-navigation.py",
+      "bytes": 4402,
+      "sha256": "eb2bbee21e47f0037e08353b47e4d0ca2d5f2ab09d9f8a77c6c57a9d388766ca"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/before/check-ownership.py",
+      "retained": "raw/weak-hand-perspective-prepared/before/check-ownership.py",
+      "bytes": 9937,
+      "sha256": "b0dab2a1cf6e95ef7bec55d76f0b265812908c4f5237c81b1d47cb21bf8d97d1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/before/check-real-hands.py",
+      "retained": "raw/weak-hand-perspective-prepared/before/check-real-hands.py",
+      "bytes": 5022,
+      "sha256": "1e6f6eff3e113b183a6e7d3aad87c27ab464b8ca46153f2dfbbd18113cfe5863"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/before/check-weak-hand-census.py",
+      "retained": "raw/weak-hand-perspective-prepared/before/check-weak-hand-census.py",
+      "bytes": 6585,
+      "sha256": "739b463ef6cbcf749f817c34ca1019729630ea91e1cd0d637f10397a33353223"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/before/compare-prior-real-hands.py",
+      "retained": "raw/weak-hand-perspective-prepared/before/compare-prior-real-hands.py",
+      "bytes": 2939,
+      "sha256": "d4c9dd66aec50f9c3bc9213b5280ee74f83c318aa39dc58ed31c9f27ece83b8b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/before/report.json",
+      "retained": "raw/weak-hand-perspective-prepared/before/report.json",
+      "bytes": 1683,
+      "sha256": "02a61437cf0dfc6eaa595f6882c229781c2c8b792034efab91825ebf138b5157"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/before/visual-review-template.json",
+      "retained": "raw/weak-hand-perspective-prepared/before/visual-review-template.json",
+      "bytes": 5440,
+      "sha256": "731fddb338b0a2dde660260796a7c9cfec5998410b6bcd9e9c703694c46bea43"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/before/workout-weak-hand-census.py",
+      "retained": "raw/weak-hand-perspective-prepared/before/workout-weak-hand-census.py",
+      "bytes": 12581,
+      "sha256": "06f189db71461a114c8d06fd72b76b71d808067b0bdf62d8da3fa7c4fb966384"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/check-constructors.py",
+      "retained": "raw/weak-hand-perspective-prepared/check-constructors.py",
+      "bytes": 2828,
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/check-cpu-semantics.py",
+      "retained": "raw/weak-hand-perspective-prepared/check-cpu-semantics.py",
+      "bytes": 3958,
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/check-frames.py",
+      "retained": "raw/weak-hand-perspective-prepared/check-frames.py",
+      "bytes": 3729,
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/check-navigation.py",
+      "retained": "raw/weak-hand-perspective-prepared/check-navigation.py",
+      "bytes": 4412,
+      "sha256": "9f0d221a8eed313738c8665ce6d8589bd5de949eef9badc8c723c904583d6fa6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/check-ownership.py",
+      "retained": "raw/weak-hand-perspective-prepared/check-ownership.py",
+      "bytes": 9990,
+      "sha256": "ba7f9043f0a86973859a1286a977c0924dbfdd5dd17b7af560e234462aec2f26"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/check-real-hands.py",
+      "retained": "raw/weak-hand-perspective-prepared/check-real-hands.py",
+      "bytes": 5090,
+      "sha256": "52e9e9b2449c2f4b345266758feed228acabb482642940e66a944017a88b31fd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/check-weak-hand-census.py",
+      "retained": "raw/weak-hand-perspective-prepared/check-weak-hand-census.py",
+      "bytes": 6715,
+      "sha256": "3e585bc1cacd6c06db393457f45a4393f4caa8c9bf49ddc297a0aaa36fa0f8e2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/compare-O-P.py",
+      "retained": "raw/weak-hand-perspective-prepared/compare-O-P.py",
+      "bytes": 4339,
+      "sha256": "08b1fe415b0531599b99a412747da6218dbacf0671ebbbfabb2ddd078da053b1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/prospective-helpers.patch",
+      "retained": "raw/weak-hand-perspective-prepared/prospective-helpers.patch",
+      "bytes": 32688,
+      "sha256": "31d91922b157646f0df64d1e0dddf96d60059b182a684098efaec2ba88af8970"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/prospective-helpers.patch.before-root-gate-binding",
+      "retained": "raw/weak-hand-perspective-prepared/prospective-helpers.patch.before-root-gate-binding",
+      "bytes": 33586,
+      "sha256": "2d5b58464139a4de13ba994125342fb712c539379403169df01c00da7a989caf"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/report.json",
+      "retained": "raw/weak-hand-perspective-prepared/report.json",
+      "bytes": 3725,
+      "sha256": "06e63e22b2a34cfeb9955bac390c4881b284a78f815c6b2b9045769e3ac5f009"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/report.json.before-root-gate-binding",
+      "retained": "raw/weak-hand-perspective-prepared/report.json.before-root-gate-binding",
+      "bytes": 3308,
+      "sha256": "b583b3723019c5a7486e09a0b7779c826966718c22ed7b3585bda489b312cf87"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/static-check.json",
+      "retained": "raw/weak-hand-perspective-prepared/static-check.json",
+      "bytes": 2877,
+      "sha256": "a7dd579fbc9f2e31e595d2eb1aae23195067e927f88b255c5dee429a81d8c2bf"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/static-check.json.before-root-gate-binding",
+      "retained": "raw/weak-hand-perspective-prepared/static-check.json.before-root-gate-binding",
+      "bytes": 2695,
+      "sha256": "b07f6d6d4468e0a444c0725f68bcd1ef3836f707cc48a97920c35299c40b9720"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/visual-review-template.json",
+      "retained": "raw/weak-hand-perspective-prepared/visual-review-template.json",
+      "bytes": 5440,
+      "sha256": "731fddb338b0a2dde660260796a7c9cfec5998410b6bcd9e9c703694c46bea43"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/weak-hand-census-root-gate.json",
+      "retained": "raw/weak-hand-perspective-prepared/weak-hand-census-root-gate.json",
+      "bytes": 7197,
+      "sha256": "1ab681076b5b7ea4ad654f44e6805fe5464fa0da5fd3edc8836b230f796c2ea5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/workout-weak-hand-perspective.py",
+      "retained": "raw/weak-hand-perspective-prepared/workout-weak-hand-perspective.py",
+      "bytes": 14040,
+      "sha256": "4247d647de1de58b79d1a26ce1ee05c7903bddc5ca88e79fa936b636b9dfefc9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prepared/workout-weak-hand-perspective.py.before-root-gate-binding",
+      "retained": "raw/weak-hand-perspective-prepared/workout-weak-hand-perspective.py.before-root-gate-binding",
+      "bytes": 13062,
+      "sha256": "ddaa7efd13ba0c3aa6077bd860c22fca5b7e156c2e3362fa66ce9379320b1b04"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-prior-preservation.json",
+      "retained": "raw/weak-hand-perspective-prior-preservation.json",
+      "bytes": 244,
+      "sha256": "8b090ca2c48974d9fbdbc31ca48668ae9eb657d9ae468e2a636ecabed3243afa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-root-visual-corroboration.json",
+      "retained": "raw/weak-hand-perspective-root-visual-corroboration.json",
+      "bytes": 1539,
+      "sha256": "eca9cd650efbfb99ac45990e7a8dce231a4411998e01cfa345020e09393becab"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-runtime-release.json",
+      "retained": "raw/weak-hand-perspective-runtime-release.json",
+      "bytes": 1424,
+      "sha256": "717e467bf967b087d9c7a4b63e331d8c51d43f47600373b27bbeb793d0067c42"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-terminate.json",
+      "retained": "raw/weak-hand-perspective-terminate.json",
+      "bytes": 263,
+      "sha256": "1762b5a3995fb97765e853ad5f11da322e3ef959d565eede16fe87b7b31d5c96"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-terminate.stderr",
+      "retained": "raw/weak-hand-perspective-terminate.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-terminate.stdout",
+      "retained": "raw/weak-hand-perspective-terminate.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-validate.py",
+      "retained": "raw/weak-hand-perspective-validate.py",
+      "bytes": 1008,
+      "sha256": "4d92bbb75298a35488eb11c37ed182e11a17e674c424705f95d806612c49b2f1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-projection-comparison.json",
+      "retained": "raw/weak-hand-projection-comparison.json",
+      "bytes": 16736,
+      "sha256": "468471e7d084eb8952f925743f68879188efa0227660c17dca1e2dd6bc1b7c49"
+    }
+  ]
+}

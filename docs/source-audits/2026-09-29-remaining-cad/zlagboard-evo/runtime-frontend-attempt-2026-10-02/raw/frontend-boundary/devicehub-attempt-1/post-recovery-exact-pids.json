@@ -1,0 +1,15 @@
+{
+  "queryEpoch": 1790987040.3918169,
+  "command": [
+    "rtk",
+    "proxy",
+    "ps",
+    "-ww",
+    "-p",
+    "40262,89674",
+    "-o",
+    "pid=,ppid=,args="
+  ],
+  "exitStatus": 0,
+  "purpose": "Read-only verification ownedPIDabsent andunknownexistingPIDuntouched; no GUIinspection or signalling unknown"
+}

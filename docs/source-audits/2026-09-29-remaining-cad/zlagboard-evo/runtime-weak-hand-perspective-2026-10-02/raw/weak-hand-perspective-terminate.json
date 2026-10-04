@@ -1,0 +1,15 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "terminate",
+    "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "com.hangten.training"
+  ],
+  "startEpoch": 1790996324.46342,
+  "endEpoch": 1790996324.649987,
+  "exitStatus": 0,
+  "pid": 3869
+}

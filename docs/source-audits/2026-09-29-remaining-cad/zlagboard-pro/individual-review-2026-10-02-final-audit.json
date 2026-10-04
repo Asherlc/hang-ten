@@ -1,0 +1,2907 @@
+{
+  "timestampUTC": "2026-10-02T14:15:25.376816+00:00",
+  "baseline": "0a4c2cfe24c97ce19d4e9b58dd7d73e7669c1054",
+  "passed": true,
+  "outOfScopeByteChecks": [
+    {
+      "path": "HangTen/Config/Analytics.local.xcconfig.example",
+      "expectedSHA256": "f71256c210d84ef78cb687dc73901fc5aeb8e311ef8872b2b411bbc033490283",
+      "actualSHA256": "f71256c210d84ef78cb687dc73901fc5aeb8e311ef8872b2b411bbc033490283",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Config/Analytics.xcconfig",
+      "expectedSHA256": "ca7a210e30b6f878c78f8f2b2cdfed7521b6ecd408cd2ab41cd730ef6d6795c1",
+      "actualSHA256": "ca7a210e30b6f878c78f8f2b2cdfed7521b6ecd408cd2ab41cd730ef6d6795c1",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/HangTen.entitlements",
+      "expectedSHA256": "e82a7f6e130b0fe65a40214c15b4116c5245125329c63954d9ccdd9cc80f039e",
+      "actualSHA256": "e82a7f6e130b0fe65a40214c15b4116c5245125329c63954d9ccdd9cc80f039e",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/HangTenApp.swift",
+      "expectedSHA256": "ce691d0d9a5360452f3704a64918f5a6af6c20d2608450aa532bf346bd101efd",
+      "actualSHA256": "ce691d0d9a5360452f3704a64918f5a6af6c20d2608450aa532bf346bd101efd",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Info.plist",
+      "expectedSHA256": "e942998a3134d316d20f33dbc6b409eb7e8d4973f9d379919b67619390d0f91a",
+      "actualSHA256": "e942998a3134d316d20f33dbc6b409eb7e8d4973f9d379919b67619390d0f91a",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/AmplitudeAnalyticsTelemetry.swift",
+      "expectedSHA256": "49e774878c37eb647def76315c53241d0d7617efef4beb7afa1c2346b697c79a",
+      "actualSHA256": "49e774878c37eb647def76315c53241d0d7617efef4beb7afa1c2346b697c79a",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/AppStore.swift",
+      "expectedSHA256": "45cb3ec1e065dcf9e08a65e9c16727c4dc79f99a7bc50d48da6a97df06d3c5db",
+      "actualSHA256": "45cb3ec1e065dcf9e08a65e9c16727c4dc79f99a7bc50d48da6a97df06d3c5db",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "expectedSHA256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+      "actualSHA256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/BoardPackageStore.swift",
+      "expectedSHA256": "298b6d5d6268e013432085e09c3103d35fad799566a77984db28341db0756fb4",
+      "actualSHA256": "298b6d5d6268e013432085e09c3103d35fad799566a77984db28341db0756fb4",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/BoardStorage.swift",
+      "expectedSHA256": "865f618cede9fdaf323704c2ade39464e498e87b8494a745a5cc1ded98e60f17",
+      "actualSHA256": "865f618cede9fdaf323704c2ade39464e498e87b8494a745a5cc1ded98e60f17",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/ClimbroProtocol.swift",
+      "expectedSHA256": "6b7b675aed8624b94937b4975e4fea24242feb82746e54e7f05d52318b10bd35",
+      "actualSHA256": "6b7b675aed8624b94937b4975e4fea24242feb82746e54e7f05d52318b10bd35",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/CountdownAudioScheduler.swift",
+      "expectedSHA256": "71ec106325e87c4112b6301289d1cec2c5b64ad24b5545040c6d63af671f6d3a",
+      "actualSHA256": "71ec106325e87c4112b6301289d1cec2c5b64ad24b5545040c6d63af671f6d3a",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/CustomRoutineDraft.swift",
+      "expectedSHA256": "603f749ce91ef6ca729d92213273368b52dca2b915c433dc4cf08e0d6330d0d4",
+      "actualSHA256": "603f749ce91ef6ca729d92213273368b52dca2b915c433dc4cf08e0d6330d0d4",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/CustomRoutineStore.swift",
+      "expectedSHA256": "f9b17f03fae6b36426592175637ee775696ac5075ba97ff122a8e4e6f7bb8005",
+      "actualSHA256": "f9b17f03fae6b36426592175637ee775696ac5075ba97ff122a8e4e6f7bb8005",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/DeepLinkManager.swift",
+      "expectedSHA256": "e56a93e0908cce433dbdbe2f49f3e75bfdda600f94118806020d51117a2fe030",
+      "actualSHA256": "e56a93e0908cce433dbdbe2f49f3e75bfdda600f94118806020d51117a2fe030",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/EntralpiProtocol.swift",
+      "expectedSHA256": "8048a5adab5c0d9a2c3cacecd972985af5c707550242a0a29a9221cc949fef92",
+      "actualSHA256": "8048a5adab5c0d9a2c3cacecd972985af5c707550242a0a29a9221cc949fef92",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/ForceSensorModels.swift",
+      "expectedSHA256": "2b0e29914c715ec8172e33a0313e8e9dd61490b6252ceab57f274f196f993a4c",
+      "actualSHA256": "2b0e29914c715ec8172e33a0313e8e9dd61490b6252ceab57f274f196f993a4c",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutDecimalText.swift",
+      "expectedSHA256": "d90262e3b7747c046394d913f740a95133983d557384e334705d20c528db42a0",
+      "actualSHA256": "d90262e3b7747c046394d913f740a95133983d557384e334705d20c528db42a0",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutDraft.swift",
+      "expectedSHA256": "45118dbb2adeaec2310f3cfa7eef2ec2f416e3acd7ae57f146b29cea1a72ad88",
+      "actualSHA256": "45118dbb2adeaec2310f3cfa7eef2ec2f416e3acd7ae57f146b29cea1a72ad88",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutDraftMigration.swift",
+      "expectedSHA256": "214444a3e2917021d4317130f2ae650c61d36de89e523e37c9636de662c6b93c",
+      "actualSHA256": "214444a3e2917021d4317130f2ae650c61d36de89e523e37c9636de662c6b93c",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutFinish.swift",
+      "expectedSHA256": "2f437e816bcac6b049c8ceaee7a7e499bc7db313feb990f7a64dd7d1b4d7c9f4",
+      "actualSHA256": "2f437e816bcac6b049c8ceaee7a7e499bc7db313feb990f7a64dd7d1b4d7c9f4",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutGuidedHangCountdown.swift",
+      "expectedSHA256": "8c2929d07e09dae01674ab4fb5e04fb0472a4d85521b60490672db3221dd384e",
+      "actualSHA256": "8c2929d07e09dae01674ab4fb5e04fb0472a4d85521b60490672db3221dd384e",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutLog.swift",
+      "expectedSHA256": "41606c075d2c1e1ed18f9764ed82f44640fe3b1ebe3596387713352261bdb362",
+      "actualSHA256": "41606c075d2c1e1ed18f9764ed82f44640fe3b1ebe3596387713352261bdb362",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutLogStore.swift",
+      "expectedSHA256": "4d27a5a641c13e131a72eb569fa37c90d5f2adf0172dc4371afdafa3935e79ec",
+      "actualSHA256": "4d27a5a641c13e131a72eb569fa37c90d5f2adf0172dc4371afdafa3935e79ec",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/FreeWorkoutRestTimer.swift",
+      "expectedSHA256": "0c81fc236988d84332bb9e1b14c24aefca242ff4b0426063511a029542384636",
+      "actualSHA256": "0c81fc236988d84332bb9e1b14c24aefca242ff4b0426063511a029542384636",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/HealthKitService.swift",
+      "expectedSHA256": "9e4291125b42c69148672cd009c267bf59d3a3fd34b1b9bdc4258084730c9a48",
+      "actualSHA256": "9e4291125b42c69148672cd009c267bf59d3a3fd34b1b9bdc4258084730c9a48",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/LocalWorkoutHistoryStore.swift",
+      "expectedSHA256": "b5dec38e7436a7e9fafe43104ef95df630449a14e3d5e2b6592be900a71a99c0",
+      "actualSHA256": "b5dec38e7436a7e9fafe43104ef95df630449a14e3d5e2b6592be900a71a99c0",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/MotherboardBluetoothService.swift",
+      "expectedSHA256": "9d63f39d0bc0c2631ce296298eb6932d5d3aa844141a942bdceea6e079dbb402",
+      "actualSHA256": "9d63f39d0bc0c2631ce296298eb6932d5d3aa844141a942bdceea6e079dbb402",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/MotherboardModels.swift",
+      "expectedSHA256": "c7161f52cda298a64caddfa154e317449bccdfedc3e6b372ecc746990ba0f6ec",
+      "actualSHA256": "c7161f52cda298a64caddfa154e317449bccdfedc3e6b372ecc746990ba0f6ec",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/MotherboardProtocol.swift",
+      "expectedSHA256": "badf81a9d16971423bf146af87c5118015762578d30cf53d59bf555ddf7e91be",
+      "actualSHA256": "badf81a9d16971423bf146af87c5118015762578d30cf53d59bf555ddf7e91be",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/MotherboardWorkoutPreparation.swift",
+      "expectedSHA256": "fc9697a38dfd2c02c523f3937338b4281ac5a1108dc820a803d6471d268f77d3",
+      "actualSHA256": "fc9697a38dfd2c02c523f3937338b4281ac5a1108dc820a803d6471d268f77d3",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/MotherboardWorkoutRecorder.swift",
+      "expectedSHA256": "a77ab9e790d448d6a3e6f861d077f8013ab138eb7bbc0eb2daf2bf706b06f7f5",
+      "actualSHA256": "a77ab9e790d448d6a3e6f861d077f8013ab138eb7bbc0eb2daf2bf706b06f7f5",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/PitchSixProtocol.swift",
+      "expectedSHA256": "bfad7c68ff3487653183fb4930e313a70abe73d4c3dc270fe2c72ac88acc4797",
+      "actualSHA256": "bfad7c68ff3487653183fb4930e313a70abe73d4c3dc270fe2c72ac88acc4797",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/PlanFilters.swift",
+      "expectedSHA256": "7f8db3f3c62628f8c0caa3821437c3e67d20a3ed1e8dd6534b8e391b89e65814",
+      "actualSHA256": "7f8db3f3c62628f8c0caa3821437c3e67d20a3ed1e8dd6534b8e391b89e65814",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/PlanStorage.swift",
+      "expectedSHA256": "c729c2cc17ece6a29dd3b4d3e571ae49f5d276cfacb9268bad4275ae3500a2b2",
+      "actualSHA256": "c729c2cc17ece6a29dd3b4d3e571ae49f5d276cfacb9268bad4275ae3500a2b2",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/ProgressorProtocol.swift",
+      "expectedSHA256": "02519f58f202f519d950e046f6f2801606c17164c4be7c48605e3d1c58d8be96",
+      "actualSHA256": "02519f58f202f519d950e046f6f2801606c17164c4be7c48605e3d1c58d8be96",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/PurchaseManager.swift",
+      "expectedSHA256": "bf99d58c390f1d9c668fd2c098731f12a29a76ca7446bc1118325250cda870d4",
+      "actualSHA256": "bf99d58c390f1d9c668fd2c098731f12a29a76ca7446bc1118325250cda870d4",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/SentryDiagnostics.swift",
+      "expectedSHA256": "895405fbe48ffab849f53e91f7e3d07f20d22624c86b4b2619898cbf5d3052b9",
+      "actualSHA256": "895405fbe48ffab849f53e91f7e3d07f20d22624c86b4b2619898cbf5d3052b9",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/SentryUserReports.swift",
+      "expectedSHA256": "b5a5e97866259b0c43fa39f87bf41095ae403678510090179c80bd3157fccde7",
+      "actualSHA256": "b5a5e97866259b0c43fa39f87bf41095ae403678510090179c80bd3157fccde7",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/SimulatedMotherboardTransport.swift",
+      "expectedSHA256": "c0e3296503c9976e70cec2da2c7b647e5746429367936a903025c583b329c108",
+      "actualSHA256": "c0e3296503c9976e70cec2da2c7b647e5746429367936a903025c583b329c108",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/SuspensionProfiles.swift",
+      "expectedSHA256": "f31abdc44591127fe10277b1d71c7d24247175578b9ed8d9e6fa23eff9a2a6e1",
+      "actualSHA256": "f31abdc44591127fe10277b1d71c7d24247175578b9ed8d9e6fa23eff9a2a6e1",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/Telemetry.swift",
+      "expectedSHA256": "7370117a6140895192583c535551bcea79e7d55b2060e53089932788a74024b8",
+      "actualSHA256": "7370117a6140895192583c535551bcea79e7d55b2060e53089932788a74024b8",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/TrainingModels.swift",
+      "expectedSHA256": "2e680154c8f9389324440dcf853f2f3ca106c17d3905dac9fb6f51c05676646d",
+      "actualSHA256": "2e680154c8f9389324440dcf853f2f3ca106c17d3905dac9fb6f51c05676646d",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/WHC06Protocol.swift",
+      "expectedSHA256": "2bee3e4be3fdb69919f9ceeb122afa5173f9caafb50d929ca2444d7062d10682",
+      "actualSHA256": "2bee3e4be3fdb69919f9ceeb122afa5173f9caafb50d929ca2444d7062d10682",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutAccessStore.swift",
+      "expectedSHA256": "a770a563aaeeb3ef451a0bf5040257afda5de2dc26b3fd620b46fabf8c04554a",
+      "actualSHA256": "a770a563aaeeb3ef451a0bf5040257afda5de2dc26b3fd620b46fabf8c04554a",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutActivityRecording.swift",
+      "expectedSHA256": "3ccf1cb1678c2bfdb2b2963aef5d7a18ac5fb5f4dbba6c712c47d30cb7cbe924",
+      "actualSHA256": "3ccf1cb1678c2bfdb2b2963aef5d7a18ac5fb5f4dbba6c712c47d30cb7cbe924",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutAudioCoach.swift",
+      "expectedSHA256": "0dc1b736e0b8c1207e310fc8b665b203762fd717cacf23794d635c9e7293effa",
+      "actualSHA256": "0dc1b736e0b8c1207e310fc8b665b203762fd717cacf23794d635c9e7293effa",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutHistory.swift",
+      "expectedSHA256": "ae6b0cb980165ac99bad4954126024673086a5cbc153f6038dfe9b821fa60bed",
+      "actualSHA256": "ae6b0cb980165ac99bad4954126024673086a5cbc153f6038dfe9b821fa60bed",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutHistoryService.swift",
+      "expectedSHA256": "23e6e19ea3e10dc4bced42508ceff5d0c1fb1e56da2bb7194420a7922cc15905",
+      "actualSHA256": "23e6e19ea3e10dc4bced42508ceff5d0c1fb1e56da2bb7194420a7922cc15905",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutSessionStore.swift",
+      "expectedSHA256": "ef6eda2d054800e5b68cdc408068f0c8ae7b6dfabf84bb58c29b317a399488f2",
+      "actualSHA256": "ef6eda2d054800e5b68cdc408068f0c8ae7b6dfabf84bb58c29b317a399488f2",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutStepNormalization.swift",
+      "expectedSHA256": "b38fab90dc4254a81ae94d24b31815459be832eb87f0748f8a28ef71835d5c5c",
+      "actualSHA256": "b38fab90dc4254a81ae94d24b31815459be832eb87f0748f8a28ef71835d5c5c",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutStopwatch.swift",
+      "expectedSHA256": "794554b95d44db2c989d5afe37fab97fa5f9c35a1735eb02f361fd5c9b826d38",
+      "actualSHA256": "794554b95d44db2c989d5afe37fab97fa5f9c35a1735eb02f361fd5c9b826d38",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutTimeline.swift",
+      "expectedSHA256": "f6133f787e0639cf6071eb1236f9b39fa8d85eca0cc02bc295f8cd164a882248",
+      "actualSHA256": "f6133f787e0639cf6071eb1236f9b39fa8d85eca0cc02bc295f8cd164a882248",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Rendering/BoardWoodSurfaceShader.metal",
+      "expectedSHA256": "caf524e2b7a548510f607a1ac7e61ff79671e5543d21ecf892b22ead7a95e8f7",
+      "actualSHA256": "caf524e2b7a548510f607a1ac7e61ff79671e5543d21ecf892b22ead7a95e8f7",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Rendering/GripHandSurfaceShader.metal",
+      "expectedSHA256": "6fe32276a9c9ff123997dee1427000dbce37099a5f300bb73db1666592de7d80",
+      "actualSHA256": "6fe32276a9c9ff123997dee1427000dbce37099a5f300bb73db1666592de7d80",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png",
+      "expectedSHA256": "da9fc125522c5e549d7651453d35e83ba73c526c102ba887eb15dd358eb3749b",
+      "actualSHA256": "da9fc125522c5e549d7651453d35e83ba73c526c102ba887eb15dd358eb3749b",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-60@2x.png",
+      "expectedSHA256": "01b26702cf4c907209751d3020165604bab51b6d60c2e69451567572b32e0960",
+      "actualSHA256": "01b26702cf4c907209751d3020165604bab51b6d60c2e69451567572b32e0960",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-76@2x.png",
+      "expectedSHA256": "98ed3887d34a1318d4aafb3e3be9eb91f33f682c2aef34c36cb6883269de2da3",
+      "actualSHA256": "98ed3887d34a1318d4aafb3e3be9eb91f33f682c2aef34c36cb6883269de2da3",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-83.5@2x.png",
+      "expectedSHA256": "cfb0a38f3537fb42859a55abad10c2b83bb3c32f04bf010a0f89de17984f4e10",
+      "actualSHA256": "cfb0a38f3537fb42859a55abad10c2b83bb3c32f04bf010a0f89de17984f4e10",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "expectedSHA256": "4db6346afef9a677eb7efc9e0124c3770facceab8602db58c7122cca1f6dad07",
+      "actualSHA256": "4db6346afef9a677eb7efc9e0124c3770facceab8602db58c7122cca1f6dad07",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/Contents.json",
+      "expectedSHA256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b",
+      "actualSHA256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandFist.imageset/Contents.json",
+      "expectedSHA256": "1f8f6ca5956e05e6a084607f951e584de858142423bd84eaa4134ca71d2c1003",
+      "actualSHA256": "1f8f6ca5956e05e6a084607f951e584de858142423bd84eaa4134ca71d2c1003",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandFist.imageset/hand-fist.svg",
+      "expectedSHA256": "5599c285c9d124640c3107b465f5f8e4cab78016ae1201dd4e8c6d535a4d5b5b",
+      "actualSHA256": "5599c285c9d124640c3107b465f5f8e4cab78016ae1201dd4e8c6d535a4d5b5b",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandFrontThree.imageset/Contents.json",
+      "expectedSHA256": "e8c18ec4b0ad283002e9cf3ce7b2095f0e96a89fe682c5be67c778e17cb2027e",
+      "actualSHA256": "e8c18ec4b0ad283002e9cf3ce7b2095f0e96a89fe682c5be67c778e17cb2027e",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandFrontThree.imageset/hand-fill.svg",
+      "expectedSHA256": "8aa65441584ff01071f36cc7f00405f94dc9e9f149052e20f370c710e270d855",
+      "actualSHA256": "8aa65441584ff01071f36cc7f00405f94dc9e9f149052e20f370c710e270d855",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandGrabbing.imageset/Contents.json",
+      "expectedSHA256": "44d51f05b4c74f05bab7c296be0c26bb28501f5433a5d05d988cd32bd81e987d",
+      "actualSHA256": "44d51f05b4c74f05bab7c296be0c26bb28501f5433a5d05d988cd32bd81e987d",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandGrabbing.imageset/hand-grabbing.svg",
+      "expectedSHA256": "9ddb51aa95dafb589e2c47c9fe35d6561c415380300675211b3895d700478b33",
+      "actualSHA256": "9ddb51aa95dafb589e2c47c9fe35d6561c415380300675211b3895d700478b33",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandPalm.imageset/Contents.json",
+      "expectedSHA256": "07740cf8ec6f7b72b491253d68787b05537f352f4729f08e63399fb9c5f6ed8f",
+      "actualSHA256": "07740cf8ec6f7b72b491253d68787b05537f352f4729f08e63399fb9c5f6ed8f",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandPalm.imageset/hand-palm.svg",
+      "expectedSHA256": "2b0387ffccfedd746cac333370eaccc64f1521885bf9468088c19b10ff33553d",
+      "actualSHA256": "2b0387ffccfedd746cac333370eaccc64f1521885bf9468088c19b10ff33553d",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandTwo.imageset/Contents.json",
+      "expectedSHA256": "657442593f1f0755192953cfcf4ac610d85ba1ab5097dc4d58e0531d0732ab86",
+      "actualSHA256": "657442593f1f0755192953cfcf4ac610d85ba1ab5097dc4d58e0531d0732ab86",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/Assets.xcassets/PhosphorHandTwo.imageset/hand-peace.svg",
+      "expectedSHA256": "8ae6d12b3b644ad5c0cd993aee52c3353a088d1195b0a6e885cbd286282e047e",
+      "actualSHA256": "8ae6d12b3b644ad5c0cd993aee52c3353a088d1195b0a6e885cbd286282e047e",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/CountdownAudio/.gitkeep",
+      "expectedSHA256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "actualSHA256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/CountdownAudio/README.md",
+      "expectedSHA256": "ea77e9048fdb0ac9830b3323820f9fca66a153beaff6b25f65d0d0d86f2d8f0c",
+      "actualSHA256": "ea77e9048fdb0ac9830b3323820f9fca66a153beaff6b25f65d0d0d86f2d8f0c",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/CountdownAudio/countdown-1.mp3",
+      "expectedSHA256": "9157273de38a68d1c7bf82cd645bd7525f617c506e9d3cf3a9fcfa4216626e55",
+      "actualSHA256": "9157273de38a68d1c7bf82cd645bd7525f617c506e9d3cf3a9fcfa4216626e55",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/CountdownAudio/countdown-2.mp3",
+      "expectedSHA256": "595855a28d61bd8e9daf410bdab20d1bfd5d7ccc770850407fab7e60d9184354",
+      "actualSHA256": "595855a28d61bd8e9daf410bdab20d1bfd5d7ccc770850407fab7e60d9184354",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/CountdownAudio/countdown-3.mp3",
+      "expectedSHA256": "5b0535d8fc64eeffe50f80a4c54a17d7f84bd90e1e3f795ec0f09995a36caad4",
+      "actualSHA256": "5b0535d8fc64eeffe50f80a4c54a17d7f84bd90e1e3f795ec0f09995a36caad4",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/GripHand/hand-mesh.json",
+      "expectedSHA256": "d53dca888e264a1ed581bcd76e5eec91576c3c5cd14456fc34eb82c934e3d433",
+      "actualSHA256": "d53dca888e264a1ed581bcd76e5eec91576c3c5cd14456fc34eb82c934e3d433",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/HangTen.storekit",
+      "expectedSHA256": "56dbe661985b546ddc826b16dd1865c8bbebdaf0c939d0c08ee0b4eeb36730c7",
+      "actualSHA256": "56dbe661985b546ddc826b16dd1865c8bbebdaf0c939d0c08ee0b4eeb36730c7",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Resources/PlanLibrary.json",
+      "expectedSHA256": "b203917f19e792e2d39abf15bbac96a6119ca0a7aa5384618fd1bb3978de2c6b",
+      "actualSHA256": "b203917f19e792e2d39abf15bbac96a6119ca0a7aa5384618fd1bb3978de2c6b",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/AppSettingsView.swift",
+      "expectedSHA256": "3973d6900d39e444df6dfea2134c63e9ee01e7b906d68ff10540abfc121133bb",
+      "actualSHA256": "3973d6900d39e444df6dfea2134c63e9ee01e7b906d68ff10540abfc121133bb",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "expectedSHA256": "911fba863c2b7dbc66a48c9c70937fb47ecd422e83e761751e662d756aac6b95",
+      "actualSHA256": "911fba863c2b7dbc66a48c9c70937fb47ecd422e83e761751e662d756aac6b95",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "expectedSHA256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+      "actualSHA256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/CustomRoutineEditorView.swift",
+      "expectedSHA256": "0e7ba09de2c632ae3c0ce3780e4022a1ea3ba32fb70ade179aa7b093adebc626",
+      "actualSHA256": "0e7ba09de2c632ae3c0ce3780e4022a1ea3ba32fb70ade179aa7b093adebc626",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/DesignSystem.swift",
+      "expectedSHA256": "34d11efe9a407eef2768d180903f6d49c869aea1a523c9be2b79ea3964202485",
+      "actualSHA256": "34d11efe9a407eef2768d180903f6d49c869aea1a523c9be2b79ea3964202485",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/FreeWorkoutAddExerciseSheet.swift",
+      "expectedSHA256": "15b09274cf25538caf599349d776110c562f0d1620255223dc1f1c573a955b39",
+      "actualSHA256": "15b09274cf25538caf599349d776110c562f0d1620255223dc1f1c573a955b39",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/FreeWorkoutGuidedHangView.swift",
+      "expectedSHA256": "21552bc21b59b9eb3d6cfbf96229cbb9cf0ef8625bb47045a55bd88ba2f6e662",
+      "actualSHA256": "21552bc21b59b9eb3d6cfbf96229cbb9cf0ef8625bb47045a55bd88ba2f6e662",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/FreeWorkoutLogSessionView.swift",
+      "expectedSHA256": "fbd765ab88a2b3c1f6871507598488e17ad812fd5e915ac5ddcddd0d4e6ac712",
+      "actualSHA256": "fbd765ab88a2b3c1f6871507598488e17ad812fd5e915ac5ddcddd0d4e6ac712",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/FreeWorkoutLogSetSheet.swift",
+      "expectedSHA256": "9bebaa75808ae105ce6393e0a86a4cd5b5514a2947ad01a7561df2a87c8ca7ab",
+      "actualSHA256": "9bebaa75808ae105ce6393e0a86a4cd5b5514a2947ad01a7561df2a87c8ca7ab",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/FreeWorkoutStartSheet.swift",
+      "expectedSHA256": "fa62377db521f3529d01df955597c9f2629e1fdda9159d9c28be0750bf758a0b",
+      "actualSHA256": "fa62377db521f3529d01df955597c9f2629e1fdda9159d9c28be0750bf758a0b",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/GripDiagramView.swift",
+      "expectedSHA256": "8c6ce950541f536a7f26b4bda6759dbf78f4c6eceeb2d07a0b0745090c3ffa06",
+      "actualSHA256": "8c6ce950541f536a7f26b4bda6759dbf78f4c6eceeb2d07a0b0745090c3ffa06",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "expectedSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "actualSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/MotherboardViews.swift",
+      "expectedSHA256": "e735dc2b3e6dd8495eee8ed7cc91cf06c5625e7569de57d88a309c218628cd69",
+      "actualSHA256": "e735dc2b3e6dd8495eee8ed7cc91cf06c5625e7569de57d88a309c218628cd69",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/MotherboardWorkoutPreparationView.swift",
+      "expectedSHA256": "decabc8f10117a8185b2b10386693014750a2e6b5393d716305760023879ec07",
+      "actualSHA256": "decabc8f10117a8185b2b10386693014750a2e6b5393d716305760023879ec07",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/OrbitPanGestureDelegate.swift",
+      "expectedSHA256": "5dceece348831fac0d9367e475ec2e1c4c324fbc46f8d1092b472e777c21326e",
+      "actualSHA256": "5dceece348831fac0d9367e475ec2e1c4c324fbc46f8d1092b472e777c21326e",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/ReportProblemView.swift",
+      "expectedSHA256": "5c8f9cf5b27cf08bd65ed528af51ea5035fcaf0c9687e47cdb1176c33734ff87",
+      "actualSHA256": "5c8f9cf5b27cf08bd65ed528af51ea5035fcaf0c9687e47cdb1176c33734ff87",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "expectedSHA256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+      "actualSHA256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/SuspendedBoardPresentation.swift",
+      "expectedSHA256": "dda582178a34701fe8c94ca5f89ae9367e1c89f4e2bea4e4c2825cdf9d4c0ca6",
+      "actualSHA256": "dda582178a34701fe8c94ca5f89ae9367e1c89f4e2bea4e4c2825cdf9d4c0ca6",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "expectedSHA256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+      "actualSHA256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/WorkoutAccessGate.swift",
+      "expectedSHA256": "a5f98213be6ada0f2e509b8097006e4d85730b8aee90e8e63e1dabfd9decb179",
+      "actualSHA256": "a5f98213be6ada0f2e509b8097006e4d85730b8aee90e8e63e1dabfd9decb179",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/WorkoutStepPickerView.swift",
+      "expectedSHA256": "f21fe2b5a337d90e822ba5206dad7469cf121ca661fd236f49eff68bc7f98a43",
+      "actualSHA256": "f21fe2b5a337d90e822ba5206dad7469cf121ca661fd236f49eff68bc7f98a43",
+      "unchanged": true
+    },
+    {
+      "path": "HangTen/Views/WorkoutSummaryView.swift",
+      "expectedSHA256": "b24170450a52215e5699df2c1b91730e084aa5c3282b8bcb8d77d1f469a52385",
+      "actualSHA256": "b24170450a52215e5699df2c1b91730e084aa5c3282b8bcb8d77d1f469a52385",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/AppStoreFavoritesTests.swift",
+      "expectedSHA256": "9b7b975fad1f9634a4489c8c507e53d60fd88b47af5ac04b10e588a3fa7458bd",
+      "actualSHA256": "9b7b975fad1f9634a4489c8c507e53d60fd88b47af5ac04b10e588a3fa7458bd",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/AppStoreTests.swift",
+      "expectedSHA256": "c6aa402f315861130da459cd3c2444791bbebbac507c46905f92354fe9f24fae",
+      "actualSHA256": "c6aa402f315861130da459cd3c2444791bbebbac507c46905f92354fe9f24fae",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/BoardModelRealityTests.swift",
+      "expectedSHA256": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+      "actualSHA256": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/BoardModelTests.swift",
+      "expectedSHA256": "74dfab4632f744e10f74f85216b77d3b073d0e84858d750a4ba8fd118d1c4601",
+      "actualSHA256": "74dfab4632f744e10f74f85216b77d3b073d0e84858d750a4ba8fd118d1c4601",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/BoardPackageStoreTests.swift",
+      "expectedSHA256": "fc1e5542383ae521cd5bfeeca0b2ca5131212948a4568b13daa1df20da8bfc26",
+      "actualSHA256": "fc1e5542383ae521cd5bfeeca0b2ca5131212948a4568b13daa1df20da8bfc26",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/BoardPickerFiltersTests.swift",
+      "expectedSHA256": "efeedc20f5c1f8016f701fa7ebce42e581cf2111ca2ad2f1b51f488621e15b40",
+      "actualSHA256": "efeedc20f5c1f8016f701fa7ebce42e581cf2111ca2ad2f1b51f488621e15b40",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/BoardSourceBoundaryAudit.swift",
+      "expectedSHA256": "5ca9a30b1b73a51faf44316f5d995f3a678ca82ca981b63c361484c79b0efb03",
+      "actualSHA256": "5ca9a30b1b73a51faf44316f5d995f3a678ca82ca981b63c361484c79b0efb03",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/BoardSourceBoundaryTests.swift",
+      "expectedSHA256": "1d956ce47ff7f72d226e3ad95157ca606b1785d520a7f6ec251fcacff9538a4c",
+      "actualSHA256": "1d956ce47ff7f72d226e3ad95157ca606b1785d520a7f6ec251fcacff9538a4c",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/BoardSourceBoundaryTrackedPaths.txt",
+      "expectedSHA256": "2d1111aa8b0b5d6a0bf1e75dcc4f28ede528d0d244e1d6000f68c00b1d41506d",
+      "actualSHA256": "2d1111aa8b0b5d6a0bf1e75dcc4f28ede528d0d244e1d6000f68c00b1d41506d",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/BoardTargetSubstitutionTests.swift",
+      "expectedSHA256": "b11d6fea355add7aff252966831f7ed1734959182cc43716e259ee41268ef9dc",
+      "actualSHA256": "b11d6fea355add7aff252966831f7ed1734959182cc43716e259ee41268ef9dc",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/ClimbroProtocolTests.swift",
+      "expectedSHA256": "58c35588bc4dccd3398fab88bd1fff6af1202f0725a1c36020f55e40249d0c16",
+      "actualSHA256": "58c35588bc4dccd3398fab88bd1fff6af1202f0725a1c36020f55e40249d0c16",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/CustomRoutineAppStoreTests.swift",
+      "expectedSHA256": "d878a10afce353223126316d369d6a1f0e0759fdfd605f8d09da85e5f0a0363e",
+      "actualSHA256": "d878a10afce353223126316d369d6a1f0e0759fdfd605f8d09da85e5f0a0363e",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/CustomRoutineDraftTests.swift",
+      "expectedSHA256": "c12bedc618849c28606d6e9d02af3d7b6bee47b7c899f40608e37b9693cd04dc",
+      "actualSHA256": "c12bedc618849c28606d6e9d02af3d7b6bee47b7c899f40608e37b9693cd04dc",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/CustomRoutineStoreTests.swift",
+      "expectedSHA256": "5d213e7069a1ce79c11e3fbabe6275f72ece8d945a8473da9da059d9f6013eee",
+      "actualSHA256": "5d213e7069a1ce79c11e3fbabe6275f72ece8d945a8473da9da059d9f6013eee",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/DeepLinkManagerTests.swift",
+      "expectedSHA256": "f64b6d447b21450ba63ad96b7e1d4a02ad8262010c07ed152a4c0ad9d64e839f",
+      "actualSHA256": "f64b6d447b21450ba63ad96b7e1d4a02ad8262010c07ed152a4c0ad9d64e839f",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/EntralpiProtocolTests.swift",
+      "expectedSHA256": "2e1fdc58f3975a66a3156e2a90e47c78c6741cb5f1a44fc25996d2f5faf04b21",
+      "actualSHA256": "2e1fdc58f3975a66a3156e2a90e47c78c6741cb5f1a44fc25996d2f5faf04b21",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/Fixtures/BoardPackageValidationFixtures.json",
+      "expectedSHA256": "d2831505b22af4145c28ceccfd9afd1af4804951e127a079d8761d0174272bfd",
+      "actualSHA256": "d2831505b22af4145c28ceccfd9afd1af4804951e127a079d8761d0174272bfd",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/ForceSensorModelsTests.swift",
+      "expectedSHA256": "22536463ca4feaf9f52c15dc1af5c4341fb1d61d47580c064632bbb82aef975f",
+      "actualSHA256": "22536463ca4feaf9f52c15dc1af5c4341fb1d61d47580c064632bbb82aef975f",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/FreeWorkoutLogTests.swift",
+      "expectedSHA256": "ff6e420f17c4d0f9151146091f0d40ab73ede173152c4c8c04f140d38ad20fc6",
+      "actualSHA256": "ff6e420f17c4d0f9151146091f0d40ab73ede173152c4c8c04f140d38ad20fc6",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/FreeWorkoutTests.swift",
+      "expectedSHA256": "9174a367e14d6a2aa919b9b701f3abaf0561cac6151fe8bada4c7e88b3911b37",
+      "actualSHA256": "9174a367e14d6a2aa919b9b701f3abaf0561cac6151fe8bada4c7e88b3911b37",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/GripHandCueCardTests.swift",
+      "expectedSHA256": "c9054950e8b3d6687a36406cc00113a2789ee94297a96ec88ef53ff2955919e9",
+      "actualSHA256": "c9054950e8b3d6687a36406cc00113a2789ee94297a96ec88ef53ff2955919e9",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/GripHandOrbitTests.swift",
+      "expectedSHA256": "80ae86c0d092d87d5699d8ea76f723a8c4241a6054ea49cafbfedb2938bc62fe",
+      "actualSHA256": "80ae86c0d092d87d5699d8ea76f723a8c4241a6054ea49cafbfedb2938bc62fe",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/HealthKitServiceTests.swift",
+      "expectedSHA256": "e481e3c04b27596e38adb0f87c7f742b17796936035c03ddaee8966435a2ba1e",
+      "actualSHA256": "e481e3c04b27596e38adb0f87c7f742b17796936035c03ddaee8966435a2ba1e",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/LiveStoreKitConfigurationTests.swift",
+      "expectedSHA256": "9cffcd06bb83fe7e9084ab663f9ce89481961f6731b7736332b17685193e0a63",
+      "actualSHA256": "9cffcd06bb83fe7e9084ab663f9ce89481961f6731b7736332b17685193e0a63",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/LocalWorkoutHistoryStoreTests.swift",
+      "expectedSHA256": "cf12e9f8679a8391d4045add2db28c3c7540efd428254e081b7166ddfc805f2a",
+      "actualSHA256": "cf12e9f8679a8391d4045add2db28c3c7540efd428254e081b7166ddfc805f2a",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/MotherboardBluetoothServiceTests.swift",
+      "expectedSHA256": "6177fa8d61408c03979cd807492567fd6809c88155b32338dd541ae830fe4b3a",
+      "actualSHA256": "6177fa8d61408c03979cd807492567fd6809c88155b32338dd541ae830fe4b3a",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/MotherboardModelsTests.swift",
+      "expectedSHA256": "800b976e8dada122dead9460ac26a397e135f8c28c8dddb0e8ddfa81c39c11b2",
+      "actualSHA256": "800b976e8dada122dead9460ac26a397e135f8c28c8dddb0e8ddfa81c39c11b2",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/MotherboardProtocolTests.swift",
+      "expectedSHA256": "d6d0f40366c3a1cbe4b510a9c5787d048847f026257e4bab8d2905bc27045743",
+      "actualSHA256": "d6d0f40366c3a1cbe4b510a9c5787d048847f026257e4bab8d2905bc27045743",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/MotherboardWorkoutPreparationTests.swift",
+      "expectedSHA256": "77cd907fe1d6c15b4ab0abf6a8ab772582858e982068182782157f806ecb9ca0",
+      "actualSHA256": "77cd907fe1d6c15b4ab0abf6a8ab772582858e982068182782157f806ecb9ca0",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/MotherboardWorkoutRecorderTests.swift",
+      "expectedSHA256": "3cab60b07b7fbd4e934f8ae270f486e89ea3b24f234a8147a8fc805568a70dd0",
+      "actualSHA256": "3cab60b07b7fbd4e934f8ae270f486e89ea3b24f234a8147a8fc805568a70dd0",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/OrbitPanArbitrationTests.swift",
+      "expectedSHA256": "85327fa4adc50bbb99be0c00a350a0b7663387c14f65bc40db2e4fea7174ed86",
+      "actualSHA256": "85327fa4adc50bbb99be0c00a350a0b7663387c14f65bc40db2e4fea7174ed86",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/PitchSixProtocolTests.swift",
+      "expectedSHA256": "fc633838c0af4cd6e5a27c79ff44721d8ec88e8667cd647de4b4c28febea3ae9",
+      "actualSHA256": "fc633838c0af4cd6e5a27c79ff44721d8ec88e8667cd647de4b4c28febea3ae9",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/PlanFiltersTests.swift",
+      "expectedSHA256": "c00d3ab188bb8402dfea644d941bcd616cfdeb12a103f9ed4ce83033e67736b3",
+      "actualSHA256": "c00d3ab188bb8402dfea644d941bcd616cfdeb12a103f9ed4ce83033e67736b3",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/PlanStorageTests.swift",
+      "expectedSHA256": "28f5b8c3755a8635833c166301fcdee5acd849f045ce4e3d946fc56d76c6fc56",
+      "actualSHA256": "28f5b8c3755a8635833c166301fcdee5acd849f045ce4e3d946fc56d76c6fc56",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/ProgressorProtocolTests.swift",
+      "expectedSHA256": "148850f0eeb9c5ebd28932db823fcd04e229d64142b08c801e5c2ffeb91737ed",
+      "actualSHA256": "148850f0eeb9c5ebd28932db823fcd04e229d64142b08c801e5c2ffeb91737ed",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/PurchaseManagerTests.swift",
+      "expectedSHA256": "6d57883d6053dd4a9a7940c787c9fa8e5ffb06e42ffe7c46a74e825652e64b50",
+      "actualSHA256": "6d57883d6053dd4a9a7940c787c9fa8e5ffb06e42ffe7c46a74e825652e64b50",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/SimulatedMotherboardTransportTests.swift",
+      "expectedSHA256": "fa3c56a1a00d1b30464b6216f1465d6182805f0bfb504635e5cb9b0de26bfa19",
+      "actualSHA256": "fa3c56a1a00d1b30464b6216f1465d6182805f0bfb504635e5cb9b0de26bfa19",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/SuspendedBoardPresentationTests.swift",
+      "expectedSHA256": "faae886aff5c9db83475e05f0e330d864cb9ca7eeaae213e53d8f4c04c01bce5",
+      "actualSHA256": "faae886aff5c9db83475e05f0e330d864cb9ca7eeaae213e53d8f4c04c01bce5",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/TelemetryTests.swift",
+      "expectedSHA256": "0bbbbacc71a01e7dedf8ed5edf9ff5b8d328c95d62eda26e24dc8c1784ec90f5",
+      "actualSHA256": "0bbbbacc71a01e7dedf8ed5edf9ff5b8d328c95d62eda26e24dc8c1784ec90f5",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/TestTargetSmokeTests.swift",
+      "expectedSHA256": "ca9e4a853406ea4059a33e5951d412c278806e0a8371003d5d792301e910d624",
+      "actualSHA256": "ca9e4a853406ea4059a33e5951d412c278806e0a8371003d5d792301e910d624",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/WHC06ProtocolTests.swift",
+      "expectedSHA256": "d2edf26b0dd8678987d53e27a4bef4157fa688aeb3cfe5f240b7818c413e493b",
+      "actualSHA256": "d2edf26b0dd8678987d53e27a4bef4157fa688aeb3cfe5f240b7818c413e493b",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/WorkoutAccessStoreTests.swift",
+      "expectedSHA256": "46d64f49d8dd1a692d2d1f3b1ecdbf37c5886b18f66600a7fc4a52052f99ced4",
+      "actualSHA256": "46d64f49d8dd1a692d2d1f3b1ecdbf37c5886b18f66600a7fc4a52052f99ced4",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/WorkoutActivityRecordingTests.swift",
+      "expectedSHA256": "c6d036e5c00288300d2396b937dd05dfd8ea96c1c4f85068e80cf88719a7178f",
+      "actualSHA256": "c6d036e5c00288300d2396b937dd05dfd8ea96c1c4f85068e80cf88719a7178f",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/WorkoutHistoryServiceTests.swift",
+      "expectedSHA256": "2426a991c97ee9d57e6bbdd42652f4affa0121390ba60c1eb2549bce23f43581",
+      "actualSHA256": "2426a991c97ee9d57e6bbdd42652f4affa0121390ba60c1eb2549bce23f43581",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/WorkoutHistoryTests.swift",
+      "expectedSHA256": "17ebb5dcabd515d9543bc7aec6988c8b07110c66eb1223ed5a0befef74070ac6",
+      "actualSHA256": "17ebb5dcabd515d9543bc7aec6988c8b07110c66eb1223ed5a0befef74070ac6",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/WorkoutSegmentTargetTests.swift",
+      "expectedSHA256": "35e1ba954566b932c728c8fb38838df100073ee6372bd382d11bb7d8a23b682d",
+      "actualSHA256": "35e1ba954566b932c728c8fb38838df100073ee6372bd382d11bb7d8a23b682d",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/WorkoutSegmentTests.swift",
+      "expectedSHA256": "0965e60acac7b79d04af4f67855460998971feb04b18dbaf653ae08afcca0bc2",
+      "actualSHA256": "0965e60acac7b79d04af4f67855460998971feb04b18dbaf653ae08afcca0bc2",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/WorkoutSessionStoreTests.swift",
+      "expectedSHA256": "8357942849e734af573fd9362f3b48f7babc864006a5cf50b64a4e86e8074542",
+      "actualSHA256": "8357942849e734af573fd9362f3b48f7babc864006a5cf50b64a4e86e8074542",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/WorkoutStepNormalizationTests.swift",
+      "expectedSHA256": "518845236eae67905c4a616f008decad54e731fa0a6763ed57feb80a75e8a5c8",
+      "actualSHA256": "518845236eae67905c4a616f008decad54e731fa0a6763ed57feb80a75e8a5c8",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/WorkoutStopwatchTests.swift",
+      "expectedSHA256": "a17833da9eef86ddd56006d3aa1894a52a6d059faa17b10df17423793ee7e252",
+      "actualSHA256": "a17833da9eef86ddd56006d3aa1894a52a6d059faa17b10df17423793ee7e252",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/WorkoutSummaryTests.swift",
+      "expectedSHA256": "0c0b6b5728554eccaeca7ac955ec3ac57685c9112652be6cde89a087d22b0369",
+      "actualSHA256": "0c0b6b5728554eccaeca7ac955ec3ac57685c9112652be6cde89a087d22b0369",
+      "unchanged": true
+    },
+    {
+      "path": "HangTenTests/WorkoutTimelineTests.swift",
+      "expectedSHA256": "1e6f080570a0f99cd8c749af28d0fc2887625d728bf16344a7b6c13b1ed4bb5e",
+      "actualSHA256": "1e6f080570a0f99cd8c749af28d0fc2887625d728bf16344a7b6c13b1ed4bb5e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/aelith-cyclops-011.FCStd",
+      "expectedSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+      "actualSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/assets/primary.model.json",
+      "expectedSHA256": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7",
+      "actualSHA256": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/assets/primary.usdz",
+      "expectedSHA256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+      "actualSHA256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/aelith-cyclops-011/suspension.json",
+      "expectedSHA256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+      "actualSHA256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/beastmaker-1000/assets/primary.model.json",
+      "expectedSHA256": "9154697f07e1d38366a860bf917add63d86fb3b98b83aab7639bae4ab26ccd6a",
+      "actualSHA256": "9154697f07e1d38366a860bf917add63d86fb3b98b83aab7639bae4ab26ccd6a",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/beastmaker-1000/assets/primary.usdz",
+      "expectedSHA256": "67780905b46597c78c696be449c2e2ab6836ed98f7feb037803ec8e04ce033c7",
+      "actualSHA256": "67780905b46597c78c696be449c2e2ab6836ed98f7feb037803ec8e04ce033c7",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
+      "expectedSHA256": "7cf2fbc8c8710109e5841f0d86aac9f85f243d9124df3786b4df03b738e39c17",
+      "actualSHA256": "7cf2fbc8c8710109e5841f0d86aac9f85f243d9124df3786b4df03b738e39c17",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/beastmaker-2000/assets/primary.model.json",
+      "expectedSHA256": "02b7f12b9c675025fc4c91e8175f53aaf8a648d6530e3de132b9691f7704ef1d",
+      "actualSHA256": "02b7f12b9c675025fc4c91e8175f53aaf8a648d6530e3de132b9691f7704ef1d",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/beastmaker-2000/assets/primary.usdz",
+      "expectedSHA256": "ebf9267920d7d6103030efd78a0aedd7ce052c6ad26bf0fbb1f96faf4911b9cc",
+      "actualSHA256": "ebf9267920d7d6103030efd78a0aedd7ce052c6ad26bf0fbb1f96faf4911b9cc",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/beastmaker-2000/beastmaker-2000.FCStd",
+      "expectedSHA256": "2dd92a230a956a19d6d9f41babf75c3c67a3c64c982ca2553055e422c215d58c",
+      "actualSHA256": "2dd92a230a956a19d6d9f41babf75c3c67a3c64c982ca2553055e422c215d58c",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/assets/primary.model.json",
+      "expectedSHA256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+      "actualSHA256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/assets/primary.usdz",
+      "expectedSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+      "actualSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/captain-fingerfood-dual.FCStd",
+      "expectedSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+      "actualSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/suspension.json",
+      "expectedSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+      "actualSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-pocket/assets/primary.model.json",
+      "expectedSHA256": "4d85ca566ef83d8dbad2b6e5f9677f98e5e4559fe1e2b20f0152450f51747b28",
+      "actualSHA256": "4d85ca566ef83d8dbad2b6e5f9677f98e5e4559fe1e2b20f0152450f51747b28",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-pocket/assets/primary.usdz",
+      "expectedSHA256": "cea629d95bcef7fe9270a2b44114588193fb136706d1bfc17b3276437d9f45c9",
+      "actualSHA256": "cea629d95bcef7fe9270a2b44114588193fb136706d1bfc17b3276437d9f45c9",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
+      "expectedSHA256": "dc967c62fb7d1ea5ee7ff808a53994ddefff6b635bd0865794d7f8e30f708ac7",
+      "actualSHA256": "dc967c62fb7d1ea5ee7ff808a53994ddefff6b635bd0865794d7f8e30f708ac7",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/assets/primary.model.json",
+      "expectedSHA256": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89",
+      "actualSHA256": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/assets/primary.usdz",
+      "expectedSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+      "actualSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/captain-fingerfood-unlevel.FCStd",
+      "expectedSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+      "actualSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/suspension.json",
+      "expectedSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+      "actualSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/assets/primary.model.json",
+      "expectedSHA256": "ed5f2cd1420b71613344048804fed21d4a6924b92b1594b7a8422e5ebf7cb754",
+      "actualSHA256": "ed5f2cd1420b71613344048804fed21d4a6924b92b1594b7a8422e5ebf7cb754",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/assets/primary.usdz",
+      "expectedSHA256": "f9061d9f9791f5c83d3ce82be67b1d2b4f9025799ba76b99acb7426d87569213",
+      "actualSHA256": "f9061d9f9791f5c83d3ce82be67b1d2b4f9025799ba76b99acb7426d87569213",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/clavellium-training-block.FCStd",
+      "expectedSHA256": "071a3514b00625796f160a8d967500562c11328ba06b3d67a9d1c525c6563198",
+      "actualSHA256": "071a3514b00625796f160a8d967500562c11328ba06b3d67a9d1c525c6563198",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/assets/primary.model.json",
+      "expectedSHA256": "8527910cc401c516a5585c0bdeb9907a0654405e323c43d12b835fc8731b0911",
+      "actualSHA256": "8527910cc401c516a5585c0bdeb9907a0654405e323c43d12b835fc8731b0911",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/assets/primary.usdz",
+      "expectedSHA256": "c4106a959aa9265717a6c20f928a9b018f048912a66b1ee56e46a6f114be22d1",
+      "actualSHA256": "c4106a959aa9265717a6c20f928a9b018f048912a66b1ee56e46a6f114be22d1",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/crimptonite-helium-mobile.FCStd",
+      "expectedSHA256": "3c00cd605c6681b65324aec37ec1c21e0af2422522a6f5d2b4db4832b19c3ad0",
+      "actualSHA256": "3c00cd605c6681b65324aec37ec1c21e0af2422522a6f5d2b4db4832b19c3ad0",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/suspension.json",
+      "expectedSHA256": "e37139047d86f44e5c5987c97e6b940874471e008a10b1bf16f9505fe6b8aa56",
+      "actualSHA256": "e37139047d86f44e5c5987c97e6b940874471e008a10b1bf16f9505fe6b8aa56",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/dewoodstok-woodbord/assets/primary.model.json",
+      "expectedSHA256": "f81201b61af8ffb544af5687708c720ad2ebca7b80b9e1daf23e34cce01977ae",
+      "actualSHA256": "f81201b61af8ffb544af5687708c720ad2ebca7b80b9e1daf23e34cce01977ae",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/dewoodstok-woodbord/assets/primary.usdz",
+      "expectedSHA256": "62a43523b873e2c4fc87d9a0c41bf4be862720eed499d5635236822bbb709a52",
+      "actualSHA256": "62a43523b873e2c4fc87d9a0c41bf4be862720eed499d5635236822bbb709a52",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/dewoodstok-woodbord/dewoodstok-woodbord.FCStd",
+      "expectedSHA256": "dfac5b76e9f625a380c710218c4d9fc0c1a257735fc00a8f887e1a4ad403ec82",
+      "actualSHA256": "dfac5b76e9f625a380c710218c4d9fc0c1a257735fc00a8f887e1a4ad403ec82",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/escape-beta-22/assets/primary.model.json",
+      "expectedSHA256": "2797e436006385608aa7fb11bc8ec2a3786ecf8d29e00182b5e64f4e66658d2e",
+      "actualSHA256": "2797e436006385608aa7fb11bc8ec2a3786ecf8d29e00182b5e64f4e66658d2e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/escape-beta-22/assets/primary.usdz",
+      "expectedSHA256": "014497a1d2a399d4aec12e7d0b97dcec22c0c6cf4cf43aa5d6cfba28cc407c23",
+      "actualSHA256": "014497a1d2a399d4aec12e7d0b97dcec22c0c6cf4cf43aa5d6cfba28cc407c23",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/escape-beta-22/escape-beta-22.FCStd",
+      "expectedSHA256": "2d3c4755a1868a83cde82c25f9b4a2965086f3a24ed5e613e66c802fd054912c",
+      "actualSHA256": "2d3c4755a1868a83cde82c25f9b4a2965086f3a24ed5e613e66c802fd054912c",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/escape-unlimited/assets/primary.model.json",
+      "expectedSHA256": "905db88c97f4ed2ae64cfe853c351d284f1c0417768a4e0f4b119e1cf7ff45f3",
+      "actualSHA256": "905db88c97f4ed2ae64cfe853c351d284f1c0417768a4e0f4b119e1cf7ff45f3",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/escape-unlimited/assets/primary.usdz",
+      "expectedSHA256": "3eb450c3a42648c8d6c4522bc3220471b298d8cb0f2cf944453ea1ac0f1e4e82",
+      "actualSHA256": "3eb450c3a42648c8d6c4522bc3220471b298d8cb0f2cf944453ea1ac0f1e4e82",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/escape-unlimited/escape-unlimited.FCStd",
+      "expectedSHA256": "7d58c7afa47497300c20c3be3516a69cc584ef77898047e0f7602b8e93976592",
+      "actualSHA256": "7d58c7afa47497300c20c3be3516a69cc584ef77898047e0f7602b8e93976592",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/evolv-kilter-basic-long/assets/primary.model.json",
+      "expectedSHA256": "d218e19200d50e63b18b92de027445454fa6c6f28fd60947535411de2d270d46",
+      "actualSHA256": "d218e19200d50e63b18b92de027445454fa6c6f28fd60947535411de2d270d46",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/evolv-kilter-basic-long/assets/primary.usdz",
+      "expectedSHA256": "ac2399e6477942eed730d4e16c78f3021f26228cc52b168c03884b120f165700",
+      "actualSHA256": "ac2399e6477942eed730d4e16c78f3021f26228cc52b168c03884b120f165700",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/evolv-kilter-basic-long/evolv-kilter-basic-long.FCStd",
+      "expectedSHA256": "4f7565bd11a4ecf75080011958ba8679fc32093d16f2859fadf23a156ac109fc",
+      "actualSHA256": "4f7565bd11a4ecf75080011958ba8679fc32093d16f2859fadf23a156ac109fc",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-doormount-pro-7/assets/primary.model.json",
+      "expectedSHA256": "e78def2362000903d34a4fa09b8afb3e4ae629bef45dab28d6e68844352d576d",
+      "actualSHA256": "e78def2362000903d34a4fa09b8afb3e4ae629bef45dab28d6e68844352d576d",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-doormount-pro-7/assets/primary.usdz",
+      "expectedSHA256": "eac54ae185cc0d62db3f421ca0c3bb39fdac50d76fc24824a8b24720f3042777",
+      "actualSHA256": "eac54ae185cc0d62db3f421ca0c3bb39fdac50d76fc24824a8b24720f3042777",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-doormount-pro-7/frictitious-doormount-pro-7.FCStd",
+      "expectedSHA256": "e9a070923b099f9ff44f2ea9faf8e4c858a3a1ea7aac56e3e3f0f8f7e58e7333",
+      "actualSHA256": "e9a070923b099f9ff44f2ea9faf8e4c858a3a1ea7aac56e3e3f0f8f7e58e7333",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-megalith/assets/primary.model.json",
+      "expectedSHA256": "cfe53835cc918b3250e98630d5e03aff9297049188ce08a4bf24b08913678b27",
+      "actualSHA256": "cfe53835cc918b3250e98630d5e03aff9297049188ce08a4bf24b08913678b27",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-megalith/assets/primary.usdz",
+      "expectedSHA256": "23a2e9078d2351710006cab3752dc57cfa33538499343e09d9d29a1887dbb4f9",
+      "actualSHA256": "23a2e9078d2351710006cab3752dc57cfa33538499343e09d9d29a1887dbb4f9",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-megalith/frictitious-megalith.FCStd",
+      "expectedSHA256": "f2c8ed561824139ec2c6aef8fc05eda9a89737e4839897ae2d47ea9f99c76fb8",
+      "actualSHA256": "f2c8ed561824139ec2c6aef8fc05eda9a89737e4839897ae2d47ea9f99c76fb8",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-nug/assets/primary.model.json",
+      "expectedSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+      "actualSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-nug/assets/primary.usdz",
+      "expectedSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+      "actualSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-nug/frictitious-nug.FCStd",
+      "expectedSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+      "actualSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-nug/suspension.json",
+      "expectedSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+      "actualSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/assets/primary.model.json",
+      "expectedSHA256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+      "actualSHA256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/assets/primary.usdz",
+      "expectedSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+      "actualSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/frictitious-port-a-board.FCStd",
+      "expectedSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+      "actualSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/suspension.json",
+      "expectedSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+      "actualSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/j-bryant-ftg-32/assets/primary.model.json",
+      "expectedSHA256": "7a9160b0061ce21448f81afd387f7c4191ce07fccfd702d90f953b99e665dac8",
+      "actualSHA256": "7a9160b0061ce21448f81afd387f7c4191ce07fccfd702d90f953b99e665dac8",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/j-bryant-ftg-32/assets/primary.usdz",
+      "expectedSHA256": "dbc50905cb93ee432da5a6ba39fb9c558d7bdf5d40c09cf26ecb4ab6db434d9a",
+      "actualSHA256": "dbc50905cb93ee432da5a6ba39fb9c558d7bdf5d40c09cf26ecb4ab6db434d9a",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/j-bryant-ftg-32/j-bryant-ftg-32.FCStd",
+      "expectedSHA256": "bc593d52df87aad48b52a698fd65d8d82da9040419023757ed044829a03a8523",
+      "actualSHA256": "bc593d52df87aad48b52a698fd65d8d82da9040419023757ed044829a03a8523",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/assets/primary.model.json",
+      "expectedSHA256": "aa7353ce7ae0e72c2b1cd8b31fedde0bd4e16f05ec24de23eca3f9d5b4533f8e",
+      "actualSHA256": "aa7353ce7ae0e72c2b1cd8b31fedde0bd4e16f05ec24de23eca3f9d5b4533f8e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/assets/primary.usdz",
+      "expectedSHA256": "19ec12f28f0971383ed5c98017db5f01936f69e0fa542623c64e0b580488e268",
+      "actualSHA256": "19ec12f28f0971383ed5c98017db5f01936f69e0fa542623c64e0b580488e268",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd",
+      "expectedSHA256": "ed1dfe2a5a0fd0b4d9fd92fdd7b370bf288c2624be6aacffa4a7e5a97641ec21",
+      "actualSHA256": "ed1dfe2a5a0fd0b4d9fd92fdd7b370bf288c2624be6aacffa4a7e5a97641ec21",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/suspension.json",
+      "expectedSHA256": "7c055fc8eaea6738fe6e5e53c81065d3ace6c3e726daf9b02424094e5358e32d",
+      "actualSHA256": "7c055fc8eaea6738fe6e5e53c81065d3ace6c3e726daf9b02424094e5358e32d",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-large/assets/primary.model.json",
+      "expectedSHA256": "1ca240e56f63b6cb6aabf19c3a7b99e02c07a4611c05ac82f2123dc89f74ba63",
+      "actualSHA256": "1ca240e56f63b6cb6aabf19c3a7b99e02c07a4611c05ac82f2123dc89f74ba63",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-large/assets/primary.usdz",
+      "expectedSHA256": "9b4af116becef393118923d91be2c42f46c9538b7e61679c4e908d7e6ac017b9",
+      "actualSHA256": "9b4af116becef393118923d91be2c42f46c9538b7e61679c4e908d7e6ac017b9",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-large/lattice-mxedge-lift-large.FCStd",
+      "expectedSHA256": "c747f4ca1f9bcb4140d6c8bb792cf5bae6ebf02ee59e8db42c6aa091fe530ecc",
+      "actualSHA256": "c747f4ca1f9bcb4140d6c8bb792cf5bae6ebf02ee59e8db42c6aa091fe530ecc",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-small/assets/primary.model.json",
+      "expectedSHA256": "041bf64dcafe95c9ddd84a3dc48cf9e54905be5e9d7f0deca70132a2a46181dd",
+      "actualSHA256": "041bf64dcafe95c9ddd84a3dc48cf9e54905be5e9d7f0deca70132a2a46181dd",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-small/assets/primary.usdz",
+      "expectedSHA256": "8f78fb29efb6f10ab72fdbbc7fbeca8accf60cce757ff8e2183f5dd9f582fc8e",
+      "actualSHA256": "8f78fb29efb6f10ab72fdbbc7fbeca8accf60cce757ff8e2183f5dd9f582fc8e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-small/lattice-mxedge-lift-small.FCStd",
+      "expectedSHA256": "2212a257fad8180143fb80304ecfaa3eb8f970d605d931e2af0affa4695bc006",
+      "actualSHA256": "2212a257fad8180143fb80304ecfaa3eb8f970d605d931e2af0affa4695bc006",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-triple-rung/assets/primary.model.json",
+      "expectedSHA256": "3080f13c98c959e0d6e162ce8ba8f55f5b4357f18e151a64e0a225dcc755ac8d",
+      "actualSHA256": "3080f13c98c959e0d6e162ce8ba8f55f5b4357f18e151a64e0a225dcc755ac8d",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-triple-rung/assets/primary.usdz",
+      "expectedSHA256": "05aab8f7aba9bd97acb7ae14b9026d53a698d7a162de56b2115d95232ec89d3c",
+      "actualSHA256": "05aab8f7aba9bd97acb7ae14b9026d53a698d7a162de56b2115d95232ec89d3c",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
+      "expectedSHA256": "82430ff72c483f5444412fe5530abcd5ffebee935867b82df662dcc020a960b0",
+      "actualSHA256": "82430ff72c483f5444412fe5530abcd5ffebee935867b82df662dcc020a960b0",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/assets/primary.model.json",
+      "expectedSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
+      "actualSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/assets/primary.usdz",
+      "expectedSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+      "actualSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/mammut-diamond-finger.FCStd",
+      "expectedSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "actualSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-climbers-edge/assets/primary.model.json",
+      "expectedSHA256": "3cd49d64e8c8dc5bbd8d5f3fefdf784f24ea1e444de2c4276fa0f1af5fb0efce",
+      "actualSHA256": "3cd49d64e8c8dc5bbd8d5f3fefdf784f24ea1e444de2c4276fa0f1af5fb0efce",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-climbers-edge/assets/primary.usdz",
+      "expectedSHA256": "4de00eb9e9d60dd70fbcbd0f1e9cd141c09b74470dbb72755847ac1a333fd341",
+      "actualSHA256": "4de00eb9e9d60dd70fbcbd0f1e9cd141c09b74470dbb72755847ac1a333fd341",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-climbers-edge/metolius-climbers-edge.FCStd",
+      "expectedSHA256": "02943657a02d83c59daf75ed473e2f841cd7a07003e907cb04a5eecf8dcb9239",
+      "actualSHA256": "02943657a02d83c59daf75ed473e2f841cd7a07003e907cb04a5eecf8dcb9239",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-contact/assets/primary.model.json",
+      "expectedSHA256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+      "actualSHA256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-contact/assets/primary.usdz",
+      "expectedSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+      "actualSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-contact/metolius-contact.FCStd",
+      "expectedSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+      "actualSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-foundry/assets/primary.model.json",
+      "expectedSHA256": "39c4ff3594ff8ab05fccf9746f455ed5666d4aa0932bd330e5591fce7e79be1d",
+      "actualSHA256": "39c4ff3594ff8ab05fccf9746f455ed5666d4aa0932bd330e5591fce7e79be1d",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-foundry/assets/primary.usdz",
+      "expectedSHA256": "201e01266d9b95e8305b428e681a64ba39d95c02693aeb1330d40789ec11ce05",
+      "actualSHA256": "201e01266d9b95e8305b428e681a64ba39d95c02693aeb1330d40789ec11ce05",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-foundry/metolius-foundry.FCStd",
+      "expectedSHA256": "d20c657c4a004a88556dc32f89d4fda3ca2c34f23e049c58219991f93bab96d6",
+      "actualSHA256": "d20c657c4a004a88556dc32f89d4fda3ca2c34f23e049c58219991f93bab96d6",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-light-rail-2/assets/primary.model.json",
+      "expectedSHA256": "70e9e992c8ce12077bc98c3a74646452d53a4fef1bda51a26d930108d455ef8e",
+      "actualSHA256": "70e9e992c8ce12077bc98c3a74646452d53a4fef1bda51a26d930108d455ef8e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-light-rail-2/assets/primary.usdz",
+      "expectedSHA256": "9b4e233f87685e2f39faef82f73af2edae3644a5d61bb87d2f3188930242db1d",
+      "actualSHA256": "9b4e233f87685e2f39faef82f73af2edae3644a5d61bb87d2f3188930242db1d",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-light-rail-2/metolius-light-rail-2.FCStd",
+      "expectedSHA256": "46b0fc407b2e6e00acaededd94bc20dbfd9d2bdb777dd7ffbee1971c72ec9a7c",
+      "actualSHA256": "46b0fc407b2e6e00acaededd94bc20dbfd9d2bdb777dd7ffbee1971c72ec9a7c",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-prime-rib/assets/primary.model.json",
+      "expectedSHA256": "5a90c32758ed7521a86dabe85e655ddb6b62925b17fe6e6d822b0c5610a72ecb",
+      "actualSHA256": "5a90c32758ed7521a86dabe85e655ddb6b62925b17fe6e6d822b0c5610a72ecb",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-prime-rib/assets/primary.usdz",
+      "expectedSHA256": "66a8f958b3b6dde6766a70c547d336a11969c6ec3b1e9fefa5fd2972f49c6125",
+      "actualSHA256": "66a8f958b3b6dde6766a70c547d336a11969c6ec3b1e9fefa5fd2972f49c6125",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-prime-rib/metolius-prime-rib.FCStd",
+      "expectedSHA256": "7a6b06acfc46080d0f785677b5a179e29f5cb8f3c1441e34368a852ee01fca3e",
+      "actualSHA256": "7a6b06acfc46080d0f785677b5a179e29f5cb8f3c1441e34368a852ee01fca3e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-project/assets/primary.model.json",
+      "expectedSHA256": "4f3a52b8cd9e556323d96632c5bd9c612a25ad16b3958c2d35fa5d188f628e78",
+      "actualSHA256": "4f3a52b8cd9e556323d96632c5bd9c612a25ad16b3958c2d35fa5d188f628e78",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-project/assets/primary.usdz",
+      "expectedSHA256": "060ba08fd0ea183f59166c34387004efbef8de247956f6e60ba72550ff11cec7",
+      "actualSHA256": "060ba08fd0ea183f59166c34387004efbef8de247956f6e60ba72550ff11cec7",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-project/metolius-project.FCStd",
+      "expectedSHA256": "1d09434aebccc9e2facad80824fa8632fbfe14b92c0dce938a1812e263c6d72f",
+      "actualSHA256": "1d09434aebccc9e2facad80824fa8632fbfe14b92c0dce938a1812e263c6d72f",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/assets/primary.model.json",
+      "expectedSHA256": "ee3ae88875cf7541a0feb5a4c72d4c9c156c6a1ff01e369ffd8a901c23e86bcd",
+      "actualSHA256": "ee3ae88875cf7541a0feb5a4c72d4c9c156c6a1ff01e369ffd8a901c23e86bcd",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/assets/primary.usdz",
+      "expectedSHA256": "41a9c06643e9d636a2d9ab1aa2ae16ca5d478d0bf3b28b84ce31da07efb0b74c",
+      "actualSHA256": "41a9c06643e9d636a2d9ab1aa2ae16ca5d478d0bf3b28b84ce31da07efb0b74c",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/metolius-rock-rings-3d.FCStd",
+      "expectedSHA256": "ff17919c504af68c6cddfa4acb8d9d8d90d6646d26eba73fc4c94a54bc5f2417",
+      "actualSHA256": "ff17919c504af68c6cddfa4acb8d9d8d90d6646d26eba73fc4c94a54bc5f2417",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/assets/primary.model.json",
+      "expectedSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+      "actualSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/assets/primary.usdz",
+      "expectedSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+      "actualSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/metolius-simulator-3d.FCStd",
+      "expectedSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "actualSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-compact-ii/assets/primary.model.json",
+      "expectedSHA256": "132f23e40eef8e0fcbd642b0e6c3da2ab46f3c4d11fc61cb0ef8544b94073588",
+      "actualSHA256": "132f23e40eef8e0fcbd642b0e6c3da2ab46f3c4d11fc61cb0ef8544b94073588",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-compact-ii/assets/primary.usdz",
+      "expectedSHA256": "2f90c3e3e0d97dba8c771391fa63659156ab954facbbfa1a74750a57615f40fa",
+      "actualSHA256": "2f90c3e3e0d97dba8c771391fa63659156ab954facbbfa1a74750a57615f40fa",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-compact-ii/metolius-wood-grips-compact-ii.FCStd",
+      "expectedSHA256": "91b4dedc00b8696ce9d025727bf8898ad247c6b4637e817a82ec32ad0bd50f14",
+      "actualSHA256": "91b4dedc00b8696ce9d025727bf8898ad247c6b4637e817a82ec32ad0bd50f14",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-deluxe-ii/assets/primary.model.json",
+      "expectedSHA256": "4dc67f2f95351e6320aa9ce2fbec68b0d3a6df03475b3d15b8fbee2ebb12b8c0",
+      "actualSHA256": "4dc67f2f95351e6320aa9ce2fbec68b0d3a6df03475b3d15b8fbee2ebb12b8c0",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-deluxe-ii/assets/primary.usdz",
+      "expectedSHA256": "1225ab7bbf8261e69b57401bcba1d26985614ad8db8468b0526dc35286c6b391",
+      "actualSHA256": "1225ab7bbf8261e69b57401bcba1d26985614ad8db8468b0526dc35286c6b391",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-deluxe-ii/metolius-wood-grips-deluxe-ii.FCStd",
+      "expectedSHA256": "eb3f85c72faa4619bf97bcb755945a7d3baf6821efde5703b6f4742f2ecb2707",
+      "actualSHA256": "eb3f85c72faa4619bf97bcb755945a7d3baf6821efde5703b6f4742f2ecb2707",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/moon-armstrong/assets/primary.model.json",
+      "expectedSHA256": "c4791fcc5908aa76745b0a3022e3e1fa9de040d5f3a48ea64740e57911c17c11",
+      "actualSHA256": "c4791fcc5908aa76745b0a3022e3e1fa9de040d5f3a48ea64740e57911c17c11",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/moon-armstrong/assets/primary.usdz",
+      "expectedSHA256": "0a2fdcfd4178b98ca1170a807f33c92dc30ac60dd5795ab315d2fec6b3153f9c",
+      "actualSHA256": "0a2fdcfd4178b98ca1170a807f33c92dc30ac60dd5795ab315d2fec6b3153f9c",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/moon-armstrong/moon-armstrong.FCStd",
+      "expectedSHA256": "b31c71fbb2236f93f78ff15215c63cafe360b93f6873477d1c936ca9c7b5dda8",
+      "actualSHA256": "b31c71fbb2236f93f78ff15215c63cafe360b93f6873477d1c936ca9c7b5dda8",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stoak-board-iii/assets/primary.model.json",
+      "expectedSHA256": "225a2c5282e5dfdac09c20ac96abc5a976f71ce8644283114199f0a414b5e142",
+      "actualSHA256": "225a2c5282e5dfdac09c20ac96abc5a976f71ce8644283114199f0a414b5e142",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stoak-board-iii/assets/primary.usdz",
+      "expectedSHA256": "808e8a7f058c8b62b5cf0e9180b86df68861022670598decf8db25f75d3c3274",
+      "actualSHA256": "808e8a7f058c8b62b5cf0e9180b86df68861022670598decf8db25f75d3c3274",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stoak-board-iii/nature-stoak-board-iii.FCStd",
+      "expectedSHA256": "7cad136c2f10ca4bdddd4f0817d58b87a14d018faf80d08d61c529c8da96b696",
+      "actualSHA256": "7cad136c2f10ca4bdddd4f0817d58b87a14d018faf80d08d61c529c8da96b696",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.model.json",
+      "expectedSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
+      "actualSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.usdz",
+      "expectedSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46",
+      "actualSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd",
+      "expectedSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+      "actualSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/suspension.json",
+      "expectedSHA256": "8f3b0cefd2f926409e8311d7a5c333d0ef17272c062233c32d7f695fccc6717e",
+      "actualSHA256": "8f3b0cefd2f926409e8311d7a5c333d0ef17272c062233c32d7f695fccc6717e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "expectedSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
+      "actualSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+      "expectedSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+      "actualSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "expectedSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+      "actualSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/suspension.json",
+      "expectedSHA256": "3ededde32246c2b90cbf89dbb28ec26f362f387ae60f5f3f22dff2c76f115325",
+      "actualSHA256": "3ededde32246c2b90cbf89dbb28ec26f362f387ae60f5f3f22dff2c76f115325",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/assets/primary.model.json",
+      "expectedSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
+      "actualSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/assets/primary.usdz",
+      "expectedSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+      "actualSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd",
+      "expectedSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+      "actualSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/suspension.json",
+      "expectedSHA256": "4e9bea938cafe3f4a7f100ff53bf58daa133a1b80926b106672d432e3a70d1a8",
+      "actualSHA256": "4e9bea938cafe3f4a7f100ff53bf58daa133a1b80926b106672d432e3a70d1a8",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/assets/primary.model.json",
+      "expectedSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
+      "actualSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/assets/primary.usdz",
+      "expectedSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+      "actualSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd",
+      "expectedSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+      "actualSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json",
+      "expectedSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e",
+      "actualSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz",
+      "expectedSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+      "actualSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json",
+      "expectedSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477",
+      "actualSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz",
+      "expectedSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+      "actualSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/primary.model.json",
+      "expectedSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
+      "actualSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/assets/primary.usdz",
+      "expectedSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+      "actualSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+      "expectedSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+      "actualSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/suspension.json",
+      "expectedSHA256": "accd4b12ac09f4de1213c06b783de736117fd44e94b12918b38c86467dd2aa9f",
+      "actualSHA256": "accd4b12ac09f4de1213c06b783de736117fd44e94b12918b38c86467dd2aa9f",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/soill-iron-palm-2/assets/primary.model.json",
+      "expectedSHA256": "d3fede4f790c74dce3192ac7f05a864819a8a5aa1d9dceaf46bd0cf7591e1329",
+      "actualSHA256": "d3fede4f790c74dce3192ac7f05a864819a8a5aa1d9dceaf46bd0cf7591e1329",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/soill-iron-palm-2/assets/primary.usdz",
+      "expectedSHA256": "851e8d66a5fb82909212c7f135862aaded63948dbc14ba392a932e565382877f",
+      "actualSHA256": "851e8d66a5fb82909212c7f135862aaded63948dbc14ba392a932e565382877f",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/soill-iron-palm-2/soill-iron-palm-2.FCStd",
+      "expectedSHA256": "662a6520907f6fbb080acb26182c325c0b5980477504ef2d1eaacd31b3abd453",
+      "actualSHA256": "662a6520907f6fbb080acb26182c325c0b5980477504ef2d1eaacd31b3abd453",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/soill-split-palm/assets/primary.model.json",
+      "expectedSHA256": "dd97b633165e1add83cff26c422f816c94a357c2e681400eae944f6aa990eb85",
+      "actualSHA256": "dd97b633165e1add83cff26c422f816c94a357c2e681400eae944f6aa990eb85",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/soill-split-palm/assets/primary.usdz",
+      "expectedSHA256": "6efb970ca86f280db52e174dcd862e15a33bf28fb8ffd938140f224838eba32f",
+      "actualSHA256": "6efb970ca86f280db52e174dcd862e15a33bf28fb8ffd938140f224838eba32f",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/soill-split-palm/soill-split-palm.FCStd",
+      "expectedSHA256": "6c9e3e425186bd139dc9efcd04a79239cc29ed53e0c5750d1c24b358215bdf3c",
+      "actualSHA256": "6c9e3e425186bd139dc9efcd04a79239cc29ed53e0c5750d1c24b358215bdf3c",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/soill-training-tiles/assets/primary.model.json",
+      "expectedSHA256": "77e09d850ee66d2f50bbbd2c2709121a64f54d834af6d5d2fd49ff8a8fa78a7d",
+      "actualSHA256": "77e09d850ee66d2f50bbbd2c2709121a64f54d834af6d5d2fd49ff8a8fa78a7d",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/soill-training-tiles/assets/primary.usdz",
+      "expectedSHA256": "0e137f91f2cc0283c144a19d052bbd7b8a89bd1706fa7b1b29677deaa3c33cbb",
+      "actualSHA256": "0e137f91f2cc0283c144a19d052bbd7b8a89bd1706fa7b1b29677deaa3c33cbb",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/soill-training-tiles/soill-training-tiles.FCStd",
+      "expectedSHA256": "87296ca455240e185fc4486eef6fe2d6e126f55acded1431e354872946981cd7",
+      "actualSHA256": "87296ca455240e185fc4486eef6fe2d6e126f55acded1431e354872946981cd7",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/target10a-linebreaker-base/assets/primary.model.json",
+      "expectedSHA256": "69cb77178c02bb78ebdbe612ebc61285a634f1c409a3d32869b7d671be1dfba1",
+      "actualSHA256": "69cb77178c02bb78ebdbe612ebc61285a634f1c409a3d32869b7d671be1dfba1",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/target10a-linebreaker-base/assets/primary.usdz",
+      "expectedSHA256": "b1c08983d2b353442a9cd0131ad5a1e4255a2e6c3222bc26ea5b0fd44ef3e8df",
+      "actualSHA256": "b1c08983d2b353442a9cd0131ad5a1e4255a2e6c3222bc26ea5b0fd44ef3e8df",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/target10a-linebreaker-base/target10a-linebreaker-base.FCStd",
+      "expectedSHA256": "69c3646329715e0d244a02f0b4fc5b02d6e636982b4431cc86430e1905a5caa0",
+      "actualSHA256": "69c3646329715e0d244a02f0b4fc5b02d6e636982b4431cc86430e1905a5caa0",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-flash-board/assets/primary.model.json",
+      "expectedSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
+      "actualSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-flash-board/assets/primary.usdz",
+      "expectedSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+      "actualSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-flash-board/suspension.json",
+      "expectedSHA256": "25830bef1ac6409ec5f1d7ac5e13317de974f96f1fa1037947554d64cbf5fc0b",
+      "actualSHA256": "25830bef1ac6409ec5f1d7ac5e13317de974f96f1fa1037947554d64cbf5fc0b",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-flash-board/tension-flash-board.FCStd",
+      "expectedSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+      "actualSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-grindstone-original/assets/primary.png",
+      "expectedSHA256": "d0009d24963d9bc3abb801196e822cc19839262d7456a865223e76ab280cf864",
+      "actualSHA256": "d0009d24963d9bc3abb801196e822cc19839262d7456a865223e76ab280cf864",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-grindstone-original/board.json",
+      "expectedSHA256": "90d29ab756a84fe220d39a8f4981135a32b95e017a429b37a150777fa309ab47",
+      "actualSHA256": "90d29ab756a84fe220d39a8f4981135a32b95e017a429b37a150777fa309ab47",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-grindstone-pro/assets/primary.model.json",
+      "expectedSHA256": "d926095165b5c401a84a7cffddf5fda5219efeed42a02acddc2bcce26e1f8a98",
+      "actualSHA256": "d926095165b5c401a84a7cffddf5fda5219efeed42a02acddc2bcce26e1f8a98",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-grindstone-pro/assets/primary.usdz",
+      "expectedSHA256": "63cd2673a47c38fa1bcf63e40c7ca16eb4e0a873b5062611a09e4ba6ed5628e2",
+      "actualSHA256": "63cd2673a47c38fa1bcf63e40c7ca16eb4e0a873b5062611a09e4ba6ed5628e2",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-grindstone-pro/tension-grindstone-pro.FCStd",
+      "expectedSHA256": "85c15658f0dc3c46c38b8e576e681f6983500271df9e58d43e99cd5c2973f028",
+      "actualSHA256": "85c15658f0dc3c46c38b8e576e681f6983500271df9e58d43e99cd5c2973f028",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-grindstone/assets/primary.model.json",
+      "expectedSHA256": "2527466044e82c32bf5271cc48f4a909eb303146d8f951215d248a1ae18ef0d4",
+      "actualSHA256": "2527466044e82c32bf5271cc48f4a909eb303146d8f951215d248a1ae18ef0d4",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-grindstone/assets/primary.usdz",
+      "expectedSHA256": "d69795c0f0c65e0c2070e3dc0c84fcfa7480a03c627157be4b8ed65cffcf5495",
+      "actualSHA256": "d69795c0f0c65e0c2070e3dc0c84fcfa7480a03c627157be4b8ed65cffcf5495",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-grindstone/tension-grindstone.FCStd",
+      "expectedSHA256": "a62e392e26ad36ae13acd9b453ce3b9315d70e8516272b24f1c429e5803ea723",
+      "actualSHA256": "a62e392e26ad36ae13acd9b453ce3b9315d70e8516272b24f1c429e5803ea723",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-honestone/assets/primary.png",
+      "expectedSHA256": "2de99ac2a771e9ed08864cbe80e6495468c74e5beaee785f345b5f08d35212ee",
+      "actualSHA256": "2de99ac2a771e9ed08864cbe80e6495468c74e5beaee785f345b5f08d35212ee",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-honestone/board.json",
+      "expectedSHA256": "234aaa19421227c248e38ba6a06ad3e156d8b9549c9971e14123b9a7a2ac1726",
+      "actualSHA256": "234aaa19421227c248e38ba6a06ad3e156d8b9549c9971e14123b9a7a2ac1726",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-whetstone/assets/primary.model.json",
+      "expectedSHA256": "76af62059693284df52bb25afbf48c6fab6bdb48667a87ae6abba63dd2e41f62",
+      "actualSHA256": "76af62059693284df52bb25afbf48c6fab6bdb48667a87ae6abba63dd2e41f62",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-whetstone/assets/primary.usdz",
+      "expectedSHA256": "2e93891153367ca3921bcbbd562571cd14a9f8c7b91da60e32b0fc1a9c4604ca",
+      "actualSHA256": "2e93891153367ca3921bcbbd562571cd14a9f8c7b91da60e32b0fc1a9c4604ca",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/tension-whetstone/tension-whetstone.FCStd",
+      "expectedSHA256": "17c04e7fc31a8cbcfc93a9314e50700611c831dccd0cf63bb69222f3d43bf00c",
+      "actualSHA256": "17c04e7fc31a8cbcfc93a9314e50700611c831dccd0cf63bb69222f3d43bf00c",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/the-hangboard/assets/primary.model.json",
+      "expectedSHA256": "6d0d41548748408a8a4b0d5c0037a498f17589aafddb1817cab83a221f75444b",
+      "actualSHA256": "6d0d41548748408a8a4b0d5c0037a498f17589aafddb1817cab83a221f75444b",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/the-hangboard/assets/primary.usdz",
+      "expectedSHA256": "baa39c97ac15c6ad5775af55801eb6a0419df6e251aca81c2624046cba49c2e9",
+      "actualSHA256": "baa39c97ac15c6ad5775af55801eb6a0419df6e251aca81c2624046cba49c2e9",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/the-hangboard/the-hangboard.FCStd",
+      "expectedSHA256": "1ff13aaf7b4442b682333c8cb845c2550ebe7170c75bf1936042d70e3aee3f0d",
+      "actualSHA256": "1ff13aaf7b4442b682333c8cb845c2550ebe7170c75bf1936042d70e3aee3f0d",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/assets/primary.model.json",
+      "expectedSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef",
+      "actualSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+      "expectedSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+      "actualSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd",
+      "expectedSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+      "actualSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-natural/assets/primary.model.json",
+      "expectedSHA256": "7b888ca64b2065530c1953003f5ab662f6075518456879b331e5342d984d2ac8",
+      "actualSHA256": "7b888ca64b2065530c1953003f5ab662f6075518456879b331e5342d984d2ac8",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-natural/assets/primary.usdz",
+      "expectedSHA256": "f913ecd901834c9e000ecc660144625c70e453856e150de9dd119b5bf6a0f17e",
+      "actualSHA256": "f913ecd901834c9e000ecc660144625c70e453856e150de9dd119b5bf6a0f17e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-natural/board.json",
+      "expectedSHA256": "2e6f7231c49f8ba1140e208277eb1d0d95fc235ac05f5f86ffd547aff160ea52",
+      "actualSHA256": "2e6f7231c49f8ba1140e208277eb1d0d95fc235ac05f5f86ffd547aff160ea52",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-pivot/assets/primary.model.json",
+      "expectedSHA256": "b7c97e44c37c0d521a5ac991bb9ccd54fca2301d6b3ea8446cc48ce86eac3005",
+      "actualSHA256": "b7c97e44c37c0d521a5ac991bb9ccd54fca2301d6b3ea8446cc48ce86eac3005",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-pivot/assets/primary.usdz",
+      "expectedSHA256": "027c17024235b0340e6513fbda000d081bc7d0d81e618ee75d9f3e5516cae746",
+      "actualSHA256": "027c17024235b0340e6513fbda000d081bc7d0d81e618ee75d9f3e5516cae746",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-pivot/trango-rock-prodigy-pivot.FCStd",
+      "expectedSHA256": "dc37d005b0ddb19b7ca97b49957fb09e0b3e0aad0d44e011ed0edd47e6c8f651",
+      "actualSHA256": "dc37d005b0ddb19b7ca97b49957fb09e0b3e0aad0d44e011ed0edd47e6c8f651",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-training-center/assets/primary.model.json",
+      "expectedSHA256": "3fba542de1faff90f9f3699fcdedad0a68ac847250ad1baf7c1dbd5929d2534a",
+      "actualSHA256": "3fba542de1faff90f9f3699fcdedad0a68ac847250ad1baf7c1dbd5929d2534a",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-training-center/assets/primary.usdz",
+      "expectedSHA256": "112adc6e53df504500b887b58ff1281c79984e32001cac6fe731b9ce031d754b",
+      "actualSHA256": "112adc6e53df504500b887b58ff1281c79984e32001cac6fe731b9ce031d754b",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-training-center/trango-rock-prodigy-training-center.FCStd",
+      "expectedSHA256": "10b634a6f3ac880bfb1414605c36eec3a696e55ea339bd626a796ffa6fbf24d5",
+      "actualSHA256": "10b634a6f3ac880bfb1414605c36eec3a696e55ea339bd626a796ffa6fbf24d5",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.model.json",
+      "expectedSHA256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+      "actualSHA256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.usdz",
+      "expectedSHA256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+      "actualSHA256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/suspension.json",
+      "expectedSHA256": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282",
+      "actualSHA256": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd",
+      "expectedSHA256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "actualSHA256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.model.json",
+      "expectedSHA256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934",
+      "actualSHA256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.usdz",
+      "expectedSHA256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea",
+      "actualSHA256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-baguette/suspension.json",
+      "expectedSHA256": "c69c11dc9708bc1e2dc9f235004f55a7c0ecd524fdf5b073c40dda1d9b0c956f",
+      "actualSHA256": "c69c11dc9708bc1e2dc9f235004f55a7c0ecd524fdf5b073c40dda1d9b0c956f",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-baguette/yy-baguette.FCStd",
+      "expectedSHA256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "actualSHA256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.model.json",
+      "expectedSHA256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+      "actualSHA256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.usdz",
+      "expectedSHA256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+      "actualSHA256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/suspension.json",
+      "expectedSHA256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97",
+      "actualSHA256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+      "expectedSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "actualSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.model.json",
+      "expectedSHA256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+      "actualSHA256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.usdz",
+      "expectedSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+      "actualSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/suspension.json",
+      "expectedSHA256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4",
+      "actualSHA256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/yy-travelboard.FCStd",
+      "expectedSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "actualSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-evo/assets/primary.png",
+      "expectedSHA256": "a80161a57ea9a9b927bf49dc555b528406453e21b4dd717df5876ef27bb8638c",
+      "actualSHA256": "a80161a57ea9a9b927bf49dc555b528406453e21b4dd717df5876ef27bb8638c",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-evo/board.json",
+      "expectedSHA256": "9525f93a05bf0cdfea3aebab1efd4e79c4f32a11934e30b37638b8e081e484fd",
+      "actualSHA256": "9525f93a05bf0cdfea3aebab1efd4e79c4f32a11934e30b37638b8e081e484fd",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-first/assets/primary.png",
+      "expectedSHA256": "142ec6af0b937cf4bb392512a26e3ce239e551ac378f2265f7b8a3c25417921c",
+      "actualSHA256": "142ec6af0b937cf4bb392512a26e3ce239e551ac378f2265f7b8a3c25417921c",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-first/board.json",
+      "expectedSHA256": "4a47711d390c3ff6fd3b682eccf14e1ef84404cbdb0a09f69b4efac90dd1fe57",
+      "actualSHA256": "4a47711d390c3ff6fd3b682eccf14e1ef84404cbdb0a09f69b4efac90dd1fe57",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-light/assets/primary.png",
+      "expectedSHA256": "ac4c69be81969352e4fb529ce548b01e5c94315913b98dba59d04966537f6613",
+      "actualSHA256": "ac4c69be81969352e4fb529ce548b01e5c94315913b98dba59d04966537f6613",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-light/board.json",
+      "expectedSHA256": "0ce4cd64aff6c090b5d91d4f315aa21caebdf0c1b31dc1150096875cb157d630",
+      "actualSHA256": "0ce4cd64aff6c090b5d91d4f315aa21caebdf0c1b31dc1150096875cb157d630",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-one/assets/primary.png",
+      "expectedSHA256": "68cb5d5023d6ef440c9de4629becb96004337b51f2d5cf6952db7283a2b1821a",
+      "actualSHA256": "68cb5d5023d6ef440c9de4629becb96004337b51f2d5cf6952db7283a2b1821a",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-one/board.json",
+      "expectedSHA256": "bcfef81a04c90b57bb453400555fda562af215e8bd2ee3dbb505fbf1bcb84465",
+      "actualSHA256": "bcfef81a04c90b57bb453400555fda562af215e8bd2ee3dbb505fbf1bcb84465",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.model.json",
+      "expectedSHA256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+      "actualSHA256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.usdz",
+      "expectedSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "actualSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "unchanged": true
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/zlagboard-evo.FCStd",
+      "expectedSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+      "actualSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+      "unchanged": true
+    }
+  ],
+  "outOfScopeFileCount": 356,
+  "otherQueueRowsUnchanged": {
+    "aelith-cyclops-011": true,
+    "captain-fingerfood-dual": true,
+    "captain-fingerfood-unlevel": true,
+    "frictitious-nug": true,
+    "frictitious-port-a-board": true,
+    "mammut-diamond-finger": true,
+    "metolius-contact": true,
+    "metolius-simulator-3d": true,
+    "nature-stone-hanger": true,
+    "nature-stone-hanger-mini": true,
+    "nature-stone-hanger-mini-karma8a": true,
+    "owl-climb-poker": true,
+    "plateau-lifting-edge": true,
+    "tension-flash-board": true,
+    "trango-rock-prodigy-forge": true,
+    "yy-baguette": true,
+    "yy-baguette-evo": true,
+    "yy-penta-evo": true,
+    "yy-travelboard": true,
+    "zlagboard-evo": true
+  },
+  "otherLockRecordsUnchanged": {
+    "beastmaker-1000": true,
+    "beastmaker-2000": true,
+    "captain-fingerfood-pocket": true,
+    "clavellium-training-block": true,
+    "dewoodstok-woodbord": true,
+    "escape-beta-22": true,
+    "evolv-kilter-basic-long": true,
+    "j-bryant-ftg-32": true,
+    "lattice-mini-bar": true,
+    "lattice-mxedge-lift-large": true,
+    "lattice-mxedge-lift-small": true,
+    "lattice-triple-rung": true,
+    "metolius-light-rail-2": true,
+    "metolius-prime-rib": true,
+    "metolius-rock-rings-3d": true,
+    "metolius-wood-grips-compact-ii": true,
+    "metolius-wood-grips-deluxe-ii": true,
+    "moon-armstrong": true,
+    "nature-stoak-board-iii": true,
+    "soill-iron-palm-2": true,
+    "soill-split-palm": true,
+    "soill-training-tiles": true,
+    "target10a-linebreaker-base": true,
+    "tension-grindstone": true,
+    "the-hangboard": true,
+    "trango-rock-prodigy-pivot": true,
+    "trango-rock-prodigy-training-center": true,
+    "frictitious-doormount-pro-7": true,
+    "escape-unlimited": true,
+    "metolius-climbers-edge": true,
+    "tension-grindstone-pro": true,
+    "metolius-foundry": true,
+    "frictitious-megalith": true,
+    "metolius-project": true,
+    "crimptonite-helium-mobile": true,
+    "tension-whetstone": true,
+    "aelith-cyclops-011": true,
+    "captain-fingerfood-dual": true,
+    "captain-fingerfood-unlevel": true,
+    "frictitious-nug": true,
+    "frictitious-port-a-board": true,
+    "mammut-diamond-finger": true,
+    "metolius-contact": true,
+    "metolius-simulator-3d": true,
+    "nature-stone-hanger": true,
+    "nature-stone-hanger-mini": true,
+    "nature-stone-hanger-mini-karma8a": true,
+    "owl-climb-poker": true,
+    "plateau-lifting-edge": true,
+    "tension-flash-board": true,
+    "trango-rock-prodigy-forge": true,
+    "yy-baguette": true,
+    "yy-baguette-evo": true,
+    "yy-penta-evo": true,
+    "yy-travelboard": true,
+    "zlagboard-evo": true
+  },
+  "queueWrapperUnchanged": true,
+  "lockWrapperChangesOnlyDigestAndHistory": true,
+  "historicalProofs": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/app-review/contact-selection-accessibility.json",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/app-review/contact-selection.png",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/app-review/default-accessibility.json",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/app-review/default.png",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/app-review/index.html",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/app-review/index.md",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/app-review/validation.json",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/authored-design.json",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/compile.json",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/metadata-diff.json",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/metadata-preservation.json",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/native-check.json",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/package-verification.json",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/reproducibility-final.json",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/review/cad-front.png",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/review/cad-side.png",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/review/cad-top.png",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/review/comparison-front.png",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/review/comparison-side.png",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/review/comparison-top.png",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/review/previous-front.png",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/review/previous-side.png",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/review/previous-top.png",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/source-audit.md",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/sources.json",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/sources/product-01.png",
+      "unchangedOrAuditPrefixPreserved": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/sources/product-02.png",
+      "unchangedOrAuditPrefixPreserved": true
+    }
+  ],
+  "nativeSource": {
+    "sha256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+    "bytes": 1412874,
+    "realZIP": true,
+    "realLFSObject": "/Users/asherlc/src/hang-ten/.git/lfs/objects/44/02/44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+    "realLFSObjectExact": true,
+    "indexCurrentlyMatches": true,
+    "indexNote": "Parent stages final files; actual native LFS object verified independently."
+  },
+  "compilerOwnedTemporaryResourcesDeleted": true,
+  "compilerCleanupRecords": {
+    "check": {
+      "owner": "placid-badger-cad-second-half",
+      "stage": "check",
+      "exactTemporaryDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/temporary-placid-badger-cad-second-half-check",
+      "childPID": 77810,
+      "created": true,
+      "command": [
+        "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/check-freecad.py"
+      ],
+      "sourceSHA256Before": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "verifiedTemporaryDirectoryDeleted": true,
+      "childExited": true
+    },
+    "publish": {
+      "owner": "placid-badger-cad-second-half",
+      "stage": "publish",
+      "exactTemporaryDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/temporary-placid-badger-cad-second-half-publish",
+      "childPID": 91036,
+      "created": true,
+      "command": [
+        "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/publish-freecad.py"
+      ],
+      "sourceSHA256Before": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "verifiedTemporaryDirectoryDeleted": true,
+      "childExited": true
+    }
+  },
+  "limitations": "Final independent bookkeeping audit; no new export, native recompute, tests, image judgment, or app operations. Frozen native evidence was reused by exact hashes.",
+  "packet": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02",
+    "manifestSHA256": "9288d2c1131b6934ad14574dd10871da9b43e426ee1e38289c0c7e437d433bd5",
+    "fileCountExcludingManifest": 196,
+    "allEntriesExactAndComplete": true
+  },
+  "frozenNativeProofsExact": [
+    {
+      "path": "compiler-final/before-export/primary.model.json",
+      "sha256": "5e3ea9a135173ec6730b0d5e145cc098a8b2e6a54f1cf50bc9df982248711b82",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/before-export/primary.usdz",
+      "sha256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/check-freecad.py",
+      "sha256": "1a35dc25a76627c26ed78bc219f53d79d497c83b9f4a3ba6abcf5b0cf3f0b056",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/check-inner-status.json",
+      "sha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/check-progress.json",
+      "sha256": "1c7c5b66c61d2abc8ee530fdbd919582558e9de9459c7ee9881b4eae2ac07508",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/check-progress.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/check-progress.stdout.log",
+      "sha256": "bc5264ffff411d0bc35ab2dd16f0b66fe4ae6f1b0823631b0de7002fd39c6dd1",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/check-resources.json",
+      "sha256": "3af4e1575b8a825963672ccba9334d237a27d59201f6ae0093aaa192e8f28455",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/check-status.json",
+      "sha256": "560fb6818d262c33bf3a1f6adc8e8c2491b71ff4b3f03856b9130bcc6f82495d",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/check.json",
+      "sha256": "61472d2b615248120837cda071295e9858403595be2714c7b9800d0d0961782a",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/check.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/check.stdout.log",
+      "sha256": "afec0a52a45400299ad59c864e0e36f26a0ed15daf6e6ae59cfeeb776dcf7194",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/independently-reconstructed-primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/inputs.json",
+      "sha256": "f2f438b858c397ab02d1a8a038f7b21bda2873cd9ac362471524408e3806f652",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/publish-freecad.py",
+      "sha256": "88d81cb541c7191166aa9874c3d4204b6e2f3ac5bc72311b1eefdcdf7e2318e1",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/publish-inner-status.json",
+      "sha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/publish-progress.json",
+      "sha256": "88e6a45ed4b803ae0025e9f76960d8d5c28a9c05493310ac1da16897673d2049",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/publish-progress.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/publish-progress.stdout.log",
+      "sha256": "127f8f93feb36c18a481e11e4edf538a8b42b36be48fdc6a22773cb79907e82c",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/publish-resources.json",
+      "sha256": "08a9c71d01bc718453db0f1f236d55bca6dbc9f20c3fd53c730627fa382dfc6b",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/publish-status.json",
+      "sha256": "3a62281587955c661729f92f9428700713b3c3eb6b155ccaba5407f4ebfb59bb",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/publish.json",
+      "sha256": "5ab10aef489990102ebf21013ccfc6403d0fdc69ed9670ac6cef3bc89eef9e91",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/publish.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/publish.stdout.log",
+      "sha256": "31bc49c87773cc7161dcbd19eead095cc1b575d11a4dcbd7accfcb531261cd13",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/reconstruct_descriptor.py",
+      "sha256": "147aa6d0c58d78ae0d05e2daff0649bcc91c3bde888321d5247f5703bea798dd",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/run_compiler_stage.py",
+      "sha256": "4240bca8940b43a0c3c78f410e1616e8c742b180f3a4429db39a1fe2519f8307",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/run_reproduction.py",
+      "sha256": "eb6173a8398848d6698147f7922d0a392cec45b09f8ebc304d90e045e86aa90d",
+      "exact": true
+    },
+    {
+      "path": "compiler-final/two-export-reproduction.json",
+      "sha256": "835e4f841eff893fe57d50868b5cb03cab20195e8391a7fe24d4afe73d0fc18c",
+      "exact": true
+    },
+    {
+      "path": "package-checks/final/audit_and_staging.py",
+      "sha256": "c2cbdb3aafb4d57e4340f3cf8a7d28021c4ad6c44bf0ca85344fa35e2fffea49",
+      "exact": true
+    },
+    {
+      "path": "package-checks/final/audit_scope.py",
+      "sha256": "bc3d31fba11251cb223682c32b52e3a8a6569170cdc480c44eec0ddf2bb5d62a",
+      "exact": true
+    },
+    {
+      "path": "package-checks/final/published-depth-and-identity-contract.json",
+      "sha256": "00ff4606f1a77eceee55574b2622f7367c2301828f9f27ade0daa2f66f0d84c1",
+      "exact": true
+    },
+    {
+      "path": "package-checks/final/published-generated-board.json",
+      "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8",
+      "exact": true
+    },
+    {
+      "path": "package-checks/final/published-package-verification.json",
+      "sha256": "b2c21426e44d259b3066695c6a3ddee9c0ad856efa5f2551b6684e25254285ed",
+      "exact": true
+    },
+    {
+      "path": "package-checks/final/scope-native-freeze.json",
+      "sha256": "3460e6553f814170751f26484364a4b1889374022d6121a6b91560b43630f104",
+      "exact": true
+    },
+    {
+      "path": "package-checks/final/staging-cleanup.json",
+      "sha256": "819951a9836209e845155d546efd3268f704571c1f5d2191de9546760b1fc067",
+      "exact": true
+    },
+    {
+      "path": "package-checks/initial-audit-not-run.json",
+      "sha256": "0ddf52715556f914579dfd9973221344538696d34d29f4ba7677572e854e69dc",
+      "exact": true
+    },
+    {
+      "path": "package-checks/initial_audit.py",
+      "sha256": "542979eefbd18d84480bad045b443a3824d4394f968cfdb03c73f846b57c586f",
+      "exact": true
+    },
+    {
+      "path": "package-checks/original-embedded-manifest.json",
+      "sha256": "b27a278c4d879c87275286e09219e85b839ab9c2664d2acbd2fa903a15212b31",
+      "exact": true
+    },
+    {
+      "path": "package-checks/promoted-embedded-manifest.json",
+      "sha256": "5e24426c2a1bde786d37a0936c36a8d691ea77762032501324294de874c20ff6",
+      "exact": true
+    },
+    {
+      "path": "package-checks/promoted-source-contract.json",
+      "sha256": "75965e78cbc3d1e2050c7df3bc43af4e959b8bced5fd3afa42a577dbbe03d872",
+      "exact": true
+    }
+  ],
+  "frozenScratchInventoryCount": 42,
+  "documentedGeneratedBytecodeExclusions": [
+    "compiler-final/__pycache__/check-freecad.cpython-311.pyc",
+    "compiler-final/__pycache__/publish-freecad.cpython-311.pyc"
+  ],
+  "environmentChecksExact": [
+    {
+      "path": "environment-checks-26-5/boot-26-5.py",
+      "sha256": "09ffa7e7a175bf8dd6718af75662c091b94702c384f95f71a81534b79e5f5667"
+    },
+    {
+      "path": "environment-checks-26-5/build-26-5-parity.py",
+      "sha256": "c9fbc4ddd5820e880ca7d1fc655cf13230fbcca56a9e2bd95e53daa9d04b706a"
+    },
+    {
+      "path": "environment-checks-26-5/lifecycle-26-5.zsh",
+      "sha256": "f81bf54a1f20c9f27ad44c8b0cf0b201ac199491a4f5e48e8a574fb8fdefa24e"
+    },
+    {
+      "path": "environment-checks-26-5/lifecycle-static-review.json",
+      "sha256": "f6208301e00fd8f59780efa3242af9364d08a6dbbbe238e9384387d9df156d40"
+    },
+    {
+      "path": "environment-checks-26-5/zsh-syntax.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "environment-checks-26-5/zsh-syntax.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "finalCanonicalHashesExact": {
+    "Hangboards/zlagboard-pro/zlagboard-pro.FCStd": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+    "Hangboards/zlagboard-pro/assets/primary.usdz": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+    "Hangboards/zlagboard-pro/assets/primary.model.json": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f"
+  },
+  "runtimeStatusPreserved": {
+    "status": "native/export/build checks passed; fresh app review blocked by Simulator startup",
+    "humanAccepted": false,
+    "readyForHumanGeometryReview": false,
+    "appWorkflowPassed": false,
+    "freshAppContactCoverage": {
+      "reviewed": 0,
+      "total": 28
+    }
+  },
+  "liveOwnedResourceCleanup": [
+    {
+      "ownership": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/ios-2026-10-02/ownership.json",
+      "ownershipSHA256": "bbeec133ba355229990dda55fefd8ec4e9f6ca515d1b17a32aca8307b92d8b70",
+      "cleanupReport": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/ios-2026-10-02/cleanup-verification.json",
+      "cleanupReportSHA256": "67c27bc82af550702c8072dc34e88e2977091498ff95dbaeb04e62d66bf96458",
+      "uuid": "9B0B559E-0E57-4C3F-9685-E5892BC41E30",
+      "exactOwnedUUIDAbsent": true,
+      "resources": {
+        "derivedData": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/ios-2026-10-02/DerivedData-placid-badger-cad-second-half",
+          "absent": true
+        },
+        "resultBundle": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/ios-2026-10-02/build-placid-badger-cad-second-half.xcresult",
+          "absent": true
+        },
+        "testResultBundle": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/ios-2026-10-02/tests-placid-badger-cad-second-half.xcresult",
+          "absent": true
+        }
+      },
+      "cleanupReportFlagsPassed": true
+    },
+    {
+      "ownership": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/build-only-2026-10-02/ownership.json",
+      "ownershipSHA256": "0f1bc6738cf04f3a7349d3b3df912c5af26737fb37ccb615276a57138dec7494",
+      "cleanupReport": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/build-only-2026-10-02/cleanup-verification.json",
+      "cleanupReportSHA256": "d98ebf11ac21ea4539b7d18ba5a4ff84f9db7ca9e365dfc95a7de92a713182ef",
+      "uuid": null,
+      "exactOwnedUUIDAbsent": "not created",
+      "resources": {
+        "derivedData": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/build-only-2026-10-02/DerivedData-placid-badger-cad-second-half",
+          "absent": true
+        },
+        "resultBundle": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/build-only-2026-10-02/build-placid-badger-cad-second-half.xcresult",
+          "absent": true
+        }
+      },
+      "cleanupReportFlagsPassed": true
+    },
+    {
+      "ownership": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/ios-26-5-2026-10-02/ownership.json",
+      "ownershipSHA256": "ce7fc5924df4de1b6b0d15520cdb4914add627c3ddbe7af37f62427fa65a035f",
+      "cleanupReport": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/ios-26-5-2026-10-02/cleanup-verification.json",
+      "cleanupReportSHA256": "fae50bcdf7e595be6aa6e293145f76f1bfdc6276d2967189d40dbd8d8c75d257",
+      "uuid": "F96B758F-638C-4C74-8732-08ACB950A84F",
+      "exactOwnedUUIDAbsent": true,
+      "resources": {
+        "derivedData": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/ios-26-5-2026-10-02/DerivedData-placid-badger-cad-second-half",
+          "absent": true
+        },
+        "resultBundle": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/ios-26-5-2026-10-02/build-placid-badger-cad-second-half.xcresult",
+          "absent": true
+        },
+        "testResultBundle": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/ios-26-5-2026-10-02/tests-placid-badger-cad-second-half.xcresult",
+          "absent": true
+        }
+      },
+      "cleanupReportFlagsPassed": true
+    }
+  ],
+  "trackedDiffPaths": [
+    "Hangboards/zlagboard-pro/assets/primary.model.json",
+    "Hangboards/zlagboard-pro/assets/primary.usdz",
+    "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
+    "docs/model-delivery-lock.json",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+    "docs/source-audits/2026-09-29-remaining-cad/second-half-ownership.md",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/build-only/build-exit-status.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/build-only/build-results-summary-stderr.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/build-only/build-results-summary.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/build-only/build.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/build-only/built-mach-o-sha256.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/build-only/cleanup-verification.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/build-only/generated-board-at-build.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/build-only/ownership.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/build-only/retained-sha256.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/build-only/source-package-sha256-before-build.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/build-only/staged-package-parity.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/comparison-front-side-top.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/comparison-front.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/comparison-side.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/comparison-top.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/final-export-shape-judgment.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/native-front.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/native-side.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/native-top.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/original-front.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/original-lfs-pointer.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/original-provenance.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/original-side.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/original-top.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/prior-front.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/prior-side.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/prior-top.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/render-provenance.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/render.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/comparison/root-export-review.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/before-export/primary.model.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/before-export/primary.usdz",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/check-freecad.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/check-inner-status.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/check-progress.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/check-progress.stderr.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/check-progress.stdout.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/check-resources.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/check-status.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/check.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/check.stderr.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/check.stdout.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/independently-reconstructed-primary.model.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/inputs.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/publish-freecad.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/publish-inner-status.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/publish-progress.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/publish-progress.stderr.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/publish-progress.stdout.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/publish-resources.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/publish-status.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/publish.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/publish.stderr.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/publish.stdout.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/reconstruct_descriptor.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/run_compiler_stage.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/run_reproduction.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/compiler-final/two-export-reproduction.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/delivery-checksums.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/delivery-validation.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/environment-checks-26-5/boot-26-5.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/environment-checks-26-5/build-26-5-parity.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/environment-checks-26-5/lifecycle-26-5.zsh",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/environment-checks-26-5/lifecycle-static-review.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/environment-checks-26-5/zsh-syntax.stderr.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/environment-checks-26-5/zsh-syntax.stdout.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/export-proof-copy.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/boot-after-reboot.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/boot-first.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/boot-recovery-commands.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/cleanup-verification.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/cleanup.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/final-runtime-validation.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/final-timeout-screen.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/final-timeout-screen.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/first-timeout-screen.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/first-timeout-screen.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/frontend-open.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/launch-services.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/owned-reboot-boot.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/owned-reboot-shutdown.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/ownership.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/reboot-status4-screen.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/retained-sha256.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/simulator-uuid",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/startup-diagnostics/commands.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/startup-diagnostics/springboard-launchctl-stderr.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/startup-diagnostics/springboard-launchctl-stdout.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/startup-diagnostics/startup-errors-stderr.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/startup-diagnostics/startup-errors-stdout.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/status4-accessibility-command.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/status4-accessibility-stderr.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios-first-26-4/status4-accessibility.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/boot-after-reboot.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/boot-first.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/boot-helper-pid",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/boot-helper.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/boot-recovery-commands.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/build-exit-status.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/build-results-summary-stderr.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/build-results-summary.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/build.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/built-mach-o-sha256.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/cleanup-verification.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/cleanup.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/final-package-gate.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/final-runtime-validation.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/final-timeout-screen.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/first-timeout-screen.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/first-timeout-screen.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/generated-board-at-build.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/boot-26-5.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/build-26-5-parity.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/capture-26-5.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/code-parity-26-5.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/elevated-jugs-26-5.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/lifecycle-26-5.zsh",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/lower-obliques-26-5.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/montages-26-5.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/package-parity-26-5.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/physical-26-5.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/preparation.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/source-inventory.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/harness/workout-26-5.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/installed-without-runtime-ready/command.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/installed-without-runtime-ready/container-stderr.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/installed-without-runtime-ready/container-stdout.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/owned-reboot-boot.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/owned-reboot-shutdown.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/ownership.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/retained-sha256.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/simulator-uuid",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/source-package-sha256-before-build.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/staged-package-parity.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/accessibility-stderr.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/accessibility-stdout.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/commands.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/frontend-stderr.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/frontend-stdout.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/install-stderr.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/install-stdout.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/launch-services-stderr.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/launch-services-stdout.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/launch-stderr.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/launch-stdout.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/screenshot-stderr.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/screenshot-stdout.txt",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/ios/status4-direct-app-attempt/view.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native-proof-copy-inventory.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native-proof-copy.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/README.md",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/astra-shape-review.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/bearing-invariants.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/before-after-front-side-top.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/candidate-authoring.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/candidate-mesh.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/candidate-verification.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/native-collider.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/native-front.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/native-oblique.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/native-rear-oblique.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/native-rear.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/native-side.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/native-six-whole-views.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/native-top.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/render-native.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/render-rounded.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/resource-cleanup.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/rounded-front.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/rounded-oblique.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/rounded-rear-oblique.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/rounded-rear.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/rounded-side.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/rounded-six-whole-views.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/rounded-top.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/scratch-completion.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/native/verify-candidate.log",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/package-checks/final/audit_and_staging.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/package-checks/final/audit_scope.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/package-checks/final/published-depth-and-identity-contract.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/package-checks/final/published-generated-board.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/package-checks/final/published-package-verification.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/package-checks/final/scope-native-freeze.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/package-checks/final/staging-cleanup.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/package-checks/initial-audit-not-run.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/package-checks/initial_audit.py",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/package-checks/original-embedded-manifest.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/package-checks/promoted-embedded-manifest.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/package-checks/promoted-source-contract.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/promotion/manifest-after.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/promotion/manifest-before.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/promotion/metadata-geometry-bridge.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/promotion/root-shape-review.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/proof-sha256.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/review.md",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/startup-diagnosis-summary.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/validation.json",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/source-audit.md"
+  ],
+  "trackedDiffOnlyAuthorizedScope": true,
+  "allNativeFactsReusedFromHashBoundProofs": true,
+  "runtimeStatus": "Read canonical validation.json and original runtime proofs; package/scope/cleanup audit does not assert workflow success or human acceptance."
+}

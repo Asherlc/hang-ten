@@ -1,0 +1,11 @@
+{
+  "exactHelperPID": 31905,
+  "verifiedCommand": "31905 /opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python .context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/run-tests.py --name full-unit-ci-recipe\n",
+  "stoppedEpoch": 1791070208.2266629,
+  "testCasesAlreadyCompleted": true,
+  "completedCases": 1509,
+  "skips": 3,
+  "failures": 2,
+  "reason": "All XCTest cases completed; xcodebuild remained in post-test collection for more than four minutes. Signal only the registered workspace-owned helper; its trap reaps exact command group and preserves the raw result.",
+  "noPassingClaim": true
+}

@@ -1,0 +1,15 @@
+{
+  "runtimeValid": true,
+  "allWholeImagesReviewed": true,
+  "wholeImageCount": 45,
+  "visualResult": "FAIL",
+  "summary": "All40 visible selected frames have phase-correct colors; elapsed197 Rest board absent. Body appearance regresses in all workout frames. No production adoption or reversal.",
+  "reviews": {
+    "on-demand-first-independent.json": "bfdd9238b37f7dae743358c3ef0ffe8e38eee09de6618c60b00bacb08096a666",
+    "on-demand-tail-independent.json": "88745f5173e2652cc4c61660d3b795b14298c5dcdba8ab141337bd62369b8ffc",
+    "on-demand-root-tail.json": "00e13dd3b32ca8340922603d2d19bf5b224ca2afed90e1dbeb68ec6769f2c420"
+  },
+  "offlineSHA": "a841e67e632fe29990583db12fec456828436ad5a52e2f5100c28a6af82ea88b",
+  "CPUBracketsAvailable": false,
+  "actualAppPhaseBoundariesMeasured": false
+}

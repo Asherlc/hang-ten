@@ -1,0 +1,26 @@
+--- retained-original
++++ validator
+@@ -7,18 +7,18 @@
+ def read(name):return json.loads((r/name).read_text())
+ try:
+  release=read('runtime-release.json');schedule=read('schedule.json');captures=read('captures.json');commands=read('commands.json');completion=read('completion.json');cleanup=read('cleanup.json');clock=read('host-clock-stability.json');anchor=read('external-anchor.json')['routeCompleted']
+- expected=[*range(1,19),90,*range(183,208)]
++ expected=[*range(1,19),90,*range(190,215)]
+  check('fixed44Schedule',schedule['offsetSeconds']==expected and len(captures)==44 and [c['scheduledOffset'] for c in captures]==expected)
+- check('releaseAuthorization',release['runtimeAuthorized'] is True and release['exclusiveRuntimeOwnership'] is True)
++ check('releaseAuthorization',release['runtimeAuthorized'] is True and release['exclusiveRuntimeOwnership'] is True and release['arm']=='baseline')
+  check('scheduleReleaseHash',sha(r/'schedule.json')==release['scheduleSHA256'])
+- parityPath=Path(release['parityPath']);parity=json.loads(parityPath.read_text());check('bound27PathParity',sha(parityPath)==release['paritySHA256'] and parity['allEqual'] and len(parity['checks'])==27 and all(x['equal'] for x in parity['checks']))
++ parityPath=Path(release['parityPath']);parity=json.loads(parityPath.read_text());check('boundReleasedPathParity',sha(parityPath)==release['paritySHA256'] and parity['allEqual'] and len(parity['checks'])==release['parityCheckCount'] and release['parityCheckCount']>0 and all(x['equal'] for x in parity['checks']))
+  check('rawCompletion',completion['captureCompleted'] is True and completion['actualCaptures']==44 and not completion['errors'] and completion['CPUBracketsAvailable'] is False and completion['phaseTimingsKnown'] is False)
+  check('exactCleanup',cleanup['passed'] is True and cleanup['appPIDAbsent'] is True and cleanup['awakeChildReaped'] is True and cleanup['awakePIDAbsent'] is True)
+  check('appBinary',read('installed-binary-gate.json')['sha256']==release['binarySHA256'])
+  env=read('launch-review-environment.json');expectedEnv={'HANGTEN_REVIEW_BOARD_ID':release['boardID'],'HANGTEN_REVIEW_PLAN_ID':'research.max-hangs','HANGTEN_REVIEW_LANDSCAPE':'1'}
+- if release['arm']=='action':expectedEnv['HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT']='1'
+- check('onlyTrainArmReviewFlags',env==expectedEnv)
++ check('onlyDefaultLiveReviewFlags',env==expectedEnv)
+  check('boundSourceReference',sha(r/'source-reference.json')==release['sourceReferenceSHA256'])
++ check('routineReference',sha(r/'routine-reference.json')==release['routineReferenceSHA256'] and read('routine-reference.json')['planLibrarySHA256']==release['planLibrarySHA256'])
+  check('volatileMuteArguments',read('launch-app-arguments.json')==['-workoutAudioCuesEnabled','NO'])
+  windows=[]
+  for c in captures:

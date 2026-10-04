@@ -1,0 +1,27 @@
+{
+  "bodyFeature": "Port_RightVisibleMouth",
+  "bodyVolume": 300696.1765830479,
+  "contacts": 8,
+  "visiblePorts": {
+    "nativeCenters": [
+      [
+        -50.75,
+        0,
+        -2.4
+      ],
+      [
+        50.75,
+        0,
+        -2.4
+      ]
+    ],
+    "radiusMM": 2,
+    "innerCutoffAbsXmm": 47,
+    "innerCutoffMeaning": "display representation boundary, not a factual stop or hidden connection"
+  },
+  "adjustmentGroovesNativeZmm": [
+    24,
+    -2.4,
+    -22.8
+  ]
+}

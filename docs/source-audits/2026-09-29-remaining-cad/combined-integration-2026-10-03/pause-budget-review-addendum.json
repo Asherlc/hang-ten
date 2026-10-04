@@ -1,0 +1,50 @@
+{
+  "workspaceOwner": "placid-badger-cad-second-half",
+  "scope": "Read-only addendum correcting prior conditional600second budget recommendation; original assessments preserved",
+  "supersedesRecommendationIn": "pause-budget-review.json",
+  "previousAssessmentPreserved": true,
+  "newEvidence": {
+    "path": ".github/workflows/ci.yml",
+    "sha256": "a10d59f89e069b629136268b81dd7f06c034a119f4c89366f1e0797f1af4c18c",
+    "lines": [
+      548,
+      549,
+      552,
+      555
+    ],
+    "actualRecipe": {
+      "configuration": "Debug",
+      "SWIFT_OPTIMIZATION_LEVEL": "-O",
+      "OTHER_SWIFT_FLAGS": "$(inherited) -assert-config Debug",
+      "DEBUG": "retained",
+      "testability": "retained",
+      "SwiftAssertions": "retained",
+      "unitRunBoundSeconds": 1800
+    }
+  },
+  "finding": "Repository CI already explicitly optimizes numerical physics while preservingDEBUG/testability/Swift assertions, documenting that unoptimized settling exhausts the run budget. Local failure validation used-Onone and therefore mismatched the established numerical test recipe.",
+  "correction": {
+    "shippingTimeoutChangeSupported": false,
+    "productionAlgorithmOrLifecycleRepairSupported": false,
+    "restore": "All temporary production diagnostics and both test waits back to original30seconds exactly",
+    "validation": "Fresh owned build/test following existingDebug+-O+-assert-config Debug recipe, nativefixtures and allphysical/pause/publication/camera assertions unchanged",
+    "previous600Proposal": "Conditional on default-Onone being the intended numerical validation recipe. Newly inspected CI source invalidates that premise;600is unnecessary as a shipping test correction."
+  },
+  "observedComparisonRetained": {
+    "optimizedNativeTestsPassed": 2,
+    "optimizedNativeTotalSeconds": 9.561,
+    "acceptedSimulationTime": 0.5124999999999994,
+    "workerAccepted": true,
+    "first8NumericalRecordsMatchOnone": true,
+    "limitation": "Earlier optimized comparison alone did not prove Swift -assert-config Debug was retained. Fresh exact-CI-recipe regression required for final validation."
+  },
+  "rootReportedHostedReference": {
+    "commit": "7e1478",
+    "unitStatus": "green",
+    "sceneTestSeconds": 6.426,
+    "controllerTestSeconds": 4.636,
+    "verification": "Reported by root; this read-only addendum independently verified workflow recipe, not remote hosted result."
+  },
+  "finalScope": "Environment/validation-recipe mismatch. Preserve the original failure logs and successful comparisons without describing them as a physical bug or shipping timeout fix.",
+  "sourceOrResourceActions": false
+}

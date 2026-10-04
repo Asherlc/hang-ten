@@ -1,0 +1,9 @@
+{
+  "status": "FAIL_BEFORE_RUNTIME_CREATION",
+  "exitStatus": 1,
+  "failedAssertion": "for x in parity['checks']:assert sha(x['path'])==x['sha256']",
+  "line": 24,
+  "helperSHA256": "1bcb467487d376552fbf47b34b54dceac6e4f815d02f7f64351c26e6f16596a5",
+  "scope": "No output directory/app/awake child created: preflight precedes ownership runtime. Regression test action replaced build products and installed app container; historical clean Evo/Pro end gates passed before tests, not invalidated.",
+  "nextAction": "Build/reinstall same frozen source and create NEW release/provenance before optional short smoke."
+}

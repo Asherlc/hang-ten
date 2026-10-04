@@ -1,0 +1,39 @@
+{
+  "owner": "placid-badger",
+  "UTC": "2026-10-03T03:35:35.809071+00:00",
+  "sources": [
+    {
+      "url": "https://natureclimbing.com/cdn/shop/files/MiniHanger-86.jpg",
+      "finalURL": "https://natureclimbing.com/cdn/shop/files/MiniHanger-86.jpg",
+      "path": ".context/placid-badger/mini-review10-correction/root/research/MiniHanger-86.jpg",
+      "contentType": "image/jpeg",
+      "bytes": 540727,
+      "sha256": "f544f0d4df04241ec344c8978031d1ff14e609ae5d75c51d58f898fc282e7aca",
+      "primaryManufacturer": true,
+      "humanAdditionalResearchAuthorized": true,
+      "visualReviewPending": true
+    },
+    {
+      "url": "https://natureclimbing.com/cdn/shop/files/Oakminihanger8.jpg",
+      "finalURL": "https://natureclimbing.com/cdn/shop/files/Oakminihanger8.jpg",
+      "path": ".context/placid-badger/mini-review10-correction/root/research/Oakminihanger8.jpg",
+      "contentType": "image/jpeg",
+      "bytes": 738613,
+      "sha256": "2fee24e982b9f74a4aa15059629dfbaa192416edf23c56526ba188b8fa7ab5d6",
+      "primaryManufacturer": true,
+      "humanAdditionalResearchAuthorized": true,
+      "visualReviewPending": true
+    },
+    {
+      "url": "https://natureclimbing.com/cdn/shop/files/Oakminihanger6.jpg",
+      "finalURL": "https://natureclimbing.com/cdn/shop/files/Oakminihanger6.jpg",
+      "path": ".context/placid-badger/mini-review10-correction/root/research/Oakminihanger6.jpg",
+      "contentType": "image/jpeg",
+      "bytes": 616223,
+      "sha256": "930c3434ff332e13a3e93ed2214b1377869c4cb227277efe17998476f7eb52ec",
+      "primaryManufacturer": true,
+      "humanAdditionalResearchAuthorized": true,
+      "visualReviewPending": true
+    }
+  ]
+}

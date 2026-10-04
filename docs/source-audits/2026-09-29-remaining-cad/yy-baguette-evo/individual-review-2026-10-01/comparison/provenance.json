@@ -1,0 +1,13 @@
+{
+  "referenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "referenceAssetSHA256": "6fb799f1b3c793bc687b43443948f7ca8793a6c2e86bc02e39a7e2511c218226",
+  "nativeAssetSHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+  "tool": "Tools/HangboardCAD/preview.py native triangle rasterization",
+  "views": [
+    "front",
+    "side",
+    "top"
+  ],
+  "composition": "Whole rendered frames, no source-image geometry inference or cropping",
+  "status": "render.log failed missing output directory; render-2.log successful after directory creation"
+}

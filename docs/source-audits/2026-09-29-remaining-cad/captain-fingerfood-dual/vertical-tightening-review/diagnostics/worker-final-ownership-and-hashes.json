@@ -1,0 +1,27 @@
+{
+  "status": "complete-owned-processes-exited",
+  "ownedPIDsVerifiedAbsent": [
+    73158,
+    73159,
+    60902,
+    60903,
+    61161,
+    61162
+  ],
+  "externalServersOrSimulatorsStartedByThisWorker": [],
+  "packageFileCount": 206,
+  "packageFilesChangedSinceOptInSnapshot": [
+    "Hangboards/captain-fingerfood-dual/suspension.json"
+  ],
+  "frozenSHA256": {
+    "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+    "Tools/HangboardCAD/tests/test_native_cord_tightening.py": "362679227649f45dbfab39a7eda39a7c648de4e928d3904e93750e51f2ab60e7",
+    "Hangboards/captain-fingerfood-dual/captain-fingerfood-dual.FCStd": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+    "Hangboards/captain-fingerfood-dual/assets/primary.usdz": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+    "Hangboards/captain-fingerfood-dual/assets/primary.model.json": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+    "Hangboards/captain-fingerfood-dual/suspension.json": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf"
+  },
+  "dualFreshApplyCheckByteIdentical": true,
+  "dualReportSHA256": "f345c21d91abebf80c2eb3548d67bb7563daa00fb2f5d7d5405441a2ab8af682",
+  "optionalBaguetteStatus": "terminated with explicit partial report; no all-five claim"
+}

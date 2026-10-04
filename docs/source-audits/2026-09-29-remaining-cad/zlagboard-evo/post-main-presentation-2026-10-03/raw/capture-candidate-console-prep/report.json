@@ -1,0 +1,17 @@
+{
+  "preparedOnly": true,
+  "runtimeAuthorized": false,
+  "syntax": "AST parse PASS; no launch executed",
+  "parentHelperSHA256": "e0a636c56eabc7aea3a695cb330bf9545bf404ab2f24de36c72505530701ec87",
+  "onlyExecutableDelta": "Two absolute output-path arguments added to existing simctl launch command.",
+  "scheduleAndRoutineBytePreserved": true,
+  "files": {
+    "capture.diff": "c69a3b858835bdf73512a516c0b943969c2d875acd80cd507f0dbd82dacd87bd",
+    "capture.previous.py": "e0a636c56eabc7aea3a695cb330bf9545bf404ab2f24de36c72505530701ec87",
+    "capture.py": "db2b679301a8ead9a129647a50f366ecdded054b9c84d90b692b84fa264645f7",
+    "protocol-supplement.md": "c473e2881b71747da1a6c39c7e091c44fa7df3a52194de9aa0289cbccb3fa202",
+    "release-template.NOT-AUTHORIZED.json": "1a4e5ecca6bb71d28b4a469f91fad8a839c4815432185d6f6283972c023021e9",
+    "routine-reference.json": "ed3655bf12b217326324bb5f461cdaee0db28f018e0e593a995c49f5b084e601",
+    "schedule.json": "26b19c6c9273432d96bf9a34be0f5796e6d8af197b8ca017766ea8123d0f45b2"
+  }
+}

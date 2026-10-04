@@ -1,0 +1,28 @@
+{
+  "verification": "Fresh pinned FreeCAD process compiled each presentation from current native source; runtime output compared against checked-in package assets.",
+  "sourceSHA256Before": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+  "sourceSHA256After": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+  "sourceUnchanged": true,
+  "command": "Tools/HangboardCAD/verify_reproducible.py --package nature-stone-hanger-mini --freecad /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd --extra-python-path .context/placid-badger/pxr311 --keep-rebuild .context/placid-badger/cad-raster-boards/reproducibility",
+  "verifierSHA256": "5dba947d12ad284d286e7c87682d7d09010ae41c4b66e8f96755574b6033690a",
+  "result": {
+    "assetMatches": true,
+    "bytes": 661424,
+    "committedAssetSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+    "descriptorBindsCommittedAsset": true,
+    "descriptorMatches": true,
+    "package": "nature-stone-hanger-mini",
+    "presentations": [
+      {
+        "assetMatches": true,
+        "bytes": 661424,
+        "committedAssetSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+        "descriptorBindsCommittedAsset": true,
+        "descriptorMatches": true,
+        "presentationID": "primary",
+        "rebuiltAssetSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30"
+      }
+    ],
+    "rebuiltAssetSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "runtimeAuthorized": true,
+  "exclusiveRuntimeOwnership": true,
+  "owner": "placid-badger-cad-second-half",
+  "simulatorUUID": "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A",
+  "controllerPID": 63244,
+  "ownershipPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/ios/ownership.json",
+  "ownershipSHA256": "4f9bfe67574aa486b3f9695858e516932876900bad81b59030657761b2d648b5",
+  "boardID": "zlagboard.evo",
+  "planID": "research.max-hangs",
+  "arm": "control-a",
+  "runID": "placid-badger-cad-second-half-board-frame-control-a",
+  "appArguments": [
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "allowedChangedPaths": [
+    "HangTen/Views/BoardModelView.swift",
+    "HangTen/Views/BoardMapView.swift",
+    "HangTen/Views/RootView.swift",
+    "HangTenTests/BoardModelRealityTests.swift"
+  ],
+  "helperSHA256": "d7313afabf58a21383e3cb591664271bdd0b3113ff1a6c9fc074749b83f62603",
+  "scheduleSHA256": "a1ddc84211b458b6a0e188bb110e83f64350290119de6b586050e8accf510701",
+  "sourceReferencePath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/candidate-lit/source-reference.json",
+  "sourceReferenceSHA256": "672ec890e68056cb767c644074f75f70d605cece091c8bc4c551068cb500e188",
+  "parityPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/parity-lit.json",
+  "paritySHA256": "027f0d6cf00b2f0397dd2fc702d81d235735118a6ed1bebfe36cd22fa23716f9",
+  "binarySHA256": "a942935be9ee125e31bdf6809519e1516246f20dda7b845b91fd26cd308ee0c3",
+  "outputDirectory": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/control-lit",
+  "priorReviewPath": null,
+  "priorReviewSHA256": null
+}

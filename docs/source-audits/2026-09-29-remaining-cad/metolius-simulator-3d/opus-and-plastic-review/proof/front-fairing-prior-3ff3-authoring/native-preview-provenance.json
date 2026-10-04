@@ -1,0 +1,53 @@
+{
+  "original-9449": {
+    "triangleCount": 34634,
+    "nodeCount": 31
+  },
+  "intermediate-21ca3": {
+    "triangleCount": 252466,
+    "nodeCount": 31
+  },
+  "native-correction": {
+    "triangleCount": 83216,
+    "nodeCount": 1
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top",
+    "oblique",
+    "raking"
+  ],
+  "renderer": "Shared preview.py Lambert triangle-face rendering at matching view and size; oblique applies fixed orthographic rotation.",
+  "sourcePath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/metolius-simulator-3d.FCStd",
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "nativeBodyMeshSHA256": "7b302b692526a61fe0a6a88711a2d0f05fe1f55daecb4c32e551c0bc8e671c2b",
+  "afterGeometry": "Actual final BodySolid from immutable contact-complete source; 0.28 mm native tessellation. CPU triangle-face shading is diagnostic only.",
+  "images": {
+    "review/comparison-front.png": "05ee8c78b8d380b195925923f4bf46cf27f154fb71815331f7ab594b30ce03ac",
+    "review/comparison-oblique.png": "24b7e1acee0214e1a89752a1e375e64330683f397f770d1725db1b52ba2802a7",
+    "review/comparison-raking.png": "85264fc66d514965254189202adaea761e8a055e6985b257889b90d380147950",
+    "review/comparison-side.png": "5868d4c35bf507534b54f304e9afa069b7bd646608638cd484f0a50f2ef7a773",
+    "review/comparison-top.png": "215369ca7eb3a06c8c970b349d4954b5238128fcfc874c1de7f67039bf116946",
+    "review/intermediate-21ca3-front.png": "961e63e968a74c723fb9131d86619d6377816b20c2c4e5eb183de2c57b31fd4e",
+    "review/intermediate-21ca3-oblique.png": "277921f0bb11032f916f4e83f9411891ec741be71206f0a9974f8dbe9706e8d8",
+    "review/intermediate-21ca3-raking.png": "64434fc19db3df0df14ea7d3b732c632783f306e6f9661532f8695a1d5ae968b",
+    "review/intermediate-21ca3-side.png": "28a8fb60a2350867ea0969ec309285ed766e8cff331cbb23aba33e159e35252f",
+    "review/intermediate-21ca3-top.png": "84dfc238e18b07497a123421b318b8846dbc37da53fe82af107460ae08efe59d",
+    "review/native-correction-front.png": "8504759f4271095e2e348b23b80e72328ddfdb79fb4ebae38061fe8b5b3a6332",
+    "review/native-correction-oblique.png": "2947238c08bf484406af6149f52e04311d6692aca7f28014125b422a788300f6",
+    "review/native-correction-raking.png": "c8d684dd47d82b23bdf4f06fb9a6deeb08d0d52e334d0d825c234b08a74b1eb4",
+    "review/native-correction-side.png": "c4c17164aaee737a145e26261efb3593ce8ca4d15f3be4cbf77c6a83dd498da7",
+    "review/native-correction-top.png": "548afc224fc012b1aa99ef0b271b518b7346dfbd1500addbf09eb5403db0bb3f",
+    "review/original-9449-front.png": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+    "review/original-9449-oblique.png": "0195e673d789e0fd38e1b58f86e3ef7e8cbb5e908125187d47e293e3d739aeaf",
+    "review/original-9449-raking.png": "efe3cf3b36bdf265a10b5747938de73719c2ab27212e7e7d0ceafa363402f7ae",
+    "review/original-9449-side.png": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+    "review/original-9449-top.png": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860"
+  },
+  "inputIdentities": {
+    "original-9449": "Original committed source9449/modela1d2",
+    "intermediate-21ca3": "Rejected intermediate source21ca3/modelc3b3; not8fa",
+    "native-correction": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d"
+  }
+}

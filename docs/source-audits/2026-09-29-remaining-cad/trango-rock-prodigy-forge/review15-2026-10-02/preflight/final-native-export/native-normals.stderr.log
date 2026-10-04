@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-tmp/placid-badger-native-normals-bootstrap.py", line 7, in <module>
+    exec(compile(open(path).read(),path,'exec'),{'__name__':'__main__','__file__':path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/check-forge-normals.py", line 67, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/check-forge-normals.py", line 56, in main
+    assert not failures
+           ^^^^^^^^^^^^
+AssertionError

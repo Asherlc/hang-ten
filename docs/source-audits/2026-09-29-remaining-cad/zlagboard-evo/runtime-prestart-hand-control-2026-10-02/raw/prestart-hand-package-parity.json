@@ -1,0 +1,113 @@
+{
+  "packages": [
+    {
+      "slug": "zlagboard-evo",
+      "stage": "built",
+      "name": "board.json",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-evo/board.json",
+      "sha256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f",
+      "expectedSHA256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f",
+      "equal": true
+    },
+    {
+      "slug": "zlagboard-evo",
+      "stage": "built",
+      "name": "primary.model.json",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-evo/assets/primary.model.json",
+      "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+      "expectedSHA256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+      "equal": true
+    },
+    {
+      "slug": "zlagboard-evo",
+      "stage": "built",
+      "name": "primary.usdz",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-evo-0b78784dcf96651ad8ed90e6bf624ac9.assetpack/Hangboards/zlagboard-evo/assets/primary.usdz",
+      "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "expectedSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "equal": true
+    },
+    {
+      "slug": "zlagboard-evo",
+      "stage": "installed",
+      "name": "board.json",
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC0ED180-2A70-4B28-B2A6-DDE80316946B/HangTen.app/Hangboards/zlagboard-evo/board.json",
+      "sha256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f",
+      "expectedSHA256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f",
+      "equal": true
+    },
+    {
+      "slug": "zlagboard-evo",
+      "stage": "installed",
+      "name": "primary.model.json",
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC0ED180-2A70-4B28-B2A6-DDE80316946B/HangTen.app/Hangboards/zlagboard-evo/assets/primary.model.json",
+      "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+      "expectedSHA256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+      "equal": true
+    },
+    {
+      "slug": "zlagboard-evo",
+      "stage": "installed",
+      "name": "primary.usdz",
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC0ED180-2A70-4B28-B2A6-DDE80316946B/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-evo-0b78784dcf96651ad8ed90e6bf624ac9.assetpack/Hangboards/zlagboard-evo/assets/primary.usdz",
+      "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "expectedSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "equal": true
+    },
+    {
+      "slug": "zlagboard-pro",
+      "stage": "built",
+      "name": "board.json",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-pro/board.json",
+      "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8",
+      "expectedSHA256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8",
+      "equal": true
+    },
+    {
+      "slug": "zlagboard-pro",
+      "stage": "built",
+      "name": "primary.model.json",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-pro/assets/primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "expectedSHA256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "equal": true
+    },
+    {
+      "slug": "zlagboard-pro",
+      "stage": "built",
+      "name": "primary.usdz",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-pro-b3be02ccb6cb0d1b9e573fdd1e258fa8.assetpack/Hangboards/zlagboard-pro/assets/primary.usdz",
+      "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+      "expectedSHA256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+      "equal": true
+    },
+    {
+      "slug": "zlagboard-pro",
+      "stage": "installed",
+      "name": "board.json",
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC0ED180-2A70-4B28-B2A6-DDE80316946B/HangTen.app/Hangboards/zlagboard-pro/board.json",
+      "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8",
+      "expectedSHA256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8",
+      "equal": true
+    },
+    {
+      "slug": "zlagboard-pro",
+      "stage": "installed",
+      "name": "primary.model.json",
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC0ED180-2A70-4B28-B2A6-DDE80316946B/HangTen.app/Hangboards/zlagboard-pro/assets/primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "expectedSHA256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "equal": true
+    },
+    {
+      "slug": "zlagboard-pro",
+      "stage": "installed",
+      "name": "primary.usdz",
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC0ED180-2A70-4B28-B2A6-DDE80316946B/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-pro-b3be02ccb6cb0d1b9e573fdd1e258fa8.assetpack/Hangboards/zlagboard-pro/assets/primary.usdz",
+      "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+      "expectedSHA256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+      "equal": true
+    }
+  ],
+  "expectedSource": "Prior SHA-bound train-unmount-package-parity.json; unchanged Evo/Pro source assets"
+}

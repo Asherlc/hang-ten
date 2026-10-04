@@ -1,0 +1,65 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 10,
+    "boardID": "nature.stone-hanger-mini",
+    "package": "nature-stone-hanger-mini",
+    "contactID": "pull-up-jug",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "nature.stone-hanger-mini",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "pull-up-jug",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791054285.694135
+  },
+  "image": "10-live-horizontal-orbit-2.png",
+  "imageSHA256": "bab1590fd0fcec2ada450ccf501db58a40efecef653cb43a6dc9666acb330911",
+  "accessibilitySHA256": "58de4ce95d7cbdc3a9ab2a65b624432e7340e115ec301d0f32eeba223549efcb",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=18;rootActive=true;cameraActive=true;sameScene=true;azimuth=-1.0814371;elevation=0.5436766;cameraPitch=0.657406;cameraSettled=true;selection=pull-up-jug;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "actualPhysicalOrbit": true,
+  "projectedBefore": {
+    "boardModel.contact.pull-up-jug": [
+      0.5319361277445109,
+      0.23752495009980035
+    ],
+    "boardModel.contact.pinch-60": [
+      0.5089820359281437,
+      0.3562874251497006
+    ],
+    "boardModel.contact.wood-edge-15-incut": [
+      0.5279441117764471,
+      0.3512974051896207
+    ],
+    "boardModel.contact.granite-edge-15": [
+      0.5129740518962075,
+      0.4321357285429141
+    ]
+  },
+  "projectedAfter": {
+    "boardModel.contact.pull-up-jug": [
+      0.5489021956087824,
+      0.2754491017964072
+    ],
+    "boardModel.contact.pinch-60": [
+      0.5139720558882235,
+      0.37824351297405184
+    ],
+    "boardModel.contact.wood-edge-15-incut": [
+      0.5429141716566865,
+      0.37025948103792405
+    ],
+    "boardModel.contact.granite-edge-15": [
+      0.5189620758483033,
+      0.4411177644710578
+    ]
+  }
+}

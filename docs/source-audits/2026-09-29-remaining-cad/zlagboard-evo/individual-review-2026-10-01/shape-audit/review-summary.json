@@ -1,0 +1,66 @@
+{
+  "package": "zlagboard-evo",
+  "sourceSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+  "approvedWholeSources": [
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/sources/product-01.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/sources/product-02.png"
+  ],
+  "demonstratedIssues": [
+    "Sharp native top sloper lip/trough intersections contrasted with visible manufacturer rounded transitions.",
+    "Both top-jug contacts omitted their flat crest strips and outer rounded top-corner bearing skin.",
+    "Missing wood finish metadata and straight-on camera obscured top-bearing form; corrected by root."
+  ],
+  "correction": {
+    "nativeFeatures": [
+      "TopTroughRounds: native Part::Fillet,6selectededges,2mm estimated radius",
+      "TopLipRounds: native Part::Fillet,5selectededges,1mm estimated radius"
+    ],
+    "contacts": "Preserve21 IDs. Bind each contact to explicit faces on finalTopLipRounds solid, including added jug crests and rounds. Distinct finalface membership.",
+    "materialCamera": "Nested media.display.surfaceFinish wood and camera viewDirection[0,-0.35,-1] supplied by root; USDZ remains material-free.",
+    "geometryPreserved": "Existing seven top-profile sketches/angles and fourteen pocket loft/cut features retained; all14pocket contact-face signatures/areas preserved. Actual tessellation envelope remains700\u00d7120\u00d742mm."
+  },
+  "poseJudgment": "Fixed upright wallboard. Main lower bearings are horizontal for straight pockets,12degrees for existing display-estimated sloper pockets; specified top20/32degrees retained. Center top10degrees remains documented display estimate. No inferred cords.",
+  "validation": {
+    "reopenValid": true,
+    "sketchesConstrained": 78,
+    "same21Contacts": true,
+    "distinctNativeSkinFaces": true,
+    "radiusEdit": {
+      "feature": "TopTroughRounds",
+      "beforeMM": 2,
+      "editedMM": 2.2,
+      "valid": true,
+      "beforeVolumeMM3": 2672702.717300137,
+      "editedVolumeMM3": 2672750.812319954,
+      "changedContacts": [
+        "top-jug-left",
+        "top-sloper-32-left",
+        "top-sloper-20-left",
+        "top-sloper-jug-center",
+        "top-sloper-20-right",
+        "top-sloper-32-right",
+        "top-jug-right"
+      ],
+      "restoredVolumeMM3": 2672702.717300137,
+      "maximumRestoredContactAreaErrorMM2": 9.094947017729282e-13
+    }
+  },
+  "limitations": "Overall envelope, unspecified pocket sizes/radii/centers, jug curves and new2/1mmround radii are display estimates, not manufacturing specifications. Manufacturer images reviewed whole without pixel measurements. Native shape/binding check does not substitute for final compiler and app acceptance.",
+  "proofFiles": [
+    "candidate-authoring.json",
+    "candidate-verification.json",
+    "before-after-front-side-top.png",
+    "rounded-oblique.png",
+    "camera-front-up19.png",
+    "promotion.json"
+  ],
+  "retainedFailures": [
+    "measure-first-failed.py",
+    "measure-first-failure.json",
+    "initial-heavy-probe-stopped.json",
+    "fillet-trials.json",
+    "sequential-trials.json",
+    "verify-first-failed.py",
+    "verify-first-failure.json"
+  ]
+}

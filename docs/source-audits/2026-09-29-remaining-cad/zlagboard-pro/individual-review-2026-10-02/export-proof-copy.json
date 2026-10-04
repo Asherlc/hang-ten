@@ -1,0 +1,259 @@
+{
+  "copied": [
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/before-export/primary.model.json",
+      "relativePath": "compiler-final/before-export/primary.model.json",
+      "sha256": "5e3ea9a135173ec6730b0d5e145cc098a8b2e6a54f1cf50bc9df982248711b82",
+      "bytes": 13435
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/before-export/primary.usdz",
+      "relativePath": "compiler-final/before-export/primary.usdz",
+      "sha256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+      "bytes": 912805
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/check-freecad.py",
+      "relativePath": "compiler-final/check-freecad.py",
+      "sha256": "1a35dc25a76627c26ed78bc219f53d79d497c83b9f4a3ba6abcf5b0cf3f0b056",
+      "bytes": 1056
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/check-inner-status.json",
+      "relativePath": "compiler-final/check-inner-status.json",
+      "sha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e",
+      "bytes": 16
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/check-progress.json",
+      "relativePath": "compiler-final/check-progress.json",
+      "sha256": "1c7c5b66c61d2abc8ee530fdbd919582558e9de9459c7ee9881b4eae2ac07508",
+      "bytes": 293
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/check-progress.stderr.log",
+      "relativePath": "compiler-final/check-progress.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/check-progress.stdout.log",
+      "relativePath": "compiler-final/check-progress.stdout.log",
+      "sha256": "bc5264ffff411d0bc35ab2dd16f0b66fe4ae6f1b0823631b0de7002fd39c6dd1",
+      "bytes": 93
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/check-resources.json",
+      "relativePath": "compiler-final/check-resources.json",
+      "sha256": "3af4e1575b8a825963672ccba9334d237a27d59201f6ae0093aaa192e8f28455",
+      "bytes": 733
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/check-status.json",
+      "relativePath": "compiler-final/check-status.json",
+      "sha256": "560fb6818d262c33bf3a1f6adc8e8c2491b71ff4b3f03856b9130bcc6f82495d",
+      "bytes": 387
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/check.json",
+      "relativePath": "compiler-final/check.json",
+      "sha256": "61472d2b615248120837cda071295e9858403595be2714c7b9800d0d0961782a",
+      "bytes": 3442
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/check.stderr.log",
+      "relativePath": "compiler-final/check.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/check.stdout.log",
+      "relativePath": "compiler-final/check.stdout.log",
+      "sha256": "afec0a52a45400299ad59c864e0e36f26a0ed15daf6e6ae59cfeeb776dcf7194",
+      "bytes": 8941
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/independently-reconstructed-primary.model.json",
+      "relativePath": "compiler-final/independently-reconstructed-primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "bytes": 13417
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/inputs.json",
+      "relativePath": "compiler-final/inputs.json",
+      "sha256": "f2f438b858c397ab02d1a8a038f7b21bda2873cd9ac362471524408e3806f652",
+      "bytes": 754
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/publish-freecad.py",
+      "relativePath": "compiler-final/publish-freecad.py",
+      "sha256": "88d81cb541c7191166aa9874c3d4204b6e2f3ac5bc72311b1eefdcdf7e2318e1",
+      "bytes": 842
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/publish-inner-status.json",
+      "relativePath": "compiler-final/publish-inner-status.json",
+      "sha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e",
+      "bytes": 16
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/publish-progress.json",
+      "relativePath": "compiler-final/publish-progress.json",
+      "sha256": "88e6a45ed4b803ae0025e9f76960d8d5c28a9c05493310ac1da16897673d2049",
+      "bytes": 293
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/publish-progress.stderr.log",
+      "relativePath": "compiler-final/publish-progress.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/publish-progress.stdout.log",
+      "relativePath": "compiler-final/publish-progress.stdout.log",
+      "sha256": "127f8f93feb36c18a481e11e4edf538a8b42b36be48fdc6a22773cb79907e82c",
+      "bytes": 93
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/publish-resources.json",
+      "relativePath": "compiler-final/publish-resources.json",
+      "sha256": "08a9c71d01bc718453db0f1f236d55bca6dbc9f20c3fd53c730627fa382dfc6b",
+      "bytes": 739
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/publish-status.json",
+      "relativePath": "compiler-final/publish-status.json",
+      "sha256": "3a62281587955c661729f92f9428700713b3c3eb6b155ccaba5407f4ebfb59bb",
+      "bytes": 390
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/publish.json",
+      "relativePath": "compiler-final/publish.json",
+      "sha256": "5ab10aef489990102ebf21013ccfc6403d0fdc69ed9670ac6cef3bc89eef9e91",
+      "bytes": 3423
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/publish.stderr.log",
+      "relativePath": "compiler-final/publish.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/publish.stdout.log",
+      "relativePath": "compiler-final/publish.stdout.log",
+      "sha256": "31bc49c87773cc7161dcbd19eead095cc1b575d11a4dcbd7accfcb531261cd13",
+      "bytes": 8928
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/reconstruct_descriptor.py",
+      "relativePath": "compiler-final/reconstruct_descriptor.py",
+      "sha256": "147aa6d0c58d78ae0d05e2daff0649bcc91c3bde888321d5247f5703bea798dd",
+      "bytes": 3612
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/run_compiler_stage.py",
+      "relativePath": "compiler-final/run_compiler_stage.py",
+      "sha256": "4240bca8940b43a0c3c78f410e1616e8c742b180f3a4429db39a1fe2519f8307",
+      "bytes": 3879
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/run_reproduction.py",
+      "relativePath": "compiler-final/run_reproduction.py",
+      "sha256": "eb6173a8398848d6698147f7922d0a392cec45b09f8ebc304d90e045e86aa90d",
+      "bytes": 1680
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/two-export-reproduction.json",
+      "relativePath": "compiler-final/two-export-reproduction.json",
+      "sha256": "835e4f841eff893fe57d50868b5cb03cab20195e8391a7fe24d4afe73d0fc18c",
+      "bytes": 6217
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/final/audit_and_staging.py",
+      "relativePath": "package-checks/final/audit_and_staging.py",
+      "sha256": "c2cbdb3aafb4d57e4340f3cf8a7d28021c4ad6c44bf0ca85344fa35e2fffea49",
+      "bytes": 4136
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/final/audit_scope.py",
+      "relativePath": "package-checks/final/audit_scope.py",
+      "sha256": "bc3d31fba11251cb223682c32b52e3a8a6569170cdc480c44eec0ddf2bb5d62a",
+      "bytes": 4476
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/final/published-depth-and-identity-contract.json",
+      "relativePath": "package-checks/final/published-depth-and-identity-contract.json",
+      "sha256": "00ff4606f1a77eceee55574b2622f7367c2301828f9f27ade0daa2f66f0d84c1",
+      "bytes": 4155
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/final/published-generated-board.json",
+      "relativePath": "package-checks/final/published-generated-board.json",
+      "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8",
+      "bytes": 8453
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/final/published-package-verification.json",
+      "relativePath": "package-checks/final/published-package-verification.json",
+      "sha256": "b2c21426e44d259b3066695c6a3ddee9c0ad856efa5f2551b6684e25254285ed",
+      "bytes": 4804
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/final/scope-native-freeze.json",
+      "relativePath": "package-checks/final/scope-native-freeze.json",
+      "sha256": "3460e6553f814170751f26484364a4b1889374022d6121a6b91560b43630f104",
+      "bytes": 111652
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/final/staging-cleanup.json",
+      "relativePath": "package-checks/final/staging-cleanup.json",
+      "sha256": "819951a9836209e845155d546efd3268f704571c1f5d2191de9546760b1fc067",
+      "bytes": 4272
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/initial-audit-not-run.json",
+      "relativePath": "package-checks/initial-audit-not-run.json",
+      "sha256": "0ddf52715556f914579dfd9973221344538696d34d29f4ba7677572e854e69dc",
+      "bytes": 242
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/initial_audit.py",
+      "relativePath": "package-checks/initial_audit.py",
+      "sha256": "542979eefbd18d84480bad045b443a3824d4394f968cfdb03c73f846b57c586f",
+      "bytes": 6793
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/original-embedded-manifest.json",
+      "relativePath": "package-checks/original-embedded-manifest.json",
+      "sha256": "b27a278c4d879c87275286e09219e85b839ab9c2664d2acbd2fa903a15212b31",
+      "bytes": 8389
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/promoted-embedded-manifest.json",
+      "relativePath": "package-checks/promoted-embedded-manifest.json",
+      "sha256": "5e24426c2a1bde786d37a0936c36a8d691ea77762032501324294de874c20ff6",
+      "bytes": 8428
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/promoted-source-contract.json",
+      "relativePath": "package-checks/promoted-source-contract.json",
+      "sha256": "75965e78cbc3d1e2050c7df3bc43af4e959b8bced5fd3afa42a577dbbe03d872",
+      "bytes": 8644
+    }
+  ],
+  "excludedGeneratedBytecode": [
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/__pycache__/check-freecad.cpython-311.pyc",
+      "relativePath": "compiler-final/__pycache__/check-freecad.cpython-311.pyc",
+      "sha256": "2d6a3f6cc1351d9052df994c8d18683481de992a4b0e915418df8e6a4ab9f2d5",
+      "bytes": 2512
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/__pycache__/publish-freecad.cpython-311.pyc",
+      "relativePath": "compiler-final/__pycache__/publish-freecad.cpython-311.pyc",
+      "sha256": "c905db4f3f7b20fb567586927d79cc68400ae9dec3fb1d44eb1e952adcd81729",
+      "bytes": 2306
+    }
+  ],
+  "exclusionReason": "Compiled Python caches are reproducible runtime artifacts, not source proof; their hashes and exact scratch files remain retained."
+}

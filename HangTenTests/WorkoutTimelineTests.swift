@@ -63,6 +63,50 @@ final class WorkoutSpeechVoiceSelectorTests: XCTestCase {
 }
 
 final class WorkoutTimelineTests: XCTestCase {
+    func testCurrentTaskSelectsEffectiveDepthPresentationAndChosenHand() throws {
+        let contacts = ["left", "right"].map {
+            PhysicalContact(id: $0, name: $0, kind: .edge,
+                depth: .range(.init(minimum: 18, maximum: 18)))
+        }
+        let geometry = Dictionary(uniqueKeysWithValues: contacts.enumerated().map { index, contact in
+            (contact.id, [BoardContactPiece(id: "\(contact.id)-piece", contactID: contact.id,
+                frame: CGRect(x: index == 0 ? 0.1 : 0.8, y: 0, width: 0.1, height: 0.1),
+                shape: .roundedRect(cornerRadiusFraction: 0), treatment: .surface)])
+        })
+        let board = BoardRevision(id: "fixture.task-positions", revisionID: "fixture", manufacturer: "Fixture",
+            name: "Fixture", subtitle: "", dimensions: "", aspectRatio: 1, contacts: contacts,
+            productURL: URL(string: "https://example.com/fixture")!, photoAssetName: nil,
+            presentations: [18, 10].map { depth in
+                BoardPresentation(id: "depth-\(depth)", name: "Fixture", aspectRatio: 1, isDefault: depth == 18,
+                    media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry)))
+            },
+            positions: [18, 10].map { depth in
+                BoardPosition(id: "depth-\(depth)", presentationID: "depth-\(depth)", contactIDs: contacts.map(\.id),
+                    effectiveDepths: Dictionary(uniqueKeysWithValues: contacts.map {
+                        ($0.id, HoldDepth.range(.init(minimum: Double(depth), maximum: Double(depth))))
+                    }))
+            })
+        let step = WorkoutStep(id: "fixture-task-index", number: 1, title: "Fixture", instruction: "",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [.init(kind: .work, target: .tasks([
+                [PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 18, maximum: 18))), side: .left),
+                 PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 18, maximum: 18))), side: .right)],
+                [PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 10, maximum: 10))))]
+            ]), timing: .fixed, duration: 10)])
+
+        XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: step, on: board), "depth-18")
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: step, on: board), ["left", "right"])
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: step, on: board, taskIndex: 1), [])
+        XCTAssertNil(WorkoutHighlightResolver.presentationID(for: step, on: board, taskIndex: 1))
+        XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: step, on: board,
+            taskIndex: 1, selectedHandSide: .right), "depth-10")
+        let highlighted = WorkoutHighlightResolver.contacts(for: step, on: board,
+            taskIndex: 1, selectedHandSide: .right)
+        XCTAssertEqual(highlighted.map(\.id), ["right"])
+        XCTAssertEqual(highlighted.first?.depth, .range(.init(minimum: 10, maximum: 10)))
+        XCTAssertEqual(board.contacts.first?.depth, .range(.init(minimum: 18, maximum: 18)))
+    }
+
     func testAnyHoldTaskDoesNotHighlightAnInventedContact() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.contact"))
         let plan = try XCTUnwrap(PlanCatalog.plan(id: "metolius.contact.entry"))
@@ -1584,6 +1628,103 @@ final class WorkoutTimelineTests: XCTestCase {
             duration: 5,
             phase: .rest)
     ]
+
+    private func configuredPlateauStep(segments: [WorkoutSegment]? = nil) -> WorkoutStep {
+        WorkoutStep(
+            id: "configured-sequence", number: 2, title: "Configured edge",
+            instruction: "Existing instruction", accessory: "Existing accessory",
+            duration: 15, phase: .hang,
+            segments: segments ?? [
+                WorkoutSegment(kind: .work, target: .requirements([
+                    .edge(depth: .range(.init(minimum: 18, maximum: 18)))
+                ]), timing: .fixed, duration: 6),
+                WorkoutSegment(kind: .work, target: .requirements([
+                    .edge(depth: .range(.init(minimum: 10, maximum: 10)))
+                ]), timing: .fixed, duration: 9)
+            ],
+            handUse: .single, side: .right, timedWorkDuration: 15
+        )
+    }
+
+    func testSequentialConfiguredCueUsesCurrentSegmentWithoutChangingRecordedStep() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        let step = configuredPlateauStep()
+        let timeline = WorkoutTimeline(steps: [step])
+
+        for (elapsed, segmentIndex, presentationID) in [
+            (0.0, 0, "depth-18mm"), (5.99, 0, "depth-18mm"),
+            (6.0, 1, "depth-10mm"), (14.0, 1, "depth-10mm")
+        ] {
+            let cue = timeline.boardCue(at: elapsed, countdown: 0, isComplete: false)
+            let preview = try XCTUnwrap(cue.step)
+            XCTAssertEqual(preview.segments, [step.segments[segmentIndex]])
+            XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: preview, on: board), presentationID)
+            XCTAssertEqual(cue.mode, .active)
+            XCTAssertFalse(cue.isResting)
+            XCTAssertEqual(preview.id, step.id)
+            XCTAssertEqual(preview.title, step.title)
+            XCTAssertEqual(preview.instruction, step.instruction)
+            XCTAssertEqual(preview.accessory, step.accessory)
+            XCTAssertEqual(preview.duration, step.duration)
+            XCTAssertEqual(preview.timedWorkDuration, step.timedWorkDuration)
+            XCTAssertEqual(preview.handUse, step.handUse)
+            XCTAssertEqual(preview.side, step.side)
+            XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: preview))
+            XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: preview))
+        }
+        XCTAssertEqual(timeline.currentSteps, [step])
+        XCTAssertEqual(timeline.step(at: 7), step)
+    }
+
+    func testConfiguredNextWorkPreviewUsesFirstSegmentDuringRestAndSkipCountdown() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        let rest = WorkoutStep(id: "rest", number: 1, title: "Rest", instruction: "",
+                               accessory: "", duration: 5, phase: .rest)
+        let work = configuredPlateauStep()
+        let timeline = WorkoutTimeline(steps: [rest, work])
+        let restCue = timeline.boardCue(at: 2, countdown: 0, isComplete: false)
+        let skipCue = timeline.boardCue(currentStep: work, stepElapsed: 0, countdown: 3,
+                                       isComplete: false)
+        for cue in [restCue, skipCue] {
+            let preview = try XCTUnwrap(cue.step)
+            XCTAssertEqual(preview.segments, [work.segments[0]])
+            XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: preview, on: board), "depth-18mm")
+            XCTAssertEqual(cue.mode, .preview)
+            XCTAssertEqual(preview.side, .right)
+        }
+        XCTAssertTrue(restCue.isResting)
+        XCTAssertFalse(skipCue.isResting)
+        XCTAssertEqual(timeline.nextWorkStep(after: rest.id), work)
+    }
+
+    func testConfiguredCueKeepsSimultaneousRequirementsTogether() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        let sequential = configuredPlateauStep()
+        let simultaneous = WorkoutSegment(kind: .work,
+            target: .requirements(sequential.workRequirements), timing: .fixed, duration: 15)
+        let step = configuredPlateauStep(segments: [simultaneous])
+        let timeline = WorkoutTimeline(steps: [step])
+        let preview = try XCTUnwrap(timeline.holdPreviewStep(at: 7))
+
+        XCTAssertEqual(preview.workRequirements, sequential.workRequirements)
+        XCTAssertNil(WorkoutHighlightResolver.presentationID(for: preview, on: board))
+    }
+
+    func testSegmentCueDoesNotInferAnUntimedBoundaryOrReusePreviousTargetForSelfSelectedWork() throws {
+        let fixed = configuredPlateauStep().segments
+        for timing: WorkoutSegmentTiming in [.undefined, .stopwatch] {
+            let untimed = WorkoutSegment(kind: .work, target: fixed[0].target,
+                                        timing: timing, duration: nil)
+            let timeline = WorkoutTimeline(steps: [configuredPlateauStep(segments: [untimed, fixed[1]])])
+            XCTAssertEqual(timeline.holdPreviewStep(at: 14)?.segments, [untimed])
+        }
+        let selfSelected = WorkoutSegment(kind: .work, target: .selfSelected,
+                                          timing: .fixed, duration: 9)
+        let timeline = WorkoutTimeline(steps: [configuredPlateauStep(segments: [fixed[0], selfSelected])])
+        let preview = try XCTUnwrap(timeline.holdPreviewStep(at: 6))
+        XCTAssertEqual(preview.segments, [selfSelected])
+        XCTAssertTrue(preview.workRequirements.isEmpty)
+    }
 
     func testNextWorkStepSkipsConsecutiveRestSteps() {
         let timeline = WorkoutTimeline(steps: restPreviewSteps)
@@ -4812,3 +4953,366 @@ final class FreeWorkoutTimelineUpdateTests: XCTestCase {
         XCTAssertEqual(updated.segments.compactMap(\.duration).reduce(0, +), 30)
     }
 }
+
+
+final class WorkoutRendererReadinessTests: XCTestCase {
+    func testFirstModelWorkoutWaitsForBothCurrentHosts() {
+        let board = UUID(), hand = UUID()
+        var value = WorkoutRendererReadiness()
+        XCTAssertFalse(value.isReady(requiresBoard: true, requiresHands: true))
+        value.renderers[board] = .init(kind: .board, isReady: true)
+        XCTAssertFalse(value.isReady(requiresBoard: true, requiresHands: true))
+        value.renderers[hand] = .init(kind: .hand, isReady: false)
+        XCTAssertFalse(value.isReady(requiresBoard: true, requiresHands: true))
+        value.renderers[hand] = .init(kind: .hand, isReady: true)
+        XCTAssertTrue(value.isReady(requiresBoard: true, requiresHands: true))
+    }
+
+    func testEveryMountedBoardInstanceMustFinishSetup() {
+        let left = UUID(), right = UUID()
+        var value = WorkoutRendererReadiness()
+        value.renderers[left] = .init(kind: .board, isReady: true)
+        value.renderers[right] = .init(kind: .board, isReady: false)
+        XCTAssertFalse(value.isReady(requiresBoard: true, requiresHands: false))
+        value.renderers[right] = .init(kind: .board, isReady: true)
+        XCTAssertTrue(value.isReady(requiresBoard: true, requiresHands: false))
+    }
+
+    func testRemovedHostDoesNotCertifyItsReplacement() {
+        let old = UUID(), replacement = UUID()
+        var value = WorkoutRendererReadiness()
+        value.renderers[old] = .init(kind: .board, isReady: true)
+        XCTAssertTrue(value.isReady(requiresBoard: true, requiresHands: false))
+        value.renderers.removeValue(forKey: old)
+        XCTAssertFalse(value.isReady(requiresBoard: true, requiresHands: false))
+        value.renderers[replacement] = .init(kind: .board, isReady: false)
+        XCTAssertFalse(value.isReady(requiresBoard: true, requiresHands: false))
+    }
+
+    func testLoadingHandKeepsFirstStartPending() {
+        var value = WorkoutRendererReadiness()
+        value.renderers[UUID()] = .init(kind: .board, isReady: true)
+        value.renderers[UUID()] = .init(kind: .hand, isReady: false)
+        XCTAssertFalse(value.isReady(requiresBoard: true, requiresHands: true))
+    }
+
+    func testNonModelPresentationWithoutHandHostsCanStart() {
+        XCTAssertTrue(WorkoutRendererReadiness().isReady(requiresBoard: false, requiresHands: false))
+    }
+
+    func testNonModelPresentationStillWaitsForItsHandCue() {
+        let id = UUID()
+        var value = WorkoutRendererReadiness()
+        XCTAssertFalse(value.isReady(requiresBoard: false, requiresHands: true))
+        value.renderers[id] = .init(kind: .hand, isReady: false)
+        XCTAssertFalse(value.isReady(requiresBoard: false, requiresHands: true))
+        value.renderers[id] = .init(kind: .hand, isReady: true)
+        XCTAssertTrue(value.isReady(requiresBoard: false, requiresHands: true))
+    }
+}
+
+
+final class WorkoutRendererStartGateTests: XCTestCase {
+    func testTerminalFallbackReleasesStartOnlyOnceWithoutClaimingRendererReadiness() {
+        let combinations: [(WorkoutRendererReadiness.Renderer.Status, WorkoutRendererReadiness.Renderer.Status)] = [
+            (.unavailable, .ready), (.ready, .unavailable), (.unavailable, .unavailable)
+        ]
+        for (board, hand) in combinations {
+            var gate = WorkoutRendererStartGate()
+            XCTAssertFalse(gate.requestFirstStart())
+            let reports = WorkoutRendererReadiness(renderers: [
+                UUID(): .init(kind: .board, status: board, preparationID: gate.requestID),
+                UUID(): .init(kind: .hand, status: hand, preparationID: gate.requestID)
+            ])
+            XCTAssertFalse(reports.isReady(requiresBoard: true, requiresHands: true))
+            XCTAssertTrue(gate.consume(reports, requiresBoard: true, requiresHands: true))
+            XCTAssertFalse(gate.isPending)
+            XCTAssertFalse(gate.consume(reports, requiresBoard: true, requiresHands: true))
+        }
+    }
+
+    func testTerminalFailureDoesNotReleaseMissingOrStillLoadingRequiredHosts() {
+        var gate = WorkoutRendererStartGate()
+        XCTAssertFalse(gate.requestFirstStart())
+        var reports = WorkoutRendererReadiness(renderers: [
+            UUID(): .init(kind: .board, status: .unavailable, preparationID: gate.requestID)
+        ])
+        XCTAssertFalse(gate.consume(reports, requiresBoard: true, requiresHands: true))
+        let hand = UUID()
+        reports.renderers[hand] = .init(kind: .hand, status: .loading, preparationID: gate.requestID)
+        XCTAssertFalse(gate.consume(reports, requiresBoard: true, requiresHands: true))
+        XCTAssertTrue(gate.isPending)
+        reports.renderers[hand] = .init(kind: .hand, status: .unavailable, preparationID: gate.requestID)
+        XCTAssertTrue(gate.consume(reports, requiresBoard: true, requiresHands: true))
+    }
+
+    func testCancelledAndStaleUnavailableReportsCannotStartButFreshFallbackCan() {
+        var gate = WorkoutRendererStartGate()
+        XCTAssertFalse(gate.requestFirstStart())
+        let oldID = gate.requestID
+        let stale = WorkoutRendererReadiness(renderers: [
+            UUID(): .init(kind: .board, status: .unavailable, preparationID: oldID)
+        ])
+        gate.cancel()
+        XCTAssertFalse(gate.consume(stale, requiresBoard: true, requiresHands: false))
+        XCTAssertFalse(gate.requestFirstStart())
+        XCTAssertNotEqual(gate.requestID, oldID)
+        XCTAssertFalse(gate.consume(stale, requiresBoard: true, requiresHands: false))
+        let fresh = WorkoutRendererReadiness(renderers: [
+            UUID(): .init(kind: .board, status: .unavailable, preparationID: gate.requestID)
+        ])
+        XCTAssertTrue(gate.consume(fresh, requiresBoard: true, requiresHands: false))
+        gate.finishPreparation()
+        XCTAssertNil(gate.requestID)
+        XCTAssertFalse(gate.consume(fresh, requiresBoard: true, requiresHands: false))
+        XCTAssertTrue(gate.requestFirstStart())
+    }
+
+    func testBoardSurfaceLoadingAndTerminalFailureHaveDistinctPreparationReports() {
+        let host = UUID(), request = UUID()
+        let loading = BoardModelSurface.ResultState.loading.preparationReadiness(hostID: host, preparationID: request)
+        let unavailable = BoardModelSurface.ResultState.unavailable.preparationReadiness(hostID: host, preparationID: request)
+        XCTAssertEqual(loading.renderers[host]?.status, .loading)
+        XCTAssertEqual(unavailable.renderers[host]?.status, .unavailable)
+        XCTAssertEqual(unavailable.renderers[host]?.preparationID, request)
+        XCTAssertFalse(loading.isResolved(requiresBoard: true, requiresHands: false))
+        XCTAssertTrue(unavailable.isResolved(requiresBoard: true, requiresHands: false))
+        XCTAssertFalse(unavailable.isReady(requiresBoard: true, requiresHands: false))
+        XCTAssertTrue(BoardModelSurface.ResultState.unavailable.preparationReadiness(
+            hostID: host, preparationID: nil).renderers.isEmpty)
+    }
+
+    func testPreparationConsumesTheStartIntentOnlyOnce() {
+        var gate = WorkoutRendererStartGate()
+        XCTAssertFalse(gate.requestFirstStart())
+        let id = gate.requestID
+        XCTAssertNotNil(id)
+        XCTAssertFalse(gate.requestFirstStart())
+        XCTAssertEqual(gate.requestID, id)
+        XCTAssertFalse(gate.consume(.init(), requiresBoard: true, requiresHands: false))
+        let ready = WorkoutRendererReadiness(renderers: [UUID(): .init(
+            kind: .board, isReady: true, preparationID: gate.requestID)])
+        XCTAssertTrue(gate.consume(ready, requiresBoard: true, requiresHands: false))
+        XCTAssertFalse(gate.isPending)
+        XCTAssertFalse(gate.consume(ready, requiresBoard: true, requiresHands: false))
+        XCTAssertTrue(gate.requestFirstStart())
+    }
+
+    func testCancellationRejectsLateReadinessAndNewStartGetsNewToken() {
+        var gate = WorkoutRendererStartGate()
+        XCTAssertFalse(gate.requestFirstStart())
+        let old = gate.requestID
+        gate.cancel()
+        XCTAssertNil(gate.requestID)
+        XCTAssertFalse(gate.consume(.init(), requiresBoard: false, requiresHands: false))
+        XCTAssertFalse(gate.requestFirstStart())
+        XCTAssertNotEqual(gate.requestID, old)
+        XCTAssertTrue(gate.consume(.init(), requiresBoard: false, requiresHands: false))
+    }
+
+    func testOldReadySnapshotCannotReleaseANewStartRequest() {
+        var gate = WorkoutRendererStartGate()
+        XCTAssertFalse(gate.requestFirstStart())
+        let old = WorkoutRendererReadiness(renderers: [UUID(): .init(
+            kind: .board, isReady: true, preparationID: gate.requestID)])
+        gate.cancel()
+        XCTAssertFalse(gate.requestFirstStart())
+        XCTAssertFalse(gate.consume(old, requiresBoard: true, requiresHands: false))
+        XCTAssertTrue(gate.isPending)
+        let current = WorkoutRendererReadiness(renderers: [UUID(): .init(
+            kind: .board, isReady: true, preparationID: gate.requestID)])
+        XCTAssertTrue(gate.consume(current, requiresBoard: true, requiresHands: false))
+    }
+
+    func testInitialCountdownRetiresPreparationWithoutRearming() {
+        var gate = WorkoutRendererStartGate()
+        XCTAssertFalse(gate.requestFirstStart())
+        XCTAssertTrue(gate.consume(.init(), requiresBoard: false, requiresHands: false))
+        gate.finishPreparation()
+        XCTAssertNil(gate.requestID)
+        XCTAssertFalse(gate.isPending)
+        XCTAssertFalse(gate.consume(.init(), requiresBoard: false, requiresHands: false))
+        XCTAssertTrue(gate.requestFirstStart())
+    }
+
+    func testCancellationAfterReleaseRequiresFreshPreparation() {
+        var gate = WorkoutRendererStartGate()
+        XCTAssertFalse(gate.requestFirstStart())
+        XCTAssertTrue(gate.consume(.init(), requiresBoard: false, requiresHands: false))
+        gate.cancel()
+        XCTAssertFalse(gate.requestFirstStart())
+        XCTAssertTrue(gate.isPending)
+    }
+}
+
+
+final class WorkoutRendererPreferenceTests: XCTestCase {
+    @MainActor
+    func testUnavailableSingleHandReleasesInitialStart() async throws {
+        let scene = GripHandRealityScene(assetResult: .failure(GripHandAsset.AssetError.missingResource))
+        XCTAssertTrue(scene.isUnavailable)
+        try await assertTerminalFailureReleasesStart(
+            GripHandModelView(posture: .halfCrimp, fingerConfiguration: nil,
+                              side: .left, resetToken: 0, scene: scene),
+            requiresBoard: false, requiresHands: true)
+    }
+
+    @MainActor
+    func testUnavailablePairHandsReleasesInitialStart() async throws {
+        let scene = GripHandRealityPairScene(assetResult: .failure(GripHandAsset.AssetError.missingResource))
+        XCTAssertFalse(scene.isAvailable)
+        try await assertTerminalFailureReleasesStart(
+            GripHandPairModelView(posture: .halfCrimp, fingerConfiguration: nil, scene: scene),
+            requiresBoard: false, requiresHands: true)
+    }
+
+    @MainActor
+    func testBoardLoadFailureReleasesInitialStart() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "zlagboard.evo"))
+        guard case .model(let original) = board.defaultPresentation.media else {
+            return XCTFail("Expected native fixture")
+        }
+        // A unique presentation key avoids borrowing a cached successful host.
+        // An unregistered presentation has no packaged or ODR resource,
+        // so the normal loader reaches its resource-unavailable failure.
+        let presentation = BoardPresentation(
+            id: "terminal-load-failure-fixture", name: "Failure fixture",
+            aspectRatio: board.defaultPresentation.aspectRatio, isDefault: false,
+            media: .model(BoardModelMedia(assetPath: "assets/missing-fixture.usdz",
+                descriptorPath: original.descriptorPath, descriptor: original.descriptor,
+                display: original.display)))
+        try await assertTerminalFailureReleasesStart(
+            BoardModelSurface(board: board, presentation: presentation,
+                              highlightedContactIDs: [], highlightMode: .active, onContactTap: nil),
+            requiresBoard: true, requiresHands: false)
+    }
+
+    @MainActor
+    private func assertTerminalFailureReleasesStart<Content: View>(
+        _ content: Content, requiresBoard: Bool, requiresHands: Bool
+    ) async throws {
+        var gate = WorkoutRendererStartGate()
+        XCTAssertFalse(gate.requestFirstStart())
+        let request = try XCTUnwrap(gate.requestID)
+        let released = expectation(description: "Unavailable fallback releases initial Start")
+        var fulfilled = false
+        var received: [WorkoutRendererReadiness] = []
+        let root = content.frame(width: 360, height: 100)
+            .environment(\.workoutRendererPreparationID, request)
+            .onPreferenceChange(WorkoutRendererReadinessKey.self) { value in
+                received.append(value)
+                if !fulfilled, gate.consume(value, requiresBoard: requiresBoard, requiresHands: requiresHands) {
+                    fulfilled = true
+                    released.fulfill()
+                }
+            }
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }.first)
+        let previous = scene.windows.first(where: \.isKeyWindow)
+        let window = UIWindow(windowScene: scene)
+        window.accessibilityIdentifier = "placid-badger-cad-second-half-terminal-preparation-test"
+        window.rootViewController = UIHostingController(rootView: root)
+        defer {
+            window.isHidden = true
+            window.rootViewController = nil
+            previous?.makeKey()
+        }
+        window.makeKeyAndVisible()
+        await fulfillment(of: [released], timeout: 5)
+        XCTAssertFalse(gate.isPending)
+        XCTAssertTrue(received.contains { !$0.renderers.isEmpty })
+        XCTAssertFalse(received.last?.isReady(requiresBoard: requiresBoard, requiresHands: requiresHands) ?? true,
+                       "An unavailable fallback must never certify successful CPU rendering")
+    }
+
+    @MainActor
+    func testMountedModelAndHandsForwardPreparationThroughSurface() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "zlagboard.evo"))
+        let request = UUID()
+        let ready = expectation(description: "Mounted board and hand preparation reaches workout")
+        var fulfilled = false
+        var received: [WorkoutRendererReadiness] = []
+        let content = VStack {
+            BoardModelSurface(board: board, presentation: board.defaultPresentation,
+                              highlightedContactIDs: [], highlightMode: .active,
+                              onContactTap: nil)
+                .frame(width: 360, height: 62)
+            GripHandPairModelView(posture: .halfCrimp, fingerConfiguration: nil)
+                .frame(width: 718, height: 68)
+        }
+        .environment(\.workoutRendererPreparationID, request)
+        .onPreferenceChange(WorkoutRendererReadinessKey.self) { value in
+            received.append(value)
+            if !fulfilled, value.isReady(requiresBoard: true, requiresHands: true),
+               value.renderers.values.allSatisfy({ $0.preparationID == request }) {
+                fulfilled = true
+                ready.fulfill()
+            }
+        }
+        let windowScene = try XCTUnwrap(UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }.first)
+        let previous = windowScene.windows.first(where: \.isKeyWindow)
+        let window = UIWindow(windowScene: windowScene)
+        window.accessibilityIdentifier = "placid-badger-cad-second-half-renderer-readiness-test"
+        window.rootViewController = UIHostingController(rootView: content)
+        defer {
+            window.isHidden = true
+            window.rootViewController = nil
+            previous?.makeKey()
+        }
+        window.makeKeyAndVisible()
+        await fulfillment(of: [ready], timeout: 20)
+        XCTAssertTrue(received.contains { $0.renderers.values.contains { $0.kind == .board && $0.isReady } },
+                      "Actual board readiness must survive the Surface wrapper")
+    }
+}
+
+
+#if targetEnvironment(simulator)
+final class WorkoutDrawablePresentationTests: XCTestCase {
+    @MainActor
+    func testPresentationOnlyChangesTheUniqueMatchingDrawable() async throws {
+        try await checkPresentation(ambiguous: false)
+    }
+
+    @MainActor
+    func testAmbiguousMatchingDrawablesRemainUntouched() async throws {
+        try await checkPresentation(ambiguous: true)
+    }
+
+    @MainActor
+    private func checkPresentation(ambiguous: Bool) async throws {
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }.first)
+        let previous = scene.windows.first(where: \.isKeyWindow)
+        let window = UIWindow(windowScene: scene)
+        window.accessibilityIdentifier = "placid-badger-cad-second-half-drawable-policy-test"
+        let controller = UIViewController()
+        window.rootViewController = controller
+        let container = UIView(frame: CGRect(x: 0, y: 0, width: 160, height: 160))
+        controller.view.addSubview(container)
+        let matching = CAMetalLayer()
+        matching.frame = CGRect(x: 10, y: 20, width: 80, height: 40)
+        matching.presentsWithTransaction = true
+        container.layer.addSublayer(matching)
+        let other = CAMetalLayer()
+        other.frame = ambiguous ? matching.frame : CGRect(x: 10, y: 80, width: 80, height: 40)
+        other.presentsWithTransaction = true
+        container.layer.addSublayer(other)
+        let marker = SimulatorDrawablePresentation.PresentationView(frame: matching.frame)
+        container.addSubview(marker)
+        defer {
+            window.isHidden = true
+            window.rootViewController = nil
+            previous?.makeKey()
+        }
+        window.makeKeyAndVisible()
+        let settled = expectation(description: "Bounded drawable discovery")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { settled.fulfill() }
+        await fulfillment(of: [settled], timeout: 2)
+        XCTAssertEqual(matching.presentsWithTransaction, ambiguous)
+        XCTAssertTrue(other.presentsWithTransaction,
+                      "Unrelated or ambiguous drawables must not be changed")
+    }
+}
+#endif

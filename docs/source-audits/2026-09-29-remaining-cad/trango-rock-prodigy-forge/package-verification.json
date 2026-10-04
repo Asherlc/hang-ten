@@ -1,0 +1,31 @@
+{
+  "slug": "trango-rock-prodigy-forge",
+  "triangleCount": 19504,
+  "nodeCount": 21,
+  "modelBoundsNativeMm": {
+    "min": [
+      -400.05001425743103,
+      -89.00000154972076,
+      -66.67499989271165
+    ],
+    "max": [
+      400.05001425743103,
+      1.5014344671111492e-14,
+      66.67499989271164
+    ]
+  },
+  "materialCount": 0,
+  "shaderCount": 0,
+  "contactCount": 20,
+  "hashes": {
+    "trango-rock-prodigy-forge.FCStd": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+    "primary.usdz": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+    "primary.model.json": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef"
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top"
+  ],
+  "reviewRenderer": "Tools/HangboardCAD/preview.py::_render, same 1100x650 size and neutral Lambert shading for both assets"
+}

@@ -1,0 +1,26 @@
+{
+  "package": "owl-climb-poker",
+  "allRetainedBytesAndHashesMatch": true,
+  "sources": [
+    {
+      "path": "evidence/owl-climb-poker-face-a.jpg",
+      "bytes": 250368,
+      "sha256": "4bae58b408b3f3a82c524b1101079eafa01cd062c398cb203d4803fce9850eab"
+    },
+    {
+      "path": "evidence/owl-climb-poker-face-b.jpg",
+      "bytes": 256145,
+      "sha256": "0c1d54cb2bc4d8e7fa285f3053b927d7c1a1b3fbafdf0b5d7aface9c82d0dbad"
+    },
+    {
+      "path": "evidence/owl-climb-poker-face-c.jpg",
+      "bytes": 283594,
+      "sha256": "5fbff79f31db8e85d078a74eb629abd069fc276ac128b3d85a84fc15ad9f1c4e"
+    },
+    {
+      "path": "evidence/owl-climb-poker-face-d.jpg",
+      "bytes": 258695,
+      "sha256": "ae39598fbf75c0e4e4dfbb599c724ff1e2531ef12ecca84b3504805e7bc3af13"
+    }
+  ]
+}

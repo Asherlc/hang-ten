@@ -1,0 +1,43 @@
+{
+  "owner": "placid-badger",
+  "scripts": {
+    ".context/placid-badger/poker-review12/native-correction-2026-10-02/author.py": "6135f8378571b3a3808cfeeef0d32d063474ff5725c9ddf0a61f080003601f88",
+    ".context/placid-badger/poker-review12/native-correction-2026-10-02/compile-1.py": "72624b497983aace00d0c9782ac64dad364ddd99d187fc6e156d31ea1c2b7626",
+    ".context/placid-badger/poker-review12/native-correction-2026-10-02/compile-2.py": "6183aecaf2a087fe847e3ac143ed04698aa48b5bcaca70656110bcfd80bb5f9a",
+    ".context/placid-badger/poker-review12/native-correction-2026-10-02/plot-native-section.py": "e302d4ce9df4bd6ea79b9bc2c5840da567c4e15786cbf848d9ff753777e5543d",
+    ".context/placid-badger/poker-review12/native-correction-2026-10-02/render-compare.py": "73760bcc316771a12a68a86e8545ccb134ed4b2eac3976d73f98ba3c9cfc1f92",
+    ".context/placid-badger/poker-review12/native-correction-2026-10-02/render-contact-extents.py": "239d1f2c49ccbc1a35090ecd70557da4eca43318eaca43bfb563e42db9b2c5bb",
+    ".context/placid-badger/poker-review12/native-correction-2026-10-02/render-native-only.py": "96cfceb5fa45982b962f53abd003c6785d4c90dfff35f1bd95ad934a18ba2a71",
+    ".context/placid-badger/poker-review12/native-correction-2026-10-02/run-native-compile2.py": "179d9a60ae478491b763b811a8d758560bb942f17134f47e4e4eb10726ba6d64",
+    ".context/placid-badger/poker-review12/native-correction-2026-10-02/run-native-validation.py": "9bc984bafed53c3992c7e6f32c39ebfd0b7ff0cf253aab3025911e6e94952dee",
+    ".context/placid-badger/poker-review12/native-correction-2026-10-02/run-native.py": "05b76ca357837136b3cdc112de5953ccda16055eaa0ed30da78baf73572977e5",
+    ".context/placid-badger/poker-review12/native-correction-2026-10-02/validate-export.py": "224274fc6237790939e1dedc2410592182719a1ecde7345bd71c75e8743f491a",
+    ".context/placid-badger/poker-review12/native-correction-2026-10-02/validate-native.py": "147720a22e6882a3a23ad13182103b495f3b9d9966993701a851bd43e867c24e",
+    ".context/placid-badger/poker-review12/native-review-2026-10-02/cleanup.py": "48b8ea666e62015103c30f7ad55810da44a7a70981046550ae8a624cfd120a2b",
+    ".context/placid-badger/poker-review12/native-review-2026-10-02/native-render-run.sh": "32b49ce56be6fa57d01e52c9c6e768e2c7d5ecb3ee2fd364cea57af550805d66",
+    ".context/placid-badger/poker-review12/native-review-2026-10-02/native-run.sh": "64b45c8fc10f77fd26aed593adb3e1049a55fd44c804a055ed9233fefcdb90a3",
+    ".context/placid-badger/poker-review12/native-review-2026-10-02/native_inspect.py": "49173edd4c5b89a3027e35e296ea589756bbaaae61353646975b476c7e4bfe5e",
+    ".context/placid-badger/poker-review12/native-review-2026-10-02/render-native.py": "86951921623011fb5a6d78128b7920b6ffc4d71a9c4d969a13e0abd6f8fb76ce",
+    ".context/placid-badger/poker-review12/native-review-2026-10-02/render.py": "f5e05f0a7cbdfa4a3d473a6be61b424e08dac9f3e2e55ea1b3d547fc25b60e0d",
+    ".context/placid-badger/poker-review12/native-review-2026-10-02/run.sh": "98bfec8512cfcc178484e75ed095996b487a469a5ad471c1f0a048db5a12c298",
+    ".context/placid-badger/poker-review12/package-validation-2026-10-02/ios-build/build.py": "58ede08d10e71ca0bd69b58b39a624e9b6ef716c9a6513bbca896848199a1f9b",
+    ".context/placid-badger/poker-review12/package-validation-2026-10-02/run_validation.py": "f5edf5df64c12cf2c88dfce8e488cac0bf54dcbd8d29acfded6989e9f8c756f4",
+    ".context/placid-badger/poker-review12/package-validation-2026-10-02/validation_support.py": "c28ceb4de33f67131a851b7a8e4f12ae2840198d3dda5af1d0cab1d13077fed4",
+    ".context/placid-badger/poker-review12/root/check_metadata.py": "50829f3268a2d3eec93f57479d8380d1d948a903d6f09068d21069af75d10b94",
+    ".context/placid-badger/poker-review12/root/finalize_packet.py": "3386477408e840e9584bb57854dc1c2f7c8945cebf345339645920fe1225e8df",
+    ".context/placid-badger/poker-review12/root/inspect_export.py": "516c0f0c84e39cd30c6c7a47541da57e0d51553a95502cb6c488e9bf15f03d77",
+    ".context/placid-badger/poker-review12/root/post_push_verify.py": "6d454858306d699ea1ab6e4579c524d7511bd26cdf4409acbe0ebe03fd2cfba9",
+    ".context/placid-badger/poker-review12/root/prepare_metadata.py": "be251e576fb2804a7a2ba14368a4dd303e35f92cbad8836760ae664c2d9d6287",
+    ".context/placid-badger/poker-review12/root/promote.py": "cb5b758fead98f71be7b0c902f005271352e878d15519f87bbd7e0329073a6c2",
+    ".context/placid-badger/poker-review12/root/record_shape_acceptance.py": "b65d00a90a57eedf32ffc288f20b336a84a295c205403d53c585a9e2341057f7",
+    ".context/placid-badger/poker-review12/root/retain_artifacts.py": "1d6ed3ff4ca4022c1805edca87a237c45cf582b003dfaecdd1f54e21fbb87e4d",
+    ".context/placid-badger/poker-review12/root/run_owned_job.py": "49820958ef097fafaf2ffb745979ae7a9357a49a6230792d1ebefff9688b4e73",
+    ".context/placid-badger/poker-review12/root/update_records.py": "8c2e0486fbcb332ce61d5b5e14dceef0b7002540ece335fd6598b867d1b90cce",
+    ".context/placid-badger/poker-review12/root/write_review.py": "be8e3e43f6d464d45b24cc0e43ba91174c66aaf7a6837cee66973c92353024e9"
+  },
+  "retainedRenderHelper": {
+    "path": ".context/placid-badger/cad-raster-boards/render_reviews.py",
+    "sha256": "e90232263554453be7412f6f5421828187a71fdc59a09be7a1d8a8ea2e4f9cea"
+  },
+  "policy": "No throwaway scripts are committed; hashes record the exact authoring and verification sources used."
+}

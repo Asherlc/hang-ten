@@ -1,0 +1,139 @@
+{
+  "owner": "placid-badger",
+  "allExactOwnedResourcesAbsent": true,
+  "receipts": [
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1-cleanup.json",
+      "sha256": "cd73b0e0876aa77bc11fc40c5e5e0d8700f48d7a1a735e1338f09eeafb184499",
+      "exitCode": 3,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2-cleanup.json",
+      "sha256": "37727651221b5674c6fb540228eb6bd0ccfe45430b01e6c847ca6c608714d3db",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3-cleanup.json",
+      "sha256": "49d465e9a903d3b944059746193f2c099a81d10d4a976a896316882a9a918322",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider-cleanup.json",
+      "sha256": "51b2a915bc5028bd3057bde34e99b2b5d562d94e19dc31d7812c9d2f525137cb",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2-cleanup.json",
+      "sha256": "29b6dd1625beee3643ec2ac31376b1aa299ef484d88ea050d92ad82cb833cf2b",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1-cleanup.json",
+      "sha256": "c76eea2b12e69206a835e26b0ad9688bc2339a8b69b3469a01b01f203003a97d",
+      "exitCode": 1,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2-cleanup.json",
+      "sha256": "71f9c41dcc23ebe4efcb5bb5e677ef4934bf2516c23f8dc9ca3e918b815eeef4",
+      "exitCode": 1,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3-cleanup.json",
+      "sha256": "8679883688d9c7757b5c6b59fba496f53505c762221a2f8755a10b2e94a4f547",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4-cleanup.json",
+      "sha256": "58039a27da96088f3f2a616dc31630e6d1215d7dc7ff4d57158d5128a39f3c80",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect-cleanup.json",
+      "sha256": "add51e944c5d5c0d5ec04679ed38f908446d690683a1765271d3e8c9fd348667",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1-cleanup.json",
+      "sha256": "3234e69a3474f4cd180b3bc55342d637c34f719620eca352615b0a8f3b0bf326",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2-cleanup.json",
+      "sha256": "550c95967bfc8ae119a0eee94bfe45dbc66cb5756a0030a87493e17c32b31e97",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview-cleanup.json",
+      "sha256": "cc2e213cf6dc6e0b493c15689991502c3d399c333981fe4e998265b90c799eb4",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativerender-cleanup.json",
+      "sha256": "769fa6dea4af35daaeedd765031480f489446999012bb2dbd7d1227d8b44cf94",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation-cleanup.json",
+      "sha256": "1c926a851db016e16f60bca5e1d0527c1427cc13a9cf9d175f205276c0388cce",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2-cleanup.json",
+      "sha256": "11f72163b7d60a9452a9c79904c0b3f6e77d4ec2ae9beb671360419fe0d110c4",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes-cleanup.json",
+      "sha256": "e21f542135ce108fe7ae5fd46cfcc1ca5b426918fbbc585b65a55a922da82ffd",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2-cleanup.json",
+      "sha256": "903ed17e20d87f021478ee594589fca466954fd1bc4ac357a95a600489bea2fc",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider-cleanup.json",
+      "sha256": "ccaa2d259864852744f9280fa890f292d5e7cad526aff56ea2d308ab701cae7b",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-cleanup.json",
+      "sha256": "914281486c8c38ede3c0d394ea5aef7293b13f9997b5894b2c1dc73604d2244e",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render-cleanup.json",
+      "sha256": "a31dea2ef289e1508bf09612c5a586b91d41ee315c792038bc0c7e823b298133",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    }
+  ],
+  "removedInterruptedWorkspaceStaging": [],
+  "canonicalPackageUnchanged": {
+    "nature-stone-hanger-mini-karma8a.FCStd": true,
+    "suspension.json": true,
+    "assets/primary.usdz": true,
+    "assets/primary.model.json": true
+  }
+}

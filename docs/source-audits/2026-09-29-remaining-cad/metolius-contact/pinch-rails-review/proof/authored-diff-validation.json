@@ -1,0 +1,33 @@
+{
+  "owner": "placid-badger",
+  "passed": true,
+  "authoredDiffCheckExitCode": 0,
+  "fullDiffCheckExitCode": 2,
+  "note": "Full diff reports whitespace only in six exact retained raw logs. Their original bytes and hashes are preserved; all authored files pass.",
+  "exactRawLogExclusions": {
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/independent/native-check.log": "694f16ba92bf18fa806e35260816b22423cfb8cf3e59ebd0b65b004d7af7de25",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/native/author.log": "0da09c100cfb4550b206b35d98f8fd1e6c257349ec058673dc8bf095f0541069",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/native/compile-check.log": "456687298d923fb7963cf05a7df9bb0555772caafd7bfb568d9f0019d1d45c25",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/native/compile.log": "da79f9767f7b565f4069a465fef51380aebdeab13da20b74b2c9ce0a2cae9cdc",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/native/rail-access-check.log": "05ac223c4ebd0a654145028ff3e34cbebbbb8d51dfcfad85a08e5dab72126745",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/proof/ios-build.log": "519915ae5ff6e7c7e69c0ecc8694dca58bf5090756be89dcd1487585e3ddc5fe"
+  },
+  "rawCopiesVerifiedByteIdentical": true,
+  "authoredDiffCommand": [
+    "rtk",
+    "proxy",
+    "git",
+    "diff",
+    "--cached",
+    "--check",
+    "--",
+    ".",
+    ":(exclude)docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/independent/native-check.log",
+    ":(exclude)docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/native/author.log",
+    ":(exclude)docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/native/compile-check.log",
+    ":(exclude)docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/native/compile.log",
+    ":(exclude)docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/native/rail-access-check.log",
+    ":(exclude)docs/source-audits/2026-09-29-remaining-cad/metolius-contact/pinch-rails-review/proof/ios-build.log"
+  ],
+  "fullCheckOutputSHA256": "d546b5a400bd5fc0c8cc6f0b0a683cb812ffeb027a821e77e4a5cde170eec49c"
+}

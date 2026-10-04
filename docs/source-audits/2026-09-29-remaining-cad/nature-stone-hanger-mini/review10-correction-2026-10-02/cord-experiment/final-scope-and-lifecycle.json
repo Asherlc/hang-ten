@@ -1,0 +1,353 @@
+{
+  "owner": "placid-badger",
+  "closedAtUTC": "2026-10-03T04:10:50.209320+00:00",
+  "canonical3AtProducerClose": {
+    "nature-stone-hanger-mini.FCStd": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+    },
+    "assets/primary.usdz": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+    },
+    "assets/primary.model.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+    }
+  },
+  "canonical3MatchFrozenRootHandoff": true,
+  "frozenCanonicalSnapshot4": {
+    "nature-stone-hanger-mini.FCStd": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+    },
+    "assets/primary.usdz": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+    },
+    "assets/primary.model.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+    },
+    "suspension.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/nature-stone-hanger-mini/suspension.json",
+      "sha256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+    }
+  },
+  "canonicalSidecarDisposition": "Root explicitly installed clarified below authoring metadata and is running its own canonical apply. These are authorized ROOT mutations; producer does not inspect an in-flight final sidecar or claim it stayed unchanged.",
+  "thisLaneCanonicalOrSharedMutation": false,
+  "sevenReservedPathsReadOrEdited": false,
+  "allRecordedOwnedProcessGroups": [
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/lifecycle.json",
+        "sha256": "f67818f12fcb189e45d583bd6575ae87f3213383d41565d629ce0206be9402a3"
+      },
+      "owner": "placid-badger",
+      "pid": 16424,
+      "processGroupID": 16424,
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/lifecycle.json",
+        "sha256": "f67818f12fcb189e45d583bd6575ae87f3213383d41565d629ce0206be9402a3"
+      },
+      "owner": "placid-badger",
+      "pid": 16434,
+      "processGroupID": 16434,
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/lifecycle.json",
+        "sha256": "1f8837c419b99ce193fd92cbdd8052939862d9786ce7dd0602cc9173b312e55b"
+      },
+      "owner": "placid-badger",
+      "pid": 18147,
+      "processGroupID": 18147,
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/lifecycle.json",
+        "sha256": "1f8837c419b99ce193fd92cbdd8052939862d9786ce7dd0602cc9173b312e55b"
+      },
+      "owner": "placid-badger",
+      "pid": 19519,
+      "processGroupID": 19519,
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/lifecycle.json",
+        "sha256": "6fc025a4378bf60e622eabec5730989032c60187aea19395c1303faec946fa0c"
+      },
+      "owner": "placid-badger",
+      "pid": 31038,
+      "processGroupID": 31038,
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "owner": "placid-badger",
+      "pid": 37850,
+      "processGroupID": 37850,
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "owner": "placid-badger",
+      "pid": 38462,
+      "processGroupID": 38462,
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "owner": "placid-badger",
+      "pid": 38567,
+      "processGroupID": 38567,
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "owner": "placid-badger",
+      "pid": 39078,
+      "processGroupID": 39078,
+      "absentAtProducerClose": true
+    }
+  ],
+  "allRecordedOwnedTemporaryCacheConfigResources": [
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/lifecycle.json",
+        "sha256": "f67818f12fcb189e45d583bd6575ae87f3213383d41565d629ce0206be9402a3"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/placid-badger-mini10-apply-config",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/lifecycle.json",
+        "sha256": "f67818f12fcb189e45d583bd6575ae87f3213383d41565d629ce0206be9402a3"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/placid-badger-mini10-apply-cache",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/lifecycle.json",
+        "sha256": "f67818f12fcb189e45d583bd6575ae87f3213383d41565d629ce0206be9402a3"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/placid-badger-mini10-apply-tmp",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/lifecycle.json",
+        "sha256": "f67818f12fcb189e45d583bd6575ae87f3213383d41565d629ce0206be9402a3"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/placid-badger-mini10-apply-config",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/lifecycle.json",
+        "sha256": "f67818f12fcb189e45d583bd6575ae87f3213383d41565d629ce0206be9402a3"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/placid-badger-mini10-apply-cache",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/lifecycle.json",
+        "sha256": "f67818f12fcb189e45d583bd6575ae87f3213383d41565d629ce0206be9402a3"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/placid-badger-mini10-apply-tmp",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/lifecycle.json",
+        "sha256": "1f8837c419b99ce193fd92cbdd8052939862d9786ce7dd0602cc9173b312e55b"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/placid-badger-mini10-apply-config",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/lifecycle.json",
+        "sha256": "1f8837c419b99ce193fd92cbdd8052939862d9786ce7dd0602cc9173b312e55b"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/placid-badger-mini10-apply-cache",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/lifecycle.json",
+        "sha256": "1f8837c419b99ce193fd92cbdd8052939862d9786ce7dd0602cc9173b312e55b"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/placid-badger-mini10-apply-tmp",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/lifecycle.json",
+        "sha256": "1f8837c419b99ce193fd92cbdd8052939862d9786ce7dd0602cc9173b312e55b"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/placid-badger-mini10-apply-config",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/lifecycle.json",
+        "sha256": "1f8837c419b99ce193fd92cbdd8052939862d9786ce7dd0602cc9173b312e55b"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/placid-badger-mini10-apply-cache",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/lifecycle.json",
+        "sha256": "1f8837c419b99ce193fd92cbdd8052939862d9786ce7dd0602cc9173b312e55b"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/placid-badger-mini10-apply-tmp",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/lifecycle.json",
+        "sha256": "6fc025a4378bf60e622eabec5730989032c60187aea19395c1303faec946fa0c"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/placid-badger-mini10-diagnostic-config",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/lifecycle.json",
+        "sha256": "6fc025a4378bf60e622eabec5730989032c60187aea19395c1303faec946fa0c"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/placid-badger-mini10-diagnostic-cache",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/lifecycle.json",
+        "sha256": "6fc025a4378bf60e622eabec5730989032c60187aea19395c1303faec946fa0c"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/placid-badger-mini10-diagnostic-tmp",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/placid-badger-mini10-apply-config",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/placid-badger-mini10-apply-cache",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/placid-badger-mini10-apply-tmp",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/placid-badger-mini10-check-config",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/placid-badger-mini10-check-cache",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/placid-badger-mini10-check-tmp",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/placid-badger-mini10-apply-config",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/placid-badger-mini10-apply-cache",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/placid-badger-mini10-apply-tmp",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/placid-badger-mini10-check-config",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/placid-badger-mini10-check-cache",
+      "absentAtProducerClose": true
+    },
+    {
+      "receipt": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+        "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+      },
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/placid-badger-mini10-check-tmp",
+      "absentAtProducerClose": true
+    }
+  ],
+  "allOwnedGroupsAndTemporaryResourcesAbsent": true,
+  "unknownSharedOrRootResourcesTouched": false,
+  "nativeGUIBlenderFreeCADSimulatorServerTestBuildOrGitMutation": false
+}

@@ -1,0 +1,106 @@
+{
+  "validatorsExecuted": false,
+  "entries": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/branch_schema.py",
+      "sourceSHA256": "74c46aba9d095dbf2bdf65b5d5393cb81e245956c68386924973130a1c7646f3",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/branch_schema.py",
+      "pathAdaptedSHA256": "74c46aba9d095dbf2bdf65b5d5393cb81e245956c68386924973130a1c7646f3",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-constructors.py",
+      "sourceSHA256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/live/check-constructors.py",
+      "pathAdaptedSHA256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-cpu-semantics.py",
+      "sourceSHA256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/live/check-cpu-semantics.py",
+      "pathAdaptedSHA256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-frames.py",
+      "sourceSHA256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/live/check-frames.py",
+      "pathAdaptedSHA256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-muted-current-hands.py",
+      "sourceSHA256": "e5c26ce2e1ccd88cdb87dc7fbfdd94265e8b3239bdba394af4753a459a733962",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/live/check-muted-current-hands.py",
+      "pathAdaptedSHA256": "b0f2ebd0ca718d844d086b554bc343efd0447be6176e77f45085a199d628c0ea",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-navigation.py",
+      "sourceSHA256": "3344a84fb789f513c10db76447658784e9fbdba5d89472aa16d76d3510b18d3a",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/live/check-navigation.py",
+      "pathAdaptedSHA256": "b40d058e1ed61a7b2ed2015088741ea50a5400847ff6db13e55b075aa5384d35",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-ownership.py",
+      "sourceSHA256": "7f29f62292b15ac631d59da9dc70eb4f42f1725127d12db6dbe4836413870628",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/live/check-ownership.py",
+      "pathAdaptedSHA256": "371400a4f776ed085ed881183d7d625fb59ece799fe96c8abd6f568d4a309e93",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-real-hands.py",
+      "sourceSHA256": "b2fb0be7c1fef86134bb1d743ff04edad34439d0bff7ad199d916ff05664e685",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/live/check-real-hands.py",
+      "pathAdaptedSHA256": "cea1d2f8a03d3b415491de8e3d27494dc46be0199c61da47369262392291127c",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-sync-counters.py",
+      "sourceSHA256": "c09bcb5c567fbacdbc2ee9d402c27f7fdd6261db6ccb1088d558e09fe6a639f2",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/live/check-sync-counters.py",
+      "pathAdaptedSHA256": "66324478259ac133e18e266cabd73446e9afef5ab2210a7f5541153d47cd5ca6",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-weak-hand-census.py",
+      "sourceSHA256": "43822bafb7b6974d72caa5707cec98c19bafb640b0b740bdaf33c79309beb3ed",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/live/check-weak-hand-census.py",
+      "pathAdaptedSHA256": "10f1a25125fbc45c1d4428dc26284cf6e725b1be6224457cb9056bec73a9a89e",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/marker-schema.json",
+      "sourceSHA256": "a4a9065f46d9a8f018dfd47ccf5a13c9d9c8eb4b6b22554e701e3fa678d23707",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/marker-schema.json",
+      "pathAdaptedSHA256": "a4a9065f46d9a8f018dfd47ccf5a13c9d9c8eb4b6b22554e701e3fa678d23707",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/marker_correlations.py",
+      "sourceSHA256": "edfdd6480f5054c53607cc5bdbf2420feb80cf606138698a55551bb1b023a0cc",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/marker_correlations.py",
+      "pathAdaptedSHA256": "edfdd6480f5054c53607cc5bdbf2420feb80cf606138698a55551bb1b023a0cc",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/muted_audio_schema.py",
+      "sourceSHA256": "538b6041f788d6903f680c2797f4be59c12278114deaf9cc9166f4a76be02948",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/muted_audio_schema.py",
+      "pathAdaptedSHA256": "538b6041f788d6903f680c2797f4be59c12278114deaf9cc9166f4a76be02948",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/validate.py",
+      "sourceSHA256": "c5cbff057d7e5aa53bb9b428ec34b6179d375c1c7715076458b9a99a69929894",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-c-validators/validate.py",
+      "pathAdaptedSHA256": "b7d436d3d146b62688a4f1b2504d3d997680e6fa22b4c26069e4b966503921b1",
+      "change": "LIVE-b to LIVE-c run path only, validator parent directory adjusted"
+    }
+  ],
+  "additionalChanges": [
+    "New prospective clock_stability.py requires app and host full-run clock offset spread<=0.1s and original capture timing; validate.py retains its separate output/gate."
+  ]
+}

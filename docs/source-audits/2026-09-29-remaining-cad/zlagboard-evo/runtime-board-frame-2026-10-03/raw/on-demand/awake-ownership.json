@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "resourceName": "placid-badger-cad-second-half-board-frame-on-demand-idle-sleep-assertion",
+  "pid": 95821,
+  "parentPID": 95818,
+  "command": [
+    "placid-badger-cad-second-half-board-frame-on-demand-idle-sleep-assertion",
+    "-i",
+    "-w",
+    "95818",
+    "-t",
+    "300"
+  ],
+  "executable": "/usr/bin/caffeinate",
+  "registeredImmediately": true
+}

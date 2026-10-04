@@ -1,0 +1,236 @@
+{
+  "createdUTC": "2026-10-03T00:24:43.498195+00:00",
+  "status": "PROPOSED_ALLOWLIST_PENDING_PARENT_APPROVAL_FOR_TRACKED_PROMOTION",
+  "files": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/frontend-controller.py",
+      "retained": "raw/frontend-boundary/frontend-controller.py",
+      "bytes": 5687,
+      "sha256": "f128757b529290aac81b62b0575107fd90b3f4cfc94af017dad90e1e10ee96d5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/frontend-controller-revision-2.py",
+      "retained": "raw/frontend-boundary/frontend-controller-revision-2.py",
+      "bytes": 7390,
+      "sha256": "f95fc3f4ea3452e80d15bbaf4786b3de6409b251a03984a6186b114ff5ebd8b5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/revision-2.patch",
+      "retained": "raw/frontend-boundary/revision-2.patch",
+      "bytes": 4700,
+      "sha256": "9f8f23daf3bc0e59bd51afc6abbeace6b0cdbe39a2dc64ea7e350592237b8b30"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/protocol.json",
+      "retained": "raw/frontend-boundary/protocol.json",
+      "bytes": 2359,
+      "sha256": "f1575450256abdec97482b2d3cec9ef14fc30b8eb3c2dc082a9728689635aed9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/protocol-revision-2.json",
+      "retained": "raw/frontend-boundary/protocol-revision-2.json",
+      "bytes": 3000,
+      "sha256": "e915ab957c43d1a72e125fe411e713656201f40d19c0075ac17a0e9de95f58f9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/revision-2-launch-attempt.json",
+      "retained": "raw/frontend-boundary/revision-2-launch-attempt.json",
+      "bytes": 722,
+      "sha256": "aaaf6e829584910a89e0ba4c741292fe1c74a63a509800a80447211254f36bf1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/cleanup.json",
+      "retained": "raw/frontend-boundary/cleanup.json",
+      "bytes": 302,
+      "sha256": "068d0aa083ea189a85a7f98a6cc2c0e56f06afc9a1be91be75fde217239d422c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/device-hub-discovery.json",
+      "retained": "raw/frontend-boundary/device-hub-discovery.json",
+      "bytes": 3600,
+      "sha256": "310d806e34d9ff3bd8712884e5bc3a02cf8f9747348aa6e771c955351b8a809d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/discovery-DeviceHub-file.json",
+      "retained": "raw/frontend-boundary/discovery-DeviceHub-file.json",
+      "bytes": 369,
+      "sha256": "32d1db3b4b0de9d5df50d98ab2e45a2a4385049be25903daeb2a73d74138d3fa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/discovery-DeviceHub-nm.json",
+      "retained": "raw/frontend-boundary/discovery-DeviceHub-nm.json",
+      "bytes": 329,
+      "sha256": "1b3f27eeb1dd7bb5e9274a13614273fa16c3db7f10c1f1731f5e03d513f3f98c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/discovery-DeviceHub-strings.json",
+      "retained": "raw/frontend-boundary/discovery-DeviceHub-strings.json",
+      "bytes": 871,
+      "sha256": "cf2e24574a4c374bae2ac85506747d95c0e31c24618e3a05eb8c3d84eda8597e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/discovery-DevicesTrampoline-file.json",
+      "retained": "raw/frontend-boundary/discovery-DevicesTrampoline-file.json",
+      "bytes": 385,
+      "sha256": "d81d54da9e6b27acaeffbc7903ffef8725c3a5c38185712bd6f1a9f00984137e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/discovery-DevicesTrampoline-nm.json",
+      "retained": "raw/frontend-boundary/discovery-DevicesTrampoline-nm.json",
+      "bytes": 492,
+      "sha256": "471a492a2248bba0927ea0736904268495d93bbe51e5a3886ea4892cbb42e4e6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/discovery-DevicesTrampoline-strings.json",
+      "retained": "raw/frontend-boundary/discovery-DevicesTrampoline-strings.json",
+      "bytes": 282,
+      "sha256": "57809cfb8f3b41c77cbc4808a11b4ed965092858a071ef6efe02177ea85e5dc6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/frontend-controller.py",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/frontend-controller.py",
+      "bytes": 7610,
+      "sha256": "28086714e3d86618b82dfb737c5fd811a3f8ce5e101a4c03cac1db988701f9a0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/revision-from-simulator-controller.patch",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/revision-from-simulator-controller.patch",
+      "bytes": 5683,
+      "sha256": "3e8fe23a30a73ccc43b34f622f926ff5178bb3a7526deb3358d912063898d523"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/protocol.json",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/protocol.json",
+      "bytes": 1876,
+      "sha256": "1dd163eef77f2acf31322ebf7a2c1fef3c9d84184378a7a00c94d3e790d65729"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/pending-ownership.json",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/pending-ownership.json",
+      "bytes": 587,
+      "sha256": "b27a7c190d8c1d1e7ba33240ea7b7d16f730910604bab68561a25f1080a15403"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/ownership.json",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/ownership.json",
+      "bytes": 633,
+      "sha256": "4988a2e14ed4bfcd638e6a934e0c76ef2365b6315e48b65451683d0f062f0366"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/existing-device-ownership-verification.json",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/existing-device-ownership-verification.json",
+      "bytes": 648,
+      "sha256": "237075c9998f09b633691643d6414cb1a55c666979755ea864f77e5cd3a74b16"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/preflight-frontends.json",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/preflight-frontends.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/launched-frontends.json",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/launched-frontends.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/cleanup-before-frontends.json",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/cleanup-before-frontends.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/controller-failure.json",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/controller-failure.json",
+      "bytes": 755,
+      "sha256": "71dcaaaed79846add81ff2897593fd611027e6b08e272f25ed10b49e3a3451c7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/cleanup.json",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/cleanup.json",
+      "bytes": 1798,
+      "sha256": "8a4cf53004021531f26b61017ebd90facd347fc4333efd6cf5e1ce6ae23fd8b5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/cleanup-recovery.json",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/cleanup-recovery.json",
+      "bytes": 660,
+      "sha256": "f9930232ab4cb1055b4fb4921cd3544fd12886fae0b8ba455dd25cd4cceb2833"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/frontend.stdout",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/frontend.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/frontend.stderr",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/frontend.stderr",
+      "bytes": 133317,
+      "sha256": "51475293b79bba6baa60bdd9acf0b6969b2b94ee168415bb629c2b7840c32962"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/environment-readonly/summary.json",
+      "retained": "raw/environment-readonly/summary.json",
+      "bytes": 398,
+      "sha256": "da0fa46a95f5799349e1a639db66da456f475fc5f1a8521fa4c172326f3d6c4c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/environment-readonly/frontend-history-correction.json",
+      "retained": "raw/environment-readonly/frontend-history-correction.json",
+      "bytes": 480,
+      "sha256": "2d770f9d16e1d0f7cf9d8390e77174ab1d24b04a4be928e30ed8185fc9e62e9a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/environment-readonly/simulator-frontends.txt",
+      "retained": "raw/environment-readonly/simulator-frontends.txt",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/environment-readonly/external-report.md",
+      "retained": "raw/environment-readonly/external-report.md",
+      "bytes": 520,
+      "sha256": "c3c32e4dbadac2e186981f5bf2d03a21659257cf4a2a7aa5989f3d0e8be71382"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/full-argv-discovery-tool-result.json",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/full-argv-discovery-tool-result.json",
+      "bytes": 826,
+      "sha256": "d11b3c12293a04554dc12c1af4779956c7ade5012fb30960cd3125e30cbbfd24"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/post-recovery-exact-pids.stdout",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/post-recovery-exact-pids.stdout",
+      "bytes": 97,
+      "sha256": "600effc385a15e122b752b4ce2b0abf44bdcfc6bd2dc22d7779fb0879217203d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/post-recovery-exact-pids.stderr",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/post-recovery-exact-pids.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/post-recovery-exact-pids.json",
+      "retained": "raw/frontend-boundary/devicehub-attempt-1/post-recovery-exact-pids.json",
+      "bytes": 310,
+      "sha256": "de4455ecad5eb34c3e006ec7f247d8e692758c5f75597d3652ab07c9dda95f79"
+    }
+  ],
+  "fileCount": 36,
+  "rawBytes": 186696,
+  "excluded": [
+    "frontend-boundary/device-hub.md",
+    "frontend-boundary/interacting-with-your-app-in-device-hub.md",
+    "environment-readonly/device-list.json",
+    "environment-readonly/device-list.stdout",
+    "environment-readonly/device-list.stderr"
+  ],
+  "exclusionReason": "Full Apple documentation stays scratch only; device-list inventories contain unrelated identifiers. No app bundle/source/runtime packet duplication.",
+  "pendingEvidence": null,
+  "intendedDestination": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-frontend-attempt-2026-10-02",
+  "trackedPromotionAuthorized": false,
+  "newEvidenceQualification": "Full-argv discovery is explicitly transcribed tool-return text/chunk884405, not a raw saved ps file. New post-recovery exact-PID stdout/stderr/command JSON is separately retained."
+}

@@ -1,0 +1,94 @@
+[
+  {
+    "name": "boot-first",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "bootstatus",
+      "9B0B559E-0E57-4C3F-9685-E5892BC41E30",
+      "-b"
+    ],
+    "timeoutSeconds": 180,
+    "timedOut": true,
+    "exitStatus": -15,
+    "elapsedSeconds": 180.01953308299926
+  },
+  {
+    "name": "first-timeout-screen",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "9B0B559E-0E57-4C3F-9685-E5892BC41E30",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/ios-2026-10-02/first-timeout-screen.png"
+    ],
+    "timeoutSeconds": 20,
+    "exitStatus": 0,
+    "elapsedSeconds": 0.43732900000031805
+  },
+  {
+    "name": "owned-reboot-shutdown",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "shutdown",
+      "9B0B559E-0E57-4C3F-9685-E5892BC41E30"
+    ],
+    "timeoutSeconds": 45,
+    "exitStatus": 0,
+    "elapsedSeconds": 3.2663216670007387
+  },
+  {
+    "name": "owned-reboot-boot",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "boot",
+      "9B0B559E-0E57-4C3F-9685-E5892BC41E30"
+    ],
+    "timeoutSeconds": 45,
+    "exitStatus": 0,
+    "elapsedSeconds": 0.6718796669993026
+  },
+  {
+    "name": "boot-after-reboot",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "bootstatus",
+      "9B0B559E-0E57-4C3F-9685-E5892BC41E30",
+      "-b"
+    ],
+    "timeoutSeconds": 480,
+    "timedOut": true,
+    "exitStatus": -15,
+    "elapsedSeconds": 480.0309916670012
+  },
+  {
+    "name": "final-timeout-screen",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "9B0B559E-0E57-4C3F-9685-E5892BC41E30",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/ios-2026-10-02/final-timeout-screen.png"
+    ],
+    "timeoutSeconds": 20,
+    "exitStatus": 0,
+    "elapsedSeconds": 0.526969291997375
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "createdAt": "2026-09-30T20:06:39.722416+00:00",
+  "HEAD": "3c770899547dbe2824db7f0c7e578481a95ecfa5",
+  "HEADSidecarSHA256": "d689a72a606c7e429ff3050da9f4daa3d57ba02c55f9a100c56d71f019ddde18",
+  "currentSidecarMatchesHEAD": true,
+  "packageFiles": 206,
+  "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "immutableSnapshots": [
+    "HEAD-suspension.json",
+    "all-package-baseline-hashes.json"
+  ]
+}

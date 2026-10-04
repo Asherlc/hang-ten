@@ -1,0 +1,32 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__ test_native_tangent_proposal_lifts_and_slides_when_axis_motion_clips_wood ___
+
+    def test_native_tangent_proposal_lifts_and_slides_when_axis_motion_clips_wood():
+        import native_cord_routes as native
+        mesh=trimesh.creation.box(extents=[.1,.1,.01])
+        transform=trimesh.transformations.rotation_matrix(np.radians(15),[1,0,0])
+        mesh.apply_transform(transform)
+        points=trimesh.transform_points(np.array([[-.001,0,.00702],[.001,0,.00702]]),transform)
+        sideways=np.array([0,.001,0])
+        with pytest.raises(ValueError,match="collision"):
+            checked_clearance(mesh,points+sideways,.00202)
+        desired=np.array([0,.001,-.0002])
+        function=getattr(native,"native_slide_steps",None)
+        steps=function(mesh,points,desired,.002) if function else [desired,*[np.eye(3)[i]*desired[i] for i in range(3)]]
+        # This is a direction-proposal test: every actual accepted path still has
+        # its true polyline objective and complete solid/tube certificates checked.
+        feasible=[]
+        for step in steps:
+            if step[1]<=.0005 or step[2]<=0 or step@np.array([0,-1,1])>=0:continue
+            try:checked_clearance(mesh,points+step,.00202)
+            except ValueError:continue
+            feasible.append(step)
+>       assert feasible, "no native-normal-derived coupled lift-and-slide proposal"
+E       AssertionError: no native-normal-derived coupled lift-and-slide proposal
+E       assert []
+
+Tools/HangboardCAD/tests/test_native_cord_tightening.py:272: AssertionError
+=========================== short test summary info ============================
+FAILED Tools/HangboardCAD/tests/test_native_cord_tightening.py::test_native_tangent_proposal_lifts_and_slides_when_axis_motion_clips_wood
+1 failed, 23 deselected in 0.82s

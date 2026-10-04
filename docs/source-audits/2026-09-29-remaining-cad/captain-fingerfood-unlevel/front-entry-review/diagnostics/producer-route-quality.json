@@ -1,0 +1,780 @@
+{
+  "scope": "Independent bounded local corner-cut scan of actual rounded caches; not a global optimum or equilibrium proof.",
+  "sidecarSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+  "poses": {
+    "edge20-front": {
+      "strands": {
+        "left-lead": {
+          "vertices": 12,
+          "fixedHeightShorteningMM": 14.106832819676507,
+          "turnsOverOneDegree": [
+            {
+              "index": 1,
+              "turnDegrees": 5.748109350316967,
+              "woodClearanceMM": 2.0181977978875656,
+              "point": [
+                -0.026404928,
+                0.034203661,
+                0.01650783
+              ]
+            },
+            {
+              "index": 2,
+              "turnDegrees": 5.946583917613391,
+              "woodClearanceMM": 2.017674953985802,
+              "point": [
+                -0.026445098,
+                0.033698932,
+                0.016721289
+              ]
+            },
+            {
+              "index": 3,
+              "turnDegrees": 10.186182864620246,
+              "woodClearanceMM": 2.0456976321725993,
+              "point": [
+                -0.026501556,
+                0.032908174,
+                0.016962592
+              ]
+            },
+            {
+              "index": 4,
+              "turnDegrees": 6.559692279243647,
+              "woodClearanceMM": 2.035616186529108,
+              "point": [
+                -0.02652808,
+                0.032521798,
+                0.01700839
+              ]
+            },
+            {
+              "index": 5,
+              "turnDegrees": 6.027980508443422,
+              "woodClearanceMM": 2.035828,
+              "point": [
+                -0.027125249,
+                0.024061852,
+                0.017035828
+              ]
+            },
+            {
+              "index": 6,
+              "turnDegrees": 6.027766557982172,
+              "woodClearanceMM": 2.020580142971689,
+              "point": [
+                -0.027144042,
+                0.023785341,
+                0.017007477
+              ]
+            },
+            {
+              "index": 7,
+              "turnDegrees": 6.179614286301978,
+              "woodClearanceMM": 2.014539261168363,
+              "point": [
+                -0.027164133,
+                0.02347757,
+                0.016942669
+              ]
+            },
+            {
+              "index": 8,
+              "turnDegrees": 6.179312987188132,
+              "woodClearanceMM": 2.0143802758524267,
+              "point": [
+                -0.027176539,
+                0.023279344,
+                0.016877965
+              ]
+            },
+            {
+              "index": 9,
+              "turnDegrees": 13.321256709532863,
+              "woodClearanceMM": 2.0301727673872993,
+              "point": [
+                -0.027198471,
+                0.022911908,
+                0.01671237
+              ]
+            },
+            {
+              "index": 10,
+              "turnDegrees": 8.069809124515155,
+              "woodClearanceMM": 2.0220778261407237,
+              "point": [
+                -0.027213061,
+                0.022704316,
+                0.016552495
+              ]
+            }
+          ],
+          "feasibleLocalCornerCutsOverOneMicrometer": []
+        },
+        "right-lead": {
+          "vertices": 12,
+          "fixedHeightShorteningMM": 14.105484990068529,
+          "turnsOverOneDegree": [
+            {
+              "index": 1,
+              "turnDegrees": 5.748109350316967,
+              "woodClearanceMM": 2.0181977978875687,
+              "point": [
+                0.026404928,
+                0.034203661,
+                0.01650783
+              ]
+            },
+            {
+              "index": 2,
+              "turnDegrees": 5.946583917613391,
+              "woodClearanceMM": 2.017674953985802,
+              "point": [
+                0.026445098,
+                0.033698932,
+                0.016721289
+              ]
+            },
+            {
+              "index": 3,
+              "turnDegrees": 10.186182864620246,
+              "woodClearanceMM": 2.0456976321725993,
+              "point": [
+                0.026501556,
+                0.032908174,
+                0.016962592
+              ]
+            },
+            {
+              "index": 4,
+              "turnDegrees": 6.559610817803883,
+              "woodClearanceMM": 2.035616186529108,
+              "point": [
+                0.02652808,
+                0.032521798,
+                0.01700839
+              ]
+            },
+            {
+              "index": 5,
+              "turnDegrees": 5.868426741893869,
+              "woodClearanceMM": 2.0358210000000003,
+              "point": [
+                0.027125098,
+                0.024069956,
+                0.017035821
+              ]
+            },
+            {
+              "index": 6,
+              "turnDegrees": 5.868500530288679,
+              "woodClearanceMM": 2.0198258669339886,
+              "point": [
+                0.027143982,
+                0.023791743,
+                0.017008082
+              ]
+            },
+            {
+              "index": 7,
+              "turnDegrees": 6.179407556318052,
+              "woodClearanceMM": 2.0139007858169915,
+              "point": [
+                0.027164139,
+                0.023481894,
+                0.016944643
+              ]
+            },
+            {
+              "index": 8,
+              "turnDegrees": 6.179547288205406,
+              "woodClearanceMM": 2.0140768496041574,
+              "point": [
+                0.027176591,
+                0.023282202,
+                0.016880694
+              ]
+            },
+            {
+              "index": 9,
+              "turnDegrees": 13.522139672859891,
+              "woodClearanceMM": 2.030868462259179,
+              "point": [
+                0.027198529,
+                0.022913312,
+                0.016716917
+              ]
+            },
+            {
+              "index": 10,
+              "turnDegrees": 8.193392532778466,
+              "woodClearanceMM": 2.0225810622967995,
+              "point": [
+                0.027213129,
+                0.022705246,
+                0.016557364
+              ]
+            }
+          ],
+          "feasibleLocalCornerCutsOverOneMicrometer": []
+        }
+      }
+    },
+    "edge25-inverted": {
+      "strands": {
+        "left-lead": {
+          "vertices": 13,
+          "fixedHeightShorteningMM": 14.119493923093362,
+          "turnsOverOneDegree": [
+            {
+              "index": 1,
+              "turnDegrees": 8.851704939805396,
+              "woodClearanceMM": 2.040321096144251,
+              "point": [
+                -0.027218115,
+                -0.033948717,
+                0.016648296
+              ]
+            },
+            {
+              "index": 2,
+              "turnDegrees": 9.293189385901666,
+              "woodClearanceMM": 2.0410237701952187,
+              "point": [
+                -0.027264403,
+                -0.033452739,
+                0.016827141
+              ]
+            },
+            {
+              "index": 3,
+              "turnDegrees": 5.159561356052222,
+              "woodClearanceMM": 2.0223029415609814,
+              "point": [
+                -0.027342159,
+                -0.032595718,
+                0.016985974
+              ]
+            },
+            {
+              "index": 4,
+              "turnDegrees": 5.159429065984936,
+              "woodClearanceMM": 2.0220787365893913,
+              "point": [
+                -0.027362073,
+                -0.032348586,
+                0.017009104
+              ]
+            },
+            {
+              "index": 5,
+              "turnDegrees": 8.375212313296018,
+              "woodClearanceMM": 2.037813999999999,
+              "point": [
+                -0.027936918,
+                -0.02420819,
+                0.017037814
+              ]
+            },
+            {
+              "index": 6,
+              "turnDegrees": 8.375180157632984,
+              "woodClearanceMM": 2.0190002516228156,
+              "point": [
+                -0.027969012,
+                -0.0238035,
+                0.01697961
+              ]
+            },
+            {
+              "index": 7,
+              "turnDegrees": 12.163815859565869,
+              "woodClearanceMM": 2.0287536590310884,
+              "point": [
+                -0.028008434,
+                -0.023358139,
+                0.016847014
+              ]
+            },
+            {
+              "index": 8,
+              "turnDegrees": 11.295608849908131,
+              "woodClearanceMM": 2.027296339202081,
+              "point": [
+                -0.028026905,
+                -0.023091913,
+                0.016701266
+              ]
+            },
+            {
+              "index": 9,
+              "turnDegrees": 2.7144017635629143,
+              "woodClearanceMM": 2.2870722774147927,
+              "point": [
+                -0.028067211,
+                -0.022042092,
+                0.015824633
+              ]
+            },
+            {
+              "index": 10,
+              "turnDegrees": 2.714428992873661,
+              "woodClearanceMM": 2.7996949926872925,
+              "point": [
+                -0.02809414,
+                -0.021371441,
+                0.015208402
+              ]
+            },
+            {
+              "index": 11,
+              "turnDegrees": 3.361540324932741,
+              "woodClearanceMM": 2.53280083672823,
+              "point": [
+                -0.028887894,
+                -0.002506432,
+                -0.00385129
+              ]
+            }
+          ],
+          "feasibleLocalCornerCutsOverOneMicrometer": []
+        },
+        "right-lead": {
+          "vertices": 13,
+          "fixedHeightShorteningMM": 14.123862153397948,
+          "turnsOverOneDegree": [
+            {
+              "index": 1,
+              "turnDegrees": 8.851744617703396,
+              "woodClearanceMM": 2.040321096144251,
+              "point": [
+                0.027218112,
+                -0.033948717,
+                0.016648296
+              ]
+            },
+            {
+              "index": 2,
+              "turnDegrees": 9.293013224091174,
+              "woodClearanceMM": 2.0410243403854293,
+              "point": [
+                0.027264416,
+                -0.033452741,
+                0.016827141
+              ]
+            },
+            {
+              "index": 3,
+              "turnDegrees": 5.158823559313007,
+              "woodClearanceMM": 2.02230653105296,
+              "point": [
+                0.027342241,
+                -0.032595723,
+                0.016985977
+              ]
+            },
+            {
+              "index": 4,
+              "turnDegrees": 5.158797403669191,
+              "woodClearanceMM": 2.0220843115581846,
+              "point": [
+                0.027362192,
+                -0.032348594,
+                0.017009109
+              ]
+            },
+            {
+              "index": 5,
+              "turnDegrees": 7.993738187857989,
+              "woodClearanceMM": 2.037808000000002,
+              "point": [
+                0.027936784,
+                -0.024237325,
+                0.017037808
+              ]
+            },
+            {
+              "index": 6,
+              "turnDegrees": 8.478952675105688,
+              "woodClearanceMM": 2.0190654834698427,
+              "point": [
+                0.027969378,
+                -0.023830245,
+                0.016982053
+              ]
+            },
+            {
+              "index": 7,
+              "turnDegrees": 10.977856144186983,
+              "woodClearanceMM": 2.026759616777831,
+              "point": [
+                0.028009628,
+                -0.02339533,
+                0.016854953
+              ]
+            },
+            {
+              "index": 8,
+              "turnDegrees": 6.498981514574381,
+              "woodClearanceMM": 2.025129389395655,
+              "point": [
+                0.028023612,
+                -0.023184084,
+                0.01674655
+              ]
+            },
+            {
+              "index": 9,
+              "turnDegrees": 6.624784120388682,
+              "woodClearanceMM": 2.021186519145813,
+              "point": [
+                0.028030604,
+                -0.023053019,
+                0.016659405
+              ]
+            },
+            {
+              "index": 10,
+              "turnDegrees": 5.072395352764881,
+              "woodClearanceMM": 2.5565606797674683,
+              "point": [
+                0.028083873,
+                -0.021670163,
+                0.015491074
+              ]
+            },
+            {
+              "index": 11,
+              "turnDegrees": 3.3854879733231185,
+              "woodClearanceMM": 2.523371404540366,
+              "point": [
+                0.028888577,
+                -0.002496448,
+                -0.003862854
+              ]
+            }
+          ],
+          "feasibleLocalCornerCutsOverOneMicrometer": []
+        }
+      }
+    },
+    "jug-reverse": {
+      "strands": {
+        "left-lead": {
+          "vertices": 5,
+          "fixedHeightShorteningMM": 12.175923070926798,
+          "turnsOverOneDegree": [
+            {
+              "index": 1,
+              "turnDegrees": 11.30716592589004,
+              "woodClearanceMM": 2.0206897040273843,
+              "point": [
+                -0.027087266,
+                0.023000522,
+                0.016768351
+              ]
+            },
+            {
+              "index": 2,
+              "turnDegrees": 5.671624461106315,
+              "woodClearanceMM": 2.0179355862039245,
+              "point": [
+                -0.027112974,
+                0.022691423,
+                0.016556719
+              ]
+            },
+            {
+              "index": 3,
+              "turnDegrees": 5.671466689840289,
+              "woodClearanceMM": 2.029487324493423,
+              "point": [
+                -0.027128794,
+                0.022501197,
+                0.016396674
+              ]
+            }
+          ],
+          "feasibleLocalCornerCutsOverOneMicrometer": []
+        },
+        "right-lead": {
+          "vertices": 5,
+          "fixedHeightShorteningMM": 12.174852363752265,
+          "turnsOverOneDegree": [
+            {
+              "index": 1,
+              "turnDegrees": 11.310326623775973,
+              "woodClearanceMM": 2.0211842818927868,
+              "point": [
+                0.027087297,
+                0.022995433,
+                0.016768204
+              ]
+            },
+            {
+              "index": 2,
+              "turnDegrees": 5.673353720360357,
+              "woodClearanceMM": 2.0189156270635435,
+              "point": [
+                0.027113003,
+                0.022686382,
+                0.016556582
+              ]
+            },
+            {
+              "index": 3,
+              "turnDegrees": 5.673034983062308,
+              "woodClearanceMM": 2.0308161956313193,
+              "point": [
+                0.027128823,
+                0.022496192,
+                0.016396541
+              ]
+            }
+          ],
+          "feasibleLocalCornerCutsOverOneMicrometer": []
+        }
+      }
+    },
+    "pocket-right-end": {
+      "strands": {
+        "left-lead": {
+          "vertices": 13,
+          "fixedHeightShorteningMM": 15.155086184236888,
+          "turnsOverOneDegree": [
+            {
+              "index": 1,
+              "turnDegrees": 3.954647459916752,
+              "woodClearanceMM": 2.023845088858918,
+              "point": [
+                -0.059405513,
+                2e-09,
+                0.016410198
+              ]
+            },
+            {
+              "index": 2,
+              "turnDegrees": 4.526938185123269,
+              "woodClearanceMM": 2.0272727838902234,
+              "point": [
+                -0.059115043,
+                2e-09,
+                0.016560476
+              ]
+            },
+            {
+              "index": 3,
+              "turnDegrees": 9.053761658334475,
+              "woodClearanceMM": 2.033712689805509,
+              "point": [
+                -0.058661491,
+                2e-09,
+                0.016751396
+              ]
+            },
+            {
+              "index": 4,
+              "turnDegrees": 5.873536863666939,
+              "woodClearanceMM": 2.0176468249040025,
+              "point": [
+                -0.05793553,
+                2e-09,
+                0.016929368
+              ]
+            },
+            {
+              "index": 5,
+              "turnDegrees": 5.943411046474016,
+              "woodClearanceMM": 2.0175734851922846,
+              "point": [
+                -0.057444546,
+                2e-09,
+                0.016997507
+              ]
+            },
+            {
+              "index": 6,
+              "turnDegrees": 8.129812573843909,
+              "woodClearanceMM": 2.100772000000001,
+              "point": [
+                -0.054423413,
+                0.0,
+                0.017100772
+              ]
+            },
+            {
+              "index": 7,
+              "turnDegrees": 8.500129786377002,
+              "woodClearanceMM": 2.044128493672794,
+              "point": [
+                -0.053845706,
+                0.0,
+                0.017038297
+              ]
+            },
+            {
+              "index": 8,
+              "turnDegrees": 7.605018448657275,
+              "woodClearanceMM": 2.0216244448640808,
+              "point": [
+                -0.053289574,
+                0.0,
+                0.016892686
+              ]
+            },
+            {
+              "index": 9,
+              "turnDegrees": 9.061543780117388,
+              "woodClearanceMM": 2.023339463220151,
+              "point": [
+                -0.05313892,
+                0.0,
+                0.016830968
+              ]
+            },
+            {
+              "index": 10,
+              "turnDegrees": 3.667277983321566,
+              "woodClearanceMM": 2.0265863857121906,
+              "point": [
+                -0.052744225,
+                0.0,
+                0.016590623
+              ]
+            },
+            {
+              "index": 11,
+              "turnDegrees": 9.528359845986168,
+              "woodClearanceMM": 2.0633627737644806,
+              "point": [
+                -0.052494256,
+                0.0,
+                0.016415553
+              ]
+            }
+          ],
+          "feasibleLocalCornerCutsOverOneMicrometer": []
+        },
+        "right-lead": {
+          "vertices": 13,
+          "fixedHeightShorteningMM": 22.21564774260959,
+          "turnsOverOneDegree": [
+            {
+              "index": 1,
+              "turnDegrees": 4.357932220099998,
+              "woodClearanceMM": 2.0172807968763418,
+              "point": [
+                -0.059507984,
+                0.004330432,
+                0.016344619
+              ]
+            },
+            {
+              "index": 2,
+              "turnDegrees": 8.177325346028349,
+              "woodClearanceMM": 2.0225817723680484,
+              "point": [
+                -0.058992722,
+                0.004323479,
+                0.016609604
+              ]
+            },
+            {
+              "index": 3,
+              "turnDegrees": 8.673739028205981,
+              "woodClearanceMM": 2.0388033878719654,
+              "point": [
+                -0.05816679,
+                0.004273279,
+                0.016901347
+              ]
+            },
+            {
+              "index": 4,
+              "turnDegrees": 5.826540492805099,
+              "woodClearanceMM": 2.0378006204599197,
+              "point": [
+                -0.057730439,
+                0.004241955,
+                0.016984554
+              ]
+            },
+            {
+              "index": 5,
+              "turnDegrees": 5.073231265886631,
+              "woodClearanceMM": 2.0294854610283726,
+              "point": [
+                -0.057435916,
+                0.004221226,
+                0.017010089
+              ]
+            },
+            {
+              "index": 6,
+              "turnDegrees": 4.054582503275174,
+              "woodClearanceMM": 2.162293962749976,
+              "point": [
+                -0.053204408,
+                0.004010409,
+                0.017010609
+              ]
+            },
+            {
+              "index": 7,
+              "turnDegrees": 4.945954470260363,
+              "woodClearanceMM": 2.4342216448345435,
+              "point": [
+                -0.05256355,
+                0.003978937,
+                0.016965209
+              ]
+            },
+            {
+              "index": 8,
+              "turnDegrees": 6.424391162493074,
+              "woodClearanceMM": 2.960788992953839,
+              "point": [
+                -0.051611031,
+                0.003932995,
+                0.016814288
+              ]
+            },
+            {
+              "index": 9,
+              "turnDegrees": 9.785999234151545,
+              "woodClearanceMM": 2.0296437161277843,
+              "point": [
+                0.026608718,
+                0.000250477,
+                -0.004780058
+              ]
+            },
+            {
+              "index": 10,
+              "turnDegrees": 9.443938984188566,
+              "woodClearanceMM": 2.0173489650479777,
+              "point": [
+                0.027010063,
+                0.000231605,
+                -0.004969152
+              ]
+            },
+            {
+              "index": 11,
+              "turnDegrees": 7.357518159470688,
+              "woodClearanceMM": 2.014980225416986,
+              "point": [
+                0.027256743,
+                0.000211638,
+                -0.005139228
+              ]
+            }
+          ],
+          "feasibleLocalCornerCutsOverOneMicrometer": []
+        }
+      }
+    }
+  },
+  "testedTrimRule": "min(1 mm, f*incoming length, f*outgoing length), f in [0.1,0.01,0.001]; only interior turns >1 degree. This does not cover arbitrary trim sizes.",
+  "interpretation": "No >1 micrometer cuts passed in this specific small-trim scan. A separate independent 45%-edge scan found tiny additional cuts; do not claim stationarity or no arbitrary feasible shortening."
+}

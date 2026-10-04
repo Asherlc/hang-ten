@@ -1,4 +1,5 @@
 import Foundation
+import simd
 
 struct ResolvedContactSnapshot: Codable, Hashable {
     let boardID: String
@@ -6,6 +7,7 @@ struct ResolvedContactSnapshot: Codable, Hashable {
     let modelSHA256: String?
     let requirement: ContactRequirement
     let contactIDs: [String]
+    let positionID: String?
     /// Present for catalog task recordings; legacy snapshots keep one requirement.
     let handTargets: [PlanHandTarget]?
 
@@ -15,6 +17,7 @@ struct ResolvedContactSnapshot: Codable, Hashable {
         modelSHA256: String?,
         requirement: ContactRequirement,
         contactIDs: [String],
+        positionID: String? = nil,
         handTargets: [PlanHandTarget]? = nil
     ) {
         self.boardID = boardID
@@ -22,11 +25,12 @@ struct ResolvedContactSnapshot: Codable, Hashable {
         self.modelSHA256 = modelSHA256
         self.requirement = requirement
         self.contactIDs = contactIDs
+        self.positionID = positionID
         self.handTargets = handTargets
     }
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case boardID, revisionID, modelSHA256, requirement, contactIDs, handTargets
+        case boardID, revisionID, modelSHA256, requirement, contactIDs, positionID, handTargets
     }
 
     init(from decoder: Decoder) throws {
@@ -48,6 +52,7 @@ struct ResolvedContactSnapshot: Codable, Hashable {
         modelSHA256 = try container.decodeIfPresent(String.self, forKey: .modelSHA256)
         requirement = try container.decode(ContactRequirement.self, forKey: .requirement)
         contactIDs = try container.decode([String].self, forKey: .contactIDs)
+        positionID = try container.decodeIfPresent(String.self, forKey: .positionID)
         handTargets = try container.decodeIfPresent([PlanHandTarget].self, forKey: .handTargets)
     }
 }
@@ -431,6 +436,11 @@ enum ContactResolutionError: LocalizedError, Equatable {
 }
 
 enum ContactResolver {
+    struct Selection {
+        let contacts: [PhysicalContact]
+        let positionID: String?
+    }
+
     /// Assigns one contact to each hand in a simultaneous plan task. Repeated
     /// IDs mean two hands share a capacity-two contact, or use the same contact
     /// on separate copies of a one-hand board.
@@ -439,12 +449,95 @@ enum ContactResolver {
         step: WorkoutStep,
         board: BoardRevision
     ) throws -> [PhysicalContact] {
-        guard (1...2).contains(task.count) else { throw ContactResolutionError.noMatches }
-        let positionContactIDs = contactIDsForDefaultPosition(on: board)
+        try resolveSelection(task, step: step, board: board).contacts
+    }
+
+    static func resolveSelection(
+        _ task: [PlanHandTarget], step: WorkoutStep, board: BoardRevision
+    ) throws -> Selection {
+        if let selection = reusableCADPairSelection(task, step: step, board: board) {
+            return selection
+        }
+        guard board.positions.contains(where: { !$0.effectiveDepths.isEmpty }) else {
+            let available = board.contacts.filter { contactIDsForDefaultPosition(on: board).contains($0.id) }
+            return Selection(contacts: try resolveTaskCandidates(task, step: step, board: board,
+                presentation: board.defaultPresentation, available: available), positionID: nil)
+        }
+        let preferred = board.positions.filter { $0.presentationID == board.defaultPresentation.id }
+            + board.positions.filter { $0.presentationID != board.defaultPresentation.id }
+        for position in preferred {
+            guard let presentation = board.presentation(id: position.presentationID),
+                  let contacts = try? resolveTaskCandidates(task, step: step, board: board,
+                    presentation: presentation, available: board.contacts(inPosition: position.id)) else { continue }
+            return Selection(contacts: contacts, positionID: position.id)
+        }
+        throw ContactResolutionError.noMatches
+    }
+
+    /// Reusable suspended units have model-local descriptor frames. Resolve
+    /// only one matching slot pair with one authored common position. Ambiguous
+    /// ranges and differing candidate sets follow the existing resolver.
+    private static func reusableCADPairSelection(
+        _ task: [PlanHandTarget], step: WorkoutStep, board: BoardRevision
+    ) -> Selection? {
+        guard task.count == 2,
+              case .model(let media) = board.defaultPresentation.media,
+              let instances = media.instances, instances.count == 2,
+              instances.allSatisfy({
+                  if case .cadRoutedCord = $0.suspension { return true }
+                  return false
+              }) else { return nil }
+        let available = board.contacts.filter { contactIDsForDefaultPosition(on: board).contains($0.id) }
         let candidates = task.map { hand in
-            board.contacts.filter { contact in
-                positionContactIDs.contains(contact.id)
-                    && matches(hand.target?.legacyRequirement ?? ContactRequirement(), contact: contact)
+            available.filter {
+                matches(hand.target?.legacyRequirement ?? ContactRequirement(), contact: $0)
+                    && matches(stepGripType: step.gripType, contact: $0)
+            }
+        }
+        guard candidates.allSatisfy({ $0.count == 2 }),
+              Set(candidates[0].map(\.id)) == Set(candidates[1].map(\.id)),
+              let pair = outermostPair(from: candidates[0], in: board.defaultPresentation) else { return nil }
+        let positions = board.positions.filter {
+            $0.presentationID == board.defaultPresentation.id && Set($0.contactIDs) == Set(pair.map(\.id))
+        }
+        guard positions.count == 1, let position = positions.first,
+              media.descriptor.modelBounds.minimum.count == 3,
+              media.descriptor.modelBounds.maximum.count == 3 else { return nil }
+        let center = (SIMD3<Double>(media.descriptor.modelBounds.minimum)
+                      + SIMD3<Double>(media.descriptor.modelBounds.maximum)) / 2
+        var placed: [(contact: PhysicalContact, x: Float)] = []
+        for instance in instances {
+            guard let pose = instance.suspension?.canonicalPoses[position.id],
+                  let transform = try? SuspendedBoardPresentation.boardTransform(for: pose),
+                  instance.baseTransform.translation.count == 3,
+                  let contact = pair.first(where: { $0.equipmentObjectID == instance.equipmentObjectID }) else { return nil }
+            // Base rotation/reflection is about the bounds center; it leaves
+            // that center fixed. Native CAD then composes pose * base.
+            let baseCenter = center + SIMD3<Double>(instance.baseTransform.translation)
+            let world = transform * SIMD4<Float>(Float(baseCenter.x), Float(baseCenter.y), Float(baseCenter.z), 1)
+            guard world.x.isFinite else { return nil }
+            placed.append((contact, world.x))
+        }
+        guard placed.count == 2, placed[0].x != placed[1].x else { return nil }
+        placed.sort { $0.x < $1.x }
+        let firstSide = task[0].side ?? (task[1].side == .left ? .right : .left)
+        let secondSide = task[1].side ?? (firstSide == .left ? .right : .left)
+        guard firstSide != secondSide else { return nil }
+        let bySide: [WorkoutSide: PhysicalContact] = [.left: placed[0].contact, .right: placed[1].contact]
+        guard let first = bySide[firstSide], let second = bySide[secondSide],
+              first.side == nil || first.side?.rawValue == firstSide.rawValue,
+              second.side == nil || second.side?.rawValue == secondSide.rawValue else { return nil }
+        return Selection(contacts: [first, second], positionID: position.id)
+    }
+
+    private static func resolveTaskCandidates(
+        _ task: [PlanHandTarget], step: WorkoutStep, board: BoardRevision,
+        presentation: BoardPresentation, available: [PhysicalContact]
+    ) throws -> [PhysicalContact] {
+        guard (1...2).contains(task.count) else { throw ContactResolutionError.noMatches }
+        let candidates = task.map { hand in
+            available.filter { contact in
+                matches(hand.target?.legacyRequirement ?? ContactRequirement(), contact: contact)
                     && matches(stepGripType: step.gripType, contact: contact)
             }
         }
@@ -452,9 +545,9 @@ enum ContactResolver {
 
         if task.count == 1 {
             let narrowed = board.isOneHanded ? candidates[0] : candidates[0].filter {
-                contact($0, fits: task[0].side, on: board)
+                contact($0, fits: task[0].side, in: presentation)
             }
-            return try singleCandidate(from: narrowed, on: board)
+            return try singleCandidate(from: narrowed, in: presentation)
         }
 
         let firstSide = task[0].side ?? (task[1].side == .left ? .right : .left)
@@ -464,16 +557,16 @@ enum ContactResolver {
         }
 
         if board.isOneHanded {
-            return try candidates.map { try singleCandidate(from: $0, on: board)[0] }
+            return try candidates.map { try singleCandidate(from: $0, in: presentation)[0] }
         }
 
-        let firstCandidates = candidates[0].filter { contact($0, fits: firstSide, on: board) }
-        let secondCandidates = candidates[1].filter { contact($0, fits: secondSide, on: board) }
+        let firstCandidates = candidates[0].filter { contact($0, fits: firstSide, in: presentation) }
+        let secondCandidates = candidates[1].filter { contact($0, fits: secondSide, in: presentation) }
         let pairs = firstCandidates.flatMap { first in
             secondCandidates.compactMap { second -> (PhysicalContact, PhysicalContact, CGFloat)? in
                 guard first.id != second.id,
-                      let firstFrame = first.resolvedFrame(in: board.defaultPresentation),
-                      let secondFrame = second.resolvedFrame(in: board.defaultPresentation) else {
+                      let firstFrame = first.resolvedFrame(in: presentation),
+                      let secondFrame = second.resolvedFrame(in: presentation) else {
                     return nil
                 }
                 return (first, second, abs(firstFrame.rect.midX - secondFrame.rect.midX))
@@ -490,7 +583,7 @@ enum ContactResolver {
         let shared = candidates[0].filter { first in
             first.handCapacity == 2 && candidates[1].contains(where: { $0.id == first.id })
         }
-        if let selected = try? singleCandidate(from: shared, on: board).first {
+        if let selected = try? singleCandidate(from: shared, in: presentation).first {
             return [selected, selected]
         }
         throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates[0].count + candidates[1].count)
@@ -510,18 +603,21 @@ enum ContactResolver {
         board: BoardRevision
     ) throws -> [[PhysicalContact]] {
         switch target {
-        case .selfSelected: []
+        case .selfSelected: return []
         case .requirements(let requirements):
-            try requirements.map { try resolve($0, step: step, board: board) }
+            let selection = try resolveSelection(requirements, step: step, board: board)
+            return try requirements.map {
+                try resolveSelection($0, step: step, board: board, inPosition: selection.positionID).contacts
+            }
         case .tasks(let tasks):
-            try resolve(tasks, step: step, board: board)
+            return try resolve(tasks, step: step, board: board)
         }
     }
 
     private static func contact(
         _ contact: PhysicalContact,
         fits side: WorkoutSide?,
-        on board: BoardRevision
+        in presentation: BoardPresentation
     ) -> Bool {
         guard let side else { return true }
         if let authored = contact.side { return authored.rawValue == side.rawValue }
@@ -529,7 +625,7 @@ enum ContactResolver {
         // authored equipment-object IDs identify the physical left/right unit.
         if contact.equipmentObjectID == "left-ring" { return side == .left }
         if contact.equipmentObjectID == "right-ring" { return side == .right }
-        guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else { return false }
+        guard let frame = contact.resolvedFrame(in: presentation) else { return false }
         if frame.rect.minX <= 0.5 && frame.rect.maxX >= 0.5 { return true }
         return side == .left ? frame.rect.midX < 0.5 : frame.rect.midX > 0.5
     }
@@ -539,10 +635,28 @@ enum ContactResolver {
         step: WorkoutStep,
         board: BoardRevision
     ) throws -> [PhysicalContact] {
-        let positionContactIDs = contactIDsForDefaultPosition(on: board)
-        var candidates = board.contacts.filter { contact in
-            positionContactIDs.contains(contact.id)
-                && matches(requirement, contact: contact)
+        try resolveSelection(requirement, step: step, board: board).contacts
+    }
+
+    static func resolveSelection(_ requirement: ContactRequirement, step: WorkoutStep, board: BoardRevision,
+                                 inPosition positionID: String? = nil) throws -> Selection {
+        if let positionID {
+            guard let position = board.position(id: positionID),
+                  let presentation = board.presentation(id: position.presentationID) else { throw ContactResolutionError.noMatches }
+            return Selection(contacts: try resolveCandidates(requirement, step: step, presentation: presentation,
+                contacts: board.contacts(inPosition: positionID)), positionID: positionID)
+        }
+        guard board.positions.contains(where: { !$0.effectiveDepths.isEmpty }) else {
+            return Selection(contacts: try resolveCandidates(requirement, step: step, presentation: board.defaultPresentation,
+                contacts: board.contacts.filter { contactIDsForDefaultPosition(on: board).contains($0.id) }), positionID: nil)
+        }
+        return try resolveSelection([requirement], step: step, board: board)
+    }
+
+    private static func resolveCandidates(_ requirement: ContactRequirement, step: WorkoutStep,
+                                          presentation: BoardPresentation, contacts: [PhysicalContact]) throws -> [PhysicalContact] {
+        var candidates = contacts.filter { contact in
+            matches(requirement, contact: contact)
                 && matches(stepGripType: step.gripType, contact: contact)
         }
 
@@ -552,14 +666,14 @@ enum ContactResolver {
 
         switch requirement.selection {
         case .single:
-            candidates = try singleCandidate(from: candidates, on: board)
+            candidates = try singleCandidate(from: candidates, in: presentation)
         case .bilateralPair:
             guard step.handUse == .double,
                   step.side == .both else {
                 throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
             }
             guard candidates.count >= 2,
-                  let pair = outermostPair(from: candidates, on: board) else {
+                  let pair = outermostPair(from: candidates, in: presentation) else {
                 throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
             }
             candidates = pair
@@ -573,10 +687,35 @@ enum ContactResolver {
         step: WorkoutStep,
         board: BoardRevision
     ) throws -> [PhysicalContact] {
+        if board.positions.contains(where: { !$0.effectiveDepths.isEmpty }) {
+            return try resolveSelection(requirements, step: step, board: board).contacts
+        }
         let resolvedIDs = try requirements.reduce(into: Set<String>()) { result, requirement in
             result.formUnion(try resolve(requirement, step: step, board: board).map(\.id))
         }
         return board.contacts.filter { resolvedIDs.contains($0.id) }
+    }
+
+    static func resolveSelection(_ requirements: [ContactRequirement], step: WorkoutStep, board: BoardRevision) throws -> Selection {
+        guard board.positions.contains(where: { !$0.effectiveDepths.isEmpty }) else {
+            return Selection(contacts: try resolve(requirements, step: step, board: board), positionID: nil)
+        }
+        let preferred = board.positions.filter { $0.presentationID == board.defaultPresentation.id }
+            + board.positions.filter { $0.presentationID != board.defaultPresentation.id }
+        for position in preferred {
+            guard let presentation = board.presentation(id: position.presentationID) else { continue }
+            let available = board.contacts(inPosition: position.id)
+            var selected = Set<String>()
+            var valid = true
+            for requirement in requirements {
+                guard let contacts = try? resolveCandidates(requirement, step: step, presentation: presentation, contacts: available) else {
+                    valid = false; break
+                }
+                selected.formUnion(contacts.map(\.id))
+            }
+            if valid { return Selection(contacts: available.filter { selected.contains($0.id) }, positionID: position.id) }
+        }
+        throw ContactResolutionError.noMatches
     }
 
     /// Every contact shown by the default presentation, including multi-position
@@ -613,7 +752,7 @@ enum ContactResolver {
 
     private static func singleCandidate(
         from candidates: [PhysicalContact],
-        on board: BoardRevision
+        in presentation: BoardPresentation
     ) throws -> [PhysicalContact] {
         guard candidates.count > 1 else {
             guard candidates.count == 1 else {
@@ -623,7 +762,7 @@ enum ContactResolver {
         }
 
         let framedCandidates = candidates.compactMap { contact -> (contact: PhysicalContact, frame: HoldFrame)? in
-            guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else {
+            guard let frame = contact.resolvedFrame(in: presentation) else {
                 return nil
             }
             return (contact, frame)
@@ -644,10 +783,38 @@ enum ContactResolver {
 
     private static func outermostPair(
         from candidates: [PhysicalContact],
-        on board: BoardRevision
+        in presentation: BoardPresentation
     ) -> [PhysicalContact]? {
+        if case .model(let media) = presentation.media,
+           let instances = media.instances, instances.count == 2, candidates.count == 2 {
+            // Descriptor frames describe one reusable unit. Explicit slot maps
+            // identify the corresponding grip across the two physical units.
+            guard Set(instances.map(\.equipmentObjectID)).count == 2,
+                  instances.allSatisfy({ !$0.equipmentObjectID.isEmpty }),
+                  Set(candidates.map(\.id)).count == 2 else { return nil }
+            var paired: [(contact: PhysicalContact, slotID: String)] = []
+            for instance in instances {
+                let owned = candidates.filter { $0.equipmentObjectID == instance.equipmentObjectID }
+                guard owned.count == 1, let contact = owned.first else { return nil }
+                let slots = instance.contactIDsBySlotID.filter { $0.value == contact.id }
+                let mappingCount = instances.reduce(0) { count, item in
+                    count + item.contactIDsBySlotID.values.filter { $0 == contact.id }.count
+                }
+                guard slots.count == 1, mappingCount == 1, let slotID = slots.keys.first else { return nil }
+                paired.append((contact, slotID))
+            }
+            let first = paired[0], second = paired[1]
+            guard first.slotID == second.slotID,
+                  first.contact.kind == second.contact.kind,
+                  first.contact.shape == second.contact.shape,
+                  first.contact.depth == second.contact.depth,
+                  first.contact.fingerCapacity == second.contact.fingerCapacity,
+                  first.contact.handCapacity == second.contact.handCapacity else { return nil }
+            return paired.map(\.contact)
+        }
+
         let framedCandidates = candidates.compactMap { contact -> (contact: PhysicalContact, frame: HoldFrame)? in
-            guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else {
+            guard let frame = contact.resolvedFrame(in: presentation) else {
                 return nil
             }
             return (contact, frame)
@@ -792,13 +959,16 @@ struct WorkoutActivityRecorder {
                             recordedTarget = .selfSelected
                         } else {
                             let contacts: [PhysicalContact]
+                            var selectedPositionID: String?
                             if task.count == 1, task[0].side == nil {
                                 contacts = []
                             } else {
                                 do {
-                                    contacts = try ContactResolver.resolve(
+                                    let selection = try ContactResolver.resolveSelection(
                                         task, step: recordedStep, board: board
                                     )
+                                    contacts = selection.contacts
+                                    selectedPositionID = selection.positionID
                                 } catch {
                                     guard allowsSourceLinkedRequirementFallback(
                                         segment,
@@ -826,11 +996,14 @@ struct WorkoutActivityRecorder {
                             recordedTarget = .resolvedContacts(ResolvedContactSnapshot(
                                 boardID: board.id,
                                 revisionID: board.revisionID,
-                                modelSHA256: modelSHA256(for: board.defaultPresentation),
+                                modelSHA256: modelSHA256(for: board.position(id: selectedPositionID).flatMap {
+                                    board.presentation(id: $0.presentationID)
+                                } ?? board.defaultPresentation),
                                 requirement: ContactRequirement(),
                                 contactIDs: zip(task, contacts).compactMap { hand, contact in
                                     hand.target == nil ? nil : contact.id
                                 },
+                                positionID: selectedPositionID,
                                 handTargets: task
                             ))
                         }
@@ -848,11 +1021,14 @@ struct WorkoutActivityRecorder {
                     let requirements = segmentTarget.contactRequirements
                     do {
                         var resolvedSegments: [RecordedActivitySegment] = []
+                        let positionID = try ContactResolver.resolveSelection(requirements,
+                            step: recordedStep, board: board).positionID
                         for requirement in requirements {
-                            let contacts = try ContactResolver.resolve(
+                            let selection = try ContactResolver.resolveSelection(
                                 requirement,
                                 step: recordedStep,
-                                board: board
+                                board: board,
+                                inPosition: positionID
                             )
                             resolvedSegments.append(
                                 RecordedActivitySegment(
@@ -863,9 +1039,12 @@ struct WorkoutActivityRecorder {
                                         ResolvedContactSnapshot(
                                             boardID: board.id,
                                             revisionID: board.revisionID,
-                                            modelSHA256: modelSHA256(for: board.defaultPresentation),
+                                            modelSHA256: modelSHA256(for: board.position(id: selection.positionID).flatMap {
+                                                board.presentation(id: $0.presentationID)
+                                            } ?? board.defaultPresentation),
                                             requirement: requirement,
-                                            contactIDs: contacts.map(\.id)
+                                            contactIDs: selection.contacts.map(\.id),
+                                            positionID: selection.positionID
                                         )
                                     ),
                                     durationSeconds: duration,
@@ -931,6 +1110,7 @@ struct WorkoutActivityRecorder {
         selectedHandSide: WorkoutSide?,
         board: BoardRevision
     ) throws -> WorkoutStep {
+        guard !step.isRestStep else { return step }
         let boardIsOneHanded = board.isOneHanded
         if step.segments.contains(where: { $0.target?.planTasks != nil }) { return step }
         guard step.handUse == .either || (step.handUse == .double && boardIsOneHanded) else { return step }

@@ -1,0 +1,11 @@
+{
+  "simulator": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "actualHomeConfirmed": true,
+  "responsiveAXConfirmed": true,
+  "screenshotSHA256": "c3c8738fa8adec1d168266d12d369a08973262f3d121f56667e04f30afd8a25a",
+  "reviewer": "root Astra",
+  "reviewedAtUTC": "2026-10-02T18:41:19.873553+00:00",
+  "wholeImageReviewed": true,
+  "observed": "Visible iOS Home icons/widgets, Settings and Safari; no startup spinner/logo",
+  "scope": "Simulator readiness only, not app validation"
+}

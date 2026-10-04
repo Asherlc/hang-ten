@@ -1,0 +1,363 @@
+{
+  "passed": true,
+  "packages": [
+    {
+      "package": "aelith-cyclops-011",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+          "meshCount": 2,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "captain-fingerfood-dual",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+          "meshCount": 5,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "captain-fingerfood-unlevel",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+          "meshCount": 5,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "frictitious-nug",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+          "meshCount": 7,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "frictitious-port-a-board",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+          "meshCount": 10,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "mammut-diamond-finger",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+          "meshCount": 17,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "metolius-contact",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+          "meshCount": 34,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "metolius-simulator-3d",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+          "meshCount": 31,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "nature-stone-hanger",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+          "meshCount": 9,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "nature-stone-hanger-mini",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+          "meshCount": 5,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "nature-stone-hanger-mini-karma8a",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46",
+          "meshCount": 4,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "owl-climb-poker",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+          "meshCount": 35,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "plateau-lifting-edge",
+      "models": [
+        {
+          "presentationID": "depth-18mm",
+          "SHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+          "meshCount": 2,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        },
+        {
+          "presentationID": "depth-15mm",
+          "SHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+          "meshCount": 2,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        },
+        {
+          "presentationID": "depth-10mm",
+          "SHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+          "meshCount": 2,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "tension-flash-board",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+          "meshCount": 8,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "trango-rock-prodigy-forge",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+          "meshCount": 21,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "yy-baguette",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+          "meshCount": 7,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "yy-baguette-evo",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+          "meshCount": 21,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "yy-penta-evo",
+      "models": [
+        {
+          "presentationID": "front-pair",
+          "SHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+          "meshCount": 10,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "yy-travelboard",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+          "meshCount": 7,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "zlagboard-evo",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "92e0e754d888a5ab6976f22197b11f9f55353309ef6648a9307c45c404d4dabe",
+          "meshCount": 22,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    },
+    {
+      "package": "zlagboard-pro",
+      "models": [
+        {
+          "presentationID": "primary",
+          "SHA256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+          "meshCount": 29,
+          "archiveMembers": [
+            "stage.usdc"
+          ],
+          "materials": 0,
+          "shaders": 0,
+          "materialBindings": 0
+        }
+      ]
+    }
+  ]
+}

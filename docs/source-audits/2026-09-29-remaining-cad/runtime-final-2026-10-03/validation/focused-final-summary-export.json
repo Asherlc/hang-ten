@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "xcresulttool",
+    "get",
+    "test-results",
+    "summary",
+    "--path",
+    ".context/placid-badger/runtime-final-2026-10-03/placid-badger-focused-final.xcresult"
+  ],
+  "exitCode": 0,
+  "stderr": ""
+}

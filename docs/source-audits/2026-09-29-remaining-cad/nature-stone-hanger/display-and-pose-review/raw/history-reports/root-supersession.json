@@ -1,0 +1,20 @@
+{
+  "status": "superseded-before-global-application",
+  "atUTC": "2026-10-01T22:37:14.370184+00:00",
+  "userCorrection": "there is 1 vertical groove on either side that the cord nestles into",
+  "interpretation": "Add one longitudinal cord groove on each side; preserve the three transverse adjustment notches on each side shown in the retained manufacturer photo and drawing. Cord enters the existing side holes.",
+  "priorPackageHashes": {
+    "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+    "Hangboards/nature-stone-hanger/assets/primary.usdz": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+    "Hangboards/nature-stone-hanger/assets/primary.model.json": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
+    "Hangboards/nature-stone-hanger/suspension.json": "7c24835c38c36ad16805c605970e939f02fa40007ee12b219a4d9da1860746fb"
+  },
+  "priorPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review",
+  "priorPacketInventorySHA256": "3845bea0a7756714fca83efb6d9d7ccdcca06f3fa737ff78858d3dd5bc65772b",
+  "priorRecordUpdateSHA256": "1b4034b392b0b2acbe9e73f388f2aa0527fd4d04052e853a163eac25c6a41ce7",
+  "priorGlobalStage": "final-records-stage",
+  "globalApplicationOccurred": false,
+  "newCommitCreated": false,
+  "humanAcceptance": "pending",
+  "previousNativeAndRuntimeChecks": "Valid only for their recorded previous package hashes; fresh checks required for corrected CAD geometry."
+}

@@ -1,0 +1,340 @@
+{
+  "scope": "Docs-only exact canonical audit, scratch integration and source-restoration evidence; no runtime outputs copied.",
+  "entries": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-final-canonical-audit/commands.json",
+      "retained": "raw/pristine-final-canonical-audit/commands.json",
+      "sha256": "0c7159b2f39e3fd7629789c5fe251b35e58a81989a0d8b43857e54a7f96bb27e",
+      "bytes": 11666
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-final-canonical-audit/ls-remote.txt",
+      "retained": "raw/pristine-final-canonical-audit/ls-remote.txt",
+      "sha256": "40c16f6123168878e373f05a3b36db7eff44d6c16428017f19a10e181446c1a3",
+      "bytes": 170
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-final-canonical-audit/report.json",
+      "retained": "raw/pristine-final-canonical-audit/report.json",
+      "sha256": "5d0111c774ca8014f238c4bb2f5bf4d9d0aaa3c05c22951c6ea8d8bea64f755b",
+      "bytes": 15656
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/Tools__HangboardCAD__native_cord_routes.py.base",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/Tools__HangboardCAD__native_cord_routes.py.base",
+      "sha256": "71e72d2883c431c668a2f4fdbd7c000ffe44939c74186ed3753560f8b63bf976",
+      "bytes": 46894
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/Tools__HangboardCAD__native_cord_routes.py.merge-preview.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/Tools__HangboardCAD__native_cord_routes.py.merge-preview.txt",
+      "sha256": "334fa7e214ae9179ea997ba6ebe40c91673996b18f1bf33dffcfb4169bc01eff",
+      "bytes": 48313
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/Tools__HangboardCAD__native_cord_routes.py.merge-stderr.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/Tools__HangboardCAD__native_cord_routes.py.merge-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/Tools__HangboardCAD__native_cord_routes.py.own",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/Tools__HangboardCAD__native_cord_routes.py.own",
+      "sha256": "1bc333253dced31cafb23f08e5bc6892ed0d33ed24541c5f94b6371fc6c2cd9f",
+      "bytes": 48065
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/Tools__HangboardCAD__native_cord_routes.py.parent",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/Tools__HangboardCAD__native_cord_routes.py.parent",
+      "sha256": "307a4db1b44c80396f2e42638f0fbc0ff6ea588d9b96829bebce9c014da45e5a",
+      "bytes": 47107
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/Tools__HangboardPackages__src__hangboard_packages__cad_source.py.base",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/Tools__HangboardPackages__src__hangboard_packages__cad_source.py.base",
+      "sha256": "02fb4d9089a8961bdd24241eca0ac3f2b0ecc8b4c0812cb46879e49b5c17fe94",
+      "bytes": 27436
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/Tools__HangboardPackages__src__hangboard_packages__cad_source.py.merge-preview.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/Tools__HangboardPackages__src__hangboard_packages__cad_source.py.merge-preview.txt",
+      "sha256": "2cb13d2ee37217b6836262c1c3c5f8273f37b0709b549ad2060ad966510df9dd",
+      "bytes": 30440
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/Tools__HangboardPackages__src__hangboard_packages__cad_source.py.merge-stderr.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/Tools__HangboardPackages__src__hangboard_packages__cad_source.py.merge-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/Tools__HangboardPackages__src__hangboard_packages__cad_source.py.own",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/Tools__HangboardPackages__src__hangboard_packages__cad_source.py.own",
+      "sha256": "1c0865f177fd9f50ee2a59f656126f67a6d6b1aa85c70ef3b791003f8de7ad09",
+      "bytes": 28649
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/Tools__HangboardPackages__src__hangboard_packages__cad_source.py.parent",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/Tools__HangboardPackages__src__hangboard_packages__cad_source.py.parent",
+      "sha256": "fe7b137ffd758f70240689ef2c260c30ac4db6174aa06c579263a79dcf370637",
+      "bytes": 29227
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/combined-delivery-checksums.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/combined-delivery-checksums.txt",
+      "sha256": "2061b24381bc1d193d9eb90aa04bdc20ac045325024426b2006b605d00ce1527",
+      "bytes": 16633
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__HANGBOARD_CORD_AUTHORING.md.base",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__HANGBOARD_CORD_AUTHORING.md.base",
+      "sha256": "b5fce35df94ca6ef29e26676b5712cf6618d835190aa66fda6394ed0e5a8fea7",
+      "bytes": 24313
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__HANGBOARD_CORD_AUTHORING.md.merge-preview.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__HANGBOARD_CORD_AUTHORING.md.merge-preview.txt",
+      "sha256": "219d470b7a261157338d4f931a2fad1538ce05faf5bb8a9bcb9f1a2812d4a4cb",
+      "bytes": 30852
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__HANGBOARD_CORD_AUTHORING.md.merge-stderr.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__HANGBOARD_CORD_AUTHORING.md.merge-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__HANGBOARD_CORD_AUTHORING.md.own",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__HANGBOARD_CORD_AUTHORING.md.own",
+      "sha256": "7782a584cd4315aecdcbe010b36555699f8f1ca577fc1ace228a168f849ca8d5",
+      "bytes": 25434
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__HANGBOARD_CORD_AUTHORING.md.parent",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__HANGBOARD_CORD_AUTHORING.md.parent",
+      "sha256": "85df120f1b298e28b3028b5eb63920170ee789f469318eaf90547828e62df354",
+      "bytes": 29731
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__model-delivery-lock.json.base",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__model-delivery-lock.json.base",
+      "sha256": "3d78ba9da8df11cd3a5bc3bd8539099c8d2f7952e0e271e4bbf1c1ee2b4c85a1",
+      "bytes": 160667
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__model-delivery-lock.json.merge-preview.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__model-delivery-lock.json.merge-preview.txt",
+      "sha256": "397d5d6726b66a3290319bd8115348c8384cebf4809aba8c7d5d4097ae66ba62",
+      "bytes": 223030
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__model-delivery-lock.json.merge-stderr.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__model-delivery-lock.json.merge-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__model-delivery-lock.json.own",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__model-delivery-lock.json.own",
+      "sha256": "17696157bb63337cfa50f1ba096a93c0dfeaabd74ef0a17c02dc16fa3c7f6028",
+      "bytes": 167318
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__model-delivery-lock.json.parent",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__model-delivery-lock.json.parent",
+      "sha256": "0180ab741348fbfac2abb8d3b1e9d74107e2e0c55dd5adb31176ca67f022b6f9",
+      "bytes": 216294
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__source-audits__2026-09-29-remaining-cad__review-queue.json.base",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__source-audits__2026-09-29-remaining-cad__review-queue.json.base",
+      "sha256": "e17ef4f51963ccad01a3fa714823de0c5f7283f8bed60090f210a7617a6050ce",
+      "bytes": 28510
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__source-audits__2026-09-29-remaining-cad__review-queue.json.merge-preview.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__source-audits__2026-09-29-remaining-cad__review-queue.json.merge-preview.txt",
+      "sha256": "b3754546593b44043460c67a45218442f4774a153d696ce07f5130997530133e",
+      "bytes": 49185
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__source-audits__2026-09-29-remaining-cad__review-queue.json.merge-stderr.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__source-audits__2026-09-29-remaining-cad__review-queue.json.merge-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__source-audits__2026-09-29-remaining-cad__review-queue.json.own",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__source-audits__2026-09-29-remaining-cad__review-queue.json.own",
+      "sha256": "e259be7d20700af24a253606a51b7b28e0d0c83ce221e863cf0383e935a2ffb3",
+      "bytes": 34749
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/docs__source-audits__2026-09-29-remaining-cad__review-queue.json.parent",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/docs__source-audits__2026-09-29-remaining-cad__review-queue.json.parent",
+      "sha256": "be56dc87daa3922291fcfed68a59e332caea0352f4418ee4bf2a23f54c644051",
+      "bytes": 42946
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/independent-audit.json",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/independent-audit.json",
+      "sha256": "44abb5172aba8692b89535974890ffede349e58c346a5f681fd1656f439031ab",
+      "bytes": 19183
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/independent-first-attempt.stderr",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/independent-first-attempt.stderr",
+      "sha256": "be24f0bf65dac18011bfc17ca1b01ecb0b520265e31652e84ca6038e58f5eca3",
+      "bytes": 89
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/overlap-merge-preview.json",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/overlap-merge-preview.json",
+      "sha256": "5742182620f745281a2cf17dae16ffbaf071a2a676e45a7d592ee5658bc56a13",
+      "bytes": 760
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/own-delivery-checksums.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/own-delivery-checksums.txt",
+      "sha256": "070bc9922def7dca1e7b42c9c668f8461b124ee14780ef0379568584cff395a4",
+      "bytes": 16633
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/parent-delivery-checksums.txt",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/parent-delivery-checksums.txt",
+      "sha256": "4267990f05613cd2baf67f1d4604bf107ea081960c45c45a7c1faf0f81567fd1",
+      "bytes": 16633
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/resolved/Tools/HangboardCAD/native_cord_routes.py",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/resolved/Tools/HangboardCAD/native_cord_routes.py",
+      "sha256": "a7285ef5dfaa8fa358ff956010e613ab891ad8536090455dc024ccdb08e90f18",
+      "bytes": 48311
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/resolved/Tools/HangboardPackages/src/hangboard_packages/cad_source.py",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/resolved/Tools/HangboardPackages/src/hangboard_packages/cad_source.py",
+      "sha256": "2cb13d2ee37217b6836262c1c3c5f8273f37b0709b549ad2060ad966510df9dd",
+      "bytes": 30440
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/resolved/docs/HANGBOARD_CORD_AUTHORING.md",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/resolved/docs/HANGBOARD_CORD_AUTHORING.md",
+      "sha256": "219d470b7a261157338d4f931a2fad1538ce05faf5bb8a9bcb9f1a2812d4a4cb",
+      "bytes": 30852
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/resolved/docs/model-delivery-lock.json",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/resolved/docs/model-delivery-lock.json",
+      "sha256": "13b6c10ca896808a9dec26d7d0e584a155652f41a39a86424eae8df383b3cece",
+      "bytes": 223387
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/resolved/docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/resolved/docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+      "sha256": "b3754546593b44043460c67a45218442f4774a153d696ce07f5130997530133e",
+      "bytes": 49185
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/resolved-preview-report.json",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/resolved-preview-report.json",
+      "sha256": "25e3d2158e6718c93b54264473cd2c4ffe2dbe755fe0a599a340163ba98005a1",
+      "bytes": 365530
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-pristine-405a-parent-9b0a/resolved-shared-files.patch",
+      "retained": "raw/integration-pristine-405a-parent-9b0a/resolved-shared-files.patch",
+      "sha256": "8d944bf25bb7a292750bc6b5fc7259cafd40fa297f51da49acc59877cf595e9a",
+      "bytes": 123558
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/resolve_snapshot.py",
+      "retained": "raw/integration-test-provenance/resolve_snapshot.py",
+      "sha256": "060734406bce70c1f83b95018f0f1f22071cd1552c4d321d5a0d6ce1ebcdc292",
+      "bytes": 9656
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/test_integration_dispatch.py",
+      "retained": "raw/integration-test-provenance/test_integration_dispatch.py",
+      "sha256": "53e5f8fdd40b5226c1a1c65534df4bf8757b84d9ef772478499259e089aa9fd6",
+      "bytes": 3155
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/focused-tests.json",
+      "retained": "raw/integration-test-provenance/focused-tests.json",
+      "sha256": "e787d5b30bc1e98400e6e4e91e98570d91f8c75b904df4e6957d1ac3dc9e9cb3",
+      "bytes": 813
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/focused-tests.log",
+      "retained": "raw/integration-test-provenance/focused-tests.log",
+      "sha256": "9174d481ff40940d7ac71b526565726f1145e28883a5ba8b22fd054eacfdb942",
+      "bytes": 3032
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/focused-tests-venv.json",
+      "retained": "raw/integration-test-provenance/focused-tests-venv.json",
+      "sha256": "8def643a42372571b924cf0e5d720245a4f2123d3ab8435aad9768bf4f4dfb67",
+      "bytes": 904
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/focused-tests-venv.log",
+      "retained": "raw/integration-test-provenance/focused-tests-venv.log",
+      "sha256": "adf7ea19f5a0706958d082dd398d485ee481ea9fcd0e98a7036229d3368ff607",
+      "bytes": 1306
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/focused-tests-final.json",
+      "retained": "raw/integration-test-provenance/focused-tests-final.json",
+      "sha256": "296caeb0dd6eb31966ae69dd6286650e60436104c70f9258336feca688db80db",
+      "bytes": 859
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/focused-tests-final.log",
+      "retained": "raw/integration-test-provenance/focused-tests-final.log",
+      "sha256": "ff62d481e44fba103257314095effa541c7808f91558ab872990b6e61a1b0bfd",
+      "bytes": 179
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration-published-counter-era/report.json",
+      "retained": "raw/integration-test-provenance/previous-overlay-audit.json",
+      "sha256": "3b5a8789aa600343067a5cd3b63ddd0e06019756867845918a1b1a5e99c68793",
+      "bytes": 20163
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/restoration-verification.json",
+      "retained": "raw/source-restoration/restoration-verification.json",
+      "sha256": "6f3f3f3a7e9b81df7a3b34ccd79e3d52e54613cb2405ae2c7091e9956bca8c85",
+      "bytes": 2397
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/manifest.json",
+      "retained": "raw/source-restoration/manifest.json",
+      "sha256": "5c79f938c51864de10b2035792e906c70b058f9404bd452a44b7389e1f063e51",
+      "bytes": 2450
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/restoration-command-note.json",
+      "retained": "raw/source-restoration/restoration-command-note.json",
+      "sha256": "27dc1f46ff2489cf8e748e1eea2e07789f481d806d53d2ddc91db27b3ce300db",
+      "bytes": 266
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/diagnostic.patch",
+      "retained": "raw/source-restoration/diagnostic.patch",
+      "sha256": "78faa173551bbbe6e2b7bffdf193e35a983d8a0fce8e77a897c0d8ab8afd60e3",
+      "bytes": 155209
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/restoration-independent.json",
+      "retained": "raw/source-restoration/restoration-independent.json",
+      "sha256": "6a9043045d7679ac1361c9519d2d0aa0cb3620cdc591e59cdaf83f5d452d357e",
+      "bytes": 5185
+    }
+  ],
+  "omissionsByReference": [
+    "87 overlay files reconstructed from exact input commits/resolver; hashes retained.",
+    "Five already committed diagnostic source snapshots referenced with verified hashes.",
+    "Generated Python bytecode omitted."
+  ]
+}

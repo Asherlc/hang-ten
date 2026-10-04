@@ -1,0 +1,14 @@
+{
+  "createdUTC": "2026-10-02T23:24:55.609854+00:00",
+  "copiedRawFiles": 305,
+  "allRawHashesMatch": true,
+  "initial134AndReverse121FreezeVerified": true,
+  "previousPacketFilesCheckedUnchanged": 3647,
+  "manifestSHA256": "3e9e1cc4000b90b1347a2d52d777b6b340bd20bc298a35adeca807f688b8ad0b",
+  "aggregateSHA256": {
+    "strict-hand-suppression-findings.json": "9989b4ea6e7833266530761ce5190bd0a870086976361b73971945f886705f97",
+    "strict-hand-suppression-reverse-findings.json": "23008123c8a7114dd658e4018a939b0934c8a01cf06307a8d8a7fad513f28e46"
+  },
+  "frozenPatchSHA256": "586b363f21aaa24dc8859569df12e608362f1069aaeeacf826d3c70f2610e27d",
+  "sourceIndexCommitDeviceMutation": false
+}

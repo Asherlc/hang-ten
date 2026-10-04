@@ -1,0 +1,50 @@
+{
+  "owner": "placid-badger",
+  "status": "passed",
+  "byteIdenticalCopies": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/final-closure.json",
+      "retained": "proof/final-closure.json",
+      "sha256": "42cf1ac5e175229b1c6c8b752bbb2247a76bbf36da4bc977bbfd92e65359f5e0",
+      "bytes": 2031
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/verify_final.py",
+      "retained": "proof/verify_final.py",
+      "sha256": "02315e8fa102bedb9a2ccc0605f21c04e84b6523d9c7168cd9e9bd1c2bfbe81f",
+      "bytes": 7062
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/integrate_package.py",
+      "retained": "proof/integrate_package.py",
+      "sha256": "9406b0201d77a47fe4097738ae0405daf17594ff6d7357eac48964e564bed609",
+      "bytes": 5414
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/update_review_state.py",
+      "retained": "proof/update_review_state.py",
+      "sha256": "9ce46442b73a5ab8851a721a304753d8b6fa71ab53f98d060eb7faf6a709dad6",
+      "bytes": 4141
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/revision-summary.json",
+      "retained": "proof/revision-summary.json",
+      "sha256": "698cf12afdff1bcb316bf09f1478fa3aa943902a67c6c58191f186662b80dcc2",
+      "bytes": 1336
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/integration-review.json",
+      "retained": "proof/integration-review.json",
+      "sha256": "39e2571acd72cf446434161f9694a77a494ed0257de640b7649a253bff3dff60",
+      "bytes": 7625
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/integration-review.md",
+      "retained": "proof/integration-review.md",
+      "sha256": "3dd21d5bd4ad746170aa445af116aa292dad6a42266f4320d849652a28bdbd5f",
+      "bytes": 1030
+    }
+  ],
+  "assemblyManifestsUnchanged": true,
+  "note": "retained-files.json and raw-retention.json retain the original assembly inventory. final-files.json additionally covers these final closing proofs."
+}

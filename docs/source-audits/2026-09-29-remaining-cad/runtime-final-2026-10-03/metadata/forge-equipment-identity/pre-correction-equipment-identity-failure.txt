@@ -1,0 +1,4 @@
+1864: Test Case '-[HangTenTests.WorkoutActivityRecordingTests testRockProdigyReusableFramesResolveToDistinctPhysicalSides]' started.
+1865: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/HangTenTests/WorkoutActivityRecordingTests.swift:598: error: -[HangTenTests.WorkoutActivityRecordingTests testRockProdigyReusableFramesResolveToDistinctPhysicalSides] : XCTAssertEqual failed: ("["primary"]") is not equal to ("["left-half", "right-half"]") - trango.rock-prodigy-forge
+1866: Test Case '-[HangTenTests.WorkoutActivityRecordingTests testRockProdigyReusableFramesResolveToDistinctPhysicalSides]' failed (0.215 seconds).
+2070: 	WorkoutActivityRecordingTests.testRockProdigyReusableFramesResolveToDistinctPhysicalSides()

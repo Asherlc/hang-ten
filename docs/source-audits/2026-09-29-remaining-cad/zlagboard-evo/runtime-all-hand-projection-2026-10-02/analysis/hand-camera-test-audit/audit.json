@@ -1,0 +1,277 @@
+{
+  "createdUTC": "2026-10-02T23:30:06.504548+00:00",
+  "scope": "Read-only prospective audit. No candidate fix adopted and no test execution/source/device changes. Current projection experiment remains independently gated.",
+  "inventory": [
+    {
+      "file": "HangTenTests/GripHandOrbitTests.swift",
+      "sha256": "80ae86c0d092d87d5699d8ea76f723a8c4241a6054ea49cafbfedb2938bc62fe",
+      "tests": [
+        {
+          "name": "testVerticalFirstDragKeepsScrollingAfterTurningHorizontal",
+          "line": 10,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandOrbitTests/testVerticalFirstDragKeepsScrollingAfterTurningHorizontal"
+        },
+        {
+          "name": "testHorizontalDragSeedsOrbitDeltaAtClaimAndResetsForNextGesture",
+          "line": 21,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandOrbitTests/testHorizontalDragSeedsOrbitDeltaAtClaimAndResetsForNextGesture"
+        },
+        {
+          "name": "testRealitySceneShowsUnavailableStateForAssetFailure",
+          "line": 39,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandOrbitTests/testRealitySceneShowsUnavailableStateForAssetFailure"
+        },
+        {
+          "name": "testHostSyncForwardsPoseFingersSideViewportAndReset",
+          "line": 47,
+          "orthographicComponentAssumption": true,
+          "identifier": "HangTenTests/GripHandOrbitTests/testHostSyncForwardsPoseFingersSideViewportAndReset"
+        },
+        {
+          "name": "testRealityMeshUsesBundledPosePositionsNormalsAndIndices",
+          "line": 76,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandOrbitTests/testRealityMeshUsesBundledPosePositionsNormalsAndIndices"
+        },
+        {
+          "name": "testVertexColorsUseBaseColorForEmptySelection",
+          "line": 109,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandOrbitTests/testVertexColorsUseBaseColorForEmptySelection"
+        },
+        {
+          "name": "testVertexColorsHighlightOnlySelectedAuthoredDigit",
+          "line": 122,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandOrbitTests/testVertexColorsHighlightOnlySelectedAuthoredDigit"
+        },
+        {
+          "name": "testVertexColorsUseHalfWeightForSelectedMiddleFinger",
+          "line": 137,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandOrbitTests/testVertexColorsUseHalfWeightForSelectedMiddleFinger"
+        },
+        {
+          "name": "testVertexColorsHighlightSelectedIndexAndRingOnly",
+          "line": 150,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandOrbitTests/testVertexColorsHighlightSelectedIndexAndRingOnly"
+        },
+        {
+          "name": "testVertexColorsUseGeometryActionIndependentOfColorMembership",
+          "line": 165,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandOrbitTests/testVertexColorsUseGeometryActionIndependentOfColorMembership"
+        },
+        {
+          "name": "testFullAzimuthOrbitReturnsCameraToItsStartingPosition",
+          "line": 207,
+          "orthographicComponentAssumption": true,
+          "identifier": "HangTenTests/GripHandOrbitTests/testFullAzimuthOrbitReturnsCameraToItsStartingPosition"
+        },
+        {
+          "name": "testOrbitZoomIsBoundedAndResetRestoresCanonicalFraming",
+          "line": 224,
+          "orthographicComponentAssumption": true,
+          "identifier": "HangTenTests/GripHandOrbitTests/testOrbitZoomIsBoundedAndResetRestoresCanonicalFraming"
+        },
+        {
+          "name": "testSideChangeMirrorsHandAndRefitsCamera",
+          "line": 258,
+          "orthographicComponentAssumption": true,
+          "identifier": "HangTenTests/GripHandOrbitTests/testSideChangeMirrorsHandAndRefitsCamera"
+        },
+        {
+          "name": "testPoseAndViewportChangesRefitAuthoredBounds",
+          "line": 273,
+          "orthographicComponentAssumption": true,
+          "identifier": "HangTenTests/GripHandOrbitTests/testPoseAndViewportChangesRefitAuthoredBounds"
+        },
+        {
+          "name": "testZeroViewportAndInvalidDeltasKeepCameraFiniteAndStable",
+          "line": 289,
+          "orthographicComponentAssumption": true,
+          "identifier": "HangTenTests/GripHandOrbitTests/testZeroViewportAndInvalidDeltasKeepCameraFiniteAndStable"
+        },
+        {
+          "name": "testPairSceneOwnsBothSurfacesAndAppliesRepeatedPoseUpdatesTogether",
+          "line": 312,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandOrbitTests/testPairSceneOwnsBothSurfacesAndAppliesRepeatedPoseUpdatesTogether"
+        },
+        {
+          "name": "testPairSceneFramesUnionAndOrbitsOneCamera",
+          "line": 363,
+          "orthographicComponentAssumption": true,
+          "identifier": "HangTenTests/GripHandOrbitTests/testPairSceneFramesUnionAndOrbitsOneCamera"
+        },
+        {
+          "name": "testPairModelViewForwardsSharedPoseAndViewport",
+          "line": 383,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandOrbitTests/testPairModelViewForwardsSharedPoseAndViewport"
+        }
+      ]
+    },
+    {
+      "file": "HangTenTests/GripHandCueCardTests.swift",
+      "sha256": "c9054950e8b3d6687a36406cc00113a2789ee94297a96ec88ef53ff2955919e9",
+      "tests": [
+        {
+          "name": "testHandCueArtworkFacesTheBoardCenter",
+          "line": 5,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testHandCueArtworkFacesTheBoardCenter"
+        },
+        {
+          "name": "testSingleSideReturnsNilForTwoHandedOrUnspecifiedCapacity",
+          "line": 10,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testSingleSideReturnsNilForTwoHandedOrUnspecifiedCapacity"
+        },
+        {
+          "name": "testSingleSideUsesResolvedSideForOneHandedCapacity",
+          "line": 18,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testSingleSideUsesResolvedSideForOneHandedCapacity"
+        },
+        {
+          "name": "testSingleSideFallsBackToRightWhenNoSideIsResolvedYet",
+          "line": 23,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testSingleSideFallsBackToRightWhenNoSideIsResolvedYet"
+        },
+        {
+          "name": "testCueLabelStaysSingularForOneHandCapacity",
+          "line": 27,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testCueLabelStaysSingularForOneHandCapacity"
+        },
+        {
+          "name": "testCueLabelPluralizesTwoHandCapacityEdgesAndJugs",
+          "line": 45,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testCueLabelPluralizesTwoHandCapacityEdgesAndJugs"
+        },
+        {
+          "name": "testPocketCountDoesNotInventExactFingerHighlights",
+          "line": 68,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testPocketCountDoesNotInventExactFingerHighlights"
+        },
+        {
+          "name": "testAllExplicitFingerCombinationsRemainExactAcrossEveryGrip",
+          "line": 76,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testAllExplicitFingerCombinationsRemainExactAcrossEveryGrip"
+        },
+        {
+          "name": "testEveryPocketUsesExplicitFingerBitsWithoutInferringMembershipFromCount",
+          "line": 88,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testEveryPocketUsesExplicitFingerBitsWithoutInferringMembershipFromCount"
+        },
+        {
+          "name": "testPostureSelectionDoesNotChangeWithHighlights",
+          "line": 108,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testPostureSelectionDoesNotChangeWithHighlights"
+        },
+        {
+          "name": "testEvaluatedMeshLoaderAcceptsCompleteSchemaTwoFixture",
+          "line": 118,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testEvaluatedMeshLoaderAcceptsCompleteSchemaTwoFixture"
+        },
+        {
+          "name": "testBundledBlenderSurfacesHaveAllPosesAndDigits",
+          "line": 124,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testBundledBlenderSurfacesHaveAllPosesAndDigits"
+        },
+        {
+          "name": "testMeshLoaderRejectsUnsupportedSchemaAndMissingPose",
+          "line": 135,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testMeshLoaderRejectsUnsupportedSchemaAndMissingPose"
+        },
+        {
+          "name": "testMeshLoaderRejectsInvalidTriangleIndices",
+          "line": 144,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testMeshLoaderRejectsInvalidTriangleIndices"
+        },
+        {
+          "name": "testMeshLoaderRejectsInconsistentPoseBuffersIncludingExtraPoses",
+          "line": 150,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testMeshLoaderRejectsInconsistentPoseBuffersIncludingExtraPoses"
+        },
+        {
+          "name": "testMeshLoaderRejectsInvalidDigitAndHighlightBuffers",
+          "line": 170,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testMeshLoaderRejectsInvalidDigitAndHighlightBuffers"
+        },
+        {
+          "name": "testMeshLoaderRejectsNonFiniteValuesAndMalformedJSON",
+          "line": 178,
+          "orthographicComponentAssumption": false,
+          "identifier": "HangTenTests/GripHandCueCardTests/testMeshLoaderRejectsNonFiniteValuesAndMalformedJSON"
+        }
+      ]
+    }
+  ],
+  "orthographicSpecificTests": [
+    "HangTenTests/GripHandOrbitTests/testHostSyncForwardsPoseFingersSideViewportAndReset",
+    "HangTenTests/GripHandOrbitTests/testFullAzimuthOrbitReturnsCameraToItsStartingPosition",
+    "HangTenTests/GripHandOrbitTests/testOrbitZoomIsBoundedAndResetRestoresCanonicalFraming",
+    "HangTenTests/GripHandOrbitTests/testSideChangeMirrorsHandAndRefitsCamera",
+    "HangTenTests/GripHandOrbitTests/testPoseAndViewportChangesRefitAuthoredBounds",
+    "HangTenTests/GripHandOrbitTests/testZeroViewportAndInvalidDeltasKeepCameraFiniteAndStable",
+    "HangTenTests/GripHandOrbitTests/testPairSceneFramesUnionAndOrbitsOneCamera"
+  ],
+  "focusedExistingOnlyTestingArguments": [
+    "-only-testing:HangTenTests/GripHandOrbitTests",
+    "-only-testing:HangTenTests/GripHandCueCardTests"
+  ],
+  "interpretation": "These two existing classes are narrowly scoped hand geometry/color/pose/orbit coverage. Under current production orthographic default they remain meaningful; do not simply run them with perspective diagnostic flag and label their required component failures a renderer failure. Seven methods need coordinated projection-aware behavioral expectations if production changes.",
+  "sourceAPIs": [
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "symbols": [
+        "GripHandRealityScene.init/update/resetCamera/orbit",
+        "GripHandRealityPairScene.init/update/resetCamera/orbit/framedPoints",
+        "GripHandRealitySurface.posedVerticesForFraming/appliedVertexColors",
+        "GripHandModelView.syncScene",
+        "GripHandPairModelView.syncScene"
+      ],
+      "assumptions": "Both scenes initialize OrthographicCameraComponent in ordinary production, save canonicalOrthographicScale, and force-unwrap/update its scale in reset/orbit. Current DEBUG perspective path fits FOV at reset from transformed authored vertices and zooms through camera distance while keeping FOV until next reset. This experiment is not a production behavior claim."
+    }
+  ],
+  "gaps": [
+    "No existing all-authored-pose vertex/frustum containment test.",
+    "PairSceneFramesUnionAndOrbitsOneCamera checks lights, motion and scale, not geometric union containment.",
+    "No perspective near/far clipping test or pair full-orbit/reset counterpart.",
+    "Existing View.syncScene tests call CPU sync directly, not an attached rendering host; cannot validate snapshot delivery."
+  ],
+  "minimalFutureAssertions": [
+    {
+      "name": "Canonical frustum fit across authored poses",
+      "detail": "Parameterize the 21 bundled action surfaces (Neutral/OpenHand/HalfCrimp/FullCrimp/Sloper/Pocket0...15), both mirrored single sides and pair union, at supported narrow portrait, 88pt cue, 68pt landscape pair and inspector aspects. Use actual source vertex positions transformed by their entities and inverse final camera transform; independently assert finite positive depth within near/far and abs(x)<=depth*tan(verticalFOV/2)*aspect, abs(y)<=depth*tan(verticalFOV/2), with small numeric tolerance. For orthographic variant use declared scale instead. Test native vertices, never pixels/AABB-only approximation; verify only appropriate reset fit, not intentional user zoom clipping."
+    },
+    {
+      "name": "Orbit/zoom/reset behavioral equivalence",
+      "detail": "Retain existing single full-turn, bounds and invalid-input cases; include pair full turn and reset. Assert camera pose/projection restore after reset token, finite near/far/FOV, bounded orbit/elevation/zoom, nonzero intended magnification, and no reset on identical pose/viewport/token update. Perspective zoom is distance based in current diagnostic, so do not demand orthographic scale or exact linear silhouette scaling at varied depths. Check near-plane safety during allowed orbit; decide/document any allowed zoom viewport clipping rather than quietly forcing every zoom to fit."
+    },
+    {
+      "name": "Pose/color independence remains exact",
+      "detail": "Reuse existing authored-digit colors, weighted blend, all15 explicit finger subsets across GripType, missing-fingers no highlight, pocket bitmask and paired alternating-pose updates. For new geometric pose coverage ensure action vertices and exact selected-finger colors remain invariant under projection/orbit/reset; no regenerated hand geometry or new finger inference."
+    }
+  ],
+  "futureCoordination": "GripHandOrbitTests.swift and GripHandCueCardTests.swift are outside the six reserved source paths; do not edit until root coordinates. No result path, Simulator or build operations prepared/executed here. Any future test run must reuse approved bounded lifecycle/exclusive handoff and registered result paths.",
+  "runtimeRequired": "Actual whole-image selected finger, hand framing/orbit/reset and board active/rest/active delivery checks remain required. CPU geometry/color test passes cannot establish the workout defect is fixed."
+}

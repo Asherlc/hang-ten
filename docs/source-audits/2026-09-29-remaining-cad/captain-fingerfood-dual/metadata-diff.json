@@ -1,0 +1,72 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "b80dc676af14be802a75e28eb6c419af068fe451a4deaae3511913b418767a71",
+  "boardFieldChanges": {},
+  "changedContacts": {},
+  "humanAcceptance": "pending one-by-one review",
+  "package": "captain-fingerfood-dual",
+  "positionsAfter": [
+    {
+      "contactIDs": [
+        "curved-edge-20"
+      ],
+      "id": "curved-lip-front",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "straight-edge-20"
+      ],
+      "id": "straight-lip-inverted",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "pocket-end-wall-20"
+      ],
+      "id": "left-pocket-vertical",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "outer-jug"
+      ],
+      "id": "exterior-jug-back",
+      "presentationID": "primary"
+    }
+  ],
+  "positionsBefore": [
+    {
+      "contactIDs": [
+        "curved-edge-20"
+      ],
+      "id": "curved-lip-front",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "straight-edge-20"
+      ],
+      "id": "straight-lip-inverted",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "pocket-end-wall-20"
+      ],
+      "id": "left-pocket-vertical",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "outer-jug"
+      ],
+      "id": "exterior-jug-back",
+      "presentationID": "primary"
+    }
+  ],
+  "removedContacts": [],
+  "sourceAudit": "captain-fingerfood-dual/README.md",
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a"
+}

@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "owner": "placid-badger",
+  "sidecarSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+  "retainedBeforeFiles": 46,
+  "sourceReviewFilesPreserved": 45,
+  "previewPairs": 48,
+  "previewImages": 57,
+  "shownImageHashes": {
+    "cord-diameter-review/body-prior-raster-overview.png": "a2acffc9e3790dda8b50ab46fa64e087fd2853bad9f2a3190f397a5bba23a353",
+    "cord-diameter-review/default-inverted-three-view-overview.png": "1bbdc438840eaeae8153e253361cbc8eadd9171a32e1e0e06e06ea3bfe752d9e",
+    "cord-diameter-review/app-review/six-canonical-app-overview.png": "7f538bdce819e2b373144e633f8d122462eb9b982f3d3d8e34272190d88ba4be"
+  },
+  "localLinksChecked": 81,
+  "humanReview": "pending #4",
+  "authoredDiffValidation": {
+    "passed": true,
+    "command": [
+      "rtk",
+      "proxy",
+      "git",
+      "diff",
+      "--cached",
+      "--check",
+      "--",
+      ".",
+      ":!docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/before/evidence/product-page-current.html"
+    ],
+    "rawEvidenceExcluded": [
+      "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/before/evidence/product-page-current.html"
+    ],
+    "reason": "Exact retained manufacturer HTML includes original whitespace; it is preserved byte-for-byte and checked against its source hash. All authored paths pass.",
+    "excludedRawEvidenceSHA256": "fc5517626285368b665c37139a52657133400bc8cf1ef0b4c54b3d1eac490f78"
+  }
+}

@@ -1,0 +1,369 @@
+{
+  "record": {
+    "applicationCensus": {
+      "applicationState": 0,
+      "standaloneGate": false,
+      "windowScenes": [
+        {
+          "activationState": 0,
+          "interfaceOrientation": 3,
+          "sceneID": "ObjectIdentifier(0x0000000104d2ee00)",
+          "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+          "windows": [
+            {
+              "alpha": 1,
+              "bounds": [
+                874,
+                402
+              ],
+              "hidden": false,
+              "key": true,
+              "rendererNamedViewClasses": {
+                "RealityKit.ARRenderView": 1,
+                "RealityKit.ARView": 1,
+                "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>": 1
+              },
+              "rendererPlacements": [
+                {
+                  "alpha": 1,
+                  "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+                  "frameInWindow": [
+                    332,
+                    240,
+                    210,
+                    36
+                  ],
+                  "hidden": false,
+                  "viewID": "ObjectIdentifier(0x0000000113ab7900)"
+                },
+                {
+                  "alpha": 1,
+                  "class": "RealityKit.ARView",
+                  "frameInWindow": [
+                    332,
+                    240,
+                    210,
+                    36
+                  ],
+                  "hidden": false,
+                  "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+                  "viewID": "ObjectIdentifier(0x0000000104343b80)"
+                },
+                {
+                  "alpha": 1,
+                  "class": "RealityKit.ARRenderView",
+                  "frameInWindow": [
+                    332,
+                    240,
+                    210,
+                    36
+                  ],
+                  "hidden": false,
+                  "viewID": "ObjectIdentifier(0x0000000104d18380)"
+                }
+              ],
+              "windowID": "ObjectIdentifier(0x0000000104338800)"
+            }
+          ]
+        }
+      ]
+    },
+    "boardDetachTrial": {
+      "detachRequested": true,
+      "hosts": [
+        {
+          "attachmentObserved": true,
+          "cameraActualSceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "cameraParentID": "ObjectIdentifier(0x000000014b3743c0)",
+          "currentOwner": true,
+          "detached": false,
+          "disappeared": false,
+          "invalid": "nil",
+          "modelRetainedForTrial": true,
+          "ownerToken": "7C53B50C-DE93-4C0D-AFDC-FC7F7BB77891",
+          "reattachedAfterDetach": false,
+          "recordedActualSceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "recordedParentID": "ObjectIdentifier(0x000000014b3743c0)",
+          "rootActualSceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "rootParentID": "ObjectIdentifier(0x000000014b3743c0)",
+          "sceneLifecycleToken": "286EC9BF-4436-46E8-BCE9-CF1D1E992A48",
+          "trainMarked": false,
+          "viewToken": "CFCBDE45-757D-432A-98E4-4472E7F5569C"
+        },
+        {
+          "attachmentObserved": true,
+          "cameraActualSceneID": "nil",
+          "cameraParentID": "nil",
+          "currentOwner": true,
+          "detached": true,
+          "disappeared": true,
+          "invalid": "nil",
+          "modelRetainedForTrial": true,
+          "ownerToken": "C7197761-F60C-476A-8511-86B999FD69F3",
+          "reattachedAfterDetach": false,
+          "recordedActualSceneID": "ObjectIdentifier(0x0000000105c77000)",
+          "recordedParentID": "ObjectIdentifier(0x000000014a662140)",
+          "rootActualSceneID": "nil",
+          "rootParentID": "nil",
+          "sceneLifecycleToken": "9FEEAD7A-E809-4E3C-A5C8-D7F3065E62FF",
+          "trainMarked": true,
+          "viewToken": "D0C541D6-9301-4E7B-8CCD-D9E8F09B023B"
+        }
+      ]
+    },
+    "boardLifetimeCensus": [
+      {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014a774c60)",
+          "isActive": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b3743c0)",
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)"
+        },
+        "constructedIDs": {
+          "cameraID": "ObjectIdentifier(0x000000014a774c60)",
+          "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+          "rootID": "ObjectIdentifier(0x000000014a775220)",
+          "wrapperID": "ObjectIdentifier(0x000000014a771c00)"
+        },
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014a775220)",
+          "isActive": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b3743c0)",
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)"
+        },
+        "sceneLifecycleToken": "286EC9BF-4436-46E8-BCE9-CF1D1E992A48",
+        "wrapperAlive": true
+      },
+      {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x0000000113a4e100)",
+          "isActive": false,
+          "parentEntityID": "nil",
+          "realitySceneID": "nil"
+        },
+        "constructedIDs": {
+          "cameraID": "ObjectIdentifier(0x0000000113a4e100)",
+          "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+          "rootID": "ObjectIdentifier(0x0000000104dd24c0)",
+          "wrapperID": "ObjectIdentifier(0x0000000106106a00)"
+        },
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x0000000104dd24c0)",
+          "isActive": false,
+          "parentEntityID": "nil",
+          "realitySceneID": "nil"
+        },
+        "sceneLifecycleToken": "9FEEAD7A-E809-4E3C-A5C8-D7F3065E62FF",
+        "wrapperAlive": true
+      }
+    ],
+    "boardRenderMembership": {
+      "cameraActive": true,
+      "cameraEntityID": "ObjectIdentifier(0x000000014a774c60)",
+      "cameraRealitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ],
+      "far": 1000,
+      "near": 0.0010000000474974513,
+      "orthographic": false,
+      "perspective": true,
+      "rootActive": true,
+      "rootEntityID": "ObjectIdentifier(0x000000014a775220)",
+      "rootRealitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+      "verticalFOVDegrees": 30
+    },
+    "cachedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "cachedMode": "active",
+    "cameraID": "ObjectIdentifier(0x000000014a774c60)",
+    "cameraTransform": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0.9438583850860596,
+      -0.33035042881965637,
+      0,
+      0,
+      0.33035042881965637,
+      0.9438583850860596,
+      0,
+      0,
+      0.10610384494066238,
+      0.3241538405418396,
+      1
+    ],
+    "complete": true,
+    "epoch": 1790990432.325355,
+    "event": "highlight-before",
+    "handLifecycleCounts": {
+      "pair.constructor-entry": 0,
+      "pair.make-entry": 0,
+      "single.constructor-entry": 0,
+      "single.make-entry": 0
+    },
+    "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "priorCachedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "priorCachedMode": "active",
+    "requestedMode": "preview",
+    "resolvedSurfaceInputs": {
+      "boardID": "zlagboard.evo",
+      "ids": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "isDisplayOnly": false,
+      "mode": "active",
+      "positionID": "primary",
+      "presentationID": "primary"
+    },
+    "rootAttached": true,
+    "rootEnabled": true,
+    "rootID": "ObjectIdentifier(0x000000014a775220)",
+    "rootTransform": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "sceneID": "ObjectIdentifier(0x000000014a771c00)",
+    "sceneLifecycleToken": "286EC9BF-4436-46E8-BCE9-CF1D1E992A48",
+    "selectedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "sequence": 150,
+    "surfaces": [
+      {
+        "ancestors": [
+          "ObjectIdentifier(0x0000000148708100)",
+          "ObjectIdentifier(0x00000001487081a0)",
+          "ObjectIdentifier(0x000000014a79f6c0)",
+          "ObjectIdentifier(0x000000014a775220)",
+          "ObjectIdentifier(0x000000014b3743c0)"
+        ],
+        "attached": true,
+        "contactID": "edge-20-left",
+        "enabled": true,
+        "entityID": "ObjectIdentifier(0x0000000148708100)",
+        "materialType": "PhysicallyBasedMaterial",
+        "name": "contact_edge_20_left",
+        "resolvedRGBAValid": true,
+        "rgba": [
+          0.9850000739097595,
+          0.2749999761581421,
+          0.10499999672174454,
+          0.6000000238418579
+        ],
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "underRegisteredRoot": true
+      },
+      {
+        "ancestors": [
+          "ObjectIdentifier(0x0000000148708300)",
+          "ObjectIdentifier(0x00000001487081a0)",
+          "ObjectIdentifier(0x000000014a79f6c0)",
+          "ObjectIdentifier(0x000000014a775220)",
+          "ObjectIdentifier(0x000000014b3743c0)"
+        ],
+        "attached": true,
+        "contactID": "edge-20-right",
+        "enabled": true,
+        "entityID": "ObjectIdentifier(0x0000000148708300)",
+        "materialType": "PhysicallyBasedMaterial",
+        "name": "contact_edge_20_right",
+        "resolvedRGBAValid": true,
+        "rgba": [
+          0.9850000739097595,
+          0.2749999761581421,
+          0.10499999672174454,
+          0.6000000238418579
+        ],
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "underRegisteredRoot": true
+      }
+    ],
+    "uptime": 73506.84298895833,
+    "viewportPoints": [
+      210,
+      36
+    ]
+  },
+  "hostObservedEpoch": 1790990432.8647208
+}

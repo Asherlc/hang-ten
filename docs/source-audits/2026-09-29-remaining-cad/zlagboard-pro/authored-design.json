@@ -1,0 +1,334 @@
+{
+  "envelope_mm": [
+    705.0,
+    152.0,
+    42.0
+  ],
+  "envelopeProvenance": "pre-migration display measurement, not published dimensions",
+  "topAnglesDegrees": [
+    0,
+    32,
+    20,
+    10,
+    20,
+    32,
+    0
+  ],
+  "pockets": [
+    {
+      "contactID": "edge-30-left",
+      "centerXZ": [
+        -280,
+        31.0
+      ],
+      "mouthWHR": [
+        98,
+        29,
+        11
+      ],
+      "depth": 30,
+      "displaySlopeDegrees": 0,
+      "parameter": "Depth_edge_30_left"
+    },
+    {
+      "contactID": "sloper-edge-30-left",
+      "centerXZ": [
+        -176,
+        31.0
+      ],
+      "mouthWHR": [
+        70,
+        29,
+        11
+      ],
+      "depth": 30,
+      "displaySlopeDegrees": 12,
+      "parameter": "Depth_sloper_edge_30_left"
+    },
+    {
+      "contactID": "sloper-edge-25-left",
+      "centerXZ": [
+        -98,
+        31.0
+      ],
+      "mouthWHR": [
+        48,
+        29,
+        11
+      ],
+      "depth": 25,
+      "displaySlopeDegrees": 12,
+      "parameter": "Depth_sloper_edge_25_left"
+    },
+    {
+      "contactID": "edge-35-center",
+      "centerXZ": [
+        0,
+        31.0
+      ],
+      "mouthWHR": [
+        94,
+        30,
+        11
+      ],
+      "depth": 35,
+      "displaySlopeDegrees": 0,
+      "parameter": "Depth_edge_35_center"
+    },
+    {
+      "contactID": "sloper-edge-25-right",
+      "centerXZ": [
+        98,
+        31.0
+      ],
+      "mouthWHR": [
+        48,
+        29,
+        11
+      ],
+      "depth": 25,
+      "displaySlopeDegrees": 12,
+      "parameter": "Depth_sloper_edge_25_right"
+    },
+    {
+      "contactID": "sloper-edge-30-right",
+      "centerXZ": [
+        176,
+        31.0
+      ],
+      "mouthWHR": [
+        70,
+        29,
+        11
+      ],
+      "depth": 30,
+      "displaySlopeDegrees": 12,
+      "parameter": "Depth_sloper_edge_30_right"
+    },
+    {
+      "contactID": "edge-30-right",
+      "centerXZ": [
+        280,
+        31.0
+      ],
+      "mouthWHR": [
+        98,
+        29,
+        11
+      ],
+      "depth": 30,
+      "displaySlopeDegrees": 0,
+      "parameter": "Depth_edge_30_right"
+    },
+    {
+      "contactID": "edge-20-left",
+      "centerXZ": [
+        -280,
+        -9.0
+      ],
+      "mouthWHR": [
+        98,
+        29,
+        11
+      ],
+      "depth": 20,
+      "displaySlopeDegrees": 0,
+      "parameter": "Depth_edge_20_left"
+    },
+    {
+      "contactID": "sloper-edge-25-lower-left",
+      "centerXZ": [
+        -176,
+        -9.0
+      ],
+      "mouthWHR": [
+        70,
+        29,
+        11
+      ],
+      "depth": 25,
+      "displaySlopeDegrees": 12,
+      "parameter": "Depth_sloper_edge_25_lower_left"
+    },
+    {
+      "contactID": "edge-30-inner-left",
+      "centerXZ": [
+        -98,
+        -9.0
+      ],
+      "mouthWHR": [
+        48,
+        29,
+        11
+      ],
+      "depth": 30,
+      "displaySlopeDegrees": 0,
+      "parameter": "Depth_edge_30_inner_left"
+    },
+    {
+      "contactID": "sloper-edge-30-center",
+      "centerXZ": [
+        0,
+        -9.0
+      ],
+      "mouthWHR": [
+        94,
+        30,
+        11
+      ],
+      "depth": 30,
+      "displaySlopeDegrees": 12,
+      "parameter": "Depth_sloper_edge_30_center"
+    },
+    {
+      "contactID": "edge-30-inner-right",
+      "centerXZ": [
+        98,
+        -9.0
+      ],
+      "mouthWHR": [
+        48,
+        29,
+        11
+      ],
+      "depth": 30,
+      "displaySlopeDegrees": 0,
+      "parameter": "Depth_edge_30_inner_right"
+    },
+    {
+      "contactID": "sloper-edge-25-lower-right",
+      "centerXZ": [
+        176,
+        -9.0
+      ],
+      "mouthWHR": [
+        70,
+        29,
+        11
+      ],
+      "depth": 25,
+      "displaySlopeDegrees": 12,
+      "parameter": "Depth_sloper_edge_25_lower_right"
+    },
+    {
+      "contactID": "edge-20-right",
+      "centerXZ": [
+        280,
+        -9.0
+      ],
+      "mouthWHR": [
+        98,
+        29,
+        11
+      ],
+      "depth": 20,
+      "displaySlopeDegrees": 0,
+      "parameter": "Depth_edge_20_right"
+    },
+    {
+      "contactID": "edge-incut-15-left",
+      "centerXZ": [
+        -280,
+        -48.0
+      ],
+      "mouthWHR": [
+        98,
+        29,
+        11
+      ],
+      "depth": 15,
+      "displaySlopeDegrees": -7,
+      "parameter": "Depth_edge_incut_15_left"
+    },
+    {
+      "contactID": "edge-15-left",
+      "centerXZ": [
+        -176,
+        -48.0
+      ],
+      "mouthWHR": [
+        70,
+        29,
+        11
+      ],
+      "depth": 15,
+      "displaySlopeDegrees": 0,
+      "parameter": "Depth_edge_15_left"
+    },
+    {
+      "contactID": "edge-incut-30-left",
+      "centerXZ": [
+        -98,
+        -48.0
+      ],
+      "mouthWHR": [
+        48,
+        29,
+        11
+      ],
+      "depth": 30,
+      "displaySlopeDegrees": -7,
+      "parameter": "Depth_edge_incut_30_left"
+    },
+    {
+      "contactID": "edge-incut-10-center",
+      "centerXZ": [
+        0,
+        -48.0
+      ],
+      "mouthWHR": [
+        94,
+        30,
+        11
+      ],
+      "depth": 10,
+      "displaySlopeDegrees": -7,
+      "parameter": "Depth_edge_incut_10_center"
+    },
+    {
+      "contactID": "edge-incut-30-right",
+      "centerXZ": [
+        98,
+        -48.0
+      ],
+      "mouthWHR": [
+        48,
+        29,
+        11
+      ],
+      "depth": 30,
+      "displaySlopeDegrees": -7,
+      "parameter": "Depth_edge_incut_30_right"
+    },
+    {
+      "contactID": "edge-15-right",
+      "centerXZ": [
+        176,
+        -48.0
+      ],
+      "mouthWHR": [
+        70,
+        29,
+        11
+      ],
+      "depth": 15,
+      "displaySlopeDegrees": 0,
+      "parameter": "Depth_edge_15_right"
+    },
+    {
+      "contactID": "edge-incut-15-right",
+      "centerXZ": [
+        280,
+        -48.0
+      ],
+      "mouthWHR": [
+        98,
+        29,
+        11
+      ],
+      "depth": 15,
+      "displaySlopeDegrees": -7,
+      "parameter": "Depth_edge_incut_15_right"
+    }
+  ]
+}

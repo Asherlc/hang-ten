@@ -1,0 +1,24 @@
+{
+  "slug": "mammut-diamond-finger",
+  "sourceSHA256": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
+  "validSolidCount": 1,
+  "fullyConstrainedSketchCount": 58,
+  "contactCount": 16,
+  "publishedDepthsMm": {},
+  "nativeEdit": {
+    "parameter": "Depth_mam_lateral_ledge_l",
+    "before": 52.0,
+    "after": 54.0,
+    "changedContacts": [
+      "mam-lateral-ledge-l"
+    ],
+    "bodyVolumeChanged": true,
+    "restored": true
+  },
+  "allContactsOnBody": true,
+  "noRearContactFaces": true,
+  "noContactSurfaceOverlap": true,
+  "potentialOverlapPairsChecked": 17,
+  "allObjectsRecomputed": true,
+  "savedSourceUnchanged": true
+}

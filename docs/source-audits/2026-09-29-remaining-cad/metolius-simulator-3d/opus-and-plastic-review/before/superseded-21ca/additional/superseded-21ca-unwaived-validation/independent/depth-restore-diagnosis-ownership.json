@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "name": "depth-restore-diagnosis",
+  "timeoutSeconds": 180,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/diagnose_depth_restore.py"
+  ],
+  "ownedProcessGroup": 42879,
+  "exitCode": 0,
+  "elapsedSeconds": 88.12467699998524,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

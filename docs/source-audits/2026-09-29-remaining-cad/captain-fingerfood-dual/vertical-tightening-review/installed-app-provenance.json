@@ -1,0 +1,10 @@
+{
+  "owner": "placid-badger",
+  "simulator": "990DFC2B-D415-4490-B070-95D4EAD9B5C8",
+  "builtApp": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app",
+  "installedApp": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/990DFC2B-D415-4490-B070-95D4EAD9B5C8/data/Containers/Bundle/Application/8544383D-337E-4898-A25A-57643DB17F3A/HangTen.app",
+  "builtBinarySHA256": "ac4efa2b8b24499f903d7c21f0cd75ea1f3788d436e7a3caef1fdcc770ad98ef",
+  "installedBinarySHA256": "ac4efa2b8b24499f903d7c21f0cd75ea1f3788d436e7a3caef1fdcc770ad98ef",
+  "binaryBytesMatch": true,
+  "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf"
+}

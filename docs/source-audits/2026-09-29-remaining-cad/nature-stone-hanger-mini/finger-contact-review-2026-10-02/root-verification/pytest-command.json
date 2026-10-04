@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "argv": [
+    "Tools/HangboardPackages/tests/test_cad_routed_cord.py",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+    "Tools/HangboardPackages/tests/test_shared_contact_membership_package.py",
+    "Tools/HangboardPackages/tests/test_model_delivery_lock.py",
+    "Tools/HangboardCAD/tests/test_contract.py::test_real_committed_source_document_matches_inventory",
+    "Tools/HangboardModels/tests/test_shared_contact_membership.py::test_existing_catalog_descriptors_roundtrip_without_new_fields",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-final-checks-tmp/pytest",
+    "--junitxml",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/final-tests.xml"
+  ]
+}

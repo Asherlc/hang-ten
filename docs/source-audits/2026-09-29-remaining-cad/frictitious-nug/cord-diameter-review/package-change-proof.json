@@ -1,0 +1,13 @@
+{
+  "changedPackageFiles": [
+    "Hangboards/frictitious-nug/suspension.json"
+  ],
+  "changedLockedFiles": [
+    "Hangboards/frictitious-nug/suspension.json"
+  ],
+  "sha256Manifest": "d1eff0bbf16d58487e273f9a24a12a4ab2c9bc50b960ff68fdaaee000a068244",
+  "beforeSuspensionSHA256": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088",
+  "afterSuspensionSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+  "preservedPackageFiles": 205,
+  "permittedChanges": "Four lead radii/provenance and native-generated routes/translation Y. Body, model, descriptor, contacts, anchor, terminals, topology, lengths, rotations, cameras and solver unchanged."
+}

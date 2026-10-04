@@ -1,0 +1,27 @@
+{
+  "owner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "python3",
+    "-m",
+    "pytest",
+    "tests",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--junitxml=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/ci-fix-2026-10-03/python/full-package-results.xml",
+    "--basetemp=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/ci-fix-2026-10-03/python/full-package-tmp"
+  ],
+  "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardPackages",
+  "timeoutSeconds": 300,
+  "startedAt": 1791063584.7994518,
+  "cleanupVerified": true,
+  "ownedTemporaryPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/ci-fix-2026-10-03/python/full-package-tmp",
+  "ownedProcessGroup": 19757,
+  "exitCode": 0,
+  "elapsedSeconds": 68.51817226409912,
+  "logSHA256": "9ceddba73259d106479f7d71bac8a40350920c95d6afe7d09f4e668be8b9f913",
+  "ownedProcessGroupAbsent": true,
+  "temporaryPathAbsent": true
+}

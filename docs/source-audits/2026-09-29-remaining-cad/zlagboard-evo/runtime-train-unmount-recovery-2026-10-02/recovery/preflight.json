@@ -1,0 +1,20 @@
+{
+  "epoch": 1790991957.989696,
+  "exactDevice": {
+    "dataPath": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data",
+    "dataPathSize": 5525463040,
+    "logPath": "/Users/asherlc/Library/Logs/CoreSimulator/BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "udid": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "lastUsedAt": "2026-10-02T18:38:01Z",
+    "isAvailable": true,
+    "logPathSize": 315392,
+    "deviceTypeIdentifier": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+    "state": "Shutdown",
+    "name": "Hang Ten Paseo placid-badger-cad-second-half Review Pro MigrationDiagnosis20261002 96137"
+  },
+  "controller": "96137 96136 07:07:57 /opt/homebrew/bin/zsh .context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prep/lifecycle.zsh\n",
+  "toolSession90373": "Unknown process id on write_stdin; OS PID96137 remains alive",
+  "causeOfShutdown": "unknown",
+  "cleanupMarkerExists": false,
+  "noBootYet": true
+}

@@ -1,0 +1,180 @@
+{
+  "owner": "placid-badger",
+  "reviewNumber": 6,
+  "boardID": "mammut.diamond-finger",
+  "currentPackageSHA256": {
+    "mammut-diamond-finger.FCStd": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
+    "assets/primary.usdz": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+    "assets/primary.model.json": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46"
+  },
+  "outputs": [
+    {
+      "image": "preview-reference-cad-overview.png",
+      "sha256": "184863587067e361ab635d5d4a5ce47a5f45d55a54f1ea1f79e33dd0950902aa",
+      "inputs": [
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources/product-01.jpg",
+          "sha256": "d08c0f36233171789ff450f4429646079f67ca2506da2f794ecf61089982014f",
+          "originalDimensionsPX": [
+            3000,
+            3000
+          ],
+          "renderedDimensionsPX": [
+            558,
+            558
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources/manual-page-1.png",
+          "sha256": "4c52fcf599cdff271cf68aeb5f8593883fe69a3e650382ee98f028c461802eb3",
+          "originalDimensionsPX": [
+            1131,
+            1600
+          ],
+          "renderedDimensionsPX": [
+            394,
+            558
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/review/cad-front.png",
+          "sha256": "f42510f06dd42ed0982a36b1bc2a7047b03e30558baea9a3b6cb0810921f214d",
+          "originalDimensionsPX": [
+            1100,
+            650
+          ],
+          "renderedDimensionsPX": [
+            600,
+            355
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/review/comparison-front.png",
+          "sha256": "1762738f77b05abe5c16432b19b96197ec6422e9b1c7c8df5dcd7c5e7301e159",
+          "originalDimensionsPX": [
+            2200,
+            700
+          ],
+          "renderedDimensionsPX": [
+            811,
+            258
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/review/comparison-side.png",
+          "sha256": "5c84ef5443c97949c3934e8fb004e3da3f28a661a31f5f9c166aa34ee8249b0d",
+          "originalDimensionsPX": [
+            2200,
+            700
+          ],
+          "renderedDimensionsPX": [
+            811,
+            258
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/review/comparison-top.png",
+          "sha256": "11f9c0d9359639e6f7d384103d04be47084c7ae0aad5a57ad0f476b1f76169b8",
+          "originalDimensionsPX": [
+            2200,
+            700
+          ],
+          "renderedDimensionsPX": [
+            811,
+            258
+          ],
+          "crop": false
+        }
+      ]
+    },
+    {
+      "image": "preview-app-selection-overview.png",
+      "sha256": "0894c167b2c7f8a757ce05900b14a51453a53bd433f710871c077670454d41cd",
+      "inputs": [
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/app-review/default.png",
+          "sha256": "7b7a36dc324ab17992c20693b3bae50a641e4288b3cfd9f82123a8df6818d488",
+          "originalDimensionsPX": [
+            1206,
+            2622
+          ],
+          "renderedDimensionsPX": [
+            615,
+            1338
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/app-review/contact-selection.png",
+          "sha256": "bd12caf893824d7bb573844571f3bfa7f027cd70c309923ffaef09a8703ed9a1",
+          "originalDimensionsPX": [
+            1206,
+            2622
+          ],
+          "renderedDimensionsPX": [
+            615,
+            1338
+          ],
+          "crop": false
+        }
+      ]
+    }
+  ],
+  "rendererSourceSHA256": "28d14ae411734038fc7d7d0fe614cfc16e577837e5be6bc3bea90f7f6b48b15f",
+  "independentReviewSHA256": "4395dcbcd7c681053255ff40b561186cb1b7a7a593582a87ade44b848f489e43",
+  "appCapture": {
+    "validationPath": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/app-review/validation.json",
+    "validationSHA256": "b9c90cedbd60290164822b20a02eca30c5187a541652956c2db75e912449890f",
+    "currentSourceModelDescriptorMatch": true,
+    "captureNote": "Earlier batch images; no new build, simulator, launch or capture.",
+    "checks": [
+      {
+        "contactID": "mam-jug-l",
+        "selection": "DEBUG initial hold",
+        "image": "default.png",
+        "accessibility": "default-accessibility.json"
+      },
+      {
+        "contactID": "mam-upper-inset-r",
+        "selection": "DEBUG contact review route",
+        "image": "contact-selection.png",
+        "accessibility": "contact-selection-accessibility.json"
+      }
+    ],
+    "device": "iPhone 17 Pro",
+    "runtime": "iOS 26.5"
+  },
+  "sourceEvidence": {
+    "approvedSourcesSHA256": "9536e90376755b7da3732dc2e568e4f3b7ad9e5bb7fa036b5532925ad2666d50",
+    "sourceAuditSHA256": "a7c996b56b3deed670ca789f3be29f2d9b0eaefa6f5fc03e5d44ee8d8a7a6c64",
+    "distinctViews": "Manufacturer product photograph and manual topology drawing."
+  },
+  "contactCount": 16,
+  "displayEstimates": [
+    "Width850mm approximates inherited33.5in package metadata; this review did not independently locate dimensional text in the retained photograph/manual.",
+    "Height196mm, thickness78mm, all pocket depths/opening dimensions/relief curves/transition radii are display estimates. No new factory grip depths or finger capacities are asserted.",
+    "CAD side relief is visibly different from prior mesh; profile fidelity is for explicit user review, not certified by hash/recompute checks."
+  ],
+  "inventoryLimitation": "Inherited subtitle states21 documented contact surfaces while logical inventory has16. Two lower recesses exist only as body geometry and cannot be selected.",
+  "method": "Existing complete retained images uniformly fitted into labeled contact sheets. No cropping, source registration, traced or inferred geometry, new model render or package change.",
+  "humanGeometryAcceptance": "pending user review",
+  "externalResourcesStarted": false,
+  "visualInspection": {
+    "status": "Final complete composites inspected; human acceptance pending.",
+    "checks": [
+      "Manufacturer product photo and manual page retained in full.",
+      "Complete prior/CAD front, side and top views present.",
+      "Both full app screens retained with jug-left and upper-inset-right selections.",
+      "Retained capture age and display estimates labeled; no new app capture claimed."
+    ],
+    "images": {
+      "preview-reference-cad-overview.png": "184863587067e361ab635d5d4a5ce47a5f45d55a54f1ea1f79e33dd0950902aa",
+      "preview-app-selection-overview.png": "0894c167b2c7f8a757ce05900b14a51453a53bd433f710871c077670454d41cd"
+    }
+  }
+}

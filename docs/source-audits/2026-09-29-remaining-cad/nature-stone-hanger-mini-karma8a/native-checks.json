@@ -1,0 +1,17 @@
+{
+  "package": "nature-stone-hanger-mini-karma8a",
+  "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+  "editedFeature": "OuterRimRound",
+  "reopenRecompute": true,
+  "fullyConstrainedSketches": true,
+  "validBoundShapes": true,
+  "contactVerticesOnActualBodySurface": true,
+  "dimensionalEditChangesSolid": true,
+  "dimensionalEditChangesContacts": [
+    "nature_pinch"
+  ],
+  "bodyVolumeBeforeMM3": 153313.19917274598,
+  "bodyVolumeAfterMM3": 152952.45718566538,
+  "sourceBytesUnchanged": true,
+  "note": "Native source acceptance only. Suspension and app acceptance remain separate."
+}

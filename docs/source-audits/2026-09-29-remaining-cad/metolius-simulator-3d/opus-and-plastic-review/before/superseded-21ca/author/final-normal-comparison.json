@@ -1,0 +1,1134 @@
+{
+  "status": "pass",
+  "sourceSHA256": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "trianglesCompared": 62,
+  "cornersCompared": 186,
+  "allPositionsExact": true,
+  "maxNormalAngleDegrees": 2.9710832210994712e-05,
+  "legacySeconds": 0.4388242500135675,
+  "uvSeconds": 3.3888152500148863,
+  "categoryCounts": {
+    "heavy-face interior": 60,
+    "heavy-face spatial boundary": 54,
+    "legacy fallback boundary": 72
+  },
+  "comparisons": [
+    {
+      "triangle": 1338,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1338,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1338,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1471,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1471,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1471,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1472,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1472,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1472,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1499,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1499,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1499,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1500,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1500,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1500,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1512,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1512,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1512,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1513,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1513,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1513,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1732,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1732,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1732,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1948,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1948,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1948,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1953,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1953,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1953,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1958,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1958,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1958,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1963,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1963,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1963,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1964,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1964,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1964,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1996,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1996,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 1996,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2312,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2312,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2312,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2371,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2371,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2371,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2372,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2372,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2372,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2440,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2440,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2440,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2441,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2441,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2441,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2505,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2505,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2505,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2767,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2767,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2767,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2830,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2830,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 2830,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 3691,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 3691,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 3691,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 3692,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 3692,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 3692,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 4127,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 4127,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 4127,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 4388,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 4388,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 4388,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 4390,
+      "category": "legacy fallback boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 4390,
+      "category": "legacy fallback boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 4390,
+      "category": "legacy fallback boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 6774,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 6774,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 6774,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 9104,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 9104,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 9104,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 16906,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 16906,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 16906,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 24752,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 24752,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 24752,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 31121,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 31121,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 31121,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 32645,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 4.436338000413295e-06
+    },
+    {
+      "triangle": 32645,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 32645,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 32649,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 32649,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 32649,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 32654,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 32654,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 32654,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 32858,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 32858,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 32858,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 44566,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 44566,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 44566,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 1.2074182697257333e-06
+    },
+    {
+      "triangle": 56425,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 56425,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 56425,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 68281,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 68281,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 68281,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 80149,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 80149,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 80149,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 80165,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 80165,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 80165,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 83918,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 83918,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 83918,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 87498,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 8.537736462515939e-07
+    },
+    {
+      "triangle": 87498,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 87498,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 94827,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 94827,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 94827,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 101147,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 101147,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 101147,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 102165,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 102165,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 102165,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 109217,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 109217,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 109217,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 140515,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 140515,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 4.436338000413295e-06
+    },
+    {
+      "triangle": 140515,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 140519,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 140519,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 140519,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 140524,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 140524,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 140524,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 140731,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 140731,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 140731,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 152495,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 152495,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 152495,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 164419,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 164419,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 164419,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 176335,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 176335,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 176335,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 188353,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 188353,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 188353,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 188747,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 188747,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 188747,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 189327,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 189327,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 189327,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 193800,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 193800,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 193800,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 2.9710832210994712e-05
+    },
+    {
+      "triangle": 196081,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 196081,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 196081,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 203845,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 203845,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 203845,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 211648,
+      "category": "heavy-face interior",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 211648,
+      "category": "heavy-face interior",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 211648,
+      "category": "heavy-face interior",
+      "corner": 2,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 211998,
+      "category": "heavy-face spatial boundary",
+      "corner": 0,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 211998,
+      "category": "heavy-face spatial boundary",
+      "corner": 1,
+      "angleDegrees": 0.0
+    },
+    {
+      "triangle": 211998,
+      "category": "heavy-face spatial boundary",
+      "corner": 2,
+      "angleDegrees": 0.0
+    }
+  ]
+}

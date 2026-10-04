@@ -1,0 +1,54 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "E9D3D8B4-1440-4417-862B-3023AF3841FA",
+  "initialTestRun": "cold-attempt-ios-tests-command.json",
+  "failedXCResultRemoved": true,
+  "commands": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "shutdown",
+        "E9D3D8B4-1440-4417-862B-3023AF3841FA"
+      ],
+      "startedMonotonic": 441062.716301958,
+      "exitCode": 0,
+      "elapsedSeconds": 3.2347149580018595,
+      "output": ""
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "boot",
+        "E9D3D8B4-1440-4417-862B-3023AF3841FA"
+      ],
+      "startedMonotonic": 441065.951284125,
+      "exitCode": 0,
+      "elapsedSeconds": 0.6125701250275597,
+      "output": ""
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "open",
+        "-a",
+        "Simulator",
+        "--args",
+        "-CurrentDeviceUDID",
+        "E9D3D8B4-1440-4417-862B-3023AF3841FA"
+      ],
+      "startedMonotonic": 441066.564159458,
+      "exitCode": 0,
+      "elapsedSeconds": 0.09546412504278123,
+      "output": ""
+    }
+  ],
+  "afterRebootAXExitCode": 0,
+  "actualUIReady": true
+}

@@ -1,0 +1,206 @@
+{
+  "owner": "placid-badger",
+  "date": "2026-10-03",
+  "number": 10,
+  "boardID": "nature.stone-hanger-mini",
+  "package": "nature-stone-hanger-mini",
+  "status": "bounded appearance/pick/touch evidence; fresh app human acceptance pending",
+  "appWorkflowPassed": false,
+  "currentAppHumanAcceptance": "pending",
+  "acceptedGeometry": {
+    "humanReview": "Shown #10 CAD body and corrected jug finger-contact highlight accepted; current app finishes and interaction remain unverified.",
+    "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views. Corrected Mini jug highlight across the upper front and back finger-contact faces, rounded crown and upper sides, shown from both faces and in the linked front/side/top comparison.",
+    "acceptedDate": "2026-10-03",
+    "reviewAnswer": "Lgtm",
+    "geometryHumanAcceptance": "accepted",
+    "humanReviewRecord": "nature-stone-hanger-mini/human-review.json",
+    "reviewPage": "nature-stone-hanger-mini/finger-contact-review-2026-10-02/index.html",
+    "unchangedAcceptedGeometry": true,
+    "newHumanAppAcceptance": "pending"
+  },
+  "immutablePackageSHA256": {
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+    "Hangboards/nature-stone-hanger-mini/suspension.json": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
+  },
+  "installedAppProvenance": {
+    "path": "installed-app-provenance.json",
+    "sha256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+    "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca"
+  },
+  "representativeContactCoverage": "All 4 logical contacts: jug, wood edge, granite edge and pinch.",
+  "selectedContactIDsCaptured": [
+    "granite-edge-15",
+    "pinch-60",
+    "pull-up-jug",
+    "wood-edge-15-incut"
+  ],
+  "wholeFrameVisualAudit": {
+    "status": "supplied audit complete",
+    "path": "visual-audits/10-visual-audit.json",
+    "sha256": "97d46b4e7c8750338302aab6331dfff7cadbe722562b4e943aec38c96f7dd95c",
+    "findingStatuses": [
+      {
+        "check": "wood and granite separation",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": null,
+        "frames": [
+          "app-captures/10-live-hold-pull-up-jug.png",
+          "app-captures/10-live-hold-wood-edge-15-incut.png",
+          "app-captures/10-live-unselected-train.png"
+        ]
+      },
+      {
+        "check": "material restoration within the same scene",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": null,
+        "frames": [
+          "app-captures/10-granite-restored-wood-selected-same-scene.png",
+          "app-captures/10-wood-restored-granite-reselected-same-scene.png"
+        ]
+      },
+      {
+        "check": "jug finger rail highlighting",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": null,
+        "frames": [
+          "app-captures/10-live-hold-pull-up-jug.png",
+          "app-captures/10-real-jug-orbit-a.png",
+          "app-captures/10-live-top-oblique.png",
+          "app-captures/10-live-horizontal-orbit-1.png",
+          "app-captures/10-live-horizontal-orbit-2.png",
+          "app-captures/10-live-horizontal-orbit-3.png"
+        ]
+      },
+      {
+        "check": "opposing pinch surfaces",
+        "status": "PASS_VISIBLE_OPPOSING_BANDS",
+        "limitation": "The lower band is mostly edge-on in the supplied pinch frame; full underside coverage is not exposed by this view.",
+        "frames": [
+          "app-captures/10-live-hold-pinch-60.png"
+        ]
+      },
+      {
+        "check": "wood edge highlighting",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": null,
+        "frames": [
+          "app-captures/10-live-hold-wood-edge-15-incut.png",
+          "app-captures/10-granite-restored-wood-selected-same-scene.png"
+        ]
+      },
+      {
+        "check": "visible native cord and solid separation",
+        "status": "PASS_VISIBLE_ROUTE",
+        "limitation": "A screenshot audit cannot recertify hidden native passage clearance or prove matrix invariance during motion.",
+        "frames": [
+          "app-captures/10-live-front.png",
+          "app-captures/10-real-jug-orbit-a.png",
+          "app-captures/10-live-horizontal-orbit-2.png",
+          "app-captures/10-live-horizontal-orbit-3.png",
+          "app-captures/10-live-landscape.png"
+        ]
+      },
+      {
+        "check": "front, top oblique, and ordinary touch end-on orbit",
+        "status": "PASS_SUPPLIED_SETTLED_VIEWS",
+        "limitation": null,
+        "frames": [
+          "app-captures/10-live-front.png",
+          "app-captures/10-live-top-oblique.png",
+          "app-captures/10-real-jug-orbit-a.png",
+          "app-captures/10-live-horizontal-orbit-1.png",
+          "app-captures/10-live-horizontal-orbit-2.png",
+          "app-captures/10-live-horizontal-orbit-3.png"
+        ]
+      },
+      {
+        "check": "DEBUG side preset readiness",
+        "status": "FAIL_RETAINED",
+        "limitation": null,
+        "frames": [
+          "app-captures/10-side-readiness-failure.png"
+        ]
+      },
+      {
+        "check": "selected hold UI",
+        "status": "PASS_SUPPLIED_PORTRAIT_CARDS",
+        "limitation": "The hold-map list uses ellipsis and its lower rows are partially behind the floating tab bar in these viewport positions; list scrolling and direct physical picks were not audited here.",
+        "frames": [
+          "app-captures/10-live-hold-pull-up-jug.png",
+          "app-captures/10-live-hold-wood-edge-15-incut.png",
+          "app-captures/10-live-hold-granite-edge-15.png",
+          "app-captures/10-live-hold-pinch-60.png"
+        ]
+      },
+      {
+        "check": "board map fit in landscape",
+        "status": "PASS_BOARD_AND_CORD_FIT",
+        "limitation": "The selected hold card begins below the captured landscape viewport; its full landscape layout is not shown.",
+        "frames": [
+          "app-captures/10-live-landscape.png"
+        ]
+      },
+      {
+        "check": "unselected Train rendering and normal lens",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": null,
+        "frames": [
+          "app-captures/10-live-unselected-train.png",
+          "app-captures/10-live-normal-lens.png"
+        ]
+      }
+    ]
+  },
+  "physicalMeshPick": {
+    "status": "pass one supplied physical mesh tap",
+    "pickedContactID": "pull-up-jug",
+    "receipt": "app-captures/10-jug-physical-mesh-pick-receipt.json",
+    "receiptSHA256": "530282f176746a5907dd16abb6980a62f15da8dbe34e6df7f643ab954c55714e",
+    "frame": "app-captures/10-jug-physical-mesh-pick.png",
+    "imageSHA256": "81aae343d95e87994183cba71c52cfd42a393341a2f98d0646e9a37d989119c8",
+    "before": "revision=10;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.34906584;cameraPitch=0.6405226;cameraSettled=true;selection=pull-up-jug;tapRevision=0;pickedContact=",
+    "after": "revision=11;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.34906584;cameraPitch=0.6405226;cameraSettled=true;selection=pull-up-jug;tapRevision=1;pickedContact=pull-up-jug"
+  },
+  "representativeFrames": [
+    "app-captures/10-live-front.png",
+    "app-captures/10-jug-physical-mesh-pick.png",
+    "app-captures/10-live-hold-granite-edge-15.png",
+    "app-captures/10-live-hold-pinch-60.png",
+    "app-captures/10-live-hold-pull-up-jug.png",
+    "app-captures/10-live-hold-wood-edge-15-incut.png"
+  ],
+  "touchEvidence": {
+    "status": "settled ordinary touch capture sequence; scope limited to supplied states",
+    "frames": [
+      "app-captures/10-live-horizontal-orbit-1.png",
+      "app-captures/10-live-horizontal-orbit-2.png",
+      "app-captures/10-live-horizontal-orbit-3.png"
+    ],
+    "visualAuditPending": false
+  },
+  "limitations": [
+    "Lower pinch underside is not fully exposed.",
+    "Failed DEBUG side readiness frame is retained; ordinary touch supplies the settled end-on view."
+  ],
+  "workout": {
+    "passed": false,
+    "status": "landscape rest preview remains red; portrait attempt ended with bounded 40-second accessibility timeout",
+    "commonGateEvidence": "capture-traces/10-workout-observation.json",
+    "trace": "capture-traces/workout-multi.json",
+    "workFrame": "app-captures/10-workout-landscape-work-highlight.png",
+    "restFrame": "app-captures/10-workout-landscape-rest-preview.png"
+  },
+  "focusedVerification": {
+    "path": "validation/final-strong-summary.json",
+    "sha256": "6c5f8e87f5a23babe0dbf11b7150c5e1b0a24ce41a3bfeb5fb622aa03cf0d8be",
+    "passed": 455,
+    "failed": 0,
+    "skipped": 1,
+    "fullSuitePassed": false,
+    "refinement": "validation/final-test-refinement.json"
+  },
+  "productionGeometryChanged": false,
+  "newManufacturerFactsOrRoutineChanges": false
+}

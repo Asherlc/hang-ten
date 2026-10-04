@@ -1,0 +1,193 @@
+{
+  "scope": "H1b whole screenshot visual review only; no pixel analysis/crop/measurements",
+  "all20IndividuallyViewed": true,
+  "allBoardStatesCorrect": true,
+  "timerVisiblyChanges": true,
+  "progressVisiblyAdvancesAcrossSequence": true,
+  "limitations": [
+    "Sparse frames only; no claim about every rendered frame",
+    "Synthetic 40-second diagnostic overlay, not a sourced training routine"
+  ],
+  "images": [
+    {
+      "file": "phase-0-clear-plus-0.25.png",
+      "sha256": "67896db386698233fb4ec0d8cc58218c86b31714aec9d8e6f9e8ec08cb62a74e",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "none",
+      "timer": "00:08",
+      "boardCorrect": true,
+      "artifact": "black rounded capsule at far left, outside board"
+    },
+    {
+      "file": "phase-0-clear-plus-1.png",
+      "sha256": "96d127b451d5fabf382921cd223e065b1e4f4d08ba358bb86b7763d162ce8fe0",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "none",
+      "timer": "00:07",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-0-clear-plus-3.png",
+      "sha256": "1719b0e1919686f1325976cb5dfc3a9b999633175c97b9a3fac339c8caf3b6d5",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "none",
+      "timer": "00:05",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-0-clear-plus-7.png",
+      "sha256": "1478f5a19c7ade6342350cd2da06ae3e7c5d91f108258a8aaec0eaaf2b70678c",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "none",
+      "timer": "00:01",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-1-active-plus-0.25.png",
+      "sha256": "cf0aca8abf6840e4ffd51274c8967478c0d42339bd67d2de879bcf08fc5c745e",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "red",
+      "timer": "00:08",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-1-active-plus-1.png",
+      "sha256": "cbe126430606f901008adec2bbc943680887b028b2cb03fc4755956b1ab3a832",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "red",
+      "timer": "00:07",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-1-active-plus-3.png",
+      "sha256": "34d06b3a0d5d9a674903a77d8e018f4ed6c186d1cf3116730eecddc91b1d0646",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "red",
+      "timer": "00:05",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-1-active-plus-7.png",
+      "sha256": "7e3d410338b1d2306c0c18387515f72b1d04244fd280433c9e6a976949a285a1",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "red",
+      "timer": "00:01",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-2-preview-plus-0.25.png",
+      "sha256": "9fb20d420dd6abdf7e6a7070241665736093903fd5258b0cc80211369a914df2",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "blue",
+      "timer": "00:08",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-2-preview-plus-1.png",
+      "sha256": "00523bf847b987ea77b117b4a3b925ad26a8a8783c54bffa910f533ddb318291",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "blue",
+      "timer": "00:07",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-2-preview-plus-3.png",
+      "sha256": "b41714561e711fcaf40638c3ae621124a8d78361aceee9c4428a2826d5879d8c",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "blue",
+      "timer": "00:05",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-2-preview-plus-7.png",
+      "sha256": "180460edb7f081963002fe3bd9257748293d2f516a88d28d91c50bad4b60eaf1",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "blue",
+      "timer": "00:01",
+      "boardCorrect": true,
+      "artifact": "black rounded capsule at far left, outside board"
+    },
+    {
+      "file": "phase-3-active-plus-0.25.png",
+      "sha256": "46c48e76fe00019f4839852d2aa01cd23230f221546b66fedc1e440e2e3ef506",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "red",
+      "timer": "00:08",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-3-active-plus-1.png",
+      "sha256": "195e35a9826a272015a996042149c2639c8d2f1cd6950814b0b03b1b00700e0d",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "red",
+      "timer": "00:07",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-3-active-plus-3.png",
+      "sha256": "3e3f8331b36de2e4a7c455b8104e793a492e9c069db00dc85bf7716d61ec6b9b",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "red",
+      "timer": "00:05",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-3-active-plus-7.png",
+      "sha256": "82de6348cad6ee9c969c931183b7c822d31097f061289608d38d0170be0937b5",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "red",
+      "timer": "00:01",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-4-preview-plus-0.25.png",
+      "sha256": "606c24cdfc9ca399622951e526ed264de2cff70cc956305f6945c9620b109005",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "blue",
+      "timer": "00:08",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-4-preview-plus-1.png",
+      "sha256": "6b88f91977768f1c2a839763d7d59ce693c44ab20c3d4eaf3a5ac6ba9814db42",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "blue",
+      "timer": "00:07",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-4-preview-plus-3.png",
+      "sha256": "f6ef992ee03d4f71e6ac84f65b317f0874205c36d54e6874a848c40f2c998003",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "blue",
+      "timer": "00:05",
+      "boardCorrect": true,
+      "artifact": null
+    },
+    {
+      "file": "phase-4-preview-plus-7.png",
+      "sha256": "a95a05f8070fc89379b7ce7175c6ae35acc3f700ed21d7122e88cd5f70414dbc",
+      "wholeImageIndividuallyViewed": true,
+      "boardColor": "blue",
+      "timer": "00:01",
+      "boardCorrect": true,
+      "artifact": null
+    }
+  ]
+}

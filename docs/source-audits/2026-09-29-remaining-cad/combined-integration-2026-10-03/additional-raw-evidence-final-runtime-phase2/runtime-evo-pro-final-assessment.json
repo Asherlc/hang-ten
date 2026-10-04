@@ -1,0 +1,53 @@
+{
+  "classification": "PASS_FOR_CAPTURED_SIMULATOR_FRAMES",
+  "checks": [
+    {
+      "board": "evo",
+      "runID": "placid-badger-cad-second-half-combined-evo-reviewed-setup",
+      "captureCount": 58,
+      "sourceCommit": "fa46c015bba7456f887ba46fc4049bdfcf697c24",
+      "binarySHA256": "92411c81d2a3cc4bf8fbb019c3022f77337e74a07ad31c7090f18e315e624fb3",
+      "imageHashesVerified": true,
+      "wholeImageReview": [
+        {
+          "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-whole-image-review-all58.json",
+          "sha256": "b62a394fb80fbc700bbb0577adf43b62b8315a260f355ab90d55e43eaca0b3d3"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-whole-image-review-hand-visibility-correction.json",
+          "sha256": "aa4676bd506097cd9f3d873d3fc6f90e09ec5ce3cb07701883e0e7b7e8fd4158"
+        }
+      ],
+      "correctCapturedContactSequence": true,
+      "correctCapturedHands": true,
+      "rawCompletionUntouched": true,
+      "cleanupPassed": true
+    },
+    {
+      "board": "pro",
+      "runID": "placid-badger-cad-second-half-combined-pro-passive-route",
+      "captureCount": 58,
+      "sourceCommit": "fa46c015bba7456f887ba46fc4049bdfcf697c24",
+      "binarySHA256": "92411c81d2a3cc4bf8fbb019c3022f77337e74a07ad31c7090f18e315e624fb3",
+      "imageHashesVerified": true,
+      "wholeImageReview": [
+        {
+          "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-pro-passive-route-whole-image-review-all58.json",
+          "sha256": "c675a5a8c3108ed3c080b9ad0b1c22a35e03f2645612fa5a13321bac7de36331"
+        }
+      ],
+      "correctCapturedContactSequence": true,
+      "correctCapturedHands": true,
+      "rawCompletionUntouched": true,
+      "cleanupPassed": true
+    }
+  ],
+  "scope": "Source-preserving normal MaxHangs workflow, Hang/Rest/followingHang after180s. Root original-image spotchecks and independent full reviews. Evo erroneous hand-absence findings explicitly superseded only by retained append-only correction; original evidence not rewritten.",
+  "limits": [
+    "No physical device available",
+    "No CPU/GPU presentation or precise app-phase timing certification",
+    "No continuous frame-visibility claim between captures",
+    "No new human geometry acceptance"
+  ],
+  "totalReviewed": 116
+}

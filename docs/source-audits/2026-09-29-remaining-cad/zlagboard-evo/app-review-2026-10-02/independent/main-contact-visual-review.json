@@ -1,0 +1,30 @@
+{
+  "timestampUTC": "2026-10-02T05:26:17.367250+00:00",
+  "reviewer": "root",
+  "status": "All21 canonical selections and5 initial orbit views visually inspected",
+  "images": {
+    "review-montages/selections-1.png": "220970c9add0f9722762f21f52aaebd4919f99a5a24b12859c0f6257864e9ebe",
+    "review-montages/selections-2.png": "dca8864440dfeb4dcfaf327be70f525c558bd15aa581f058d7a98230b7505a17",
+    "review-montages/selections-3.png": "8087fccd19c8de14d9cb5fe37c91c24ee61a6e2c47e4cc3bd90c1f91ab3207f7",
+    "review-montages/selections-4.png": "e12c221005a4adbb097d0b59d88eed270e3cd1f43dbbae4ee483894517973ade",
+    "review-montages/selections-5.png": "cf6486382b263a493329357eed1d71b31dd0b79c273ea62d1e72e165c5557290",
+    "review-montages/selections-6.png": "f736836420e3fe6271fa33037a5212541eb98ab0441607500e59c10892942535",
+    "review-montages/selections-7.png": "fd26e31ae76ece5b0f967e8bf37074edb9c4d012bfd9226feca0cf0e438cc7f5",
+    "review-montages/orbits-1.png": "38537fbfe0fa0950f8b664766fd2fd86aff46a17fd9ca74ecd45809f9de4f691",
+    "review-montages/orbits-2.png": "5eb76eea09422c9a60ed0e375afdbe7a3bbba9ee333f44cd8af5a166f326f3ba"
+  },
+  "observations": [
+    "All21 selected cards correspond to the visible red physical contact.",
+    "Wood body, full board framing and both pocket rows remain visible.",
+    "Selected-card text is legible; hold-map chips use existing truncation and scrolling.",
+    "Initial jug angles are shallow; elevated crest/corner proof remains a separate required review."
+  ],
+  "remaining": [
+    "Elevated jug review",
+    "Physical picks/reset",
+    "Active/rest workout",
+    "Focused test retry",
+    "Cleanup"
+  ],
+  "humanReview": "pending"
+}

@@ -1,0 +1,46 @@
+--- v5/prototype_schema.py
++++ v6/prototype_schema.py
+@@ -1,8 +1,8 @@
+-"""Prospective adapter for corrected prototype v2; requires explicit runtime release."""
++"""Prospective adapter for viewport-readiness prototype v3; requires explicit runtime release."""
+ from pathlib import Path
+ import hashlib, json, math, re
+ READY = True
+-EXPECTED_EVENT_SCHEMA_SHA256 = "ee895ad76f0a4ed48b6ade3c0e4ad83b018e9418b1a0dd849606a7df480f3b8e"  # Revised v2 only; no launch authorization.
++EXPECTED_EVENT_SCHEMA_SHA256 = "f80ca24971a12232bc78991201be4b583b1e48729ffdcae0340999d608072a7c"  # Revised v3 only; no launch authorization.
+ sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+ 
+ def validate_release(release):
+@@ -29,14 +29,30 @@
+             for p in w["rendererPlacements"] if p["class"]=="RealityKit.ARView"]
+ 
+ def image_protocol(rows):
+-    events=image_rows(rows); pending=None; latest={}; stages={}; publications=[]; max_flight=0
++    events=image_rows(rows); pending=None; latest={}; stages={}; requests={}; waiting=set(); publications=[]; max_flight=0
+     for r in events:
+         k=key(r); event=r["imageEvent"]
+         assert isinstance(k[1],int) and k[1]>0 and re.fullmatch(r"[A-Fa-f0-9-]{36}",k[0])
+         if event=="requested":
+             assert k[1]>latest.get(k[0],0); latest[k[0]]=k[1]
++            assert len(r["requestedViewport"])==2 and all(isinstance(v,str) for v in r["requestedViewport"])
++            assert isinstance(r["requestedDisplayScale"],str)
++            # Preserve nonfinite spellings in raw rows; success requires later valid request.
++            requests[k]=(r,[float(v) for v in r["requestedViewport"]],float(r["requestedDisplayScale"]))
++        elif event=="waiting-for-viewport":
++            assert pending is None and k in requests and k not in stages and k not in waiting
++            request,dimensions,scale=requests[k]
++            assert math.isfinite(scale) and scale>0
++            assert all(math.isfinite(v) and v>=0 and v*scale<=4096 for v in dimensions)
++            assert any(v==0 for v in dimensions)
++            assert not any(x.get("event")=="hand-lifecycle" and x.get("lifecycleEvent")=="constructor-entry" for x in rows if request["sequence"]<x["sequence"]<r["sequence"])
++            waiting.add(k)  # Consumed, never itself submitted or counted as ready.
+         elif event=="submitted":
+-            assert pending is None and latest[k[0]]>=k[1]
++            assert pending is None and latest[k[0]]>=k[1] and k in requests and k not in waiting
++            request,dimensions,scale=requests[k]
++            assert all(math.isfinite(v) and v>0 and v*scale<=4096 for v in dimensions)
++            assert math.isfinite(scale) and scale>0
++            assert r["viewport"]==dimensions and r["displayScale"]==scale
+             assert r["kind"]=="pair" and r["orthographic"] is True and r["perspective"] is False
+             assert r["textureFormat"]=="bgra8Unorm_srgb" and r["inputColorSpace"]=="sRGB"
+             assert r["displayScale"]>0 and all(math.isfinite(v) and v>0 for v in r["viewport"])

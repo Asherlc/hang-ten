@@ -1,0 +1,141 @@
+diff --git a/HangTen/Models/BoardModelRealityTypes.swift b/HangTen/Models/BoardModelRealityTypes.swift
+index 9d268157d..248c50ea0 100644
+--- a/HangTen/Models/BoardModelRealityTypes.swift
++++ b/HangTen/Models/BoardModelRealityTypes.swift
+@@ -920,11 +920,12 @@ final class BoardModelRealityScene {
+     }
+ 
+     private func applyHighlight(to entity: ModelEntity, color: Color, mode: BoardHighlightMode) {
+-        guard let baseline = baselineMaterials[entity] else { return }
++        guard let baseline = baselineMaterials[entity], var component = entity.model else { return }
+ 
+         if color == .clear {
+             // Restore the complete runtime finish, including a wood shader.
+-            entity.model?.materials = [baseline]
++            component.materials = [baseline]
++            entity.components.set(component)
+             return
+         }
+ 
+@@ -934,7 +935,8 @@ final class BoardModelRealityScene {
+         material.baseColor = .init(tint: uiColor.withAlphaComponent(0.6))
+         material.roughness = .init(floatLiteral: 0.8)
+ 
+-        entity.model?.materials = [material]
++        component.materials = [material]
++        entity.components.set(component)
+     }
+ 
+     private func updateCameraTransform(animated: Bool = false, completion: (() -> Void)? = nil) {
+diff --git a/HangTen/Views/BoardModelView.swift b/HangTen/Views/BoardModelView.swift
+index 13e528a96..29b82e60c 100644
+--- a/HangTen/Views/BoardModelView.swift
++++ b/HangTen/Views/BoardModelView.swift
+@@ -146,6 +146,18 @@ struct BoardModelUnavailableView: View {
+ }
+ 
+ struct BoardModelRealityView: View {
++    private struct SceneSelection: Equatable {
++        let scene: BoardModelRealityScene
++        let contactIDs: Set<String>
++        let mode: BoardHighlightMode
++        let positionID: String?
++
++        static func == (lhs: Self, rhs: Self) -> Bool {
++            lhs.scene === rhs.scene && lhs.contactIDs == rhs.contactIDs
++                && lhs.mode == rhs.mode && lhs.positionID == rhs.positionID
++        }
++    }
++
+     let model: BoardModelRealityScene
+     let boardName: String
+     let accessibilityValue: String?
+@@ -161,6 +173,7 @@ struct BoardModelRealityView: View {
+     @State private var lastDragTranslation: CGSize = .zero
+     @State private var lastMagnification: CGFloat = 1
+     @State private var didReportUnavailable = false
++    @State private var synchronizedSelection: SceneSelection?
+ 
+     private var fieldOfViewDegrees: Double {
+         #if DEBUG
+@@ -173,14 +186,22 @@ struct BoardModelRealityView: View {
+ 
+     var body: some View {
+         let _ = cameraRevision
++        let selection = SceneSelection(scene: model, contactIDs: highlightedContactIDs,
++                                       mode: highlightMode, positionID: positionID)
+         GeometryReader { proxy in
+             let size = proxy.size
+             RealityView { content in
+                 content.add(model.root)
+                 content.add(model.camera)
+-                applySync(size: size)
++                applyFraming(size: size)
++                if let current = synchronizedSelection, current.scene === model {
++                    applySelection(current)
++                }
+             } update: { content in
+-                applySync(size: size)
++                applyFraming(size: size)
++                if let current = synchronizedSelection, current.scene === model {
++                    applySelection(current)
++                }
+             }
+             .gesture(orbitGesture(size: size))
+             .simultaneousGesture(magnifyGesture)
+@@ -191,6 +212,11 @@ struct BoardModelRealityView: View {
+             // root and camera replace the prior scene's entities.
+             .id(ObjectIdentifier(model))
+         }
++        // Reading this state schedules a RealityView update when only the
++        // highlight mode changes; apply the selection in that callback.
++        .onChange(of: selection, initial: true) { _, current in
++            synchronizedSelection = current
++        }
+         // A display-only card is one element (its host Button owns the tap). An
+         // interactive board exposes its contact elements instead, so the
+         // container must not collapse them into a single element.
+@@ -199,9 +225,8 @@ struct BoardModelRealityView: View {
+             value: onContactTap == nil ? accessibilityValue : nil))
+     }
+ 
+-    private func applySync(size: CGSize) {
++    private func applyFraming(size: CGSize) {
+         let priorCameraTransform = model.camera.transform.matrix
+-        let priorInstanceTransforms = model.instanceEntities.map { $0.transform.matrix }
+         var camera = model.camera.camera
+         camera.fieldOfViewInDegrees = Float(fieldOfViewDegrees)
+         camera.fieldOfViewOrientation = .vertical
+@@ -209,16 +234,24 @@ struct BoardModelRealityView: View {
+         camera.far = 1000
+         model.camera.camera = camera
+         model.frame(in: size)
+-        let didSelect = model.select(positionID: positionID)
+-        model.highlight(highlightedContactIDs, mode: highlightMode)
+-        // RealityView synchronizes after SwiftUI evaluates the accessibility
+-        // overlay. Reproject once when framing or a board pose actually changes.
+-        // The unchanged follow-up update must not schedule another invalidation.
+-        if model.camera.transform.matrix != priorCameraTransform
+-            || model.instanceEntities.map({ $0.transform.matrix }) != priorInstanceTransforms {
++        // Reproject only when framing changes; the follow-up update must not
++        // schedule another invalidation.
++        if model.camera.transform.matrix != priorCameraTransform {
++            Task { @MainActor in cameraRevision &+= 1 }
++        }
++    }
++
++    private func applySelection(_ selection: SceneSelection) {
++        let scene = selection.scene
++        let priorCameraTransform = scene.camera.transform.matrix
++        let priorInstanceTransforms = scene.instanceEntities.map { $0.transform.matrix }
++        let didSelect = scene.select(positionID: selection.positionID)
++        scene.highlight(selection.contactIDs, mode: selection.mode)
++        if scene.camera.transform.matrix != priorCameraTransform
++            || scene.instanceEntities.map({ $0.transform.matrix }) != priorInstanceTransforms {
+             Task { @MainActor in cameraRevision &+= 1 }
+         }
+-        if let positionID, !didSelect {
++        if selection.positionID != nil, !didSelect {
+             Task { @MainActor in
+                 guard !didReportUnavailable else { return }
+                 didReportUnavailable = true

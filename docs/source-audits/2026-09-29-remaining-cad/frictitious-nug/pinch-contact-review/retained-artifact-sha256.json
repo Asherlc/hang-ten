@@ -1,0 +1,351 @@
+{
+  "owner": "placid-badger",
+  "files": {
+    "native-authoring/authoring-provenance.md": {
+      "source": ".context/placid-badger/nug-pinch-review/native-author-two-bands/authoring-provenance.md",
+      "sha256": "d23ca96097b96f774077cddacba5f96ca1c1ef97f4cf05b3961c477b7196a210",
+      "bytes": 3707
+    },
+    "native-authoring/seamed-native-proof.json": {
+      "source": ".context/placid-badger/nug-pinch-review/native-author-two-bands/seamed-native-proof.json",
+      "sha256": "1a00e07b91d3b1bfcaaacbf332487cc5fe2d01c229a02995417bbae86ca7adfc",
+      "bytes": 83679
+    },
+    "native-authoring/seamed-archive-proof.json": {
+      "source": ".context/placid-badger/nug-pinch-review/native-author-two-bands/seamed-archive-proof.json",
+      "sha256": "794c05cca44dd6dded867ab1ca5e858fd287d5fceeacb04de17ec218756f8754",
+      "bytes": 1072
+    },
+    "native-authoring/seam-author-proof.json": {
+      "source": ".context/placid-badger/nug-pinch-review/native-author-two-bands/seam-author-proof.json",
+      "sha256": "d32f54ad15d86e9d874d1f092dfe637b30df8c7bf97af03a3c5e9111fc65843b",
+      "bytes": 82557
+    },
+    "native-authoring/final-baseline-preservation.json": {
+      "source": ".context/placid-badger/nug-pinch-review/native-author-two-bands/final-baseline-preservation.json",
+      "sha256": "041fea1a057563b9bd8426fbc3b48b941bf12e3d909aef1b25c7a7edb10cb220",
+      "bytes": 3669
+    },
+    "native-authoring/boundary-edges.json": {
+      "source": ".context/placid-badger/nug-pinch-review/native-author-two-bands/boundary-edges.json",
+      "sha256": "c1116051f59a575149190274aa68f2fc085463edecf7b35ac104c51af6e99e9f",
+      "bytes": 925
+    },
+    "independent-code-review/python-review.json": {
+      "source": ".context/placid-badger/nug-pinch-review/independent-code-review/python-review.json",
+      "sha256": "160dae38230b0827726d11f0e87cd7b880381c6f0ff5ba59f8b7b5fa1be9a295",
+      "bytes": 3524
+    },
+    "independent-code-review/python-review.md": {
+      "source": ".context/placid-badger/nug-pinch-review/independent-code-review/python-review.md",
+      "sha256": "d2605d350a20362be8da23c3d5a84d15d4ebefa1e18cf7937a610b4c15cca41c",
+      "bytes": 1830
+    },
+    "independent-code-review/swift-review.json": {
+      "source": ".context/placid-badger/nug-pinch-review/independent-code-review/swift-review.json",
+      "sha256": "7cc5fe0c044a48eb8ef165c7da63adfb94b830ab9352ae67020f5c220ba1e35f",
+      "bytes": 3399
+    },
+    "independent-code-review/swift-review.md": {
+      "source": ".context/placid-badger/nug-pinch-review/independent-code-review/swift-review.md",
+      "sha256": "2f3c8f4ec3eb452d5df82c6810d8a4eead6ef783148cc1271721b32cc28a96d2",
+      "bytes": 1264
+    },
+    "independent-code-review/unrelated-depth-probe-fixed.json": {
+      "source": ".context/placid-badger/nug-pinch-review/independent-code-review/unrelated-depth-probe-fixed.json",
+      "sha256": "09de9f029c10bbbdfdefe50247493f6554582d6c4b274e136548116627cee854",
+      "bytes": 732
+    },
+    "independent-code-review/unrelated-depth-probe.json": {
+      "source": ".context/placid-badger/nug-pinch-review/independent-code-review/unrelated-depth-probe.json",
+      "sha256": "1f4ad4eccb9f7f59519591f3a2f9169f5e0cab0b862cb6cca050b979a9eff5ea",
+      "bytes": 388
+    },
+    "python-contract/current-code-hashes.json": {
+      "source": ".context/placid-badger/nug-pinch-review/python-contract/current-code-hashes.json",
+      "sha256": "f1485a0c29fd137c13c6f4066d53b09f6f8d3fc91250665b9e02cbe2b2c12512",
+      "bytes": 892
+    },
+    "python-contract/green-broader.log": {
+      "source": ".context/placid-badger/nug-pinch-review/python-contract/green-broader.log",
+      "sha256": "dfc11919e3e41a95a618bb6093f959c6482a3230396dbc24b895c9ccb6da8fcc",
+      "bytes": 340
+    },
+    "python-contract/green-initial.log": {
+      "source": ".context/placid-badger/nug-pinch-review/python-contract/green-initial.log",
+      "sha256": "c7cb9d89547bf9ed61602dcad41ee9c8c0f819e62825b20d51c77b4b2ef2f866",
+      "bytes": 99
+    },
+    "python-contract/green-unrelated-depth-broader.log": {
+      "source": ".context/placid-badger/nug-pinch-review/python-contract/green-unrelated-depth-broader.log",
+      "sha256": "3c59a1f27f754399fad6d4a9c37d02d55297168c615f8da63d2ad619517ffc55",
+      "bytes": 340
+    },
+    "python-contract/implementation-verification.json": {
+      "source": ".context/placid-badger/nug-pinch-review/python-contract/implementation-verification.json",
+      "sha256": "46e279f03d7e65b46ad3c142054a3d9b7ed2cec83ab6267bdfe5091b966ee901",
+      "bytes": 2681
+    },
+    "python-contract/native-in-memory-smoke.json": {
+      "source": ".context/placid-badger/nug-pinch-review/python-contract/native-in-memory-smoke.json",
+      "sha256": "4d4834483c5ace5ab9f700dfb2fc9c26671cc2a4696cc327917e43cd653527f1",
+      "bytes": 670
+    },
+    "python-contract/native-in-memory-smoke.py": {
+      "source": ".context/placid-badger/nug-pinch-review/python-contract/native-in-memory-smoke.py",
+      "sha256": "7b84b132f4e746b7aedcb28b7e43348b54f9f07b66001f6f7c9adcb4d33b96d6",
+      "bytes": 2368
+    },
+    "python-contract/red-outline.log": {
+      "source": ".context/placid-badger/nug-pinch-review/python-contract/red-outline.log",
+      "sha256": "655ee6b276d5a4efdbdc0ce03d9380cd7e2ec38d6d35b41bd35b3a88185d9813",
+      "bytes": 1598
+    },
+    "python-contract/red-unrelated-depth.log": {
+      "source": ".context/placid-badger/nug-pinch-review/python-contract/red-unrelated-depth.log",
+      "sha256": "bb4164486491d8f6dca35764eec8d0367f32b68f1bdfe927e522a75f56e8edb4",
+      "bytes": 5525
+    },
+    "python-contract/red.log": {
+      "source": ".context/placid-badger/nug-pinch-review/python-contract/red.log",
+      "sha256": "397845bf27d546bc142735d96d826328cf6d8c7f9d3126b77c9ff51e0ed0384e",
+      "bytes": 7263
+    },
+    "python-contract/unrelated-depth-fix-verification.json": {
+      "source": ".context/placid-badger/nug-pinch-review/python-contract/unrelated-depth-fix-verification.json",
+      "sha256": "4ef97750816734830782f32451c9e579ee29dd950ab4e916cec71b954f5562d4",
+      "bytes": 992
+    },
+    "runtime-contract/fixture-failure-diagnosis.json": {
+      "source": ".context/placid-badger/nug-pinch-review/runtime-contract/fixture-failure-diagnosis.json",
+      "sha256": "75b20bccc22cde9d2e07788c9a61f55eb9ad75cd58442e18a68eb586b260a078",
+      "bytes": 2199
+    },
+    "runtime-contract/red-ios-build-command.json": {
+      "source": ".context/placid-badger/nug-pinch-review/runtime-contract/red-ios-build-command.json",
+      "sha256": "16d5a8c81a70bb633cd649291ee5dc48406be4a143d2db17fea893127ddd3baa",
+      "bytes": 477
+    },
+    "runtime-contract/red-ios-build.log": {
+      "source": ".context/placid-badger/nug-pinch-review/runtime-contract/red-ios-build.log",
+      "sha256": "3c51fe4f437206465d2d2d9d70961954d4bc311c2efb2dbf58c900b90f6b910e",
+      "bytes": 692776
+    },
+    "runtime-contract/red-ios-summary.json": {
+      "source": ".context/placid-badger/nug-pinch-review/runtime-contract/red-ios-summary.json",
+      "sha256": "5d6419a10ef54d1015c79e647203be97b61c9905e06da6cc094fb3626aa1e4a4",
+      "bytes": 2159
+    },
+    "runtime-contract/red-ios-test-command.json": {
+      "source": ".context/placid-badger/nug-pinch-review/runtime-contract/red-ios-test-command.json",
+      "sha256": "45ffc4d0d2cb60367d4f5eb3229c82ec592278b7f8c36d270dfbc952b48a74d3",
+      "bytes": 1250
+    },
+    "runtime-contract/red-ios-tests.log": {
+      "source": ".context/placid-badger/nug-pinch-review/runtime-contract/red-ios-tests.log",
+      "sha256": "17f71c73dd8f6b9f6ebde27f61dca0dca42da047605e93e0ff2e1480624c16d2",
+      "bytes": 15691
+    },
+    "runtime-contract/runtime-fixture-review-supplement.json": {
+      "source": ".context/placid-badger/nug-pinch-review/runtime-contract/runtime-fixture-review-supplement.json",
+      "sha256": "aefd7168d1c4b519e8b3eb8d3d8e4c190ac622e09dd4e2469fbdf60bc5de3eb7",
+      "bytes": 3417
+    },
+    "runtime-contract/runtime-implementation-review.json": {
+      "source": ".context/placid-badger/nug-pinch-review/runtime-contract/runtime-implementation-review.json",
+      "sha256": "0dce0d4f08096f068fca6f87150528b1b5f0cebdb8c57086476b5e4116ec34f3",
+      "bytes": 4310
+    },
+    "runtime-contract/tests-first-snapshot.json": {
+      "source": ".context/placid-badger/nug-pinch-review/runtime-contract/tests-first-snapshot.json",
+      "sha256": "97e004b4fcf4231e806d61c04330cf95a57239b1950234ec024adf8166c0c12d",
+      "bytes": 1160
+    },
+    "independent-geometry-validation/final-coverage-verification.json": {
+      "source": ".context/placid-badger/nug-pinch-review/independent-geometry-validation/final-coverage-verification.json",
+      "sha256": "07b334df8c9d5a6222084b9fab7b413bd44d632240020158758834f5b6b004cf",
+      "bytes": 3726
+    },
+    "independent-geometry-validation/initial-overstrict-area-tolerance.log": {
+      "source": ".context/placid-badger/nug-pinch-review/independent-geometry-validation/initial-overstrict-area-tolerance.log",
+      "sha256": "33c82531e4a0f288674ac76d4e6046099f4ea14a4ceb5f74ca4321da25d7ed74",
+      "bytes": 389
+    },
+    "independent-geometry-validation/initial-unrequested-uv-exclusion.log": {
+      "source": ".context/placid-badger/nug-pinch-review/independent-geometry-validation/initial-unrequested-uv-exclusion.log",
+      "sha256": "59ac7995cffe41eca561da3f14a40b0936ac804c9cee39fd1c483524ff02db62",
+      "bytes": 395
+    },
+    "independent-geometry-validation/script.log": {
+      "source": ".context/placid-badger/nug-pinch-review/independent-geometry-validation/script.log",
+      "sha256": "07b334df8c9d5a6222084b9fab7b413bd44d632240020158758834f5b6b004cf",
+      "bytes": 3726
+    },
+    "independent-geometry-validation/verify-final-coverage.py": {
+      "source": ".context/placid-badger/nug-pinch-review/independent-geometry-validation/verify-final-coverage.py",
+      "sha256": "f7aa2d926155d76b87e199e0feebaa65f88d30bb5b4f2965d04d8a2e7fbf0c66",
+      "bytes": 7194
+    },
+    "native-compile/compile.log": {
+      "source": ".context/placid-badger/nug-pinch-review/native-compile/compile.log",
+      "sha256": "6b2321b4c1ce3fe40648ab5a635c1e043bc3fe1c733ebc811091aa9faa3c9b48",
+      "bytes": 4117
+    },
+    "native-compile/compile-command.json": {
+      "source": ".context/placid-badger/nug-pinch-review/native-compile/compile-command.json",
+      "sha256": "55c0bf5d3a3deb65278c5604cbe5406b59b44d5914239d6661990e2125209a75",
+      "bytes": 639
+    },
+    "native-cord/commands.json": {
+      "source": ".context/placid-badger/nug-pinch-review/native-cord/commands.json",
+      "sha256": "b0e4e14dc30b31aed3b011038556cc0ca206c522bb31e9af19cd11c92966598f",
+      "bytes": 1627
+    },
+    "native-cord/export-collision-solid.log": {
+      "source": ".context/placid-badger/nug-pinch-review/native-cord/export-collision-solid.log",
+      "sha256": "fb96195d449d7e0a93a94b60eca06a098a72461bb5f94e854c7be1faf1c6924d",
+      "bytes": 178
+    },
+    "native-cord/solid-primary.json": {
+      "source": ".context/placid-badger/nug-pinch-review/native-cord/solid-primary.json",
+      "sha256": "645fd4ec9124c7bcb32d305da42cd56df6eb7d5f660425fa79b9467f28e00780",
+      "bytes": 2060665
+    },
+    "native-cord/collision-geometry-preservation.json": {
+      "source": ".context/placid-badger/nug-pinch-review/native-cord/collision-geometry-preservation.json",
+      "sha256": "56adef8059d8e9c2ec888ae0cee92c86ee57106bf9e6ae4ce47562360c3f0c2a",
+      "bytes": 693
+    },
+    "native-cord/fresh-reproduction.log": {
+      "source": ".context/placid-badger/nug-pinch-review/native-cord/fresh-reproduction.log",
+      "sha256": "b5f2fd3f160716157547552b799d38e2250ab320a3a9745975af43945133109c",
+      "bytes": 990
+    },
+    "native-cord/fresh-native-check.log": {
+      "source": ".context/placid-badger/nug-pinch-review/native-cord/fresh-native-check.log",
+      "sha256": "125e5335418ab4b7b908c3800fcddbaa51744b84ffc82d2b8453507ae7e260bc",
+      "bytes": 34
+    },
+    "native-cord/fresh-native-check-report.json": {
+      "source": ".context/placid-badger/nug-pinch-review/native-cord/fresh-native-check-report.json",
+      "sha256": "0cf03b4b05866fd6b77a5ac973dd0615450dbe7f5a2c207d0c7969f73a7b023c",
+      "bytes": 36065
+    },
+    "native-cord/post-apply-native-certificates.json": {
+      "source": ".context/placid-badger/nug-pinch-review/native-cord/post-apply-native-certificates.json",
+      "sha256": "1c79cd229ce43f85c230aa45b04274c0862310131afacb21a047a232a62074b7",
+      "bytes": 8611
+    },
+    "native-cord/certify-fresh-routes.py": {
+      "source": ".context/placid-badger/nug-pinch-review/native-cord/certify-fresh-routes.py",
+      "sha256": "3e91a86a88d7537ed1ea1d0eaad9e23e39bd2149de90f01fc86e38989c29d53f",
+      "bytes": 2748
+    },
+    "integration/python-tests.log": {
+      "source": ".context/placid-badger/nug-pinch-review/python-tests.log",
+      "sha256": "d94697da3f81db79d620740e83b8e90454536fc5638adad7b2e01dc99b8f7f95",
+      "bytes": 844
+    },
+    "integration/python-test-report.json": {
+      "source": ".context/placid-badger/nug-pinch-review/python-test-report.json",
+      "sha256": "dc7816544ec6bd161f4ece84a8c75922c4cdebbfe7eda02fe12763d1fa724d4f",
+      "bytes": 551
+    },
+    "integration/package-validation.log": {
+      "source": ".context/placid-badger/nug-pinch-review/package-validation.log",
+      "sha256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc",
+      "bytes": 5583
+    },
+    "integration/delivery-parity.json": {
+      "source": ".context/placid-badger/nug-pinch-review/delivery-parity.json",
+      "sha256": "d8ac7b965159aec3a53995fae93b038952f58470191dc86e663349784ad0ba31",
+      "bytes": 26447
+    },
+    "integration/staging-command.json": {
+      "source": ".context/placid-badger/nug-pinch-review/staging-command.json",
+      "sha256": "73c1a29215bd41a7c082e344db9c2cd662a9a1b0535f788ad714b26ddf3907b4",
+      "bytes": 734
+    },
+    "integration/staging.log": {
+      "source": ".context/placid-badger/nug-pinch-review/staging.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "integration/package-change-proof.json": {
+      "source": ".context/placid-badger/nug-pinch-review/package-change-proof.json",
+      "sha256": "4b924f75a64c02f779ffffccca2a800f3768a73b9046f6b1533f310a4cea3e46",
+      "bytes": 2015
+    },
+    "integration/meshoptimizer-dependency-proof.json": {
+      "source": ".context/placid-badger/nug-pinch-review/meshoptimizer-dependency-proof.json",
+      "sha256": "c9e1353ddc1848c652c3405baed30790d5401c84a41c5dc14680a3ff519c4a2e",
+      "bytes": 2508
+    },
+    "integration/meshoptimizer-two-tests.log": {
+      "source": ".context/placid-badger/nug-pinch-review/meshoptimizer-two-tests.log",
+      "sha256": "15c68ce6c0990c127ab70192a9c1d89d8373746169ec74ca5e1bf702f7694b71",
+      "bytes": 98
+    },
+    "integration/ios-build.log": {
+      "source": ".context/placid-badger/nug-pinch-review/ios-build.log",
+      "sha256": "6cea2398630ab26ff4e62065690a1102dcf8bacc96ebe7a67b0fe415255f748a",
+      "bytes": 233321
+    },
+    "integration/ios-build-command.json": {
+      "source": ".context/placid-badger/nug-pinch-review/ios-build-command.json",
+      "sha256": "cbbc74e7d4845b24ad0c6a0f7c7f1d76acc02244563209dfe5e68b68ba06febb",
+      "bytes": 477
+    },
+    "integration/ios-tests.log": {
+      "source": ".context/placid-badger/nug-pinch-review/ios-tests.log",
+      "sha256": "8eb9765bf4b53c34edfe2e5f21d8d96ccc6f284cc4645213b9d7df1fa574edd9",
+      "bytes": 462564
+    },
+    "integration/ios-summary.json": {
+      "source": ".context/placid-badger/nug-pinch-review/ios-summary.json",
+      "sha256": "343ad27aa954ecf927a3e0423c1072347ad39c14c842a856f2cb625cfd8663f5",
+      "bytes": 1986
+    },
+    "integration/ios-test-command.json": {
+      "source": ".context/placid-badger/nug-pinch-review/ios-test-command.json",
+      "sha256": "9b320909c22d1fd3ea14a6eea1796e1ec0f1b35c1836e7e2dbc583cc370b249f",
+      "bytes": 925
+    },
+    "integration/installed-app-provenance.json": {
+      "source": ".context/placid-badger/nug-pinch-review/installed-app-provenance.json",
+      "sha256": "501dab726cc58039744c0988dcaa1fc01a0040ffadae842f0c3e0f4ef0776b0f",
+      "bytes": 729
+    },
+    "runtime-contract/first-full-attempt/ios-tests.log": {
+      "source": ".context/placid-badger/nug-pinch-review/first-full-xctest-attempt/ios-tests.log",
+      "sha256": "0e469f964685f4faf5b2f4cdf9ab22ba93b8d9f493f4c73ff1357bce2feea725",
+      "bytes": 456605
+    },
+    "runtime-contract/first-full-attempt/ios-summary.json": {
+      "source": ".context/placid-badger/nug-pinch-review/first-full-xctest-attempt/ios-summary.json",
+      "sha256": "67e8eef4295c57ce846ab981f7707b47bfdbc87547f52b50e5eaaba0dc72e7bb",
+      "bytes": 2513
+    },
+    "runtime-contract/first-full-attempt/ios-test-command.json": {
+      "source": ".context/placid-badger/nug-pinch-review/first-full-xctest-attempt/ios-test-command.json",
+      "sha256": "262ca0f351ddc2be98877a6eee27321c7277d7209324401d232808eb346beb63",
+      "bytes": 926
+    },
+    "runtime-contract/first-full-attempt/ios-build-command.json": {
+      "source": ".context/placid-badger/nug-pinch-review/first-full-xctest-attempt/ios-build-command.json",
+      "sha256": "cb8263655b93a8c82dc716621fe0d4ac0160ce19d7f7874e4b058838774f1e54",
+      "bytes": 477
+    },
+    "runtime-contract/first-full-attempt/ios-build.log": {
+      "source": ".context/placid-badger/nug-pinch-review/first-full-xctest-attempt/ios-build.log",
+      "sha256": "50105cd1bc7ec1d8f27cb1f96de9ffef9e90e3921bc4c28aa83e5964d21d7f78",
+      "bytes": 196028
+    },
+    "integration/installed-delivery-validation.json": {
+      "source": "docs/source-audits/2026-09-29-remaining-cad/installed-delivery-validation.json",
+      "sha256": "effc0778c7cb7432236e64e9c0388c436ccd5389dfe243d84d63a5b3f044685c",
+      "bytes": 31816
+    }
+  },
+  "scope": "Exact copied proof bytes; raw logs are not trimmed. Capture-time source identities remain explicit."
+}

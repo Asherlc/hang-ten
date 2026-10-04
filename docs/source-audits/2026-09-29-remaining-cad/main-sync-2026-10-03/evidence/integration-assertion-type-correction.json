@@ -1,0 +1,10 @@
+{
+  "originalToolSession": 77097,
+  "originalResult": {
+    "failed": 2,
+    "passed": 15
+  },
+  "failure": "New assertion compared tuple-returning contact_ids_for_position with frozenset; Forge assertions passed.",
+  "correction": "Assert exact singleton tuple; no package geometry or expected contact changed.",
+  "retention": "Original complete raw output remains in tool execution transcript; this JSON is a derived correction record, not a raw log."
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "stage": "staged",
+    "relativePath": "Hangboards/zlagboard-evo/board.json",
+    "sha256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f",
+    "expectedSHA256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f",
+    "bytesEqual": true
+  },
+  {
+    "stage": "staged",
+    "relativePath": "Hangboards/zlagboard-evo/assets/primary.model.json",
+    "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+    "expectedSHA256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+    "bytesEqual": true
+  },
+  {
+    "stage": "staged",
+    "relativePath": "OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-evo-0b78784dcf96651ad8ed90e6bf624ac9.assetpack/Hangboards/zlagboard-evo/assets/primary.usdz",
+    "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "expectedSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "Hangboards/zlagboard-evo/board.json",
+    "sha256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f",
+    "expectedSHA256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "Hangboards/zlagboard-evo/assets/primary.model.json",
+    "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+    "expectedSHA256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-evo-0b78784dcf96651ad8ed90e6bf624ac9.assetpack/Hangboards/zlagboard-evo/assets/primary.usdz",
+    "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "expectedSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "bytesEqual": true
+  }
+]

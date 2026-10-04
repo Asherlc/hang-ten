@@ -1,0 +1,11 @@
+# Penta Evo independent package review
+
+Read-only audit. Source, model, descriptor and sidecar byte-identical initial migration and exactly match retained fresh native compile closure/continuous-cord reports. Both retained manufacturer source images match recorded hashes. Real FCStd passes archive preflight; saved native feature tree contains48 fully constrained Sketcher profiles, analytic extrusion/loft/fillet/cut/common features, and editable Parameters.PocketDepthScale=1. Historical native edit test changes1→1.04, grows all4 scalar pocket depths, restores volume/depths. No unchanged re-export or re-solve was repeated.
+
+Actual package parser and narrow iOS/Android staging pass. Seven reusable slots map to14 exact contact identities through two instances. Descriptor v2 has10 mesh nodes:1 body,7 contacts,2 attachments. USD has no material/shader/binding/texture assets. Main authoring sources stay out of staged packages; generated board metadata and model/descriptor bytes match exactly.
+
+Material omission: display has camera only, no surfaceFinish. Retained full manufacturer photo visibly shows wood grain and laminated edges, supporting existing wood finish metadata without claiming an unsupported species. However central_ring_001 and upper_band_exterior_001 are physical wood regions tagged attachment. BoardModelRealityTypes.swift forces attachment-role nodes neutral regardless global finish (line226). Flag these regions for authoritative material review; do not independently change shared renderer.
+
+Evidence limitation: original binary URLs for the two historically approved images are unknown; product URL is reference only, as recorded. Preserve that limitation. Package dimensions remain unpublished;226.6x30x230mm native envelope is a prior-display measurement, not a maker dimension. Cord is external upper-band/central-opening loop, not a hidden small channel; schema2 sidecar carries both instances with primary/reverse poses.
+
+Historical exact rounded-runtime certificate minimum centerline distance1.99865mm versus2mm cord radius passes numerical tolerance but is not a positive physical surface gap claim. Source geometry, selectable bearing orientation, cord presentation and human acceptance remain separate visual review gates.

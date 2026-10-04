@@ -1,0 +1,9 @@
+{
+  "classification": "INVALID_SETUP_PROTOCOL_NO_MEASUREMENT",
+  "wholeImageReviewed": "mini-before-hand-setup.png",
+  "observed": "Natural Get Ready00:02 and Use two boards one hand on each; no idle hand selector or Start",
+  "actualProductionTaskPolicy": "Source two-hand tasks auto-start and use two physical one-handed boards; no hand substitution permitted",
+  "physicalHandTapCount": 0,
+  "originalTimeoutRetained": true,
+  "prospectiveNextProtocol": "Capture the actual automatic normal route, with no UI hand choice and the same source10s/180s schedule"
+}

@@ -1,0 +1,18 @@
+{
+  "simulator": "48059B24-A469-4B02-A47A-A303FB8D978E",
+  "cleanupStatus": 0,
+  "derivedDataRemoved": true,
+  "xcresultRemoved": true,
+  "owner": "placid-badger",
+  "simulatorName": "Hang Ten Paseo placid-badger Metolius Contact Pinch Rails Review",
+  "simulatorDeletionVerified": true,
+  "verificationCommand": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "list",
+    "devices",
+    "--json"
+  ]
+}

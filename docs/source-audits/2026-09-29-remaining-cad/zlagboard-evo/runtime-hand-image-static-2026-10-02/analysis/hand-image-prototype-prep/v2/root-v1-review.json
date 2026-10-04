@@ -1,0 +1,10 @@
+{
+  "status": "rejected-unapplied",
+  "patchSHA256": "ad66364c11e903e56cac88f342dae8cc5a00ce1feae3a2f94ae7a8d3c219ace8",
+  "findings": [
+    "Both image branches inserted in single-hand body; pair path unchanged and wrong scene type in unreachable branch",
+    "PNG directory outside helper registered diagnostic run directory"
+  ],
+  "runtimePerformed": false,
+  "productionChanges": false
+}

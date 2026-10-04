@@ -1,0 +1,17 @@
+{
+  "package": "yy-baguette",
+  "number": 16,
+  "reviewAnswer": "y",
+  "acceptedDate": "2026-10-01",
+  "reviewedCommit": "a77034f",
+  "acceptedScope": "Displayed La Baguette revision with unsupported grooves removed, exterior cords on smooth rounded end surfaces, wood finish and all six selectable contacts.",
+  "sourceSHA256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+  "presentations": {
+    "primary": {
+      "descriptorSHA256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934",
+      "modelSHA256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea"
+    }
+  },
+  "reviewPacket": "groove-removal-review/review.md",
+  "status": "accepted"
+}

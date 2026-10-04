@@ -1,0 +1,6 @@
+{
+  "firstAttempt": "edge20-front-front timed out waiting for current model/contact readiness after 45 seconds",
+  "observation": "Initial screenshot showed a white launch surface and an empty AX application. A later unchanged process exposed the expected UNLEVEL board, selected curved-edge-20 contact and four model contacts.",
+  "diagnosisLimit": "Delayed first launch is observed; a specific runtime service cause is not established.",
+  "retry": "Same installed binary, source, sidecar and 45-second per-pose readiness gates; no app or package edits."
+}

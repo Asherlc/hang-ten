@@ -1,0 +1,21 @@
+{
+  "firstExport": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/first-export.json",
+  "firstExportSHA256": "adf026fb858d7c17d3a34eb38228c597481039d550bf6769432af6a7f3691d10",
+  "sourceRecords": {
+    "source": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-final-package/Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd",
+      "sha256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e"
+    },
+    "model": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-build-1/assets/primary.usdz",
+      "sha256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61"
+    },
+    "descriptor": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-build-1/assets/primary.model.json",
+      "sha256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
+    },
+    "status": "first source-bound compiler passed; repeat/reimport/native-normal gates pending"
+  },
+  "copiedPackage": ".context/placid-badger/forge-review15/native-author/stable-bindings/export-bound-package/Hangboards/trango-rock-prodigy-forge",
+  "bytesCopiedExactly": true
+}

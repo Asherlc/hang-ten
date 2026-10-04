@@ -1,0 +1,11 @@
+# Post-Main LIVE baseline preparation
+
+No runtime/resource/build/source action performed. Root must provide the explicit authorized release and actual owned Simulator/controller, freshly installed binary/source/parity hashes. Arm is baseline; runID placid-badger-cad-second-half-post-main-live-baseline. Only board/plan/landscape review flags are set; inherited review flags are removed. There is no frame-renderer, Train-unmount, hand, step or explicit autostart flag.
+
+Train setup IDs remain train.settings and train.board (Zlagboard.Evo), and route remains hangten://plan/research.max-hangs/workout. WorkoutView uses normal shouldAutoStart; one setup AX check/screenshot precedes openurl. Measurement uses screenshots only, with no taps/AX/skip after openurl. Volatile audio-off arguments and owned direct caffeinate assertion preserve prior muted-awake context, not audio-on coverage.
+
+Current Main research.max-hangs is explicitly10s Hang then180s Rest, not historical7s. Exact blocks/plan and source hashes are retained in routine-reference.json. Three-second initial countdown remains. Fixed44 offsets are1–18,90,190–214 after external openurl completion; this brackets expected next Hang near193–203 plus following Rest if startup is prompt, but does not prove exact semantic timing. Root must classify every whole screenshot by its visible phase/timer. Startup delays or missing next Hang are limits/invalid coverage, not grounds for shifting or backfilling captures. 300s bound, lateness0.25s, rawhash/clock/cleanup checks unchanged.
+
+Release fields follow original helper, replacing hardcoded resources: owner,simulatorUUID,controllerPID,ownershipPath/SHA256,sourceCommit,sourceReferencePath/SHA256,parityPath/SHA256,parityCheckCount,binarySHA256,helperSHA256,scheduleSHA256,planLibrarySHA256,routineReferenceSHA256,boardID=zlagboard.evo,planID=research.max-hangs,arm=baseline,runID,outputDirectory,appArguments=[-workoutAudioCuesEnabled,NO],runtimeAuthorized/exclusiveRuntimeOwnership. Source reference requires approvedByRoot,baselineOnly,commit,files[{path,sha256}]. No release is preauthorized. Candidate code changes are not assumed.
+
+Validator reads completed evidence only; save stdout/stderr as new files. It makes no pixel, CPU material, continuous-state, complete-workflow or human-acceptance claim.

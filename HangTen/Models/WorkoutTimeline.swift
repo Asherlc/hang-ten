@@ -720,9 +720,40 @@ struct WorkoutTimeline {
         let isResting = currentStep.phase == .rest
             || (currentStep.hasRestInterval && stepElapsed >= currentStep.activeDuration)
 
-        return isResting
-            ? nextWorkStep(after: currentStep.id)
-            : currentStep
+        if isResting {
+            return nextWorkStep(after: currentStep.id).map {
+                Self.workSegmentPreview($0, elapsed: 0)
+            }
+        }
+        return Self.workSegmentPreview(currentStep, elapsed: stepElapsed)
+    }
+
+    /// A cue describes one work segment. Requirements within that segment stay
+    /// together, while the original timeline step remains intact for recording.
+    private static func workSegmentPreview(_ step: WorkoutStep, elapsed: TimeInterval) -> WorkoutStep {
+        guard var selected = step.segments.first(where: { $0.kind == .work }) else {
+            return step
+        }
+        var remaining = max(0, elapsed)
+        for segment in step.segments {
+            if segment.kind == .work {
+                selected = segment
+            }
+            // Stopwatch/undefined work has no elapsed-time boundary to infer.
+            guard segment.timing == .fixed, let duration = segment.duration,
+                  duration.isFinite, duration >= 0 else { break }
+            if remaining < duration { break }
+            remaining -= duration
+        }
+        return WorkoutStep(
+            id: step.id, number: step.number, title: step.title,
+            instruction: step.instruction, accessory: step.accessory,
+            duration: step.duration, phase: step.phase, segments: [selected],
+            gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
+            handUse: step.handUse, side: step.side, action: step.action,
+            repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
+            timedWorkDuration: step.timedWorkDuration
+        )
     }
 
     private func clampedElapsed(_ elapsed: TimeInterval) -> TimeInterval {
@@ -785,32 +816,61 @@ enum WorkoutLiftCompletionPolicy {
 }
 
 enum WorkoutHighlightResolver {
+    static func presentationID(
+        for step: WorkoutStep?,
+        on board: BoardRevision,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
+    ) -> String? {
+        guard let step,
+              let selection = selection(for: step, on: board, taskIndex: taskIndex, selectedHandSide: selectedHandSide),
+              let position = board.position(id: selection.positionID) else { return nil }
+        return position.presentationID
+    }
+
+    static func contacts(
+        for step: WorkoutStep,
+        on board: BoardRevision,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
+    ) -> [PhysicalContact] {
+        selection(for: step, on: board, taskIndex: taskIndex, selectedHandSide: selectedHandSide)?.contacts ?? []
+    }
+
     static func contactIDs(
         for step: WorkoutStep,
         on board: BoardRevision,
         taskIndex: Int = 0,
         selectedHandSide: WorkoutSide? = nil
     ) -> [String] {
+        contacts(for: step, on: board, taskIndex: taskIndex, selectedHandSide: selectedHandSide).map(\.id)
+    }
+
+    private static func selection(
+        for step: WorkoutStep,
+        on board: BoardRevision,
+        taskIndex: Int,
+        selectedHandSide: WorkoutSide?
+    ) -> ContactResolver.Selection? {
         if let tasks = step.segments.lazy.compactMap({ $0.target?.planTasks }).first,
            tasks.indices.contains(taskIndex) {
             let authoredTask = tasks[taskIndex]
             if authoredTask.count == 1, authoredTask[0].side == nil,
-               selectedHandSide == nil { return [] }
+               selectedHandSide == nil { return nil }
             let task = authoredTask.map { hand in
                 PlanHandTarget(target: hand.target, side: hand.side ?? selectedHandSide)
             }
-            guard let contacts = try? ContactResolver.resolve(task, step: step, board: board) else {
-                return []
+            guard let resolved = try? ContactResolver.resolveSelection(task, step: step, board: board) else {
+                return nil
             }
-            return zip(task, contacts).compactMap { hand, contact in
-                hand.target == nil ? nil : contact.id
-            }
+            return ContactResolver.Selection(
+                contacts: zip(task, resolved.contacts).compactMap { hand, contact in
+                    hand.target == nil ? nil : contact
+                },
+                positionID: resolved.positionID
+            )
         }
-        return (try? ContactResolver.resolve(
-            step.workRequirements,
-            step: step,
-            board: board
-        ).map(\.id)) ?? []
+        return try? ContactResolver.resolveSelection(step.workRequirements, step: step, board: board)
     }
 }
 

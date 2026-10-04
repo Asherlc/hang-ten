@@ -1,0 +1,91 @@
+{
+  "archive": ".context/placid-badger-cad-second-half/main-sync-2026-10-03/raw-results/failed-workout-api-placid-badger-cad-second-half.xcresult.zip",
+  "archiveSHA256": "98853464bf3a5ccbfd02313a5fd1a0d8b4957dcc6a86512dc985d5430b9b236f",
+  "rows": [
+    {
+      "path": "Data/data.0~C93p_UUkQWhh3gCMlNvLCCXpSMwvnTkj3LVgaEeXMMteEmXVTTcNWojg3ORJvBzJg_IwTXaclbSAjF6533l99w==",
+      "bytes": 314,
+      "sha256": "bd2f37032d9f3d896e4642cef8fd98cd9e6ae80bc1ed43b7ba052aef044de944"
+    },
+    {
+      "path": "Data/data.0~OHtlee2dp-tmqXxQwvMpRFFTK0_pRui_zzKzwwMHkdSAnQ4gJJ99bnk3UbzfnbxdSCfc2s7omYMz0e-S3yW-4g==",
+      "bytes": 70,
+      "sha256": "89f90957edb8acb0c3e5c82f4e074ba4e1a49b75473b08773f8b504115072003"
+    },
+    {
+      "path": "Data/data.0~Tx6TPscteI1YqcxNbehxUXOmuZy-fKf4UsQjYgewgeDECj34deM1xEj-WNaFalC38VZ8IZysUqda77urlNnPRQ==",
+      "bytes": 434,
+      "sha256": "8b8663116370dae77e3131b301d4e98036c8b1fdead41eb354a92312f058818e"
+    },
+    {
+      "path": "Data/data.0~_f4FWBZHQ9zs4hdD3PXtXtrevuC2KbuUIxQu46CWAxyG0OstvjSBX-FGPlrW8LGJEfrEj3av4D7XhOuSUse-4g==",
+      "bytes": 36,
+      "sha256": "35e2629a5ab936ddf63b0af03efcc8e8b26841dfeb04e36e23523e7672bdf4aa"
+    },
+    {
+      "path": "Data/data.0~jNN60Mk1IMD7qm7R8Vxo6NKP5JqtNRPpe3WSCcmCykpA1SBn0S2f6CU4bAGZN6tj_UEnC5hu46OjsWRH620TJw==",
+      "bytes": 3225,
+      "sha256": "f130d68d3bf91ce55c53d7f55cc53c0c8a75f0fc156289be721c0c5e644baa18"
+    },
+    {
+      "path": "Data/data.0~t3bamzOqWl1NjT5fgbCQ1t1-lDHbnBNiflJWjutHeMZt_5ZFNzunAphN4MlDLUfUKrEC4l5MMA5LM7cWhpsQhg==",
+      "bytes": 38955,
+      "sha256": "d23260bdb5d7ac5389ec0044aac5d16fdfb844f01b85a86049c464e19d6269f1"
+    },
+    {
+      "path": "Data/data.0~tZA20h1q-YkjNxOe7ya2GilWHsW_B3rdf7-3SKSrhGxeNx58ugTX5YfVfjaJj4fTHOEI56SKM4PRRN8wynETfA==",
+      "bytes": 116,
+      "sha256": "d3c1e8dfce93703a60773c2a7bfbae2207e45424e05cd0f250325e19100fad74"
+    },
+    {
+      "path": "Data/data.0~tkp-dayP5xRiHPHzfKoiVq6yyklRH-9GB9hzLzs00KYeaN9h9N7a0fliWtHYqFbwfEdiUGIOboxcW-Sk5ZKPkA==",
+      "bytes": 97,
+      "sha256": "d83f27472903a44c9d3889c80b45e618b67bb221babba4b8664e611220cbab8c"
+    },
+    {
+      "path": "Data/refs.0~C93p_UUkQWhh3gCMlNvLCCXpSMwvnTkj3LVgaEeXMMteEmXVTTcNWojg3ORJvBzJg_IwTXaclbSAjF6533l99w==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~OHtlee2dp-tmqXxQwvMpRFFTK0_pRui_zzKzwwMHkdSAnQ4gJJ99bnk3UbzfnbxdSCfc2s7omYMz0e-S3yW-4g==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~Tx6TPscteI1YqcxNbehxUXOmuZy-fKf4UsQjYgewgeDECj34deM1xEj-WNaFalC38VZ8IZysUqda77urlNnPRQ==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~_f4FWBZHQ9zs4hdD3PXtXtrevuC2KbuUIxQu46CWAxyG0OstvjSBX-FGPlrW8LGJEfrEj3av4D7XhOuSUse-4g==",
+      "bytes": 67,
+      "sha256": "b01c58f67ba92b664f75e999e8fee3bd42da292bf3c0f3d2d3f46e694f7d0d7b"
+    },
+    {
+      "path": "Data/refs.0~jNN60Mk1IMD7qm7R8Vxo6NKP5JqtNRPpe3WSCcmCykpA1SBn0S2f6CU4bAGZN6tj_UEnC5hu46OjsWRH620TJw==",
+      "bytes": 331,
+      "sha256": "b0147beef61d3a3d3d3756723cde2138fd1a9bd958bbc212f6c7c74f98cbdc96"
+    },
+    {
+      "path": "Data/refs.0~t3bamzOqWl1NjT5fgbCQ1t1-lDHbnBNiflJWjutHeMZt_5ZFNzunAphN4MlDLUfUKrEC4l5MMA5LM7cWhpsQhg==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~tZA20h1q-YkjNxOe7ya2GilWHsW_B3rdf7-3SKSrhGxeNx58ugTX5YfVfjaJj4fTHOEI56SKM4PRRN8wynETfA==",
+      "bytes": 67,
+      "sha256": "1602d07b85fe6d8f034bc5d9f63080a85edf0c28710591232d499a3a67e2f7ec"
+    },
+    {
+      "path": "Data/refs.0~tkp-dayP5xRiHPHzfKoiVq6yyklRH-9GB9hzLzs00KYeaN9h9N7a0fliWtHYqFbwfEdiUGIOboxcW-Sk5ZKPkA==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Info.plist",
+      "bytes": 776,
+      "sha256": "d0dbed98a41a91a38671706e8d165664b1240b4cc7f73e2ac5c3b016d6be50fe"
+    }
+  ]
+}

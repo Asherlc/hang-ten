@@ -1,0 +1,112 @@
+{
+  "status": "pass",
+  "owner": "placid-badger",
+  "exactCommandReceipts": [
+    {
+      "receipt": "placid-badger-karma8a-author-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-collision-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-compile-primary-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-compile-repro-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-continuous-cert-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-export-check-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-final-native-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-inspect-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-metadata-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-native-export-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-normals-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-package-validation-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-render-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-seat-diagnostic-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-solve-apply-command.json",
+      "status": "fail",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-solve-apply-venv-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    },
+    {
+      "receipt": "placid-badger-karma8a-solve-check-command.json",
+      "status": "pass",
+      "processGroupAbsent": true,
+      "temporaryDirectoryAbsent": true
+    }
+  ],
+  "externalPersistentResources": [],
+  "noSimulatorOrHTTPStarted": true,
+  "canonicalFourFilesStillOriginal": true,
+  "retainedArtifacts": "Workspace-owned review outputs intentionally retained; throwaway scripts remain under this ignored lane only."
+}

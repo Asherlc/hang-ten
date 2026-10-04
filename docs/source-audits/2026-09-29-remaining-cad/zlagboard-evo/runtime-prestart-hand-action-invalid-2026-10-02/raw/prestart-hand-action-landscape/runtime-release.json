@@ -1,0 +1,22 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "prestart-hand-action",
+  "helperSHA256": "54e3e6a5f06e5ce8f61108d56e3997e0f6f1c88ef1adcf471fc3603c384bcfca",
+  "constructorMarkerAuditReady": true,
+  "structuralNavEventAuditReady": true,
+  "rootSourceRuntimeRelease": true,
+  "previousEvidenceFrozen": true,
+  "postbootConfirmationPassed": true,
+  "retainedDetachIntervention": false,
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "binarySHA256": "f98a07f4383af14396d8442581a330f4d3523d0c9854436420b67bf14b681d97",
+  "codePackageParityPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-prelaunch-parity.json",
+  "codePackageParitySHA256": "d41c248d904a4c5f0810eec69a5584fb132ee6ff2b46e489ad7052463b543942",
+  "priorFrozenManifestPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-frozen-manifest.json",
+  "priorFrozenManifestSHA256": "625345549e35d3231fdbb9f8222d7a46d6cc0b9b54f02e976e6ac61106e8b1eb",
+  "authorization": "Root authorizes ONE action using samef98 binary, only prestart suppression flag/runID change, qualified control originalFAIL + approved supplemental timing criterion. No reversal authorized.",
+  "perspectiveFrozenManifestPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-frozen-manifest.json",
+  "perspectiveFrozenManifestSHA256": "c28f39a336000fb76156af64e5d5af9fef7c196ccb004b93af645abaa984a113",
+  "completedControlAuditPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-root-gate.json",
+  "completedControlAuditSHA256": "f72c6d594b4c49606bba61dcee28bc47afc038e80389ebf1c4472a248b09ea60"
+}

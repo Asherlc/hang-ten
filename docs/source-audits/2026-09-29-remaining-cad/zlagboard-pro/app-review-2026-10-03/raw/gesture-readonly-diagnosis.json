@@ -1,0 +1,42 @@
+{
+  "status": "read-only bounded assessment; no runtime actions or source changes",
+  "inputs": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v2/top-jug-left-ax.json",
+      "sha256": "2ae9aed58eddafd0b4f287cb2c24b4f1534fb8b8d4aee409e0242b36bbeaab47"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v2/jug-orbit-ax.json",
+      "sha256": "06dea1fcf3fdc8de95f3e77dd05442fb47bb0599f3652f695c9f460bb6cb713c"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v2/commands.json",
+      "sha256": "d9b5da4080a42ecfe68a29b40ad078e8d72964a8c5d642f3d783302b6ef2358d"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "9ffdb0e7c38254b10da4dec42bc3116be9f32cb8f8efeaad4588633a0464014f"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "b8720ac7c42252f22dceecb8a58f96a1de297068bbb7a3972bddac8c7072fccf"
+    }
+  ],
+  "facts": [
+    "Map frame before/after is x34 y220 width334 height72.",
+    "Start167.6,259.6 is almost exactly projected edge-30-inner-left center167.667,259.667; AX center is not collider proof, but empty-start assertion is unsupported.",
+    "Verified physical top-jug-left tap was at86,234.667, tapRevision1/pickedContact top-jug-left.",
+    "Before/after diagnostic revision12, azimuth0, elevation0.20943952, pitch0.5461143, cameraSettledtrue and contact projected frames are unchanged.",
+    "Current generic DragGesture minimumDistance4 increments cameraRevision for every onChanged. No observed increment supports no orbit callback reaching this state; no direct gesture event trace exists.",
+    "Gesture chain remains generic orbit .gesture, magnify .simultaneousGesture, targeted spatial tap .gesture as at successful7a686 baseline. AX overlay explicitly allowsHitTesting(false).",
+    "BoardDetail contains parent vertical ScrollView. Its before/after map origin is unchanged, so actual parent scroll is not demonstrated.",
+    "Old successful Pro orbit:167.6,256 to227.72,256 duration1.0. Failed v2:167.6,259.6 to211.02,248.8 duration0.5. Both exceed nominal4pt threshold."
+  ],
+  "recommendation": "Root planned known-physically-pickable jug-center start is a bounded evidence-based probe. If that diagonal still fails, one horizontal50\u201360pt/1s from the same known point matches older successful gesture direction/duration and reduces vertical ScrollView contention. Keep failed raw proof; require actual cameraRevision/angle or projected-frame change and whole-image orbit before claiming pass.",
+  "cli": "axe swipe --help offers duration, delta, pre-delay/post-delay; no --tap-style/physical swipe switch. Do not invent that option.",
+  "limits": [
+    "No root cause established; unchanged generic gesture chain does not prove framework arbitration behavior.",
+    "No screenshot pixel measurements or image edits.",
+    "No claim a drag starting on any AX contact center must hit the nearest collider."
+  ]
+}

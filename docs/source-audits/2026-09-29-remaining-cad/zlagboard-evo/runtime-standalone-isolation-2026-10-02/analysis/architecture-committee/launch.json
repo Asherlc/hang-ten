@@ -1,0 +1,26 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "members": [
+    {
+      "id": "b1c90189-a9a4-4732-9b82-b81e34f08bf5",
+      "provider": "claude/claude-opus-5-5",
+      "purpose": "read-only architecture review"
+    },
+    {
+      "id": "a3ab7c53-fb1f-4200-9018-61d9896bc87a",
+      "provider": "codex/gpt-6-astra",
+      "purpose": "read-only architecture review"
+    }
+  ],
+  "workspaceId": "wks_cefd37d4c507143c",
+  "persistentWorkspace": true,
+  "noResourcesOrEditsAuthorizedForMembers": true,
+  "sourceFrozen": true,
+  "evidenceCommit": "10c7a6eb980e7e1c9a3ef0119c82a42e5159e83a",
+  "remoteVerified": true,
+  "sourceHashes": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "4ef9535c18fdeebc4217105bd7ded0f8c6d0073ecc3badf8f0f7dc04511f1687",
+    "HangTen/Views/BoardModelView.swift": "acd84833c02faabf0af0fa0584d12b9d27c701d7192258bd690a30cebf80cd89",
+    "HangTen/Views/RootView.swift": "4b92a95c3fc04e24375d3a20bb0cb40675785a8c530c8aa58cd53db74344b07f"
+  }
+}

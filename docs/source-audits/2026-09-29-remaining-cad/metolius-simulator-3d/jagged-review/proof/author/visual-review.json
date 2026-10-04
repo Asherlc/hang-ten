@@ -1,0 +1,31 @@
+{
+  "status": "technical visual inspection complete",
+  "viewedAllCompletePanels": true,
+  "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+  "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+  "beforeModelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+  "views": {
+    "front": {
+      "path": "review/comparison-front.png",
+      "sha256": "3d76c8fdef856bd33b55198ab8f22d13a9a4c6bce950e045b5bcb294105930c4"
+    },
+    "side": {
+      "path": "review/comparison-side.png",
+      "sha256": "31b427271d2ba2c6cd4cefdbe371a1d076bc12d566d3163330f01281cf1239eb"
+    },
+    "top": {
+      "path": "review/comparison-top.png",
+      "sha256": "1109424da4cbe2749cc67e426cfc16ea1b7a50f8e5c9576bb8f2ed87eac12f9f"
+    },
+    "oblique": {
+      "path": "review/comparison-oblique.png",
+      "sha256": "c6d5bf3fdcb68ce19bdad71c9ee96149f26a17788e3e2171ea7c4e61b5a64d5a"
+    },
+    "raking": {
+      "path": "review/comparison-raking.png",
+      "sha256": "4736b584e0e01df19666af7606e5cf57d14e1ad632c6b0e50e22e29cf3e91653"
+    }
+  },
+  "observations": "Rounded lower/outer outline and continuous shoulder bridges are visibly improved; no empty transition bands. Shared CPU triangle-face shading exaggerates faceting and dark edge slivers; actual app rendering remains final appearance authority.",
+  "humanAcceptance": false
+}

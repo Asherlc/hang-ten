@@ -1,0 +1,98 @@
+{
+  "status": "partial-source-support; exact pairing unresolved",
+  "sourceVideo": {
+    "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/placid-badger-flash14-maker-overview.mp4",
+    "sha256": "c3805a162b8a11f9f4c0e29b39a5927145ee617e8e536a611ad9c16a30730190",
+    "sourceURL": "https://tensionclimbing.com/cdn/shop/videos/c/vp/70ce0899eac44f7b876cc98be9220958/70ce0899eac44f7b876cc98be9220958.HD-1080p-7.2Mbps-37591722.mp4?v=0"
+  },
+  "viewedWholeFrames": [
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/placid-badger-maker-whole-t0.png",
+      "sha256": "a2233f0bd7362b23e49bd5f89f7f7db347b3352d04c4d4d6f15727745f11563f",
+      "actualSeconds": 0,
+      "requestedSeconds": 0,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/placid-badger-maker-whole-t1.png",
+      "sha256": "856f5395d01f5b1e54d78d63256242b8f939ab8c7058706e4653deaaa5857d85",
+      "actualSeconds": 0.9593098958333334,
+      "requestedSeconds": 1,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/placid-badger-maker-whole-t1p5.png",
+      "sha256": "fa4ab068a6279e11b202da3287c5fb27ab323195b9be3091ff5bab356f2383ce",
+      "actualSeconds": 1.459765625,
+      "requestedSeconds": 1.5,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/placid-badger-maker-whole-t2.png",
+      "sha256": "b65464c0b821b158635fa0d4b35508c953edceea58b4558db8a364f1d52d6f24",
+      "actualSeconds": 1.9602864583333333,
+      "requestedSeconds": 2,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/placid-badger-maker-whole-t2p5.png",
+      "sha256": "1d16e147cf8f283317d099b4b8d7012b4caa42a8ba5e62db9909ad5e33187577",
+      "actualSeconds": 2.460807291666667,
+      "requestedSeconds": 2.5,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/placid-badger-maker-whole-t3.png",
+      "sha256": "f7aec4b89fdbfe1e7fea80a48a1e9beaabe0c6b3d293c36a9a28fb050afd169b",
+      "actualSeconds": 2.9612630208333335,
+      "requestedSeconds": 3,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/placid-badger-maker-whole-t4.png",
+      "sha256": "4b431c478fb0185db668db4fffc0bd502c8de193c73ec6a6c77d7376d46c5918",
+      "actualSeconds": 3.9623046875,
+      "requestedSeconds": 4,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/placid-badger-maker-whole-t6.png",
+      "sha256": "edd41ceaad4c86b18fcda64dbe9f6f3629f46873001f1ab9335134bb89a068a3",
+      "actualSeconds": 5.964322916666666,
+      "requestedSeconds": 6,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    }
+  ],
+  "newlySupported": [
+    "The loaded hanging two-well configuration has four free legs total, two per end, and exterior shoulder/crown wrapping at both ends.",
+    "In the visible two-well face, the endward/outer mouth feeds a direct free leg and the gripward/inner mouth has a continuation bending around the shoulder toward the hidden side.",
+    "The exterior continuation runs around the crown-side shoulder in the shown hanging two-well orientation; the retained static three-well image shows its visible runs below the barrel."
+  ],
+  "evidenceLimits": [
+    "The far-side mouth is hidden where the exterior continuation lands.",
+    "The exterior F_outer-to-B_inner pairing is consistent with the visible roles but not directly traceable. F_inner-to-B_inner or other hidden connectivity is not ruled out solely by the whole frames.",
+    "A projected X at the right end is visible, but actual over/under contact order is not reliably separable.",
+    "Four native depth-bores remain authoring estimates, not proven hidden construction.",
+    "Visible rear-side free-leg origin is behind the barrel; exact far-mouth assignment is inference."
+  ],
+  "proposedChainDisposition": {
+    "chain": "support -> reverse outer -> outer bore -> front outer -> exterior wrap -> reverse inner -> inner bore -> front inner -> support",
+    "visibleRoles": "supported as a provisional reconstruction",
+    "exactExteriorEndpointPairing": "unresolved; not independently passed",
+    "hiddenBoreContinuity": "unproven estimate"
+  },
+  "minimalOwnerClarification": "At each end, does the exterior wrap connect the outer hole on the three-well face to the inner hole on the two-well face, leaving the three-well inner and two-well outer holes as the free leads? A continuous view of the far-side landing would also resolve this.",
+  "priorFollowupUpdate": "Video now confirms exterior wraps under load, superseding the earlier slack-only limitation. Rear-source-fidelity blocker remains until visible representation and unresolved endpoint pairing are deliberately resolved.",
+  "productionFilesChanged": false,
+  "nativeJobsLaunched": 0,
+  "appFrames": 0,
+  "pixelMeasurementOrCrop": false
+}

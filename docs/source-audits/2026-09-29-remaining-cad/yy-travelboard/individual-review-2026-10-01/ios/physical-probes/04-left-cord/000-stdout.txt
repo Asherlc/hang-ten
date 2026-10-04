@@ -1,0 +1,1 @@
+✓ Tap at (140.0, 300.0) completed successfully

@@ -1,0 +1,21 @@
+{
+  "hypothesis": "Structural Train board removal may prevent stale workout highlights with production board/hand rendering paths.",
+  "temporaryOnly": true,
+  "sourceScope": [
+    "HangTen/Views/TrainView.swift"
+  ],
+  "arms": [
+    "control-a",
+    "action",
+    "control-b"
+  ],
+  "conditional": "Control must validly fail before action; reversal only after full valid action pass. Stop otherwise.",
+  "launchFlag": "HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT",
+  "capture": "Same external44-shot muted-awake passive normal route; no CPU/lifetime instrumentation",
+  "limitations": [
+    "Host removal requested structurally; framework deallocation not measured",
+    "Preserves only Evo single-presentation slot",
+    "No production navigation policy or missing-hand repair claimed"
+  ],
+  "patchSHA256": "46cf4d9ee39f79c2198ed8c2a8eadc2a3eed3dcdb10c80d6f4b35a2f55a5ad02"
+}

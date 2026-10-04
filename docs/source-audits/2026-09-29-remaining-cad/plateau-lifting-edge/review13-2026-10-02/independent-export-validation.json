@@ -1,0 +1,103 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+  "priorSourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+  "archivePreservation": {
+    "originalNonDocumentPayloadsByteIdentical": 75,
+    "originalXMLObjectDefinitionsPreserved": 47,
+    "additionalBinderPayloads": [
+      "Depth10BlockerExterior.Shape.Map.txt",
+      "Depth10BlockerExterior.Shape.brp",
+      "Depth10MetalExterior.Shape.Map.txt",
+      "Depth10MetalExterior.Shape.brp",
+      "Depth15BlockerExterior.Shape.Map.txt",
+      "Depth15BlockerExterior.Shape.brp",
+      "Depth15MetalExterior.Shape.Map.txt",
+      "Depth15MetalExterior.Shape.brp",
+      "Depth18MetalExterior.Shape.Map.txt",
+      "Depth18MetalExterior.Shape.brp"
+    ]
+  },
+  "coreManifestMatchesOnlyAuthorizedFinishChanges": true,
+  "allFactualFieldsAndPositionsPreserved": true,
+  "presentations": [
+    {
+      "presentationID": "depth-18mm",
+      "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+      "modelBytes": 34044,
+      "nodes": {
+        "plateau_body": "body",
+        "plateau_edge_18": "contact",
+        "plateau_metal_exterior": "attachment"
+      },
+      "nodeTriangleCounts": {
+        "plateau_body": 72,
+        "plateau_edge_18": 66,
+        "plateau_metal_exterior": 786
+      },
+      "physicalTriangleUnionExactlyPreserved": true,
+      "duplicateTriangleCount": 0,
+      "contactTrianglesExactlyPreserved": true,
+      "measuredContactDepthMM": 17.999999225139618,
+      "descriptorFreshlyReconstructedExactly": true,
+      "unboundMeshNodes": 3,
+      "normalVectorsFiniteAndUnit": true
+    },
+    {
+      "presentationID": "depth-15mm",
+      "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+      "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+      "modelBytes": 35467,
+      "nodes": {
+        "plateau_blocker_exterior": "attachment",
+        "plateau_body": "body",
+        "plateau_edge_18": "contact",
+        "plateau_metal_exterior": "attachment"
+      },
+      "nodeTriangleCounts": {
+        "plateau_body": 74,
+        "plateau_edge_18": 66,
+        "plateau_metal_exterior": 790,
+        "plateau_blocker_exterior": 18
+      },
+      "physicalTriangleUnionExactlyPreserved": true,
+      "duplicateTriangleCount": 0,
+      "contactTrianglesExactlyPreserved": true,
+      "measuredContactDepthMM": 14.999999199062586,
+      "descriptorFreshlyReconstructedExactly": true,
+      "unboundMeshNodes": 4,
+      "normalVectorsFiniteAndUnit": true
+    },
+    {
+      "presentationID": "depth-10mm",
+      "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+      "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+      "modelBytes": 35467,
+      "nodes": {
+        "plateau_blocker_exterior": "attachment",
+        "plateau_body": "body",
+        "plateau_edge_18": "contact",
+        "plateau_metal_exterior": "attachment"
+      },
+      "nodeTriangleCounts": {
+        "plateau_body": 74,
+        "plateau_edge_18": 66,
+        "plateau_metal_exterior": 790,
+        "plateau_blocker_exterior": 18
+      },
+      "physicalTriangleUnionExactlyPreserved": true,
+      "duplicateTriangleCount": 0,
+      "contactTrianglesExactlyPreserved": true,
+      "measuredContactDepthMM": 9.999998845160006,
+      "descriptorFreshlyReconstructedExactly": true,
+      "unboundMeshNodes": 4,
+      "normalVectorsFiniteAndUnit": true
+    }
+  ],
+  "canonicalPackageStillFrozen": true,
+  "otherPackageFilesVerifiedUnchanged": 198,
+  "appFrames": 0,
+  "limits": "Independent native archive and actual exported geometry checks; app finish/picking/workout unverified."
+}

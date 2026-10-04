@@ -1,0 +1,8 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "simulator": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "derivedData": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half",
+  "resultBundle": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/build-placid-badger-cad-second-half.xcresult",
+  "testResultBundle": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/tests-placid-badger-cad-second-half.xcresult",
+  "lifetime": "temporary validation; cleanup trap removes exact owned resources"
+}

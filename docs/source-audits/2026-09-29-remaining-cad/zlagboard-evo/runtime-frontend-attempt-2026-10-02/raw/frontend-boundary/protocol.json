@@ -1,0 +1,29 @@
+{
+  "status": "PREPARATION_ONLY_NOT_LAUNCHED",
+  "owner": "placid-badger-cad-second-half",
+  "marker": "placid-badger-cad-second-half-frontend-boundary-2026-10-02",
+  "exactDeviceUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "launchControllerCommand": "rtk proxy python3 .context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/frontend-controller.py --launch-reviewed",
+  "frontendCommand": [
+    "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/Contents/MacOS/Simulator",
+    "-CurrentDeviceUDID",
+    "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "-PaseoWorkspaceOwner",
+    "placid-badger-cad-second-half-frontend-boundary-2026-10-02"
+  ],
+  "trap": "Python atexit (EXIT equivalent), SIGINT/SIGTERM installed before launch; direct child handle and argv/PID/PPID guards; bounded TERM then KILL exact unreaped child only; verified absence",
+  "ownership": "Pending registered before launch, immediate PID/argv/controller registration after spawn while INT/TERM masked; unique owner command marker and environment marker.",
+  "preflight": "Fail closed if ANY existing Simulator desktop executable is found. Never attach to or stop unknown frontend. No global reset/service operation.",
+  "visibleWindowGate": "Root uses computer-use skill node_repl @oai/sky on already-running frontend, selects/verifies exact owned UUID window before measurement. get_app_state can launch app if absent: do not call unless exact registered process is alive. No AX/desktop interactions during measurement.",
+  "plannedRun": "Only after root execution gate, one unchanged eef5a676 normal orthographic natural workout with the existing passive 12-capture protocol. New uniquely named output; no source/build/install/cache change.",
+  "stopRules": [
+    "On valid visible normal O failure, stop and hand back.",
+    "On pass, no automatic frontend-closed control; await root decision.",
+    "Controller cleanup stops exact frontend only; main controller90373 retains simulator/DD ownership."
+  ],
+  "historyLimit": "Initial lifecycle did launch Simulator successfully. Current process absence does not establish historical headless execution.",
+  "newResources": [
+    "One explicitly owned desktop Simulator frontend process only"
+  ],
+  "scriptSHA256": "f128757b529290aac81b62b0575107fd90b3f4cfc94af017dad90e1e10ee96d5"
+}

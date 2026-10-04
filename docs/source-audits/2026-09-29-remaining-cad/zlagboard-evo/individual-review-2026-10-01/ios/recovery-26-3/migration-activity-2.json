@@ -1,0 +1,4 @@
+{
+  "atUTC": "2026-10-02T03:20:59.193609+00:00",
+  "processSnapshot": "  PID ELAPSED      TIME  %CPU STAT COMMAND\n44156   04:31   0:02.21   1.4 Ss   /Library/Developer/CoreSimulator/Volumes/iOS_23D8133/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.3.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/DataMigration.framework/XPCServices/com.apple.datamigrator.xpc/com.apple.datamigrator\n44175   04:30   0:00.53   0.0 Ss   /Library/Developer/CoreSimulator/Volumes/iOS_23D8133/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.3.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/Contacts.framework/Support/contactsd\n47904   02:51   0:00.92   0.0 Ss   /Library/Developer/CoreSimulator/Volumes/iOS_23D8133/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.3.simruntime/Contents/Resources/RuntimeRoot/usr/libexec/addressbooksyncd\n"
+}

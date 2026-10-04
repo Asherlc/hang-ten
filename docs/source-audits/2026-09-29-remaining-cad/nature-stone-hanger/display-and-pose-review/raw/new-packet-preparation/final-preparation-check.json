@@ -1,0 +1,27 @@
+{
+  "status": "pass-final-scratch-preparation",
+  "createdUTC": "2026-10-02T00:31:37.374473+00:00",
+  "configSHA256": "8a7fe684a506bfe3f49545a300c1c9877cb93bdaa61c6d6afbf2ece44e8f567b",
+  "builderSHA256": "0cda7795043c76e8ddb3cdbbb611cb9352e7e2ed9488bd204304c07326058d0f",
+  "identity": {
+    "originalSourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+    "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+    "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+    "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+    "sidecarSHA256": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae"
+  },
+  "finalReady": true,
+  "proofRoleCount": 20,
+  "retainedEvidenceCount": 21,
+  "rawFilesBeforeThisReceipt": 408,
+  "rawBytesBeforeThisReceipt": 50700300,
+  "readinessStatus": "ready",
+  "allActualSchemasAndLinkedHashesPassed": true,
+  "sourceEvidenceInventoryExact": true,
+  "manifestFactsPositionsAndFinishExact": true,
+  "nativeBodyGeometryChanged": true,
+  "humanAcceptance": "pending",
+  "rootAuthorizedScratchBuildAndVerify": true,
+  "nativeOrMathChecksRepeated": false,
+  "canonicalOrGlobalMutation": false
+}

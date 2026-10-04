@@ -1,0 +1,27 @@
+{
+  "status": "SCRATCH_CORRECTION_APPLY_CHECK_PASS",
+  "reason": "Extracted non-ViewBuilder handContent computed properties now explicitly return GeometryReader after cameraRevision read. Both helpers corrected.",
+  "previousPatch": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/direct-hand-suppression-proposal/strict-hand-suppression.patch",
+    "sha256": "90032b935acc1d4b16b1f9f5371f4c715cc34814f805904cd25aa64d12a49598",
+    "preserved": true
+  },
+  "patchSHA256": "1d8812e4674980d8fd954d99d198417b55b083b4abafc9233553f30b601c5f9d",
+  "files": [
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "currentSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "proposedSHA256": "b47b76a780061f291a2e32b888e00adfba6b1dcc6a157d5f73df36a5d1797f15"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "currentSHA256": "008de5d3854b809fb452b9455d3d1d018da8649d48ece7d1d8a7b14120372eb5",
+      "proposedSHA256": "6f9fcd3da0677d79c411cf4cf053ae06a88b60f58f2b37522924f91570c3be25"
+    }
+  ],
+  "applyCheckExit": 0,
+  "limitations": [
+    "No tracked apply, typecheck, build or runtime execution; prior report retained unchanged.",
+    "All diagnostic gates and limitations in prior report remain applicable."
+  ]
+}

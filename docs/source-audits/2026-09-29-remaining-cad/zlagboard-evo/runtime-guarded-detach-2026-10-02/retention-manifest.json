@@ -1,0 +1,1353 @@
+{
+  "scope": "Completed guarded-detach control/action comparison only",
+  "originalFrozenFileCount": 222,
+  "postfreezeRootSupplementSeparate": true,
+  "rawFiles": 224,
+  "rawBytes": 13236144,
+  "entries": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-all-hand-workout.py",
+      "retained": "raw/check-normal-all-hand-workout.py",
+      "bytes": 3958,
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-projection-hosts.py",
+      "retained": "raw/check-normal-projection-hosts.py",
+      "bytes": 3729,
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-strict-hand-absence.py",
+      "retained": "raw/check-normal-strict-hand-absence.py",
+      "bytes": 1152,
+      "sha256": "9c0395c040a4cb62c79eca1c57b8127e6579b02a738f7483f54e29f802aa1ec6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-strict-hand-lifetime.py",
+      "retained": "raw/check-strict-hand-lifetime.py",
+      "bytes": 2919,
+      "sha256": "44e560b3c31c1c44b8f2bee262c3718cbd82cbfcb35c435a7448ad71f0723fb6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-app-termination-verification.json",
+      "retained": "raw/guarded-detach-app-termination-verification.json",
+      "bytes": 308,
+      "sha256": "190ef72bc0fe75cbda3ac31c3b639ab0891a8273a19c20ef6d1501e1e771030b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/capture-helper.patch",
+      "retained": "raw/guarded-detach-applied/capture-helper.patch",
+      "bytes": 5234,
+      "sha256": "74e6fd9b2f1a81494e41b63afe0831de77c6f1fdd7152c9a0bcc96706ee79959"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/check-parity.py",
+      "retained": "raw/guarded-detach-applied/check-parity.py",
+      "bytes": 1196,
+      "sha256": "e5fde3ef5e9bbba68185f27023f067fbdfc9ffe928d2779d5e562ac6dcbd1dd4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/check-trial-env-correction.patch",
+      "retained": "raw/guarded-detach-applied/check-trial-env-correction.patch",
+      "bytes": 4058,
+      "sha256": "dc30479300cb680c2aec13b3a4a57638e1add4c50fbd8f6ee919a8ab2d29e4e4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/check-trial.before-env-review.py",
+      "retained": "raw/guarded-detach-applied/check-trial.before-env-review.py",
+      "bytes": 5385,
+      "sha256": "c78a640e03f3482058f254fb9e4d94822be394151650f3c1d5d4c6c224224682"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/check-trial.py",
+      "retained": "raw/guarded-detach-applied/check-trial.py",
+      "bytes": 5829,
+      "sha256": "9314bbb16c6ff71ef3dba8808a88a36823708a80feff4d057fade0244e4f1399"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/compare-arms.py",
+      "retained": "raw/guarded-detach-applied/compare-arms.py",
+      "bytes": 2865,
+      "sha256": "dc42346c263d785c785fe750fe214d0f5d62c392cf3863ef340d8f3a7b0ccb31"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/control-runtime-release.json",
+      "retained": "raw/guarded-detach-applied/control-runtime-release.json",
+      "bytes": 296,
+      "sha256": "5d8d206fcbb0fd6c2d627522cc56092a283fa98ceaa95a05f99d948a1060df0e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/detach-runtime-release.json",
+      "retained": "raw/guarded-detach-applied/detach-runtime-release.json",
+      "bytes": 1061,
+      "sha256": "e768fee804a552a337c090c50b88ba4551ad38e33c52baf36046616afd9104a0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/guarded-detach.patch",
+      "retained": "raw/guarded-detach-applied/guarded-detach.patch",
+      "bytes": 9112,
+      "sha256": "0a9d708b372a86c11e4357443097ace03eb9d405f019114c602b2959af0551b3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/protocol.json",
+      "retained": "raw/guarded-detach-applied/protocol.json",
+      "bytes": 645,
+      "sha256": "27f31bc662861f58fbad179e847889ecfa6e85210e142424e4a92fc2973c25e5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/report.json",
+      "retained": "raw/guarded-detach-applied/report.json",
+      "bytes": 6317,
+      "sha256": "242cf2d34feacb0c6999dfac1e37dbcba7a0af71897c38dfb774ea315f266b25"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/root-application.json",
+      "retained": "raw/guarded-detach-applied/root-application.json",
+      "bytes": 609,
+      "sha256": "190836a92bff887726debd0178cf72feb6b3ff181e31e99287439c29fce24f68"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "retained": "raw/guarded-detach-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 98322,
+      "sha256": "9fb7c5331ec4975be198673f6bf18fb25531d120376ea48fd1e23b1a8263b4ff"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/source/HangTen/Views/BoardModelView.swift",
+      "retained": "raw/guarded-detach-applied/source/HangTen/Views/BoardModelView.swift",
+      "bytes": 22886,
+      "sha256": "305cd09b7a45b7179c513a4e78be2e772293fe6127514ca0fb7bcf98537adc90"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/source/HangTen/Views/GripHandModelView.swift",
+      "retained": "raw/guarded-detach-applied/source/HangTen/Views/GripHandModelView.swift",
+      "bytes": 47424,
+      "sha256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/source/HangTen/Views/RootView.swift",
+      "retained": "raw/guarded-detach-applied/source/HangTen/Views/RootView.swift",
+      "bytes": 149223,
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/source/HangTen/Views/TrainView.swift",
+      "retained": "raw/guarded-detach-applied/source/HangTen/Views/TrainView.swift",
+      "bytes": 26684,
+      "sha256": "1d381d39babf4f665c170a1fb74336832620c5cf70dd281e29b498830cd9a30d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/source-freeze.json",
+      "retained": "raw/guarded-detach-applied/source-freeze.json",
+      "bytes": 815,
+      "sha256": "30a71ef33d869130c8567ab9bb2e7934aa1b470595d911d490697da77842b660"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-applied/workout-guarded-detach.py",
+      "retained": "raw/guarded-detach-applied/workout-guarded-detach.py",
+      "bytes": 8848,
+      "sha256": "480220b28acb8f3ac4bf4e036fe2821989a2dcbb3053d7484305b56be6da322f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-arm-comparison.json",
+      "retained": "raw/guarded-detach-arm-comparison.json",
+      "bytes": 5113,
+      "sha256": "6831fc060362a981912b3d7792678d883f737f68555f354591127e6cfe0476c4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-before-parity.json",
+      "retained": "raw/guarded-detach-before-parity.json",
+      "bytes": 12855,
+      "sha256": "7fbbc20d670ac5abc66a7b1b3e5c305248549358d702dd46b23130caa50ccbed"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-build-command.json",
+      "retained": "raw/guarded-detach-build-command.json",
+      "bytes": 533,
+      "sha256": "51bc7e21b243d500211c64d9baa48d3246c988f0b9ce67247b4a0fa758e41f7d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-build-command.stderr",
+      "retained": "raw/guarded-detach-build-command.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-build-command.stdout",
+      "retained": "raw/guarded-detach-build-command.stdout",
+      "bytes": 337468,
+      "sha256": "58e5ea98e57d4091b8698106a75ab100665c9dedca24b05c1578e327bff34e5b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-code-parity/installed-container.txt",
+      "retained": "raw/guarded-detach-code-parity/installed-container.txt",
+      "bytes": 176,
+      "sha256": "6b85f9a20058af44c30da4b47b97481d3ea1eb4e0f23ed356ccde00a2fd99251"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-code-parity/mach-o-parity.json",
+      "retained": "raw/guarded-detach-code-parity/mach-o-parity.json",
+      "bytes": 2030,
+      "sha256": "8ab6c4d9335f77646a886d01c963586ffcaf3735d400e5f1f4d70f37b64720e5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/000-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/000-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/000-stdout.txt",
+      "bytes": 176,
+      "sha256": "6b85f9a20058af44c30da4b47b97481d3ea1eb4e0f23ed356ccde00a2fd99251"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/001-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/001-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/001-stdout.txt",
+      "bytes": 162,
+      "sha256": "9f88d3d2aeb288df8449a06ebc0ae6a31ad0945af86004784766d2379a25603f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/002-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/002-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/002-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/002-stdout.txt",
+      "bytes": 28,
+      "sha256": "1456a2b254d1e13b8677a1737e59436096e586e6a47e16d89c48917f2aad637c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/003-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/003-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/003-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/004-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/004-stderr.txt",
+      "bytes": 370,
+      "sha256": "65fb8d135384afb2d846c83a637ed57572aff0ce4678f67f9721ef33c72f01b0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/004-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/005-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/005-stderr.txt",
+      "bytes": 380,
+      "sha256": "a93cc7ce44998f1ace74bc6633d0fdc89c59d78e3efa891edeb90f395ee53228"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/005-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/006-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/006-stderr.txt",
+      "bytes": 377,
+      "sha256": "57fe2fc8c3acb12190228e8f3f07882e8eb5bb883a83be6a8e8cb9aec3191ab4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/006-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/007-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/007-stderr.txt",
+      "bytes": 377,
+      "sha256": "d51e2c132e91a0025ec43bab26a6fef76b8565910106bccce0ebbce072bed59c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/007-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/008-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/008-stderr.txt",
+      "bytes": 377,
+      "sha256": "49b06e0bd7bf63436e70a05e215288e8007b868231cfc9264d1fe9e461f58cf7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/008-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/008-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/009-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/009-stderr.txt",
+      "bytes": 381,
+      "sha256": "457895760b22aa4fb2e5dc10707597a557573855d2604226ed18d5b2d6227635"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/009-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/009-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/010-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/010-stderr.txt",
+      "bytes": 378,
+      "sha256": "152da2c4d93abc172e65507830c5e66ae0adab953ccd827e920ec689f1d5ab6a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/010-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/010-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/011-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/011-stderr.txt",
+      "bytes": 378,
+      "sha256": "09ea2d79d7ab605c1afde78c7f07b7c111e32273a7575ddc97db24605b6b57da"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/011-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/011-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/012-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/012-stderr.txt",
+      "bytes": 378,
+      "sha256": "3d03f477197ac707541c3e21c0ee9a8f84210945338e469251c035366062425e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/012-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/012-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/013-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/013-stderr.txt",
+      "bytes": 380,
+      "sha256": "25b888161d2e307146ceeeb97a0898550041fa14db15d37817dc7a014cd1246b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/013-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/013-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/014-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/014-stderr.txt",
+      "bytes": 377,
+      "sha256": "3bbc58d1568ffa81ced5e95a92189575128c9ed387bbd21d02737afaf5301489"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/014-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/014-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/015-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/015-stderr.txt",
+      "bytes": 377,
+      "sha256": "9b7337494c01eebe7eaa899a577148df621ff392fcd4611673dc55db8f329784"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/015-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/015-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/016-stderr.txt",
+      "retained": "raw/guarded-detach-control-landscape/016-stderr.txt",
+      "bytes": 377,
+      "sha256": "6080b181b0c12bb6d695f2a07105d4a09aa8648779378eee6fa4479a6c65f52a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/016-stdout.txt",
+      "retained": "raw/guarded-detach-control-landscape/016-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/capture-process-status.json",
+      "retained": "raw/guarded-detach-control-landscape/capture-process-status.json",
+      "bytes": 86,
+      "sha256": "ddccabee824b19dd32a69b2ac10894e1d1bd219e4509890270c11aa200e593dc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/captures.json",
+      "retained": "raw/guarded-detach-control-landscape/captures.json",
+      "bytes": 7905,
+      "sha256": "56543dd47ff8a5ccb4d76af45b4a1bb21c83f394dd43b548e8757191bce4d117"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/check-normal-all-hand-workout.stderr",
+      "retained": "raw/guarded-detach-control-landscape/check-normal-all-hand-workout.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/check-normal-all-hand-workout.stdout",
+      "retained": "raw/guarded-detach-control-landscape/check-normal-all-hand-workout.stdout",
+      "bytes": 448,
+      "sha256": "bc6820698e3f71b985a735aa3fcf70d852fe1399a7633dc5618c48831e656c3b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/check-normal-projection-hosts.stderr",
+      "retained": "raw/guarded-detach-control-landscape/check-normal-projection-hosts.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/check-normal-projection-hosts.stdout",
+      "retained": "raw/guarded-detach-control-landscape/check-normal-projection-hosts.stdout",
+      "bytes": 594,
+      "sha256": "593e4ca1e1d5deed50383ecd5bc87bbf6c06536cce7c34e22c96e30216e3a484"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/check-normal-strict-hand-absence.stderr",
+      "retained": "raw/guarded-detach-control-landscape/check-normal-strict-hand-absence.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/check-normal-strict-hand-absence.stdout",
+      "retained": "raw/guarded-detach-control-landscape/check-normal-strict-hand-absence.stdout",
+      "bytes": 199,
+      "sha256": "2b6c358c45742b998a9321d00a0a0430795c975410e834909ab35938c871ef4d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/check-strict-hand-lifetime.stderr",
+      "retained": "raw/guarded-detach-control-landscape/check-strict-hand-lifetime.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/check-strict-hand-lifetime.stdout",
+      "retained": "raw/guarded-detach-control-landscape/check-strict-hand-lifetime.stdout",
+      "bytes": 496,
+      "sha256": "b32789a90b2b4bb1684b345b94e598cecf65badad429110d163e975389deb9cc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/check-train-constructors.stderr",
+      "retained": "raw/guarded-detach-control-landscape/check-train-constructors.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/check-train-constructors.stdout",
+      "retained": "raw/guarded-detach-control-landscape/check-train-constructors.stdout",
+      "bytes": 419,
+      "sha256": "942bdc44eac42d471552984b476c0c6be934f8dce674a2850b8493e2f13b2599"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/check-trial.stderr",
+      "retained": "raw/guarded-detach-control-landscape/check-trial.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/check-trial.stdout",
+      "retained": "raw/guarded-detach-control-landscape/check-trial.stdout",
+      "bytes": 808,
+      "sha256": "a9ee7d20101e5e0e5eff682a923b427a7a570243e3cf7f2db803805e3f7de5c4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/commands.json",
+      "retained": "raw/guarded-detach-control-landscape/commands.json",
+      "bytes": 6462,
+      "sha256": "d95f9ba121418d00e242e2b8d71d6894c5aa4e0ba8a503708e47ded41b78c014"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/control-gate.json",
+      "retained": "raw/guarded-detach-control-landscape/control-gate.json",
+      "bytes": 845,
+      "sha256": "7c14ade874695792db856906e7733738601b4c44cdcdb92a00301e19bf79f5ee"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/early-trial-observations.json",
+      "retained": "raw/guarded-detach-control-landscape/early-trial-observations.json",
+      "bytes": 34960,
+      "sha256": "066effab65c5102a18fed73aa4a9de7ae7639d99a34e0d53ad9550b036a7bfdd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/events-CDC68690-30DA-408C-BA24-D55A178E455A.jsonl",
+      "retained": "raw/guarded-detach-control-landscape/events-CDC68690-30DA-408C-BA24-D55A178E455A.jsonl",
+      "bytes": 983903,
+      "sha256": "4eae119897a34cfae5238ba06aa0e85bf80f10b17a12321ef310a2761d774c15"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/first-eight-visual-review.json",
+      "retained": "raw/guarded-detach-control-landscape/first-eight-visual-review.json",
+      "bytes": 3735,
+      "sha256": "acdb7d1fe75efbd3dd50f5a6cebce8ee86ee988f5facc940b4f913ed3316fcba"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/following-preview-tail.json",
+      "retained": "raw/guarded-detach-control-landscape/following-preview-tail.json",
+      "bytes": 11091,
+      "sha256": "9598f370efcc2727e8e8bc6514a73fbd3da24fc9bd4f1db536fb271eb78d3ad8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/guarded-detach-validation.json",
+      "retained": "raw/guarded-detach-control-landscape/guarded-detach-validation.json",
+      "bytes": 313202,
+      "sha256": "6fdec2611893b9447db95522fed7cef97e24e4d463dc750ed390b769082ec6a5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/hand-lifetime-validation.json",
+      "retained": "raw/guarded-detach-control-landscape/hand-lifetime-validation.json",
+      "bytes": 151102,
+      "sha256": "db3eb72d7f153e9b8cb7a987f5cfd45980c5c586a12640b840538ec7c08f8f3a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/installed-binary-gate.json",
+      "retained": "raw/guarded-detach-control-landscape/installed-binary-gate.json",
+      "bytes": 374,
+      "sha256": "b824ff1991ba08d1599980627f379650c7f667219f102ef0fe415aa27ac1aea5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/launch-initial-capture.json",
+      "retained": "raw/guarded-detach-control-landscape/launch-initial-capture.json",
+      "bytes": 152,
+      "sha256": "9fc09f929e51e32b0e3d4713e5aa6c3d657c15c7d7344905a4ce9095621683bc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/launch-initial.png",
+      "retained": "raw/guarded-detach-control-landscape/launch-initial.png",
+      "bytes": 427127,
+      "sha256": "79de242f317992588f06a148eb48548c2531aa43f8847e5edd6edd1393d66372"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/launch-review-environment.json",
+      "retained": "raw/guarded-detach-control-landscape/launch-review-environment.json",
+      "bytes": 468,
+      "sha256": "031827cc86f3b46b7d0b86df7cd22e9c750572333a21f9a214588dde035a11a9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/normal-host-frame-validation.json",
+      "retained": "raw/guarded-detach-control-landscape/normal-host-frame-validation.json",
+      "bytes": 360453,
+      "sha256": "7fa4aed7a5da4482a5492e4a5dda86e96099b318aa4705aa570d68c35e21552a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-0-active-plus-0.25.png",
+      "retained": "raw/guarded-detach-control-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 267647,
+      "sha256": "b5206a4643503d7da66d237d0b741f625e361c20407dd7792698e67548dfa383"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-0-active-plus-1.png",
+      "retained": "raw/guarded-detach-control-landscape/phase-0-active-plus-1.png",
+      "bytes": 268474,
+      "sha256": "3ebc76fccb367c2b0417e45ffbd0851b6bb00298aac38e37a01ab458d53d4009"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-0-active-plus-3.png",
+      "retained": "raw/guarded-detach-control-landscape/phase-0-active-plus-3.png",
+      "bytes": 278329,
+      "sha256": "974413ab6526e2f5bbd730579558d0824393f901862832fa2675a8406876e9c0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-0-active-plus-5.png",
+      "retained": "raw/guarded-detach-control-landscape/phase-0-active-plus-5.png",
+      "bytes": 278693,
+      "sha256": "52b9a9e2151038354cd3153d5e789046af6bbafdcea4556d7dcab3f07ac18d31"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-1-preview-plus-0.25.png",
+      "retained": "raw/guarded-detach-control-landscape/phase-1-preview-plus-0.25.png",
+      "bytes": 245204,
+      "sha256": "7e40a0f82915efc9b097dd98193cac7deff8a72fc0a0af5b1ac40a44c787c28c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-1-preview-plus-1.png",
+      "retained": "raw/guarded-detach-control-landscape/phase-1-preview-plus-1.png",
+      "bytes": 249254,
+      "sha256": "c61072f3f3a75ab2644df7dd9c20620ff404c59802422f3a444d448c0a868e3c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-1-preview-plus-3.png",
+      "retained": "raw/guarded-detach-control-landscape/phase-1-preview-plus-3.png",
+      "bytes": 247705,
+      "sha256": "47e559046945bff41c617e65610227aa84d3faba58074a9e2a1670c3f7e3f0f7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-1-preview-plus-5.png",
+      "retained": "raw/guarded-detach-control-landscape/phase-1-preview-plus-5.png",
+      "bytes": 246495,
+      "sha256": "4e91cc52f76a15cd0684cd1a2a4b6899c98efd34bd8eabcade907520b0fa0176"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-2-active-plus-0.25.png",
+      "retained": "raw/guarded-detach-control-landscape/phase-2-active-plus-0.25.png",
+      "bytes": 279169,
+      "sha256": "a1b13ccc7f7d43a31e69e2a8a73290801f13a0a5fc1d3dc5baee8f7af1ee928d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-2-active-plus-1.png",
+      "retained": "raw/guarded-detach-control-landscape/phase-2-active-plus-1.png",
+      "bytes": 280808,
+      "sha256": "08a754dfa2bad8f0dee1a1c326135b861f5d2dd9fe1fb33aacd558db39ddc092"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-2-active-plus-3.png",
+      "retained": "raw/guarded-detach-control-landscape/phase-2-active-plus-3.png",
+      "bytes": 279483,
+      "sha256": "9eb678e52ea2c3d6f2ebc5ef8366c24fa85f487ff6f66461b546d3bb163f9d4a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/phase-2-active-plus-5.png",
+      "retained": "raw/guarded-detach-control-landscape/phase-2-active-plus-5.png",
+      "bytes": 279781,
+      "sha256": "ab8874f90ad3ea34e1fbe6fabf6d61636ac0e368b99fe902db441c0c47a37d67"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/protocol.json",
+      "retained": "raw/guarded-detach-control-landscape/protocol.json",
+      "bytes": 1164,
+      "sha256": "d893f2d097c661552617e585401cf5a916340ab0c0f0ff86ec26dba4908b8932"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/runtime-release.json",
+      "retained": "raw/guarded-detach-control-landscape/runtime-release.json",
+      "bytes": 296,
+      "sha256": "5d8d206fcbb0fd6c2d627522cc56092a283fa98ceaa95a05f99d948a1060df0e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/strict-absence-validation.json",
+      "retained": "raw/guarded-detach-control-landscape/strict-absence-validation.json",
+      "bytes": 389,
+      "sha256": "4a0406b134e8ac16d0ed75593c5f4b6f716dbf13929bf8b68c80c442bf41cfef"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/structural-correspondence.json",
+      "retained": "raw/guarded-detach-control-landscape/structural-correspondence.json",
+      "bytes": 308443,
+      "sha256": "1fc8700ac5b373a67c3916a50352a338a8cf211b54bd3bba5509ee5fb51ae6da"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/trace-copy.json",
+      "retained": "raw/guarded-detach-control-landscape/trace-copy.json",
+      "bytes": 719,
+      "sha256": "cf98ec535fa39289ac237966ce1fe8687617d1de447c00bedd76e914ad6cb8eb"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/train-constructor-validation.json",
+      "retained": "raw/guarded-detach-control-landscape/train-constructor-validation.json",
+      "bytes": 177206,
+      "sha256": "da58b0e898b53f4a3094bec6e8d797b4db78dbc7f25c134ef7e0583651c2aa6c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/transition-observations.json",
+      "retained": "raw/guarded-detach-control-landscape/transition-observations.json",
+      "bytes": 35451,
+      "sha256": "ab222c0e6c9e568fac0b1bdd42742cbe4f1e3e4d9496093fe628a160ab91668c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/visual-review.json",
+      "retained": "raw/guarded-detach-control-landscape/visual-review.json",
+      "bytes": 5553,
+      "sha256": "a25f64b019908273c1bcacdc3a3e7ef761d2bc35207662bc9b7f22c9a281ebae"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-parity.json",
+      "retained": "raw/guarded-detach-control-parity.json",
+      "bytes": 12855,
+      "sha256": "7fbbc20d670ac5abc66a7b1b3e5c305248549358d702dd46b23130caa50ccbed"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/000-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/000-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/000-stdout.txt",
+      "bytes": 176,
+      "sha256": "6b85f9a20058af44c30da4b47b97481d3ea1eb4e0f23ed356ccde00a2fd99251"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/001-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/001-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/001-stdout.txt",
+      "bytes": 162,
+      "sha256": "9f88d3d2aeb288df8449a06ebc0ae6a31ad0945af86004784766d2379a25603f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/002-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/002-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/002-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/002-stdout.txt",
+      "bytes": 27,
+      "sha256": "247b171fa24de347692fa57acf91b4492b993c7ea41958f5c942b3146762cc08"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/003-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/003-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/003-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/004-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/004-stderr.txt",
+      "bytes": 369,
+      "sha256": "62212ec72e72e9fc1f63d2d4e7fd468d235854eb89cc96e339c659ae492ed4de"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/004-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/005-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/005-stderr.txt",
+      "bytes": 379,
+      "sha256": "fd0144b8e9ef8d0670b2ea81cdf444df74d4777eee36da888269592f5d038bcc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/005-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/006-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/006-stderr.txt",
+      "bytes": 376,
+      "sha256": "ca12f73ed1911c628f9eacb1961776dc25ba7f1c939706b9aeee29040b20fde7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/006-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/007-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/007-stderr.txt",
+      "bytes": 376,
+      "sha256": "f88e00a4ab61f4cf3f10571d190239b1930d5c09523721d0087649906c092459"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/007-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/008-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/008-stderr.txt",
+      "bytes": 376,
+      "sha256": "395b00786c6972fafd1018c17afb34703663cc6894aadbcc4eb1579d970415d9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/008-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/008-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/009-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/009-stderr.txt",
+      "bytes": 380,
+      "sha256": "9d335406934baa837fa77d4ed6ffc728bbd61a0634a0926247b92374439af2ac"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/009-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/009-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/010-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/010-stderr.txt",
+      "bytes": 377,
+      "sha256": "9246065e515513638d628cef0a24b9937f817983602a11f9074c65bc2666b5a2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/010-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/010-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/011-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/011-stderr.txt",
+      "bytes": 377,
+      "sha256": "8114453697c2772b371b5314274244e69d7ffb5717bf99c8cabbdfd0234b97a6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/011-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/011-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/012-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/012-stderr.txt",
+      "bytes": 377,
+      "sha256": "8a2c623accce8db9b311868fa2dcca5a818d5d5905a23276059fde41b0440e83"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/012-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/012-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/013-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/013-stderr.txt",
+      "bytes": 379,
+      "sha256": "4bc4031817bde6d28ba09ed3b07f9f7ac51f960556c4bdf4a33c5750eddbe1a8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/013-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/013-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/014-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/014-stderr.txt",
+      "bytes": 376,
+      "sha256": "15d91f2ceb151e874d2ce17948051f16738eb5c4d68428a5498c32dd91c38387"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/014-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/014-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/015-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/015-stderr.txt",
+      "bytes": 376,
+      "sha256": "87a6adc36d03f4e092ac5b025eee4db48b8b0afcd5bcd5c0e3392f3472c528c4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/015-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/015-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/016-stderr.txt",
+      "retained": "raw/guarded-detach-detach-landscape/016-stderr.txt",
+      "bytes": 376,
+      "sha256": "61372b27ea254e5200bba5fe8b81dca1a7124900e545b484b3a184c8f80a4ea8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/016-stdout.txt",
+      "retained": "raw/guarded-detach-detach-landscape/016-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/capture-process-status.json",
+      "retained": "raw/guarded-detach-detach-landscape/capture-process-status.json",
+      "bytes": 85,
+      "sha256": "19db8e9c53f210be51f00b713ca59eefe6aa5a7a54a1fd04dcbfb166181c8440"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/captures.json",
+      "retained": "raw/guarded-detach-detach-landscape/captures.json",
+      "bytes": 7892,
+      "sha256": "69921e8b95c4c813affd96d1f49a0df3e3833f02519bd5632672d84d52887800"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/check-normal-all-hand-workout.stderr",
+      "retained": "raw/guarded-detach-detach-landscape/check-normal-all-hand-workout.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/check-normal-all-hand-workout.stdout",
+      "retained": "raw/guarded-detach-detach-landscape/check-normal-all-hand-workout.stdout",
+      "bytes": 447,
+      "sha256": "d09a23709af4ab92c635e63af432a5f6d49cfa35e814b68aa5a46e41c4f138e1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/check-normal-projection-hosts.stderr",
+      "retained": "raw/guarded-detach-detach-landscape/check-normal-projection-hosts.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/check-normal-projection-hosts.stdout",
+      "retained": "raw/guarded-detach-detach-landscape/check-normal-projection-hosts.stdout",
+      "bytes": 594,
+      "sha256": "be572d3605474ac099bc66f8b3323b1b8badad3de7760996e66d7bc4a47dcb62"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/check-normal-strict-hand-absence.stderr",
+      "retained": "raw/guarded-detach-detach-landscape/check-normal-strict-hand-absence.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/check-normal-strict-hand-absence.stdout",
+      "retained": "raw/guarded-detach-detach-landscape/check-normal-strict-hand-absence.stdout",
+      "bytes": 199,
+      "sha256": "2b6c358c45742b998a9321d00a0a0430795c975410e834909ab35938c871ef4d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/check-strict-hand-lifetime.stderr",
+      "retained": "raw/guarded-detach-detach-landscape/check-strict-hand-lifetime.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/check-strict-hand-lifetime.stdout",
+      "retained": "raw/guarded-detach-detach-landscape/check-strict-hand-lifetime.stdout",
+      "bytes": 496,
+      "sha256": "b32789a90b2b4bb1684b345b94e598cecf65badad429110d163e975389deb9cc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/check-train-constructors.stderr",
+      "retained": "raw/guarded-detach-detach-landscape/check-train-constructors.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/check-train-constructors.stdout",
+      "retained": "raw/guarded-detach-detach-landscape/check-train-constructors.stdout",
+      "bytes": 419,
+      "sha256": "942bdc44eac42d471552984b476c0c6be934f8dce674a2850b8493e2f13b2599"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/check-trial.stderr",
+      "retained": "raw/guarded-detach-detach-landscape/check-trial.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/check-trial.stdout",
+      "retained": "raw/guarded-detach-detach-landscape/check-trial.stdout",
+      "bytes": 808,
+      "sha256": "51fd0baf128f75201fd728cc95f0990c3e5de0b0e2013eb0aabaf22e444309bc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/commands.json",
+      "retained": "raw/guarded-detach-detach-landscape/commands.json",
+      "bytes": 6451,
+      "sha256": "78125a9c4572cc1b98322a8c19b68262423be9d055ec9a437d06d21a71af0276"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/early-trial-observations.json",
+      "retained": "raw/guarded-detach-detach-landscape/early-trial-observations.json",
+      "bytes": 32130,
+      "sha256": "2748b8641a346c3656333da62647572b54022c4f7774450b0696a65dcea344d5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/events-70D8F2B9-F130-40A3-AC42-E04445758BA9.jsonl",
+      "retained": "raw/guarded-detach-detach-landscape/events-70D8F2B9-F130-40A3-AC42-E04445758BA9.jsonl",
+      "bytes": 948365,
+      "sha256": "78b346108d8b9ed59041d90bd8ec35801504febd8f2c9292b7e87753bb2b27cb"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/first-eight-visual-review.json",
+      "retained": "raw/guarded-detach-detach-landscape/first-eight-visual-review.json",
+      "bytes": 3726,
+      "sha256": "25b1c11229c3038d9c8540a7a0636a7bfb0b584ce44fe486acf04ab2e45241d5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/following-preview-tail.json",
+      "retained": "raw/guarded-detach-detach-landscape/following-preview-tail.json",
+      "bytes": 10828,
+      "sha256": "842b292c051d89da281f7a79a902c3e246d07873ac390c48bc074919b39d4227"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/guarded-detach-validation.json",
+      "retained": "raw/guarded-detach-detach-landscape/guarded-detach-validation.json",
+      "bytes": 276543,
+      "sha256": "9aff01607c6cf8d13542896bfb328a99815db37407d908db5bd6d84f27bea649"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/hand-lifetime-validation.json",
+      "retained": "raw/guarded-detach-detach-landscape/hand-lifetime-validation.json",
+      "bytes": 150835,
+      "sha256": "37fbaae487b9322b2dc83ddb4ffd06a99ca0cd7ce3b5563994946b8e6a80a410"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/installed-binary-gate.json",
+      "retained": "raw/guarded-detach-detach-landscape/installed-binary-gate.json",
+      "bytes": 374,
+      "sha256": "b824ff1991ba08d1599980627f379650c7f667219f102ef0fe415aa27ac1aea5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/launch-initial-capture.json",
+      "retained": "raw/guarded-detach-detach-landscape/launch-initial-capture.json",
+      "bytes": 151,
+      "sha256": "a388089c76606d927786977b4acf5c5a76ea3629cc74b0cb24ec0af98a62f329"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/launch-initial.png",
+      "retained": "raw/guarded-detach-detach-landscape/launch-initial.png",
+      "bytes": 426739,
+      "sha256": "1c340a8c771ac0b79fb1a4d825587d1899751ef45a12875971525d634f21a4fc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/launch-review-environment.json",
+      "retained": "raw/guarded-detach-detach-landscape/launch-review-environment.json",
+      "bytes": 523,
+      "sha256": "9c75d97759f311df03cca3c49c330eac6fd8138a571861ba13cd0cab73e44fb6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/normal-host-frame-validation.json",
+      "retained": "raw/guarded-detach-detach-landscape/normal-host-frame-validation.json",
+      "bytes": 361429,
+      "sha256": "e118c6372f0554c9c5b49fb5ef900f74058756e7394624639f1fc5ef67b09710"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-0-active-plus-0.25.png",
+      "retained": "raw/guarded-detach-detach-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 276285,
+      "sha256": "3ec86e78e7a1229ec0551f006e7c97740b4d8b1481dc35fd98b6dfd08541bfd7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-0-active-plus-1.png",
+      "retained": "raw/guarded-detach-detach-landscape/phase-0-active-plus-1.png",
+      "bytes": 277681,
+      "sha256": "632393338ecc1fb605f05792e2ed4869711c93238306f153af51bd6c1af319e9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-0-active-plus-3.png",
+      "retained": "raw/guarded-detach-detach-landscape/phase-0-active-plus-3.png",
+      "bytes": 278327,
+      "sha256": "ea4f6b04a92acc4747d0460a44277ab265165f4eaf086d2893e59ff947b205e5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-0-active-plus-5.png",
+      "retained": "raw/guarded-detach-detach-landscape/phase-0-active-plus-5.png",
+      "bytes": 277559,
+      "sha256": "a5e3b9b7401b0815a373e9b44a1e9448940f6a02d50f1e5a810465efc13fe084"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-1-preview-plus-0.25.png",
+      "retained": "raw/guarded-detach-detach-landscape/phase-1-preview-plus-0.25.png",
+      "bytes": 245201,
+      "sha256": "3c61b01eb9dcdb482e663b8dfecf660314d518f93f50b383ebf8f898392331e0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-1-preview-plus-1.png",
+      "retained": "raw/guarded-detach-detach-landscape/phase-1-preview-plus-1.png",
+      "bytes": 249250,
+      "sha256": "f89720fdecdc4cbb8b0698254ee99732f4c7b54ce09b4328bd3e9cceec94c8b6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-1-preview-plus-3.png",
+      "retained": "raw/guarded-detach-detach-landscape/phase-1-preview-plus-3.png",
+      "bytes": 247708,
+      "sha256": "bed81a70a682a2be4ef216a7216d96af7c92a7d0430c94ce926ab77a24ebdef8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-1-preview-plus-5.png",
+      "retained": "raw/guarded-detach-detach-landscape/phase-1-preview-plus-5.png",
+      "bytes": 246496,
+      "sha256": "5501e6d0debbfb7c3c4c8ca68fe9344a2f920f77bcc0dc3f2efd108dc903e90b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-2-active-plus-0.25.png",
+      "retained": "raw/guarded-detach-detach-landscape/phase-2-active-plus-0.25.png",
+      "bytes": 279169,
+      "sha256": "a1b13ccc7f7d43a31e69e2a8a73290801f13a0a5fc1d3dc5baee8f7af1ee928d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-2-active-plus-1.png",
+      "retained": "raw/guarded-detach-detach-landscape/phase-2-active-plus-1.png",
+      "bytes": 280808,
+      "sha256": "08a754dfa2bad8f0dee1a1c326135b861f5d2dd9fe1fb33aacd558db39ddc092"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-2-active-plus-3.png",
+      "retained": "raw/guarded-detach-detach-landscape/phase-2-active-plus-3.png",
+      "bytes": 279483,
+      "sha256": "9eb678e52ea2c3d6f2ebc5ef8366c24fa85f487ff6f66461b546d3bb163f9d4a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-2-active-plus-5.png",
+      "retained": "raw/guarded-detach-detach-landscape/phase-2-active-plus-5.png",
+      "bytes": 279781,
+      "sha256": "ab8874f90ad3ea34e1fbe6fabf6d61636ac0e368b99fe902db441c0c47a37d67"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/protocol.json",
+      "retained": "raw/guarded-detach-detach-landscape/protocol.json",
+      "bytes": 1163,
+      "sha256": "992752edc10ae444e59853555e3f629e060107d4d50f149ea0f4d49b124a874b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/runtime-release.json",
+      "retained": "raw/guarded-detach-detach-landscape/runtime-release.json",
+      "bytes": 1061,
+      "sha256": "e768fee804a552a337c090c50b88ba4551ad38e33c52baf36046616afd9104a0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/strict-absence-validation.json",
+      "retained": "raw/guarded-detach-detach-landscape/strict-absence-validation.json",
+      "bytes": 389,
+      "sha256": "249cbbf0f30b633a6c7de4fd66eea0e814fd78bb377936ab400067a26e910e3b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/structural-correspondence.json",
+      "retained": "raw/guarded-detach-detach-landscape/structural-correspondence.json",
+      "bytes": 302077,
+      "sha256": "fe61e9348e68615c4870c9ce35966e3dfa94523fffb800f5be9a4667cb9e3bee"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/trace-copy.json",
+      "retained": "raw/guarded-detach-detach-landscape/trace-copy.json",
+      "bytes": 717,
+      "sha256": "d7ee13c4abb20920a9133d38ebde20ca334b253028957424951aa6e8155b72ad"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/train-constructor-validation.json",
+      "retained": "raw/guarded-detach-detach-landscape/train-constructor-validation.json",
+      "bytes": 176942,
+      "sha256": "5057fde18e29051b3076eacc0981eb3bda1121ddf4df747f6da45ac490e68bde"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/transition-observations.json",
+      "retained": "raw/guarded-detach-detach-landscape/transition-observations.json",
+      "bytes": 34659,
+      "sha256": "63c3b0ef2347fe81f09a4d3c0ce68101e41f5889f2f6221a07468219542d83b3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/visual-review.json",
+      "retained": "raw/guarded-detach-detach-landscape/visual-review.json",
+      "bytes": 5541,
+      "sha256": "d2c628b9eb3167a0b20b538b660beb04ca8bc2e3d33b5eea0fc136e76fe15591"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-final-parity.json",
+      "retained": "raw/guarded-detach-final-parity.json",
+      "bytes": 12855,
+      "sha256": "7fbbc20d670ac5abc66a7b1b3e5c305248549358d702dd46b23130caa50ccbed"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-findings.json",
+      "retained": "raw/guarded-detach-findings.json",
+      "bytes": 13824,
+      "sha256": "ee8e803710d6d5136f5ca225313d6e72ab053fd96ee3bded7e72c18e81c34400"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-frozen-manifest.json",
+      "retained": "raw/guarded-detach-frozen-manifest.json",
+      "bytes": 57813,
+      "sha256": "ef004763b891aba414ae015d755d5efae5c0e18504d6fc8f3bb50c20c22ac9de"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-install-command.json",
+      "retained": "raw/guarded-detach-install-command.json",
+      "bytes": 449,
+      "sha256": "dc9588460c01a0d9c66a24a9d9ebc5b181cdef3a6bd0041097a902acc6ae9050"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-install-command.stderr",
+      "retained": "raw/guarded-detach-install-command.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-install-command.stdout",
+      "retained": "raw/guarded-detach-install-command.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-package-parity.json",
+      "retained": "raw/guarded-detach-package-parity.json",
+      "bytes": 11183,
+      "sha256": "18ed82c9ca2ccba051eb06122fb8bb7c3f0d58d29b5f987a81747842fe46e0b4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-prior-freeze-verification.json",
+      "retained": "raw/guarded-detach-prior-freeze-verification.json",
+      "bytes": 266,
+      "sha256": "a3a3fe10549d5919707a4650589b47286e5784df364414a2b9b4828c3e7f0269"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-root-corroboration-supplement.json",
+      "retained": "raw/guarded-detach-root-corroboration-supplement.json",
+      "bytes": 1027,
+      "sha256": "d10f8712c4dd8b5f770f056f17a666782bea48c9d3d25392c20fa1c7fd68bbda"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-terminate-command.json",
+      "retained": "raw/guarded-detach-terminate-command.json",
+      "bytes": 298,
+      "sha256": "626bbdb3c4c0dd72cd792e7060d52e2dc641c50d46e7e1216054dcc895ad62e8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-terminate-command.stderr",
+      "retained": "raw/guarded-detach-terminate-command.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-terminate-command.stdout",
+      "retained": "raw/guarded-detach-terminate-command.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-proposal/check-train-constructors.py",
+      "retained": "raw/train-host-proposal/check-train-constructors.py",
+      "bytes": 2827,
+      "sha256": "8c671fee30985971a5db26847fd625a725f54829875b9fc688a5dbdfc29532c0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/apply-check.stderr",
+      "retained": "analysis/guarded-detach-proposal/apply-check.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/apply-check.stdout",
+      "retained": "analysis/guarded-detach-proposal/apply-check.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/before/HangTen/Models/BoardModelRealityTypes.swift",
+      "retained": "analysis/guarded-detach-proposal/before/HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 92428,
+      "sha256": "929ab78c1d4ed9806e156a4fbe04c0afd0622d3bf24bee03d4d2a8686686b0f3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/before/HangTen/Views/BoardModelView.swift",
+      "retained": "analysis/guarded-detach-proposal/before/HangTen/Views/BoardModelView.swift",
+      "bytes": 22063,
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/before/HangTen/Views/TrainView.swift",
+      "retained": "analysis/guarded-detach-proposal/before/HangTen/Views/TrainView.swift",
+      "bytes": 26422,
+      "sha256": "86245095b857d1ae864672ca4f6d3dfacbd1f17390ac1dd5f7d1a0b909b19af0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/guarded-detach.initial.patch",
+      "retained": "analysis/guarded-detach-proposal/guarded-detach.initial.patch",
+      "bytes": 10479,
+      "sha256": "97f18c9b6c612a6b756050fbc772fa99a5cc1f24ed8c347d2e8d3cf43b587bff"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/guarded-detach.patch",
+      "retained": "analysis/guarded-detach-proposal/guarded-detach.patch",
+      "bytes": 9112,
+      "sha256": "0a9d708b372a86c11e4357443097ace03eb9d405f019114c602b2959af0551b3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/guarded-detach.patch.before-callback-review",
+      "retained": "analysis/guarded-detach-proposal/guarded-detach.patch.before-callback-review",
+      "bytes": 10674,
+      "sha256": "d2d6753f3fdf81db624e27c43910d5b4a4a5c24d11f5f4c642b04c0e40341b52"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/models-fragment.swift",
+      "retained": "analysis/guarded-detach-proposal/models-fragment.swift",
+      "bytes": 5937,
+      "sha256": "3eeb2e6b1cac245ac5b997a73f28825da143801cf906cc46fb0751808fa90d59"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/provenance-initial.json",
+      "retained": "analysis/guarded-detach-proposal/provenance-initial.json",
+      "bytes": 902,
+      "sha256": "6eeb410594f2f78e680d2c352b1d72f672b0fc8795e68d41b9179613f653dc0f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/provenance.json",
+      "retained": "analysis/guarded-detach-proposal/provenance.json",
+      "bytes": 902,
+      "sha256": "c77ad6077780359571889a57a87b4754e21c0045c110a5614a0ef123baebd568"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/provenance.json.before-callback-review",
+      "retained": "analysis/guarded-detach-proposal/provenance.json.before-callback-review",
+      "bytes": 902,
+      "sha256": "59951ab47cae3c1e574a9e2ab40c0598ee640f95a8b5ab1070f7b05677982318"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/report.json",
+      "retained": "analysis/guarded-detach-proposal/report.json",
+      "bytes": 6317,
+      "sha256": "242cf2d34feacb0c6999dfac1e37dbcba7a0af71897c38dfb774ea315f266b25"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/report.json.before-callback-review",
+      "retained": "analysis/guarded-detach-proposal/report.json.before-callback-review",
+      "bytes": 6103,
+      "sha256": "7bf3912f20af4e01a56c988185dae4c964d1d60671a397c9ceca443e1c7b6d56"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/root-application.json",
+      "retained": "analysis/guarded-detach-proposal/root-application.json",
+      "bytes": 609,
+      "sha256": "190836a92bff887726debd0178cf72feb6b3ff181e31e99287439c29fce24f68"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "retained": "analysis/guarded-detach-proposal/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 98322,
+      "sha256": "9fb7c5331ec4975be198673f6bf18fb25531d120376ea48fd1e23b1a8263b4ff"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/source/HangTen/Views/BoardModelView.swift",
+      "retained": "analysis/guarded-detach-proposal/source/HangTen/Views/BoardModelView.swift",
+      "bytes": 22886,
+      "sha256": "305cd09b7a45b7179c513a4e78be2e772293fe6127514ca0fb7bcf98537adc90"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/guarded-detach-proposal/source/HangTen/Views/TrainView.swift",
+      "retained": "analysis/guarded-detach-proposal/source/HangTen/Views/TrainView.swift",
+      "bytes": 26684,
+      "sha256": "1d381d39babf4f665c170a1fb74336832620c5cf70dd281e29b498830cd9a30d"
+    }
+  ]
+}

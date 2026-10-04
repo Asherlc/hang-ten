@@ -1,0 +1,8 @@
+{
+  "atUTC": "2026-10-02T05:45:58.995944+00:00",
+  "test": "HangTenTests/BoardModelRealityTests/testTimelineDrivenHostedModelUpdatesHighlightModeWithoutLayoutChanges",
+  "productionDiffEmpty": true,
+  "testPatchSHA256": "d23df0e917b20f91ad912cbf6d3ebe19c68a7899caa6ffcff11fc7ee1f6e2c8c",
+  "priorObservedStateTest": "Passed unchanged production; not accepted as reproduction.",
+  "currentHypothesis": "Timeline clock-derived value reaches SwiftUI label but does not cause retained RealityView update to synchronize mode; parent phase tracked by non-observable probe."
+}

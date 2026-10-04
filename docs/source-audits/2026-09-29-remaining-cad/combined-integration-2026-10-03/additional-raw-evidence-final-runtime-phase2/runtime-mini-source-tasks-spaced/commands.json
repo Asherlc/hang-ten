@@ -1,0 +1,483 @@
+[
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-0",
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "37186",
+      "-o",
+      "pid=,command="
+    ],
+    "startEpoch": 1791076246.379049,
+    "startMonotonic": 137890.575061875,
+    "limitSeconds": 20,
+    "pid": 68925,
+    "endEpoch": 1791076246.40325,
+    "endMonotonic": 137890.599264083,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-1",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "com.hangten.training",
+      "app"
+    ],
+    "startEpoch": 1791076246.408691,
+    "startMonotonic": 137890.604704,
+    "limitSeconds": 20,
+    "pid": 68928,
+    "endEpoch": 1791076246.642046,
+    "endMonotonic": 137890.838061166,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-2",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/app.stderr",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791076246.675442,
+    "startMonotonic": 137890.871455916,
+    "limitSeconds": 20,
+    "pid": 68941,
+    "endEpoch": 1791076247.04036,
+    "endMonotonic": 137891.236376333,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-3",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "enumerate"
+    ],
+    "startEpoch": 1791076250.042527,
+    "startMonotonic": 137894.238552208,
+    "limitSeconds": 20,
+    "pid": 68963,
+    "endEpoch": 1791076250.376739,
+    "endMonotonic": 137894.572765833,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-4",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/train-setup.png"
+    ],
+    "startEpoch": 1791076250.377994,
+    "startMonotonic": 137894.57402,
+    "limitSeconds": 20,
+    "pid": 68985,
+    "endEpoch": 1791076250.983333,
+    "endMonotonic": 137895.1793615,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-5",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "openurl",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "hangten://plan/research.max-hangs/workout"
+    ],
+    "startEpoch": 1791076268.5699468,
+    "startMonotonic": 137912.766033833,
+    "limitSeconds": 20,
+    "pid": 72168,
+    "endEpoch": 1791076268.99844,
+    "endMonotonic": 137913.194529541,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-6",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-001s.png"
+    ],
+    "startEpoch": 1791076270.0015821,
+    "startMonotonic": 137914.197674416,
+    "limitSeconds": 20,
+    "pid": 72445,
+    "endEpoch": 1791076270.96794,
+    "endMonotonic": 137915.164036208,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-7",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-006s.png"
+    ],
+    "startEpoch": 1791076275.0040388,
+    "startMonotonic": 137919.2001475,
+    "limitSeconds": 20,
+    "pid": 73031,
+    "endEpoch": 1791076275.567459,
+    "endMonotonic": 137919.763569416,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-8",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-011s.png"
+    ],
+    "startEpoch": 1791076280.00365,
+    "startMonotonic": 137924.199775333,
+    "limitSeconds": 20,
+    "pid": 73253,
+    "endEpoch": 1791076280.6299021,
+    "endMonotonic": 137924.826030083,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-9",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-016s.png"
+    ],
+    "startEpoch": 1791076284.999865,
+    "startMonotonic": 137929.1960065,
+    "limitSeconds": 20,
+    "pid": 73473,
+    "endEpoch": 1791076285.600041,
+    "endMonotonic": 137929.79618575,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-10",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-021s.png"
+    ],
+    "startEpoch": 1791076290.0005472,
+    "startMonotonic": 137934.196705833,
+    "limitSeconds": 20,
+    "pid": 73598,
+    "endEpoch": 1791076290.631586,
+    "endMonotonic": 137934.827747,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-11",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-090s.png"
+    ],
+    "startEpoch": 1791076359.000432,
+    "startMonotonic": 138003.196820666,
+    "limitSeconds": 20,
+    "pid": 76750,
+    "endEpoch": 1791076359.846866,
+    "endMonotonic": 138004.043257958,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-12",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-190s.png"
+    ],
+    "startEpoch": 1791076459.00216,
+    "startMonotonic": 138103.198882791,
+    "limitSeconds": 20,
+    "pid": 82610,
+    "endEpoch": 1791076459.851934,
+    "endMonotonic": 138104.048660583,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-13",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-195s.png"
+    ],
+    "startEpoch": 1791076463.99883,
+    "startMonotonic": 138108.195568833,
+    "limitSeconds": 20,
+    "pid": 82682,
+    "endEpoch": 1791076464.7219808,
+    "endMonotonic": 138108.918724125,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-14",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-200s.png"
+    ],
+    "startEpoch": 1791076468.998883,
+    "startMonotonic": 138113.195638833,
+    "limitSeconds": 20,
+    "pid": 82766,
+    "endEpoch": 1791076469.6165729,
+    "endMonotonic": 138113.813331125,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-15",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-205s.png"
+    ],
+    "startEpoch": 1791076473.998948,
+    "startMonotonic": 138118.195721,
+    "limitSeconds": 20,
+    "pid": 82820,
+    "endEpoch": 1791076474.551379,
+    "endMonotonic": 138118.748154375,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-16",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-210s.png"
+    ],
+    "startEpoch": 1791076478.9992971,
+    "startMonotonic": 138123.196086458,
+    "limitSeconds": 20,
+    "pid": 83245,
+    "endEpoch": 1791076479.8547142,
+    "endMonotonic": 138124.051506416,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-17",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-215s.png"
+    ],
+    "startEpoch": 1791076483.999064,
+    "startMonotonic": 138128.195870083,
+    "limitSeconds": 20,
+    "pid": 83286,
+    "endEpoch": 1791076484.540647,
+    "endMonotonic": 138128.737455708,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-18",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-220s.png"
+    ],
+    "startEpoch": 1791076489.003351,
+    "startMonotonic": 138133.200173833,
+    "limitSeconds": 20,
+    "pid": 83442,
+    "endEpoch": 1791076489.769454,
+    "endMonotonic": 138133.9662805,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-19",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-225s.png"
+    ],
+    "startEpoch": 1791076494.006486,
+    "startMonotonic": 138138.203325291,
+    "limitSeconds": 20,
+    "pid": 83636,
+    "endEpoch": 1791076495.716618,
+    "endMonotonic": 138139.91346375,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-20",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "terminate",
+      "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791076495.7213628,
+    "startMonotonic": 138139.918209125,
+    "limitSeconds": 10,
+    "pid": 83838,
+    "endEpoch": 1791076496.656074,
+    "endMonotonic": 138140.852923583,
+    "exitStatus": 0
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-21",
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "68951",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791076496.658303,
+    "startMonotonic": 138140.855151791,
+    "limitSeconds": 3,
+    "pid": 83933,
+    "endEpoch": 1791076496.711135,
+    "endMonotonic": 138140.907984583,
+    "exitStatus": 1
+  },
+  {
+    "owner": "placid-badger-cad-second-half",
+    "resourceName": "placid-badger-cad-second-half-combined-mini-source-tasks-spaced-helper-22",
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "68927",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791076496.71776,
+    "startMonotonic": 138140.914608666,
+    "limitSeconds": 3,
+    "pid": 83936,
+    "endEpoch": 1791076496.756046,
+    "endMonotonic": 138140.952895375,
+    "exitStatus": 1
+  }
+]

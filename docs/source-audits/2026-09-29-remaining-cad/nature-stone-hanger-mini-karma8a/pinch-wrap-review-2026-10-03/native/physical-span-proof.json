@@ -1,0 +1,41 @@
+{
+  "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+  "passed": true,
+  "preTessellationAnalyticBBoxZ": [
+    -30.659137602339154,
+    30.65913760233916
+  ],
+  "postTessellationBBoxZ": [
+    -30.0,
+    30.00000000000001
+  ],
+  "outsidePhysical60mmSlabArea": 0.0,
+  "tessellatedZExtrema": [
+    -30.0,
+    30.00000000000001
+  ],
+  "witnesses": [
+    [
+      44.5,
+      0.0,
+      -30.0
+    ],
+    [
+      44.5,
+      0.0,
+      30.0
+    ]
+  ],
+  "witnessDistances": [
+    0.0,
+    0.0
+  ],
+  "witnessSpanMm": 60.0,
+  "retainedCompilerDepthGate": {
+    "wood-edge-15": 15.0,
+    "granite-edge-15": 15.0,
+    "pinch-60": 60.0
+  },
+  "note": "Raw native-reopen-proof analyticBBoxZ field was read after tessellation, which tightens FreeCAD cached bounds; this report labels the two observations precisely.",
+  "rawProofSHA256": "187c2b6667e220c53febfa14033f21e4be27ab2d498079b2e31d423a83a4c0a5"
+}

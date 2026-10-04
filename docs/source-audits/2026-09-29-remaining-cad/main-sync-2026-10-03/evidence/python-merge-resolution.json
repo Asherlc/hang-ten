@@ -1,0 +1,77 @@
+{
+  "scope": "existing Main and branch contracts only; no native package/index/commit/runtime mutation",
+  "files": [
+    {
+      "path": "Tools/HangboardCAD/prepare_assets.py",
+      "sha256": "fcf0aa49deb470fe901f4fe34488829b6edcfe4fcb2dffdfa5d40da63202a935",
+      "pythonAST": true,
+      "mergeMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardCAD/solve_threaded_rope.py",
+      "sha256": "83ea90045300f88ae308711f4da4f03594ec41de49396e89dbf241aae9314e81",
+      "pythonAST": true,
+      "mergeMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/board_catalog.py",
+      "sha256": "6d139dbaa2ef5a87b03ebf9c49cb9e08af91cfa81416ff1d2d9de58ced0a54dd",
+      "pythonAST": true,
+      "mergeMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/cad_source.py",
+      "sha256": "bcaa1ac3da3ff867ab863cb029b4d14060c772795a1ad81ff4dd082987738ecd",
+      "pythonAST": true,
+      "mergeMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/src/hangboard_packages/cord_audit.py",
+      "sha256": "62d3b6f7061d0e43f2bf21604ae3659da0597d7443d3ee924d52de7d6eb97f16",
+      "pythonAST": true,
+      "mergeMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_cord_audit_reusable_instances.py",
+      "sha256": "2a6c727e3de71c528149a69eb5c36201a70a301cfb1e12676810f65c1a906731",
+      "pythonAST": true,
+      "mergeMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_model_first_packages.py",
+      "sha256": "a933e66945ea915b54326ebdf39f8183623b2c07ae69e2ef6aa4a80c75e5d676",
+      "pythonAST": true,
+      "mergeMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_remove_primary_backdrops.py",
+      "sha256": "f174b5bca70e49a18e43458b7b6e7c219bb6c6e4c63f105b107eae1772b0f943",
+      "pythonAST": true,
+      "mergeMarkersAbsent": true
+    },
+    {
+      "path": "Tools/HangboardPackages/scripts/remove_primary_backdrops.py",
+      "sha256": "3fb746a852acf9e9ab020e400a6c2bafb5cab878f608e04384b60996b58ffce4",
+      "pythonAST": true,
+      "mergeMarkersAbsent": true
+    }
+  ],
+  "testResults": [
+    {
+      "artifact": "package-merge-tests.json",
+      "result": "collection failed system Python missing pxr/numpy; zero test execution"
+    },
+    {
+      "artifact": "package-merge-tests-system.json",
+      "result": "277 passed 2 inventory/material integration failures before root metadata resolution"
+    },
+    {
+      "artifact": "cad-merged-contracts.json",
+      "result": "93 passed owned dependency interpreter"
+    },
+    {
+      "artifact": "retired-raster-input-contract.json",
+      "result": "13 passed 8 deselected; no image processing"
+    }
+  ]
+}

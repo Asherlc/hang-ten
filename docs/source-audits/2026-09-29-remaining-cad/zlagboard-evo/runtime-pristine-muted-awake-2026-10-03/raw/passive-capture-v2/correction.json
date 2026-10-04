@@ -1,0 +1,9 @@
+{
+  "priorHelperSHA256": "af6434b4e4f413992c94f91b594904e8934b6156d796e4028174f7a2f4b7eddc",
+  "newHelperSHA256": "5caa65d4f2aa946e2dfeb10e5c118f6d8465e1195af6805ea7e240b254532364",
+  "oldPredicate": "assert any(n.get('AXUniqueId')=='train.changeBoard' for n in nodes),'Normal Train setup not present; stop without retry'",
+  "newPredicate": "assert any(n.get('AXUniqueId')=='train.settings' for n in nodes) and any(n.get('AXUniqueId')=='train.board' and n.get('AXLabel')==('Zlagboard.Evo' if g['boardID']=='zlagboard.evo' else 'Zlagboard.Pro 2.0') for n in nodes),'Normal Train and expected board setup not present; stop without retry'",
+  "reason": "Actual AX tree inherits train.board on child controls. Original gate used absent train.changeBoard. Workout URL was never sent.",
+  "priorFailureRetained": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-a",
+  "sourceChanged": false
+}

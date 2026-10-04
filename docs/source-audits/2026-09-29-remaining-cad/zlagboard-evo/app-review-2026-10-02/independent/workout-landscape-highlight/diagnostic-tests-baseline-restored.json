@@ -1,0 +1,18 @@
+{
+  "timestampUTC": "2026-10-02T06:27:50.452360+00:00",
+  "baseline": "1f5a5865050c96bf89e67b1929099205dcbd6827",
+  "retainedTestSource": {
+    "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02-independent/workout-landscape-highlight/BoardModelRealityTests.diagnostic-final.swift",
+    "sha256": "15c3b9859aacbe4bf0befe90f7644fcd9ec33a0ff80484e2e6f0e62bca74638d"
+  },
+  "retainedTestPatch": {
+    "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02-independent/workout-landscape-highlight/diagnostic-tests-final-retained.patch",
+    "sha256": "b4d86055bd0c3c1c43458313cf66ec8dc080806d99ac1500861db0eb6158c22c"
+  },
+  "restoredFile": "HangTenTests/BoardModelRealityTests.swift",
+  "restoredSHA256": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+  "restoredFileExactHEAD": true,
+  "allHangTenAndHangTenTestsExactHEAD": true,
+  "reason": "Diagnostic material-state tests passed but did not reproduce or establish a fix for the actual rendered-frame defect. Retain experiments as evidence; no production or test code change ships.",
+  "appBinaryUnaffectedByTestOnlyReversion": true
+}

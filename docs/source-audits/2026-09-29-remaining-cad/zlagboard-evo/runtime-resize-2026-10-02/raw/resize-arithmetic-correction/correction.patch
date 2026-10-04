@@ -1,0 +1,11 @@
+--- a/HangTen/Views/RootView.swift
++++ b/HangTen/Views/RootView.swift
+@@ -3795,7 +3795,7 @@
+     }
+     private var isResizeDriver: Bool { ["F", "G"].contains(driver) }
+     private var initialViewport: CGSize {
+-        isResizeDriver ? CGSize(width: 410, height: 410 * 120 / 700) : viewport
++        isResizeDriver ? CGSize(width: 410.0, height: 410.0 * 120.0 / 700.0) : viewport
+     }
+     private func viewport(for phase: Selection) -> CGSize {
+         isResizeDriver && phase == .clear ? initialViewport : viewport

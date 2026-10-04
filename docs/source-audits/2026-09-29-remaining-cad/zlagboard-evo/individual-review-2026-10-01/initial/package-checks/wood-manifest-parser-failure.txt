@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py", line 3198, in load_board_package
+    board = _load_board(_parse_board_document(raw_board, label))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py", line 1875, in _load_board
+    _closed(
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py", line 97, in _closed
+    raise ValueError(f"{source} has unknown keys: {sorted(unknown)}")
+ValueError: board.json has unknown keys: ['display']

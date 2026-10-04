@@ -1,0 +1,9 @@
+{
+  "capturedAX": "ui-modal-readonly-ax.stdout",
+  "commandExit0": true,
+  "parserFirstPassFailedOnNullLabel": true,
+  "rawBytesPreserved": true,
+  "visibleOpenCancelPairAbsent": true,
+  "noTapIssued": true,
+  "interpretation": "Previous run recordings established modal obstruction; current idle read finds no modal. Do not tap nonexistent buttons or infer current app readiness from old frames."
+}

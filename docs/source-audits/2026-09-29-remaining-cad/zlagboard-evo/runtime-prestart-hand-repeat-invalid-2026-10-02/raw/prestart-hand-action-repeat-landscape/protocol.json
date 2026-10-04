@@ -1,0 +1,20 @@
+{
+  "hardBoundSeconds": 300,
+  "plannedPhases": [
+    "active",
+    "preview",
+    "active"
+  ],
+  "captureOffsetsAfterActualMutation": [
+    0.25,
+    1,
+    3,
+    5
+  ],
+  "afterLaunchUIAccess": "screenshots only; no AX queries/taps/Skip",
+  "externalTracePollingSeconds": 0.03,
+  "routineUnchanged": true,
+  "samplerLimit": "Existing120-iteration sampler remains; new identical both-arm boundary census on actual highlight-before/after supplies sparse late-phase app/window/placement evidence, not every capture instant",
+  "arm": "prestart-hand-action-repeat",
+  "startup": "Prestart-hand action arm. Same new binary; normal Train structural unmount, ordinary ownership, real orthographic hands, weak lifetime census and sync counters. Original external20s Train attachment readiness and passive natural7/180/7 with12captures plus following-preview tail unchanged. Control flag absent; action alone adds SUPPRESS_PRESTART_HAND_HOSTS. Common source environment and bounded countdown records retained. No strict all-hand suppression, perspective or other experimental gates. Root must hash-gate valid failing control with earlier startup hand history before action; no reversal authorized. Sparse countdown callback is state evidence, not exact permission-edge timestamp. No training source timing or content changes."
+}

@@ -1,0 +1,20 @@
+{
+  "testedSourceSHA256": "e5389150b4181b13b0adffe1e3dc93aa6f6d5ea6c1afac024992f67c5268a854",
+  "correctedSourceSHA256": "7e6a250ba784952ef85a38842f4f1e8b58ffdd6a60ab6a4a7ae40402a9575ff0",
+  "changes": [
+    "Nature/Flash assert cadRoutedCord solved body/cord preserved and camera orbit; Rock Rings retains pivot displacement and now also fixed camera/cord assertions.",
+    "Nature/Flash family assertion requires cadRoutedCord; picking/collision assertions unchanged.",
+    "Shared-contact and NUG deselection require authored wood CustomMaterial; selected roughness/PBR and picking assertions preserved.",
+    "Penta all-position selection remains mandatory; additional per-instance matrix checks require pose*base exactly once, including primary."
+  ],
+  "productionBugReported": "Instance CAD adapter composed pose twice; parent owns/fixed production source. Test now detects exact composition.",
+  "livePhysicsTestUnchanged": true,
+  "livePhysicsFailure": "30-second settled-frame expectation and zero callback observed. No demonstrated cause; preserve raw failure and retry unchanged.",
+  "parseExit": 0,
+  "scopedDiffCheckExit": 0,
+  "testsExecutedByThisWorker": false,
+  "testMethodNamesPreserved": true,
+  "historicalFailureLog": ".context/placid-badger-cad-second-half/main-sync-2026-10-03/xctest-integration.stdout",
+  "failureLogNotRewritten": true,
+  "onlyProductTreeEdit": "HangTenTests/BoardModelRealityTests.swift"
+}

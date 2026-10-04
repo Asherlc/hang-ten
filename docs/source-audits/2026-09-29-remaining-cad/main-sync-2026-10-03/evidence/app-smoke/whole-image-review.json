@@ -1,0 +1,31 @@
+{
+  "scope": "Initial portrait hold-detail appearance only; no workout transition or human acceptance check",
+  "experimentalFrameRendererEnabled": false,
+  "simulatorUUID": "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+  "images": [
+    {
+      "path": "zlagboard.evo.png",
+      "classification": "FAIL",
+      "description": "First fresh launch captured at nominal 5 seconds: red selected pocket visible, remainder of board absent.",
+      "sha256": "d0f56ee9e410656cfab195c2bdf908a26a3f68ceb0043b37d405b5872ba7feef"
+    },
+    {
+      "path": "zlagboard.pro-2.png",
+      "classification": "INVALID",
+      "description": "Unregistered board ID; cannot validate Pro. Raw capture retained.",
+      "sha256": "b19683536441fd096ee2820bc5f0c3fc49fd6ddc67b20e0d7a7ea924b78674cc"
+    },
+    {
+      "path": "zlagboard.pro.png",
+      "classification": "PASS_APPEARANCE_ONLY",
+      "description": "Corrected Pro route shows wood body and red left20mm contact with matching text.",
+      "sha256": "d48774dbe65b05713b787dbdca28e3d3a7ba85275918a88e9ee1f3f3b0270bbf"
+    },
+    {
+      "path": "zlagboard.evo-settled.png",
+      "classification": "PASS_APPEARANCE_ONLY",
+      "description": "Separate fresh Evo launch at nominal15seconds shows wood body and red left20mm contact with matching text. Does not erase initial failure or establish exact latency.",
+      "sha256": "108c3692dfffd4607cd2185130f7a1d4d0f566b3d2e53c995f6b427e26b5d709"
+    }
+  ]
+}

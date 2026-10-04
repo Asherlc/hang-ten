@@ -1,0 +1,14 @@
+{
+  "status": "pass",
+  "scope": "Native authoring checks complete; exports and app/human acceptance pending",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "sourcePath": ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/metolius-simulator-3d.FCStd",
+  "sourceBytes": 9805957,
+  "beforeSourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "rawPlasticManifestExact": true,
+  "normalFlagsPreserved": true,
+  "nativeVisualGate": "pending root/Opus",
+  "exportGate": "not started",
+  "actualAppGate": "pending",
+  "humanAcceptance": "pending"
+}

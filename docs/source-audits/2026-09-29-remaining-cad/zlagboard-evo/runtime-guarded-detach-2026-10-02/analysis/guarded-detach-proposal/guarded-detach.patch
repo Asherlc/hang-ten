@@ -1,0 +1,193 @@
+--- a/HangTen/Models/BoardModelRealityTypes.swift
++++ b/HangTen/Models/BoardModelRealityTypes.swift
+@@ -1448,6 +1448,113 @@
+         let scene: UUID
+         let view: UUID
+     }
++    static let boardDetachTrial = isEnabled
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DETACH_TRIAL"] == "1"
++    private static let detachesTrainHost = boardDetachTrial
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_DETACH_DISAPPEARING_BOARD_HOST"] == "1"
++    @MainActor
++    private final class TrialHost {
++        let token = UUID()
++        // Intentional diagnostic retention, identical in control and action arms.
++        let model: BoardModelRealityScene
++        let train: Bool
++        weak var parent: Entity?
++        weak var actualScene: RealityKit.Scene?
++        var observed = false
++        var disappeared = false
++        var detached = false
++        var invalid: String?
++        init(model: BoardModelRealityScene, train: Bool) {
++            self.model = model; self.train = train
++        }
++    }
++    private var trialHosts: [ViewSceneKey: TrialHost] = [:]
++    private var trialOwners: [UUID: UUID] = [:]
++
++    /// Called only after both content.add calls. Scene attachment may still be pending.
++    func trialHostAdded(scene: BoardModelRealityScene, view: UUID, train: Bool) {
++        guard Self.boardDetachTrial else { return }
++        let key = ViewSceneKey(scene: scene.diagnosticLifecycleToken, view: view)
++        if let previous = trialHosts[key] {
++            // Observe normal repeated make, but never detach using ambiguous ownership.
++            previous.invalid = "repeated-make"
++            trialOwners[key.scene] = UUID()
++            return
++        }
++        let host = TrialHost(model: scene, train: train)
++        trialHosts[key] = host
++        trialOwners[key.scene] = host.token
++        observeTrialAttachment(scene: scene, view: view)
++    }
++
++    private func observeTrialAttachment(scene: BoardModelRealityScene, view: UUID) {
++        guard Self.boardDetachTrial,
++              let host = trialHosts[ViewSceneKey(scene: scene.diagnosticLifecycleToken, view: view)],
++              trialOwners[scene.diagnosticLifecycleToken] == host.token,
++              !host.disappeared, host.invalid == nil else { return }
++        let root = scene.root, camera = scene.camera
++        if host.observed {
++            guard let parent = host.parent, let actual = host.actualScene,
++                  root.parent === parent, camera.parent === parent,
++                  root.scene === actual, camera.scene === actual else {
++                host.invalid = "attachment-changed-before-disappear"; return
++            }
++        } else if let parent = root.parent, camera.parent === parent,
++                  let actual = root.scene, camera.scene === actual {
++            host.parent = parent; host.actualScene = actual; host.observed = true
++        }
++    }
++
++    private func trialHostSnapshot() -> [[String: Any]] {
++        trialHosts.keys.sorted { ($0.scene.uuidString + $0.view.uuidString)
++            < ($1.scene.uuidString + $1.view.uuidString) }.map { key in
++            let host = trialHosts[key]!
++            let root = host.model.root, camera = host.model.camera
++            return ["sceneLifecycleToken": key.scene.uuidString, "viewToken": key.view.uuidString,
++                "ownerToken": host.token.uuidString, "trainMarked": host.train,
++                "modelRetainedForTrial": true, "attachmentObserved": host.observed,
++                "currentOwner": trialOwners[key.scene] == host.token,
++                "disappeared": host.disappeared, "detached": host.detached,
++                "invalid": host.invalid ?? "nil",
++                "recordedParentID": host.parent.map(identity) ?? "nil",
++                "recordedActualSceneID": host.actualScene.map(identity) ?? "nil",
++                "rootParentID": root.parent.map(identity) ?? "nil",
++                "cameraParentID": camera.parent.map(identity) ?? "nil",
++                "rootActualSceneID": root.scene.map(identity) ?? "nil",
++                "cameraActualSceneID": camera.scene.map(identity) ?? "nil",
++                "reattachedAfterDetach": host.detached && (root.scene != nil || camera.scene != nil)]
++        }
++    }
++
++    func trialHostDisappeared(scene: BoardModelRealityScene, view: UUID) {
++        guard Self.boardDetachTrial else { return }
++        let key = ViewSceneKey(scene: scene.diagnosticLifecycleToken, view: view)
++        guard let host = trialHosts[key] else { return }
++        // Last synchronous ownership observation; no suspension between guard and action.
++        observeTrialAttachment(scene: scene, view: view)
++        let alreadyDisappeared = host.disappeared
++        host.disappeared = true
++        capture("detach-trial-before", scene: scene, view: view)
++        let root = scene.root, camera = scene.camera
++        if Self.detachesTrainHost && host.train {
++            if !alreadyDisappeared, host.invalid == nil, host.observed,
++               host.model === scene, trialOwners[key.scene] == host.token,
++               let parent = host.parent, let actual = host.actualScene,
++               root.parent === parent, camera.parent === parent,
++               root.scene === actual, camera.scene === actual {
++                // Never remove the shared parent or touch another host's entities.
++                root.removeFromParent()
++                camera.removeFromParent()
++                host.detached = root.parent == nil && camera.parent == nil
++                    && root.scene == nil && camera.scene == nil
++                if !host.detached { host.invalid = "detach-did-not-clear-scene-membership" }
++            } else {
++                host.invalid = host.invalid ?? "detach-ownership-guard-rejected"
++            }
++        }
++        capture("detach-trial-after", scene: scene, view: view)
++    }
++
+     private var samplers: [ViewSceneKey: Task<Void, Never>] = [:]
+     private var viewSignatures: [ViewSceneKey: String] = [:]
+     private var requestedIDs: [UUID: Set<String>] = [:]
+@@ -1841,6 +1948,11 @@
+             row["applicationCensus"] = applicationCensus()
+         }
+         row["boardRenderMembership"] = renderMembership(root: scene.root, camera: scene.camera)
++        if Self.boardDetachTrial {
++            if let view { observeTrialAttachment(scene: scene, view: view) }
++            row["boardDetachTrial"] = ["detachRequested": Self.detachesTrainHost,
++                "hosts": trialHostSnapshot()]
++        }
+         // After the existing view-update dedup guard; never part of its signature.
+         // No additional event or sample is scheduled for this census.
+         if Self.recordsPredecessorAttachments {
+--- a/HangTen/Views/BoardModelView.swift
++++ b/HangTen/Views/BoardModelView.swift
+@@ -164,6 +164,18 @@
+     }
+ }
+ 
++#if DEBUG
++private struct BoardDiagnosticTrainHostKey: EnvironmentKey {
++    static let defaultValue = false
++}
++extension EnvironmentValues {
++    var boardDiagnosticTrainHost: Bool {
++        get { self[BoardDiagnosticTrainHostKey.self] }
++        set { self[BoardDiagnosticTrainHostKey.self] = newValue }
++    }
++}
++#endif
++
+ struct BoardModelRealityView: View {
+     let model: BoardModelRealityScene
+     let boardName: String
+@@ -182,6 +194,7 @@
+     @State private var didReportUnavailable = false
+     #if DEBUG
+     @State private var diagnosticViewToken = UUID()
++    @Environment(\.boardDiagnosticTrainHost) private var diagnosticTrainHost
+     #endif
+ 
+     private var fieldOfViewDegrees: Double {
+@@ -229,6 +242,12 @@
+                 #endif
+                 content.add(model.root)
+                 content.add(model.camera)
++                #if DEBUG
++                if BoardHighlightDiagnostic.boardDetachTrial {
++                    BoardHighlightDiagnostic.shared.trialHostAdded(scene: model,
++                        view: diagnosticViewToken, train: diagnosticTrainHost)
++                }
++                #endif
+                 applySync(size: size)
+                 #if DEBUG
+                 if BoardHighlightDiagnostic.isEnabled {
+@@ -262,6 +281,8 @@
+             .onDisappear {
+                 #if DEBUG
+                 if BoardHighlightDiagnostic.isEnabled {
++                    BoardHighlightDiagnostic.shared.trialHostDisappeared(
++                        scene: model, view: diagnosticViewToken)
+                     BoardHighlightDiagnostic.shared.disappear(view: diagnosticViewToken, scene: model)
+                 }
+                 #endif
+--- a/HangTen/Views/TrainView.swift
++++ b/HangTen/Views/TrainView.swift
+@@ -165,6 +165,11 @@
+                     .cardPreviewStyle()
+                 #endif
+             }
++            #if DEBUG
++            .environment(\.boardDiagnosticTrainHost, BoardHighlightDiagnostic.boardDetachTrial
++                && store.selectedBoard.id == "zlagboard.evo"
++                && store.selectedBoard.presentations.count == 1)
++            #endif
+ 
+             VStack(alignment: .leading, spacing: 5) {
+                 SectionLabel(title: "Your board")

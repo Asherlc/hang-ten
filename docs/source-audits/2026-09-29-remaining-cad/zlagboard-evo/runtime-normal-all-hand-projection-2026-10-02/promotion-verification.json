@@ -1,0 +1,11 @@
+{
+  "createdUTC": "2026-10-03T00:09:12.937243+00:00",
+  "copiedRawFiles": 137,
+  "allRawHashesMatch": true,
+  "worker136FileFreezeVerified": true,
+  "previousPacketFilesCheckedUnchanged": 4288,
+  "manifestSHA256": "011a5eb80422b6fcce571c9c403ca7371abcd889de7a6c48581f5394dcea6f72",
+  "aggregateSHA256": "eb11463e888ab7e46369ddc1e8836b0c7f1531bdb2e9306514373a2d8a7eefcd",
+  "noSourceRuntimeIndexCommitMutation": true,
+  "unrelatedDeviceListsAndFrontendExcluded": true
+}

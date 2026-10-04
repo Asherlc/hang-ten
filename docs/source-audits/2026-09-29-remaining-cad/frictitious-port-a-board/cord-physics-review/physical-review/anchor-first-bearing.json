@@ -1,0 +1,256 @@
+{
+  "hashes": {
+    "frictitious-port-a-board.FCStd": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+    "assets/primary.usdz": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+    "assets/primary.model.json": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+    "suspension.json": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf"
+  },
+  "bodyValid": true,
+  "bodySolids": 1,
+  "bodyFaces": 126,
+  "nativeFeatures": [
+    {
+      "name": "LeftFrontCordEntryWell",
+      "type": "Part::Cylinder",
+      "shapeBounds": "BoundBox (-55.5, -25, -5.5, -44.5, -20, 5.5)",
+      "radius": 5.5,
+      "height": 5.0
+    },
+    {
+      "name": "LeftFrontEntryCut",
+      "type": "Part::Cut",
+      "shapeBounds": "BoundBox (-65.9774, -24, -71.9774, 65.9774, 24, 71.9774)",
+      "radius": null,
+      "height": null
+    },
+    {
+      "name": "LeftBackCordEntryWell",
+      "type": "Part::Cylinder",
+      "shapeBounds": "BoundBox (-55.5, 20, -5.5, -44.5, 25, 5.5)",
+      "radius": 5.5,
+      "height": 5.0
+    },
+    {
+      "name": "LeftBackEntryCut",
+      "type": "Part::Cut",
+      "shapeBounds": "BoundBox (-65.9774, -24, -71.9774, 65.9774, 24, 71.9774)",
+      "radius": null,
+      "height": null
+    },
+    {
+      "name": "RightFrontCordEntryWell",
+      "type": "Part::Cylinder",
+      "shapeBounds": "BoundBox (44.5, -25, -5.5, 55.5, -20, 5.5)",
+      "radius": 5.5,
+      "height": 5.0
+    },
+    {
+      "name": "RightFrontEntryCut",
+      "type": "Part::Cut",
+      "shapeBounds": "BoundBox (-65.9774, -24, -71.9774, 65.9774, 24, 71.9774)",
+      "radius": null,
+      "height": null
+    },
+    {
+      "name": "RightBackCordEntryWell",
+      "type": "Part::Cylinder",
+      "shapeBounds": "BoundBox (44.5, 20, -5.5, 55.5, 25, 5.5)",
+      "radius": 5.5,
+      "height": 5.0
+    },
+    {
+      "name": "RightBackEntryCut",
+      "type": "Part::Cut",
+      "shapeBounds": "BoundBox (-65.9774, -24, -71.9774, 65.9774, 24, 71.9774)",
+      "radius": null,
+      "height": null
+    }
+  ],
+  "uprightFirstBearingAnalysis": {
+    "left-front": {
+      "firstRoutePointRuntime": [
+        -0.038775201,
+        0.066598219,
+        0.025668154
+      ],
+      "nextPointRuntime": [
+        -0.038788944,
+        0.066517497,
+        0.025676104
+      ],
+      "supportLocalRuntime": [
+        0.0,
+        0.29409166000000003,
+        0.0
+      ],
+      "distanceToNativeWoodMM": 1.6996347023012763,
+      "nearestWoodPointRuntime": [
+        -0.03877520100000001,
+        0.06641982971277684,
+        0.023977906863196993
+      ],
+      "nearestFaces": [
+        {
+          "face": 69,
+          "type": "<class 'Part.Cylinder'>",
+          "normalRuntime": [
+            -0.0,
+            0.10495742819420774,
+            0.9944767157992478
+          ]
+        }
+      ],
+      "unitTensionSumRuntime": [
+        -5.808249209274252e-05,
+        -0.0014597152123221324,
+        -0.013909788906788942
+      ],
+      "kinkTurnDegrees": 0.8013620458441454,
+      "tangentForceMagnitudeByFace": [
+        {
+          "face": 69,
+          "magnitude": 5.8670111549844623e-05
+        }
+      ]
+    },
+    "left-rear": {
+      "firstRoutePointRuntime": [
+        -0.038775201,
+        0.066598219,
+        -0.025668154
+      ],
+      "nextPointRuntime": [
+        -0.038788944,
+        0.066517497,
+        -0.025676104
+      ],
+      "supportLocalRuntime": [
+        0.0,
+        0.29409166000000003,
+        0.0
+      ],
+      "distanceToNativeWoodMM": 1.6996347023012728,
+      "nearestWoodPointRuntime": [
+        -0.03877520100000001,
+        0.06641982971277684,
+        -0.023977906863196997
+      ],
+      "nearestFaces": [
+        {
+          "face": 9,
+          "type": "<class 'Part.Cylinder'>",
+          "normalRuntime": [
+            0.0,
+            0.10495742819420774,
+            -0.9944767157992478
+          ]
+        }
+      ],
+      "unitTensionSumRuntime": [
+        -5.808249209274252e-05,
+        -0.0014597152123221324,
+        0.013909788906788942
+      ],
+      "kinkTurnDegrees": 0.8013620458441454,
+      "tangentForceMagnitudeByFace": [
+        {
+          "face": 9,
+          "magnitude": 5.8670111549844623e-05
+        }
+      ]
+    },
+    "right-front": {
+      "firstRoutePointRuntime": [
+        0.038775201,
+        0.066598219,
+        0.025668154
+      ],
+      "nextPointRuntime": [
+        0.038788944,
+        0.066517497,
+        0.025676104
+      ],
+      "supportLocalRuntime": [
+        0.0,
+        0.29409166000000003,
+        0.0
+      ],
+      "distanceToNativeWoodMM": 1.6996347023012763,
+      "nearestWoodPointRuntime": [
+        0.038775201,
+        0.06641982971277684,
+        0.023977906863196993
+      ],
+      "nearestFaces": [
+        {
+          "face": 69,
+          "type": "<class 'Part.Cylinder'>",
+          "normalRuntime": [
+            -0.0,
+            0.10495742819420774,
+            0.9944767157992478
+          ]
+        }
+      ],
+      "unitTensionSumRuntime": [
+        5.808249209274252e-05,
+        -0.0014597152123221324,
+        -0.013909788906788942
+      ],
+      "kinkTurnDegrees": 0.8013620458441454,
+      "tangentForceMagnitudeByFace": [
+        {
+          "face": 69,
+          "magnitude": 5.8670111549844623e-05
+        }
+      ]
+    },
+    "right-rear": {
+      "firstRoutePointRuntime": [
+        0.038775201,
+        0.066598219,
+        -0.025668154
+      ],
+      "nextPointRuntime": [
+        0.038788944,
+        0.066517497,
+        -0.025676104
+      ],
+      "supportLocalRuntime": [
+        0.0,
+        0.29409166000000003,
+        0.0
+      ],
+      "distanceToNativeWoodMM": 1.6996347023012728,
+      "nearestWoodPointRuntime": [
+        0.038775201,
+        0.06641982971277684,
+        -0.023977906863196997
+      ],
+      "nearestFaces": [
+        {
+          "face": 9,
+          "type": "<class 'Part.Cylinder'>",
+          "normalRuntime": [
+            0.0,
+            0.10495742819420774,
+            -0.9944767157992478
+          ]
+        }
+      ],
+      "unitTensionSumRuntime": [
+        5.808249209274252e-05,
+        -0.0014597152123221324,
+        0.013909788906788942
+      ],
+      "kinkTurnDegrees": 0.8013620458441454,
+      "tangentForceMagnitudeByFace": [
+        {
+          "face": 9,
+          "magnitude": 5.8670111549844623e-05
+        }
+      ]
+    }
+  },
+  "sourceSaved": false
+}

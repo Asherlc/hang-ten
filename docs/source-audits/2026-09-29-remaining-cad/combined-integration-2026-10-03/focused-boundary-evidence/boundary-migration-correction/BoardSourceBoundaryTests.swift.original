@@ -1,0 +1,974 @@
+import XCTest
+@testable import HangTen
+
+final class BoardSourceBoundaryTests: XCTestCase {
+    private enum PackageDiscoveryError: Error {
+        case invalidRootChild(String)
+        case invalidAssetPath(String)
+    }
+
+    func testCatalogContainsExactlyRegisteredPackageBoards() {
+        let expectedIDs = [
+            "aelith.cyclops-011",
+            "beastmaker-1000",
+            "beastmaker-2000",
+            "captain-fingerfood.dual",
+            "captain-fingerfood.pocket",
+            "captain-fingerfood.unlevel",
+            "clavellium-training-block",
+            "crimptonite.helium-mobile",
+            "dewoodstok-woodbord",
+            "escape-beta-22",
+            "escape.unlimited",
+            "evolv-kilter-basic-long",
+            "frictitious.doormount-pro-7",
+            "frictitious.megalith",
+            "frictitious.nug",
+            "frictitious.port-a-board",
+            "j-bryant.ftg-32",
+            "lattice-triple-rung",
+            "lattice.mini-bar",
+            "lattice.mxedge-lift-large",
+            "lattice.mxedge-lift-small",
+            "mammut.diamond-finger",
+            "metolius.climbers-edge",
+            "metolius.contact",
+            "metolius.foundry",
+            "metolius.light-rail-2",
+            "metolius.prime-rib",
+            "metolius.project",
+            "metolius.rock-rings-3d",
+            "metolius.simulator-3d",
+            "metolius.wood-grips-compact-ii",
+            "metolius.wood-grips-deluxe-ii",
+            "moon.armstrong",
+            "nature.stoak-board-iii",
+            "nature.stone-hanger",
+            "nature.stone-hanger-mini",
+            "nature.stone-hanger-mini-karma8a",
+            "owl-climb.poker",
+            "plateau.lifting-edge",
+            "soill.iron-palm-2",
+            "soill.split-palm",
+            "soill.training-tiles",
+            "surfaces-for-climbing-transgression-2011",
+            "surfaces-for-climbing-transgression-2013",
+            "target10a.linebreaker-base",
+            "tension.flash-board",
+            "tension.grindstone",
+            "tension.grindstone-original",
+            "tension.grindstone-pro",
+            "tension.honestone",
+            "tension.whetstone",
+            "the-hangboard.the-hangboard",
+            "trango.rock-prodigy-forge",
+            "trango.rock-prodigy-natural",
+            "trango.rock-prodigy-pivot",
+            "trango.rock-prodigy-training-center",
+            "yy.baguette",
+            "yy.baguette-evo",
+            "yy.penta-evo",
+            "yy.travelboard",
+            "yy.verticalboard-evo",
+            "yy.verticalboard-first",
+            "yy.verticalboard-light",
+            "yy.verticalboard-one",
+            "zlagboard.evo",
+            "zlagboard.pro",
+        ]
+
+        XCTAssertEqual(
+            BoardCatalog.all.map(\.id).sorted(),
+            expectedIDs
+        )
+    }
+
+    func testCompactUsesPackageModelNotStandaloneResource() throws {
+        XCTAssertNil(
+            Bundle.main.url(
+                forResource: "wood-grips-compact-ii",
+                withExtension: "usdz",
+                subdirectory: "BoardModels"
+            )
+        )
+
+        let compact = try XCTUnwrap(
+            BoardCatalog.board(for: "metolius.wood-grips-compact-ii")
+        )
+        guard case .model(let model) = compact.defaultPresentation.media else {
+            return XCTFail("Compact II must use model media")
+        }
+        XCTAssertEqual(model.assetPath, "assets/primary.usdz")
+        XCTAssertEqual(model.descriptorPath, "assets/primary.model.json")
+        XCTAssertNil(BoardCatalog.packageStore.presentationAssetURL(for: compact))
+        XCTAssertEqual(
+            BoardCatalog.packageStore.modelResource(for: compact),
+            BoardModelResource(
+                packageSlug: "metolius-wood-grips-compact-ii",
+                assetPath: "assets/primary.usdz"
+            )
+        )
+        XCTAssertTrue(
+            try XCTUnwrap(
+                BoardCatalog.packageStore.presentationDescriptorURL(for: compact)
+            ).path.hasSuffix(
+                "/Hangboards/metolius-wood-grips-compact-ii/assets/primary.model.json"
+            )
+        )
+        XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: compact))
+    }
+
+    func testEveryCatalogBoardUsesItsDefaultPackagePresentationAsset() throws {
+        let repositoryRoot = repositoryRootURL()
+        let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
+
+        for board in BoardCatalog.all {
+            let packagePath = try XCTUnwrap(packagePaths[board.id])
+            let bundledDocumentURL = try XCTUnwrap(Bundle.main.resourceURL)
+                .appendingPathComponent("Hangboards", isDirectory: true)
+                .appendingPathComponent(packagePath, isDirectory: true)
+                .appendingPathComponent("board.json")
+            let bundledDocument = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: bundledDocumentURL)) as? [String: Any]
+            )
+            XCTAssertEqual(bundledDocument["id"] as? String, board.id)
+            let sourcePackageURL = repositoryRoot
+                .appendingPathComponent("Hangboards", isDirectory: true)
+                .appendingPathComponent(packagePath, isDirectory: true)
+            // A CAD-backed package has no checked-in board.json; its document is
+            // the one staging generated from the FCStd (verified byte-exact by
+            // the Python staging tests).
+            let documentURL = try XCTUnwrap(
+                BoardSourceBoundaryAudit.boardDocumentURL(forPackageAt: sourcePackageURL)
+            )
+            let document = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: documentURL)) as? [String: Any]
+            )
+            XCTAssertEqual(try Data(contentsOf: bundledDocumentURL), try Data(contentsOf: documentURL))
+            let presentations = try XCTUnwrap(document["presentations"] as? [[String: Any]])
+            let defaultPresentation = try XCTUnwrap(
+                presentations.first { ($0["isDefault"] as? Bool) == true }
+            )
+            let media = try XCTUnwrap(defaultPresentation["media"] as? [String: Any])
+            let defaultAssetPath = try XCTUnwrap(media["assetPath"] as? String)
+            switch board.defaultPresentation.media {
+            case .raster:
+                let expectedAssetURL = Bundle.main.resourceURL!
+                    .appendingPathComponent("Hangboards", isDirectory: true)
+                    .appendingPathComponent(packagePath, isDirectory: true)
+                    .appendingPathComponent(defaultAssetPath)
+                    .standardizedFileURL
+                let imageURL = try XCTUnwrap(
+                    BoardCatalog.packageStore.presentationImageURL(for: board)
+                )
+                XCTAssertEqual(imageURL.standardizedFileURL, expectedAssetURL)
+            case .model(let model):
+                let descriptorPath = try XCTUnwrap(media["descriptorPath"] as? String)
+                let expectedDescriptorURL = Bundle.main.resourceURL!
+                    .appendingPathComponent("Hangboards", isDirectory: true)
+                    .appendingPathComponent(packagePath, isDirectory: true)
+                    .appendingPathComponent(descriptorPath)
+                    .standardizedFileURL
+
+                XCTAssertEqual(model.assetPath, defaultAssetPath)
+                XCTAssertEqual(model.descriptorPath, descriptorPath)
+                XCTAssertNil(BoardCatalog.packageStore.presentationAssetURL(for: board))
+                XCTAssertEqual(
+                    try XCTUnwrap(
+                        BoardCatalog.packageStore.presentationDescriptorURL(for: board)
+                    ).standardizedFileURL,
+                    expectedDescriptorURL
+                )
+                let sourceDescriptorURL = sourcePackageURL
+                    .appendingPathComponent(descriptorPath)
+                XCTAssertEqual(
+                    try Data(contentsOf: expectedDescriptorURL),
+                    try Data(contentsOf: sourceDescriptorURL)
+                )
+                XCTAssertEqual(
+                    BoardCatalog.packageStore.modelResource(for: board),
+                    BoardModelResource(
+                        packageSlug: packagePath,
+                        assetPath: defaultAssetPath
+                    )
+                )
+                XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board))
+            }
+        }
+    }
+
+    func testBundledBoardContentUsesSchemaVersionThree() throws {
+        let repositoryRoot = repositoryRootURL()
+        let boardURLs = try BoardSourceBoundaryAudit.bundledBoardDocumentURLs(
+            at: repositoryRoot
+        )
+
+        XCTAssertFalse(boardURLs.isEmpty)
+        for boardURL in boardURLs {
+            let boardDocument = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
+            )
+            XCTAssertEqual(
+                boardDocument["schemaVersion"] as? Int,
+                3,
+                "Every bundled board package must use schema version 3: \(boardURL.path)."
+            )
+        }
+
+        let planURL = repositoryRoot
+            .appendingPathComponent("HangTen/Resources/PlanLibrary.json")
+        let planDocument = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: Data(contentsOf: planURL)) as? [String: Any]
+        )
+        let metadata = try XCTUnwrap(planDocument["metadata"] as? [String: Any])
+
+        XCTAssertNil(planDocument["schemaVersion"])
+        XCTAssertNil(metadata["version"])
+    }
+
+    func testEveryBuiltInPlanTargetResolvesOnItsPackageBoard() {
+        for plan in PlanCatalog.all {
+            // Board-agnostic catalog plans intentionally soft-fall to
+            // self-selected recording when the athlete's board lacks a matching
+            // depth. The hard invariant is package-bound plans only.
+            guard let boardID = plan.boardID else { continue }
+            let board = BoardCatalog.board(for: boardID)
+
+            for step in plan.steps {
+                for target in step.workRequirements {
+                    XCTAssertFalse(
+                        (try? ContactResolver.resolve(target, step: step, board: board))?.isEmpty ?? true,
+                        "Expected target in \(plan.id)/\(step.id) to resolve on \(board.id)."
+                    )
+                }
+            }
+        }
+    }
+
+    func testLegacyBoardDeliveryArtifactsAreAbsent() {
+        let repositoryRoot = repositoryRootURL()
+        let forbiddenRelativePaths = [
+            "HangTen/Models/GeneratedBoardCatalog.swift",
+            "HangTen/Resources/BoardLibrary.json",
+            "HangTen/Views/MetoliusCompactIIDesign.swift",
+            "HangTen/Views/RockProdigyTrainingCenterDesign.swift",
+            "HangTen/Resources/Assets.xcassets/CompactBoard.imageset",
+            "HangTen/Resources/Assets.xcassets/CompactBoardIllustration.imageset",
+            "HangTen/Views/BoardDesignLanguage.swift"
+        ]
+
+        for relativePath in forbiddenRelativePaths {
+            XCTAssertFalse(
+                FileManager.default.fileExists(
+                    atPath: repositoryRoot.appendingPathComponent(relativePath).path
+                ),
+                "Remove redundant board delivery artifact \(relativePath)."
+            )
+        }
+
+        let projectURL = repositoryRoot
+            .appendingPathComponent("HangTen.xcodeproj", isDirectory: true)
+            .appendingPathComponent("project.pbxproj")
+        let project = try? String(contentsOf: projectURL, encoding: .utf8)
+        XCTAssertNotNil(project)
+        for artifactName in [
+            "GeneratedBoardCatalog.swift",
+            "BoardLibrary.json",
+            "MetoliusCompactIIDesign.swift",
+            "RockProdigyTrainingCenterDesign.swift",
+            "BoardDesignLanguage.swift"
+        ] {
+            XCTAssertFalse(
+                project?.contains(artifactName) == true,
+                "Remove the stale Xcode project reference to \(artifactName)."
+            )
+        }
+    }
+
+    /// Checks each catalog package against the declared raster or model-only asset boundary.
+    func testEveryCatalogPackageMatchesTypedMediaBoundary() throws {
+        let repositoryRoot = repositoryRootURL()
+        let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
+        let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
+        let migratedModelBoardIDs: Set<String> = [
+            "aelith.cyclops-011",
+            "frictitious.nug",
+            "frictitious.port-a-board",
+            "nature.stone-hanger-mini",
+            "nature.stone-hanger-mini-karma8a",
+            "plateau.lifting-edge",
+            "yy.baguette",
+            "yy.travelboard",
+            "frictitious.doormount-pro-7",
+            "frictitious.megalith",
+            "trango.rock-prodigy-forge",
+            "trango.rock-prodigy-natural",
+            "zlagboard.evo",
+            "zlagboard.pro",
+            "beastmaker-1000",
+            "beastmaker-2000",
+            "captain-fingerfood.dual",
+            "captain-fingerfood.pocket",
+            "captain-fingerfood.unlevel",
+            "clavellium-training-block",
+            "crimptonite.helium-mobile",
+            "dewoodstok-woodbord",
+            "escape-beta-22",
+            "escape.unlimited",
+            "evolv-kilter-basic-long",
+            "j-bryant.ftg-32",
+            "lattice-triple-rung",
+            "lattice.mini-bar",
+            "lattice.mxedge-lift-large",
+            "lattice.mxedge-lift-small",
+            "mammut.diamond-finger",
+            "metolius.foundry",
+            "metolius.light-rail-2",
+            "metolius.prime-rib",
+            "metolius.project",
+            "metolius.rock-rings-3d",
+            "metolius.wood-grips-compact-ii",
+            "metolius.wood-grips-deluxe-ii",
+            "moon.armstrong",
+            "nature.stoak-board-iii",
+            "nature.stone-hanger",
+            "owl-climb.poker",
+            "tension.flash-board",
+            "tension.grindstone",
+            "tension.grindstone-pro",
+            "tension.grindstone-original",
+            "tension.honestone",
+            "tension.whetstone",
+            "trango.rock-prodigy-pivot",
+            "metolius.climbers-edge",
+            "metolius.contact",
+            "metolius.simulator-3d",
+            "soill.iron-palm-2",
+            "soill.split-palm",
+            "soill.training-tiles",
+            "surfaces-for-climbing-transgression-2011",
+            "surfaces-for-climbing-transgression-2013",
+            "the-hangboard.the-hangboard",
+            "trango.rock-prodigy-training-center",
+            "target10a.linebreaker-base",
+            "yy.baguette-evo",
+            "yy.penta-evo",
+            "yy.verticalboard-first",
+            "yy.verticalboard-light",
+            "yy.verticalboard-one",
+            "yy.verticalboard-evo"
+        ]
+
+        XCTAssertFalse(
+            FileManager.default.fileExists(
+                atPath: hangboardsURL.appendingPathComponent("catalog.json").path
+            )
+        )
+
+        for board in BoardCatalog.all {
+            let packagePath = try XCTUnwrap(packagePaths[board.id])
+            let packageURL = hangboardsURL
+                .appendingPathComponent(packagePath, isDirectory: true)
+            let boardDocument = try XCTUnwrap(
+                JSONSerialization.jsonObject(
+                    with: Data(contentsOf: try XCTUnwrap(
+                        BoardSourceBoundaryAudit.boardDocumentURL(forPackageAt: packageURL)
+                    ))
+                ) as? [String: Any]
+            )
+            let holds = try XCTUnwrap(boardDocument["contacts"] as? [[String: Any]])
+            let packageEntries = try Set(
+                FileManager.default.contentsOfDirectory(atPath: packageURL.path)
+            )
+            let assetPaths = try packageRelativeAssetPaths(in: packageURL)
+
+            // CAD authoring sidecars are distinct from the declared runtime assets.
+            let authoringSource = "\(packagePath).FCStd"
+            let extraEntries = packageEntries.subtracting(["assets", "board.json"])
+            XCTAssertTrue(
+                extraEntries.isEmpty || extraEntries == [authoringSource]
+                    || extraEntries == [authoringSource, "suspension.json"]
+                    || extraEntries == [authoringSource, "suspension.json", "rope-physics.json"],
+                "unexpected package entries: \(extraEntries.sorted())"
+            )
+            if packageEntries.contains(authoringSource) {
+                XCTAssertFalse(
+                    packageEntries.contains("board.json"),
+                    "CAD-backed package \(packagePath) must not commit board.json"
+                )
+            }
+            XCTAssertEqual(boardDocument["schemaVersion"] as? Int, 3)
+            XCTAssertNil(boardDocument["presentation"])
+            let presentations = try XCTUnwrap(
+                boardDocument["presentations"] as? [[String: Any]]
+            )
+            let declaredAssets = Set(presentations.flatMap { presentation -> [String] in
+                guard let media = presentation["media"] as? [String: Any],
+                      let assetPath = media["assetPath"] as? String else {
+                    return []
+                }
+                var paths = [assetPath]
+                if let descriptorPath = media["descriptorPath"] as? String {
+                    paths.append(descriptorPath)
+                }
+                if let physicsPath = media["physicsDescriptorPath"] as? String {
+                    paths.append(physicsPath)
+                }
+                return paths
+            })
+            XCTAssertEqual(assetPaths, declaredAssets)
+            XCTAssertEqual(boardDocument["id"] as? String, board.id)
+            XCTAssertFalse(holds.isEmpty)
+            XCTAssertTrue(holds.allSatisfy { $0["cueStyle"] == nil })
+
+            switch board.defaultPresentation.media {
+            case .raster(let media):
+                XCTAssertFalse(
+                    migratedModelBoardIDs.contains(board.id),
+                    "Migrated board \(board.id) must not retain raster media."
+                )
+                XCTAssertFalse(media.contactGeometry.isEmpty)
+                let logicalHoldIDs = Set(holds.compactMap { $0["id"] as? String })
+                var originalRasterHoldIDs = Set<String>()
+                XCTAssertTrue(
+                    presentations.allSatisfy { presentation in
+                        guard let media = presentation["media"] as? [String: Any] else {
+                            return false
+                        }
+                        return media["type"] as? String == "raster"
+                    }
+                )
+                for presentation in presentations {
+                    guard let presentationMedia = presentation["media"] as? [String: Any],
+                          presentationMedia["type"] as? String == "raster",
+                          let holdGeometry = presentationMedia["contactGeometry"] as? [String: Any]
+                    else {
+                        continue
+                    }
+                    let derivationType =
+                        (presentation["derivation"] as? [String: Any])?["type"] as? String
+                    if derivationType == "original" {
+                        let presentationHoldIDs = Set(holdGeometry.keys)
+                        XCTAssertTrue(
+                            originalRasterHoldIDs.isDisjoint(with: presentationHoldIDs),
+                            "Original raster presentations must own each logical hold once."
+                        )
+                        originalRasterHoldIDs.formUnion(presentationHoldIDs)
+                    }
+                    for (holdID, rawPieces) in holdGeometry {
+                        XCTAssertTrue(logicalHoldIDs.contains(holdID))
+                        guard let pieces = rawPieces as? [[String: Any]] else {
+                            XCTFail("Raster holdGeometry for \(holdID) must be an array of pieces.")
+                            continue
+                        }
+                        XCTAssertFalse(
+                            pieces.isEmpty,
+                            "Raster holdGeometry for \(holdID) must contain a piece."
+                        )
+                    }
+                }
+                XCTAssertEqual(
+                    originalRasterHoldIDs,
+                    logicalHoldIDs,
+                    "Original raster media must cover every logical hold exactly once."
+                )
+            case .model:
+                XCTAssertTrue(
+                    migratedModelBoardIDs.contains(board.id),
+                    "Only migrated boards may use model media."
+                )
+                var modelAssets = Set<String>()
+                for presentation in board.presentations {
+                    guard case .model(let model) = presentation.media else { continue }
+                    modelAssets.formUnion([model.assetPath, model.descriptorPath])
+                    if let physicsPath = model.physicsDescriptorPath {
+                        modelAssets.insert(physicsPath)
+                        XCTAssertNotNil(try BoardCatalog.packageStore.presentationPhysicsInput(
+                            for: board, presentationID: presentation.id))
+                    }
+                }
+                if packageEntries.contains("rope-physics.json") {
+                    XCTAssertTrue(board.presentations.contains { presentation in
+                        guard case .model(let model) = presentation.media else { return false }
+                        return model.physicsDescriptorPath != nil
+                    })
+                }
+                XCTAssertEqual(assetPaths, modelAssets)
+                XCTAssertTrue(
+                    presentations.allSatisfy { presentation in
+                        guard let media = presentation["media"] as? [String: Any] else {
+                            return false
+                        }
+                        return media["type"] as? String == "model"
+                    }
+                )
+                XCTAssertFalse(assetPaths.contains { $0.hasSuffix(".png") })
+                XCTAssertTrue(holds.allSatisfy {
+                    $0["geometry"] == nil && $0["presentationID"] == nil
+                })
+                for presentation in board.presentations {
+                    guard case .model(let media) = presentation.media else { continue }
+                    XCTAssertEqual(Set(media.descriptor.contacts.keys),
+                                   Set(board.contacts(in: presentation).map(\.id)), presentation.id)
+                }
+            }
+        }
+    }
+
+    func testPackageAssetBoundaryEnumerationPreservesNestedPathsAndEqualBasenames() throws {
+        let packageURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("BoardSourceBoundaryTests-\(UUID().uuidString)")
+        let frontURL = packageURL.appendingPathComponent("assets/front/shared.png")
+        let rearURL = packageURL.appendingPathComponent("assets/rear/shared.png")
+        try FileManager.default.createDirectory(
+            at: frontURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try FileManager.default.createDirectory(
+            at: rearURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try Data([0]).write(to: frontURL)
+        try Data([1]).write(to: rearURL)
+        defer { try? FileManager.default.removeItem(at: packageURL) }
+
+        XCTAssertEqual(
+            try packageRelativeAssetPaths(in: packageURL),
+            ["assets/front/shared.png", "assets/rear/shared.png"]
+        )
+    }
+
+    func testBoardMapUsesOnePhysicalPathForHighlightingAndHitTesting() throws {
+        let repositoryRoot = repositoryRootURL()
+        let sourceURL = repositoryRoot
+            .appendingPathComponent("HangTen/Views/BoardMapView.swift")
+        let source = try String(contentsOf: sourceURL, encoding: .utf8)
+
+        XCTAssertTrue(source.contains("BoardPresentationImage"))
+        XCTAssertTrue(source.contains("BoardContactPathShape(pieces: pieces)"))
+        XCTAssertTrue(source.contains(".contentShape(.interaction, shape)"))
+        XCTAssertTrue(source.contains(".contentShape(.accessibility, shape)"))
+        XCTAssertTrue(source.contains(".accessibilityElement(children: .combine)"))
+        XCTAssertFalse(source.contains("contentShape(Rectangle())"))
+        XCTAssertFalse(source.contains("Canvas("))
+        XCTAssertFalse(source.contains("BoardDesign"))
+    }
+
+    func testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds() throws {
+        let repositoryRoot = repositoryRootURL()
+        let sourceURL = repositoryRoot
+            .appendingPathComponent("HangTen/Views/BoardMapView.swift")
+        let source = try String(contentsOf: sourceURL, encoding: .utf8)
+
+        XCTAssertTrue(source.contains("let boardBounds = proxy.size"))
+        let physicalHoldVisualFrame =
+            "                                )\n" +
+            "                                .frame(width: boardBounds.width, height: boardBounds.height)\n" +
+            "                            }\n" +
+            "                        }\n" +
+            "                        .frame(width: boardBounds.width, height: boardBounds.height)"
+        XCTAssertTrue(
+            source.contains(physicalHoldVisualFrame),
+            "Each PhysicalHoldVisual must receive the board's explicit bounds."
+        )
+        let holdFrameRange = try XCTUnwrap(source.range(of: physicalHoldVisualFrame))
+        let modelStart = try XCTUnwrap(source.range(of: "                case .model:",
+                                                  range: holdFrameRange.upperBound..<source.endIndex))
+        let rasterSource = source[holdFrameRange.lowerBound..<modelStart.lowerBound]
+        let outerZStackFrame =
+            "                            }\n" +
+            "                        }\n" +
+            "                        .frame(width: boardBounds.width, height: boardBounds.height)"
+        XCTAssertTrue(
+            rasterSource.contains(outerZStackFrame),
+            "The raster board ZStack must receive explicit bounds before later modifiers."
+        )
+    }
+
+    func testBoundaryAuditAllowsOnlyScopedDisplayModelBindings() {
+        let binding = "enum BoardModelIdentity { static let boardID = \"metolius.wood-grips-compact-ii\" }"
+        let literals: Set<String> = ["metolius.wood-grips-compact-ii"]
+        XCTAssertTrue(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/BoardModelView.swift", source: binding,
+            packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/OtherView.swift", source: binding,
+            packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/BoardModelView.swift",
+            source: binding.replacingOccurrences(of: "metolius.wood-grips-compact-ii", with: "fixture.board"),
+            packageOwnedLiterals: ["fixture.board"]
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/BoardModelView.swift",
+            source: binding + "\nlet outside = \"metolius.wood-grips-compact-ii\"", packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/BoardModelView.swift",
+            source: "enum BoardModelIdentity { let hold = PhysicalContact() }", packageOwnedLiterals: literals
+        ).isEmpty)
+    }
+
+    func testBoundaryAuditAllowsOnlyTheScopedCatalogDefaultBoardBinding() {
+        let binding = """
+        enum BoardCatalog {
+            static let defaultBoard: BoardRevision = {
+                let boardID = "metolius.wood-grips-compact-ii"
+                return packageStore.board(id: boardID)!
+            }()
+        }
+        """
+        let literals: Set<String> = ["metolius.wood-grips-compact-ii"]
+
+        XCTAssertTrue(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Models/TrainingModels.swift",
+            source: binding,
+            packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/OtherView.swift",
+            source: binding,
+            packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Models/TrainingModels.swift",
+            source: binding + "\nlet planTarget = \"metolius.wood-grips-compact-ii\"",
+            packageOwnedLiterals: literals
+        ).isEmpty)
+    }
+
+    func testBoundaryAuditRejectsAssetLiteralsInsideDisplayModelIdentity() {
+        let source = """
+        enum BoardModelIdentity {
+            static let boardID = "metolius.wood-grips-compact-ii"
+            static let image = "assets/primary.png"
+        }
+        """
+
+        XCTAssertEqual(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Views/BoardModelView.swift",
+                source: source,
+                packageOwnedLiterals: ["metolius.wood-grips-compact-ii", "assets/primary.png"]
+            ),
+            ["HangTen/Views/BoardModelView.swift: package-owned literal assets/primary.png"]
+        )
+    }
+
+    func testBoundaryAuditPreservesQuotedSubstringMatching() {
+        let path = "HangTen/Views/Fixture.swift"
+        let literals: Set<String> = [
+            "", "a", "aa", "a\\", "\\", "\"", "a\"a", "\"a", "a\"",
+            "\"\u{301}", "\u{301}", "é", "e\u{301}", "K", "K", "a\u{301}", "\n"
+        ]
+        // Exercise every adjacent quote pair, including escaped quotes and quotes
+        // inside a literal. This audit matches raw source, not parsed strings.
+        let sources = [
+            "", "a", "\"a", "a\"", "\"a\"", "\"a\"a\"", "\"\"\"",
+            #"\"a\""#, #""a\""#, #""a"a""#, "\"\n\"",
+            "\"\u{301}\"", "\"\"\u{301}", "\"a\"\u{301}",
+            "\"e\u{301}\"", "\"é\"", "\"K\"", "\"K\"",
+            "\"a\"\u{301}\"a\"", "\"\"\u{301}\""
+        ]
+        for source in sources {
+            let expected = literals.filter { source.contains("\"\($0)\"") }
+                .map { "\(path): package-owned literal \($0)" }
+                + literals.filter { path.contains($0) }
+                .map { "\(path): package-owned path literal \($0)" }
+            XCTAssertEqual(
+                BoardSourceBoundaryAudit.findings(
+                    relativePath: path, source: source, packageOwnedLiterals: literals
+                ).sorted(),
+                expected.sorted(),
+                "Raw quoted-substring behavior changed for \(source.debugDescription)"
+            )
+        }
+    }
+
+    func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {
+        let repositoryRoot = repositoryRootURL()
+        let packageOwnedLiterals = try packageOwnedLiterals(at: repositoryRoot)
+        let sourceURLs = try appSourceAndResourceURLs(at: repositoryRoot)
+
+        var findings: [String] = []
+        for sourceURL in sourceURLs {
+            let relativePath = sourceURL.path.replacingOccurrences(
+                of: repositoryRoot.path + "/",
+                with: ""
+            )
+            let source = (try? String(contentsOf: sourceURL, encoding: .utf8)) ?? ""
+            findings.append(
+                contentsOf: BoardSourceBoundaryAudit.findings(
+                    relativePath: relativePath,
+                    source: source,
+                    packageOwnedLiterals: packageOwnedLiterals
+                )
+            )
+        }
+
+        XCTAssertEqual(
+            findings.sorted(),
+            [],
+            "Board metadata, mappings, assets, and concrete geometry belong only in approved Hangboards packages."
+        )
+    }
+
+    func testBoundaryAuditAllowsFactualPlanRequirements() {
+        let requirement = "ContactRequirement(kind: .edge, selection: .bilateralPair)"
+
+        XCTAssertEqual(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/TrainingModels.swift",
+                source: requirement,
+                packageOwnedLiterals: []
+            ),
+            []
+        )
+        XCTAssertFalse(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/TrainingModels.swift",
+                source: #"let image = BoardPresentation(assetPath: "assets/primary.png")"#,
+                packageOwnedLiterals: ["assets/primary.png"]
+            ).isEmpty
+        )
+        XCTAssertFalse(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/UnauthorizedGeometry.swift",
+                source: "let frame = HoldFrame(x: 0, y: 0, width: 1, height: 1)",
+                packageOwnedLiterals: []
+            ).isEmpty
+        )
+    }
+
+    func testBoundaryAuditAllowsCanonicalPresentationVocabularyInGenericOwners() {
+        let canonicalPresentationVocabulary: Set<String> = [
+            "assets/primary.png",
+            "primary.png",
+            "primary"
+        ]
+        let genericLoaderSource = """
+        let assetPath = "assets/primary.png"
+        let filename = "primary.png"
+        let stem = "primary"
+        """
+
+        XCTAssertEqual(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/BoardPackageStore.swift",
+                source: genericLoaderSource,
+                packageOwnedLiterals: canonicalPresentationVocabulary
+            ),
+            []
+        )
+        XCTAssertEqual(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/TrainingModels.swift",
+                source: genericLoaderSource,
+                packageOwnedLiterals: canonicalPresentationVocabulary
+            ),
+            []
+        )
+        XCTAssertFalse(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/UnauthorizedLoader.swift",
+                source: genericLoaderSource,
+                packageOwnedLiterals: canonicalPresentationVocabulary
+            ).isEmpty
+        )
+        XCTAssertFalse(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/BoardPackageStore.swift",
+                source: #"let mapping = BoardPresentation(assetPath: "assets/primary.png")"#,
+                packageOwnedLiterals: canonicalPresentationVocabulary
+            ).isEmpty
+        )
+        XCTAssertFalse(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/BoardPackageStore.swift",
+                source: #"let packageID = "fixture.package-specific""#,
+                packageOwnedLiterals: ["fixture.package-specific"]
+            ).isEmpty
+        )
+    }
+
+    func testBoundaryAuditIgnoresUntrackedAppScratchFiles() throws {
+        let repositoryRoot = repositoryRootURL()
+        let scratchRelativePath = "HangTen/BoundaryAuditUntrackedScratch.swift"
+        let scratchURL = repositoryRoot.appendingPathComponent(scratchRelativePath)
+        try "let artifact = \"GeneratedBoardCatalog\"".write(to: scratchURL, atomically: true, encoding: .utf8)
+        defer { try? FileManager.default.removeItem(at: scratchURL) }
+
+        let sourcePaths = try appSourceAndResourceURLs(at: repositoryRoot).map {
+            $0.path.replacingOccurrences(of: repositoryRoot.path + "/", with: "")
+        }
+
+        XCTAssertTrue(
+            sourcePaths.contains("HangTen/HangTenApp.swift"),
+            "A tracked handwritten app source should remain a boundary-audit candidate."
+        )
+        XCTAssertFalse(
+            sourcePaths.contains(scratchRelativePath),
+            "An untracked scratch file with a prohibited token must not affect the boundary audit."
+        )
+    }
+
+    private func repositoryRootURL() -> URL {
+        URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+    }
+
+    private func packageOwnedLiterals(at repositoryRoot: URL) throws -> Set<String> {
+        let hangboardsRoot = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
+        var identifiers = Set<String>()
+
+        for (boardID, packagePath) in try discoveredPackagePaths(at: repositoryRoot) {
+            identifiers.insert(boardID)
+
+            let packageURL = hangboardsRoot.appendingPathComponent(packagePath, isDirectory: true)
+            let boardURL = try XCTUnwrap(
+                BoardSourceBoundaryAudit.boardDocumentURL(forPackageAt: packageURL)
+            )
+            let boardObject = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
+            )
+            let holds = try XCTUnwrap(boardObject["contacts"] as? [[String: Any]])
+            identifiers.formUnion(try holds.map { try XCTUnwrap($0["id"] as? String) })
+
+            for presentation in boardObject["presentations"] as? [[String: Any]] ?? [] {
+                guard let media = presentation["media"] as? [String: Any] else { continue }
+                let assetPaths = [media["assetPath"], media["descriptorPath"]]
+                    .compactMap { $0 as? String }
+                for assetPath in assetPaths {
+                    let assetURL = URL(fileURLWithPath: assetPath)
+                    identifiers.insert(assetPath)
+                    identifiers.insert(assetURL.lastPathComponent)
+                    let stem = assetURL.deletingPathExtension().lastPathComponent
+                    // Very short presentation stems such as `top` and `end` are
+                    // ordinary source vocabulary and create path-name collisions
+                    // (for example, WorkoutStopwatch.swift). The full package
+                    // asset path and filename remain protected by the audit.
+                    if stem.count >= 5 {
+                        identifiers.insert(stem)
+                    }
+                }
+            }
+
+        }
+
+        return identifiers
+    }
+
+    private func packageRelativeAssetPaths(in packageURL: URL) throws -> Set<String> {
+        let assetsURL = packageURL.appendingPathComponent("assets", isDirectory: true)
+        guard let enumerator = FileManager.default.enumerator(
+            at: assetsURL,
+            includingPropertiesForKeys: [
+                .isDirectoryKey,
+                .isRegularFileKey,
+                .isSymbolicLinkKey
+            ]
+        ) else {
+            throw PackageDiscoveryError.invalidAssetPath("assets")
+        }
+        let packagePrefix = packageURL.standardizedFileURL.path + "/"
+        var paths = Set<String>()
+        for case let itemURL as URL in enumerator {
+            let values = try itemURL.resourceValues(forKeys: [
+                .isDirectoryKey,
+                .isRegularFileKey,
+                .isSymbolicLinkKey
+            ])
+            guard values.isSymbolicLink != true else {
+                throw PackageDiscoveryError.invalidAssetPath(itemURL.path)
+            }
+            if values.isDirectory == true { continue }
+            let itemPath = itemURL.standardizedFileURL.path
+            guard values.isRegularFile == true, itemPath.hasPrefix(packagePrefix) else {
+                throw PackageDiscoveryError.invalidAssetPath(itemURL.path)
+            }
+            paths.insert(String(itemPath.dropFirst(packagePrefix.count)))
+        }
+        return paths
+    }
+
+    private func discoveredPackagePaths(at repositoryRoot: URL) throws -> [String: String] {
+        let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
+        let children = try FileManager.default.contentsOfDirectory(
+            at: hangboardsURL,
+            includingPropertiesForKeys: [
+                .isDirectoryKey,
+                .isRegularFileKey,
+                .isSymbolicLinkKey
+            ]
+        )
+        var paths: [String: String] = [:]
+        for child in children {
+            let values = try child.resourceValues(forKeys: [
+                .isDirectoryKey,
+                .isRegularFileKey,
+                .isSymbolicLinkKey
+            ])
+            guard values.isDirectory == true, values.isSymbolicLink != true else {
+                throw PackageDiscoveryError.invalidRootChild(child.lastPathComponent)
+            }
+            guard let boardURL = BoardSourceBoundaryAudit.boardDocumentURL(forPackageAt: child),
+                  FileManager.default.fileExists(atPath: boardURL.path) else { continue }
+            let document = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
+            )
+            let boardID = try XCTUnwrap(document["id"] as? String)
+            XCTAssertNil(paths[boardID], "Duplicate discovered board ID \(boardID)")
+            paths[boardID] = child.lastPathComponent
+        }
+        return paths
+    }
+
+    private func appSourceAndResourceURLs(at repositoryRoot: URL) throws -> [URL] {
+        // The test target's manifest build phase keeps this checked-in list equal
+        // to `git ls-files`, which the iOS simulator itself cannot invoke.
+        return try trackedAppBoundaryPaths(at: repositoryRoot)
+            .filter { relativePath in
+                exclusionReason(for: relativePath) == nil &&
+                    (relativePath.hasPrefix("HangTen/") ||
+                        relativePath == "HangTen.xcodeproj/project.pbxproj")
+            }
+            .map { repositoryRoot.appendingPathComponent($0) }
+    }
+
+    private func trackedAppBoundaryPaths(at repositoryRoot: URL) throws -> [String] {
+        let manifestURL = repositoryRoot
+            .appendingPathComponent("HangTenTests", isDirectory: true)
+            .appendingPathComponent("BoardSourceBoundaryTrackedPaths.txt")
+        return try String(contentsOf: manifestURL, encoding: .utf8)
+            .split(separator: "\n")
+            .map(String.init)
+    }
+
+    private func exclusionReason(for relativePath: String) -> String? {
+        // Canonical package data is the authority this boundary protects.
+        if relativePath == "Hangboards" || relativePath.hasPrefix("Hangboards/") {
+            return "approved Hangboards package authority"
+        }
+        // Tests intentionally contain divergent fixtures and package literals.
+        if relativePath == "HangTenTests" || relativePath.hasPrefix("HangTenTests/") {
+            return "test fixtures"
+        }
+        // The plan export is generated and runtime-replaces its legacy mappings.
+        if relativePath == "HangTen/Resources/PlanLibrary.json" {
+            return "generated canonical plan resource"
+        }
+        // Workspace products and indexes are not checked-in handwritten app inputs.
+        for prefix in [".context/", ".codegraph/", "build/", "DerivedData/"]
+            where relativePath.hasPrefix(prefix) {
+            return "generated or built workspace resource"
+        }
+        // Historical design/audit prose may name artifacts without delivering them.
+        for prefix in ["docs/", ".superpowers/"] where relativePath.hasPrefix(prefix) {
+            return "historical documentation"
+        }
+        return nil
+    }
+}

@@ -1,0 +1,62 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "uuid": "E0AC7F37-369F-414E-B407-353435A0BE03",
+  "simulatorDeleted": true,
+  "ownedPaths": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/DerivedData-placid-badger-cad-second-half",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/build-placid-badger-cad-second-half.xcresult",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/tests-placid-badger-cad-second-half.xcresult",
+      "absent": true
+    }
+  ],
+  "errors": [],
+  "commands": [
+    {
+      "args": [
+        "xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "--json"
+      ],
+      "exitStatus": 0
+    },
+    {
+      "args": [
+        "xcrun",
+        "simctl",
+        "shutdown",
+        "E0AC7F37-369F-414E-B407-353435A0BE03"
+      ],
+      "exitStatus": 0
+    },
+    {
+      "args": [
+        "xcrun",
+        "simctl",
+        "delete",
+        "E0AC7F37-369F-414E-B407-353435A0BE03"
+      ],
+      "exitStatus": 0
+    },
+    {
+      "args": [
+        "xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "--json"
+      ],
+      "exitStatus": 0
+    }
+  ],
+  "passed": true,
+  "exactOwnershipRecordsConsumed": true
+}

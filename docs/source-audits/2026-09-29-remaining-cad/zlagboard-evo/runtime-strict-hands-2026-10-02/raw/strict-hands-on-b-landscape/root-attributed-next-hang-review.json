@@ -1,0 +1,62 @@
+{
+  "reviewer": "/root",
+  "attribution": "Root directly opened these four whole images, as communicated in collaboration messages. No assertion that root viewed other eight frames.",
+  "captures": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "51d328aaf6680ca062822fdf65e94562b58703711b3cdc341682af2ffd049fc3",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "timer": "00:07",
+      "handsVisible": true,
+      "runningPauseControlVisible": true,
+      "captureStartEpoch": 1790983050.0396612,
+      "captureEndEpoch": 1790983050.5636768,
+      "requestedOffset": 0.25,
+      "actualStartOffset": 0.2981293201446533
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-2-active-plus-1.png",
+      "sha256": "bbdd05483422b501a8b7b58bf89ff8f2ef203ba06d4df17f85e528342fd3ec8f",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "timer": "00:06",
+      "handsVisible": true,
+      "runningPauseControlVisible": true,
+      "captureStartEpoch": 1790983050.7742999,
+      "captureEndEpoch": 1790983051.280229,
+      "requestedOffset": 1,
+      "actualStartOffset": 1.0327680110931396
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-2-active-plus-3.png",
+      "sha256": "9116951084e41da86f8a85fd9c198834de64785f6e777dd472c1d9c3ffae011b",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:03",
+      "handsVisible": true,
+      "runningPauseControlVisible": true,
+      "captureStartEpoch": 1790983052.783276,
+      "captureEndEpoch": 1790983053.953353,
+      "requestedOffset": 3,
+      "actualStartOffset": 3.0417442321777344
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-2-active-plus-5.png",
+      "sha256": "80dc6847e65b8827b387be34cf4127646acbbdde0c48662a2529a6f7fccf9ec4",
+      "directWholeImageViewed": true,
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "timer": "00:02",
+      "handsVisible": true,
+      "runningPauseControlVisible": true,
+      "captureStartEpoch": 1790983054.776007,
+      "captureEndEpoch": 1790983055.2822242,
+      "requestedOffset": 5,
+      "actualStartOffset": 5.034475088119507
+    }
+  ]
+}

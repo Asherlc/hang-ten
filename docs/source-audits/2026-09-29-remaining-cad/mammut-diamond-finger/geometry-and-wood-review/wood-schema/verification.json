@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "sourceCommit": "6126228e8c44c5832982acc09e10ce47809f50c0",
+  "files": {
+    "HangTen/Models/TrainingModels.swift": "2e680154c8f9389324440dcf853f2f3ca106c17d3905dac9fb6f51c05676646d",
+    "HangTen/Models/BoardPackageStore.swift": "298b6d5d6268e013432085e09c3103d35fad799566a77984db28341db0756fb4",
+    "Tools/HangboardPackages/src/hangboard_packages/board_catalog.py": "54af5c45627f76128e7629c601822d37903c57f4260ee81fdc668bf922140172",
+    "HangTenTests/BoardPackageStoreTests.swift": "fc1e5542383ae521cd5bfeeca0b2ca5131212948a4568b13daa1df20da8bfc26",
+    "Tools/HangboardPackages/tests/test_model_first_packages.py": "5784e35ecc4116a925bf6971e8b8c09dea093cb6f7c8ea4dbf6ed9cab9b76d10",
+    "Tools/HangboardPackages/tests/test_board_package_staging.py": "94fc0cc37523d012112ef55108d35b02d872bd758cd9b936845179374a1e9056"
+  },
+  "adoptionProof": "upstream-adoption-proof.json",
+  "red": {
+    "python": "red-python-expanded.log:12 failed,23 passed before implementation",
+    "swiftProductionDecoder": "red-swift-decoder.log:5 expected failures before implementation"
+  },
+  "green": {
+    "targeted": "green-targeted-corrected-fixture.log:35 passed",
+    "fullPackages": "full-packages.log:469 passed in26.77s",
+    "fullRelevant": "706 passed, 10 skipped in 119.32s (0:01:59)",
+    "swiftProductionDecoder": "green-swift-decoder.log:0 failures",
+    "swiftSyntax": "swift-parse.log:exit0"
+  },
+  "fullCommand": "TMPDIR=$PWD/.context/placid-badger/tmp/ MESHOPT_LIBRARY=$PWD/.context/placid-badger/deps/meshoptimizer-build/libmeshoptimizer.dylib .context/placid-badger/venv/bin/python -m pytest -q Tools/HangboardCAD/tests Tools/HangboardModels/tests Tools/HangboardPackages/tests --basetemp=.context/placid-badger/mammut-wood-integration/schema/full-relevant-tmp",
+  "supersededIntermediateLogs": {
+    "green-targeted.log": "ran before Python adapter completed; expected old-schema rejection",
+    "green-targeted-final.log": "three attachment tests initially had unsorted descriptor fixture nodes; corrected fixture ordering, original role eligibility gate unchanged"
+  },
+  "scope": "Existing upstream finish contract only. No appearance metadata/newrenderer, catalog-wide opt-in assertion, native asset/manifest/sidecar, delivery lock or Git edits. Root owns full iOS build and runtime material tests.",
+  "cleanup": "All invoked test/probe commands exited; no simulator/server/external resources created."
+}

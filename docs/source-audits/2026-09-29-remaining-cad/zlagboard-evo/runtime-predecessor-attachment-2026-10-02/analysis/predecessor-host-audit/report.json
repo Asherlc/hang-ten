@@ -1,0 +1,161 @@
+{
+  "scope": "Read-only source audit; rootNav pending. No source edits, runtime action or claim that predecessor host causes defect.",
+  "surfaceInputs": {
+    "train": "TrainView:139\u2013142 selectedBoardCard calls BoardMapView(board:store.selectedBoard) without overrides. Defaults BoardMapView:570\u2013585 are IDsempty, modeactive, requestedPresentationnil, activeHoldnil, onHoldTapnil, isDisplayOnlyfalse. Resolves same Evo primary presentation/position through State; observed historical Train viewport264x45.257 distinguishes geometry only, not semantic provenance.",
+    "workout": "RootView actual workout calls BoardMapView with dynamic IDs/mode/resolved presentation and activeHold. Initial/countdown suppressed state can be IDsempty/modeactive, primaryposition, niltap, isDisplayOnlyfalse: same leaf semantics as Train. isDisplayOnlytrue occurs in BoardPickerCard at TrainView:570, not selectedBoardCard.",
+    "consequence": "No existing isDisplayOnly/presentation/highlight predicate uniquely identifies only Train predecessor. Empty IDs, first scene, small viewport, firstload or boardID checks would risk suppressing actual workout or another valid view and are unsuitable exact discriminators."
+  },
+  "ownershipAndCache": [
+    {
+      "refs": "BoardModelRealityTypes:177\u2013185,1341\u20131387",
+      "fact": "Every load creates a new BoardModelRealityScene with new root and PerspectiveCamera plus per-scene contact/baseline dictionaries. It calls scene.load, which awaits Entity(contentsOf:sameURL). No app cache returns an existing Entity/scene to two hosts."
+    },
+    {
+      "refs": "BoardModelRealityTypes:243\u2013283",
+      "fact": "Single-instance board uses its newly loaded hierarchy directly. Recursive clone is only for reusable media.instances inside that scene. Do not describe independent Train/Workout loads as cloning one shared app source entity; they invoke separate Entity(contentsOf:) loads. RealityKit may internally share mesh/shader resources, but that is not shared mutable entity ownership demonstrated here."
+    },
+    {
+      "refs": "BoardModelRealityTypes:1131\u20131206,1210\u20131253,1275\u20131281; BoardPackageStore:260\u2013281",
+      "fact": "The so-called source cache stores in-flight tasks/waiters keyed board/presentation/modelSHA and removes loadingentry on completion. LoadedSource holds only resourceLease (URL/ODR lease), no Entity or MeshResource. Store maps board/presentation to assetURL/descriptorURL/resource metadata. Concurrent waiters can share that lease wrapper; each loader still allocates its own scene/entities. Serial model-load gate limits concurrent loads."
+    },
+    {
+      "refs": "BoardModelRealityTypes:292\u2013330,944\u2013959",
+      "fact": "Wood/plastic/granite finish values are static immutable material templates. Each model receives its own ModelComponent material array; baselineMaterials is keyed to that scene entity. Highlight constructs a local PhysicallyBasedMaterial value (woodCustomMaterial baseline falls back to new neutral PBR), sets tint/roughness, assigns array on selected entity. No app code mutates a shared material singleton or mesh to highlight. Framework backing resource identity/behavior cannot be established from these Swift value assignments alone."
+    },
+    {
+      "refs": "BoardModelView:23,109\u2013143; BoardModelRealityTypes:211\u2013214,1101\u20131127",
+      "fact": "Each Surface retains its scene in State, resets result toloading onDisappear, and taskcancels by SwiftUI lifetime. Scene retains URL/ODRlease until deinit. Reset is not proof immediate host/entity deallocation: RealityView/framework/task/debugrecorder references may outlive SwiftUI branch. Actual attach/deactivate/remove/deinit census is required; a retained object alone is not an active renderer."
+    }
+  ],
+  "smallestFaithfulSuppressionDesignIfAuthorized": {
+    "preferred": "Coordinate a narrow TrainView reservation for the selectedBoardCard callsite (line141). Apply an explicit DEBUG environment marker only to that BoardMapView. BoardModelSurface in already-reserved BoardModelView reads marker; when marked+globalexperimentflag enabled it renders a clear placeholder and skips its load task before any BoardModelRealityLoader/RealityView construction. Keep BoardMapView outer aspectRatio/State/card style and all Train/navigation elements unchanged. No BoardMap source edit required.",
+    "whyMarker": "Specific selectedBoardCard provenance distinguishes it from identical initial workout inputs. A marker is diagnostic context, not guessed ordinal/size. Do not reuse isDisplayOnly to mean suppression: it changes interaction and still constructs model.",
+    "layout": "Keep BoardMapView and its model aspect ratio intact; replace only Surface hosted content with Color.clear using same sizing container. This preserves proposed card region but exact layout/placement must be measured in control/suppressed arms; do not replace wholecard or fabricate a raster board.",
+    "loadGuard": "Hiding with opacity0 or allowsHitTestingfalse does not prevent construction. Both bodybranch and .task must guard suppression, with no deferred lease/import. The marker is immutable for run; no scene-detach midway. Record explicit skippedsourcecontext as proof and assert workout still constructs once.",
+    "scope": "Would touch TrainView.swift plus BoardModelView.swift; TrainView is currently outside reservation and must be coordinated before any application. Root gate remains normal navigation; no fake direct-workout routing.",
+    "boundedComparison": "Fresh normal launch control then samebinary markedpredecessor-suppressed launch, real7s/180s phases and productionautostart only. All other inputs same. Verify selectedcard occupiedlayout, no Train model-load/make/root, actual workout identities/frames and all highlight phases. A pass indicates predecessor-construction/history boundary sufficient, not sharedentity corruption or a shippedfix."
+  },
+  "inReservationAlternativeAndLimits": {
+    "possible": "RootView can mark the TrainView subtree with a DEBUG environment context and override context inside actual WorkoutView (same reservedRootViewfile) before its content; BoardModelSurface can suppress context==train underexperimentflag. This avoids TrainView edit and guessinghostcount.",
+    "limitation": "That marker also propagates into other Train navigation destinations unless each overrides it; it is exact only for a constrained freshTrain->workout route and could suppress BoardDetail/Picker surfaces if exercised. It is broader and more fragile than tagging selectedBoardCard directly. Report it as route-scoped suppression, not universally onlythepriorcard. Prefer coordinatedcallsite marker for requested exclusive scope.",
+    "notRecommended": "Inspectingaccessibilityidentifierancestor/privateUIKitclass, SceneIDorder, firstrequestcount, viewportwidth, or emptyselection to inferTrain. None is a stable exact provenance selector."
+  },
+  "remainingConfounders": [
+    "Preventing predecessor load also removes shader/material warm-up and USDZ/ODR/backend resource work, not only a possibly live host. A success would not distinguish historical resource initialization from overlap; subsequent experiment would need separate preloadwithoutRealityView versus fullhost only if warranted.",
+    "Normal navigation may mount more than one scene briefly; source comments/cache names cannot prove hiddenactivehost. Correlate actual root.scene/isActive/window membership and disappear events.",
+    "RootNavresult pending; do not authorize predecessorexperiment until that comparison resolves.",
+    "Debug recorder itself may retain scenes; inspect actual weak/strong diagnosticownership if lifecycleevidence points there, without confusing debugonlystate withproduction."
+  ],
+  "sourceEvidence": [
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+      "ranges": [
+        [
+          46,
+          50
+        ],
+        [
+          139,
+          177
+        ],
+        [
+          568,
+          573
+        ],
+        [
+          623,
+          632
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "911fba863c2b7dbc66a48c9c70937fb47ecd422e83e761751e662d756aac6b95",
+      "ranges": [
+        [
+          558,
+          598
+        ],
+        [
+          650,
+          670
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+      "ranges": [
+        [
+          16,
+          40
+        ],
+        [
+          43,
+          82
+        ],
+        [
+          109,
+          143
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "89898763d913d908b35abfce0baf4da365efb37aed84c6823d76f0307c5b8ddd",
+      "ranges": [
+        [
+          167,
+          214
+        ],
+        [
+          242,
+          307
+        ],
+        [
+          314,
+          330
+        ],
+        [
+          726,
+          746
+        ],
+        [
+          944,
+          959
+        ],
+        [
+          1131,
+          1168
+        ],
+        [
+          1173,
+          1206
+        ],
+        [
+          1210,
+          1253
+        ],
+        [
+          1275,
+          1292
+        ],
+        [
+          1338,
+          1393
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Models/BoardPackageStore.swift",
+      "sha256": "298b6d5d6268e013432085e09c3103d35fad799566a77984db28341db0756fb4",
+      "ranges": [
+        [
+          260,
+          281
+        ]
+      ]
+    }
+  ]
+}

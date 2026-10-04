@@ -1,0 +1,639 @@
+{
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 3308,
+      "sha256": "bc452e67c110a0f8eb72e0c5ff2649a7767ece9d21deca4ac087c0c427f1eb03"
+    },
+    {
+      "path": "index.md",
+      "bytes": 581,
+      "sha256": "976ee981eedd157f55b4dd9df090e9b208269a60eb48ff4323b93272166e681a"
+    },
+    {
+      "path": "promotion-verification.json",
+      "bytes": 363,
+      "sha256": "2100f4921f375ea644c7dc526b3e9d93b319d9e507d0945b38b0c517ec01723a"
+    },
+    {
+      "path": "raw/structural-real-hands-app-termination-verification.json",
+      "bytes": 301,
+      "sha256": "debfbad3e4c9ed42da7564d85cb3e356239186fedc6a7c225e2da0cbda0af1e6"
+    },
+    {
+      "path": "raw/structural-real-hands-before-parity.json",
+      "bytes": 12855,
+      "sha256": "16951668967afa0195b9d7d34ee211d1a4c005fd71af02a073ebf7988d36216e"
+    },
+    {
+      "path": "raw/structural-real-hands-before-parity.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-before-parity.stdout",
+      "bytes": 32,
+      "sha256": "4e4a2d1eb8b1835aa4cef37309d0d8016bf1f05e01855b5f48594f8cf5972e41"
+    },
+    {
+      "path": "raw/structural-real-hands-comparison.json",
+      "bytes": 5154,
+      "sha256": "ac885ba13eac8457ffe8a8bdc814f73926064da40bbb0b3440d111e807c647f6"
+    },
+    {
+      "path": "raw/structural-real-hands-final-parity.json",
+      "bytes": 12855,
+      "sha256": "16951668967afa0195b9d7d34ee211d1a4c005fd71af02a073ebf7988d36216e"
+    },
+    {
+      "path": "raw/structural-real-hands-final-parity.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-final-parity.stdout",
+      "bytes": 32,
+      "sha256": "4e4a2d1eb8b1835aa4cef37309d0d8016bf1f05e01855b5f48594f8cf5972e41"
+    },
+    {
+      "path": "raw/structural-real-hands-findings.json",
+      "bytes": 10836,
+      "sha256": "8945f79f72594d5f4e92bd7267d5f93d468f5a138f6a2f38e70fc9bff66a3bd0"
+    },
+    {
+      "path": "raw/structural-real-hands-frozen-manifest.json",
+      "bytes": 31869,
+      "sha256": "5659ce008315e88a1188ed79d46112b0e37476d28c701a8aca30a9d8a3a435ab"
+    },
+    {
+      "path": "raw/structural-real-hands-helper-freeze.json",
+      "bytes": 5098,
+      "sha256": "bba3f6e6c1c9542b1272ff52f955bc8e5cac6d685e0c5f7fe4d7025ce4d53923"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/000-stdout.txt",
+      "bytes": 176,
+      "sha256": "90731506a97d571f5bc2da91db1574bb5d12230613add8509cc5f30d2c378946"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/001-stdout.txt",
+      "bytes": 162,
+      "sha256": "21d799e24556f34a6eeff9932436da09f6f178927306e2664ff57ff9084af76c"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/002-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/002-stdout.txt",
+      "bytes": 28,
+      "sha256": "350dbda06f80e045c37b6211aa90b8e52add109e38600c716fd69d18c86d50d4"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/003-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/004-stderr.txt",
+      "bytes": 369,
+      "sha256": "2be0261457a284c8b518f076c94f3074a98ba2e65c6f957d86db53722a498487"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/005-stderr.txt",
+      "bytes": 379,
+      "sha256": "c8dda3520014af162b8d30918cd4e29c977a2cb170d5077b38356a6cebe7f570"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/006-stderr.txt",
+      "bytes": 376,
+      "sha256": "c8504a3bdee6b28e618532bebcc60702719e5fca74f97aad9588208ca8fc88f2"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/007-stderr.txt",
+      "bytes": 376,
+      "sha256": "ffa53ed6a30dbf9149046ec428edfd2e0fdac5d2c117b5924b0ae1026c782432"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/008-stderr.txt",
+      "bytes": 376,
+      "sha256": "ac6301aca34dbc229e154f7389f585cca2bb6a85321dbffda2e0e98f23307e6b"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/008-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/009-stderr.txt",
+      "bytes": 380,
+      "sha256": "9ea6afe92106b966882a3313b9deed79f26e690847745174ff5514e279aa1a07"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/009-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/010-stderr.txt",
+      "bytes": 377,
+      "sha256": "9bd9a4beb318828f9a272f4fb566dc45f92d80bfc30ef4f7ede74136aa604397"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/010-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/011-stderr.txt",
+      "bytes": 377,
+      "sha256": "1f86c39fc649cdd0b68b285253f2b9614b4f4071bfa9078f510b6ecea3ca8074"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/011-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/012-stderr.txt",
+      "bytes": 377,
+      "sha256": "b159d760d2ece75e49c55c3bd5b310f893815d2acf6767738026b881d9702723"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/012-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/013-stderr.txt",
+      "bytes": 379,
+      "sha256": "3f602c13dfc338c4cee5d618be0cfc463427339469fa3ab0df0c2f0082812cd3"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/013-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/014-stderr.txt",
+      "bytes": 376,
+      "sha256": "4c67e35a78352b7c11210cde058905a4f0f06b2cbf6be258b2a1c807cde4e033"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/014-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/015-stderr.txt",
+      "bytes": 376,
+      "sha256": "822fb2adafc762748fe7b64e95442f9249348e6c46894405fd43bded9c4c4c9c"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/015-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/016-stderr.txt",
+      "bytes": 376,
+      "sha256": "ae69a6303520d12abd3a9304d25b196cd9858f1d993cf37350b57afa01c91e02"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/016-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/capture-process-status.json",
+      "bytes": 116,
+      "sha256": "cc7bc4468e411aa685aa5687294e7d57bb909d87ee2f8a94d8b8a2dcb630fcfb"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/captures.json",
+      "bytes": 7884,
+      "sha256": "11080d0940d586a76c0d94084dc1638bc3d8d5734b0bdfdd0d6462dc73aa7f1f"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/check-constructors.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/check-constructors.py.stdout",
+      "bytes": 423,
+      "sha256": "ead9b3d7bb8fc863e0258fef33269be5cd16591ed1e0e899394036056c0df326"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/check-cpu-semantics.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/check-cpu-semantics.py.stdout",
+      "bytes": 448,
+      "sha256": "59e31a1ee7c6a80b5e4410f921a9cd759df7a24200cc7fe3dcb37254083a5ffa"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/check-frames.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/check-frames.py.stdout",
+      "bytes": 594,
+      "sha256": "c275f9f67e3fa6b5911809d56591d74e9ec0e8534c72f7b4f3a212e8fceb0a50"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/check-navigation.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/check-navigation.py.stdout",
+      "bytes": 627,
+      "sha256": "024b507109b6d9f74081ddb4294db78b2ba8c70b31cd881572b1154800a9a82a"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/check-ownership.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/check-ownership.py.stdout",
+      "bytes": 998,
+      "sha256": "71c06012c25073345b627590c6cf52bc7b5445dfdbbd17f029d9270d32ce0a90"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/check-real-hands.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/check-real-hands.py.stdout",
+      "bytes": 847,
+      "sha256": "8665c7f2710359e57ee71b52635111571497737cce9194032229c338848f6376"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/commands.json",
+      "bytes": 6455,
+      "sha256": "b955d310b9db888de8f326bdd942bb898888169a5b403fa89d64563fa89ea893"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/compare-prior-ordinary.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/compare-prior-ordinary.py.stdout",
+      "bytes": 237,
+      "sha256": "0cdd35a668edaff0706b41a2d9921b55929ccafd17c1465ce04bc933dfd87008"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/events-26090603-C706-4595-80B8-EA8904DE6F91.jsonl",
+      "bytes": 1012686,
+      "sha256": "710b84b1cd06e61dad9f6703ad9334a19e368d239323f0e4fb73dc0423c52a55"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/first-eight-visual-review.json",
+      "bytes": 6639,
+      "sha256": "27a461f29af540e0d4078262e24bd51830f72562d93d500c997188937fe22543"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/following-preview-tail.json",
+      "bytes": 12006,
+      "sha256": "9c4e669368ad17447a1ea810418341f02ec456093c77e7194660d3a363dbeb78"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/installed-binary-gate.json",
+      "bytes": 374,
+      "sha256": "7a156d68ba1066633a3900733df23d28741eeb1a72866bc54e1c5b45f7419eae"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/launch-initial-capture.json",
+      "bytes": 153,
+      "sha256": "29e23308bea593d16bba389d12a091ef02087d0c0b20455a77ec71fbeac811a2"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/launch-initial.png",
+      "bytes": 718932,
+      "sha256": "3d5fa471e8accf158fc9f5cd465f8034e144316933a9528df82748c77f521356"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/launch-review-environment.json",
+      "bytes": 473,
+      "sha256": "5a0d03d0dd610e058425c9a08e94767b2c5a1b90030087a66ad90a848b7d5c88"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/normal-host-frame-validation.json",
+      "bytes": 358347,
+      "sha256": "6766fe40b5a9f6d3a46318ea68d0b77c6af4d1a8bca1de6cf225bfe7b7c0a1b2"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 332536,
+      "sha256": "d953869139b791c9dafb4f0b0b22effad3dad3c4c040ce0693514c93ce8f8674"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/phase-0-active-plus-1.png",
+      "bytes": 334190,
+      "sha256": "eaab2508ff7c4563f2d6be8e9ee53de5e0e5ae50913a77bc02fae360fe1f687a"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/phase-0-active-plus-3.png",
+      "bytes": 333573,
+      "sha256": "42558e0e1119be9b3e0fc49669a1990b6cf1b5dc6b776094d71c14898a315430"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/phase-0-active-plus-5.png",
+      "bytes": 333160,
+      "sha256": "d48dce2212be37c93ad2f6be0e0f8d79f63a365fda1a433dfc96c93cd862319e"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/phase-1-preview-plus-0.25.png",
+      "bytes": 300960,
+      "sha256": "14e7a4f09ecc7870155e58747f5784d8d99fac8e84d40fcd911c255532b6a523"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/phase-1-preview-plus-1.png",
+      "bytes": 305282,
+      "sha256": "2bd6044efa35979b49ce1013cd2bdc2c33ee858d8202336e67b95b469ee16e26"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/phase-1-preview-plus-3.png",
+      "bytes": 303574,
+      "sha256": "f6e35cd1991fb0f167ccb0f2b1b3d6688d4ccb33b823995d715921862ddbc9e2"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/phase-1-preview-plus-5.png",
+      "bytes": 302203,
+      "sha256": "1b8c132a0747c3d2957526c45e978c1ccb96da2aed37dea1d4d351171b9eaca5"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/phase-2-active-plus-0.25.png",
+      "bytes": 335590,
+      "sha256": "16bbfe5b3839e6ea2b21df7867df19b39bdde8c3c244e0821a41e55f9dc0fa58"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/phase-2-active-plus-1.png",
+      "bytes": 337450,
+      "sha256": "a67b88ab1e47eb78979e980552d42d130b78edde5681082ebb67605b8939b813"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/phase-2-active-plus-3.png",
+      "bytes": 335859,
+      "sha256": "78cc44814e9a19de371155545e687dab82f19b59ecd8b13e9d9979ca00fca0fb"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/phase-2-active-plus-5.png",
+      "bytes": 336670,
+      "sha256": "d8cd7fbe91ba2779911ddf1ff0d99ffa599b30f7b97bfb25eb9cec12f31db02d"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/protocol.json",
+      "bytes": 1177,
+      "sha256": "d364c852f36ab0cffd96e0e35d7e41d3c0263c28bc09987deb3de68c545bb625"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/real-hand-lifetime-camera-validation.json",
+      "bytes": 17146,
+      "sha256": "6a1d484e972f9499e63300c018fe962d68cb14775f0ef0ae54775305d7a282b3"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/runtime-release.json",
+      "bytes": 936,
+      "sha256": "f173cd7f5c26ce6bf6fd6ebfef5c26a7a9a424c82637412a383add9f93030828"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/structural-correspondence.json",
+      "bytes": 329993,
+      "sha256": "d8acf9008df9a420685380132a41881e5f61acd89ad5dfddc1a3baf89dce45c5"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/structural-dependency-navigation.json",
+      "bytes": 52072,
+      "sha256": "1b9d93a248aa4f7e238382943a558803d55d91da98d47a043f321b19a4144d47"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/structural-dependency-ownership.json",
+      "bytes": 227189,
+      "sha256": "ba58782884512275b865ba69d5f4a603d7beb3c49f9220b9ba3d175b068f6849"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/trace-copy.json",
+      "bytes": 717,
+      "sha256": "9cdb5af0b481da085fbdf073bde45216eed339f495dc3eacdb7e31ec8c08eeb1"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/train-constructor-validation.json",
+      "bytes": 314367,
+      "sha256": "699d964681941e47d93896d7a53492208208604d9cf9c6e1a7790d85e3a16179"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/train-startup-readiness.json",
+      "bytes": 14179,
+      "sha256": "056fa3ee070a830600ae248c2763b5802ce4ef9492904bbfd7bb054f95dcea24"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/transition-observations.json",
+      "bytes": 36928,
+      "sha256": "e8c7b650aa704aa98b0826a175238318bf353429e01660cd86c1aa79beb83f6a"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/validator-command-results.json",
+      "bytes": 471,
+      "sha256": "06503da3e0668875d8f93408be5dda056cd43d0fc566aaa09df2b11d8e92d023"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/visual-review.json",
+      "bytes": 10086,
+      "sha256": "8575ab467869d0747a4b05884543a50cc5474d53d25c50db117cd5b4e14ff949"
+    },
+    {
+      "path": "raw/structural-real-hands-landscape/workout-openurl-timing.json",
+      "bytes": 153,
+      "sha256": "338238c3354723efcdd59beee9981597c9ebf3894a14992e5ba386988e6e5c8e"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/PROTOCOL.md",
+      "bytes": 4413,
+      "sha256": "cd11d1e16e83d74699f74fb76a3ac8744ab75c54594a94f4368c1410fbbba092"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/capture.patch",
+      "bytes": 6750,
+      "sha256": "1f338e1c4a75ddfc8d4a8496b6a3b60ce4f52b6230ebb1acdb2887e63edc0e8e"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/capture.patch.before-full-binary-binding",
+      "bytes": 6703,
+      "sha256": "e7f50676dadd3ced9fd4f585d67412d02c8dd3331f97d097ffa4743be269dfef"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/check-constructors.py",
+      "bytes": 2828,
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/check-cpu-semantics.py",
+      "bytes": 3958,
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/check-frames.py",
+      "bytes": 3729,
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/check-navigation.py",
+      "bytes": 4401,
+      "sha256": "cefe1d72225c96a81d1e5a03a91445ec969317afe9b7be501aa3a1c825ce133a"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/check-navigation.py.patch",
+      "bytes": 3617,
+      "sha256": "042d63ce0c3326b4b5886457a31e19b21726ddb7e68a974ae963e3fae0d8901f"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/check-ownership.py",
+      "bytes": 9842,
+      "sha256": "857993e063ec1c987bf84cefa6e143828071f10fa0b1028fb3af58774174a7e0"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/check-ownership.py.patch",
+      "bytes": 6827,
+      "sha256": "e3078e88895c0af0d46ba4ccb66e123b9b66666d0e7af8f5d24d14227127c353"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/check-real-hands.py",
+      "bytes": 5027,
+      "sha256": "09b113ea0c57fc14a5952cf188a5c2931c3592b91451ce2027a8638291a4a0c9"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/compare-prior-ordinary.py",
+      "bytes": 2961,
+      "sha256": "3dced381437499899e2e8c1e88e837e00194e77fb3c0036bd4953d9938b42b94"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/constructors.patch",
+      "bytes": 1923,
+      "sha256": "5104c5613c843b59abb2ca140302db3f5c4163feab1178d83332618c5cec53c6"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/report.json",
+      "bytes": 3131,
+      "sha256": "33051bad2327b97ba5f8fb6aa5b4467172dd5c9f95a2cb74b894bc39fe71f0bf"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/report.json.before-full-binary-binding",
+      "bytes": 3005,
+      "sha256": "8f218ee6f57dbf2f32c67ef2dd9f618ef1f861cc4fdb9e22ed7044e2acb11bc9"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/static-check.json",
+      "bytes": 2495,
+      "sha256": "2eed115e92ce8a8e1bef0e901dcfe8d1c4f07aa16eb90dd8ae447395f0bea618"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/static-check.json.before-full-binary-binding",
+      "bytes": 2463,
+      "sha256": "bce46acd85f7de60796f72f09e4ae07dacff1a54a6adbc42e995cc48a53e062f"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/visual-review-template.json",
+      "bytes": 5440,
+      "sha256": "731fddb338b0a2dde660260796a7c9cfec5998410b6bcd9e9c703694c46bea43"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/workout-real-hands.py",
+      "bytes": 12407,
+      "sha256": "277e94838fecf62f7b839f4f2e1625b04cf2bd712d8a24c97a466741f5d92d70"
+    },
+    {
+      "path": "raw/structural-real-hands-prepared/workout-real-hands.py.before-full-binary-binding",
+      "bytes": 12360,
+      "sha256": "4102d3fac3e0bf1fb7a886f1d3941793dedd79e18ac21116ece9e0012e97a34f"
+    },
+    {
+      "path": "raw/structural-real-hands-prior-preservation.json",
+      "bytes": 249,
+      "sha256": "1177ca9847e4f61d846eee4710aade2fb1576b1db0e3bab94875986b7a08bd01"
+    },
+    {
+      "path": "raw/structural-real-hands-root-visual-corroboration.json",
+      "bytes": 1531,
+      "sha256": "73ebdf5bfd2f065f58a206b2eb1d13a4afb8344df67e762dd6a731caa992dd6f"
+    },
+    {
+      "path": "raw/structural-real-hands-runtime-release.json",
+      "bytes": 936,
+      "sha256": "f173cd7f5c26ce6bf6fd6ebfef5c26a7a9a424c82637412a383add9f93030828"
+    },
+    {
+      "path": "raw/structural-real-hands-terminate.json",
+      "bytes": 265,
+      "sha256": "6c3e48d67a1bf1e11f5e31a60639db652611819d406c921535416adafd95024a"
+    },
+    {
+      "path": "raw/structural-real-hands-terminate.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-terminate.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/structural-real-hands-validate.py",
+      "bytes": 991,
+      "sha256": "163fe5e129d3d3e2ada0413bd51e08054d23dee77ba6c072f310f3d324940dc4"
+    },
+    {
+      "path": "raw/structural-real-hands-weak-lifetimes.json",
+      "bytes": 25546,
+      "sha256": "75f26a2fb817a9511e65568548419d8dc0dc0e4b2216b27a1157181d6a330e58"
+    },
+    {
+      "path": "retention-manifest.json",
+      "bytes": 42045,
+      "sha256": "d0ede8e82282d6fda4833e379120bff293e07bc670369f240bda165b33ce9ba1"
+    }
+  ]
+}

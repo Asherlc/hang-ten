@@ -1,0 +1,300 @@
+{
+  "capture": {
+    "capture": "next-active-timed-2",
+    "startEpoch": 1790967805.004159,
+    "endEpoch": 1790967805.52946
+  },
+  "before": {
+    "cachedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "cachedMode": "active",
+    "cameraID": "ObjectIdentifier(0x0000000149fdbc00)",
+    "cameraTransform": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0.9438583850860596,
+      -0.33035042881965637,
+      0,
+      0,
+      0.33035042881965637,
+      0.9438583850860596,
+      0,
+      0,
+      0.10610384494066238,
+      0.3241538405418396,
+      1
+    ],
+    "complete": true,
+    "epoch": 1790967804.882392,
+    "event": "sample",
+    "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "requestedMode": "active",
+    "rootAttached": true,
+    "rootEnabled": true,
+    "rootID": "ObjectIdentifier(0x0000000149fd90c0)",
+    "rootTransform": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "sceneID": "ObjectIdentifier(0x0000000147ed6300)",
+    "sceneLifecycleToken": "1562EA03-1B48-4B87-941C-581A13477DED",
+    "selectedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "sequence": 37,
+    "surfaces": [
+      {
+        "ancestors": [
+          "ObjectIdentifier(0x0000000148f60360)",
+          "ObjectIdentifier(0x0000000148f62400)",
+          "ObjectIdentifier(0x0000000148f625e0)",
+          "ObjectIdentifier(0x0000000149fd90c0)",
+          "ObjectIdentifier(0x0000000149fd5b20)"
+        ],
+        "attached": true,
+        "contactID": "edge-20-left",
+        "enabled": true,
+        "entityID": "ObjectIdentifier(0x0000000148f60360)",
+        "materialType": "PhysicallyBasedMaterial",
+        "name": "contact_edge_20_left",
+        "resolvedRGBAValid": true,
+        "rgba": [
+          0.9850000739097595,
+          0.2749999761581421,
+          0.10499999672174454,
+          0.6000000238418579
+        ],
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "underRegisteredRoot": true
+      },
+      {
+        "ancestors": [
+          "ObjectIdentifier(0x0000000148f61f00)",
+          "ObjectIdentifier(0x0000000148f62400)",
+          "ObjectIdentifier(0x0000000148f625e0)",
+          "ObjectIdentifier(0x0000000149fd90c0)",
+          "ObjectIdentifier(0x0000000149fd5b20)"
+        ],
+        "attached": true,
+        "contactID": "edge-20-right",
+        "enabled": true,
+        "entityID": "ObjectIdentifier(0x0000000148f61f00)",
+        "materialType": "PhysicallyBasedMaterial",
+        "name": "contact_edge_20_right",
+        "resolvedRGBAValid": true,
+        "rgba": [
+          0.9850000739097595,
+          0.2749999761581421,
+          0.10499999672174454,
+          0.6000000238418579
+        ],
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "underRegisteredRoot": true
+      }
+    ],
+    "uptime": 50879.31420370834,
+    "viewToken": "84C21FF4-8F21-4B29-B2BD-62D01336BF89"
+  },
+  "after": {
+    "cachedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "cachedMode": "active",
+    "cameraID": "ObjectIdentifier(0x0000000149fdbc00)",
+    "cameraTransform": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0.9438583850860596,
+      -0.33035042881965637,
+      0,
+      0,
+      0.33035042881965637,
+      0.9438583850860596,
+      0,
+      0,
+      0.10610384494066238,
+      0.3241538405418396,
+      1
+    ],
+    "complete": true,
+    "epoch": 1790967805.926156,
+    "event": "sample",
+    "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "requestedMode": "active",
+    "rootAttached": true,
+    "rootEnabled": true,
+    "rootID": "ObjectIdentifier(0x0000000149fd90c0)",
+    "rootTransform": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "sceneID": "ObjectIdentifier(0x0000000147ed6300)",
+    "sceneLifecycleToken": "1562EA03-1B48-4B87-941C-581A13477DED",
+    "selectedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "sequence": 38,
+    "surfaces": [
+      {
+        "ancestors": [
+          "ObjectIdentifier(0x0000000148f60360)",
+          "ObjectIdentifier(0x0000000148f62400)",
+          "ObjectIdentifier(0x0000000148f625e0)",
+          "ObjectIdentifier(0x0000000149fd90c0)",
+          "ObjectIdentifier(0x0000000149fd5b20)"
+        ],
+        "attached": true,
+        "contactID": "edge-20-left",
+        "enabled": true,
+        "entityID": "ObjectIdentifier(0x0000000148f60360)",
+        "materialType": "PhysicallyBasedMaterial",
+        "name": "contact_edge_20_left",
+        "resolvedRGBAValid": true,
+        "rgba": [
+          0.9850000739097595,
+          0.2749999761581421,
+          0.10499999672174454,
+          0.6000000238418579
+        ],
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "underRegisteredRoot": true
+      },
+      {
+        "ancestors": [
+          "ObjectIdentifier(0x0000000148f61f00)",
+          "ObjectIdentifier(0x0000000148f62400)",
+          "ObjectIdentifier(0x0000000148f625e0)",
+          "ObjectIdentifier(0x0000000149fd90c0)",
+          "ObjectIdentifier(0x0000000149fd5b20)"
+        ],
+        "attached": true,
+        "contactID": "edge-20-right",
+        "enabled": true,
+        "entityID": "ObjectIdentifier(0x0000000148f61f00)",
+        "materialType": "PhysicallyBasedMaterial",
+        "name": "contact_edge_20_right",
+        "resolvedRGBAValid": true,
+        "rgba": [
+          0.9850000739097595,
+          0.2749999761581421,
+          0.10499999672174454,
+          0.6000000238418579
+        ],
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "underRegisteredRoot": true
+      }
+    ],
+    "uptime": 50880.35797191667,
+    "viewToken": "84C21FF4-8F21-4B29-B2BD-62D01336BF89"
+  },
+  "visibleBoardPockets": "blue",
+  "expected": "red during Step3 Hang",
+  "imageSHA256": "bf4c4b7f5f0124c5fb22b2e85f018c15481bc4ad379a380e0a9f08e331ce71dc"
+}

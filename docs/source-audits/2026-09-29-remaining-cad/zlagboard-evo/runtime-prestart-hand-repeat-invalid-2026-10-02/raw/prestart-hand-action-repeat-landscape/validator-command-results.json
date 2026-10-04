@@ -1,0 +1,57 @@
+[
+  {
+    "helper": "check-cpu-semantics.py",
+    "exitStatus": 1,
+    "interpretation": "Original code executed; missing required phase/capture inputs are not treated as semantic test failures or passes."
+  },
+  {
+    "helper": "check-frames.py",
+    "exitStatus": 1,
+    "interpretation": "Original code executed; missing required phase/capture inputs are not treated as semantic test failures or passes."
+  },
+  {
+    "helper": "check-constructors.py",
+    "exitStatus": 1,
+    "interpretation": "Original code executed; missing required phase/capture inputs are not treated as semantic test failures or passes."
+  },
+  {
+    "helper": "check-ownership.py",
+    "exitStatus": 1,
+    "interpretation": "Original code executed; missing required phase/capture inputs are not treated as semantic test failures or passes."
+  },
+  {
+    "helper": "check-navigation.py",
+    "exitStatus": 1,
+    "interpretation": "Original code executed; missing required phase/capture inputs are not treated as semantic test failures or passes."
+  },
+  {
+    "helper": "check-real-hands.py",
+    "exitStatus": 1,
+    "interpretation": "Original code executed; missing required phase/capture inputs are not treated as semantic test failures or passes."
+  },
+  {
+    "helper": "check-weak-hand-census.py",
+    "exitStatus": 1,
+    "interpretation": "Original code executed; missing required phase/capture inputs are not treated as semantic test failures or passes."
+  },
+  {
+    "helper": "check-sync-counters.py",
+    "exitStatus": 1,
+    "interpretation": "Original code executed; missing required phase/capture inputs are not treated as semantic test failures or passes."
+  },
+  {
+    "helper": "check-prestart-hands.py",
+    "exitStatus": 1,
+    "interpretation": "Original code executed; missing required phase/capture inputs are not treated as semantic test failures or passes."
+  },
+  {
+    "helper": "compare.py",
+    "exitStatus": 1,
+    "interpretation": "Original code executed; missing required phase/capture inputs are not treated as semantic test failures or passes."
+  },
+  {
+    "helper": "check-supplemental-timing.py",
+    "exitStatus": 1,
+    "interpretation": "Original code executed; missing required phase/capture inputs are not treated as semantic test failures or passes."
+  }
+]

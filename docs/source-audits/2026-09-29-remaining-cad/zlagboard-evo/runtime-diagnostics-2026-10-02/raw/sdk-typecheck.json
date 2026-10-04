@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "swiftc",
+    "-typecheck",
+    "-D",
+    "DEBUG",
+    "-swift-version",
+    "6",
+    "-sdk",
+    "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk",
+    "-target",
+    "arm64-apple-ios26.0-simulator",
+    "-module-cache-path",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/module-cache",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/DiagnosticSDKHookCheck.swift"
+  ],
+  "exitCode": 0,
+  "durationSeconds": 12.278783082962036,
+  "scope": "Exact retained recorder helper and representative RealityView hooks against SDK; stub scene domain types, not full app typecheck."
+}

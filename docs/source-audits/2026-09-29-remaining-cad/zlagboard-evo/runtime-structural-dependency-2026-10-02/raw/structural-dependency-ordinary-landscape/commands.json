@@ -1,0 +1,256 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "app"
+    ],
+    "startEpoch": 1790993237.341939,
+    "endEpoch": 1790993237.5726452,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "data"
+    ],
+    "startEpoch": 1790993237.6034539,
+    "endEpoch": 1790993237.7906911,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1790993237.791095,
+    "endEpoch": 1790993238.185065,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "openurl",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "hangten://plan/research.max-hangs/workout"
+    ],
+    "startEpoch": 1790993242.24002,
+    "endEpoch": 1790993242.442933,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/launch-initial.png"
+    ],
+    "startEpoch": 1790993242.4431849,
+    "endEpoch": 1790993242.945398,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-0-active-plus-0.25.png"
+    ],
+    "startEpoch": 1790993246.123304,
+    "endEpoch": 1790993246.617127,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-0-active-plus-1.png"
+    ],
+    "startEpoch": 1790993246.876661,
+    "endEpoch": 1790993247.3646379,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-0-active-plus-3.png"
+    ],
+    "startEpoch": 1790993248.853245,
+    "endEpoch": 1790993249.321654,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-0-active-plus-5.png"
+    ],
+    "startEpoch": 1790993250.871302,
+    "endEpoch": 1790993251.351428,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-1-preview-plus-0.25.png"
+    ],
+    "startEpoch": 1790993253.118976,
+    "endEpoch": 1790993253.609348,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-1-preview-plus-1.png"
+    ],
+    "startEpoch": 1790993253.886344,
+    "endEpoch": 1790993254.3880079,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-1-preview-plus-3.png"
+    ],
+    "startEpoch": 1790993255.856677,
+    "endEpoch": 1790993256.3267179,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-1-preview-plus-5.png"
+    ],
+    "startEpoch": 1790993257.8710048,
+    "endEpoch": 1790993258.359731,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-2-active-plus-0.25.png"
+    ],
+    "startEpoch": 1790993433.222419,
+    "endEpoch": 1790993433.681817,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-2-active-plus-1.png"
+    ],
+    "startEpoch": 1790993433.948677,
+    "endEpoch": 1790993434.40067,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-2-active-plus-3.png"
+    ],
+    "startEpoch": 1790993435.947594,
+    "endEpoch": 1790993436.394067,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-2-active-plus-5.png"
+    ],
+    "startEpoch": 1790993437.946639,
+    "endEpoch": 1790993438.393916,
+    "exitStatus": 0
+  }
+]

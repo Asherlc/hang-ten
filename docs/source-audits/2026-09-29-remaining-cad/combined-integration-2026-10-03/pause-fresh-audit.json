@@ -1,0 +1,141 @@
+{
+  "workspaceOwner": "placid-badger-cad-second-half",
+  "scope": "Read-only source/fresh evidence audit; no production/test edits, Sim operations or resources",
+  "freshEvidence": {
+    "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/focused-pause/tests.stdout",
+    "sha256": "2d28c701dde7aa03336ec52c4a78aaacd94c5b57cb18dc4390b928bbb69a66ea",
+    "sceneTestTotalWallSeconds": 110.654,
+    "controllerTestTotalWallSeconds": 373.248,
+    "awaitTimeoutSeconds": 30,
+    "frameNotifications": 0,
+    "controllerObservedFailureCallback": false
+  },
+  "whatFreshRunProves": [
+    "Scene and independent controller fail unchanged with same input/profile/target; renderer synchronization and scene mesh application are not necessary to reproduce timeout.",
+    "Independent controller failure closure would fail and fulfill expectation for an observed numerical error; its expectation instead remained unfulfilled. Neither success nor failure reached that callback before timeout."
+  ],
+  "whatItDoesNotProve": [
+    "Whole-test durations are not worker durations. MainActor controller test cold-initializes static synchronous solverFixture before creating expectation. Scene load also performs expensive preparation before its30second await.",
+    "No progress/timing source presently identifies whether first step, many slow steps, actor scheduling or delayed resume caused the timeout.",
+    "Raw controller fixture initializes RopeDynamicsSolver directly; scene uses prepareDisplay/projectInitialization first. Same input/target does not imply identical initialized state."
+  ],
+  "sourceBoundaries": {
+    "sceneTest": "HangTenTests/BoardModelRealityTests.swift:597",
+    "controllerFixtureBeforeExpectation": "HangTenTests/LiveRopeControllerTests.swift:65",
+    "controllerTest": "HangTenTests/LiveRopeControllerTests.swift:89",
+    "workerActor": "HangTen/Models/LiveRopeController.swift:52",
+    "workerWholeSettleCall": "HangTen/Models/LiveRopeController.swift:60",
+    "controllerTaskAwait": "HangTen/Models/LiveRopeController.swift:123",
+    "controllerIdentityGate": "HangTen/Models/LiveRopeController.swift:126",
+    "controllerFailureCallbackGate": "HangTen/Models/LiveRopeController.swift:136",
+    "settlingOuterBound": "HangTen/Models/RopeDynamicsSolver.swift:226",
+    "recursiveRetryDepth4": "HangTen/Models/RopeDynamicsSolver.swift:113",
+    "corrections80": "HangTen/Models/RopeDynamicsSolver.swift:163",
+    "lineSearch16": "HangTen/Models/RopeDynamicsSolver.swift:357",
+    "contactWorkingSetUpTo2048": "HangTen/Models/RopeDynamicsSolver.swift:399",
+    "fullContactFallbackUpTo2048": "HangTen/Models/RopeDynamicsSolver.swift:432",
+    "repeatedMeritGeometry": "HangTen/Models/RopeDynamicsSolver.swift:566",
+    "selfContactQuadraticEnumeration": "HangTen/Models/RopeSimulationMetrics.swift:81",
+    "coldSeed19RouteSolves": "HangTen/Models/RopeThreadedSeed.swift:134",
+    "seedAStar": "HangTen/Models/RopeThreadedSeed.swift:286"
+  },
+  "sourceFindings": {
+    "actorIsolation": "Worker is custom actor, solver is Sendable struct, controller Task inherits MainActor but awaits worker. Project Swift5.0/-Onone, no SWIFT_DEFAULT_ACTOR_ISOLATION setting. Source does not show numerical solve executing on MainActor.",
+    "loopBound": "Immediate settle computes up to1200fixed steps synchronously within worker actor; earliest settled criterion needs0.5simulated seconds (~120steps). No intermediate frame is returned.",
+    "nestedCost": "Each step may perform80constraint corrections, each up to16line-search merit attempts, contact working-set solve/fallback bounds up to2048, plus recursive dt retries to depth4.",
+    "contactEnumeration": "Self-contact enumerates all pairs of links before spatial rejection.550mm loop with <=2mm links has>=275links, or about37k candidate pairs each enumeration. Repeated manifold/merit calls can be costly in-Onone; actual iteration counts unknown.",
+    "collider": "Closest/inside/contact queries use BVH; do not misdescribe every call as exhaustive10200triangle scan.",
+    "cancellation": "Checks at worker entry/exit and between outer settling steps; no checks within expensive inner correction/contact/merit loops. A canceled prior scene worker may keep consuming CPU until its current step returns; contention is plausible but unmeasured.",
+    "fixtureCost": "Controller static fixture builds collider/seed synchronously on main test actor before awaiting delivery; seed rebuilds routes twice+17bisections and AStar geometry search each time.343seconds outside await could be cold fixture cost/CPU contention. Not evidence of343second blocked delivery."
+  },
+  "primaryHypothesis": "Native full-resolution numerical solve is still inside a costly step/settling sequence when30wallseconds expires, possibly compounded by preceding canceled step work and cold fixture preparation.",
+  "hypothesisStatus": "Unconfirmed runtime boundary; source alone insufficient for final implementation fix",
+  "minimalBoundedInstrumentation": [
+    {
+      "boundary": "test start/fixture ready/advance called/wait began/wait ended/stop",
+      "fields": [
+        "monotonicElapsedSeconds",
+        "testName"
+      ],
+      "purpose": "Separate cold preparation from30second worker window."
+    },
+    {
+      "boundary": "worker entry/before settled/return/error/cancellation",
+      "fields": [
+        "monotonicElapsedSeconds",
+        "steps",
+        "settleImmediately",
+        "Thread.isMainThread",
+        "settled",
+        "geometryAccepted",
+        "errorDescription"
+      ],
+      "purpose": "Prove work is scheduled and whether it finishes, throws or remains pending."
+    },
+    {
+      "boundary": "settled outerstep start/end at indices0,1,2,4,8,16,32,64,119,239,479,959,1199",
+      "fields": [
+        "monotonicElapsedSeconds",
+        "stepDuration",
+        "simulatedTime",
+        "maximumSpeed",
+        "boardDisplacement",
+        "maxLocalStrain",
+        "minClearanceMargin",
+        "settled"
+      ],
+      "purpose": "Bound log volume while locating per-step cost vs convergence."
+    },
+    {
+      "boundary": "first numerical step inner phase begin/end only",
+      "fields": [
+        "phase",
+        "correctionIndex",
+        "monotonicElapsedSeconds"
+      ],
+      "phases": [
+        "topologyRefresh",
+        "correctConstraints0",
+        "correctConstraints1",
+        "correctConstraints2",
+        "sweptGeometry",
+        "metrics"
+      ],
+      "purpose": "If first step exceeds30seconds, identify last entered phase without hot-loop logging."
+    },
+    {
+      "boundary": "controller resume after await/error",
+      "fields": [
+        "identityAccepts",
+        "capturedToken",
+        "currentToken",
+        "Task.isCancelled",
+        "generation",
+        "framePresent"
+      ],
+      "purpose": "Distinguish finished worker from rejected delivery."
+    },
+    {
+      "boundary": "bounded MainActor heartbeat after fixture ready during await",
+      "fields": [
+        "monotonicElapsedSeconds"
+      ],
+      "limit": "At most five once-per-second events; cancel afterward",
+      "purpose": "Demonstrate main actor remains responsive during numerical solve."
+    }
+  ],
+  "samplingGate": "Parent may sample exact owned-device test processPID for3seconds into workspace-owned artifact after worker-entry trace. Verify exactPID from owned-device process/log before sampling; capture no shared/unknown process. Sampling avoids instrumenting every numerical hot loop.",
+  "decisionGates": [
+    "No worker entry => investigate Task scheduling/actor context before modifying solver.",
+    "Worker entered, heartbeat continues, step progress slow/no return => sample CPU and optimize confirmed hot phase without changing physical/topological acceptance.",
+    "Worker returns accepted frame, controller resumed but identity false => targeted lifecycle/token fix with reproduction of that exact rejection.",
+    "Worker throws numerical error before timeout => fix underlying numeric/fixture initialization cause; never convert unsupported raw seed into accepted frame.",
+    "No heartbeat despite worker entry => use stack evidence to distinguish main actor blocking from cooperative executor starvation."
+  ],
+  "prohibitedShortcuts": [
+    "Timeout bump as final fix without measured boundaries",
+    "Loose geometry/settled acceptance",
+    "Skipping native fixture or paused publication assertions",
+    "Claiming run total equals settling wall duration"
+  ]
+}

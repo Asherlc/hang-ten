@@ -1,0 +1,99 @@
+{
+  "reviewedAtUTC": "2026-10-01T15:26:47.784305+00:00",
+  "status": "pass-final-integration-and-packet-closure",
+  "blockingFindings": [],
+  "currentSHA256": {
+    "Hangboards/metolius-simulator-3d/metolius-simulator-3d.FCStd": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+    "Hangboards/metolius-simulator-3d/assets/primary.usdz": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+    "Hangboards/metolius-simulator-3d/assets/primary.model.json": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d",
+    "Tools/HangboardCAD/compile_board.py": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d"
+  },
+  "outsidePackageChanges": [],
+  "unrelatedPackageFilesPreserved": 203,
+  "manifest": "Exact raw manifest and30contacts unchanged",
+  "queue": {
+    "otherRowsExactlyMatchHEAD": true,
+    "first7Accepted": true,
+    "review8HumanAcceptance": "pending",
+    "review8RecordAtInspection": "awaiting revised review #8; not accepted",
+    "currentIdentityAndLinksMatch": true
+  },
+  "testEvidence": {
+    "python": "706 passed, 11 skipped in 130.44s (0:02:10)",
+    "iOS": {
+      "passed": 1278,
+      "skipped": 3,
+      "failed": 0
+    },
+    "rerunsPerformedByReviewer": false
+  },
+  "deliveryParity": {
+    "packages": 64,
+    "modelPackages": 58,
+    "ODRAssets": 60,
+    "scope": "Fresh Apple installed bytes versus canonical generated Android staging; no Android runtime exists in checkout."
+  },
+  "appEvidence": {
+    "captureCount": 8,
+    "actualDragOrbits": 3,
+    "visualReviewer": "Root, direct full-frame inspection; this integration audit verifies hashes and records without claiming a second full-frame review."
+  },
+  "cleanup": {
+    "exactSimulatorUUID": "5DBF7406-93EC-474A-9320-931FC57FA394",
+    "deviceDirectoryAbsent": true,
+    "derivedDataAbsent": true,
+    "xcresultAbsent": true,
+    "recordedDeviceListHashMatches": true
+  },
+  "priorIndependentReviewPreserved": {
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/final-independent-review.json": "b59aa6697df6afc2aeae3df5f7ea44d59683b8f2a38b3cdd4f791833e2e5f08c",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/final-independent-review.md": "5ce31489011b2cc54bca4a60d9e8ef42140244f673df85d3010d1e96ab4aa89f"
+  },
+  "limits": [
+    "Existing94.1183246mm estimated thickness and6.77degree roof-normal limits remain; no globalG1 or manufacturing claim.",
+    "Human review8 remains pending."
+  ],
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/ios-summary.json": "ef926610a4b266db5b7e4a0f6be54c96230826f9fd818c48b518cd4256bd7a76",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/ios-tests.log": "d5b5211c756bbb291a1051106e182d54585817f020156e5d1097c90d53af807d",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/ios-test-command.json": "f989fadcda2f2844737f834e58ec67ee9f52caedf20a1455882d74b7f0f84a6b",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/ios-build-command.json": "59b58b2edc6f64fc67a9465dd769d2f7ab839121b9b5f6e89944895d7fa48d46",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/python-test-report.json": "cc3abc40938e2da74b6040a7a275ee7fa6014f8b50944d74b312ae215d2764f4",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/python-tests.log": "0279b54717348b86c305f9995fce9b291f1b0164d151d2a7bcab26ad8f7237c8",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/delivery-parity.json": "869e1ce5c5ab564505c11c7d262ab1b8fbc8e1adf563445ac83bbf3047bd6cb5",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/staging-command.json": "e58e6cd31c1439309188f5fb6a18f3269468c75528445ad7748fa472862c1881",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/run_delivery_parity.py": "fd8cf860fbae665948eced8afa0ecd5bb2b96509d2f52efa124f41a8d4e84ce6",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/verified-cleanup.json": "e8372710386ae7d2b2fb25cc3e8c8ca4a7269686373e00f0ae40af6cba068490",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/devices-fresh-deletion-verification.json": "58be6d8fa49280a34eb698c8462ee0a608bb64a1526e052ebae0de92272ad7e1",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/installed-app-provenance.json": "b0b38a81fda042a2a07749cd178f2a743856ea0628f1860ae0af136567034739",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-visual-review.json": "47f7a457b384a38433863e52a3ac682bdd37a1395ccff610808eb86f67ca1865",
+    ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-captures/validation.json": "d89a77f6a4cffbbb765490929be918b27a98624a06bdf22edab822ddb98cb43b",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/visual-review.json": "09f59cfb0fe1ee030cbd3d1d1dfb59dc8999901272a4e736f529c75f3b24879d",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/cleanup.json": "e0c2285d8fbb2b7de2f9ae9b44da1978e64e476eaad5e3bb12f310a163ea7527",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json": "e0adef45f0c0436dcfc2409645c7f0b0b213d10f905c4db24ce19722a5d39f0d",
+    "docs/source-audits/2026-09-29-remaining-cad/installed-delivery-validation.json": "6894633ce0bbd28f2e2ae969b567603235ba952665d8a21132e39231371d3dc7",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/human-review.json": "4329f79d9b756f616892212fdc44618d68b1d523ab95bbbc7a89edbe3c05b4e6",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/jagged-review/index.html": "caf716f286d436176a8b01763dd7e2c3384a7a1d9a4cfc8a2042137fd6e89fe2",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/jagged-review/review.md": "18a4c19bdac76eab196e5b3ea1691e68d28f30566ac62031b6e52adaee3b0550",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/jagged-review/provenance.json": "a7626c634d3dfb127ed67fba716409d13330b6628d840dd81599f7900485b0e3",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/jagged-review/runtime-validation.json": "eca83f3dec9eed35eebd636253b924fe917338f482726fa8bc125995bb1f4f06",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/jagged-review/raw-retention.json": "b35c29ab5f37d6961e53b34f4d16323c5e05bce01c40100846c47dab5392d640",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/jagged-review/retained-files.json": "8af84f63ea5a6e132365847956721a13f6d12ef54ccbaab75ad5ad5fa035155a",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/jagged-review/composition-provenance.json": "0f1ceffaefb3afa78616b98418d2fde0e7590ccf612225da4f171150bb4da541",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/jagged-review/app/after/validation.json": "d89a77f6a4cffbbb765490929be918b27a98624a06bdf22edab822ddb98cb43b"
+  },
+  "packetClosure": {
+    "rawByteIdenticalCopies": 367,
+    "inventoryFilesChecked": 352,
+    "runtimeAssertionsAndReportHashesMatch": true,
+    "humanReview": "pending; originalJagged feedback/history retained",
+    "localReviewLinksExist": true,
+    "historicalInputDisposition": {
+      "retainedPaths": [
+        "before/original-audit/human-review.json",
+        "before/original-audit/source-audit.md"
+      ],
+      "reason": "Canonical source paths were intentionally updated during integration; retained capture-time bytes exactly match revisionBaseCommit b097aa5ba34d55e69b9cdac73122b06774947a16 via independent git show SHA256 comparison. All367 retained bytes match declared hashes;365 still match live input files,2match exact historical commit."
+    }
+  }
+}

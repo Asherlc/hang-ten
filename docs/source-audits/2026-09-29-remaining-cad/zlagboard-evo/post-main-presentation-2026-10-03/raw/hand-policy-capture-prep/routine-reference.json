@@ -1,0 +1,333 @@
+{
+  "planLibraryPath": "HangTen/Resources/PlanLibrary.json",
+  "planLibrarySHA256": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1",
+  "authoredRecords": [
+    {
+      "id": "research.max-hangs.warm-up",
+      "steps": [
+        {
+          "accessory": "10s hang \u00b7 3m recovery \u00b7 half crimp \u00b7 3s in reserve",
+          "action": "hang",
+          "activeDuration": 10,
+          "duration": 190,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "id": "max-hangs-1",
+          "instruction": "Hang for 10 seconds on your chosen 8\u201320 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 10,
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed"
+            },
+            {
+              "duration": 180,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "title": "Max hang \u00b7 set 1"
+        }
+      ],
+      "title": "Max hang \u00b7 set 1"
+    },
+    {
+      "id": "research.max-hangs.main",
+      "steps": [
+        {
+          "accessory": "10s hang \u00b7 3m recovery \u00b7 half crimp \u00b7 3s in reserve",
+          "action": "hang",
+          "activeDuration": 10,
+          "duration": 190,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "id": "max-hangs-2",
+          "instruction": "Hang for 10 seconds on your chosen 8\u201320 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 10,
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed"
+            },
+            {
+              "duration": 180,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "title": "Max hang \u00b7 set 2"
+        },
+        {
+          "accessory": "10s hang \u00b7 3m recovery \u00b7 half crimp \u00b7 3s in reserve",
+          "action": "hang",
+          "activeDuration": 10,
+          "duration": 190,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "id": "max-hangs-3",
+          "instruction": "Hang for 10 seconds on your chosen 8\u201320 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 10,
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed"
+            },
+            {
+              "duration": 180,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "title": "Max hang \u00b7 set 3"
+        },
+        {
+          "accessory": "10s hang \u00b7 3m recovery \u00b7 half crimp \u00b7 3s in reserve",
+          "action": "hang",
+          "activeDuration": 10,
+          "duration": 190,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "id": "max-hangs-4",
+          "instruction": "Hang for 10 seconds on your chosen 8\u201320 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 10,
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed"
+            },
+            {
+              "duration": 180,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "title": "Max hang \u00b7 set 4"
+        },
+        {
+          "accessory": "10s hang \u00b7 half crimp \u00b7 3s in reserve",
+          "action": "hang",
+          "activeDuration": 10,
+          "duration": 10,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "id": "max-hangs-5",
+          "instruction": "Hang for 10 seconds on your chosen 8\u201320 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 10,
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed"
+            }
+          ],
+          "title": "Max hang \u00b7 set 5"
+        }
+      ],
+      "title": "Max Hangs"
+    },
+    {
+      "blocks": [
+        {
+          "blockID": "research.max-hangs.warm-up"
+        },
+        {
+          "blockID": "research.max-hangs.main"
+        }
+      ],
+      "id": "research.max-hangs",
+      "metadata": {
+        "category": "research",
+        "level": "Advanced",
+        "notes": [
+          "Adapted from Eva L\u00f3pez's author-published MAW guidance: five sets of 10 seconds, a 3-second margin before failure, and 3-minute rests between sets.",
+          "Choose an 8\u201320 mm edge before starting. Five sets is a fixed session within the source's 3\u20135-set range; this is not the full 2012 study's periodized program.",
+          "Complete a progressive warm-up before this timed session; see the original study (doi:10.1080/19346182.2012.716061)."
+        ],
+        "provenance": "adapted",
+        "sourceLabel": "Eva L\u00f3pez \u00b7 MaxHangs (MAW)",
+        "sourceURL": "https://en-eva-lopez.blogspot.com/2018/05/fingerboard-training-guide-II-Maxhangs-SubHangs-and-Inthangs-methodology.html",
+        "subtitle": "Adapted session: five 10-second half-crimp hangs on a chosen 8\u201320 mm edge, leaving 3 seconds in reserve.",
+        "tags": [
+          "built-in",
+          "research"
+        ],
+        "title": "Max Hangs",
+        "workoutLabels": [
+          "max-effort"
+        ]
+      }
+    }
+  ],
+  "cadence": {
+    "hangSeconds": 10,
+    "betweenSetRestSeconds": 180,
+    "initialCountdownSeconds": 3
+  },
+  "correction": "User task mentioned historical7s; current merged source is10s. No content modified.",
+  "sourceFiles": {
+    "HangTen/Views/WorkoutView.swift": "caa67bd053af93b60b92adc14e9ba6a3325ac0e91936d765f56d6232314a7029",
+    "HangTen/Views/WorkoutSessionState.swift": "1cb5f7d33c84bd403e68ce06bcd5dc8580d8f63889984b09b9ceb2037ae2a28f",
+    "HangTen/Views/TrainView.swift": "b8720ac7c42252f22dceecb8a58f96a1de297068bbb7a3972bddac8c7072fccf",
+    "HangTen/Models/DeepLinkManager.swift": "e56a93e0908cce433dbdbe2f49f3e75bfdda600f94118806020d51117a2fe030",
+    "HangTen/Models/AppStore.swift": "48ce4d87e27cef4ba06a8d4077523f550dee89abd64d167c8ea924601b0b6107"
+  }
+}

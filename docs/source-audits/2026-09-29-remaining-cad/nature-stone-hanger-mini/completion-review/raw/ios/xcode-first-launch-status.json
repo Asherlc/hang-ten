@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "xcodebuild",
+    "-checkFirstLaunchStatus"
+  ],
+  "readOnly": true,
+  "timeoutSeconds": 25,
+  "ownedProcessGroup": 51119,
+  "exitCode": 0,
+  "output": "",
+  "ownedProcessGroupAbsent": true,
+  "elapsedSeconds": 0.16009904199745506
+}

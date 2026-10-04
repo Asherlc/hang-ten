@@ -1,0 +1,114 @@
+{
+  "owner": "placid-badger",
+  "recordedAtUTC": "2026-10-01T17:30:30.139764+00:00",
+  "status": "rejected diagnostic: native trim face BOP failure; not final validation",
+  "sourceSHA256": "d4f4c07d5c17afce79350100c3f694ce30043a97ce45a9920e8654355cdb1692",
+  "humanAcceptance": "pending review #8",
+  "reason": "Native d4f4 rear-root trim face failed strict BOP InvalidCurveOnSurface. Finite pcurve/curve diagnosis retained; no strict BOP waiver or final gate pass.",
+  "logsMayBePartialAtFreeze": false,
+  "finalAcceptanceCarriedForward": false,
+  "rawCopies": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-d4f4/author_functional_probe.py",
+      "retained": "author/author_functional_probe.py",
+      "sha256": "fa9bf4275b50cf089e70d13585410231f630ef17ca5d3174179c8c956c8306c5",
+      "bytes": 14779
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-d4f4/nose-seam-check.json",
+      "retained": "author/nose-seam-check.json",
+      "sha256": "3dea1115f865b58dad21243b92f16fc954846cfd91be72b50fb88e8f1baea4ca",
+      "bytes": 3936
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-d4f4/probe-body-mesh.json",
+      "retained": "author/probe-body-mesh.json",
+      "sha256": "e0c4f5927c206ba842d60062926c46038b0f7464af1a3a6a4a663c091d6c7a12",
+      "bytes": 4404800
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-d4f4/probe-body.brep",
+      "retained": "author/probe-body.brep",
+      "sha256": "f7836eeb84b84c4117f88d4728204499e50cdef076674b617027311cdc9f8e49",
+      "bytes": 2964686
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-d4f4/probe-design.json",
+      "retained": "author/probe-design.json",
+      "sha256": "63b2df764958f12a39ff7a905501dd6d71fed9aa4d0a1031948455db7da661be",
+      "bytes": 8039
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-d4f4/probe-source.FCStd",
+      "retained": "author/probe-source.FCStd",
+      "sha256": "d4f4c07d5c17afce79350100c3f694ce30043a97ce45a9920e8654355cdb1692",
+      "bytes": 4607473
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-d4f4/refine-bop-probe.json",
+      "retained": "author/refine-bop-probe.json",
+      "sha256": "5a058a3c7a96827e0e36afd5de63b159d03a4214b6afd7442e3c3aad83310366",
+      "bytes": 2512
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-d4f4/repaired-root-check.json",
+      "retained": "author/repaired-root-check.json",
+      "sha256": "9112f1e57900afb087444539bb15bcdfd3e647b44b8cb78c99236f8e4c3d7642",
+      "bytes": 940
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/trim-review-d4f.json",
+      "retained": "independent-validation/trim-review-d4f.json",
+      "sha256": "e9794a460d3b9171339219df38aa9a56eb1e8641c624832c65e76404acf6d74f",
+      "bytes": 1955
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/trim-curve-diagnosis.json",
+      "retained": "independent-validation/trim-curve-diagnosis.json",
+      "sha256": "a38cf924c7833d4ad0334b83afc0111ddc9811675010be930d6880aab20bbfeb",
+      "bytes": 312885
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/trim-curve-diagnosis-dense.json",
+      "retained": "independent-validation/trim-curve-diagnosis-dense.json",
+      "sha256": "29ccc6480f3b4ceb231f784e59d6abf030812e8c48f98a4f4b9f4b39f603cc6d",
+      "bytes": 2856879
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/trim-curve-diagnosis.log",
+      "retained": "independent-validation/trim-curve-diagnosis.log",
+      "sha256": "d919de0204336e9a7c60147939d8fe42c75de16120715aabc2bf4df625071449",
+      "bytes": 121
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/trim-curve-diagnosis-dense.log",
+      "retained": "independent-validation/trim-curve-diagnosis-dense.log",
+      "sha256": "d919de0204336e9a7c60147939d8fe42c75de16120715aabc2bf4df625071449",
+      "bytes": 121
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/trim-curve-diagnosis-ownership.json",
+      "retained": "independent-validation/trim-curve-diagnosis-ownership.json",
+      "sha256": "55a5603248468903a830b21b26984999091125d57698291f7417c79a88bba0d2",
+      "bytes": 372
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/trim-curve-diagnosis-dense-ownership.json",
+      "retained": "independent-validation/trim-curve-diagnosis-dense-ownership.json",
+      "sha256": "16b4f18244f1c74772ad7063ef8057d7644099ec35ea635b65a83e3b5b48b147",
+      "bytes": 382
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/diagnose_trim_curves.py",
+      "retained": "independent-validation/diagnose_trim_curves.py",
+      "sha256": "5510c6c514032f747cabce9167edb7b6c491a4ccefbed41714ebf603d9499a0c",
+      "bytes": 1844
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/diagnose_trim_curves_dense.py",
+      "retained": "independent-validation/diagnose_trim_curves_dense.py",
+      "sha256": "f9d43df7d9050add3ea6e4a7b8338a32f84e25e3bfcaec3176b84b16590bda73",
+      "bytes": 1943
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "status": "pass",
+  "field": "nature_pinch.HangTenDepthAxis",
+  "before": "absent (compiler default y)",
+  "after": "Z",
+  "nativePinchOppositionSpanMM": 60.0,
+  "allShapeAreasAndVolumesUnchanged": true,
+  "manifestRawUnchanged": true,
+  "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0"
+}

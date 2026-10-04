@@ -1,0 +1,32 @@
+{
+  "status": "Prospective scratch-only diagnostic; not applied or built; conditional on parent experiment gate",
+  "source": "HangTen/Models/BoardModelRealityTypes.swift",
+  "inputSHA256": "e186a896f012ee595690d78013dfef7816d5caf54a0bac7b699e1c20cdbfc872",
+  "proposedSHA256": "929ab78c1d4ed9806e156a4fbe04c0afd0622d3bf24bee03d4d2a8686686b0f3",
+  "patchSHA256": "4560a4e56ae94bee073027c586bc0de53a3d0d83c7389defa8a4fe62ecd05f23",
+  "applyCheckExitCode": 0,
+  "launchGate": "DEBUG + HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC=1 + HANGTEN_REVIEW_PREDECESSOR_ATTACHMENT_CENSUS=1",
+  "references": [
+    "BoardHighlightDiagnostic.boardSceneConstructed existing marker",
+    "BoardHighlightDiagnostic.capture existing dedup and sparse event export"
+  ],
+  "ownership": "Registry retains only small weak-box objects and identity strings; wrapper/root/camera are separate weak references. Temporary strong entity reads exist only during synchronous snapshot serialization. No entity mutation, deinit logging, observable state, counters, callbacks, new events or timers.",
+  "snapshot": "All lifetime tokens observed by existing constructor marker retained as tombstones. Existing retained capture rows gain census after update dedup. No signature fields changed; no observation scheduled when existing capture dedups. Dead entity emits alive:false only; attachment/active fields absent rather than invented false.",
+  "interpretation": [
+    "Correlate constructor token/model SHA with Train and workout records using complete stream; do not infer role from creation order alone.",
+    "After Train disappearance, inspect predecessor root and camera independently: weak liveness, actual parentEntityID and RealityKit scene ID, enabled and isActive.",
+    "Match live actual scene IDs to same-time applicationCensus renderer placements where present; unmatched scene ID is not proof of visible host.",
+    "Wrapper alive does not prove attachment. Entity scene membership/isActive does not prove GPU execution, visibility, or causal influence.",
+    "Weak nil proves object gone by that synchronous observation; weak nonnil proves liveness only at observation. Separate reads are point observations, not synchronized render-frame snapshots.",
+    "No observation between existing sparse events can establish exact deallocation/detachment time. Existing samplers and task lifetimes remain unchanged; any retention they cause predates this census."
+  ],
+  "validationRequired": [
+    "Complete launch-opening-to-tail stream and constructor markers, no unexplained tokens",
+    "Gate enabled for both control and suppression arms; exact same binary and remaining launch environment",
+    "All observed constructor tokens present in each later census, one marker per token",
+    "No census field in viewSignatures; unchanged event scheduling and semantic inputs",
+    "Actual workout frames/camera/selection/timing correspondence remains required",
+    "Runtime typecheck/build and behavior not performed by this proposal"
+  ],
+  "limitations": "This observes attachment before a teardown decision; it neither chooses nor implements teardown and does not establish retained-host causality."
+}

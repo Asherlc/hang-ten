@@ -1,0 +1,166 @@
+{
+  "owner": "placid-badger",
+  "date": "2026-10-03",
+  "number": 13,
+  "boardID": "plateau.lifting-edge",
+  "package": "plateau-lifting-edge",
+  "status": "bounded appearance/pick/touch evidence; fresh app human acceptance pending",
+  "appWorkflowPassed": false,
+  "currentAppHumanAcceptance": "pending",
+  "acceptedGeometry": {
+    "humanReview": "Shown #13 CAD shape and seated cord accepted; current app wood, neutral components, cord, picking, highlights and workout appearance remain unverified",
+    "humanReviewRecord": "plateau-lifting-edge/human-review.json",
+    "reviewPage": "plateau-lifting-edge/review13-2026-10-02/index.html",
+    "unchangedAcceptedGeometry": true,
+    "newHumanAppAcceptance": "pending"
+  },
+  "immutablePackageSHA256": {
+    "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+    "Hangboards/plateau-lifting-edge/assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+    "Hangboards/plateau-lifting-edge/assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+    "Hangboards/plateau-lifting-edge/suspension.json": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+  },
+  "installedAppProvenance": {
+    "path": "installed-app-provenance.json",
+    "sha256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+    "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca"
+  },
+  "representativeContactCoverage": "One physical edge across the 18 \u2192 15 \u2192 10 \u2192 18 mm authored presentation sequence.",
+  "selectedContactIDsCaptured": [
+    "edge-18"
+  ],
+  "wholeFrameVisualAudit": {
+    "status": "supplied audit complete",
+    "path": "visual-audits/13-visual-audit.json",
+    "sha256": "7f236399531ce72feaf27ab9d042e2d05697f4126e3232b3b612a96f9780f680",
+    "findingStatuses": [
+      {
+        "check": "wood and neutral attachment materials",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": null,
+        "frames": [
+          "app-captures/13-live-front.png",
+          "app-captures/13-effective-depth-15.png",
+          "app-captures/13-effective-depth-10.png",
+          "app-captures/13-live-top-oblique.png",
+          "app-captures/13-live-unselected-train.png"
+        ]
+      },
+      {
+        "check": "selected edge coverage",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": "The selected rail becomes occluded at the final end-on angle. Its card and receipt still identify edge-18; no highlight visibility claim is made for a hidden surface.",
+        "frames": [
+          "app-captures/13-live-hold-edge-18.png",
+          "app-captures/13-live-horizontal-orbit-1.png",
+          "app-captures/13-live-top-oblique.png",
+          "app-captures/13-live-normal-lens.png"
+        ]
+      },
+      {
+        "check": "native curl cord seating",
+        "status": "PASS_VISIBLE_ROUTE",
+        "limitation": "Whole-frame images do not recertify hidden bearing clearance or numerically prove source-solved transform invariance.",
+        "frames": [
+          "app-captures/13-live-front.png",
+          "app-captures/13-live-horizontal-orbit-1.png",
+          "app-captures/13-live-horizontal-orbit-2.png",
+          "app-captures/13-live-horizontal-orbit-3.png",
+          "app-captures/13-live-top-oblique.png"
+        ]
+      },
+      {
+        "check": "ordinary touch orbit and top-oblique view",
+        "status": "PASS_SUPPLIED_SETTLED_VIEWS",
+        "limitation": "Captured states do not assess unseen animation frames, reset behavior, or mesh picking while orbiting.",
+        "frames": [
+          "app-captures/13-live-horizontal-orbit-1.png",
+          "app-captures/13-live-horizontal-orbit-2.png",
+          "app-captures/13-live-horizontal-orbit-3.png",
+          "app-captures/13-live-top-oblique.png"
+        ]
+      },
+      {
+        "check": "physical mesh pick",
+        "status": "PASS_ONE_SUPPLIED_CONTACT_PICK",
+        "limitation": "One front-view pick at 18 mm is audited. Picks of the other two media variants, taps on neutral parts, and deselection are not claimed.",
+        "frames": [
+          "app-captures/13-edge-physical-mesh-pick.png"
+        ]
+      },
+      {
+        "check": "position-effective depth and variant switching",
+        "status": "PASS_SUPPLIED_18_15_10_18_SEQUENCE",
+        "limitation": "The launch timestamp is shared across the supplied sequence, but the renderer revision resets to 1 for each media variant. No retained entity identity or same-scene continuity claim is made across presentation replacement. Portrait segment labels are ellipsized while their distinct depth numbers remain readable.",
+        "frames": [
+          "app-captures/13-edge-physical-mesh-pick.png",
+          "app-captures/13-effective-depth-15.png",
+          "app-captures/13-effective-depth-10.png",
+          "app-captures/13-effective-depth-18-restored.png"
+        ]
+      },
+      {
+        "check": "landscape fit and selected UI",
+        "status": "PASS_BOARD_AND_CORD_FIT_PORTRAIT_CARD",
+        "limitation": "The landscape selected card falls below the captured viewport. The hold-map chip is partly behind the portrait tab bar at this scroll position; chip interaction and scrolling are not audited.",
+        "frames": [
+          "app-captures/13-live-landscape.png",
+          "app-captures/13-live-normal-lens.png",
+          "app-captures/13-effective-depth-15.png",
+          "app-captures/13-effective-depth-10.png"
+        ]
+      }
+    ]
+  },
+  "physicalMeshPick": {
+    "status": "pass one supplied physical mesh tap",
+    "pickedContactID": "edge-18",
+    "receipt": "app-captures/13-edge-physical-mesh-pick-receipt.json",
+    "receiptSHA256": "ce2158599d3c1956ba92e367689e9b9ade2c675e6d0c740060ed6b4a85641932",
+    "frame": "app-captures/13-edge-physical-mesh-pick.png",
+    "imageSHA256": "caf91bc8f0d07f00a759fc82aa533b37dd1131cadf3d0f5e7aa34fdd3901f610",
+    "before": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=-0.2914568;cameraSettled=true;selection=edge-18;tapRevision=0;pickedContact=",
+    "after": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=-0.2914568;cameraSettled=true;selection=edge-18;tapRevision=1;pickedContact=edge-18"
+  },
+  "representativeFrames": [
+    "app-captures/13-live-front.png",
+    "app-captures/13-edge-physical-mesh-pick.png",
+    "app-captures/13-live-hold-edge-18.png"
+  ],
+  "touchEvidence": {
+    "status": "settled ordinary touch capture sequence; scope limited to supplied states",
+    "frames": [
+      "app-captures/13-live-horizontal-orbit-1.png",
+      "app-captures/13-live-horizontal-orbit-2.png",
+      "app-captures/13-live-horizontal-orbit-3.png"
+    ],
+    "visualAuditPending": false
+  },
+  "limitations": [
+    "Variant switching recreates presentation entities; no same-entity continuity claim.",
+    "One physical pick at 18 mm; 15/10 mm physical picks not claimed."
+  ],
+  "workout": {
+    "passed": false,
+    "status": "not executed after common #10 workout gate failed",
+    "commonGateEvidence": "capture-traces/10-workout-observation.json",
+    "trace": "capture-traces/workout-multi.json",
+    "workFrame": "app-captures/10-workout-landscape-work-highlight.png",
+    "restFrame": "app-captures/10-workout-landscape-rest-preview.png"
+  },
+  "focusedVerification": {
+    "path": "validation/final-strong-summary.json",
+    "sha256": "6c5f8e87f5a23babe0dbf11b7150c5e1b0a24ce41a3bfeb5fb622aa03cf0d8be",
+    "passed": 455,
+    "failed": 0,
+    "skipped": 1,
+    "fullSuitePassed": false,
+    "refinement": "validation/final-test-refinement.json"
+  },
+  "productionGeometryChanged": false,
+  "newManufacturerFactsOrRoutineChanges": false
+}

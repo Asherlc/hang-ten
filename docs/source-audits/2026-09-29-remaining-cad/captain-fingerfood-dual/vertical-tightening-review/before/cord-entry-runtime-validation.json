@@ -1,0 +1,125 @@
+{
+  "owner": "placid-badger",
+  "date": "2026-09-30",
+  "package": "captain-fingerfood-dual",
+  "boardID": "captain-fingerfood.dual",
+  "passed": true,
+  "scope": "Front-mouth cord-entry correction: native exact routes, solid/tube clearance, current-source canonical app rendering and delivery identity.",
+  "feedback": "Cord doesn\u2019t go through holes",
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "descriptorSHA256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+  "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+  "suspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+  "solverSHA256": "40d23e454d8790fd4769a7e6713a831e810a1ae3756c786776203b915cc6ffd1",
+  "testSourceSHA256": "3517ccefd0db22167057fa64cd38073d8dddb7093ac55981353ab3d2f3fd5efd",
+  "generatedManifestSHA256": "50f7cf31287e5ca78c22baa3ba312310f15e2f7973295a80c2ccb6861b970793",
+  "binaryProvenance": {
+    "owner": "placid-badger",
+    "simulator": "B50C9F34-769B-4CBD-A642-F109D3867F69",
+    "builtApp": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app",
+    "installedApp": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/B50C9F34-769B-4CBD-A642-F109D3867F69/data/Containers/Bundle/Application/05B7A052-FA8C-4C19-B145-1439D8ED8FCC/HangTen.app",
+    "binarySHA256": "776b2b7e54280d4e3b291ec97cfed7bd9643cf38a012aa5863575c048bb33e24",
+    "builtInstalledBinaryMatch": true
+  },
+  "nativeChecks": {
+    "exactRegeneration": "passed all four poses",
+    "fullSolidAndTubeClearance": "passed all four rounded runtime caches",
+    "frontMouthEntry": "both leads in all four poses",
+    "unrelatedBaguetteCaches": "all five unchanged"
+  },
+  "python": {
+    "passed": 569,
+    "deselected": 1,
+    "reasonForDeselection": "Unchanged full-catalog native byte rebuild already independently proved; source, USDZ and descriptor remain exact.",
+    "report": "front-mouth-review/full-python.log",
+    "reportSHA256": "a0abfbe55c6e060fcb1f3b4f7017a7bbc58ef75990a0db879d2174c26fda45d8"
+  },
+  "iOS": {
+    "passed": 1258,
+    "skipped": 3,
+    "failed": 0,
+    "total": 1261,
+    "device": "iPhone 17 Pro",
+    "runtime": "iOS 26.5",
+    "simulator": "B50C9F34-769B-4CBD-A642-F109D3867F69",
+    "buildCommand": [
+      "xcodebuild",
+      "-project",
+      "HangTen.xcodeproj",
+      "-scheme",
+      "HangTen",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "platform=iOS Simulator,id=B50C9F34-769B-4CBD-A642-F109D3867F69",
+      "-derivedDataPath",
+      ".context/DerivedData",
+      "build-for-testing"
+    ],
+    "testCommand": [
+      "xcodebuild",
+      "-project",
+      "HangTen.xcodeproj",
+      "-scheme",
+      "HangTen",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "platform=iOS Simulator,id=B50C9F34-769B-4CBD-A642-F109D3867F69",
+      "-derivedDataPath",
+      ".context/DerivedData",
+      "-parallel-testing-enabled",
+      "NO",
+      "-only-testing:HangTenTests",
+      "-resultBundlePath",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/dual-cord-feedback/placid-badger-dual-cord-tests.xcresult",
+      "test-without-building"
+    ],
+    "testResult": "Passed; xcodebuild exit 0",
+    "testFinalization": "Test assertions completed in 34.7 seconds. Slow post-test simctl diagnostic collection was stopped by exact owned PID; Xcode then finalized with success. Recorded separately in cord-entry-test-results/test-diagnostics-stop.json."
+  },
+  "app": {
+    "canonicalPosesCaptured": 4,
+    "selectedContactVisible": true,
+    "cordAccessibilityAbsent": true,
+    "physicalOrbitVerified": false,
+    "captureProvenance": "app-review/validation.json"
+  },
+  "automatedSceneCoverage": {
+    "allDUALPositionsAndNonPickableCords": "BoardModelRealityTests.testNativeCADModelsCreateNonPickableCordSegmentsInEveryPosition passed",
+    "sharedSceneOrbitAndReset": "BoardModelRealityTests.testCameraOrbitAndResetUpdateRealityKitCamera passed on Pivot; this does not prove physical DUAL drag behavior",
+    "sharedHighlightAndSelectionClearing": "Existing RealityKit highlight/selection clearing tests passed"
+  },
+  "installedDelivery": {
+    "bundledPackages": 64,
+    "modelPackages": 58,
+    "ODRModelAssets": 60
+  },
+  "cleanup": {
+    "simulator": "B50C9F34-769B-4CBD-A642-F109D3867F69",
+    "cleanupStatus": 0,
+    "derivedDataRemoved": true,
+    "simulatorDeletionVerified": true,
+    "resultBundleRemoved": true,
+    "resultSummaryRetained": "cord-entry-test-results/ios-summary.json"
+  },
+  "onlyPackageFileChanged": "Hangboards/captain-fingerfood-dual/suspension.json",
+  "nativeSourceModelDescriptorUnchanged": true,
+  "humanReview": "awaiting revised DUAL review; do not advance queue",
+  "limits": [
+    "App screenshots establish four canonical selected-contact states. Physical UI orbit did not change the camera and remains unverified; attempted oblique images are omitted.",
+    "Native technical front/side/top comparisons and continuous solid/tube checks provide the additional route views.",
+    "Cord dimensions are retained display estimates; no hidden connection or global rope-equilibrium claim is added."
+  ],
+  "evidenceSHA256": {
+    "app-review/validation.json": "5dbcf703a446f2829afbcb92f8d89d5295660f67f69f53be7dcc6af35a9425a2",
+    "cord-entry-verification.json": "54d2f5b03f2f678608f05edb0613bc4788e9541851116dbe553aa88a5e5a419a",
+    "cord-entry-source-review.json": "3f35c5f4dc37c745442f2f67afb2e680680bd4c7d07558e8344abbb7c3564143",
+    "native-route-check.json": "552769af7d7d680d6f59c404816cd830b0b7c97ec746a9a7eb5ab82fdba90cb8",
+    "continuous-cord-clearance.json": "f85f2ad21aa95719e3b660b27127d15281305235b0693944789c255fa4aaf411",
+    "final-solver-independent-review.json": "963b9c524aa3d67c984a6432d6d51e957de67a697c4638d3986f58811e452242",
+    "cord-entry-test-results/ios-summary.json": "5b969b64dfcf3e146098bc2f7016252928afa28b84487f9a7e1e301f33fcbb07",
+    "cord-entry-test-results/ios-tests.log": "bfecdc3ab1dd9af4023bd7549bb2a22692c5a7576e06bac86836760a2a01653b",
+    "cord-entry-test-results/resource-cleanup.json": "e0830966abf7f0cf881dde352b8be8795026dffcaa5174c8ca82eaff9979bd4e"
+  }
+}

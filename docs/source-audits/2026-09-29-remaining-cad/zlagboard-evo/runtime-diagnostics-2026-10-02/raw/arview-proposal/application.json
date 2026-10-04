@@ -1,0 +1,7 @@
+{
+  "beforeSHA256": "9393df190a056ca79f45dacba4855240f3c1a1670529cd4936247ecc1e9bedab",
+  "afterSHA256": "e33608bee0580b78496c3b92fd1ba21247d90faac64c074bbfa1b8f0420bd005",
+  "patchSHA256": "fc6148734397b078215ff6ced34c11cd6160a7ea48bf130877489145d55d5a65",
+  "scope": "DEBUG host probe only when onContactTap nil; no production interaction changes",
+  "authorization": "Root explicit diagnostic ARView gate; no production adoption"
+}

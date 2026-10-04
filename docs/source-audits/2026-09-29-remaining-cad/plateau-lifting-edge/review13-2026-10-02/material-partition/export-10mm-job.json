@@ -1,0 +1,18 @@
+{
+  "name": "placid-badger-plateau13-material-export-10mm",
+  "timeoutSeconds": 180,
+  "command": [
+    "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+    "--user-cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-10mm-tmp/placid-badger-FreeCAD-user.cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-compile-material-partition.py"
+  ],
+  "ownedExtraDirectories": [
+    "placid-badger-plateau13-export-10mm-staging"
+  ],
+  "environment": {
+    "HANGTEN_CAD_PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311",
+    "PLATEAU_PRESENTATION_ID": "depth-10mm",
+    "PLATEAU_EXPORT_STAGING_NAME": "placid-badger-plateau13-export-10mm-staging"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "owner": "placid-badger",
+  "status": "Frozen scratch candidate ready for root independent gate/promotion",
+  "nativeSource": {
+    "path": "owl-climb-poker.FCStd",
+    "sha256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553"
+  },
+  "asset": {
+    "path": "compile-1/assets/primary.usdz",
+    "sha256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+    "bytes": 2044005,
+    "identicalBothBuilds": true
+  },
+  "descriptor": {
+    "path": "compile-1/assets/primary.model.json",
+    "sha256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+    "bytes": 16823,
+    "identicalBothBuilds": true
+  },
+  "authorShapeVerdict": "Targeted Face A discrepancy resolved; no further source-supported blockers identified in the whole approved maker/native/exact-USDZ views. Final independent review and human runtime review remain separate gates.",
+  "shapeConfidence": "medium-high qualitative photo fidelity; exact profile/radius/depth remain display estimates",
+  "reviewed": [
+    "all four whole approved maker images",
+    "all four independent native face views",
+    "all four actual candidate USDZ face views",
+    "whole prior/current front side top comparisons",
+    "A/B and C/D whole obliques",
+    "descriptor-owned B contact extents in A B and oblique views",
+    "native B-profile prior/current section at X=-132 mm"
+  ],
+  "validation": {
+    "native": "native-validation.json",
+    "nativeFeatureAndMetadataPreservation": "metadata-feature-preservation.json",
+    "firstCompile": "compile-1-report.json",
+    "secondCompile": "compile-2-report.json",
+    "exportAndReproducibility": "export-validation.json",
+    "cd": "cd-final-regression.json",
+    "renderProvenance": "render-provenance.json",
+    "contacts": "contact-extents.json"
+  },
+  "nativeChecksSummary": "One valid solid; 660x100x100 envelope;187 fully constrained sketches;34 unchanged contact IDs;32 unaffected native contact surfaces with zero unmatched overlap area;4% PocketDepthScale edit/restore;source bytes unchanged.",
+  "exportSummary": "Two separate clean processes yield byte-identical USDZ and descriptor;35 meshes/34 contacts;91612 triangles;no materials, bindings or textures;all34 measured display depth values match prior exactly;C/D seam angles unchanged at2.7528456839127657 degrees.",
+  "measuredDepthCaveat": "Poker manifest has no per-contact depth facts. All reported depths are measured display geometry, not manufacturer grip-depth claims.",
+  "manifestDifference": [
+    {
+      "path": "/presentations/0/media/display/surfaceFinish",
+      "before": null,
+      "after": "wood"
+    }
+  ],
+  "canonicalSourceAndAssetUntouched": true,
+  "runtimeFinish": "unverified; CPU shape diagnostics only",
+  "cleanup": [
+    {
+      "registry": "resources.json",
+      "allProcessGroupsAbsent": true,
+      "allTemporaryDirectoriesDeleted": true
+    },
+    {
+      "registry": "validation-resources.json",
+      "allProcessGroupsAbsent": true,
+      "allTemporaryDirectoriesDeleted": true
+    },
+    {
+      "registry": "compile2-resources.json",
+      "allProcessGroupsAbsent": true,
+      "allTemporaryDirectoriesDeleted": true
+    }
+  ],
+  "compilerStagingDeleted": true,
+  "otherDiagnosticCleanup": "sample-resource.json",
+  "selectedCurve": "selected-curve.json",
+  "authoringNotes": "geometry-authoring-notes.md",
+  "reviewPage": "whole-review.html"
+}

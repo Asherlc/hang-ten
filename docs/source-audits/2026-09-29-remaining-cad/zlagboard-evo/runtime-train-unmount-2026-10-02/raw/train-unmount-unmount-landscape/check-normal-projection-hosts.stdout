@@ -1,0 +1,31 @@
+{
+  "checks": {
+    "workoutSceneFromCountdown": true,
+    "hostObserved": true,
+    "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+    "sameHost": true,
+    "sameActualScene": true,
+    "rootCameraActiveSameScene": true,
+    "hostVisible": true,
+    "sampledFramesOnMonotoneOwnEndpointPath": true,
+    "allPostFirstCaptureCensusesFinal": true
+  },
+  "censuses": 128,
+  "otherScenes": [
+    "9FF9A764-F0A7-4BC6-A925-D2466ABE89CB"
+  ],
+  "endpoints": [
+    [
+      232,
+      182.33333333333331,
+      410,
+      70
+    ],
+    [
+      332,
+      240,
+      210,
+      36
+    ]
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "status": "SOURCE_BUILT_INSTALLED_NO_OBSERVATION_LAUNCHED",
+  "sourcePatchSHA256": "c53b409f878296d440c9eb567163a7afcb0c8c2c9be3a1288995411008d8241d",
+  "binarySHA256": "09310b53114826e1e9c39a499846b2e57a6b464e576aa7bf879b56709d267854",
+  "parity27Passed": true,
+  "originalHelperDirectoryPreserved": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-runtime-prep",
+  "schema": "Exact v3 markers, finite epoch/uptime/numeric scalars, UUID request/load/model IDs, one context/appearance; reject explicit ambiguity, unknown parent/deferred/task/cancellation/load links and changed model token. Allow right-censored known spans; no required completion event.",
+  "window": "30seconds from recorded appearance; separate30second appearance-arrival bound and20second Train readiness. Early exception is incomplete even if evidence is well formed. Same screenshot asynchronously externally polled; documented method change.",
+  "cleanup": "Handlers installed before Popen; direct owned child only, no group/service kills; bounded drain and retained partials. Executor terminates app by exact owned device/bundle and verifies PID after helper exit.",
+  "checks": {
+    "AST": true,
+    "syntheticRightCensoredSpanAccepted": true,
+    "syntheticUnknownAttemptRejected": true,
+    "syntheticNonfiniteScalarRejected": true,
+    "noRuntimeExecution": true
+  },
+  "files": {
+    "capture.py": "0a1eba05a5b797c3a9c63a47c0df28b3275b4d7273facf3ebee8919c8248c5b5",
+    "check-observation.py": "d5e3fba0d95593fcceb94995c69a72d1d803296f334fe80a7a7e6771cc32bc97",
+    "marker-schema-draft.json": "e35067d48dbf707c320a08d637b72f06709e06245f054e8acd9be625c904df75",
+    "marker-schema.json": "a4a9065f46d9a8f018dfd47ccf5a13c9d9c8eb4b6b22554e701e3fa678d23707",
+    "marker_correlations.py": "edfdd6480f5054c53607cc5bdbf2420feb80cf606138698a55551bb1b023a0cc",
+    "prior-capture.py.txt": "301d619992de07d5eb64c512e84a0421fa0205be1abc4803394c40889de3de64",
+    "prior-check-observation.py.txt": "8792a02d465782bcefb1c16462c22ea2c44b3f3defa4e858b342ef558afe0d32",
+    "release-proposal.json": "cb19321b9360c27afbdb9e336b57acef51b115629e653469d8e53d92bcdf43c3",
+    "static-checks.json": "cb8b960333f0e3b78ad3192aaa21b3f8502098e2ad49aa45169d022d86968b14"
+  },
+  "limitations": [
+    "No inference of rendered Scene or GPU activity from model UUID.",
+    "Load-call alone cannot identify model scene; return/ready provides explicit identity only when observed.",
+    "Task catch marker does not independently prove cancellation cause.",
+    "All source instrumentation and synchronous logging can perturb timing.",
+    "This release proposal explicitly forbids launch until root authorizes."
+  ]
+}

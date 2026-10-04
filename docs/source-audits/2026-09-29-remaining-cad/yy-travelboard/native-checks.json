@@ -1,0 +1,17 @@
+{
+  "package": "yy-travelboard",
+  "sourceSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "editedFeature": "Front25Cutter",
+  "reopenRecompute": true,
+  "fullyConstrainedSketches": true,
+  "validBoundShapes": true,
+  "contactVerticesOnActualBodySurface": true,
+  "dimensionalEditChangesSolid": true,
+  "dimensionalEditChangesContacts": [
+    "yy_edge_25"
+  ],
+  "bodyVolumeBeforeMM3": 695184.441553621,
+  "bodyVolumeAfterMM3": 688250.3088425363,
+  "sourceBytesUnchanged": true,
+  "note": "Native source acceptance only. Suspension and app acceptance remain separate."
+}

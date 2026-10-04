@@ -1,0 +1,372 @@
+{
+  "createdUTC": "2026-10-02T21:28:21.125118+00:00",
+  "sourceRoot": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02",
+  "rawFiles": 60,
+  "rawBytes": 5449825,
+  "entries": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/000-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/000-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/000-stdout.txt",
+      "bytes": 162,
+      "sha256": "b5165d689de054a59b28ace69f831205f5a1a0f8285e6cae0e3f8d46e3377848"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/001-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/001-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/001-stdout.txt",
+      "bytes": 28,
+      "sha256": "3a266a08771f2f55f2fa2a0d7156b25e1e1346bfc0fa3bc91b3b2a72034544d1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/002-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/002-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/002-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/002-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/003-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/003-stderr.txt",
+      "bytes": 388,
+      "sha256": "bdb128789fb1b8a139dc8b07d13879d88211c6bf132a1030879b4a9b094705df"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/003-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/004-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/004-stderr.txt",
+      "bytes": 385,
+      "sha256": "532679115a90392bffe63d982313cea827e48cd7c1cb7f9d235cc72a2f6fa9f4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/004-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/005-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/005-stderr.txt",
+      "bytes": 385,
+      "sha256": "31598f8cbcf676bc7b60c89dfb4cd6cf66c619510f346e07772157afc551635f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/005-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/006-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/006-stderr.txt",
+      "bytes": 385,
+      "sha256": "b2a20699ca2813da9a073ae13735ddbdc395b6177b81aa6d337e757636394a49"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/006-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/007-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/007-stderr.txt",
+      "bytes": 389,
+      "sha256": "de3c0d7a1ecd0db1a97ffcafa49b0ba24fe9f26e8afff465cc266ecbe15d68c4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/007-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/008-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/008-stderr.txt",
+      "bytes": 386,
+      "sha256": "1c403c48f0789e8283daa2ef8c31c7364cbe596c16019d82c0e34feb06e18245"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/008-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/008-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/009-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/009-stderr.txt",
+      "bytes": 386,
+      "sha256": "1e4a009027f6562ccd8b004e81443c21049f150794e5dda46eeb628b3e77e170"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/009-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/009-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/010-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/010-stderr.txt",
+      "bytes": 386,
+      "sha256": "88f9db1694cc9108aa9d39193091605780587c6c2ff497cdc91ebf71a6fbf71a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/010-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/010-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/011-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/011-stderr.txt",
+      "bytes": 388,
+      "sha256": "fafe0b31be97ef5b3c12f10e584cd96e68f36810eb9adc9c78d4995b45b478aa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/011-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/011-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/012-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/012-stderr.txt",
+      "bytes": 385,
+      "sha256": "fc3e911a6d0ed285c99bd4a74f91007746e4aec944591e8899d89db1756e5a62"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/012-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/012-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/013-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/013-stderr.txt",
+      "bytes": 385,
+      "sha256": "b5d3b30f9c589e60dff3f1fcb05b3c8803267034c764b8e6d29e43313be07408"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/013-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/013-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/014-stderr.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/014-stderr.txt",
+      "bytes": 385,
+      "sha256": "62bf06adeab77e12690adf0491579c629d1f1156330b74952bc22d091658ad6d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/014-stdout.txt",
+      "retained": "raw/caption-passive-normal-workout-landscape/014-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/captures.json",
+      "retained": "raw/caption-passive-normal-workout-landscape/captures.json",
+      "bytes": 8003,
+      "sha256": "42b31d103c6f6adf59954f743625556d9187c6de1d85b933c9200e861ec4a447"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/commands.json",
+      "retained": "raw/caption-passive-normal-workout-landscape/commands.json",
+      "bytes": 5862,
+      "sha256": "e597111655e017d3b44abe49ca3860a14baddf83d4383ab83d5a5e6346056560"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/events-BB0EBB7F-7D6A-488F-81CB-44999DA24AE6.jsonl",
+      "retained": "raw/caption-passive-normal-workout-landscape/events-BB0EBB7F-7D6A-488F-81CB-44999DA24AE6.jsonl",
+      "bytes": 603006,
+      "sha256": "13efd02bebc1d8b00baf9298084fa2adb243029eb9312877dc90e168912efd12"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/frozen-summary.json",
+      "retained": "raw/caption-passive-normal-workout-landscape/frozen-summary.json",
+      "bytes": 13400,
+      "sha256": "8ac008b6b456ab5b81713551f367de5ab77bdebacef5ab8d829aa6b0e1fa8a1d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/launch-review-environment.json",
+      "retained": "raw/caption-passive-normal-workout-landscape/launch-review-environment.json",
+      "bytes": 271,
+      "sha256": "b6e1c756ed930068b7f4451e4c7e1af61d6a57d15ffa46857782703e5aaf8bc0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/passive-correspondence.json",
+      "retained": "raw/caption-passive-normal-workout-landscape/passive-correspondence.json",
+      "bytes": 329342,
+      "sha256": "86de45e21c03c300cb87de7cdf04b8b1d5968214085f2f673289d0dec01d2b23"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/phase-0-active-plus-0.25.png",
+      "retained": "raw/caption-passive-normal-workout-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 276285,
+      "sha256": "3ec86e78e7a1229ec0551f006e7c97740b4d8b1481dc35fd98b6dfd08541bfd7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/phase-0-active-plus-1.png",
+      "retained": "raw/caption-passive-normal-workout-landscape/phase-0-active-plus-1.png",
+      "bytes": 277681,
+      "sha256": "632393338ecc1fb605f05792e2ed4869711c93238306f153af51bd6c1af319e9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/phase-0-active-plus-3.png",
+      "retained": "raw/caption-passive-normal-workout-landscape/phase-0-active-plus-3.png",
+      "bytes": 334652,
+      "sha256": "3cf6319961f2d3a47ff3c85b408ea6b350113ead48fbbf7190a6092b4bfbf584"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/phase-0-active-plus-5.png",
+      "retained": "raw/caption-passive-normal-workout-landscape/phase-0-active-plus-5.png",
+      "bytes": 335905,
+      "sha256": "6c6961f43337ad74c8a9bfee273da80496a6af2c0540de4009ba02f66e770b54"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/phase-1-preview-plus-0.25.png",
+      "retained": "raw/caption-passive-normal-workout-landscape/phase-1-preview-plus-0.25.png",
+      "bytes": 300960,
+      "sha256": "14e7a4f09ecc7870155e58747f5784d8d99fac8e84d40fcd911c255532b6a523"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/phase-1-preview-plus-1.png",
+      "retained": "raw/caption-passive-normal-workout-landscape/phase-1-preview-plus-1.png",
+      "bytes": 305282,
+      "sha256": "2bd6044efa35979b49ce1013cd2bdc2c33ee858d8202336e67b95b469ee16e26"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/phase-1-preview-plus-3.png",
+      "retained": "raw/caption-passive-normal-workout-landscape/phase-1-preview-plus-3.png",
+      "bytes": 305520,
+      "sha256": "a3ab18b11e63afbb4c706c904b0ac69f70639f9ba6335d84b961803fef764720"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/phase-1-preview-plus-5.png",
+      "retained": "raw/caption-passive-normal-workout-landscape/phase-1-preview-plus-5.png",
+      "bytes": 302203,
+      "sha256": "1b8c132a0747c3d2957526c45e978c1ccb96da2aed37dea1d4d351171b9eaca5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/phase-2-active-plus-0.25.png",
+      "retained": "raw/caption-passive-normal-workout-landscape/phase-2-active-plus-0.25.png",
+      "bytes": 335590,
+      "sha256": "16bbfe5b3839e6ea2b21df7867df19b39bdde8c3c244e0821a41e55f9dc0fa58"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/phase-2-active-plus-1.png",
+      "retained": "raw/caption-passive-normal-workout-landscape/phase-2-active-plus-1.png",
+      "bytes": 337450,
+      "sha256": "a67b88ab1e47eb78979e980552d42d130b78edde5681082ebb67605b8939b813"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/phase-2-active-plus-3.png",
+      "retained": "raw/caption-passive-normal-workout-landscape/phase-2-active-plus-3.png",
+      "bytes": 335859,
+      "sha256": "78cc44814e9a19de371155545e687dab82f19b59ecd8b13e9d9979ca00fca0fb"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/phase-2-active-plus-5.png",
+      "retained": "raw/caption-passive-normal-workout-landscape/phase-2-active-plus-5.png",
+      "bytes": 336352,
+      "sha256": "67ae3730d936cd8e150128749f9bcc743988bba99f75f7ad8b32f948bf18823b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/post-hang-tail/events-BB0EBB7F-7D6A-488F-81CB-44999DA24AE6.jsonl",
+      "retained": "raw/caption-passive-normal-workout-landscape/post-hang-tail/events-BB0EBB7F-7D6A-488F-81CB-44999DA24AE6.jsonl",
+      "bytes": 611810,
+      "sha256": "44e61c50ff916facfd89c93a793b777e5e5d5ce29f12f636d13c70e600daff9e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/post-hang-tail/trace-copy.json",
+      "retained": "raw/caption-passive-normal-workout-landscape/post-hang-tail/trace-copy.json",
+      "bytes": 5285,
+      "sha256": "c8731131ea82c8e31f1e1c5e139158c53d105ed2a37c053ca5d9177ceda99f65"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/protocol.json",
+      "retained": "raw/caption-passive-normal-workout-landscape/protocol.json",
+      "bytes": 460,
+      "sha256": "a1e87cd9817eb9ba1933c8ce639d46ad4c41f3f0100e69762fc6ad1f0d2ea88a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/root-visual-review.json",
+      "retained": "raw/caption-passive-normal-workout-landscape/root-visual-review.json",
+      "bytes": 3833,
+      "sha256": "f7ead6036a229fdf49c0e54357ad551f8481c754a377f82b1760177e10a2c5f3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/trace-copy.json",
+      "retained": "raw/caption-passive-normal-workout-landscape/trace-copy.json",
+      "bytes": 728,
+      "sha256": "9f40cacfe2ed3d3f1da241ffacf253489f5c09e24d4b79f23a265204abc61021"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-passive-normal-workout-landscape/transition-observations.json",
+      "retained": "raw/caption-passive-normal-workout-landscape/transition-observations.json",
+      "bytes": 14590,
+      "sha256": "9b88a32c95121274792e616d5628a98c36186d0424ef0f9b18b42af1e08782e5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/workout-passive-caption-binary.py",
+      "retained": "harness/workout-passive-caption-binary.py",
+      "bytes": 5650,
+      "sha256": "216513fd5bf95023677d14360bfe920f73787126939bddf3d17175418cc7cb2b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/initial-resize-audit/evidence-rows.jsonl",
+      "retained": "analysis/initial-resize-audit/evidence-rows.jsonl",
+      "bytes": 28431,
+      "sha256": "e01547dbbe813f71d72f99f8ddaef3545a1a5ad32dce606a3a0470916efe419a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/initial-resize-audit/report.json",
+      "retained": "analysis/initial-resize-audit/report.json",
+      "bytes": 7201,
+      "sha256": "ed3910f714463f2ada3e321c4eb2a2de15426034c4bc82efbb97d4c0cb1359e8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/initial-resize-audit/source-excerpts.txt",
+      "retained": "analysis/initial-resize-audit/source-excerpts.txt",
+      "bytes": 10220,
+      "sha256": "b379281c7129f3d10998c01686adeb06ef647793acd7b807a188b466afe15407"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/architecture-committee/astra-passive-resize-review.txt",
+      "retained": "analysis/architecture-committee/astra-passive-resize-review.txt",
+      "bytes": 12324,
+      "sha256": "8dd8f02282f5ed2706f46a8b66bb2ddabe1a1578a70ccf72d031df5cd0801255"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/ownership.json",
+      "retained": "resource-provenance/ownership-at-snapshot.json",
+      "bytes": 847,
+      "sha256": "1ace3ca5d4e0dbc4ccbda0bcc3550f1fdcef7925ee3f9f8398c371661de7c490"
+    }
+  ],
+  "normalWorkoutPassed": false,
+  "productionFixEstablished": false,
+  "sourceProvenance": "linked-baseline-provenance.json",
+  "resourceCleanupClaimed": false
+}

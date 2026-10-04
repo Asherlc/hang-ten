@@ -1,0 +1,81 @@
+{
+  "status": "pass-force-settling-structure-review-with-pending-final-gates",
+  "scope": "Read-only implementation and limited one-route diagnostic review; no final sidecar acceptance or solver/test execution.",
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "colliderSHA256": "9f1c7afee52db277aaef76ea3c92fcc8ceae8223b95fd43847314a9545466d77",
+  "reviewedHelperSHA256": "13975c3e5ed3d60542041a9fd934386ed79536f42b64f578d37aaffe70c73c27",
+  "fileSHA256": {
+    ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/implementation-review-13975c3e/native_cord_guides.py": "13975c3e5ed3d60542041a9fd934386ed79536f42b64f578d37aaffe70c73c27",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/implementation-review-13975c3e/planar-right-force-diagnosis.json": "4530c75435c1f07943685d564d49d10ea993add709516b2b0ed29761e5343942",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/implementation-review-13975c3e/force-settling-probe.json": "d4532559b9eb3bcff84bf6e92f10ff60e1e1aa44d9c9419c5f391a4ad2809e78",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/implementation-review-13975c3e/test_native_cord_guides.py": "5ae71c50902e9b1a17070376315b15b48d3748dfe56e212f5be71acaab63aa75"
+  },
+  "functionLineRanges": {
+    "unit_tension_chain_jacobian": [
+      254,
+      265
+    ],
+    "settle_material_forces": [
+      268,
+      294
+    ],
+    "_optimize_lead": [
+      297,
+      355
+    ],
+    "certify_active_reactions": [
+      146,
+      204
+    ],
+    "facet_reconstructed_balance": [
+      116,
+      143
+    ],
+    "solve_groove_guided_routes": [
+      368,
+      419
+    ]
+  },
+  "findings": [
+    "Required reaction is incoming-minus-outgoing unit tangent: the negative of local unit-tension resultant. The chain Jacobian uses the correct positive diagonal/negative adjacent Hessian blocks (I - tangent outer product)/segment length. Solving J delta = -actual-facet residual has the correct sign.",
+    "Only free nodes receive corrections. Each iteration performs whole-solid clearance and fresh local nonnegative material-facet reaction/cone fitting. Missing support and collision errors without an attached reaction report propagate.",
+    "Native-plane optimization always releases its coordinate constraint before the full 3D settling/certification phase. Zero correction is permitted when existing fresh 3D gates already pass; this is not proof of an additional global shortest-path search.",
+    "The final rounded-cache source still independently checks actual facet reactions, finite guide span, bore approach/inset, full radius solid/tube clearance and length. These final candidate gates have not yet been supplied."
+  ],
+  "policyObservations": [
+    {
+      "name": "per-correction-search-bound",
+      "detail": "At most five corrections, each at most 10 micrometres; that is not a cumulative 10 micrometre bound. Report actual displacement/iteration counts without calling it a new physical tolerance."
+    },
+    {
+      "name": "weighted-normal-error-bound",
+      "detail": "The reviewed facet_reconstructed_balance reports weightedMaterialConeErrorBounds but its pass status gates only actual nodal residual. Fresh independent all-16 review will require both actual nodal residual and the maximum weighted cone-error bound <= unchanged 1e-5."
+    },
+    {
+      "name": "search-vertex-budget",
+      "detail": "The reviewed _optimize_lead tries dense material settling before its 128-vertex guard. The guard should cover that branch too; no resource budget pass is claimed by this review."
+    }
+  ],
+  "retainedDiagnostic": {
+    "routeCount": 1,
+    "failedPlanarActualFacetResidual": 1.2152006842586722e-05,
+    "reportedMaxCorrectionM": 3.6332310080141485e-07,
+    "reportedActualFacetResidualAfter": 4.153500813659561e-12,
+    "reportedMaximumWeightedConeErrorBound": 1.0584809278179657e-13,
+    "reportedContinuousClearanceLowerBoundM": 0.0014904785505211514,
+    "scope": "Author-owned diagnostic values retained exactly, not independently re-solved or accepted as final all-pose proof."
+  },
+  "testsReviewedButNotRun": [
+    "Independent finite-difference Jacobian fixture",
+    "Missing support/collision fail-closed fixture",
+    "Reuse recertification fixtures occur in the test snapshot ahead of the reviewed helper implementation; final code/tests must be frozen and validated together."
+  ],
+  "blockingFindings": [],
+  "remainingGates": [
+    "Final immutable helper/code freeze review; fresh all-16 actual-facet audit and regenerated all-eight cache",
+    "Fresh new-shape runtime/test/cleanup and human review"
+  ],
+  "finalReady": false,
+  "canonicalMutation": false,
+  "resourceOrSolveStarted": false
+}

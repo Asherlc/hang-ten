@@ -1,0 +1,23 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "spawn",
+    "87CE3964-139D-4FAE-B121-AB12237401DB",
+    "log",
+    "show",
+    "--last",
+    "6m",
+    "--style",
+    "compact",
+    "--predicate",
+    "(process == \"datamigrator\" OR process == \"MobileDataMigrationAgent\" OR process CONTAINS \"AddressBook\") AND (eventMessage CONTAINS[c] \"migration\" OR eventMessage CONTAINS[c] \"plugin\" OR eventMessage CONTAINS[c] \"AddressBook\" OR eventMessage CONTAINS[c] \"RPC\")"
+  ],
+  "boundSeconds": 25.0,
+  "timedOut": false,
+  "interruptedBySignal": null,
+  "exitStatus": 0,
+  "elapsedSeconds": 2.53291495799931
+}

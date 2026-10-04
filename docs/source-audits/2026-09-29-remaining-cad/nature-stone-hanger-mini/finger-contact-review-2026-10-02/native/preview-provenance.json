@@ -1,0 +1,717 @@
+{
+  "images": [
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-neutral-front.png",
+      "sha256": "251e7bc923de9964605ef7d54ea2aae58287156e9e01b16027aff267b562d4f6",
+      "selection": "neutral",
+      "selectedNodeIDs": [
+        [],
+        []
+      ],
+      "view": "front",
+      "cameraRows": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-neutral-back.png",
+      "sha256": "1411d5cfdf6fe48a766c5e6de684341882a6d3f157fdbfc8f1c1703b23539811",
+      "selection": "neutral",
+      "selectedNodeIDs": [
+        [],
+        []
+      ],
+      "view": "back",
+      "cameraRows": [
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-neutral-side.png",
+      "sha256": "bdd5d2d1bc148bcd6bf1cfd329b31f3506482d5ba28d919be05f02ab0d898c32",
+      "selection": "neutral",
+      "selectedNodeIDs": [
+        [],
+        []
+      ],
+      "view": "side",
+      "cameraRows": [
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          -0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-neutral-top.png",
+      "sha256": "d416864572a8e7ed1a7f77bd4584cab05daa5b131c971f7cf2172eec8a919e7f",
+      "selection": "neutral",
+      "selectedNodeIDs": [
+        [],
+        []
+      ],
+      "view": "top",
+      "cameraRows": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-neutral-front-oblique.png",
+      "sha256": "1db0695750154e0765a097e6b1383c12512d738a20c62ce340ee29ce91de2eed",
+      "selection": "neutral",
+      "selectedNodeIDs": [
+        [],
+        []
+      ],
+      "view": "front-oblique",
+      "cameraRows": [
+        [
+          0.8192319205190405,
+          0.0,
+          -0.5734623443633282
+        ],
+        [
+          -0.19835953471222845,
+          0.9382720848292712,
+          -0.28337076387461213
+        ],
+        [
+          0.5380637094168614,
+          0.34589809891083956,
+          0.7686624420240878
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-neutral-reverse-oblique.png",
+      "sha256": "3e77e0d2d0671f7fccccd499b8731a9198238a71b268db9f7fc9fece83f1e4cf",
+      "selection": "neutral",
+      "selectedNodeIDs": [
+        [],
+        []
+      ],
+      "view": "reverse-oblique",
+      "cameraRows": [
+        [
+          -0.8192319205190405,
+          0.0,
+          -0.5734623443633283
+        ],
+        [
+          -0.2529707404776681,
+          0.8974438174088701,
+          0.3613867721109544
+        ],
+        [
+          0.5146502354656655,
+          0.44112877325628463,
+          -0.7352146220938078
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pull-up-jug-front.png",
+      "sha256": "4230ad5c252398e12aa393bcd42ade2f391d4e3e762fd16934b3335f071ccf76",
+      "selection": "pull-up-jug",
+      "selectedNodeIDs": [
+        [
+          "nature_jug",
+          "nature_jug_ends"
+        ],
+        [
+          "nature_jug",
+          "nature_jug_ends",
+          "nature_jug_pressure"
+        ]
+      ],
+      "view": "front",
+      "cameraRows": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pull-up-jug-back.png",
+      "sha256": "8df3377b725adfc73d483fa0a6c8ee5ecd5f5b7ac93c8a5d15019cf68b16f558",
+      "selection": "pull-up-jug",
+      "selectedNodeIDs": [
+        [
+          "nature_jug",
+          "nature_jug_ends"
+        ],
+        [
+          "nature_jug",
+          "nature_jug_ends",
+          "nature_jug_pressure"
+        ]
+      ],
+      "view": "back",
+      "cameraRows": [
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pull-up-jug-side.png",
+      "sha256": "290d1a67649b257e66f6600d5c0f10cbc6c549313796b6b2fae7f6491ab5eff5",
+      "selection": "pull-up-jug",
+      "selectedNodeIDs": [
+        [
+          "nature_jug",
+          "nature_jug_ends"
+        ],
+        [
+          "nature_jug",
+          "nature_jug_ends",
+          "nature_jug_pressure"
+        ]
+      ],
+      "view": "side",
+      "cameraRows": [
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          -0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pull-up-jug-top.png",
+      "sha256": "edbe8c5e733e385ec819ef1f33e051da38d406a65a8fb13b07777b0b2119fcaf",
+      "selection": "pull-up-jug",
+      "selectedNodeIDs": [
+        [
+          "nature_jug",
+          "nature_jug_ends"
+        ],
+        [
+          "nature_jug",
+          "nature_jug_ends",
+          "nature_jug_pressure"
+        ]
+      ],
+      "view": "top",
+      "cameraRows": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pull-up-jug-front-oblique.png",
+      "sha256": "dc2076743092bf72fa8ad1d266783c76627214eec3b1be43b8931ca096417c96",
+      "selection": "pull-up-jug",
+      "selectedNodeIDs": [
+        [
+          "nature_jug",
+          "nature_jug_ends"
+        ],
+        [
+          "nature_jug",
+          "nature_jug_ends",
+          "nature_jug_pressure"
+        ]
+      ],
+      "view": "front-oblique",
+      "cameraRows": [
+        [
+          0.8192319205190405,
+          0.0,
+          -0.5734623443633282
+        ],
+        [
+          -0.19835953471222845,
+          0.9382720848292712,
+          -0.28337076387461213
+        ],
+        [
+          0.5380637094168614,
+          0.34589809891083956,
+          0.7686624420240878
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pull-up-jug-reverse-oblique.png",
+      "sha256": "48c937cc6c550ba40073acb44304db3559bbe408cb9d2f569045971e5b531194",
+      "selection": "pull-up-jug",
+      "selectedNodeIDs": [
+        [
+          "nature_jug",
+          "nature_jug_ends"
+        ],
+        [
+          "nature_jug",
+          "nature_jug_ends",
+          "nature_jug_pressure"
+        ]
+      ],
+      "view": "reverse-oblique",
+      "cameraRows": [
+        [
+          -0.8192319205190405,
+          0.0,
+          -0.5734623443633283
+        ],
+        [
+          -0.2529707404776681,
+          0.8974438174088701,
+          0.3613867721109544
+        ],
+        [
+          0.5146502354656655,
+          0.44112877325628463,
+          -0.7352146220938078
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pinch-60-front.png",
+      "sha256": "3627b56c3dca61c05afe7f6ae6fe6f4db516effce19c8dc3128595929dfed661",
+      "selection": "pinch-60",
+      "selectedNodeIDs": [
+        [
+          "nature_jug",
+          "nature_pinch"
+        ],
+        [
+          "nature_jug",
+          "nature_pinch"
+        ]
+      ],
+      "view": "front",
+      "cameraRows": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pinch-60-back.png",
+      "sha256": "c8b66e8b5144ddacedb6f95639416de5dddb9abbc3b90e649116b406f8b5d385",
+      "selection": "pinch-60",
+      "selectedNodeIDs": [
+        [
+          "nature_jug",
+          "nature_pinch"
+        ],
+        [
+          "nature_jug",
+          "nature_pinch"
+        ]
+      ],
+      "view": "back",
+      "cameraRows": [
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pinch-60-side.png",
+      "sha256": "fe9824c0eeaf1bd7f28787d370b3f5dc827effac5789606c5faec0c9e1d5f33a",
+      "selection": "pinch-60",
+      "selectedNodeIDs": [
+        [
+          "nature_jug",
+          "nature_pinch"
+        ],
+        [
+          "nature_jug",
+          "nature_pinch"
+        ]
+      ],
+      "view": "side",
+      "cameraRows": [
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          -0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pinch-60-top.png",
+      "sha256": "a7933fe57cf90063674a05034881964867473d5c0a5c24ee6b74b14619033ea1",
+      "selection": "pinch-60",
+      "selectedNodeIDs": [
+        [
+          "nature_jug",
+          "nature_pinch"
+        ],
+        [
+          "nature_jug",
+          "nature_pinch"
+        ]
+      ],
+      "view": "top",
+      "cameraRows": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pinch-60-front-oblique.png",
+      "sha256": "6ed0ce91f9fa2177b6aa19cdc0dc8e62feb6127979d74f1dffb9311750333c68",
+      "selection": "pinch-60",
+      "selectedNodeIDs": [
+        [
+          "nature_jug",
+          "nature_pinch"
+        ],
+        [
+          "nature_jug",
+          "nature_pinch"
+        ]
+      ],
+      "view": "front-oblique",
+      "cameraRows": [
+        [
+          0.8192319205190405,
+          0.0,
+          -0.5734623443633282
+        ],
+        [
+          -0.19835953471222845,
+          0.9382720848292712,
+          -0.28337076387461213
+        ],
+        [
+          0.5380637094168614,
+          0.34589809891083956,
+          0.7686624420240878
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    },
+    {
+      "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pinch-60-reverse-oblique.png",
+      "sha256": "2b175c2831ccfc7653ca08a2b68531ba16676fd34726f149ef9ae44e482d1a01",
+      "selection": "pinch-60",
+      "selectedNodeIDs": [
+        [
+          "nature_jug",
+          "nature_pinch"
+        ],
+        [
+          "nature_jug",
+          "nature_pinch"
+        ]
+      ],
+      "view": "reverse-oblique",
+      "cameraRows": [
+        [
+          -0.8192319205190405,
+          0.0,
+          -0.5734623443633283
+        ],
+        [
+          -0.2529707404776681,
+          0.8974438174088701,
+          0.3613867721109544
+        ],
+        [
+          0.5146502354656655,
+          0.44112877325628463,
+          -0.7352146220938078
+        ]
+      ],
+      "poseQuaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bothWholeAssetsSameScale": true,
+      "perPixelDepth": true
+    }
+  ],
+  "priorModelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
+  "currentModelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+  "rendererHelperSHA256": "4813f62cecf013dda9b7e3345ac9747b01934bf751dfd6300a865ae3e22d2466",
+  "scope": "Whole actual imported prior/current USDZ only, neutral diagnostic appearance, upright identity transform; no cord or app rendering",
+  "currentAppFrames": 0
+}

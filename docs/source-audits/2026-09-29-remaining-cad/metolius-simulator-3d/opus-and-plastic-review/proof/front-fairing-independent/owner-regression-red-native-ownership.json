@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "owner-regression-red-native",
+  "timeoutSeconds": 120,
+  "command": [
+    "--extra-python-path",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/run_owner_regression_red.py"
+  ],
+  "ownedProcessGroup": 13128,
+  "exitCode": 1,
+  "elapsedSeconds": 0.7901708749704994,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

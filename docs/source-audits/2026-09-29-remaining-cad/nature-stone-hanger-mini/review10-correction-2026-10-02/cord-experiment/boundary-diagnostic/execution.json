@@ -1,0 +1,17 @@
+{
+  "rawExitCode": 0,
+  "command": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/command.json",
+    "sha256": "be596e04676aed4fa968fe3119ad91506954cd4b2513b5c93e37459e8db35594"
+  },
+  "log": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/diagnostic.log",
+    "sha256": "092e2890a645a3d5f589917a72e3d39d41488a9de811c1bd4e05d0f585617d4f"
+  },
+  "report": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/station-boundary-diagnosis.json",
+    "sha256": "b4733fbc20c3bd8c7bbc0ba32e6a66441e30de02f948fa51979bb2015fb47549"
+  },
+  "processGroupAbsentAtReturn": true,
+  "nativeSolveOrRoutesGenerated": false
+}

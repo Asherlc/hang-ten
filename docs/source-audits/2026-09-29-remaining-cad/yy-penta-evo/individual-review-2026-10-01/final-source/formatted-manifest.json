@@ -1,0 +1,318 @@
+{
+  "schemaVersion": 3,
+  "id": "yy.penta-evo",
+  "manufacturer": "YY Vertical",
+  "name": "Penta Evo",
+  "productURL": "https://www.yyvertical.com/en/products/penta-evo",
+  "subtitle": "Paired portable rotating devices with seven grips per unit",
+  "dimensions": "Not published by YY Vertical",
+  "aspectRatio": 1.5,
+  "equipmentObjects": [
+    {
+      "id": "left-penta"
+    },
+    {
+      "id": "right-penta"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "front-pair",
+      "name": "Paired Penta Evo",
+      "aspectRatio": 1.5,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              -0.08,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          },
+          "surfaceFinish": "wood"
+        },
+        "instances": [
+          {
+            "equipmentObjectID": "left-penta",
+            "baseTransform": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0.000000000,
+                0.000000000,
+                0.000000000
+              ]
+            },
+            "contactIDsBySlotID": {
+              "edge-25": "edge-25-left",
+              "edge-20": "edge-20-left",
+              "edge-15": "edge-15-left",
+              "edge-10": "edge-10-left",
+              "mono": "mono-left",
+              "duo": "duo-left",
+              "tray": "tray-left"
+            }
+          },
+          {
+            "equipmentObjectID": "right-penta",
+            "baseTransform": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0.000000000,
+                0.000000000,
+                0.000000000
+              ]
+            },
+            "contactIDsBySlotID": {
+              "edge-25": "edge-25-right",
+              "edge-20": "edge-20-right",
+              "edge-15": "edge-15-right",
+              "edge-10": "edge-10-right",
+              "mono": "mono-right",
+              "duo": "duo-right",
+              "tray": "tray-right"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "edge-25-left",
+      "equipmentObjectID": "left-penta",
+      "name": "Left unit 25 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-left",
+      "equipmentObjectID": "left-penta",
+      "name": "Left unit 20 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "mono-left",
+      "equipmentObjectID": "left-penta",
+      "name": "Left unit mono",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "duo-left",
+      "equipmentObjectID": "left-penta",
+      "name": "Left unit duo",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "edge-15-left",
+      "equipmentObjectID": "left-penta",
+      "name": "Left unit 15 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-left",
+      "equipmentObjectID": "left-penta",
+      "name": "Left unit 10 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "tray-left",
+      "equipmentObjectID": "left-penta",
+      "name": "Left unit tray",
+      "kind": "jug",
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-right",
+      "equipmentObjectID": "right-penta",
+      "name": "Right unit 20 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-25-right",
+      "equipmentObjectID": "right-penta",
+      "name": "Right unit 25 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-right",
+      "equipmentObjectID": "right-penta",
+      "name": "Right unit 10 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-right",
+      "equipmentObjectID": "right-penta",
+      "name": "Right unit 15 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "mono-right",
+      "equipmentObjectID": "right-penta",
+      "name": "Right unit mono",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "duo-right",
+      "equipmentObjectID": "right-penta",
+      "name": "Right unit duo",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "tray-right",
+      "equipmentObjectID": "right-penta",
+      "name": "Right unit tray",
+      "kind": "jug",
+      "gripTypes": []
+    }
+  ],
+  "positions": [
+    {
+      "contactIDs": [
+        "edge-25-left",
+        "edge-25-right"
+      ],
+      "id": "primary",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "duo-left",
+        "duo-right"
+      ],
+      "id": "duo",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "id": "edge-15",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "id": "edge-20",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "mono-left",
+        "mono-right"
+      ],
+      "id": "mono",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "edge-10-left",
+        "edge-10-right"
+      ],
+      "id": "reverse",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "tray-left",
+        "tray-right"
+      ],
+      "id": "tray",
+      "presentationID": "front-pair"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "runtimeAuthorized": true,
+  "exclusiveRuntimeOwnership": true,
+  "owner": "placid-badger-cad-second-half",
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "controllerPID": 96137,
+  "boardID": "zlagboard.evo",
+  "arm": "image",
+  "runID": "placid-badger-cad-second-half-hand-output-image",
+  "helperSHA256": "fc3b2e80f3430ee077e5c7322463589d94c3816bd6ce7fb50f8fe0948707ab22",
+  "scheduleSHA256": "a1ddc84211b458b6a0e188bb110e83f64350290119de6b586050e8accf510701",
+  "sourceReferencePath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/passive-capture/source-reference.json",
+  "sourceReferenceSHA256": "48f7f2a3918e90bd61d146945bb9db86a8621f72f9ca8595537691c8be6ab114",
+  "planID": "research.max-hangs",
+  "appArguments": [
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "parityPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/parity.json",
+  "paritySHA256": "2f8bbefc125ce11c9b7df695fee44262c37bd3215963a0d41b8c55388cea910d",
+  "binarySHA256": "f6cf757759394fb5386eb78b8ce4d9360e21075096911526313c0ff3524d7709",
+  "outputDirectory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/image",
+  "priorReviewPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a-review.json",
+  "priorReviewSHA256": "16cb79bbc88a76e48a5c0c47e2471a9f666202779ca4add0d24c573c60e96eed",
+  "handOutputBuildSourceVerified": true
+}

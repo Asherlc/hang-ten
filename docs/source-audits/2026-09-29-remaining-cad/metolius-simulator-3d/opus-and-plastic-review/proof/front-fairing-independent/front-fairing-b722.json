@@ -1,0 +1,145 @@
+{
+  "status": "pass",
+  "blockingFindings": [],
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "beforeSourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "nativeProfileSpans": [
+    {
+      "span": 0,
+      "startYZ": [
+        -72.128,
+        135.0
+      ],
+      "endYZ": [
+        -65.0,
+        117.0
+      ],
+      "startDyDz": -0.528000000000001,
+      "endDyDz": -0.34999999999999903,
+      "monotonicityProvedByPositiveDepthAndNegativeHeightBezierDerivativeControlPoints": true,
+      "normalTiltDegreesAtStartEnd": [
+        27.834053940550877,
+        19.290046219188685
+      ]
+    },
+    {
+      "span": 1,
+      "startYZ": [
+        -65.0,
+        117.0
+      ],
+      "endYZ": [
+        -55.0,
+        87.0
+      ],
+      "startDyDz": -0.35,
+      "endDyDz": -0.36400000000000005,
+      "monotonicityProvedByPositiveDepthAndNegativeHeightBezierDerivativeControlPoints": true,
+      "normalTiltDegreesAtStartEnd": [
+        19.290046219188735,
+        20.00150593665385
+      ]
+    },
+    {
+      "span": 2,
+      "startYZ": [
+        -55.0,
+        87.0
+      ],
+      "endYZ": [
+        -44.0,
+        59.0
+      ],
+      "startDyDz": -0.36400000000000043,
+      "endDyDz": -0.39400000000000057,
+      "monotonicityProvedByPositiveDepthAndNegativeHeightBezierDerivativeControlPoints": true,
+      "normalTiltDegreesAtStartEnd": [
+        20.00150593665387,
+        21.504440240813086
+      ]
+    },
+    {
+      "span": 3,
+      "startYZ": [
+        -44.0,
+        59.0
+      ],
+      "endYZ": [
+        -32.0,
+        29.0
+      ],
+      "startDyDz": -0.3939999999999998,
+      "endDyDz": -0.41400000000000003,
+      "monotonicityProvedByPositiveDepthAndNegativeHeightBezierDerivativeControlPoints": true,
+      "normalTiltDegreesAtStartEnd": [
+        21.504440240813043,
+        22.489554942130884
+      ]
+    },
+    {
+      "span": 4,
+      "startYZ": [
+        -32.0,
+        29.0
+      ],
+      "endYZ": [
+        -18.0,
+        -4.0
+      ],
+      "startDyDz": -0.41399999999999987,
+      "endDyDz": -0.43000000000000005,
+      "monotonicityProvedByPositiveDepthAndNegativeHeightBezierDerivativeControlPoints": true,
+      "normalTiltDegreesAtStartEnd": [
+        22.489554942130873,
+        23.267704810056955
+      ]
+    }
+  ],
+  "upperBodyAboveZ135": {
+    "beforeVolumeMM3": 2304429.1680063563,
+    "afterVolumeMM3": 2304432.8933858867,
+    "differenceVolumesMM3": [
+      0.0,
+      0.0
+    ],
+    "differenceSolidCounts": [
+      0,
+      0
+    ],
+    "beforeShapeValid": true,
+    "afterShapeValid": true
+  },
+  "upperConstructionControls": [
+    {
+      "object": "ForwardCenterJug",
+      "boundsDeltaMM": 0.0,
+      "areaDeltaMM2": 0.0,
+      "volumeDeltaMM3": 0.0
+    },
+    {
+      "object": "ForwardCenterJugWithinEnvelope",
+      "boundsDeltaMM": 0.0,
+      "areaDeltaMM2": 0.0,
+      "volumeDeltaMM3": 0.0
+    },
+    {
+      "object": "FlatSloperRoof",
+      "boundsDeltaMM": 0.0,
+      "areaDeltaMM2": 0.0,
+      "volumeDeltaMM3": 0.0
+    },
+    {
+      "object": "RoundSloperRoof",
+      "boundsDeltaMM": 0.0,
+      "areaDeltaMM2": 0.0,
+      "volumeDeltaMM3": 0.0
+    }
+  ],
+  "sourceBytesUnchanged": true,
+  "limits": [
+    "Native curve anchors and slopes are operator display estimates, not manufacturer dimensions.",
+    "Monotonicity follows the positive/negative derivative Bernstein controls of each nonrational cubic, not pixel fitting.",
+    "Published depths, all30 contacts, functional grips and native edit/restoration remain separate unchanged gates.",
+    "Exact zero-volume directional differences establish unchanged upper solid for this OCCT operation; no manufacturing certification."
+  ]
+}

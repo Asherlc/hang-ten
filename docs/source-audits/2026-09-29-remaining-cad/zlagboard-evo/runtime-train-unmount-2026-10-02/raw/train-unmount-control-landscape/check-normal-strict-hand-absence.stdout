@@ -1,0 +1,8 @@
+{
+  "strictFlagEnabled": true,
+  "perspectiveFlagAbsent": true,
+  "openingStrictEnabled": true,
+  "allFourCountsZeroThroughout": true,
+  "noHandLifecycleEvents": true,
+  "noHandCameraEvents": true
+}

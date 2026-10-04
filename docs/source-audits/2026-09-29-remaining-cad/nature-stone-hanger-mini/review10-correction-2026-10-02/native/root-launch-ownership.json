@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "task": "Mini native jug binder and pose correction",
+  "agentId": "f1675cc1-8654-47b7-bd62-79637eff3a42",
+  "provider": "codex/gpt-6-astra",
+  "workspaceId": "wks_d4a549643389e3ab",
+  "status": "running",
+  "externalResources": [
+    {
+      "kind": "paseo-native-author",
+      "id": "f1675cc1-8654-47b7-bd62-79637eff3a42",
+      "owner": "placid-badger",
+      "cleanup": "archive after native author work and verify archived state"
+    }
+  ],
+  "nativeResourcesOwnedByAuthor": true,
+  "otherWorkspacesOutOfScope": true
+}

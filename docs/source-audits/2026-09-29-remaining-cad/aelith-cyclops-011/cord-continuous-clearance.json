@@ -1,0 +1,32 @@
+{
+  "package": "aelith-cyclops-011",
+  "sourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+  "sidecarSHA256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+  "algorithm": "Tools/HangboardCAD/native_cord_routes.py",
+  "algorithmSHA256": "309cffb89d3955298aefab71bc1e57098fbc7beb14596aef1b8064cf83b77171",
+  "method": "adaptive signed-distance 1-Lipschitz lower bound on each complete rounded runtime polyline",
+  "numericalToleranceMM": 0.01,
+  "runtimeSupportReconstructed": true,
+  "presentations": {
+    "primary": {
+      "modelSHA256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+      "collisionFixtureSHA256": "d8f950d61706b5b727f3d50eb268bb92e47f3685493b3ec5f452f223a05026f4",
+      "poses": {
+        "front-cup": {
+          "strands": {
+            "single-eye-loop": {
+              "certifiedMinimumClearanceMM": 1.0402227502920915,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 139.99999844122752,
+              "restLengthMM": 140.0,
+              "vertexCountWithSupport": 12
+            }
+          }
+        }
+      }
+    }
+  },
+  "minimumCertifiedClearanceMM": 1.0402227502920915,
+  "tubeSelfIntersectionPassed": true,
+  "displayRevision": "User requested shorter cord on 2026-09-30"
+}

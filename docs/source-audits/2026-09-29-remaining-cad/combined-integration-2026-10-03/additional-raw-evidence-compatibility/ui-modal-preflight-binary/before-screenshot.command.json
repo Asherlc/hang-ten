@@ -1,0 +1,15 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "io",
+    "055BDCE2-3263-470D-89DF-04B967EF7790",
+    "screenshot",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-modal-preflight-binary/before.png"
+  ],
+  "pid": 69305,
+  "boundSeconds": 15,
+  "startedEpoch": 1791072856.8023639
+}

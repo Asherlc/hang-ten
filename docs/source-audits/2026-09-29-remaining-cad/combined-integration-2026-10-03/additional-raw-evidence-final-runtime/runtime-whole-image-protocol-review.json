@@ -1,0 +1,71 @@
+{
+  "scope": "Read-only prospective helper review. No helper/source edits, simulator/process/build commands, resource creation or fresh runtime actions performed.",
+  "sourceHashesSHA256": {
+    ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture.py": "eb3b2c0ab71392fa83cf00a33fd904a954bbaa395596250a4a363e05ee44d3aa",
+    ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture-ax-setup-protocol.py": "5f641c85ba71027e860cb621d9517bfd44cdf291e08133e1bee5659d6b02c3fe",
+    ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/schedule.json": "3fb0910895d90e616d9cb54811beb4943f28a9280449382cfb55e5d42e6a10e0",
+    ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/schedule-ax-setup-protocol.json": "f44a8a6b4d28911cea2b6c7301a7748c2806f0e7733aa466f1ce34bd8149fb9d",
+    ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/prepare-release.py": "7717e9ba428ea383e9ef878111318c21620b7f58cac3a2b5f82241c99cb40c21"
+  },
+  "syntax": "ast.parse passes for current capture.py, retained capture-ax-setup-protocol.py and prepare-release.py; no import or helper execution.",
+  "retainedAXHelperExact": true,
+  "assessment": "Corrected current helper/protocol has no remaining material source-review concern. Schedule metadata and scale3 coordinate derivation findings are resolved. Final binding addition appropriately preserves raw build reference while identifying committed frozen bytes; regenerate any prepared release whose helper hash predates final helper bytes.",
+  "findings": [
+    {
+      "severity": "pre-execution-evidence-correction",
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/schedule.json",
+      "finding": "Hash-bound copied schedule still states hardBoundSeconds300 and final workout verification/optional Open anchor; helper now uses420 and mandatory observed system Open command completion.",
+      "requiredCorrection": "Retain old schedule beside archived AX helper; update current prospective anchor, hard bound and protocol correction fields. Preserve offsets exactly.",
+      "status": "Resolved: current schedule declares420, observed Open/Start anchor, mandatory actual Open/noAX, old schedule retained."
+    },
+    {
+      "severity": "coordinate-evidence",
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture.py",
+      "finding": "Helper records Preferred UI Scale3 and accepts tapX/tapY as logical coordinates, but review ACK does not state coordinate units or retained screenshot pixel point. A later reviewer cannot audit whether root converted pixels to logical points correctly.",
+      "recommendedCorrection": "Root ACK records tap coordinate space as device logical points, reviewed screenshot dimensions/pixel point and explicit scale3 derivation. Helper can assert conversion and image bounds; no board geometry measurement.",
+      "status": "Resolved: root ACK requires coordinateScale3 and tapX/Y equal screenshotTapPixelX/Y divided by3."
+    },
+    {
+      "severity": "bounded-completion-note",
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture.py",
+      "finding": "Five Mini review gates can consume225 seconds at individual45-second maximum, leaving less than224-second capture window inside420-second total bound. Slow review correctly fails, but some setups can be doomed at Start.",
+      "optionalCorrection": "Before opening measurement window, require enough remaining total lifetime for final224-second screenshot and predeclared command slack; otherwise fail while retaining setup. No deadline extension/retry.",
+      "status": "Nonblocking bounded-failure note retained;420 hard bound correctly invalidates late setups, no timeout extension/retry."
+    }
+  ],
+  "verifiedProperties": [
+    "Ownership release binds owner, exact UUID/controller, frozen helper/source/parity/binary; successful build/install/container exit records are verified.",
+    "Required81 selected canonical files and66 native source/built/installed package parity checks are preserved before and after capture.",
+    "Current normal launch is shared across Train, URL consent and measurement. Prior setup launch is not substituted for same-launch observed consent.",
+    "Root reviews each whole setup image; ACK requires wholeImageReviewed, approved, same imageSHA256/UID/appPID and literal observed control. Unknown/missing/absent system dialog is invalid and cannot trigger guessed tap.",
+    "Train stage never taps; URL Open is one physical coordinate tap on root-observed button. Mini normal hand selector/Left menu/idle Left Start each receives exactly one gate and physical tap.",
+    "Evo/Pro external anchor equals system Open command completion with no intervening setup delay; Mini anchor equals normal Start command completion.",
+    "After anchor there are no AX queries/taps/gestures/relaunch/Skip/pause. Fixed-offset screenshot loop preserves no backfill and max0.25-second launch lateness.",
+    "App phase mutation time remains unknown; screenshots are unclassified pending whole-image review. Capture completion does not claim runtime/geometry success.",
+    "Main deadline and owned caffeinate lifetime both420; each stage45-second wait is bounded and aborts on wake/lifetime failure.",
+    "Exact app launch intent/PID and command child ownership recorded immediately; finally stops/reaps only helper children and exact app. Shared persistent controller-owned Simulator/DD are left intact.",
+    "No shipping source, routine timing, geometry, readiness/preparation or countdown state changes."
+  ],
+  "offsetValidation": {
+    "count": 58,
+    "finalSeconds": 224,
+    "sameAsPreviousProtocol": true
+  },
+  "actualRuntimeValidation": "No device or process actions performed by reviewer. Parent controls execution; live device/resource/source inspection prohibited and not performed. Review of workspace-owned helper/proof files only.",
+  "priorFailedRuntimePreserved": "Original URL dialog runtime arm not modified or reclassified by this review.",
+  "publishedSourceBindingReview": {
+    "bindingPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/posttests-runtime-install/published-source-binding.json",
+    "bindingSHA256": "5585ed98716c5976908459e6184698e8a6d790047876fe4e5678bf1f239a3977",
+    "releaseCheck": {
+      "helperMatchesCurrent": true,
+      "scheduleMatchesCurrent": true,
+      "publishedBindingMatches": true,
+      "frozenBindingSourceSHAEqualsReleaseSourceSHA": true,
+      "frozenSourceRecordHashMatches": true,
+      "publishedCommit": "fa46c015bba7456f887ba46fc4049bdfcf697c24",
+      "frozenBuildHEAD": "3497b01405386ce388cb478d60c8e915cafc5dc6"
+    },
+    "qualification": "Original build reference records its then-HEAD, including its separately frozen working-source hashes. No raw reference or proof is rewritten; this additional binding identifies the committed tree containing those exact source bytes.",
+    "noRawSourceReferenceRewritten": true
+  }
+}

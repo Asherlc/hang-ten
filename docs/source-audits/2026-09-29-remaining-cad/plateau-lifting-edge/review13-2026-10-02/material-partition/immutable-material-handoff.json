@@ -1,0 +1,48 @@
+{
+  "owner": "placid-badger",
+  "registeredUTC": "2026-10-02T19:03:14.577060+00:00",
+  "handoff": "Immutable material partition source+three exports; Astra must copy to its lane before adding seating sidecar.",
+  "sourceAnd3Pairs": {
+    "plateau-lifting-edge.FCStd": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/candidate-package/plateau-lifting-edge.FCStd",
+      "sha256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "bytes": 122324
+    },
+    "assets/depth-10mm.model.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/candidate-package/assets/depth-10mm.model.json",
+      "sha256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+      "bytes": 988
+    },
+    "assets/depth-10mm.usdz": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/candidate-package/assets/depth-10mm.usdz",
+      "sha256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+      "bytes": 35467
+    },
+    "assets/depth-15mm.model.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/candidate-package/assets/depth-15mm.model.json",
+      "sha256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+      "bytes": 988
+    },
+    "assets/depth-15mm.usdz": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/candidate-package/assets/depth-15mm.usdz",
+      "sha256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+      "bytes": 35467
+    },
+    "assets/primary.model.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/candidate-package/assets/primary.model.json",
+      "sha256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+      "bytes": 904
+    },
+    "assets/primary.usdz": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/candidate-package/assets/primary.usdz",
+      "sha256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "bytes": 34044
+    }
+  },
+  "materialOnlyGeneratedManifestSHA256": "118d6e273d5e7cd1f8de37389ba65f37b47a4319cfcabe039f2b070e4d0cb772",
+  "native47BREPPreservationProof": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/fresh-native-preservation-proof.json",
+  "archiveAndXMLPreservationProof": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/native-preservation-and-finish-proof.json",
+  "sidecarIncluded": false,
+  "currentAppFrames": 0,
+  "humanAcceptance": "pending"
+}

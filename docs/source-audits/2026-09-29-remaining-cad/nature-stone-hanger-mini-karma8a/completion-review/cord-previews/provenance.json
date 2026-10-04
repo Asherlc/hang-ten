@@ -1,0 +1,903 @@
+{
+  "owner": "placid-badger",
+  "inputPackage": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/solve-root/Hangboards/nature-stone-hanger-mini-karma8a",
+  "canonicalMatchesFrozen": true,
+  "inputSHA256": {
+    "nature-stone-hanger-mini-karma8a.FCStd": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+    "assets/primary.usdz": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+    "assets/primary.model.json": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+    "suspension.json": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf"
+  },
+  "method": "Exact semantic USDZ triangles and normals; quaternion+translation of exact nine-decimal rounded cached body-space routes. Leads prepend actual fixed support derived from descriptor bounds and sidecar offset. Segments retain only their exact two-endpoint cached routes. Tube display radius equals sidecar; 24-segment circular cross sections. CPU z-buffer handles body/cord occlusion. Whole scene including support fits each frame. Neutral body, dark cord; no materials or finishes added to the USDZ. No source-image processing or hand-authored routes.",
+  "runtimeAppFinishes": "unverified",
+  "noAcceptanceClaim": true,
+  "poseEvidence": {
+    "granite-front": {
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "translation": [
+        0.0,
+        -0.046186777,
+        0.0
+      ],
+      "anchorWorldMeters": [
+        0.0,
+        0.044999999,
+        0.0
+      ],
+      "supportAbovePosedBodyMeters": 0.06118677667055225,
+      "routes": {
+        "left-lead": {
+          "kind": "lead",
+          "radiusMeters": 0.001,
+          "cachedBodySpacePoints": [
+            [
+              -0.051620453,
+              0.027825621,
+              0.0075
+            ],
+            [
+              -0.051736369,
+              0.027680992,
+              0.0075
+            ],
+            [
+              -0.051880314,
+              0.027452936,
+              0.0075
+            ],
+            [
+              -0.051969696,
+              0.027198494,
+              0.0075
+            ],
+            [
+              -0.052,
+              0.026930517,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "renderedWorldCenterline": [
+            [
+              0.0,
+              0.044999999,
+              0.0
+            ],
+            [
+              -0.051620453,
+              -0.018361156,
+              0.0075
+            ],
+            [
+              -0.051736369,
+              -0.018505784999999997,
+              0.0075
+            ],
+            [
+              -0.051880314,
+              -0.018733840999999998,
+              0.0075
+            ],
+            [
+              -0.051969696,
+              -0.018988282999999998,
+              0.0075
+            ],
+            [
+              -0.052,
+              -0.019256259999999997,
+              0.0075
+            ],
+            [
+              -0.0525,
+              -0.046186777,
+              0.0075
+            ]
+          ],
+          "renderedLengthMeters": 0.1100000009567815,
+          "displayRestLengthMeters": 0.11
+        },
+        "left-cross-return": {
+          "kind": "segment",
+          "radiusMeters": 0.001,
+          "cachedBodySpacePoints": [
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0525,
+              0.0,
+              -0.0075
+            ]
+          ],
+          "renderedWorldCenterline": [
+            [
+              -0.0525,
+              -0.046186777,
+              0.0075
+            ],
+            [
+              -0.0525,
+              -0.046186777,
+              0.0
+            ],
+            [
+              -0.0525,
+              -0.046186777,
+              -0.0075
+            ]
+          ],
+          "renderedLengthMeters": 0.015,
+          "displayRestLengthMeters": 0.04
+        },
+        "right-lead": {
+          "kind": "lead",
+          "radiusMeters": 0.001,
+          "cachedBodySpacePoints": [
+            [
+              0.051620456,
+              0.027825617,
+              0.0075
+            ],
+            [
+              0.051649463,
+              0.027789425,
+              0.0075
+            ],
+            [
+              0.051735962,
+              0.027681487,
+              0.0075
+            ],
+            [
+              0.051879879,
+              0.02745345,
+              0.0075
+            ],
+            [
+              0.051969245,
+              0.027199035,
+              0.0075
+            ],
+            [
+              0.051999547,
+              0.026931089,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "renderedWorldCenterline": [
+            [
+              0.0,
+              0.044999999,
+              0.0
+            ],
+            [
+              0.051620456,
+              -0.018361159999999998,
+              0.0075
+            ],
+            [
+              0.051649463,
+              -0.018397352,
+              0.0075
+            ],
+            [
+              0.051735962,
+              -0.018505289999999997,
+              0.0075
+            ],
+            [
+              0.051879879,
+              -0.018733326999999998,
+              0.0075
+            ],
+            [
+              0.051969245,
+              -0.018987742,
+              0.0075
+            ],
+            [
+              0.051999547,
+              -0.019255688,
+              0.0075
+            ],
+            [
+              0.0525,
+              -0.046186777,
+              0.0075
+            ]
+          ],
+          "renderedLengthMeters": 0.10999984764333515,
+          "displayRestLengthMeters": 0.11
+        },
+        "right-cross-return": {
+          "kind": "segment",
+          "radiusMeters": 0.001,
+          "cachedBodySpacePoints": [
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              0.0525,
+              0.0,
+              -0.0075
+            ]
+          ],
+          "renderedWorldCenterline": [
+            [
+              0.0525,
+              -0.046186777,
+              0.0075
+            ],
+            [
+              0.0525,
+              -0.046186777,
+              0.0
+            ],
+            [
+              0.0525,
+              -0.046186777,
+              -0.0075
+            ]
+          ],
+          "renderedLengthMeters": 0.015,
+          "displayRestLengthMeters": 0.04
+        }
+      }
+    },
+    "wood-inverted": {
+      "rotation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "translation": [
+        0.0,
+        -0.046186716,
+        0.0
+      ],
+      "anchorWorldMeters": [
+        0.0,
+        0.044999999,
+        0.0
+      ],
+      "supportAbovePosedBodyMeters": 0.061186715670552255,
+      "routes": {
+        "left-lead": {
+          "kind": "lead",
+          "radiusMeters": 0.001,
+          "cachedBodySpacePoints": [
+            [
+              -0.051620453,
+              -0.027825621,
+              0.0075
+            ],
+            [
+              -0.051736369,
+              -0.027680992,
+              0.0075
+            ],
+            [
+              -0.051880314,
+              -0.027452936,
+              0.0075
+            ],
+            [
+              -0.051969696,
+              -0.027198494,
+              0.0075
+            ],
+            [
+              -0.052,
+              -0.026930517,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "renderedWorldCenterline": [
+            [
+              0.0,
+              0.044999999,
+              0.0
+            ],
+            [
+              0.051620453,
+              -0.018361095000000004,
+              0.0075
+            ],
+            [
+              0.051736369,
+              -0.018505724,
+              0.0075
+            ],
+            [
+              0.051880314,
+              -0.018733780000000002,
+              0.0075
+            ],
+            [
+              0.051969696,
+              -0.018988222000000003,
+              0.0075
+            ],
+            [
+              0.052,
+              -0.019256199,
+              0.0075
+            ],
+            [
+              0.0525,
+              -0.046186716,
+              0.0075
+            ]
+          ],
+          "renderedLengthMeters": 0.1099999538627279,
+          "displayRestLengthMeters": 0.11
+        },
+        "left-cross-return": {
+          "kind": "segment",
+          "radiusMeters": 0.001,
+          "cachedBodySpacePoints": [
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0525,
+              0.0,
+              -0.0075
+            ]
+          ],
+          "renderedWorldCenterline": [
+            [
+              0.0525,
+              -0.046186716,
+              0.0075
+            ],
+            [
+              0.0525,
+              -0.046186716,
+              0.0
+            ],
+            [
+              0.0525,
+              -0.046186716,
+              -0.0075
+            ]
+          ],
+          "renderedLengthMeters": 0.015,
+          "displayRestLengthMeters": 0.04
+        },
+        "right-lead": {
+          "kind": "lead",
+          "radiusMeters": 0.001,
+          "cachedBodySpacePoints": [
+            [
+              0.051620456,
+              -0.027825617,
+              0.0075
+            ],
+            [
+              0.051649473,
+              -0.027789412,
+              0.0075
+            ],
+            [
+              0.051736523,
+              -0.027680796,
+              0.0075
+            ],
+            [
+              0.051880462,
+              -0.027452742,
+              0.0075
+            ],
+            [
+              0.051969839,
+              -0.027198304,
+              0.0075
+            ],
+            [
+              0.05200014,
+              -0.026930332,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "renderedWorldCenterline": [
+            [
+              0.0,
+              0.044999999,
+              0.0
+            ],
+            [
+              -0.051620456,
+              -0.018361099000000002,
+              0.0075
+            ],
+            [
+              -0.051649473,
+              -0.018397304000000003,
+              0.0075
+            ],
+            [
+              -0.051736523,
+              -0.018505920000000002,
+              0.0075
+            ],
+            [
+              -0.051880462,
+              -0.018733974000000004,
+              0.0075
+            ],
+            [
+              -0.051969839,
+              -0.018988412000000003,
+              0.0075
+            ],
+            [
+              -0.05200014,
+              -0.019256384,
+              0.0075
+            ],
+            [
+              -0.0525,
+              -0.046186716,
+              0.0075
+            ]
+          ],
+          "renderedLengthMeters": 0.10999999989479455,
+          "displayRestLengthMeters": 0.11
+        },
+        "right-cross-return": {
+          "kind": "segment",
+          "radiusMeters": 0.001,
+          "cachedBodySpacePoints": [
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              0.0525,
+              0.0,
+              -0.0075
+            ]
+          ],
+          "renderedWorldCenterline": [
+            [
+              -0.0525,
+              -0.046186716,
+              0.0075
+            ],
+            [
+              -0.0525,
+              -0.046186716,
+              0.0
+            ],
+            [
+              -0.0525,
+              -0.046186716,
+              -0.0075
+            ]
+          ],
+          "renderedLengthMeters": 0.015,
+          "displayRestLengthMeters": 0.04
+        }
+      }
+    },
+    "pinch-side": {
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "translation": [
+        0.0,
+        -0.046186777,
+        0.0
+      ],
+      "anchorWorldMeters": [
+        0.0,
+        0.044999999,
+        0.0
+      ],
+      "supportAbovePosedBodyMeters": 0.06118677667055225,
+      "routes": {
+        "left-lead": {
+          "kind": "lead",
+          "radiusMeters": 0.001,
+          "cachedBodySpacePoints": [
+            [
+              -0.051620453,
+              0.027825621,
+              0.0075
+            ],
+            [
+              -0.051736369,
+              0.027680992,
+              0.0075
+            ],
+            [
+              -0.051880314,
+              0.027452936,
+              0.0075
+            ],
+            [
+              -0.051969696,
+              0.027198494,
+              0.0075
+            ],
+            [
+              -0.052,
+              0.026930517,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "renderedWorldCenterline": [
+            [
+              0.0,
+              0.044999999,
+              0.0
+            ],
+            [
+              -0.051620453,
+              -0.018361156,
+              0.0075
+            ],
+            [
+              -0.051736369,
+              -0.018505784999999997,
+              0.0075
+            ],
+            [
+              -0.051880314,
+              -0.018733840999999998,
+              0.0075
+            ],
+            [
+              -0.051969696,
+              -0.018988282999999998,
+              0.0075
+            ],
+            [
+              -0.052,
+              -0.019256259999999997,
+              0.0075
+            ],
+            [
+              -0.0525,
+              -0.046186777,
+              0.0075
+            ]
+          ],
+          "renderedLengthMeters": 0.1100000009567815,
+          "displayRestLengthMeters": 0.11
+        },
+        "left-cross-return": {
+          "kind": "segment",
+          "radiusMeters": 0.001,
+          "cachedBodySpacePoints": [
+            [
+              -0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              -0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0525,
+              0.0,
+              -0.0075
+            ]
+          ],
+          "renderedWorldCenterline": [
+            [
+              -0.0525,
+              -0.046186777,
+              0.0075
+            ],
+            [
+              -0.0525,
+              -0.046186777,
+              0.0
+            ],
+            [
+              -0.0525,
+              -0.046186777,
+              -0.0075
+            ]
+          ],
+          "renderedLengthMeters": 0.015,
+          "displayRestLengthMeters": 0.04
+        },
+        "right-lead": {
+          "kind": "lead",
+          "radiusMeters": 0.001,
+          "cachedBodySpacePoints": [
+            [
+              0.051620456,
+              0.027825617,
+              0.0075
+            ],
+            [
+              0.051649463,
+              0.027789425,
+              0.0075
+            ],
+            [
+              0.051735962,
+              0.027681487,
+              0.0075
+            ],
+            [
+              0.051879879,
+              0.02745345,
+              0.0075
+            ],
+            [
+              0.051969245,
+              0.027199035,
+              0.0075
+            ],
+            [
+              0.051999547,
+              0.026931089,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ]
+          ],
+          "renderedWorldCenterline": [
+            [
+              0.0,
+              0.044999999,
+              0.0
+            ],
+            [
+              0.051620456,
+              -0.018361159999999998,
+              0.0075
+            ],
+            [
+              0.051649463,
+              -0.018397352,
+              0.0075
+            ],
+            [
+              0.051735962,
+              -0.018505289999999997,
+              0.0075
+            ],
+            [
+              0.051879879,
+              -0.018733326999999998,
+              0.0075
+            ],
+            [
+              0.051969245,
+              -0.018987742,
+              0.0075
+            ],
+            [
+              0.051999547,
+              -0.019255688,
+              0.0075
+            ],
+            [
+              0.0525,
+              -0.046186777,
+              0.0075
+            ]
+          ],
+          "renderedLengthMeters": 0.10999984764333515,
+          "displayRestLengthMeters": 0.11
+        },
+        "right-cross-return": {
+          "kind": "segment",
+          "radiusMeters": 0.001,
+          "cachedBodySpacePoints": [
+            [
+              0.0525,
+              0.0,
+              0.0075
+            ],
+            [
+              0.0525,
+              0.0,
+              0.0
+            ],
+            [
+              0.0525,
+              0.0,
+              -0.0075
+            ]
+          ],
+          "renderedWorldCenterline": [
+            [
+              0.0525,
+              -0.046186777,
+              0.0075
+            ],
+            [
+              0.0525,
+              -0.046186777,
+              0.0
+            ],
+            [
+              0.0525,
+              -0.046186777,
+              -0.0075
+            ]
+          ],
+          "renderedLengthMeters": 0.015,
+          "displayRestLengthMeters": 0.04
+        }
+      }
+    }
+  },
+  "images": [
+    {
+      "poseID": "granite-front",
+      "view": "front",
+      "image": "granite-front-front.png",
+      "sha256": "0255adb59647b3d1fce342658164c48bcb3b35e142f9d5287a5f23db889bda9d",
+      "wholeScene": true
+    },
+    {
+      "poseID": "granite-front",
+      "view": "oblique",
+      "image": "granite-front-oblique.png",
+      "sha256": "3a17ae507c706b844b5be296baf4f868a5144d9a30733365f8f96fef58c47d2f",
+      "wholeScene": true
+    },
+    {
+      "poseID": "granite-front",
+      "view": "side",
+      "image": "granite-front-side.png",
+      "sha256": "8755681c0de80f1e595fbda3986056ce3623308302c67b64d86b25fa8b5dce62",
+      "wholeScene": true
+    },
+    {
+      "poseID": "granite-front",
+      "view": "front / oblique / side",
+      "image": "granite-front-whole-cord.png",
+      "sha256": "bf63f8a61aa8a72b8da421504828b354fe03dbc1c170b36687bb9e19c023eb1a",
+      "wholeScene": true
+    },
+    {
+      "poseID": "wood-inverted",
+      "view": "front",
+      "image": "wood-inverted-front.png",
+      "sha256": "742ae3d2809c51bbd32d018730ada2181dda885797528ea228d611fb402601b7",
+      "wholeScene": true
+    },
+    {
+      "poseID": "wood-inverted",
+      "view": "oblique",
+      "image": "wood-inverted-oblique.png",
+      "sha256": "f82130e4bb23eec664e15d34556431c06205c45b104c206112cbadabccf1773e",
+      "wholeScene": true
+    },
+    {
+      "poseID": "wood-inverted",
+      "view": "side",
+      "image": "wood-inverted-side.png",
+      "sha256": "4936281c5c9e6eb9f07782008bff55f3bc65d8b1117911cdef16acef08c220a2",
+      "wholeScene": true
+    },
+    {
+      "poseID": "wood-inverted",
+      "view": "front / oblique / side",
+      "image": "wood-inverted-whole-cord.png",
+      "sha256": "0389b015b9baaf39a811ada2a359cf979f750580c9a7ea8af8c85a712ca0a33c",
+      "wholeScene": true
+    },
+    {
+      "poseID": "pinch-side",
+      "view": "front",
+      "image": "pinch-side-front.png",
+      "sha256": "0255adb59647b3d1fce342658164c48bcb3b35e142f9d5287a5f23db889bda9d",
+      "wholeScene": true
+    },
+    {
+      "poseID": "pinch-side",
+      "view": "oblique",
+      "image": "pinch-side-oblique.png",
+      "sha256": "3a17ae507c706b844b5be296baf4f868a5144d9a30733365f8f96fef58c47d2f",
+      "wholeScene": true
+    },
+    {
+      "poseID": "pinch-side",
+      "view": "side",
+      "image": "pinch-side-side.png",
+      "sha256": "8755681c0de80f1e595fbda3986056ce3623308302c67b64d86b25fa8b5dce62",
+      "wholeScene": true
+    },
+    {
+      "poseID": "pinch-side",
+      "view": "front / oblique / side",
+      "image": "pinch-side-whole-cord.png",
+      "sha256": "90b4e2a76dfc9b7608ce1ac9551cebbd1532a348f6516eacacc997bcdb19004d",
+      "wholeScene": true
+    }
+  ],
+  "scriptSHA256": "b1ce98700dbe23f5e39c24b73572a67c368178943ba39d5ad53795a9b28fa559",
+  "rendererHelperSHA256": "12b188f46cb371455fcc2973195a39b6c36f995054418dae991cc81aa6d18bf5",
+  "rasterHelperSHA256": "e90232263554453be7412f6f5421828187a71fdc59a09be7a1d8a8ea2e4f9cea",
+  "visualInspection": {
+    "status": "whole final sheets inspected",
+    "images": [
+      "granite-front-whole-cord.png",
+      "wood-inverted-whole-cord.png",
+      "pinch-side-whole-cord.png"
+    ],
+    "observations": [
+      "Every frame contains the complete board, both support legs and their common fixed support without cropping.",
+      "Oblique views expose the lead descending in the existing near-side groove and the transverse exterior return.",
+      "Wood-inverted applies the stored half-turn to both model and cached routes. Granite-front and pinch-side intentionally share their existing rigid pose, and therefore their neutral full-scene previews look the same.",
+      "Side projection overlays the symmetric left and right leads; the oblique and front views show both.",
+      "Neutral shading is technical geometry only; runtime wood/granite finishes and app behavior remain unverified."
+    ]
+  }
+}

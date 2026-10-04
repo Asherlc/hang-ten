@@ -1,0 +1,60 @@
+{
+  "scope": "Prospective fallback source review only. No implementation selected, source/runtime edits, build or tests. First scope is static uncorded Evo/Pro, read-only model maps; Main per-hand task resolution remains untouched.",
+  "sources": [
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "7d551e314b93f056556effb8dc9d52dbd2bd4a303231a064e41cf4f1559b1701"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "10e4fe7d6d945cc0ad22623113e51c4bccc280a949c7408c3fbeaf9a25861747"
+    }
+  ],
+  "concreteIncompatibilities": [
+    {
+      "ref": "BoardModelView.swift:679\u2013694; BoardModelRealityTypes.swift:1100\u20131117,1658\u20131665",
+      "finding": "Prototype frames/selects, applies request.orbit, then highlight. Changed contact selection recalculates Main selectionOrbit, resets zoom and requests0.28s camera animation. Immediate updateAndRender(deltaTime:0) does not establish final target camera. If camera is active it may remain midtransition; inactive initial assignment alone does not establish later behavior."
+    },
+    {
+      "ref": "BoardModelView.swift:616\u2013622,679\u2013683; BoardModelRealityTypes.swift:1101\u20131117",
+      "finding": "Hidden opposite-mode prerender reapplies request.orbit; same contacts avoid selectionOrbit recomputation. Visible first selection and opposite-mode prerender can therefore have different effective camera targets while cache entries carry the same request orbit key."
+    },
+    {
+      "ref": "BoardModelRealityTypes.swift:1658",
+      "finding": "The identical-target early return intentionally preserves live animation. Calling a nonanimated update with that same target would not alone force the actual transform to target. An explicit snapshot settlement boundary must stop owned animation and assign the validated target even when target is unchanged."
+    },
+    {
+      "ref": "BoardModelView.swift:588\u2013608,705\u2013720; BoardModelRealityTypes.swift:1575\u20131601",
+      "finding": "Coordinator serializes drain with frame==nil and stores scalar pending inputs, but model-owned camera animation/geometric task/live controllers are independent mutators. Revision filtering prevents stale publication, not scene mutation during GPU consumption. Completion/cache-hit highlight calls also mutate scene outside a snapshot-application boundary."
+    }
+  ],
+  "minimalExplicitContract": {
+    "scopeGuard": "Allow only explicitly chosen static Evo/Pro presentation with no suspension/liveRopes/geometricCord or geometricUncorded motion state, no external live subscription, and exclusive ownership of loaded scene entities by this offscreen renderer. Reject/fallback unsupported state rather than silently freezing cords. No shared roots/camera with a live RealityView.",
+    "modelAPI": "Add a narrowly explicit snapshot preparation path in BoardModelRealityScene, leaving existing highlight/select/frame/orbit defaults and Main live0.28 animation untouched. Reuse canonical position transforms, contact selectionOrbit/visibility calculation, full-bounds perspective fit, projection and clipping. Do not duplicate approximate focus math in coordinator.",
+    "semanticOrder": [
+      "Resolve and apply supported canonical position and viewport first.",
+      "On contact/position change compute the same canonical focus as Main, resetting user orbit/zoom exactly as live selection does; mode-only change preserves effective focus/orbit.",
+      "Track user orbit intent separately from canonical selection focus, or make the coordinator own the actual resolved absolute orbit. Never use default(0,0,1) as a substitute for resolved selection focus.",
+      "Apply materials for requested mode without launching selection motion; settle actual camera to its canonical target explicitly, including unchanged-target case. Verify no camera animation/geometric task/live mutation remains.",
+      "Return a value snapshot: selection identity, effective orbit, canonical instance transforms, camera transform/projection/clips, viewport/scale and lighting/display version. Only then enqueue GPU render."
+    ],
+    "animationAdaptation": "Offscreen mode renders the final canonical selection camera immediately, an explicit discrete presentation adaptation. It does not claim reproduction of Main animated transition; default live mode retains animation.",
+    "gestureSemantics": "After a selection reset, drag/zoom must start from resolved focus orbit and preserve Main clamp/zoom behavior. Mode changes do not reset orbit. Reset tap returns to a documented canonical selected-contact camera; do not silently change live reset semantics. Preserve effective rendered orbit as cache key, not merely last requested delta.",
+    "inFlightOwnership": "At most one render/conversion uses the owned scene. New semantic/size/gesture requests modify scalar latest-pending state only; no material/camera/entity writes until GPU completion and eager conversion release the frame. Disappearance invalidates publication immediately but retains scene/ODR/render resources through callback; no detach/reuse by another renderer while in flight.",
+    "alternatePrerender": "Start only when visible exact snapshot exists and no newer pending request. Derive opposite mode from the SAME frozen camera/instance snapshot; change only materials. Do not call orbit/select/focus again. Hidden mode never changes displayed input or presented camera bookkeeping. Remove unnecessary completion/cache-hit scene.highlight restoration; later submission applies its explicit state at the safe boundary.",
+    "cache": "Key completed frames by model/presentation identity and validated snapshot generation, contact IDs+position, actual effective camera/instance transforms/projection, mode, exact viewport/scale and lighting version. Reject late revision/appearance/model mismatch. Disappear clears publication/cache; recreated model cannot reuse old entries. Any same-aspect size preview reuse must be explicitly only a temporary resolution adaptation, never an exact-size cache hit.",
+    "noPolling": "No frame sampler/timer or artificial simulation delta needed for static snapshot. Renderer work only on semantic/size/gesture changes and optional one opposite-mode precompute."
+  },
+  "meaningfulConditionalTests": [
+    "Model-only: changed contacts produce snapshot camera/instance transforms matching fully settled canonical Main selection; active and preview snapshots differ only in materials, including first-selection and hidden-alternate order.",
+    "Orbit/cache: mode toggle after nonzero orbit preserves actual camera; new contact applies intended Main focus reset; zoom applied once; cache cannot return opposite-camera or previous-model frame.",
+    "Coordinator with small actual static scene: request A in flight then B/clear/disappear never publishes stale A; latest request eventually publishes, no scene mutation during held frame ownership, reappear has valid current revision. GPU completion test distinct from value-only cache tests.",
+    "Whole fresh app views: static Evo/Pro contact orientations, top/jug and flat/incut readability, mode transitions and gesture/reset behavior; no passing-test substitution for screenshot evidence."
+  ],
+  "limits": [
+    "This source audit does not prove a GPU/framework failure mechanism or a successful fallback.",
+    "Corded and multi-instance moving boards are explicitly deferred: supporting them requires a settled rope/geometry snapshot contract, not cancellation of Main behavior.",
+    "Studio lighting and discrete camera transition remain declared display adaptations; native assets, manufacturer dimensions and routine task semantics remain unchanged."
+  ],
+  "productionImplementationAuthorized": false
+}

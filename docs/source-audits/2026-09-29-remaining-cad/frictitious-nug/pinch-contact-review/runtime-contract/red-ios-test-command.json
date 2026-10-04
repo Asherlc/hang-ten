@@ -1,0 +1,31 @@
+{
+  "owner": "placid-badger",
+  "simulator": "20358DD7-A124-4108-ADEA-E9B07EA3DA09",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=20358DD7-A124-4108-ADEA-E9B07EA3DA09",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "-parallel-testing-enabled",
+    "NO",
+    "-only-testing:HangTenTests/BoardPackageStoreTests/testSharedContactMembershipBuildsBothContactInventories",
+    "-only-testing:HangTenTests/BoardPackageStoreTests/testSharedContactMembershipRejectsMalformedOrUnboundDeclarations",
+    "-only-testing:HangTenTests/BoardModelRealityTests/testSharedContactMeshUsesPrimaryPickingAndUnionHighlight",
+    "-collect-test-diagnostics",
+    "never",
+    "-resultBundlePath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-pinch-review/placid-badger-nug-pinch-red-tests.xcresult",
+    "test-without-building"
+  ],
+  "timeoutSeconds": 540,
+  "resultBundle": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-pinch-review/placid-badger-nug-pinch-red-tests.xcresult",
+  "exitCode": 65,
+  "elapsedSeconds": 15.641277791990433
+}

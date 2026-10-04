@@ -1,0 +1,364 @@
+{
+  "owner": "placid-badger",
+  "verifiedUTC": "2026-10-02T15:32:33.549532+00:00",
+  "status": "passed-package-and-compile-only",
+  "pythonJUnit": {
+    "tests": 195,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "junitFiles": [
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest-junit.xml",
+      "sha256": "ce5309f4985ffafdb04558dbe72c3e51a13c3eb332f8b59e0559bfff42ab826b",
+      "counts": {
+        "tests": 24,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-manifest-package-pytest-junit.xml",
+      "sha256": "85084f876433cc6a7759affd9bf871dd50e19ed47eba78b3f204de5d54af5dfa",
+      "counts": {
+        "tests": 171,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "canonicalCLIValidatedBoards": 64,
+  "canonicalCLIDrafts": [],
+  "frozenCanonical": {
+    "owner": "placid-badger",
+    "package": "owl-climb-poker",
+    "frozenSHA256": {
+      "owl-climb-poker.FCStd": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+      "assets/primary.usdz": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "assets/primary.model.json": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+    },
+    "observedSHA256": {
+      "owl-climb-poker.FCStd": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+      "assets/primary.usdz": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "assets/primary.model.json": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+    },
+    "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+    "generatedManifestBytes": 10019,
+    "surfaceFinish": "wood",
+    "contactIDs": [
+      "face-a-left-outer-slot",
+      "face-a-left-single-pocket",
+      "face-a-left-dual-pocket",
+      "face-a-center-pull-up-slot",
+      "face-a-right-dual-pocket",
+      "face-a-right-single-pocket",
+      "face-a-right-outer-slot",
+      "face-b-left-outer-slot",
+      "face-b-left-single-pocket",
+      "face-b-left-dual-pocket",
+      "face-b-left-deep-sloper",
+      "face-b-center-pull-up-slot",
+      "face-b-right-deep-sloper",
+      "face-b-right-dual-pocket",
+      "face-b-right-single-pocket",
+      "face-b-right-outer-slot",
+      "face-c-left-outer-slot",
+      "face-c-left-single-pocket",
+      "face-c-left-dual-pocket",
+      "face-c-left-shallow-half-round",
+      "face-c-center-pull-up-slot",
+      "face-c-right-shallow-half-round",
+      "face-c-right-dual-pocket",
+      "face-c-right-single-pocket",
+      "face-c-right-outer-slot",
+      "face-d-left-outer-slot",
+      "face-d-left-single-pocket",
+      "face-d-left-dual-pocket",
+      "face-d-left-deep-rounded-recess",
+      "face-d-center-pull-up-slot",
+      "face-d-right-deep-rounded-recess",
+      "face-d-right-dual-pocket",
+      "face-d-right-single-pocket",
+      "face-d-right-outer-slot"
+    ],
+    "contactCount": 34,
+    "positions": [
+      {
+        "id": "face-a",
+        "presentationID": "primary",
+        "contactIDs": [
+          "face-a-left-outer-slot",
+          "face-a-left-single-pocket",
+          "face-a-left-dual-pocket",
+          "face-a-center-pull-up-slot",
+          "face-a-right-dual-pocket",
+          "face-a-right-single-pocket",
+          "face-a-right-outer-slot"
+        ]
+      },
+      {
+        "id": "face-b",
+        "presentationID": "primary",
+        "contactIDs": [
+          "face-b-left-outer-slot",
+          "face-b-left-single-pocket",
+          "face-b-left-dual-pocket",
+          "face-b-left-deep-sloper",
+          "face-b-center-pull-up-slot",
+          "face-b-right-deep-sloper",
+          "face-b-right-dual-pocket",
+          "face-b-right-single-pocket",
+          "face-b-right-outer-slot"
+        ]
+      },
+      {
+        "id": "face-c",
+        "presentationID": "primary",
+        "contactIDs": [
+          "face-c-left-outer-slot",
+          "face-c-left-single-pocket",
+          "face-c-left-dual-pocket",
+          "face-c-left-shallow-half-round",
+          "face-c-center-pull-up-slot",
+          "face-c-right-shallow-half-round",
+          "face-c-right-dual-pocket",
+          "face-c-right-single-pocket",
+          "face-c-right-outer-slot"
+        ]
+      },
+      {
+        "id": "face-d",
+        "presentationID": "primary",
+        "contactIDs": [
+          "face-d-left-outer-slot",
+          "face-d-left-single-pocket",
+          "face-d-left-dual-pocket",
+          "face-d-left-deep-rounded-recess",
+          "face-d-center-pull-up-slot",
+          "face-d-right-deep-rounded-recess",
+          "face-d-right-dual-pocket",
+          "face-d-right-single-pocket",
+          "face-d-right-outer-slot"
+        ]
+      }
+    ],
+    "orientation": {
+      "pivot": "modelBoundsCenter",
+      "rotations": {
+        "face-a": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "face-b": [
+          0.707106781,
+          0,
+          0,
+          0.707106781
+        ],
+        "face-c": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "face-d": [
+          -0.707106781,
+          0,
+          0,
+          0.707106781
+        ]
+      }
+    },
+    "allFactualContactsAndPositionsMatchBaseline": true,
+    "soleManifestChange": "/presentations/0/media/display/surfaceFinish: wood",
+    "suspensionAbsent": true
+  },
+  "canonicalStillMatchesFinalFrozenInput": true,
+  "iosBuild": {
+    "status": "passed-compile-and-staging",
+    "commit": "ad74a51e1c43991145721ab04ff8c0d3c6c51cca",
+    "dirtyDiffSHA256": "b461e0c0ad7852d124a61849f8b45a9f9bc9f55722e3a1b5ffc3ea0572f739f3",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcodebuild",
+      "-project",
+      "HangTen.xcodeproj",
+      "-scheme",
+      "HangTen",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "generic/platform=iOS Simulator",
+      "-derivedDataPath",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-DD",
+      "build-for-testing"
+    ],
+    "elapsedSeconds": 47.9227661670011,
+    "builtBinarySHA256": "7ba82cd2b3dc7383892f91c8e6308786eb768fe4482850edbb2a433663f6832e",
+    "stagedGeneratedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+    "stagedDescriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+    "odrModelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+    "odrModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-owl-climb-poker-050a94a5ac8037ff286ea4c0ceffe61b.assetpack/Hangboards/owl-climb-poker/assets/primary.usdz",
+    "testBundleBuilt": true,
+    "ODRSeparatedFromMetadata": true,
+    "CADAuthoringFilesExcluded": true,
+    "frozenFilesUnchanged": true,
+    "rawLogSHA256": "fd97bbf1884f68485652b6bec22d6b5d822bf06c478607a754b666a510786c48"
+  },
+  "actualAndroidByteParity": {
+    "generatedManifest": true,
+    "descriptor": true,
+    "inlineModel": true,
+    "CADExcluded": true,
+    "suspensionSidecarExcluded": true
+  },
+  "cleanupFreshVerification": [
+    {
+      "jobName": "placid-badger-poker12-model-tools-pytest",
+      "processGroup": 34571,
+      "remainingProcessesNow": [],
+      "processGroupAbsentNow": true,
+      "resources": [
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest-TMP",
+          "absentNow": true
+        }
+      ],
+      "priorCleanupPassed": true
+    },
+    {
+      "jobName": "placid-badger-poker12-manifest-package-pytest",
+      "processGroup": 34617,
+      "remainingProcessesNow": [],
+      "processGroupAbsentNow": true,
+      "resources": [
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-manifest-package-pytest-TMP",
+          "absentNow": true
+        }
+      ],
+      "priorCleanupPassed": true
+    },
+    {
+      "jobName": "placid-badger-poker12-canonical-cli",
+      "processGroup": 34897,
+      "remainingProcessesNow": [],
+      "processGroupAbsentNow": true,
+      "resources": [
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-canonical-cli-TMP",
+          "absentNow": true
+        }
+      ],
+      "priorCleanupPassed": true
+    },
+    {
+      "jobName": "placid-badger-poker12-android-staging",
+      "processGroup": 34903,
+      "remainingProcessesNow": [],
+      "processGroupAbsentNow": true,
+      "resources": [
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-android-staging-TMP",
+          "absentNow": true
+        },
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-android-stage",
+          "absentNow": true
+        }
+      ],
+      "priorCleanupPassed": true
+    },
+    {
+      "jobName": "placid-badger-poker12-ios-build",
+      "processGroup": 34926,
+      "remainingProcessesNow": [],
+      "processGroupAbsentNow": true,
+      "resources": [
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-build-TMP",
+          "absentNow": true
+        },
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-DD",
+          "absentNow": true
+        }
+      ],
+      "priorCleanupPassed": true
+    }
+  ],
+  "allOwnedProcessGroupsAbsentNow": true,
+  "allOwnedResourcePathsAbsentNow": true,
+  "simulatorsCreated": 0,
+  "simulatorsBooted": 0,
+  "appsInstalled": 0,
+  "appsLaunched": 0,
+  "currentAppFrames": 0,
+  "iosUnitTestCasesExecuted": 0,
+  "runtimeEnvironment": "Previously blocked; no simulator guest operation attempted",
+  "currentAppearanceVerified": false,
+  "geometryAcceptance": false,
+  "artifacts": [
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/package-validation.json",
+      "bytes": 13421,
+      "sha256": "b2e762d3b01807d7d7f4e1fb3623f2d10a3f588830f2fd3e4a1c436b14233be0"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/ios-build/build-validation.json",
+      "bytes": 7577,
+      "sha256": "7f56d1d5481519ce3055ca98de02433c6b7ec230b70d499787bc8c441246ac4d"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/canonical-generated-board.json",
+      "bytes": 10019,
+      "sha256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/ios-build/generated-board.json",
+      "bytes": 10019,
+      "sha256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/ios-build/build-dirty-diff.patch",
+      "bytes": 2270,
+      "sha256": "b461e0c0ad7852d124a61849f8b45a9f9bc9f55722e3a1b5ffc3ea0572f739f3"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/ios-build/git-status-before.txt",
+      "bytes": 158,
+      "sha256": "8ae859923ec7384231ca5fde1184eaaaee11dd010f522f228a80500cb7c9ba9a"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest.log",
+      "bytes": 99,
+      "sha256": "d7762caef79dec0d631144d5906d3f708c0c435d7368e36bdae3938e5c314489"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-manifest-package-pytest.log",
+      "bytes": 260,
+      "sha256": "0d7dd2967952583776af4f23cee6b80f452d24ffa26a7b094a90d9be02577d1d"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-canonical-cli.log",
+      "bytes": 5583,
+      "sha256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-android-staging.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-build.log",
+      "bytes": 1313146,
+      "sha256": "fd97bbf1884f68485652b6bec22d6b5d822bf06c478607a754b666a510786c48"
+    }
+  ]
+}

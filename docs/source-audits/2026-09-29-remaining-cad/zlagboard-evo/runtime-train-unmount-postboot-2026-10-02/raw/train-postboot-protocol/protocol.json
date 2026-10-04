@@ -1,0 +1,11 @@
+{
+  "epoch": 1790992022.7379682,
+  "recoveryEvidence": "../simulator-recovery-2026-10-02",
+  "binarySHA256": "9855fc146d9bf381797b8a982a70f96e7f001c9838e5fd49df2d590e8d6d2242",
+  "sourceBuildInstallChanges": false,
+  "runOrder": [
+    "control",
+    "unmount only if valid control fails"
+  ],
+  "limits": "New postboot environment; unknown preceding shutdown cause; no frontend actions. Original230 and failedreversal11 retained unchanged."
+}

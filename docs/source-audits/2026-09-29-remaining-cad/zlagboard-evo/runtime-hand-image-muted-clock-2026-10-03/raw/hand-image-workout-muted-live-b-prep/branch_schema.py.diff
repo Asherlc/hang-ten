@@ -1,0 +1,29 @@
+--- original/branch_schema.py
++++ branch_schema.py
+@@ -100,3 +100,26 @@
+     return dict(role=role,censusSequence=latest['sequence'],censusEpoch=latest['epoch'],hand=attached[0],limits=LIMITS)
+ def published_artifacts(rows):
+     return [dict(path=r['pngPath'],sha256=r['pngSHA256'],bytes=r['pngByteCount'],sessionID=r['sessionID'],revision=r['revision'],sequence=r['sequence']) for r in image_rows(rows) if r['imageEvent']=='published']
++
++
++def capture_checkpoint(rows,role,allow_first_before_gap=False,capture_start=None):
++    """LIVE first+.25 only: preserve a proved sparse-observation gap, not readiness."""
++    try:return capture_evidence(rows,role)
++    except AssertionError as exc:
++        if role!='live' or not allow_first_before_gap or str(exc)!='No unique LIVE attached pair in latest sparse census':raise
++        original_error=str(exc)
++    latest=next((r for r in reversed(rows) if 'handLifetimeCensus' in r),None)
++    require(latest is not None and capture_start is not None,'Gap lacks preceding census/time')
++    candidates=[r for r in rows if r.get('event')=='hand-lifecycle' and r.get('lifecycleEvent')=='constructor-entry' and r.get('handKind')=='pair' and latest['sequence']<r['sequence'] and r['epoch']<capture_start]
++    require(len(candidates)==1,'Gap lacks unique new pair constructor before shot')
++    ctor=candidates[0];token=ctor['handLifetimeToken']
++    makes=[r for r in rows if r.get('event')=='hand-lifecycle' and r.get('lifecycleEvent')=='make-entry' and r.get('handLifetimeToken')==token]
++    fits=[r for r in rows if r.get('event')=='hand-camera' and r.get('cameraEvent')=='reset-fitted' and r.get('handLifetimeToken')==token]
++    require(len(makes)==1 and bool(fits),'Gap lacks actual make and fit')
++    make=makes[0];fit=fits[-1]
++    require(ctor['sequence']<make['sequence']<fit['sequence'] and all(r['epoch']<capture_start for r in [ctor,make,fit]),'Ctor/make/fit not all before actual shot')
++    require(make['handRootID']==ctor['handRootID'] and make['handCameraID']==ctor['handCameraID']==fit['handCameraID'],'Gap entity identity mismatch')
++    require(fit['orthographicPresent'] is True and fit['perspectivePresent'] is False and fit['allDepthsFinite'] and fit['allDepthsInsideUnchangedClips'] and fit['framingVertexCount']>0,'Gap lacks valid orthographic fit')
++    require(not any(r.get('event')=='hand-view-lifecycle' and r.get('swiftUIEvent')=='disappeared' and token in r.get('knownLifetimeTokens',[]) and r['sequence']>make['sequence'] for r in rows),'Current hand disappeared after make')
++    require(not any(h['handLifetimeToken']==token for h in latest['handLifetimeCensus']),'Gap is contrary state, not a preconstructor census')
++    return dict(role=role,observationStatus='PENDING_FIRST_BEFORE_CENSUS_GAP',readinessProven=False,originalStrictError=original_error,precedingCensus=latest,constructor=ctor,make=make,fit=fit,captureStartBound=capture_start,requiresFullTraceFirstAfterAndRemaining23=True,limits=LIMITS)

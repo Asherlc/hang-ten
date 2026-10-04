@@ -1,0 +1,121 @@
+26:     var body: some View {
+27:         VStack(spacing: 8) {
+28:             Text(cueLabel.uppercased())
+29:                 .font(.system(size: 10, weight: .semibold, design: .rounded))
+30:                 .tracking(1.35)
+31:                 .foregroundStyle(Color.hangMuted)
+32: 
+33:             if let gripType {
+34:                 Text(gripType.label)
+35:                     .font(.system(size: 18, weight: .bold, design: .rounded))
+36:                     .foregroundStyle(Color.hangInk)
+37:             } else {
+38:                 Text("Grip not specified")
+39:                     .font(.system(size: 16, weight: .semibold, design: .rounded))
+40:                     .foregroundStyle(Color.hangMuted)
+41:             }
+42: 
+43:             HStack(spacing: 10) {
+44:                 if let singleSide = Self.singleSide(
+45:                     handCapacity: hold.handCapacity,
+46:                     resolvedSide: resolvedHandSide
+47:                 ) {
+48:                     GripHandCueCard(
+49:                         posture: gripType,
+50:                         fingerConfiguration: fingerConfiguration,
+51:                         side: singleSide
+52:                     )
+53:                 } else {
+54:                     GripHandPairCueCards(posture: gripType, fingerConfiguration: fingerConfiguration)
+55:                 }
+56:             }
+57:         }
+58:         .padding(.horizontal, 10)
+59:         .padding(.vertical, 10)
+60:         .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+61:         .accessibilityElement(children: .contain)
+62:         .accessibilityLabel(accessibilitySummary)
+63:     }
+
+130: struct GripHandCueCard: View {
+131:     let posture: GripType?
+132:     let fingerConfiguration: FingerConfiguration?
+133:     let side: GripCueSide
+134:     var usesSharedPairPreview = false
+135:     @State private var showsModel = false
+136: 
+137:     var body: some View {
+138:         VStack(spacing: 3) {
+139:             Button {
+140:                 showsModel = true
+141:             } label: {
+142:                 Group {
+143:                     if usesSharedPairPreview {
+144:                         Image(systemName: "arrow.up.left.and.arrow.down.right")
+145:                             .font(.system(size: 9, weight: .semibold))
+146:                             .foregroundStyle(Color.hangMuted)
+147:                             .frame(maxWidth: .infinity, minHeight: 28)
+148:                     } else {
+149:                         GripHandModelView(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
+150:                             .frame(height: 88)
+151:                             .overlay(alignment: .topTrailing) {
+152:                                 Image(systemName: "arrow.up.left.and.arrow.down.right")
+153:                                     .font(.system(size: 9, weight: .semibold))
+154:                                     .foregroundStyle(Color.hangMuted)
+155:                             }
+156:                     }
+157:                 }
+158:                 .contentShape(Rectangle())
+159:             }
+160:             .buttonStyle(.plain)
+161:             .accessibilityLabel("Explore \(side.accessibilityIdentifier) hand in 3D")
+162:             .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier).model")
+163: 
+164:             Text(posture?.label ?? "Grip not specified")
+165:                 .font(.system(size: 10, weight: .bold, design: .rounded))
+166:                 .foregroundStyle(Color.hangMuted)
+167:                 .lineLimit(1)
+168:                 .minimumScaleFactor(0.68)
+169:             if fingerConfiguration == nil {
+170:                 Text("Fingers not specified")
+171:                     .font(.system(size: 10, weight: .semibold, design: .rounded))
+172:                     .foregroundStyle(Color.hangMuted)
+173:                     .lineLimit(1)
+174:                     .minimumScaleFactor(0.68)
+175:                     .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier).fingers")
+176:             }
+177:         }
+178:         .frame(maxWidth: .infinity)
+179:         .padding(.horizontal, 8)
+180:         .padding(.vertical, 7)
+181:         .background(Color.hangBackground.opacity(usesSharedPairPreview ? 0.48 : 0.88), in: RoundedRectangle(cornerRadius: 15))
+182:         .overlay {
+183:             RoundedRectangle(cornerRadius: 15)
+184:                 .stroke(Color.hangLine.opacity(0.85), lineWidth: 1)
+185:         }
+186:         .accessibilityElement(children: .contain)
+187:         .accessibilityLabel(accessibilityLabel)
+188:         .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier)")
+189:         .sheet(isPresented: $showsModel) {
+190:             GripHandModelInspector(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
+191:         }
+
+202: struct GripHandPairCueCards: View {
+203:     let posture: GripType?
+204:     let fingerConfiguration: FingerConfiguration?
+205: 
+206:     var body: some View {
+207:         VStack(spacing: 2) {
+208:             GripHandPairModelView(posture: posture, fingerConfiguration: fingerConfiguration)
+209:                 .frame(height: 88)
+210:                 .padding(.horizontal, 8)
+211:                 .accessibilityHidden(true)
+212: 
+213:             HStack(spacing: 10) {
+214:                 GripHandCueCard(posture: posture, fingerConfiguration: fingerConfiguration,
+215:                                 side: .left, usesSharedPairPreview: true)
+216:                 GripHandCueCard(posture: posture, fingerConfiguration: fingerConfiguration,
+217:                                 side: .right, usesSharedPairPreview: true)
+218:             }
+219:         }
+220:     }

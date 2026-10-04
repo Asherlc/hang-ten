@@ -1,0 +1,16 @@
+{
+  "sourceSHA256": "af60f1976922034ad4bf46ab9d899701ff6784b690996d080bebea6b9091e90a",
+  "originalSourceSHA256": "8a8e4957b044d01c76c49ee1b0c07f88f388bac05cff36b31d655c0e6d4ae8fb",
+  "changes": {
+    "/presentations/0/media/display/surfaceFinish": "wood",
+    "/presentations/0/media/display/camera/viewDirection": [
+      0,
+      -0.35,
+      -1
+    ]
+  },
+  "geometryAndOtherDocumentDataExact": true,
+  "allOtherManifestFactsExact": true,
+  "provenance": "Wood from retained whole manufacturer photograph;19.3 degree downward camera is display adaptation to show usable top surfaces.",
+  "supersedes": "wood-manifest-provenance.json intermediate incorrect root display; preserved and rejected by package parser"
+}

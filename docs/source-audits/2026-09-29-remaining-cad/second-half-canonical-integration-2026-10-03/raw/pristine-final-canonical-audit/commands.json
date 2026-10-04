@@ -1,0 +1,548 @@
+[
+  {
+    "args": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "ls-remote",
+      "--heads",
+      "origin",
+      "placid-badger-cad-second-half",
+      "migrate-remaining-hangboards-to-cad"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "cat-file",
+      "-t",
+      "9b0a371f72216ab7746d876c141f834f815ffc34"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "rev-parse",
+      "--git-common-dir"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-baguette/assets/primary.model.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-baguette/assets/primary.usdz"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-baguette/suspension.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-baguette/yy-baguette.FCStd"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-baguette-evo/assets/primary.model.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-baguette-evo/assets/primary.usdz"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-baguette-evo/suspension.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-penta-evo/assets/primary.model.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-penta-evo/assets/primary.usdz"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-penta-evo/suspension.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-penta-evo/yy-penta-evo.FCStd"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-travelboard/assets/primary.model.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-travelboard/assets/primary.usdz"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-travelboard/suspension.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/yy-travelboard/yy-travelboard.FCStd"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/zlagboard-evo/assets/primary.model.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/zlagboard-evo/assets/primary.usdz"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/zlagboard-evo/zlagboard-evo.FCStd"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/zlagboard-pro/assets/primary.model.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/zlagboard-pro/assets/primary.usdz"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Hangboards/zlagboard-pro/zlagboard-pro.FCStd"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:docs/source-audits/2026-09-29-remaining-cad/review-queue.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:docs/model-delivery-lock.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:docs/source-audits/2026-09-29-remaining-cad/yy-baguette/human-review.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/human-review.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/human-review.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/human-review.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/human-review.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/human-review.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "diff",
+      "--name-only",
+      "f15623ea65761a769460379afcf5bacfd5cc762b",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8",
+      "--",
+      "Hangboards"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "status",
+      "--porcelain",
+      "--untracked-files=no"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "ls-files",
+      "--others",
+      "--exclude-standard",
+      "--",
+      "Hangboards"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "diff",
+      "--name-only",
+      "5eae12bb9c0493c7b29f982d92ab855ac7f5696c",
+      "9b0a371f72216ab7746d876c141f834f815ffc34",
+      "--",
+      "Hangboards",
+      "Tools",
+      "HangTen",
+      "HangTenTests",
+      "docs/model-delivery-lock.json",
+      "docs/source-audits/2026-09-29-remaining-cad/review-queue.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Tools/HangboardCAD/native_cord_routes.py"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "014c2596d54eaea6301ec46eb917eb45b3a07b57:Tools/HangboardCAD/native_cord_routes.py"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "9b0a371f72216ab7746d876c141f834f815ffc34:Tools/HangboardCAD/native_cord_routes.py"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "5eae12bb9c0493c7b29f982d92ab855ac7f5696c:Tools/HangboardCAD/native_cord_routes.py"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:Tools/HangboardPackages/src/hangboard_packages/cad_source.py"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "014c2596d54eaea6301ec46eb917eb45b3a07b57:Tools/HangboardPackages/src/hangboard_packages/cad_source.py"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "9b0a371f72216ab7746d876c141f834f815ffc34:Tools/HangboardPackages/src/hangboard_packages/cad_source.py"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "5eae12bb9c0493c7b29f982d92ab855ac7f5696c:Tools/HangboardPackages/src/hangboard_packages/cad_source.py"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:docs/HANGBOARD_CORD_AUTHORING.md"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "014c2596d54eaea6301ec46eb917eb45b3a07b57:docs/HANGBOARD_CORD_AUTHORING.md"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "9b0a371f72216ab7746d876c141f834f815ffc34:docs/HANGBOARD_CORD_AUTHORING.md"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "5eae12bb9c0493c7b29f982d92ab855ac7f5696c:docs/HANGBOARD_CORD_AUTHORING.md"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "9399160729fcc418cedf47344b41163d244b5d96:docs/source-audits/2026-09-29-remaining-cad/review-queue.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8:docs/source-audits/2026-09-29-remaining-cad/review-queue.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "show",
+      "9b0a371f72216ab7746d876c141f834f815ffc34:docs/source-audits/2026-09-29-remaining-cad/review-queue.json"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "diff",
+      "--name-only",
+      "9399160729fcc418cedf47344b41163d244b5d96",
+      "9b0a371f72216ab7746d876c141f834f815ffc34",
+      "--",
+      "Hangboards/yy-baguette",
+      "Hangboards/yy-baguette-evo",
+      "Hangboards/yy-penta-evo",
+      "Hangboards/yy-travelboard",
+      "Hangboards/zlagboard-evo",
+      "Hangboards/zlagboard-pro"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "rev-parse",
+      "e60142f3e"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "merge-base",
+      "--is-ancestor",
+      "e60142f3ef60456248054bf3cf917c7ab81bf5e6",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "merge-base",
+      "--is-ancestor",
+      "e60142f3ef60456248054bf3cf917c7ab81bf5e6",
+      "9b0a371f72216ab7746d876c141f834f815ffc34"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "rev-parse",
+      "1e09ed9be"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "merge-base",
+      "--is-ancestor",
+      "1e09ed9be2c690fe98c0a69aa92125a66127f9e0",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "merge-base",
+      "--is-ancestor",
+      "1e09ed9be2c690fe98c0a69aa92125a66127f9e0",
+      "9b0a371f72216ab7746d876c141f834f815ffc34"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "rev-parse",
+      "583a2d08e"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "merge-base",
+      "--is-ancestor",
+      "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+      "405a4530ab3a26496cf4e44fb59917e5befd7af8"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "merge-base",
+      "--is-ancestor",
+      "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+      "9b0a371f72216ab7746d876c141f834f815ffc34"
+    ],
+    "exitStatus": 0,
+    "stderr": ""
+  }
+]

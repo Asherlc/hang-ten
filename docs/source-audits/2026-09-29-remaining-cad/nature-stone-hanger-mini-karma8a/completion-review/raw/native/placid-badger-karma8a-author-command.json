@@ -1,0 +1,19 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "python3",
+    "Tools/HangboardCAD/run_freecad.py",
+    ".context/placid-badger/karma8a-review11/refinement-2026-10-02/author_seat.py"
+  ],
+  "startedUTC": "2026-10-02T13:46:16.027983+00:00",
+  "timeoutSeconds": 300,
+  "ownedTemporaryDirectory": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-author-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 95271,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 9.221745582999574
+}

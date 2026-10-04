@@ -1,0 +1,18 @@
+{
+  "timestampUTC": "2026-10-02T03:25:12.979185+00:00",
+  "reviewer": "root",
+  "status": "native/export comparison inspected; fresh app review blocked",
+  "images": {
+    "comparison-final/comparison-front-side-top.png": "df96773be1b8946a86de9091095811a74a763b6368662f254b7eb0d4576099cc",
+    "shape-audit/before-after-front-side-top.png": "de850383cbf67ba19edc46c1ecf0a1fa906983f05bd12295e36bbd38ae5e31c8"
+  },
+  "observations": [
+    "Whole original/prior/corrected front-side-top comparison retained.",
+    "Rounded top transitions and jug crest coverage reviewed against retained whole maker images."
+  ],
+  "limitations": [
+    "No fresh app screenshots or runtime highlight/picking validation completed.",
+    "Display geometry estimates are not manufacturing or ergonomic accuracy claims."
+  ],
+  "humanReview": "pending"
+}

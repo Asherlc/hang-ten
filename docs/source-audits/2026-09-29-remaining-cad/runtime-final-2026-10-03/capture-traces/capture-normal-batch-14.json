@@ -1,0 +1,455 @@
+{
+  "owner": "placid-badger",
+  "number": 14,
+  "steps": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14",
+        "three-edge-left",
+        "--telephoto"
+      ],
+      "startedAt": 1791055972.599033,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": \"three-edge-left\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-left;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.650909900665283
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "14-live-front"
+      ],
+      "startedAt": 1791055983.250266,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-front.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-left;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 2.1649527549743652
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14",
+        "three-edge-left",
+        "--telephoto"
+      ],
+      "startedAt": 1791055985.415988,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": \"three-edge-left\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-left;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.604557037353516
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "14-live-hold-three-edge-left"
+      ],
+      "startedAt": 1791055996.02094,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-hold-three-edge-left.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-left;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 2.120645761489868
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14",
+        "three-edge-center",
+        "--telephoto"
+      ],
+      "startedAt": 1791055998.141995,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": \"three-edge-center\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-center;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.539252996444702
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "14-live-hold-three-edge-center"
+      ],
+      "startedAt": 1791056008.682973,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-hold-three-edge-center.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-center;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 2.2634220123291016
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14",
+        "three-edge-right",
+        "--telephoto"
+      ],
+      "startedAt": 1791056010.946898,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": \"three-edge-right\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-right;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.488732099533081
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "14-live-hold-three-edge-right"
+      ],
+      "startedAt": 1791056021.4360142,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-hold-three-edge-right.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-right;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.8891277313232422
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14",
+        "two-edge-left",
+        "--telephoto"
+      ],
+      "startedAt": 1791056023.325778,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": \"two-edge-left\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=two-edge-left;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.257966041564941
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "14-live-hold-two-edge-left"
+      ],
+      "startedAt": 1791056033.584246,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-hold-two-edge-left.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=two-edge-left;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.8378441333770752
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14",
+        "two-edge-right",
+        "--telephoto"
+      ],
+      "startedAt": 1791056035.422474,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": \"two-edge-right\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=two-edge-right;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.17805004119873
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "14-live-hold-two-edge-right"
+      ],
+      "startedAt": 1791056045.601193,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-hold-two-edge-right.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=two-edge-right;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.7859079837799072
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14",
+        "small-crimp-left",
+        "--telephoto"
+      ],
+      "startedAt": 1791056047.387645,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": \"small-crimp-left\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=small-crimp-left;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.151747941970825
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "14-live-hold-small-crimp-left"
+      ],
+      "startedAt": 1791056057.540169,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-hold-small-crimp-left.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=small-crimp-left;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.7733149528503418
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14",
+        "small-crimp-right",
+        "--telephoto"
+      ],
+      "startedAt": 1791056059.314048,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": \"small-crimp-right\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=small-crimp-right;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.84768295288086
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "14-live-hold-small-crimp-right"
+      ],
+      "startedAt": 1791056070.162296,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-hold-small-crimp-right.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=small-crimp-right;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.8530378341674805
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14",
+        "two-edge-left",
+        "--telephoto"
+      ],
+      "startedAt": 1791056072.0158699,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": \"two-edge-left\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=two-edge-left;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.271416187286377
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "orbit",
+        "14-live-horizontal-orbit-1"
+      ],
+      "startedAt": 1791056082.287812,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-horizontal-orbit-1.png\", \"rendererDiagnostic\": \"revision=5;rootActive=true;cameraActive=true;sameScene=true;azimuth=-0.54071856;elevation=0.097739354;cameraPitch=0.09773936;cameraSettled=true;selection=two-edge-left;tapRevision=0;pickedContact=\", \"actualPhysicalOrbit\": true, \"projectedBefore\": {\"boardModel.contact.three-edge-right\": [0.2734530938123752, 0.8343868520859673], \"boardModel.contact.two-edge-right\": [0.2964071856287425, 0.8445006321112516], \"boardModel.contact.small-crimp-right\": [0.3572854291417165, 0.7863463969658661], \"boardModel.contact.three-edge-center\": [0.5, 0.8343868520859673], \"boardModel.contact.small-crimp-left\": [0.6427145708582835, 0.7863463969658661], \"boardModel.contact.two-edge-left\": [0.7035928143712575, 0.8445006321112516], \"boardModel.contact.three-edge-left\": [0.7265469061876249, 0.8343868520859673]}, \"projectedAfter\": {\"boardModel.contact.three-edge-right\": [0.30538922155688625, 0.8116308470290773], \"boardModel.contact.two-edge-right\": [0.3572854291417165, 0.8268015170670039], \"boardModel.contact.small-crimp-right\": [0.4101796407185629, 0.7699115044247788], \"boardModel.contact.three-edge-center\": [0.4830339321357285, 0.7951959544879899], \"boardModel.contact.small-crimp-left\": [0.6287425149700598, 0.7484197218710493], \"boardModel.contact.three-edge-left\": [0.6546906187624751, 0.7774968394437423], \"boardModel.contact.two-edge-left\": [0.6706586826347305, 0.7951959544879899]}}\n",
+      "stderr": "",
+      "elapsedSeconds": 5.081622123718262
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "orbit",
+        "14-live-horizontal-orbit-2"
+      ],
+      "startedAt": 1791056087.3699222,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-horizontal-orbit-2.png\", \"rendererDiagnostic\": \"revision=9;rootActive=true;cameraActive=true;sameScene=true;azimuth=-1.0814371;elevation=0.19547871;cameraPitch=0.1954787;cameraSettled=true;selection=two-edge-left;tapRevision=0;pickedContact=\", \"actualPhysicalOrbit\": true, \"projectedBefore\": {\"boardModel.contact.three-edge-right\": [0.30538922155688625, 0.8116308470290773], \"boardModel.contact.two-edge-right\": [0.3572854291417165, 0.8268015170670039], \"boardModel.contact.small-crimp-right\": [0.4101796407185629, 0.7699115044247788], \"boardModel.contact.three-edge-center\": [0.4830339321357285, 0.7951959544879899], \"boardModel.contact.small-crimp-left\": [0.6287425149700598, 0.7484197218710493], \"boardModel.contact.three-edge-left\": [0.6546906187624751, 0.7774968394437423], \"boardModel.contact.two-edge-left\": [0.6706586826347305, 0.7951959544879899]}, \"projectedAfter\": {\"boardModel.contact.three-edge-center\": [0.47405189620758476, 0.7534766118836915], \"boardModel.contact.three-edge-left\": [0.5558882235528941, 0.7104930467762326], \"boardModel.contact.small-crimp-left\": [0.5818363273453093, 0.695322376738306], \"boardModel.contact.three-edge-right\": [0.38822355289421157, 0.7977243994943111], \"boardModel.contact.two-edge-right\": [0.4481037924151696, 0.8065739570164349], \"boardModel.contact.small-crimp-right\": [0.4780439121756487, 0.7496839443742098], \"boardModel.contact.two-edge-left\": [0.5968063872255488, 0.7269279393173198]}}\n",
+      "stderr": "",
+      "elapsedSeconds": 4.793273687362671
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "orbit",
+        "14-live-horizontal-orbit-3"
+      ],
+      "startedAt": 1791056092.164047,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-horizontal-orbit-3.png\", \"rendererDiagnostic\": \"revision=13;rootActive=true;cameraActive=true;sameScene=true;azimuth=-1.6221557;elevation=0.29321805;cameraPitch=0.2932181;cameraSettled=true;selection=two-edge-left;tapRevision=0;pickedContact=\", \"actualPhysicalOrbit\": true, \"projectedBefore\": {\"boardModel.contact.three-edge-center\": [0.47405189620758476, 0.7534766118836915], \"boardModel.contact.three-edge-left\": [0.5558882235528941, 0.7104930467762326], \"boardModel.contact.small-crimp-left\": [0.5818363273453093, 0.695322376738306], \"boardModel.contact.three-edge-right\": [0.38822355289421157, 0.7977243994943111], \"boardModel.contact.two-edge-right\": [0.4481037924151696, 0.8065739570164349], \"boardModel.contact.small-crimp-right\": [0.4780439121756487, 0.7496839443742098], \"boardModel.contact.two-edge-left\": [0.5968063872255488, 0.7269279393173198]}, \"projectedAfter\": {\"boardModel.contact.three-edge-left\": [0.4650698602794411, 0.6675094816687738], \"boardModel.contact.three-edge-center\": [0.47305389221556887, 0.729456384323641], \"boardModel.contact.two-edge-left\": [0.5169660678642715, 0.6776232616940581], \"boardModel.contact.small-crimp-left\": [0.5259481037924152, 0.654867256637168], \"boardModel.contact.three-edge-right\": [0.4810379241516966, 0.7951959544879899], \"boardModel.contact.two-edge-right\": [0.5329341317365269, 0.7926675094816689], \"boardModel.contact.small-crimp-right\": [0.5369261477045908, 0.7345132743362831]}}\n",
+      "stderr": "",
+      "elapsedSeconds": 5.232642889022827
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14",
+        "two-edge-left",
+        "--telephoto"
+      ],
+      "startedAt": 1791056097.3973691,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": \"two-edge-left\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=two-edge-left;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.33957290649414
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "orbit",
+        "14-live-top-oblique",
+        "--start",
+        ".23",
+        ".72",
+        "--end",
+        ".83",
+        ".22"
+      ],
+      "startedAt": 1791056107.737511,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-top-oblique.png\", \"rendererDiagnostic\": \"revision=5;rootActive=true;cameraActive=true;sameScene=true;azimuth=-0.54071856;elevation=0.32525027;cameraPitch=0.3252503;cameraSettled=true;selection=two-edge-left;tapRevision=0;pickedContact=\", \"actualPhysicalOrbit\": true, \"projectedBefore\": {\"boardModel.contact.three-edge-right\": [0.2734530938123752, 0.8343868520859673], \"boardModel.contact.two-edge-right\": [0.2964071856287425, 0.8445006321112516], \"boardModel.contact.small-crimp-right\": [0.3572854291417165, 0.7863463969658661], \"boardModel.contact.three-edge-center\": [0.5, 0.8343868520859673], \"boardModel.contact.small-crimp-left\": [0.6427145708582835, 0.7863463969658661], \"boardModel.contact.two-edge-left\": [0.7035928143712575, 0.8445006321112516], \"boardModel.contact.three-edge-left\": [0.7265469061876249, 0.8343868520859673]}, \"projectedAfter\": {\"boardModel.contact.three-edge-right\": [0.32834331337325345, 0.7812895069532239], \"boardModel.contact.three-edge-center\": [0.48502994011976047, 0.740834386852086], \"boardModel.contact.small-crimp-left\": [0.6137724550898204, 0.7016434892541088], \"boardModel.contact.three-edge-left\": [0.6367265469061877, 0.7003792667509481], \"boardModel.contact.two-edge-right\": [0.3752495009980039, 0.8040455120101139], \"boardModel.contact.small-crimp-right\": [0.4211576846307385, 0.752212389380531], \"boardModel.contact.two-edge-left\": [0.6506986027944112, 0.7319848293299622]}}\n",
+      "stderr": "",
+      "elapsedSeconds": 4.751594066619873
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14",
+        "three-edge-left",
+        "--landscape"
+      ],
+      "startedAt": 1791056112.490011,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": \"three-edge-left\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-left;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.285254001617432
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "14-live-landscape"
+      ],
+      "startedAt": 1791056122.775935,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-landscape.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-left;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.5341310501098633
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14"
+      ],
+      "startedAt": 1791056124.310934,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": null, \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.27808403968811
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "14-live-unselected-train"
+      ],
+      "startedAt": 1791056134.589761,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-unselected-train.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.7446420192718506
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "14",
+        "three-edge-left"
+      ],
+      "startedAt": 1791056136.335168,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"tension.flash-board\", \"contact\": \"three-edge-left\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-left;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.405548095703125
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "14-live-normal-lens"
+      ],
+      "startedAt": 1791056146.7415419,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/14-live-normal-lens.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-left;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 1.943474292755127
+    }
+  ]
+}

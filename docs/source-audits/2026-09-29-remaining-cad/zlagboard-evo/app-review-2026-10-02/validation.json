@@ -1,0 +1,61 @@
+{
+  "boardID": "zlagboard.evo",
+  "owner": "placid-badger-cad-second-half",
+  "status": "geometry-ready; workout-highlight-unresolved",
+  "readyForHumanGeometryReview": true,
+  "humanAccepted": false,
+  "appWorkflowPassed": false,
+  "temporaryResourcesDeleted": true,
+  "baselineCommit": "1f5a5865050c96bf89e67b1929099205dcbd6827",
+  "nativeCorrectionCommit": "3fcf41daed7013eeb40d3e45340bdc4b3ee3cc14",
+  "sourceSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+  "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+  "descriptorSHA256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+  "geometrySelectionChecks": {
+    "contacts": 21,
+    "selectedCaptures": 21,
+    "defaultCaptures": 1,
+    "fixedUprightWallboard": true,
+    "suspension": "not applicable",
+    "surfaceFinish": "wood",
+    "nativeExportUnchanged": true,
+    "rootReview": "independent/root-fresh-geometry-review.json",
+    "independentReview": "independent/app-shape-review-ios-26-4.json",
+    "coverage": "ios-26-4/capture-coverage.json",
+    "physicalPickingAndReset": "ios-26-4/physical-probes/final-validation.json"
+  },
+  "workoutHighlight": {
+    "passed": false,
+    "reproducedOn": [
+      "iOS26.5",
+      "iOS26.4"
+    ],
+    "productionChangesShipped": false,
+    "testChangesShipped": false,
+    "cause": "Not established. CPU material/display mismatch observed; all four attempted fixes failed actual visual checks and were reverted.",
+    "freshFailure": "ios-26-4/baseline-b-landscape/following-rest-settled.png",
+    "independentReview": "independent/workout-visual-review-ios-26-4.json",
+    "investigation": "investigation-notes.md"
+  },
+  "runtimeReports": [
+    "ios/final-runtime-validation.json",
+    "ios-26-4/final-runtime-validation.json"
+  ],
+  "cleanupProofs": [
+    "ios/cleanup-verification.json",
+    "ios-26-4/cleanup-verification.json"
+  ],
+  "packageParity": "ios-26-4/package-parity.json",
+  "allMachOParity": "ios-26-4/code-parity/mach-o-parity.json",
+  "sourceParity": "ios-26-4/baseline-source-parity.json",
+  "historicalPacketsPreserved": [
+    "../individual-review-2026-10-01/proof-sha256.json",
+    "../runtime-recovery-2026-10-02/proof-sha256.json"
+  ],
+  "limits": [
+    "Native rounding radii and unspecified dimensions are display estimates, not manufacturer dimensions.",
+    "No manufacturing or ergonomic accuracy claim.",
+    "Geometry readiness does not establish correct workout highlight transitions.",
+    "Acceptance requires a subsequent explicit user reply."
+  ]
+}

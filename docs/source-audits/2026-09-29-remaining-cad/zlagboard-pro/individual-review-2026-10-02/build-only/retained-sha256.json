@@ -1,0 +1,12 @@
+{
+  "build-exit-status.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "build-results-summary-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "build-results-summary.json": "0c6dafcfeb3c4330b29cafc21ce4c87a6b92cd9d67f6606009da6f58b7977fe0",
+  "build.log": "408e33c2626ba0d4ba58e4244caa6bcf71d779eef0e14e202377cbe5374b2b1c",
+  "built-mach-o-sha256.json": "053334639ccfcfeb26003cf4c370d3a88daee059b9a0f444b48c3189d3b27844",
+  "cleanup-verification.json": "d98ebf11ac21ea4539b7d18ba5a4ff84f9db7ca9e365dfc95a7de92a713182ef",
+  "generated-board-at-build.json": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8",
+  "ownership.json": "0f1bc6738cf04f3a7349d3b3df912c5af26737fb37ccb615276a57138dec7494",
+  "source-package-sha256-before-build.json": "c6c033110e573271bdfae6749e94835d06feddf9908958ab3129672f8baed95f",
+  "staged-package-parity.json": "3b1c40b6b2145454a7e91b700ed64f547523691b9ca709b739ad937cace0aa57"
+}

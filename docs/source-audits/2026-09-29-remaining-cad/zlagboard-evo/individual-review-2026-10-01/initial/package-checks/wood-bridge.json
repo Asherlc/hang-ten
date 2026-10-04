@@ -1,0 +1,24 @@
+{
+  "timestampUTC": "2026-10-02T02:40:27.040190+00:00",
+  "beforeSourceSHA256": "8a8e4957b044d01c76c49ee1b0c07f88f388bac05cff36b31d655c0e6d4ae8fb",
+  "afterSourceSHA256": "50048bab4882e31f906650c645835f26ff3eca60ed2686be2ce4c84f51936be4",
+  "bothHashesMatchRootProvenance": true,
+  "initialSourceHashExact": true,
+  "archiveMemberNamesExact": true,
+  "changedArchiveMembers": [
+    "Document.xml"
+  ],
+  "nonDocumentArchiveMemberBytesExact": true,
+  "objectDataBytesExact": true,
+  "nativeObjectListExact": true,
+  "changedDocumentProperties": [
+    "HangTenBoardManifest"
+  ],
+  "otherNativeDocumentPropertiesExact": true,
+  "onlyWoodManifestValueChanged": false,
+  "all21ContactFactsExact": true,
+  "assetAndDescriptorHashesUnchanged": true,
+  "realFCStdZIP": true,
+  "scope": "Intermediate wood-only metadata revision; not final freeze or human acceptance.",
+  "passed": false
+}

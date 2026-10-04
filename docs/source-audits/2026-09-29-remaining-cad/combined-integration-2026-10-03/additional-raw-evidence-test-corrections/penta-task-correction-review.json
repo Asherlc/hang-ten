@@ -1,0 +1,42 @@
+{
+  "scope": "Independent read-only source review; no source/test edits, builds or resource actions performed by reviewer.",
+  "sourceHashesSHA256": {
+    "HangTen/Models/WorkoutActivityRecording.swift": "8ed923ef8be1c1536934766ccc076b2a3c72059bb58bb1541e4f43c96bd5edcf",
+    "HangTenTests/BoardTargetSubstitutionTests.swift": "91c1b8fe27bd0cbc9a5b99f046157787da99276cac816e360bf1b0248ec6512c",
+    "HangTen/Models/PlanStorage.swift": "a108e9c9a58556b9b6319e679992b78b5df9b6169f1ab64a8dc05680ddd454d1",
+    "HangTen/Views/SuspendedBoardPresentation.swift": "0a0eecdbc4cdca2869828601a53299af461dacad9177bf7dec141647d171a61b"
+  },
+  "baseline": "Current shared HEAD before uncommitted task correction",
+  "productionLocation": "HangTen/Models/WorkoutActivityRecording.swift:455",
+  "assessment": "Narrow production correction matches diagnosed task-side boundary and retained native placement; no current production or test-source blocker identified. Initial test initializer compile blocker was sent parent and is now corrected in shared source.",
+  "findings": [
+    {
+      "severity": "blocking-build",
+      "location": "HangTenTests/BoardTargetSubstitutionTests.swift:443",
+      "finding": "PlanHandTarget(side: $0, target: target) reverses Swift initializer argument labels. The sole declared initializer in PlanStorage.swift:307 orders target then side.",
+      "correction": "PlanHandTarget(target: target, side: $0)",
+      "presentAtReview": false,
+      "status": "Resolved by parent during review; current source uses target then side."
+    }
+  ],
+  "verifiedSourceProperties": [
+    "New branch is entered only for two-hand default model with exactly two native CAD-routed instances.",
+    "Each hand predicate and grip filter produces exactly two candidates and same candidate ID set; candidate ambiguity is not solved by picking a first CAD position.",
+    "Existing outermostPair validates distinct equipment owners, unique slot mappings, same authored slot and matching physical kind/shape/depth/finger/hand facts.",
+    "Exactly one authored position on default presentation must contain precisely the selected contact IDs.",
+    "P*B transformed descriptor bounds center is correct: base rotation/reflection about center does not move center, leaving center+base translation; pose acts on that point.",
+    "Finite distinct Float world X coordinates determine physical side; ordering does not depend on instance array, contact ID names, or world-origin sign.",
+    "Task side inference matches existing algorithm and authoritative physical contact.side must agree.",
+    "Existing task/legacy resolver tail is byte-identical, including broad legacy rejection, different-target task path, Rock Rings handling and strict outermostPair checks.",
+    "No CAD package facts or geometry are changed by this diff."
+  ],
+  "existingResolverTailByteIdentical": true,
+  "testCoverageReview": {
+    "integration": "Actual native Penta selected20 through MaxHangsEdgeSelection, exact contact IDs, highlight IDs, actual20 mm depths and canonical edge-20 pose retained.",
+    "ordering": "Actual native instance array and reversed array, explicit left/right and reversed hand order assert ordered IDs and positionID.",
+    "strictLegacy": "Broad unchosen6 candidates rejection and exact20 mapped pair success retained, existing differing-slot/owner/fact rejections untouched.",
+    "limitation": "New regression uses native valid package to reproduce real side fault; malformed placement/mapping helper fallback cases are not newly tested. Existing fallback code remains unchanged."
+  },
+  "commentPrecision": "Helper says different per-hand targets do not enter, while actual gate is equal resulting candidate ID sets. Different predicates that both resolve to the same sole valid pair may enter; that is semantically valid matching but comment is slightly broader than code.",
+  "verificationStatus": "Parent build active at review; no compiled/test-passing claim made. Initializer now corrected. Parent owns focused/full CI-recipe execution."
+}

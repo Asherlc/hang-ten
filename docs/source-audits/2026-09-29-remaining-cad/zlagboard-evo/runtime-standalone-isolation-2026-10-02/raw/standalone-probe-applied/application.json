@@ -1,0 +1,20 @@
+{
+  "before": {
+    "HangTen/Views/RootView.swift": "d49b4b9130b998cc49a1197380756874e67505bdff1e29e63ae451f4aca89ea3",
+    "HangTen/Views/BoardModelView.swift": "acd84833c02faabf0af0fa0584d12b9d27c701d7192258bd690a30cebf80cd89",
+    "HangTen/Models/BoardModelRealityTypes.swift": "50ee645a890e2935b8419e33b9c9d3859ac7aae79350eb5c7ca5fc5ed2f97b7b"
+  },
+  "after": {
+    "HangTen/Views/RootView.swift": "41d8186fbe2c1a7411332215a2c8bb3aa4190f6ffaf7201d02eb831e9bcfb195",
+    "HangTen/Views/BoardModelView.swift": "9e5bf2e01d9686069201179e45f7e95266752efe37605c8ba841a36f1ae56312",
+    "HangTen/Models/BoardModelRealityTypes.swift": "423f51cf19d896fe6160ca1ac11f02e40af9c70eb3d5ec19336c3e3849687d88"
+  },
+  "patches": {
+    "standalone-probe.patch": "d50c11f952593490dc8221f075733cc066a38765fbabf1bd22d2307b5c447c28",
+    "optional-scene-update-counter.patch": "4cf20446426a463a5aefa33798ecb540d673f2c7fb5918ab91af15d993c0d4a0"
+  },
+  "authorizedCorrections": [
+    "isDisplayOnly false matches workout",
+    "finite positive configured viewport and exact actual-size guard"
+  ]
+}

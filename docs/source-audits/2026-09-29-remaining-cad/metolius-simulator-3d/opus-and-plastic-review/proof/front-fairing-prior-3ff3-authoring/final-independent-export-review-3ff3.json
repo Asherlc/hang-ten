@@ -1,0 +1,113 @@
+{
+  "status": "pass",
+  "scope": "Independent source facts, export contract, logical surface coverage and finite tessellation-distance checks. App/Opus visual disposition and human acceptance remain separate.",
+  "blockingFindings": [],
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "contactCount": 30,
+  "meshNodeCount": 31,
+  "publishedDepthCount": 27,
+  "maximumExportDepthErrorMM": 0.0006134212016988272,
+  "actualExportFaceEnvelopeMM": [
+    711.0000252723694,
+    221.99988365173337
+  ],
+  "unrelatedPackageFilesUnchanged": 203,
+  "unboundMaterialsShadersAndBindings": true,
+  "finiteUnitVertexNormals": true,
+  "descriptorContactBoundsMatchActualMeshes": true,
+  "nativeSolidTessellationWatertight": true,
+  "exactWeldedExportWatertight": false,
+  "pairedExportEdgeWindingConsistent": true,
+  "universalCornerNormalAlignment": false,
+  "topologyCounts": {
+    "mode": "exactStoredPositions",
+    "uniqueVertices": 44821,
+    "uniqueEdges": 130514,
+    "boundaryEdges": 2973,
+    "nonManifoldEdges": 62,
+    "inconsistentPairedEdgeWinding": 0,
+    "watertight": false,
+    "windingConsistentOnPairedEdges": true
+  },
+  "normalLimitations": {
+    "affectedTriangleCount": 1087,
+    "totalAffectedAreaMM2": 6.893361052214539,
+    "maximumAffectedTriangleAltitudeMM": 0.4706790134367594,
+    "actualAppWatchLocationsNativeMM": [
+      "Center X\u00b147, Y\u2248\u221236.86, Z\u2248188.44: thin semantic seam triangles.",
+      "Outer jug X\u00b1267\u2026271, Y\u2248\u221292, Z\u2248168\u2026171: small corner-normal shading patches."
+    ]
+  },
+  "coverageDistancesMM": {
+    "nativeVerticesToExport": 0.26572285518685407,
+    "nativeTriangleCentersToExport": 0.23808502332082238,
+    "exportTriangleCentersToNative": 0.2628050700867831
+  },
+  "rawFailureDispositions": [
+    {
+      "report": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-functional-3ff3.json",
+      "finding": "One steep upper-roll vertical Z difference0.388154mm exceeds0.28mm.",
+      "disposition": "The unchanged tessellation deflection is a Euclidean surface-distance criterion, not a vertical-coordinate criterion. Native point-to-exported jug-triangle distance0.187846mm passes unchanged0.28mm. Raw failure preserved; actual jug ray membership and all X47 membership checks passed.",
+      "supplement": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-upper-roll-euclidean-3ff3.json"
+    },
+    {
+      "report": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-topology-3ff3.json",
+      "finding": "Exact exported semantic mesh union has2973 boundary edges and62 nonmanifold edges; some tiny triangles have opposing corner normals.",
+      "disposition": "Not represented as watertight or universally normal-aligned. Source whole native tessellation is watertight/winding-consistent; exhaustive finite vertex/center comparisons staywithin0.28mm. CPU images show thin seam marks, requiring actual-app visual disposition.",
+      "supplements": [
+        ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-tessellation-3ff3.json",
+        ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-coverage-3ff3.json",
+        ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-normal-slivers-3ff3.json"
+      ]
+    },
+    {
+      "report": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-facts-3ff3.json",
+      "finding": "Initial independent normalized-bound verifier used downward Y.",
+      "disposition": "Verifier corrected to descriptor contract upward normalized Y after inspecting contact_model_descriptor.py. Final v2 matches all30 descriptor bounds within4.99e\u221210; sourced-depth/envelope tolerances unchanged.",
+      "supplement": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-facts-3ff3-v2.json"
+    }
+  ],
+  "visualInspection": "Physically viewed all five listed full-frame comparisons; intended forward slopers and rolled center jug survive export, with faint center/outer seam marks retained as app watch items. No cropping, geometry inference or source measurement from pixels.",
+  "remainingGates": [
+    "Root actual-app inspection and Opus exported/app watch-item disposition.",
+    "User acceptance of review8 remains pending."
+  ],
+  "limits": [
+    "Coverage checks use all native vertices/triangle centers and all exported triangle centers, not a continuous Hausdorff proof.",
+    "No geometry, normal, tessellation, source-fact tolerance or package bytes were changed by this reviewer.",
+    "Residual native nose normal-angle change reaches2.056degrees; positional continuity is not a blanketG1 claim.",
+    "Actual thickness94.00075013mm is an authored display estimate."
+  ],
+  "ownedResourcesCleaned": true,
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/metolius-simulator-3d.FCStd": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/assets/primary.usdz": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/assets/primary.model.json": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+    "Tools/HangboardCAD/compile_board.py": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-review-3ff3.json": "66a0fa39e932cd03fefc35fe2137630815d01a0976479cc5285fec40c22b388c",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-check-3ff3.json": "094f051ddf77a64f4960c40fd86c99bdc719fcbd69753a08d3c84ad6acd59394",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/functional-sections-3ff3.json": "3071cf33a5fec611b69f3533d34116c45dfb1144539cab746d660965a11c5bcc",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins-3ff3.json": "a46cc5e397af5714eb08b5a2df24812df28deb36257ecc7b8b4221b454c9f817",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-tessellation-3ff3.json": "3a79091052813b4f0f0ec4b3ddc17687b72b283eb995763e38ff180c2c3250f9",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-contract-3ff3.json": "08aeb955d52e88ee727a545703950a5c22580cc055aada9acfdb5c29f212d5fc",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-facts-3ff3-v2.json": "04014b1769232693c464faed9b58db0ce09042ab66588ad06a85f050a6cea60a",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-functional-3ff3.json": "c43a0b5a36cd0c972e58690c8b97d4d3ac53ac40299a7c57ac060c5912b5b498",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-upper-roll-euclidean-3ff3.json": "3a2ba176b3b17bd0fc5386f7d564137db7c7e3152f04f51623122382ba72bbc8",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-coverage-3ff3.json": "fe409da51a6dc86fa3b47f0816622f066428dcba79b3bb215d05ba130f9508e1",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-topology-3ff3.json": "a897ece542c38f54839613fe1128983db846119752dd6a144e78146fa74946ef",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-normal-slivers-3ff3.json": "ca73a07ad3766036570f7a4b00ee118ccec75540e15aa3cb74d32e7117d73890",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/baseline-export-topology.json": "3a238fc5bf8177e912117563ab259f176be9579971d48d2cfc43893e13445a15",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/baseline-export-seams.json": "126123ac8ffd0ba8554b4930a172fe918d70e2c1371c19b7f76f20ed46000e45",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-check-3ff3-ownership.json": "b5abd41e71ed1100dde84bd89e2650d2437f3f1d627a94c86a527f44f5df9df1",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/functional-sections-3ff3-ownership.json": "9e29c7c1fda29961c1f4afb9dff662d297dfa2f7d7ce8d8a8ae70ebe375e448b",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins-3ff3-ownership.json": "704ea5dffb9f084554f1922710b572c662682151b0428766d8c948197c8e6b51",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/comparison-front.png": "161c8127559f24ef1191933609770aea22e9d37d399449fa79d52d5759be6036",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/comparison-side.png": "e9ef7361cb4ca0cf242012866f031ad7f13654cd66523a9763f6e0beeef37ab4",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/comparison-top.png": "aaadc1358316ca8061d26db9b3bb80f5c7b66044b426c514ccba4b0ff8443333",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/comparison-high-front.png": "5deac2f657eeed960f5d2a96f1151726c2f155a309cd334286c91ed65b3adb9f",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/comparison-rear-center.png": "5d3ed21bdf117c6fea8cd72b27737f656f5b0414832b475c9cbd623bb313f196"
+  }
+}

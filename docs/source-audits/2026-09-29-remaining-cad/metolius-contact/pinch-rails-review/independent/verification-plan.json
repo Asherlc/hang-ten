@@ -1,0 +1,54 @@
+{
+  "createdAt": "2026-10-01T04:50:50.163545+00:00",
+  "status": "prepared; author candidate awaited",
+  "checks": [
+    {
+      "name": "logical facts",
+      "method": "Exact raw HangTenBoardManifest equality, all33contacts/order/capacities/grips/depths/camera/display unchanged."
+    },
+    {
+      "name": "published dimensions",
+      "method": "Fresh native reopen/recompute, optimal body bounds826\u00d7279\u00d767mm;29published region depths measured on native surfaces, tolerance0.02mm."
+    },
+    {
+      "name": "surface identity",
+      "method": "Each semantic contact consists of final-solid surface faces, sample against final shell (not solid interior distance); normals lead outward; no rear-plane proxy or overlap. Compiler contract and sourceface support corroborate fullface identity."
+    },
+    {
+      "name": "projection and opposed access",
+      "method": "At author-provided rail section stations, compare old/new native frontmost Y via exact BRep intersections. Quantify projection towardnegativeY relative local old shell, not only unchanged globalminY. Identify inner+outer exposed normal directions, outward clearance probes, and actual added volume. No hand-size accessibility claim."
+    },
+    {
+      "name": "mirror",
+      "method": "Compare left/right rail sections and contact geometry after Xreflection; tolerance-based native surface/distance and section comparison rather than pixel analysis."
+    },
+    {
+      "name": "editability",
+      "method": "Read-only source reopen/recompute; authored sketches analytic and constrained. Meaningful sourceparameter edit done only on independent scratchcopy/inmemory if candidate parameterstable; restore and hash original unchanged."
+    },
+    {
+      "name": "USD coherence",
+      "method": "ActualSHA descriptorbinding, exactmesh/node/contactinventory, finite arrays/validtriangleindices, zero materials/shaders/bindings; physicalgap/slivers flagged by nativeauthorcertification and independent section review."
+    },
+    {
+      "name": "scope",
+      "method": "All206baseline Hangboards files inventoried;203nonContactfiles must remain unchanged. Targetsource/asset/descriptor only may change."
+    }
+  ],
+  "executionLimits": [
+    "No nativeheavyprocess yet; coordinate author completion before fresh nativechecks.",
+    "Technical verification does not replace Astra shape/sourcejudgment or user acceptance.",
+    "Published dimensions preserved; unknown rail thickness/projectionremain explicitly displayestimates, no invented makerfacts."
+  ],
+  "baselineFiles": {
+    "before-primary.model.json": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7",
+    "before-primary.usdz": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+    "before-native-metadata.json": "e583e6cb1704041e022c05e63259ed4debd4e3b41702184a93693483af82a073",
+    "all-hangboards-baseline.json": "1d180a4a2394c7cb8d93eb27e7353b8604d10bf3c5b683828c0dadcb7e762a9e",
+    "baseline.json": "a3c876ac3df2c511be429c24a33bbf2b4fec2ee05f629114bb52cbe669a675d4",
+    "before-manifest-raw.txt": "7f05fa8db30998f46c1268108b9778c30e869d099f025aa256827fc1b7cc0545",
+    "before-manifest.json": "09a0da64c454154228d822c10abbf0de88298f6461fdf9fb0edaa013d25cc8a3",
+    "check_candidate.py": "a8419a68003e9ad92666d327ec50f67e57cc547f666661a1e13f4b83aaac0036",
+    "before-metolius-contact.FCStd": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62"
+  }
+}

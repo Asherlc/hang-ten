@@ -1,0 +1,66 @@
+{
+  "scope": "Unapplied orientation normalization and sparse lighting observation only",
+  "source": "HangTen/Views/GripHandModelView.swift",
+  "beforeSHA256": "10368b26488a7daa145eaff42673b4c2bdbed18d87ef132b3b87c49ca98839c8",
+  "proposedSHA256": "ccb0ab3f261ae0b172eac238eb9f40fe0c71ffc4e6112f6b3700ee743fc7b6e5",
+  "patchSHA256": "01fa926fe7139a4dd0e339a3f9127dc02e42038c382e2d38b44d62caf00fe02f",
+  "schemaSHA256": "a982a44b8cc2b7bf6c2302e50b39f2cc678600d9c531551da4773e4b0aad5f91",
+  "checks": [
+    {
+      "name": "apply-check",
+      "exitCode": 0,
+      "command": [
+        "rtk",
+        "proxy",
+        "git",
+        "apply",
+        "--check",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/v4-orientation-boundary/orientation-boundary.patch"
+      ]
+    },
+    {
+      "name": "swift-parse",
+      "exitCode": 0,
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "swiftc",
+        "-frontend",
+        "-parse",
+        "-D",
+        "DEBUG",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/v4-orientation-boundary/proposed/HangTen/Views/GripHandModelView.swift"
+      ]
+    }
+  ],
+  "applied": false,
+  "runtimeActions": false,
+  "changes": [
+    "Fixed CIImage downMirrored transform before eager CGImage; normalized UIImage.up and PNG",
+    "Explicit orientation metadata",
+    "Read-only renderer IBL resource-presence/intensity fields at existing submitted marker"
+  ],
+  "unchanged": [
+    "camera/entity transforms",
+    "light/material configuration",
+    "texture pixelFormat",
+    "CI input/output color spaces",
+    "tone mapping",
+    "image request/callback/publication lifetimes",
+    "capture schedule"
+  ],
+  "rationale": "Primary coordinate conventions plus whole-image vertical inversion support this explicit renderer-output normalization; no reference image is transformed or measured. Dark output remains unresolved and is not corrected by a light/material/color change.",
+  "sources": [
+    "https://developer.apple.com/documentation/metal/creating-and-sampling-textures",
+    "https://developer.apple.com/documentation/coreimage/cicontext/init(cglcontext:pixelformat:colorspace:options:)-6rp6d",
+    "https://developer.apple.com/documentation/uikit/uiimage/orientation",
+    "https://developer.apple.com/documentation/coreimage/ciimage/oriented(_:)",
+    "https://developer.apple.com/documentation/realitykit/realityrenderer/lighting"
+  ],
+  "limits": [
+    "Read-only lighting values do not establish live-view defaults or explain darkness alone",
+    "Typecheck/build/whole-image orientation validation still required",
+    "Color-pipeline audit owned independently; no double-gamma claim"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "reviewType": "Static independent audit of changed Swift tests, not XCTest execution",
+  "casesMatchPositionOrder": true,
+  "casesContactMembershipValid": true,
+  "representatives": [
+    [
+      "paired-25-20-15-10",
+      "edge-20-left"
+    ],
+    [
+      "paired-10-15",
+      "edge-10-left"
+    ],
+    [
+      "paired-12-8-6",
+      "edge-12-left"
+    ],
+    [
+      "paired-8-6",
+      "edge-8-left"
+    ],
+    [
+      "central-30-25",
+      "edge-central-30"
+    ],
+    [
+      "central-25",
+      "edge-central-25"
+    ],
+    [
+      "central-20-6",
+      "edge-central-20"
+    ],
+    [
+      "central-6",
+      "edge-central-6"
+    ],
+    [
+      "rounded-tray",
+      "rounded-tray"
+    ]
+  ],
+  "orientationFallback": {
+    "expected": 10.4,
+    "central20ActualFrom90DegreeRotationBounds": 10.3999996,
+    "paired20ActualFrom180DegreeRotationBounds": 10.3999996,
+    "viewDirection": [
+      0,
+      0,
+      -1
+    ]
+  },
+  "bearingTestCoverage": "All18 edge contacts; exact measured outward native rail normals from recommendation; rounded tray sampled endpoint also tested",
+  "trayEndpointExpectedUpDot": 0.4539905,
+  "trayThreshold": 0.45,
+  "comments": [
+    "New edge-bearing test resolves each contact through app selection before reading its suspension pose, so stale/shared opposite orientation should fail.",
+    "Orientation-only fallback expected10.4 follows current90-degreeX pose and52x5cm model bounds.",
+    "Tray endpoint test is a necessary regression guard; broader native sample proof and app review remain separate.",
+    "No Swift execution performed by this worker; parent owns Simulator lifecycle."
+  ],
+  "passed": true
+}

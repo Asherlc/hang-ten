@@ -1,0 +1,33 @@
+NOT AN APPLIED PATCH. Hook-level diff proposal; helper APIs are design names, not compiled code.
+
+HangTenApp.swift DEBUG branch at83:
++ if env["HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC"] == "1" {
++     BoardHighlightDiagnosticView() // ordinary BoardMapView; held @State mode
++ } else if existingGripReviewFlag { ... } else { RootView() }
+
+BoardModelView.swift BoardModelRealityView stored state near160:
++ #if DEBUG
++ @State private var diagnosticViewToken = UUID()
++ #endif
+
+RealityView make at178, after content.add(root/camera) and existing applySync:
++ diagnostics.registerAndSnapshot(viewToken, model, size, content root identities)
+RealityView update at182, after existing applySync:
++ diagnostics.snapshotUpdate(viewToken, model, size, content root identities)
++ // recording only: no state invalidation or entity mutation
+Modifier on disappearance:
++ diagnostics.unregister(viewToken) // weak registry; do not change root
+
+BoardModelRealityTypes.swift highlight at717:
++ diagnostics.appendRequested(scene:self, desired IDs/mode, prior cache)
+  existing guard and existing material operations unchanged
++ diagnostics.appendOutcome(scene:self, including cached-noop)
+applyHighlight near922, immediately after each existing assignment:
++ diagnostics.appendMaterialWrite(scene:self, entity, actual material)
+
+DEBUG helper only:
++ held-phase View (@State activeA/preview/activeB); normal BoardMapView
++ non-observable @MainActor weak registry + bounded event ring
++ explicit complete JSON checkpoint FileHandle write/sync/close
++ explicit reversible root transform / selected-entity visibility controls
++ no direct scene.highlight in harness, no polling, no body print

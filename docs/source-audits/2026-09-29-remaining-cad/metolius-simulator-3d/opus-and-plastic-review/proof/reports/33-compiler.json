@@ -1,0 +1,116 @@
+{
+  "status": "pass",
+  "scope": "Read-only final production compiler diff from HEAD, tests/README, package and queue preservation. No native/export/test reruns.",
+  "headCommit": "b097aa5ba34d55e69b9cdac73122b06774947a16",
+  "blockingFindings": [],
+  "reviewConclusions": [
+    {
+      "subject": "Default behavior",
+      "locations": [
+        "compile_board.py:122",
+        "compile_board.py:592",
+        "compile_board.py:644",
+        "compile_board.py:988"
+      ],
+      "finding": "Absent/false flag leaves cache uncalled and legacy inverse evaluator, remap/order, flat-normal branch and output path unchanged. True flag requires the analytic-normal Bool. Retained f4 default-false rebuild exactly reproduces original USDZ/descriptor bytes."
+    },
+    {
+      "subject": "Exact facet and UV ownership",
+      "locations": [
+        "compile_board.py:464",
+        "compile_board.py:497",
+        "compile_board.py:536",
+        "compile_board.py:557"
+      ],
+      "finding": "Unordered exact three-position facet signature, unique face owner, and exactly one finite usable UV witness per vertex are all required. Ownership is recorded before UV lookup, so missing UV does not hide a second owner. Invalid coincident witnesses retain ambiguity. Uninspectable tessellation invalidates acceleration; unavailable UV uses fallback."
+    },
+    {
+      "subject": "C0 safety and normals",
+      "locations": [
+        "compile_board.py:510",
+        "compile_board.py:524",
+        "compile_board.py:624"
+      ],
+      "finding": "Internal knot multiplicity >= degree marks derivative-side ambiguity, forcing legacy fallback for affected facets. Unit normalization and winding-sign handling remain in shared output path. Existing remap-related semantic sliver limitations remain explicitly reported; no universal normal-winding claim."
+    },
+    {
+      "subject": "Real ownership regression",
+      "locations": [
+        "uv_node_normal_checks.py:102"
+      ],
+      "finding": "Native cylindrical facet and nearby native plane exercise the actual failure mechanism, independent of package/scratch geometry. Test compares to actual cylinder inverse-normal and requires the legacy result to differ; retained legacy-only mutation fails and unchanged f4 passes. Reversed winding, missing/ambiguous UV, coincident faces, false triangle signatures, C0 knots and no-flag behavior have native coverage."
+    },
+    {
+      "subject": "Honest contract/evidence",
+      "locations": [
+        "README.md:432"
+      ],
+      "finding": "README explicitly distinguishes opt-in exact-face ownership from legacy centroid selection. Same-source192-corner proof retains191 legacy agreements and1 actual-owner inverse agreement, while preserving raw7.161516-degree review-required report. No widened tolerances, geometric-failure waiver, all-corner or manufacturer certification claim."
+    },
+    {
+      "subject": "Test lifecycle",
+      "locations": [
+        "test_uv_node_normals.py:25"
+      ],
+      "finding": "Native wrapper has120-second bound, exact owned session/process-group cleanup unconditionally in finally, reap before temporary directory removal."
+    }
+  ],
+  "preservation": {
+    "otherPackageFilesCompared": 203,
+    "otherPackageFileChanges": [],
+    "queueRowsCompared": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "queueRowsChanged": [],
+    "row8HumanReview": "awaiting revised review #8; not accepted",
+    "baselinePackageHashFile": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/all-hangboards-baseline.json",
+    "baselineQueue": ".context/placid-badger/metolius-simulator-3d-plastic-review/before-front-fairing-integration/review-queue.json"
+  },
+  "retainedTestEvidence": {
+    "nativeCasesPassed": 10,
+    "fullPythonSummary": "706 passed, 11 skipped in 116.77s (0:01:56)",
+    "rerunForThisReview": false
+  },
+  "limitations": [
+    "This is code/evidence review, not another native or export run.",
+    "Finite native normal sample does not guarantee every opt-in normal equals legacy, which is intentionally not the contract.",
+    "Raw semantic topology and normal sliver caveats remain in export review; actual app/human acceptance are separate."
+  ],
+  "fileSHA256": {
+    "Tools/HangboardCAD/compile_board.py": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+    "Tools/HangboardCAD/tests/uv_node_normal_checks.py": "684998bb8ca409e7ee07a46f572865a40d5bb1cd7fc86fe49da0419e0e38a8e7",
+    "Tools/HangboardCAD/tests/test_uv_node_normals.py": "829e79fc508ac55c28ab17c859ffaca4fa92c29438533f699f96cc308fd05f2f",
+    "Tools/HangboardCAD/README.md": "fe80fe6bed25f97ac900141d799e45af49402c9e4c848a43c0f05fd8576b5ed3",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/all-hangboards-baseline.json": "ba7cef4f87b4471e94aec8f870cf3e06f2a4aeeba1b527a21df36e02b7cb4253",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/before-front-fairing-integration/review-queue.json": "e0adef45f0c0436dcfc2409645c7f0b0b213d10f905c4db24ce19722a5d39f0d",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json": "e0adef45f0c0436dcfc2409645c7f0b0b213d10f905c4db24ce19722a5d39f0d",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/baseline-default-false-reproducibility.json": "866d5a42b8954dc6a1591b3be5c7802e27da46d38cd437fcf70eef0f4b7caf43",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/python-test-report.json": "414ae6711ed64b58f4e3963e52a69609a76253d50e7d3039e603129bd524928d",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/actual-owner-normal-supplement-b722.json": "a216a909ef9705ff6db7bc286866e7efe2d3663612188aa6297b4ea3e7254e13",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/owner-regression-green-native.log": "bf0818ff0f21bb51aeaac0a583faa66f900f9c8e2436252e973726276fbc2deb",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/owner-regression-red-native.log": "094fd2614042e54c85f18a42b7ddb3937fb648a609bb531d96cda8c41bb501f1",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/final-independent-export-review-b722.json": "8d936cf31a7cb3cc2d1dfdaa9b705b1a56020022735637ddd771e8921127e978",
+    "Hangboards/metolius-simulator-3d/metolius-simulator-3d.FCStd": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+    "Hangboards/metolius-simulator-3d/assets/primary.usdz": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+    "Hangboards/metolius-simulator-3d/assets/primary.model.json": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb"
+  }
+}

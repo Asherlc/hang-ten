@@ -1,0 +1,30 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-reimport-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-reimport-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-reimport-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 36724,
+      "pgid": 36724,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/verify-reimport.py",
+        "--repo",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--package",
+        ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3",
+        "--report",
+        ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-proof.json",
+        "--mesh-output",
+        ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/actual-reimport-meshes.json",
+        "--native-report",
+        ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-author-proof.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "original-9449": {
+    "triangleCount": 34634,
+    "nodeCount": 31
+  },
+  "rejected-8fa": {
+    "triangleCount": 254961,
+    "nodeCount": 31
+  },
+  "native-correction": {
+    "triangleCount": 251108,
+    "nodeCount": 1
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top",
+    "oblique",
+    "raking"
+  ],
+  "renderer": "Shared preview.py Lambert triangle-face rendering at matching view and size; oblique applies fixed orthographic rotation.",
+  "nativeBodyBRepExactAcrossContactRebuild": false,
+  "nativeBodyBRepHashes": [
+    "9cc07ea435129cf9ab358a6e7fda997c7117fce7f749ef2b2c86d8a9672cc95d",
+    "b24b6b4f0121e6e28a8cbc5faaa0862bc75a38396848c78fb62ae70d0877825c"
+  ],
+  "inputHashes": {
+    "probe-source.FCStd": "1bbcb61ab32cd02b28f7ddd675086d04db92873988d14c5b2acaa8d6fda3c0cb",
+    "candidate/metolius-simulator-3d.FCStd": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+    "probe-body-mesh.json": "9cc7ee1ee22e872e7b44957a90b78e8bc9d6b932a8864e4e75e4f7e759ae2421",
+    "original-9449/assets/primary.usdz": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+    "rejected-8fa/assets/primary.usdz": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628"
+  },
+  "imageHashes": {
+    "comparison-side.png": "f7b336ba6c269ab9ba9bd6ffb5666be7cfe68892b600c80d8294015607d4a4b1",
+    "comparison-raking.png": "1db0ed4fad098a4a288f3695eba2d1c854a3fa2acb0bea4d6b5ae9980a18147a",
+    "comparison-oblique.png": "7d1bc0b0c84970b721fa2ca9ea81ad063566fe5e2e9eb1ad0a6a1cd8d15ecc9f",
+    "original-9449-raking.png": "efe3cf3b36bdf265a10b5747938de73719c2ab27212e7e7d0ceafa363402f7ae",
+    "native-correction-front.png": "c6428d29fc3b5466b7f796d1fae04a1f73098937cf7d1626208ca2aca901d5f7",
+    "rejected-8fa-front.png": "8746bc3b05cce598a4c5742e8505dee6fa2e35847f67ba3064c147ffc3f07443",
+    "native-correction-raking.png": "27a852d99a747ec2a3845e3143757a5299e7b1ff6cc31093f7c6ed2302c6ece1",
+    "comparison-top.png": "49e68014a405a932fc113f787c5d0bc364cd3e61a66f793637fee4406e6a1238",
+    "native-correction-oblique.png": "821203a8e4bdae107eab803d68714574a65c24ca10ad73dfafbf0da8b12d3def",
+    "rejected-8fa-raking.png": "ab14b02d96c8d75941ec56906597a9bd436b55e663dc0efd056371a407e7a4dd",
+    "native-correction-side.png": "086a6d2893d65d5957ca61d9f5b8571ff02c9583f7f8c083c725bd03b22fbb61",
+    "original-9449-oblique.png": "0195e673d789e0fd38e1b58f86e3ef7e8cbb5e908125187d47e293e3d739aeaf",
+    "native-correction-top.png": "c16b43bf22b114c59472d37d8bae2b3957b8b3c79882210f979a7455f0b6a5e3",
+    "original-9449-front.png": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+    "comparison-front.png": "342957783ee8a62d09455bf555c7e75c35d3b4dc6a94b5ea50f00bf473a9bce7",
+    "rejected-8fa-oblique.png": "9bef7da75ee2e4547a0f8f7b971588bc45456f099a85373ac2037c0f047a6250",
+    "original-9449-side.png": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+    "rejected-8fa-side.png": "0cff71e6a0db501f5e9cfeb4d556aa6ba1891c93d8b246c9c432d5b44130606c",
+    "rejected-8fa-top.png": "2acb1cb6e393b86840c04f2534f8464290143161b0baf6ceebc194a5e8c5c862",
+    "original-9449-top.png": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860"
+  },
+  "contactRebuildNativeBodyReserialization": {
+    "equalTokenCount": true,
+    "changedOCCTShapeFlags0101000To0111000": 319,
+    "otherDifferentNumericTokens": 29,
+    "maximumOtherNumericDifference": 1.1102230246251565e-16,
+    "note": "Native bind/common checks set OCCT shape flags; remaining serialized numeric changes are rounding. Exact export previews follow."
+  }
+}

@@ -1,0 +1,1132 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "preparedUTC": "2026-10-04T01:19:13Z",
+  "sourceScopes": [
+    "runtime-mini-automatic-source-tasks-fresh",
+    "runtime-mini-source-tasks-spaced"
+  ],
+  "explicitlyExcluded": "Active final-integrated-validation tests and mutable ios registry, DerivedData/apps, unarchived current active results, tmp fixtures, canonical packages, queues, and historical records.",
+  "preservationMethod": "Exact byte copy or exact SHA-256 identity reuse; source/retained paths identify every requested proof even when repeated images or empty logs share one stored copy.",
+  "statuses": "Original recorded statuses are preserved in their unchanged raw files; packaging does not reinterpret or upgrade them.",
+  "files": [
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/000-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/000-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stdout",
+      "sha256": "e5f583acf689f5b93d95a84d3706918977b14efead65b3b362c6335bdd0eb8be",
+      "bytes": 189,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/001-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/001-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/001-stdout.txt",
+      "sha256": "9a754fa7afb1b0f2039a802a222c2979512ac2db761cdedd809b8cfea4344ec7",
+      "bytes": 176,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/002-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/002-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/002-stdout.txt",
+      "sha256": "31e84f290b7b9d5fd34d4a7ec470b4e0c4c7c063010cb560ecc368515695212a",
+      "bytes": 28,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/003-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/003-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/003-stdout.txt",
+      "sha256": "c70f34340d2a2310decdf735b2f6b76ebf92bcdd968a1411490ed67de2470fec",
+      "bytes": 6131,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/004-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/004-stderr.txt",
+      "sha256": "840455950feed734207e4eb1e6efdcbaca492edd46b7a1e95df93b4c225601e5",
+      "bytes": 373,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/004-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/005-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/005-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/006-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/006-stderr.txt",
+      "sha256": "0fbe5969c21aff815e3e72946cfa57f29d29d59a81cbf7ad8ee8e6f3a1bb8928",
+      "bytes": 374,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/006-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/008-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/008-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/009-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/009-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/010-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/010-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/app-intent.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/app-intent.json",
+      "sha256": "9604c33977f3cf67ab7bef46f8272b6740753f9c6e3fd6d56bf14cd686956089",
+      "bytes": 437,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/app-registration.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/app-registration.json",
+      "sha256": "83f6721bc5f6751c896e5f78ff105c50e92f2896896f164d9858a8e0bd12e945",
+      "bytes": 158,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/app.stderr",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/app.stdout",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/awake-intent.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/awake-intent.json",
+      "sha256": "f1d5d81aac462fe221dd83070334ec5f07ac675abaf30ab49b86c0decdce6cfe",
+      "bytes": 299,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/awake-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/awake-ownership.json",
+      "sha256": "024024038ea52b66d5074af94bee52ccc6d37c4f0409d5dd9b216e5e74f224fd",
+      "bytes": 388,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/awake.stderr",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/awake.stdout",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/canonical-preservation.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/postmerge-canonical-preservation.json",
+      "sha256": "6cd16210b6356c123447aeb7d8920d8042cf7889038cd615d0b53538a65264d3",
+      "bytes": 43156,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/captures.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/captures.json",
+      "sha256": "11703a46dfb09d8b755fc5e4190fc8d49183a60b471dbd02974618b7952a823f",
+      "bytes": 628,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/runtime-evo/cleanup.json",
+      "sha256": "1c24a58b672ffa16fb7b78c5e2edf234c564df11b582efc6d58a5b3f3357028b",
+      "bytes": 230,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/commands.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/commands.json",
+      "sha256": "08b69286d50e6c869c2df97cd463889c7e7313cb44d87e685975edbdbc616356",
+      "bytes": 6889,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/completion.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/completion.json",
+      "sha256": "b038623c921e59dab4f1d50bd005c7155cfd5bb25ba3eae9ab7e67eefe346d1f",
+      "bytes": 228,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/elapsed-001s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/elapsed-001s.png",
+      "sha256": "399cef923cc7a0ca1b25018e39fc8b2c3ef31bac2dc999ec4e0c2ea7caadf99d",
+      "bytes": 268947,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/external-anchor.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/external-anchor.json",
+      "sha256": "10240fa06db3eb71634245b1ec1dffdfc063007f12e17533e9dab1d53229b5da",
+      "bytes": 428,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/failure.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/failure.txt",
+      "sha256": "6454c0e3026d9b49c4cfe7ee738cdbd0f6c1bd4a102f55bf33547f853aea2e2d",
+      "bytes": 1104,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/helper-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/helper-ownership.json",
+      "sha256": "cbc231734903b24b5af4b21e46f8b955fa1f89ffcb7d5ec436e9758c8368c455",
+      "bytes": 473,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/host-clock-stability.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/host-clock-stability.json",
+      "sha256": "a769a63852bd128b232304e48ebba6e55aaa57f38c61a7e2ffb1cb603bd23e7b",
+      "bytes": 640,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/installed-binary-gate.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/installed-binary-gate.json",
+      "sha256": "75d434ba5eda445737f7c8b4ea5dc0679479fb268df3e3b63b6dd0d59088c674",
+      "bytes": 280,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/invalid-capture-deadline.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/invalid-capture-deadline.json",
+      "sha256": "1b7a4f0fd53fc74a71b844c7a54e999476dffd1d154d5e8f947fef7a65c67aff",
+      "bytes": 588,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/launch-app-arguments.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/runtime-evo/launch-app-arguments.json",
+      "sha256": "59a90eec4c918f4fa86dcc98d7b3e13b3bbcc76365132ba919aa43dddc50a642",
+      "bytes": 41,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/launch-review-environment.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-mini-passive-route/launch-review-environment.json",
+      "sha256": "d9ea07a536130f5ac1e897bbe2740a0c872a5b3677016bf49d76dc6b164f55a5",
+      "bytes": 145,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/parity.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/parity.json",
+      "sha256": "258452357cffe83b35c6de235917251fb571930f7be96092189a5bc5ab6097c3",
+      "bytes": 235133,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/published-source-binding.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/published-source-binding.json",
+      "sha256": "5585ed98716c5976908459e6184698e8a6d790047876fe4e5678bf1f239a3977",
+      "bytes": 793,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/routine-reference.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-mini-automatic-source-tasks/routine-reference.json",
+      "sha256": "a9d8ee5670e61401b40b9c5d20c8a4a6f6b6b3f4d6b02bda0255c1332d155662",
+      "bytes": 20789,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/runtime-release.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/runtime-release.json",
+      "sha256": "70b886a1254d32a19e32daf8ed9a3a0d6bea60a6d29c52f934751fb5154ed079",
+      "bytes": 4780,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/same-launch-url-setup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-pro-passive-route/same-launch-url-setup.json",
+      "sha256": "c454dd9c12cb05fc80b58e32c3a61cf975da80d76425b12aa045462a5a19350c",
+      "bytes": 236,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/schedule.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-mini-automatic-source-tasks/schedule.json",
+      "sha256": "47d1ae7420536830e9c63920ec64f5ea2c4e2747cd74c8566541b4e5eb03f546",
+      "bytes": 1839,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/source-reference.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/source-reference.json",
+      "sha256": "50327ed1b8eb201d12d53b6657dd5216244b6689d144960bc168aaf827ef096c",
+      "bytes": 96774,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/tap-coordinate-convention.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/tap-coordinate-convention.json",
+      "sha256": "f35252d717044c83b91f6fa73e5888a909c27769e30ec206b3f4fe98a4aa8668",
+      "bytes": 151,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/train-review-request.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/train-review-request.json",
+      "sha256": "013d70c6ed282df6c085b361be851b35f20bc17e864c9c74fbbd317ed74d7ee1",
+      "bytes": 833,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/train-review.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/train-review.json",
+      "sha256": "0257ce7195036f1dad3b4fb24e83a906077c35a905b17d48cfa1474236fcbd4f",
+      "bytes": 1168,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/train-setup.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/train-setup.png",
+      "sha256": "1af7c1e809350fe45b9d85b60d8c238b3c474598e3b8a8840325861ee0ad280c",
+      "bytes": 399600,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/000-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/000-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stdout",
+      "sha256": "e5f583acf689f5b93d95a84d3706918977b14efead65b3b362c6335bdd0eb8be",
+      "bytes": 189,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/001-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/001-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/001-stdout.txt",
+      "sha256": "9a754fa7afb1b0f2039a802a222c2979512ac2db761cdedd809b8cfea4344ec7",
+      "bytes": 176,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/002-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/002-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/002-stdout.txt",
+      "sha256": "e28df4091c0aa98003fba288f279114179ac1611a15028548e05c3121577d10f",
+      "bytes": 28,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/003-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/003-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/003-stdout.txt",
+      "sha256": "8dceb0f69fe0d741b62dfaf2248f5576e542b20264da5b62449960257d628b9c",
+      "bytes": 6131,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/004-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/004-stderr.txt",
+      "sha256": "be59243d67ac8dbff4d4d0f33c763f30f5caa810fe0ffec7b45bfeb0d3f9a1d0",
+      "bytes": 364,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/004-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/005-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/005-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/006-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/006-stderr.txt",
+      "sha256": "e173dcfe17ecbefef53025f81f3718567ab38a80029a218ad8dffcb515bdbd2b",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/006-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/007-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/007-stderr.txt",
+      "sha256": "a47e9db6fadddcfdc358ee9db1713a5244439072510ae7f904301680938ad726",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/007-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/008-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/008-stderr.txt",
+      "sha256": "79af279df7f0b1b3402a1515be1d2fc4ed0213781a0559fdcf124417136ec8cd",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/008-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/009-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/009-stderr.txt",
+      "sha256": "f88c6f3ab759cfb698bb5b854c90e75dca6117c8d12648e8b390185233d95e7b",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/009-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/010-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/010-stderr.txt",
+      "sha256": "844ebe2dafafd6d353362e304025f85ba42262cdd9cc949079325d03f9e9c4f4",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/010-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/011-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/011-stderr.txt",
+      "sha256": "aef5db07975d597e8197aaf0bc66bacbef7d1b1c4f47e48de2d173cec0df3425",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/011-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/012-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/012-stderr.txt",
+      "sha256": "5ccbc5cca253693ac60bf39426f214a8b1f8fca26bdfb9bd1373d1eb543fef04",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/012-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/013-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/013-stderr.txt",
+      "sha256": "c740004d55deb929ea1b42a5d2daee3ca16488b3fe267f006dede32f67408c59",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/013-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/014-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/014-stderr.txt",
+      "sha256": "a0bb5c275ff0dc1c8e826fc8422a576498c8fdcd2b6502f9a79e7a3c606f0339",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/014-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/015-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/015-stderr.txt",
+      "sha256": "44b6e53c6c429e35ef9b1d724ddcf82c274c19de76a97da865e8185da9df0296",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/015-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/016-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/016-stderr.txt",
+      "sha256": "b900189a33719398367276d7da048a7dbae84b57e5f537f2cba4d38e75aacd56",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/016-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/017-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/017-stderr.txt",
+      "sha256": "972e667cc46776f72838f9bde5bce827a35c4cb18e81ce2317d27b22f0d9493d",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/017-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/018-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/018-stderr.txt",
+      "sha256": "e8ea2a0292be76dcc6f63a8e28c51114b5acab98025996c9294dfc09e80eebc5",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/018-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/019-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/019-stderr.txt",
+      "sha256": "09b0be47ca7d9017934076323a634301cde5e5b4ec54c0fff90dd6604b2a1b16",
+      "bytes": 365,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/019-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/020-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/020-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/021-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/021-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/022-stderr.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/022-stdout.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/app-intent.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/app-intent.json",
+      "sha256": "9055cc86280039598512b717193c0680fe52b725fad32492830fb2d4327db053",
+      "bytes": 428,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/app-registration.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/app-registration.json",
+      "sha256": "342a7d9be00d21e4172979ad2fb93cfffcdeb7ff99528e3f6dc168ac72dedbf2",
+      "bytes": 158,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/app.stderr",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/app.stdout",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/awake-intent.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/awake-intent.json",
+      "sha256": "0b15f53735b8b137f63f6270bd01e05094393c7d481fdbc2e848acc0d7d257ef",
+      "bytes": 290,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/awake-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/awake-ownership.json",
+      "sha256": "f16b92561851b6c72254bf4eccb71cf92075c906c0d81b584ff3895965e512b8",
+      "bytes": 379,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/awake.stderr",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/awake.stdout",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/canonical-preservation.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/postmerge-canonical-preservation.json",
+      "sha256": "6cd16210b6356c123447aeb7d8920d8042cf7889038cd615d0b53538a65264d3",
+      "bytes": 43156,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/captures.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/captures.json",
+      "sha256": "a3f05c195edb0b79b18d9f4a83b6364cb214d677473ca4daa8d68a7d9c27f54a",
+      "bytes": 8647,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/runtime-evo/cleanup.json",
+      "sha256": "1c24a58b672ffa16fb7b78c5e2edf234c564df11b582efc6d58a5b3f3357028b",
+      "bytes": 230,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/commands.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/commands.json",
+      "sha256": "f194ff18903eb4577cd666bc70d4824cfd1a83e6648d3dc4c89a32b915ae18b7",
+      "bytes": 15520,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/completion.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/completion.json",
+      "sha256": "d1ba520632c0722e385990619bad093c49bb665b849e4f22946ee5cf6c5ef464",
+      "bytes": 228,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-001s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-001s.png",
+      "sha256": "4d0d80e3dd4f9ca83b58f4de0da523cbfc21dc0e5f6a7611f902142e3b546e03",
+      "bytes": 266861,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-006s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-006s.png",
+      "sha256": "32a8aba0a5c39f96b1a58436f874a7cdf8577890d86fbd05f0fac9f1d6eca8fb",
+      "bytes": 307061,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-011s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-011s.png",
+      "sha256": "b81daecbd580d64d6a755103f4f61c1c1bbf74ba1358732c2620076a0ae32562",
+      "bytes": 306841,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-016s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-016s.png",
+      "sha256": "2a23987dc4dd851635434e5cc7a49dcafb7f9b02c74197d474469c20ef5ff009",
+      "bytes": 270896,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-021s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-021s.png",
+      "sha256": "9ea6b7dc932934c8f7e1350907144cbc07e99c2b10c4dd96341476db2cf6387c",
+      "bytes": 270612,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-090s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-090s.png",
+      "sha256": "ac193dafa9867bcc0a864a6571ea56332f149271c2b9a5c8b92a446f237374b4",
+      "bytes": 266600,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-190s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-190s.png",
+      "sha256": "a76d4bfdcf972713eb3e6f0bcdd042898e469f8b554546d87271c6da06381822",
+      "bytes": 269238,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-195s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-195s.png",
+      "sha256": "6a38bd22e7524049a76d9c69170628706883d48943ace1088959679ffdec68e7",
+      "bytes": 308444,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-200s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-200s.png",
+      "sha256": "02b0b0b663c6e497d205c765ca4c3cce01df773ad11a3106632e544128221435",
+      "bytes": 307069,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-205s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-205s.png",
+      "sha256": "0e691f24d7db86894085329d93e6f445dcb987cb5e25e5cf4d28a0f24447b53b",
+      "bytes": 270630,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-210s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-210s.png",
+      "sha256": "38fbd981142260b34430556f3d2af2ff223df3e8e760ee9f1ea9dd4db3e20349",
+      "bytes": 269573,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-215s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-215s.png",
+      "sha256": "0e6052e4f5b9bc04d521409f9b95a12756ceb0d1cde061cf00cc3e9631fe15ba",
+      "bytes": 270066,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-220s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-220s.png",
+      "sha256": "e910dac7529f6172031e9e94e9637c512348229ccd8c45d2287986f75e6f57ce",
+      "bytes": 267807,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/elapsed-225s.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/elapsed-225s.png",
+      "sha256": "77f21b5225fa343748e4a6da58579c44fe03698db0dba8a4ec43e6cc8c7a90ff",
+      "bytes": 270902,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/external-anchor.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/external-anchor.json",
+      "sha256": "6fafaa403b837cac4538120c81fe6a98feee194e7aa9b1ab7e8d2b00572ee47f",
+      "bytes": 428,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/helper-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/helper-ownership.json",
+      "sha256": "373cbc493906b2ae0c4fb3167ea8d8a6a964bf371e7994ab21b7e3471385544f",
+      "bytes": 466,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/host-clock-stability.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/host-clock-stability.json",
+      "sha256": "d2db07041d0fa4f5f5005c47cc985ca107666b944f0bebb0d8dad00993f57b04",
+      "bytes": 1237,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/installed-binary-gate.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/installed-binary-gate.json",
+      "sha256": "75d434ba5eda445737f7c8b4ea5dc0679479fb268df3e3b63b6dd0d59088c674",
+      "bytes": 280,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/launch-app-arguments.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/runtime-evo/launch-app-arguments.json",
+      "sha256": "59a90eec4c918f4fa86dcc98d7b3e13b3bbcc76365132ba919aa43dddc50a642",
+      "bytes": 41,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/launch-review-environment.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-mini-passive-route/launch-review-environment.json",
+      "sha256": "d9ea07a536130f5ac1e897bbe2740a0c872a5b3677016bf49d76dc6b164f55a5",
+      "bytes": 145,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/parity.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/parity.json",
+      "sha256": "258452357cffe83b35c6de235917251fb571930f7be96092189a5bc5ab6097c3",
+      "bytes": 235133,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/published-source-binding.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/published-source-binding.json",
+      "sha256": "5585ed98716c5976908459e6184698e8a6d790047876fe4e5678bf1f239a3977",
+      "bytes": 793,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/routine-reference.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-mini-automatic-source-tasks/routine-reference.json",
+      "sha256": "a9d8ee5670e61401b40b9c5d20c8a4a6f6b6b3f4d6b02bda0255c1332d155662",
+      "bytes": 20789,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/runtime-release.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/runtime-release.json",
+      "sha256": "5a2d7ac4951c0eaf0add1f80bc8d10c7d58ed364708793152f67617ec923dce7",
+      "bytes": 4735,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/same-launch-url-setup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-pro-passive-route/same-launch-url-setup.json",
+      "sha256": "c454dd9c12cb05fc80b58e32c3a61cf975da80d76425b12aa045462a5a19350c",
+      "bytes": 236,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/schedule.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/prep/runtime/schedule-spaced-route.json",
+      "sha256": "d1d7acb8e0d2114e322b99f15f6f03ac1abd36608e9cd68c9e5eca83e5d8b678",
+      "bytes": 1391,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/source-reference.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/source-reference.json",
+      "sha256": "50327ed1b8eb201d12d53b6657dd5216244b6689d144960bc168aaf827ef096c",
+      "bytes": 96774,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/tap-coordinate-convention.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/tap-coordinate-convention.json",
+      "sha256": "f35252d717044c83b91f6fa73e5888a909c27769e30ec206b3f4fe98a4aa8668",
+      "bytes": 151,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/train-review-request.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/train-review-request.json",
+      "sha256": "99e2444b20305f565ef0626c2f20e13d71d66dba23e5728d8c925ccac4f0a283",
+      "bytes": 824,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/train-review.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/train-review.json",
+      "sha256": "d41f6bfd86fcb187a9548598bafcc2d23347e8b7c762c31255fe38054c49fd41",
+      "bytes": 1222,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/train-setup.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/train-setup.png",
+      "sha256": "5b8e954ed3f99dd13be4cad6be8b59d8d69ba042c69ea65f73576023f67e4567",
+      "bytes": 399874,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh-release.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh/runtime-release.json",
+      "sha256": "70b886a1254d32a19e32daf8ed9a3a0d6bea60a6d29c52f934751fb5154ed079",
+      "bytes": 4780,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh-routine-reference.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-mini-automatic-source-tasks/routine-reference.json",
+      "sha256": "a9d8ee5670e61401b40b9c5d20c8a4a6f6b6b3f4d6b02bda0255c1332d155662",
+      "bytes": 20789,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh-whole-image-review-captured1.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-automatic-source-tasks-fresh-whole-image-review-captured1.json",
+      "sha256": "865ee585a00e00180a90403a4647c6dd6408cb85a7df8290c12596986e4641d9",
+      "bytes": 2431,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced-release.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced/runtime-release.json",
+      "sha256": "5a2d7ac4951c0eaf0add1f80bc8d10c7d58ed364708793152f67617ec923dce7",
+      "bytes": 4735,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced-routine-reference.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-mini-automatic-source-tasks/routine-reference.json",
+      "sha256": "a9d8ee5670e61401b40b9c5d20c8a4a6f6b6b3f4d6b02bda0255c1332d155662",
+      "bytes": 20789,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced-whole-image-review-all14.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced-whole-image-review-all14.json",
+      "sha256": "c72ace3ae0f79aeed157e5915c32046b02fc5a3c63ecb7779d42be9246947701",
+      "bytes": 28317,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced-protocol-prose-qualification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-mini-source-tasks-spaced-protocol-prose-qualification.json",
+      "sha256": "e1b70b7848986d626368034d274ab3c19c100b42f241ececb41a86c04ba7aed1",
+      "bytes": 1410,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-pro-final-assessment.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/runtime-evo-pro-final-assessment.json",
+      "sha256": "3f47498510ae19fb23be552516e527100e9711288ac1e55c1beeb065712498db",
+      "bytes": 2400,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/published-parent-source-correspondence.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime-phase2/published-parent-source-correspondence.json",
+      "sha256": "e8946b0551ad0e25e056062f2e4cd54aaca8e64e3d8ec598966515e3a0f3006c",
+      "bytes": 708,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture-auto-route.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/prep/runtime/capture-auto-route.py",
+      "sha256": "59acad5fdee7210e85a7847bd623faeb1b0a55370acad7760ad1474e8832a79b",
+      "bytes": 17254,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/prepare-auto-release.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/prep/runtime/prepare-auto-release.py",
+      "sha256": "2eaeacd36901580bc3f9d580a23148a97ada69f2070213368c22e3e6ac294a9b",
+      "bytes": 7833,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/schedule-auto-route.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-mini-automatic-source-tasks/schedule.json",
+      "sha256": "47d1ae7420536830e9c63920ec64f5ea2c4e2747cd74c8566541b4e5eb03f546",
+      "bytes": 1839,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture-spaced-route.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/prep/runtime/capture-spaced-route.py",
+      "sha256": "e050ce5999123a7d384630ba71b765cdeb92173e270e7e3f9d7e1b9f84233f04",
+      "bytes": 17260,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/prepare-spaced-release.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/prep/runtime/prepare-spaced-release.py",
+      "sha256": "754bcea39f1a109054b759bf2b4656a2380386c95803ca0a9a9ad689f421438c",
+      "bytes": 7837,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/schedule-spaced-route.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/prep/runtime/schedule-spaced-route.json",
+      "sha256": "d1d7acb8e0d2114e322b99f15f6f03ac1abd36608e9cd68c9e5eca83e5d8b678",
+      "bytes": 1391,
+      "action": "reused-exact-existing-durable-bytes"
+    }
+  ],
+  "accounting": {
+    "owner": "placid-badger-cad-second-half",
+    "sourceProofFileCount": 158,
+    "sourceProofBytes": 6002352,
+    "uniqueRetainedFiles": 91,
+    "newCopiedFiles": 71,
+    "newCopiedBytes": 5098429,
+    "reusedProofMappings": 87,
+    "totalDistinctArchiveBytes": 0,
+    "archiveCount": 0,
+    "externalResourcesCreated": [],
+    "scope": "Preparation only. Recorded run statuses, interrupted collector results, failures, and additive corrections remain unchanged; no new test/build/runtime PASS, PR, human acceptance, or cleanup claim."
+  }
+}

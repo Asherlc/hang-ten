@@ -1,0 +1,182 @@
+{
+  "noNewImageEvents": true,
+  "before": {
+    "recordCount": 7,
+    "lastSequence": 7,
+    "readiness": {
+      "make": {
+        "complete": true,
+        "epoch": 1791008023.4592052,
+        "event": "hand-lifecycle",
+        "handCameraID": "ObjectIdentifier(0x00000001174436e0)",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeToken": "09B898BC-FE4A-44F7-BB93-B8E6EED60ED6",
+        "handRootID": "ObjectIdentifier(0x00000001174436a0)",
+        "lifecycleEvent": "make-entry",
+        "sequence": 5,
+        "uptime": 89821.68535120833,
+        "viewToken": "36B95046-6480-4F0A-B544-2B91066F4286"
+      },
+      "fit": {
+        "allDepthsFinite": true,
+        "allDepthsInsideUnchangedClips": true,
+        "cameraEvent": "reset-fitted",
+        "cameraTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.959770917892456,
+          -0.28078407049179077,
+          0,
+          0,
+          0.28078407049179077,
+          0.959770917892456,
+          0,
+          0,
+          3.961261034011841,
+          9.515283584594727,
+          1
+        ],
+        "complete": true,
+        "epoch": 1791008023.724596,
+        "event": "hand-camera",
+        "far": 100,
+        "framingVertexCount": 37284,
+        "handCameraID": "ObjectIdentifier(0x00000001174436e0)",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeToken": "09B898BC-FE4A-44F7-BB93-B8E6EED60ED6",
+        "maximumDepth": 10.936546325683594,
+        "minimumDepth": 8.617655754089355,
+        "near": 0.10000000149011612,
+        "orthographicPresent": true,
+        "orthographicScale": 2.5384838581085205,
+        "perspectivePresent": false,
+        "sequence": 7,
+        "uptime": 89821.95074454167
+      },
+      "constructor": {
+        "complete": true,
+        "epoch": 1791008023.363268,
+        "event": "hand-lifecycle",
+        "handCameraID": "ObjectIdentifier(0x00000001174436e0)",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 0,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeToken": "09B898BC-FE4A-44F7-BB93-B8E6EED60ED6",
+        "handRootID": "ObjectIdentifier(0x00000001174436a0)",
+        "lifecycleEvent": "constructor-entry",
+        "sequence": 3,
+        "uptime": 89821.58941475001
+      }
+    },
+    "imageEventCount": 0
+  },
+  "after": {
+    "recordCount": 7,
+    "lastSequence": 7,
+    "readiness": {
+      "make": {
+        "complete": true,
+        "epoch": 1791008023.4592052,
+        "event": "hand-lifecycle",
+        "handCameraID": "ObjectIdentifier(0x00000001174436e0)",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeToken": "09B898BC-FE4A-44F7-BB93-B8E6EED60ED6",
+        "handRootID": "ObjectIdentifier(0x00000001174436a0)",
+        "lifecycleEvent": "make-entry",
+        "sequence": 5,
+        "uptime": 89821.68535120833,
+        "viewToken": "36B95046-6480-4F0A-B544-2B91066F4286"
+      },
+      "fit": {
+        "allDepthsFinite": true,
+        "allDepthsInsideUnchangedClips": true,
+        "cameraEvent": "reset-fitted",
+        "cameraTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.959770917892456,
+          -0.28078407049179077,
+          0,
+          0,
+          0.28078407049179077,
+          0.959770917892456,
+          0,
+          0,
+          3.961261034011841,
+          9.515283584594727,
+          1
+        ],
+        "complete": true,
+        "epoch": 1791008023.724596,
+        "event": "hand-camera",
+        "far": 100,
+        "framingVertexCount": 37284,
+        "handCameraID": "ObjectIdentifier(0x00000001174436e0)",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeToken": "09B898BC-FE4A-44F7-BB93-B8E6EED60ED6",
+        "maximumDepth": 10.936546325683594,
+        "minimumDepth": 8.617655754089355,
+        "near": 0.10000000149011612,
+        "orthographicPresent": true,
+        "orthographicScale": 2.5384838581085205,
+        "perspectivePresent": false,
+        "sequence": 7,
+        "uptime": 89821.95074454167
+      },
+      "constructor": {
+        "complete": true,
+        "epoch": 1791008023.363268,
+        "event": "hand-lifecycle",
+        "handCameraID": "ObjectIdentifier(0x00000001174436e0)",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 0,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeToken": "09B898BC-FE4A-44F7-BB93-B8E6EED60ED6",
+        "handRootID": "ObjectIdentifier(0x00000001174436a0)",
+        "lifecycleEvent": "constructor-entry",
+        "sequence": 3,
+        "uptime": 89821.58941475001
+      }
+    },
+    "imageEventCount": 0
+  },
+  "scope": "App event counts only; not GPU-idle proof"
+}

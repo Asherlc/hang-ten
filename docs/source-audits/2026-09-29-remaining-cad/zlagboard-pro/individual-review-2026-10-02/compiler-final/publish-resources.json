@@ -1,0 +1,14 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "stage": "publish",
+  "exactTemporaryDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/temporary-placid-badger-cad-second-half-publish",
+  "childPID": 91036,
+  "created": true,
+  "command": [
+    "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/publish-freecad.py"
+  ],
+  "sourceSHA256Before": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+  "verifiedTemporaryDirectoryDeleted": true,
+  "childExited": true
+}

@@ -1,0 +1,76 @@
+{
+  "owner": "placid-badger",
+  "ciRunID": 37151709739,
+  "ciJobID": 111286912572,
+  "headSHA": "4d010a76003a24c8f6d22f02e5b159eea1ee7d92",
+  "jobURL": "https://github.com/Asherlc/hang-ten/actions/runs/37151709739/job/111286912572",
+  "logPath": ".context/placid-badger/ci-fix-2026-10-03/swift/unit-job-111286912572.log",
+  "logSHA256": "f2a83421d330f2212d62546f3192dc4b7b8c1a70c29eb24be32b657674b459c9",
+  "failureLines": [
+    {
+      "line": 7375,
+      "text": "Test (iOS Simulator: HangTenTests)\tRun XCTest suite\t2026-10-03T20:55:45.8356220Z /Users/runner/work/hang-ten/hang-ten/HangTenTests/SuspendedBoardPresentationTests.swift:103: error: -[HangTenTests.SuspendedBoardPresentationTests testSeatedPentaSourceLoadsInTheProductionScene] : XCTAssertEqualWithAccuracy failed: (\"4.3809414e-06\") is not equal to (\"0.0\") +/- (\"1e-06\")"
+    },
+    {
+      "line": 7376,
+      "text": "Test (iOS Simulator: HangTenTests)\tRun XCTest suite\t2026-10-03T20:55:45.8357150Z /Users/runner/work/hang-ten/hang-ten/HangTenTests/SuspendedBoardPresentationTests.swift:103: error: -[HangTenTests.SuspendedBoardPresentationTests testSeatedPentaSourceLoadsInTheProductionScene] : XCTAssertEqualWithAccuracy failed: (\"-4.3809414e-06\") is not equal to (\"0.0\") +/- (\"1e-06\")"
+    }
+  ],
+  "failingTest": "HangTenTests/SuspendedBoardPresentationTests/testSeatedPentaSourceLoadsInTheProductionScene",
+  "failedAssertions": 2,
+  "testSuiteExecuted": 1478,
+  "testSuiteSkipped": 3,
+  "testSuiteDurationSeconds": 531.355,
+  "testPhaseDurationSeconds": 695,
+  "buildDurationSeconds": 514,
+  "testPhaseBudgetSeconds": 1076,
+  "liveSettledTestPassed": true,
+  "liveSettledTestDurationSeconds": 9.906,
+  "clavelliumPhysicsSuitePassed": true,
+  "clavelliumDurationsSeconds": {
+    "determinismAndHalfTimeStep": 41.884,
+    "loadSeatsCordStartingAway": 11.778,
+    "physicalRotationsRepeatedReversals": 230.258,
+    "uprightHugsUpperPassage": 10.417
+  },
+  "actualOptimization": "-O with -assert-config Debug",
+  "descriptorBoundsX": [
+    -0.113304302,
+    0.113313064
+  ],
+  "authoredBoundsMidpointX": 4.381000000004687e-06,
+  "FloatSourceMidpointX": 4.381000053399475e-06,
+  "FloatPairBoundsMidpointX": 4.380941390991211e-06,
+  "reportedCIPrimaryCameraX": 4.3809414e-06,
+  "reportedCIReverseCameraX": -4.3809414e-06,
+  "floatMidpointDifferenceMeters": 5.866240826435387e-11,
+  "rootCause": "The test hardcodes origin-centered camera framing despite the accepted native descriptor having a small nonzero X bounds center. Production correctly frames the posed complete pair bounds; reverse changes the center sign. Native loop x coordinates stay inside those extrema.",
+  "change": "Only the authorized test method: expect xDirection * native descriptor midpoint at unchanged 1e-6 accuracy; retain existing instance ownership/count/spacing/pose assertions.",
+  "regressionMutationCaught": "Incorrectly centering the current native pair at x=0 now fails the strict authored-center expectation by 4.381e-6 m, above its 1e-6 tolerance.",
+  "relatedUnitFilter": "HangTenTests/SuspendedBoardPresentationTests/testNativeCADPentaInstancesKeepTheirAuthoredPoseAndInextensibleLoop",
+  "scopedDiffWhitespaceCheck": "PASS",
+  "localXCTestVerification": "PENDING_ROOT_OWNED_RUN",
+  "priorLocalAttempt": {
+    "path": ".context/placid-badger/runtime-final-2026-10-03/commands/full-green.log",
+    "summaryPath": ".context/placid-badger/runtime-final-2026-10-03/full-attempt-summary.json",
+    "wholeAttemptTimedOutSeconds": 1200,
+    "lastStartedTest": "ClavelliumRopePhysicsTests/testDeterminismAndHalfTimeStep",
+    "liveSettledPredicateTimeoutSeconds": 30,
+    "liveSettledTestTotalSeconds": 76.159,
+    "failures": [
+      "unfulfilled settled predicate",
+      "settled flag false",
+      "frameNotifications 0 instead of 1"
+    ],
+    "causalLimit": "The prior record does not distinguish an over-budget numerical solve from a rejected/stale delivery. maxDuration=5 is simulation time, up to 1200 solver steps, not a five-second wall timeout. This completed optimized CI run demonstrates the unchanged live test and strict physics suite can pass without a render host or skipped/stubbed physics."
+  },
+  "inputSHA256": {
+    "Hangboards/yy-penta-evo/assets/primary.model.json": "b0cd578994a9290d8bd52441ac615c3d8b20b059144b2dadcb85b733c566d764",
+    "Hangboards/yy-penta-evo/suspension.json": "e419f73232d56bdf29b609f94316cf8b6fc1db215c0423a6348841ddd9714c8f",
+    "HangTenTests/SuspendedBoardPresentationTests.swift": "68d1a7c7a47b4209d95841b9f96391c2b0c4b0b2df618cb127df46bddeb05d5c",
+    "HangTen/Models/BoardModelRealityTypes.swift": "dfb079b42c054c29f9c9719721c96face6f573db8e7c66792cc755d22ca5bfc4",
+    "HangTen/Models/LiveRopeController.swift": "464db176a840c98d99afaaf182811df804d9aaa70a2d92f1aca0f2bcdebfbfbe",
+    ".github/workflows/ci.yml": "a10d59f89e069b629136268b81dd7f06c034a119f4c89366f1e0797f1af4c18c"
+  },
+  "externalResourcesCreated": []
+}

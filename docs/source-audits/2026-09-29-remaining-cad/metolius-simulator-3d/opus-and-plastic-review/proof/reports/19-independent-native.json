@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "native-check-b722",
+  "timeoutSeconds": 300,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_native_candidate.py",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/metolius-simulator-3d.FCStd",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/native-check-b722.json"
+  ],
+  "ownedProcessGroup": 62621,
+  "exitCode": 0,
+  "elapsedSeconds": 170.95844537502853,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

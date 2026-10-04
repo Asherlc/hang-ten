@@ -1,0 +1,189 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "96137",
+      "-o",
+      "pid=,command="
+    ],
+    "startEpoch": 1791010234.6292632,
+    "startMonotonic": 91198.776126291,
+    "owner": "placid-badger-cad-second-half",
+    "commandLimitSeconds": 20,
+    "pid": 43249,
+    "parentPID": 43247,
+    "exitStatus": 0,
+    "endEpoch": 1791010234.654322,
+    "endMonotonic": 91198.801186333
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "app"
+    ],
+    "startEpoch": 1791010234.6550741,
+    "startMonotonic": 91198.801937541,
+    "owner": "placid-badger-cad-second-half",
+    "commandLimitSeconds": 20,
+    "pid": 43251,
+    "parentPID": 43247,
+    "exitStatus": 0,
+    "endEpoch": 1791010234.8492649,
+    "endMonotonic": 91198.996129958
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "data"
+    ],
+    "startEpoch": 1791010234.8811069,
+    "startMonotonic": 91199.027971916,
+    "owner": "placid-badger-cad-second-half",
+    "commandLimitSeconds": 20,
+    "pid": 43261,
+    "parentPID": 43247,
+    "exitStatus": 0,
+    "endEpoch": 1791010235.074831,
+    "endMonotonic": 91199.221697083
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791010235.0766752,
+    "startMonotonic": 91199.223540625,
+    "owner": "placid-badger-cad-second-half",
+    "commandLimitSeconds": 20,
+    "pid": 43284,
+    "parentPID": 43247,
+    "exitStatus": 0,
+    "endEpoch": 1791010235.371659,
+    "endMonotonic": 91199.518526791
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "openurl",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "hangten://plan/research.max-hangs/workout"
+    ],
+    "startEpoch": 1791010239.45485,
+    "startMonotonic": 91203.601737041,
+    "owner": "placid-badger-cad-second-half",
+    "commandLimitSeconds": 20,
+    "pid": 43338,
+    "parentPID": 43247,
+    "exitStatus": 0,
+    "endEpoch": 1791010239.671914,
+    "endMonotonic": 91203.818802708
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-a-landscape/launch-initial.png"
+    ],
+    "startEpoch": 1791010239.673602,
+    "startMonotonic": 91203.820491625,
+    "owner": "placid-badger-cad-second-half",
+    "commandLimitSeconds": 20,
+    "pid": 43357,
+    "parentPID": 43247,
+    "exitStatus": 0,
+    "endEpoch": 1791010240.1583948,
+    "endMonotonic": 91204.305286291
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-a-landscape/phase-0-active-plus-0.25.png"
+    ],
+    "startEpoch": 1791010243.42006,
+    "startMonotonic": 91207.566965916,
+    "owner": "placid-badger-cad-second-half",
+    "commandLimitSeconds": 20,
+    "pid": 43376,
+    "parentPID": 43247,
+    "exitStatus": 0,
+    "endEpoch": 1791010243.90463,
+    "endMonotonic": 91208.051539875
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "terminate",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791010243.910812,
+    "startMonotonic": 91208.057720166,
+    "owner": "placid-badger-cad-second-half",
+    "commandLimitSeconds": 10,
+    "pid": 43387,
+    "parentPID": 43247,
+    "exitStatus": 0,
+    "endEpoch": 1791010244.1379478,
+    "endMonotonic": 91208.284857916
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "43294",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791010244.138651,
+    "startMonotonic": 91208.285560083,
+    "owner": "placid-badger-cad-second-half",
+    "commandLimitSeconds": 3,
+    "pid": 43401,
+    "parentPID": 43247,
+    "exitStatus": 1,
+    "endEpoch": 1791010244.1637802,
+    "endMonotonic": 91208.310690083
+  }
+]

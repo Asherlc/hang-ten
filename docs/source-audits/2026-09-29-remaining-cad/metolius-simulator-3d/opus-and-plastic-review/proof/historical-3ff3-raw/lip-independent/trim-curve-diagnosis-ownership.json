@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "name": "trim-curve-diagnosis",
+  "timeoutSeconds": 90,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/diagnose_trim_curves.py"
+  ],
+  "ownedProcessGroup": 53910,
+  "exitCode": 0,
+  "elapsedSeconds": 3.2319190410198644,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

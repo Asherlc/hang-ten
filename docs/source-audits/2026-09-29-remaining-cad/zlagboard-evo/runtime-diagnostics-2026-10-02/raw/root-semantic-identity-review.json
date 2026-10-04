@@ -1,0 +1,22 @@
+{
+  "reviewer": "root",
+  "method": "Whole screenshots opened individually; no pixel measurement or classification",
+  "productionFixEstablished": false,
+  "observations": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/identity-semantic-a-landscape/active-settled.png",
+      "sha256": "1ed6791f9419a51960a74c5fdd4b74da337a2cddf12a39ca02e5c1643ae7aea5",
+      "observation": "Hang 00:05: board and hands absent in this exact frame."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/identity-semantic-a-landscape/following-rest-settled.png",
+      "sha256": "42a255fb9764d4e1ba030746c71cf9ec3feecbfdc5c2d7fb53cf133ad7583f36",
+      "observation": "Rest 02:56: board and hands absent."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/identity-semantic-a-landscape/next-active-timed-2.png",
+      "sha256": "e2253e9482728001daf085a1dbb2d78ecd32a07fd8fdd2b18f73a315da171d6a",
+      "observation": "Hang 00:06: board absent; hands visible."
+    }
+  ]
+}

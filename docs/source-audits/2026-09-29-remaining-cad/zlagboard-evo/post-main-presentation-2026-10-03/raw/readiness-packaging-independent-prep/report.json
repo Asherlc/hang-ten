@@ -1,0 +1,248 @@
+{
+  "scope": "Independent read-only source/preservation review and scratch archive extension; no current runtime capture inspection, no export/tests/resource actions.",
+  "head": "a314f39c03121465b493da6f45e49fa7c928b1cc",
+  "changedTrackedPaths": [
+    "HangTen/Views/BoardMapView.swift",
+    "HangTen/Views/BoardModelView.swift",
+    "HangTen/Views/GripHandModelView.swift",
+    "HangTen/Views/WorkoutView.swift",
+    "HangTenTests/WorkoutTimelineTests.swift"
+  ],
+  "onlyFiveAuthorizedPaths": true,
+  "sourceHashes": [
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "738908c478aa2303f8b399d94292ae7aa6b2179de2a26e68a58c3b41af176aca"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "ade41f67877d8c6c19083b36587aa82489d5debd98eef17881d9b527cdca4d75"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "2af37de375d637f12418a77749f78ff92bb00048915695f62f233baedc474abb"
+    },
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "sha256": "417a4b27d7ae0ce1d1fa7f4dee440fadcea12d7a8c1b7a33a285edac61709e8f"
+    },
+    {
+      "path": "HangTenTests/WorkoutTimelineTests.swift",
+      "sha256": "521dea85b36198b2a58464fef3a89bfdbbd22df1d26ff3b06e7acc928647cd8c"
+    }
+  ],
+  "canonical22": [
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.model.json",
+      "sha256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.usdz",
+      "sha256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/yy-baguette/suspension.json",
+      "sha256": "c69c11dc9708bc1e2dc9f235004f55a7c0ecd524fdf5b073c40dda1d9b0c956f",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/yy-baguette/yy-baguette.FCStd",
+      "sha256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.model.json",
+      "sha256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.usdz",
+      "sha256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/suspension.json",
+      "sha256": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd",
+      "sha256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.model.json",
+      "sha256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.usdz",
+      "sha256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/suspension.json",
+      "sha256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+      "sha256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.model.json",
+      "sha256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.usdz",
+      "sha256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/yy-travelboard/suspension.json",
+      "sha256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/yy-travelboard/yy-travelboard.FCStd",
+      "sha256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": true
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.model.json",
+      "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.usdz",
+      "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/zlagboard-evo.FCStd",
+      "sha256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": true
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.usdz",
+      "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": null
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
+      "sha256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "matchesRetainedMainSync": true,
+      "isPointer": false,
+      "realZip": true
+    }
+  ],
+  "allNativePreserved": true,
+  "sixFCStdRealZIP": true,
+  "allCanonicalHangboardsUnchanged": true,
+  "queueSHA256": "e259be7d20700af24a253606a51b7b28e0d0c83ce221e863cf0383e935a2ffb3",
+  "entireQueueExactHEAD": true,
+  "protectedMainSource": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "10e4fe7d6d945cc0ad22623113e51c4bccc280a949c7408c3fbeaf9a25861747",
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutActivityRecording.swift",
+      "sha256": "85b99c73ee4fb02cd4e3746cf38c8cfdb3549641a0c8112ffa37ee4b25b1e0ac",
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTen/Models/WorkoutTimeline.swift",
+      "sha256": "d5e570e784a48019552ab6c792208d490377682f01e40e75c900a76832e449a3",
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTen/Resources/PlanLibrary.json",
+      "sha256": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1",
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTenTests/BoardModelRealityTests.swift",
+      "sha256": "7e6a250ba784952ef85a38842f4f1e8b58ffdd6a60ab6a4a7ae40402a9575ff0",
+      "exactHEAD": true
+    }
+  ],
+  "timelineTestsAppendOnly": true,
+  "contractReview": [
+    "Main task/cursor resolver, authored routine content and geometric camera/cord solver source are byte-identical to HEAD. All existing BoardModelRealityTests methods are untouched.",
+    "Hand source additions wrap existing RealityView with Simulator presentation policy and publish preparation preferences; underlying authored mesh/pose application, materials, camera fit/orbit and shaders are not changed by this diff.",
+    "BoardModel additions report positive viewport/current selection plus same root/camera Scene after existing applySync, and extend Simulator presentation matching. They do not edit native package bindings, finishes or USDZ materials.",
+    "Workout introduces a first-start preparation gate before existing audio/countdown flow, preserving taskIndex/selectedHandSide resolution. Initial countdown keeps authored hand hosts mounted but hidden/inaccessible; this deliberately changes startup lifetime/timing, not routine durations.",
+    "Ready means mounted scene synchronization, not GPU presented-frame proof. Scalar gate tests cannot establish actual visual correctness or preference delivery under lifecycle changes.",
+    "Unavailable model/hand remains pending by design; no timeout recovery is provided here. The disabled DEBUG frame-image branch has no readiness reporter, so its use is outside this default-live validation. No scope expansion into a fallback implementation."
+  ],
+  "retainedTests": {
+    "path": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-final-green",
+    "exitSHA256": "b91d66320adb18cd6dbd44a4304dff8cc72625f7f5528991b038ed5f42756dad",
+    "stdoutSHA256": "15222c588ff43a1df567ca9d45a7d4967e3829050f325834acb362918ea4e2e3",
+    "reported": "82tests,0failures; TEST SUCCEEDED",
+    "runByThisAudit": false
+  },
+  "necessaryPackagingEdits": [
+    "No whitelist extension needed for readiness names: existing recursion already covers new readiness-* source freezes, helpers, builds and raw logs.",
+    "Use proposed additive v2 gate to defer test directories until bundle-archive.json and bundle-deletion.json exist; readiness-final-green currently lacks these. Preserve exact raw xcresult ZIP+member verification before controller cleanup.",
+    "Final archive must reject every deferred active capture/test directory, not just historical hand-policy-control. No invalid capture is required to pass: finalized completion plus exact cleanup is sufficient.",
+    "Include current5-file candidate source freeze, focused test source-reference, red/green/revised/token/final raw logs and result archives, implementation review revisions and field-correction artifacts. Preserve failed-source timing qualification.",
+    "Keep *.xcresult.zip under existing GitLFS policy; do not add unpacked result/DD trees. Final cleanup records and whole runtime reviews are still required before final packet/readiness conclusion."
+  ],
+  "archiveScriptExecuted": false,
+  "archiveExtensionSHA256": "0530065f702c5fb6dce79fe98d0f20f0f34201aceef824d414cdf6c542de6316",
+  "runtimeRepairClaim": false
+}

@@ -1,0 +1,134 @@
+{
+  "accessSections": [
+    {
+      "zMm": -20,
+      "accessWitnessYMm": -55,
+      "rightOpposingSurfaces": [
+        {
+          "x": 331.1028804727899,
+          "normals": [
+            {
+              "face": "Face128",
+              "normal": [
+                -0.9846519073784376,
+                -0.0,
+                -0.17452971465055683
+              ]
+            }
+          ]
+        },
+        {
+          "x": 362.6974918642499,
+          "normals": [
+            {
+              "face": "Face152",
+              "normal": [
+                0.8686486756328418,
+                0.0,
+                0.4954285804445582
+              ]
+            }
+          ]
+        }
+      ],
+      "localPinchWidthMm": 31.594611391460035,
+      "priorFrontYMm": -43.46142578125,
+      "railFrontYMm": -67.0,
+      "forwardProjectionMm": 23.53857421875,
+      "leftExactMirror": true
+    },
+    {
+      "zMm": -60,
+      "accessWitnessYMm": -55,
+      "rightOpposingSurfaces": [
+        {
+          "x": 334.77218254251886,
+          "normals": [
+            {
+              "face": "Face162",
+              "normal": [
+                -0.9999438554192099,
+                -0.0,
+                -0.010596509301001372
+              ]
+            }
+          ]
+        },
+        {
+          "x": 384.74115078790214,
+          "normals": [
+            {
+              "face": "Face152",
+              "normal": [
+                0.8861319363185839,
+                0.0,
+                0.4634330495727266
+              ]
+            }
+          ]
+        }
+      ],
+      "localPinchWidthMm": 49.96896824538328,
+      "priorFrontYMm": -36.01681632653061,
+      "railFrontYMm": -67.00000000000001,
+      "forwardProjectionMm": 30.983183673469405,
+      "leftExactMirror": true
+    },
+    {
+      "zMm": -100,
+      "accessWitnessYMm": -55,
+      "rightOpposingSurfaces": [
+        {
+          "x": 334.6278055848586,
+          "normals": [
+            {
+              "face": "Face162",
+              "normal": [
+                -0.9998293294254951,
+                -0.0,
+                -0.018474631811346582
+              ]
+            }
+          ]
+        },
+        {
+          "x": 403.6362261871374,
+          "normals": [
+            {
+              "face": "Face152",
+              "normal": [
+                0.9270441877074636,
+                0.0,
+                0.3749520956573104
+              ]
+            }
+          ]
+        }
+      ],
+      "localPinchWidthMm": 69.00842060227882,
+      "priorFrontYMm": -28.54757988953733,
+      "railFrontYMm": -67.00000000000003,
+      "forwardProjectionMm": 38.4524201104627,
+      "leftExactMirror": true
+    }
+  ],
+  "railNativeEdit": {
+    "parameter": "PinchRailFrontDepth",
+    "before": 67,
+    "after": 65,
+    "bodyChanged": true,
+    "changedContacts": [
+      "pinch-right",
+      "pinch-left"
+    ],
+    "allContactGeometryRestored": true,
+    "sourceBytesUnchanged": true
+  },
+  "description": "Sections and normals measured only from authored CAD solid, not reference imagery. At y=-55 mm each rail exposes opposing inner/outer final-solid contact surfaces; baseline has air at the same section. All rail profile, width, projection and rounding values are operator-selected display estimates."
+}
+
+								
+								
+								
+								
+								

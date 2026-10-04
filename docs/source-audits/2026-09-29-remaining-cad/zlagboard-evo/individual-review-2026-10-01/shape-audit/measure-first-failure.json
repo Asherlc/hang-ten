@@ -1,0 +1,6 @@
+{
+  "exitCode": 3,
+  "exception": "AttributeError: 'Base.BoundBox' object has no attribute 'MinPoint'",
+  "location": "measure.py:16",
+  "effect": "Read-only measurement aborted before geometry output; native source not saved."
+}

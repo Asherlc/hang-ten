@@ -1,0 +1,12 @@
+{
+  "captureCompleted": false,
+  "plannedCaptures": 58,
+  "actualCaptures": 22,
+  "errors": [
+    "Host clock drift; no timing comparison"
+  ],
+  "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+  "CPUBracketsAvailable": false,
+  "phaseTimingsKnown": false,
+  "noRetries": true
+}

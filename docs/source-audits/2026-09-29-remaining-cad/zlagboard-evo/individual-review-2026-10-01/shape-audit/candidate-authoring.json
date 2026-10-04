@@ -1,0 +1,1222 @@
+{
+  "startingSourceSHA256": "af60f1976922034ad4bf46ab9d899701ff6784b690996d080bebea6b9091e90a",
+  "valid": true,
+  "solids": 1,
+  "volumeBefore": 2672550.578727857,
+  "volumeAfter": 2672702.717300137,
+  "sideEdges": [
+    162,
+    167,
+    173,
+    175,
+    174,
+    180
+  ],
+  "frontEdges": [
+    4,
+    10,
+    16,
+    22,
+    25
+  ],
+  "contacts": [
+    {
+      "contactID": "edge-30-left",
+      "faces": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291,
+        396
+      ],
+      "areaMM2": 9208.358586104025,
+      "priorAreaMM2": 9208.358586104025,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "sloper-edge-30-left",
+      "faces": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        397
+      ],
+      "areaMM2": 6849.957059838389,
+      "priorAreaMM2": 6849.957059838389,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "sloper-edge-25-left",
+      "faces": [
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        398
+      ],
+      "areaMM2": 4282.882138456849,
+      "priorAreaMM2": 4282.882138456849,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "edge-35-center",
+      "faces": [
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        332,
+        333,
+        334,
+        335,
+        336,
+        337,
+        338,
+        339,
+        402
+      ],
+      "areaMM2": 10094.734506817857,
+      "priorAreaMM2": 10094.734506817857,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "sloper-edge-25-right",
+      "faces": [
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        340,
+        341,
+        342,
+        343,
+        344,
+        345,
+        346,
+        347,
+        403
+      ],
+      "areaMM2": 4282.88213845685,
+      "priorAreaMM2": 4282.88213845685,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "sloper-edge-30-right",
+      "faces": [
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235,
+        348,
+        349,
+        350,
+        351,
+        352,
+        353,
+        354,
+        355,
+        404
+      ],
+      "areaMM2": 6849.957059838391,
+      "priorAreaMM2": 6849.957059838391,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "edge-30-right",
+      "faces": [
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        356,
+        357,
+        358,
+        359,
+        360,
+        361,
+        362,
+        363,
+        405
+      ],
+      "areaMM2": 9208.358586104026,
+      "priorAreaMM2": 9208.358586104025,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "edge-20-left",
+      "faces": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        308,
+        309,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315,
+        399
+      ],
+      "areaMM2": 6982.8719084578615,
+      "priorAreaMM2": 6982.8719084578615,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "sloper-edge-25-lower-left",
+      "faces": [
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        400
+      ],
+      "areaMM2": 6003.323185856897,
+      "priorAreaMM2": 6003.323185856897,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "edge-30-inner-left",
+      "faces": [
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        324,
+        325,
+        326,
+        327,
+        328,
+        329,
+        330,
+        331,
+        401
+      ],
+      "areaMM2": 4852.234950949861,
+      "priorAreaMM2": 4852.234950949861,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "sloper-edge-30-center",
+      "faces": [
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        364,
+        365,
+        366,
+        367,
+        368,
+        369,
+        370,
+        371,
+        406
+      ],
+      "areaMM2": 9124.28605429095,
+      "priorAreaMM2": 9124.28605429095,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "edge-30-inner-right",
+      "faces": [
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259,
+        372,
+        373,
+        374,
+        375,
+        376,
+        377,
+        378,
+        379,
+        407
+      ],
+      "areaMM2": 4852.234950949861,
+      "priorAreaMM2": 4852.234950949861,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "sloper-edge-25-lower-right",
+      "faces": [
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        380,
+        381,
+        382,
+        383,
+        384,
+        385,
+        386,
+        387,
+        408
+      ],
+      "areaMM2": 6003.3231858569,
+      "priorAreaMM2": 6003.3231858569,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "edge-20-right",
+      "faces": [
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        388,
+        389,
+        390,
+        391,
+        392,
+        393,
+        394,
+        395,
+        409
+      ],
+      "areaMM2": 6982.8719084578615,
+      "priorAreaMM2": 6982.8719084578615,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": true
+    },
+    {
+      "contactID": "top-jug-left",
+      "faces": [
+        2,
+        4,
+        140,
+        141,
+        144,
+        276,
+        277
+      ],
+      "areaMM2": 4135.630491667068,
+      "priorAreaMM2": 2035.4648047722026,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": false
+    },
+    {
+      "contactID": "top-sloper-32-left",
+      "faces": [
+        5,
+        7,
+        9,
+        145,
+        146,
+        147,
+        280
+      ],
+      "areaMM2": 4600.905535069923,
+      "priorAreaMM2": 4457.294364708725,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": false
+    },
+    {
+      "contactID": "top-sloper-20-left",
+      "faces": [
+        13,
+        15,
+        148,
+        150
+      ],
+      "areaMM2": 3659.8457926572505,
+      "priorAreaMM2": 3575.637315519065,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": false
+    },
+    {
+      "contactID": "top-sloper-jug-center",
+      "faces": [
+        19,
+        153
+      ],
+      "areaMM2": 8217.710617439545,
+      "priorAreaMM2": 8103.104362848246,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": false
+    },
+    {
+      "contactID": "top-sloper-20-right",
+      "faces": [
+        23,
+        25,
+        159,
+        161
+      ],
+      "areaMM2": 3659.845792657249,
+      "priorAreaMM2": 3575.637315519065,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": false
+    },
+    {
+      "contactID": "top-sloper-32-right",
+      "faces": [
+        22,
+        24,
+        26,
+        158,
+        160,
+        162,
+        283
+      ],
+      "areaMM2": 4600.905624037345,
+      "priorAreaMM2": 4457.294364708725,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": false
+    },
+    {
+      "contactID": "top-jug-right",
+      "faces": [
+        16,
+        18,
+        151,
+        152,
+        155,
+        281,
+        282
+      ],
+      "areaMM2": 4135.624422464484,
+      "priorAreaMM2": 2035.4620758853287,
+      "allFacesExplicitFinalSkin": true,
+      "unchangedPocket": false
+    }
+  ],
+  "addedOrTrimmedTopFaces": [
+    {
+      "face": 2,
+      "contactID": "top-jug-left",
+      "areaMM2": 1430.3251191585798,
+      "centerNativeMM": [
+        -302.0986790867975,
+        -33.61779307662572,
+        58.56740774827503
+      ],
+      "normalNative": [
+        0.0,
+        -0.2330339502367123,
+        0.9724686000262802
+      ],
+      "type": "<class 'Part.SurfaceOfExtrusion'>"
+    },
+    {
+      "face": 4,
+      "contactID": "top-jug-left",
+      "areaMM2": 1051.4802103067432,
+      "centerNativeMM": [
+        -344.51159150533294,
+        -19.97490320244144,
+        52.67761334452298
+      ],
+      "normalNative": [
+        -0.7071067811865472,
+        1.555634918610405e-16,
+        0.7071067811865478
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 5,
+      "contactID": "top-sloper-32-left",
+      "areaMM2": 5.286153072453291,
+      "centerNativeMM": [
+        -264.69573919125895,
+        -41.77265922524078,
+        34.97571799967191
+      ],
+      "normalNative": [
+        0.4279972667859053,
+        -0.8297845438073398,
+        0.35815632129314656
+      ],
+      "type": "<class 'Part.BSplineSurface'>"
+    },
+    {
+      "face": 7,
+      "contactID": "top-sloper-32-left",
+      "areaMM2": 87.05702308947714,
+      "centerNativeMM": [
+        -220.00000000000003,
+        -41.837751322997725,
+        33.665551309559646
+      ],
+      "normalNative": [
+        -0.0,
+        -0.8746197071393959,
+        0.48480962024633695
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 9,
+      "contactID": "top-sloper-32-left",
+      "areaMM2": 5.28615307245402,
+      "centerNativeMM": [
+        -175.30426080874113,
+        -41.77265922524081,
+        34.97571799967182
+      ],
+      "normalNative": [
+        -0.42799726678594036,
+        -0.8297845438072978,
+        0.3581563212932021
+      ],
+      "type": "<class 'Part.BSplineSurface'>"
+    },
+    {
+      "face": 13,
+      "contactID": "top-sloper-20-left",
+      "areaMM2": 94.73122654787345,
+      "centerNativeMM": [
+        -135.769787586709,
+        -41.76846722633624,
+        44.552617788832485
+      ],
+      "normalNative": [
+        -0.0,
+        -0.8191520442889272,
+        0.5735764363511385
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 15,
+      "contactID": "top-sloper-20-left",
+      "areaMM2": 5.340289519308332,
+      "centerNativeMM": [
+        -95.38267293872518,
+        -41.74352089722173,
+        45.58776756395199
+      ],
+      "normalNative": [
+        -0.44707049826461,
+        -0.7886461690838303,
+        0.42209618521236586
+      ],
+      "type": "<class 'Part.BSplineSurface'>"
+    },
+    {
+      "face": 16,
+      "contactID": "top-jug-right",
+      "areaMM2": 1051.47687292941,
+      "centerNativeMM": [
+        344.51158975889115,
+        -19.974874403048318,
+        52.6776147580618
+      ],
+      "normalNative": [
+        0.7071067811865471,
+        1.5556349186104053e-16,
+        0.707106781186548
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 18,
+      "contactID": "top-jug-right",
+      "areaMM2": 1430.3224370440566,
+      "centerNativeMM": [
+        302.0986200036547,
+        -33.61779200627482,
+        58.567407984510226
+      ],
+      "normalNative": [
+        0.0,
+        -0.23303395023671195,
+        0.9724686000262804
+      ],
+      "type": "<class 'Part.SurfaceOfExtrusion'>"
+    },
+    {
+      "face": 19,
+      "contactID": "top-sloper-jug-center",
+      "areaMM2": 264.1502231437931,
+      "centerNativeMM": [
+        -8.984020459740297e-13,
+        -41.704575228675736,
+        52.34793365135961
+      ],
+      "normalNative": [
+        -0.0,
+        -0.7660444431189781,
+        0.6427876096865394
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 22,
+      "contactID": "top-sloper-32-right",
+      "areaMM2": 5.286153072453882,
+      "centerNativeMM": [
+        264.6957391912587,
+        -41.7726592252408,
+        34.975717999671616
+      ],
+      "normalNative": [
+        -0.4279972667858244,
+        -0.8297845438073813,
+        0.358156321293147
+      ],
+      "type": "<class 'Part.BSplineSurface'>"
+    },
+    {
+      "face": 23,
+      "contactID": "top-sloper-20-right",
+      "areaMM2": 5.340289519307516,
+      "centerNativeMM": [
+        95.38267293872495,
+        -41.7435208972217,
+        45.58776756395218
+      ],
+      "normalNative": [
+        0.44707049826463957,
+        -0.7886461690838448,
+        0.4220961852123075
+      ],
+      "type": "<class 'Part.BSplineSurface'>"
+    },
+    {
+      "face": 24,
+      "contactID": "top-sloper-32-right",
+      "areaMM2": 87.05702308947714,
+      "centerNativeMM": [
+        220.00000000000003,
+        -41.837751322997725,
+        33.665551309559646
+      ],
+      "normalNative": [
+        -0.0,
+        -0.8746197071393959,
+        0.48480962024633695
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 25,
+      "contactID": "top-sloper-20-right",
+      "areaMM2": 94.73122654787295,
+      "centerNativeMM": [
+        135.7697875867088,
+        -41.76846722633624,
+        44.552617788832485
+      ],
+      "normalNative": [
+        -0.0,
+        -0.819152044288927,
+        0.5735764363511386
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 26,
+      "contactID": "top-sloper-32-right",
+      "areaMM2": 5.286153072455235,
+      "centerNativeMM": [
+        175.30426080874142,
+        -41.772659225240844,
+        34.975717999671524
+      ],
+      "normalNative": [
+        0.4279972667860563,
+        -0.8297845438072488,
+        0.35815632129317676
+      ],
+      "type": "<class 'Part.BSplineSurface'>"
+    },
+    {
+      "face": 140,
+      "contactID": "top-jug-left",
+      "areaMM2": 1014.9260308492387,
+      "centerNativeMM": [
+        -299.0,
+        -15.936166432960448,
+        60.0
+      ],
+      "normalNative": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "type": "<class 'Part.Plane'>"
+    },
+    {
+      "face": 141,
+      "contactID": "top-jug-left",
+      "areaMM2": 30.274327851068943,
+      "centerNativeMM": [
+        -265.37050493026055,
+        -33.12448547371465,
+        58.34079597495664
+      ],
+      "normalNative": [
+        0.7070425942956775,
+        -0.16362815657366767,
+        0.6879800841797247
+      ],
+      "type": "<class 'Part.BSplineSurface'>"
+    },
+    {
+      "face": 144,
+      "contactID": "top-jug-left",
+      "areaMM2": 580.3375468310487,
+      "centerNativeMM": [
+        -300.4831576353412,
+        -4.042396431407749,
+        59.61723939337525
+      ],
+      "normalNative": [
+        -0.0,
+        0.11917040944721047,
+        0.992873815503352
+      ],
+      "type": "<class 'Part.SurfaceOfExtrusion'>"
+    },
+    {
+      "face": 145,
+      "contactID": "top-sloper-32-left",
+      "areaMM2": 142.17612330203363,
+      "centerNativeMM": [
+        -264.25225928779247,
+        -22.128978950479517,
+        47.00212089467282
+      ],
+      "normalNative": [
+        0.7071067811865477,
+        -0.3747095052206851,
+        0.59966055956455
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 146,
+      "contactID": "top-sloper-32-left",
+      "areaMM2": 4214.424729683224,
+      "centerNativeMM": [
+        -220.03028346106612,
+        -20.751082642310045,
+        47.03328443788283
+      ],
+      "normalNative": [
+        0.0,
+        -0.529919264233205,
+        0.8480480961564261
+      ],
+      "type": "<class 'Part.Plane'>"
+    },
+    {
+      "face": 147,
+      "contactID": "top-sloper-32-left",
+      "areaMM2": 140.9737028660226,
+      "centerNativeMM": [
+        -175.7704912631308,
+        -22.210750316815137,
+        46.92199699626083
+      ],
+      "normalNative": [
+        -0.7071067811865388,
+        -0.37470950522068985,
+        0.5996605595645577
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 148,
+      "contactID": "top-sloper-20-left",
+      "areaMM2": 3435.7516798435,
+      "centerNativeMM": [
+        -136.04732079357439,
+        -20.64855294510435,
+        52.48454134731229
+      ],
+      "normalNative": [
+        0.0,
+        -0.34202014332566877,
+        0.9396926207859084
+      ],
+      "type": "<class 'Part.Plane'>"
+    },
+    {
+      "face": 150,
+      "contactID": "top-sloper-20-left",
+      "areaMM2": 124.0225967465685,
+      "centerNativeMM": [
+        -95.78154555371725,
+        -22.50598788390133,
+        52.51839947640723
+      ],
+      "normalNative": [
+        -0.707106781186542,
+        -0.2418447626479772,
+        0.66446302438868
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 151,
+      "contactID": "top-jug-right",
+      "areaMM2": 1014.9260308492175,
+      "centerNativeMM": [
+        298.99999999999994,
+        -15.936166432960478,
+        60.0
+      ],
+      "normalNative": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "type": "<class 'Part.Plane'>"
+    },
+    {
+      "face": 152,
+      "contactID": "top-jug-right",
+      "areaMM2": 580.3375002453828,
+      "centerNativeMM": [
+        300.48315502098194,
+        -4.04239610506555,
+        59.617239362595825
+      ],
+      "normalNative": [
+        -0.0,
+        0.11917040944720952,
+        0.9928738155033522
+      ],
+      "type": "<class 'Part.SurfaceOfExtrusion'>"
+    },
+    {
+      "face": 153,
+      "contactID": "top-sloper-jug-center",
+      "areaMM2": 7953.560394295752,
+      "centerNativeMM": [
+        -2.287012750730384e-16,
+        -20.564378230985525,
+        56.37394527638344
+      ],
+      "normalNative": [
+        0.0,
+        -0.1736481776669304,
+        0.9848077530122081
+      ],
+      "type": "<class 'Part.Plane'>"
+    },
+    {
+      "face": 155,
+      "contactID": "top-jug-right",
+      "areaMM2": 30.274327851069785,
+      "centerNativeMM": [
+        265.37050493026055,
+        -33.12448547371473,
+        58.340795974956634
+      ],
+      "normalNative": [
+        -0.7070425942956913,
+        -0.16362815657368227,
+        0.6879800841797074
+      ],
+      "type": "<class 'Part.BSplineSurface'>"
+    },
+    {
+      "face": 158,
+      "contactID": "top-sloper-32-right",
+      "areaMM2": 142.17612991206641,
+      "centerNativeMM": [
+        264.2522592466426,
+        -22.128977997304066,
+        47.00212145502974
+      ],
+      "normalNative": [
+        -0.7071067811865073,
+        -0.37470950522070656,
+        0.5996605595645844
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 159,
+      "contactID": "top-sloper-20-right",
+      "areaMM2": 124.02259674656864,
+      "centerNativeMM": [
+        95.78154555371725,
+        -22.505987883901334,
+        52.51839947640723
+      ],
+      "normalNative": [
+        0.7071067811865477,
+        -0.24184476264797528,
+        0.6644630243886747
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 160,
+      "contactID": "top-sloper-32-right",
+      "areaMM2": 4214.424699487312,
+      "centerNativeMM": [
+        220.0302831452306,
+        -20.751082659820597,
+        47.03328442694102
+      ],
+      "normalNative": [
+        0.0,
+        -0.529919264233205,
+        0.8480480961564261
+      ],
+      "type": "<class 'Part.Plane'>"
+    },
+    {
+      "face": 161,
+      "contactID": "top-sloper-20-right",
+      "areaMM2": 3435.7516798435,
+      "centerNativeMM": [
+        136.04732079357439,
+        -20.64855294510435,
+        52.48454134731229
+      ],
+      "normalNative": [
+        0.0,
+        -0.34202014332566877,
+        0.9396926207859084
+      ],
+      "type": "<class 'Part.Plane'>"
+    },
+    {
+      "face": 162,
+      "contactID": "top-sloper-32-right",
+      "areaMM2": 140.97370286602307,
+      "centerNativeMM": [
+        175.7704912631308,
+        -22.2107503168152,
+        46.921996996260795
+      ],
+      "normalNative": [
+        0.7071067811865349,
+        -0.3747095052206919,
+        0.599660559564561
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 276,
+      "contactID": "top-jug-left",
+      "areaMM2": 24.15518304888595,
+      "centerNativeMM": [
+        -265.36338022763243,
+        -15.936166432960484,
+        59.63661977236758
+      ],
+      "normalNative": [
+        0.7071067811865479,
+        0.0,
+        0.7071067811865474
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 277,
+      "contactID": "top-jug-left",
+      "areaMM2": 4.132073621502492,
+      "centerNativeMM": [
+        -265.36543555991284,
+        -6.933958364429518,
+        59.55512272856426
+      ],
+      "normalNative": [
+        0.7068019166799231,
+        0.048537772626952955,
+        0.7057443837580297
+      ],
+      "type": "<class 'Part.BSplineSurface'>"
+    },
+    {
+      "face": 280,
+      "contactID": "top-sloper-32-left",
+      "areaMM2": 5.701649984258552,
+      "centerNativeMM": [
+        -264.9745394603823,
+        -3.514023628515493,
+        59.37397454531623
+      ],
+      "normalNative": [
+        0.49294573512460826,
+        -0.09575036977792506,
+        0.8647753285737574
+      ],
+      "type": "<class 'Part.BSplineSurface'>"
+    },
+    {
+      "face": 281,
+      "contactID": "top-jug-right",
+      "areaMM2": 24.155183048886162,
+      "centerNativeMM": [
+        265.36338022763243,
+        -15.936166432960444,
+        59.63661977236758
+      ],
+      "normalNative": [
+        -0.7071067811865475,
+        -0.0,
+        0.7071067811865476
+      ],
+      "type": "<class 'Part.Cylinder'>"
+    },
+    {
+      "face": 282,
+      "contactID": "top-jug-right",
+      "areaMM2": 4.132070496461174,
+      "centerNativeMM": [
+        265.36543556504654,
+        -6.933959333986282,
+        59.555122780766126
+      ],
+      "normalNative": [
+        -0.7068018562300253,
+        0.048537829100392976,
+        0.7057444404145254
+      ],
+      "type": "<class 'Part.BSplineSurface'>"
+    },
+    {
+      "face": 283,
+      "contactID": "top-sloper-32-right",
+      "areaMM2": 5.701762537557042,
+      "centerNativeMM": [
+        264.97455300387094,
+        -3.5140476453055505,
+        59.37398040195044
+      ],
+      "normalNative": [
+        -0.4929524188609614,
+        -0.09574595597001771,
+        0.8647720073259278
+      ],
+      "type": "<class 'Part.BSplineSurface'>"
+    }
+  ],
+  "sourceUnchanged": true,
+  "nativeFeatures": [
+    "TopTroughRounds",
+    "TopLipRounds"
+  ],
+  "noSharedContactFaces": true,
+  "omittedJugCrestBeforeMM2": {
+    "left": 1030.303697983318,
+    "right": 1030.3036979832918
+  },
+  "candidateSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c"
+}

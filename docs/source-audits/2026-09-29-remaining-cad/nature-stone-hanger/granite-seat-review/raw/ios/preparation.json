@@ -1,0 +1,38 @@
+{
+  "status": "prepared-awaiting-new-final-inputs",
+  "owner": "placid-badger",
+  "resourcesCreated": false,
+  "testsRun": false,
+  "authorizationGate": "Root explicit ready message and root-created final-inputs.json must both arrive before any simulator create, build or external resource.",
+  "historicalScriptsSHA256": {
+    "preflight.py": "a9eca94efa985fb61dd220e3f4ca50d5364c656e160231147dcba7494a5aeb72",
+    "ios-session.zsh": "98ed530eac5e623e23f6663b2ed5b2648b06105fa6f0aaca3b52ceff9c6cfe31",
+    "run_xcode.py": "9b1d7c50929dc5320b5b663febdbaca26d51284be9ec4bbde76dabb3cf52116d",
+    "build_ios.py": "564e41dd97b8fedbaef32bc697099955e21441c1bc8ff1ff5b95ce2ecfb57570",
+    "install_app.py": "c21924a98fe7ceecd44661c582fa65120c7fb94ea06a786e2806ade1e1bdb626",
+    "capture_review.py": "2ba23610028ecd030c60e7b2cf84fc654d2bc699b9949b266ca69d721bce40b0",
+    "finalize_runtime.py": "f15a4c528d6b554259b25972403289ac10977324f10876faceea1e056e0703d8"
+  },
+  "capturePlan": [
+    "All eight active contact selections; normal material visible across unselected contacts in those full frames.",
+    "Close front and both side obliques of granite seat using actual drags and existing telephoto DEBUG route.",
+    "Granite then wood in same live instance; review restoration in front and oblique frames."
+  ],
+  "testClasses": [
+    "BoardModelTests",
+    "BoardModelRealityTests",
+    "BoardPackageStoreTests",
+    "SuspendedBoardPresentationTests"
+  ],
+  "cleanup": "Exact UUID registered pending then owned, EXIT/INT/TERM trap before create; exact process groups, DD/xcresult/tmp verified absent.",
+  "wrapperSyntaxVerified": true,
+  "fileSHA256": {
+    "build_ios.py": "564e41dd97b8fedbaef32bc697099955e21441c1bc8ff1ff5b95ce2ecfb57570",
+    "capture_review.py": "96a5156c400c3261d66f135f7b56d68c1400207f0b92695bb265e4c5519b8127",
+    "finalize_runtime.py": "d1acb804e9a34dbc9b8bedf85fc690b8c0e00cf092d853d0024330fb144f0ffb",
+    "install_app.py": "b60bd702ae04d0e9e817815211fe5b2cdfa2d36916ddefd699acc1400ee627e2",
+    "ios-session.zsh": "5a505e297c9aabd878a1c1c91afefbb45f2a26db43fb41ec58d54fdd0364680f",
+    "preflight.py": "7856cc9d05d84315246eddcb8dfd1e0985266f9e05756f00e164740891033e4f",
+    "run_xcode.py": "a76f574322a73592815a74e6b29494196976c0a2953f4177275f2eb908101c61"
+  }
+}

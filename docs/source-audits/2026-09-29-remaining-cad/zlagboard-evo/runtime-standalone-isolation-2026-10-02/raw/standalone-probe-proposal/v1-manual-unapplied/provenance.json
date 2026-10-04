@@ -1,0 +1,9 @@
+{
+  "status": "SCRATCH ONLY; NO APPLICATION/BUILD/RUNTIME",
+  "sourceSHA256": {
+    "HangTen/Views/RootView.swift": "d49b4b9130b998cc49a1197380756874e67505bdff1e29e63ae451f4aca89ea3",
+    "HangTen/Views/BoardModelView.swift": "acd84833c02faabf0af0fa0584d12b9d27c701d7192258bd690a30cebf80cd89",
+    "HangTen/Models/BoardModelRealityTypes.swift": "50ee645a890e2935b8419e33b9c9d3859ac7aae79350eb5c7ca5fc5ed2f97b7b"
+  },
+  "patchSHA256": "6025535d48d9fee346a45d11f4f0dd4004d937c9f6f0a4fbecfb1a3451dd3c32"
+}

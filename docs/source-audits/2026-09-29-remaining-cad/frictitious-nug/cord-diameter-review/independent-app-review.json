@@ -1,0 +1,178 @@
+{
+  "createdAt": "2026-09-30T21:23:09.522823+00:00",
+  "reviewer": "cad_wall_boards",
+  "package": "frictitious-nug",
+  "status": "passed scoped canonical-capture review",
+  "blockingFindings": [],
+  "humanAcceptance": "pending The NUG review",
+  "suspensionSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+  "generatedManifestSHA256": "a92ab8953bc5e793a3eb9c04f46f97d954ceea17665d8bb6554d0935b4a69773",
+  "builtInstalledBinarySHA256": "dcbb3c30fe29934aa0d1ac83da208de88df11e73db14ddb06023f57835f2badb",
+  "scope": "Physically inspected all six exact PNGs via view_image, read validation and installation reports, independently verified retained hashes and current generated manifest. No simulator mutations, new resources, tests or shared edits.",
+  "captureObservations": [
+    {
+      "positionID": "front-25",
+      "contactID": "edge-25",
+      "image": "front-25-front.png",
+      "observed": "25 mm edge label/depth visible; lower cavity contact highlighted; paired projected lead silhouettes reach the mouths; body and support fit within card.",
+      "savedRotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "savedCamera": {
+        "viewDirection": [
+          0,
+          -0.3,
+          -1
+        ],
+        "fitPadding": 0.12
+      },
+      "obviousClippingMissingCordOrSelectedContactBlocker": false
+    },
+    {
+      "positionID": "front-inverted-20",
+      "contactID": "edge-20",
+      "image": "front-inverted-20-front.png",
+      "observed": "20 mm edge label/depth visible; opposite native edge presented as lower grip after inversion; selected surface visible; cords and body complete.",
+      "savedRotation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "savedCamera": {
+        "viewDirection": [
+          0,
+          0.3,
+          -1
+        ],
+        "fitPadding": 0.12
+      },
+      "obviousClippingMissingCordOrSelectedContactBlocker": false
+    },
+    {
+      "positionID": "reverse-13",
+      "contactID": "edge-13",
+      "image": "reverse-13-front.png",
+      "observed": "13 mm edge label/depth visible on reverse cavity; appropriate shallow ledge highlighted; saved reverse camera exposes selected cavity; cords continuous.",
+      "savedRotation": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "savedCamera": {
+        "viewDirection": [
+          0,
+          -0.3,
+          1
+        ],
+        "fitPadding": 0.12
+      },
+      "obviousClippingMissingCordOrSelectedContactBlocker": false
+    },
+    {
+      "positionID": "reverse-inverted-8",
+      "contactID": "edge-8",
+      "image": "reverse-inverted-8-front.png",
+      "observed": "8 mm edge label/depth visible; reverse inverted selected ledge remains visible; cords present with no obvious body penetration or crop.",
+      "savedRotation": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "savedCamera": {
+        "viewDirection": [
+          0,
+          0.3,
+          1
+        ],
+        "fitPadding": 0.12
+      },
+      "obviousClippingMissingCordOrSelectedContactBlocker": false
+    },
+    {
+      "positionID": "outer-upper",
+      "contactID": "jug-40",
+      "image": "outer-upper-front.png",
+      "observed": "40 mm jug label/depth visible; broad upper exterior strip highlighted; body and exposed cords complete.",
+      "savedRotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "savedCamera": {
+        "viewDirection": [
+          0,
+          -0.3,
+          -1
+        ],
+        "fitPadding": 0.12
+      },
+      "obviousClippingMissingCordOrSelectedContactBlocker": false
+    },
+    {
+      "positionID": "outer-lower",
+      "contactID": "pinch-60",
+      "image": "outer-lower-front.png",
+      "observed": "60 mm pinch label/depth visible; lower exterior strip highlighted; pinch selection is visible although thin at this camera angle; body/cords uncropped.",
+      "savedRotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "savedCamera": {
+        "viewDirection": [
+          0,
+          -0.3,
+          -1
+        ],
+        "fitPadding": 0.12
+      },
+      "obviousClippingMissingCordOrSelectedContactBlocker": false
+    }
+  ],
+  "provenanceChecks": {
+    "all12CaptureAndAccessibilityHashesMatch": true,
+    "sourceModelDescriptorMatchActualFiles": true,
+    "builtAndInstalledBinaryHashesAgree": true,
+    "all64InstalledManifestsReportedByteMatched": true,
+    "all60ODRModelsReportedHashMatched": true,
+    "currentNUGGeneratedManifestIndependentlyRecomputed": true,
+    "installedDeliverySimulatorMatchesCaptureSession": true
+  },
+  "sourceRepresentation": "Prior physically inspected approved front/reverse/in-use sources show exposed front and rear lead portions. Current metadata retains four exterior leads. These canonical camera projections overlap front/rear pairs and often show only two silhouettes, so these images alone do not count all four independently. No unsupported hidden join is asserted.",
+  "limits": [
+    "Six canonical stills, not physical UI orbit or arbitrary-angle coverage.",
+    "No obvious missing cord, clipping or body penetration is visible at these scales; exact clearance is established by the separately retained native certificates, not pixels.",
+    "Native-local saved camera directions rotate with pose; similar front/inverted/reverse screen silhouettes are expected with the symmetric body and corrected view directions.",
+    "The pinch60 highlight is a narrow lower strip in this canonical view; opposing-face grip understanding and manufacturer fidelity remain under human review.",
+    "Cord300mm rest length and common support remain display estimates; source6mm diameter is now represented by3mm radius."
+  ],
+  "fileSHA256": {
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/validation.json": "4734ecbd025eaca61ed7a97a29351c8a2f3a08713e5e0e9deb52be72bd1496fa",
+    ".context/placid-badger/nug-review/installed-app-provenance.json": "adbabd8632a0d5a842d5f6d78793ed934485144c96d20711932804b80582a8c4",
+    "docs/source-audits/2026-09-29-remaining-cad/installed-delivery-validation.json": "2f574a9f2057ee1c4be6163fadcfd5fb3da2795b92fd39f4041c5df6fef03ad2",
+    "Hangboards/frictitious-nug/suspension.json": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+    "Hangboards/frictitious-nug/frictitious-nug.FCStd": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+    "Hangboards/frictitious-nug/assets/primary.usdz": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+    "Hangboards/frictitious-nug/assets/primary.model.json": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/front-25-front-accessibility.json": "cbc8c382df0f206e39e9e373d306d2e92661783f66f10dd95329b80ebd34fca2",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/front-25-front.png": "ac2e4db16e322b1ed969910dbb4bc45dfecbdbf554482a02110a47ddb8c35ae5",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/front-inverted-20-front-accessibility.json": "d42ac64a9d120a38177e1edd1696c6d217d35af823057f579c69b63836212110",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/front-inverted-20-front.png": "c9453b8182c4e20cc1572944a9a27018a10268447d6efa43d52d9f7d6b1e498a",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/outer-lower-front-accessibility.json": "b402a21dde7b1f1df9033e200d59923ad8a5f83734134eb2d156228daf699049",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/outer-lower-front.png": "be127e9c521a61f76336a50353dcbe2e08d11400b29e1c87a8bf542ace736183",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/outer-upper-front-accessibility.json": "1133bafb61517d8a095f1dbeb6cc6f4dcc2ab713113b33d63e8652f810a17edd",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/outer-upper-front.png": "f7c187a463e3e51ac32474541e8d7aa1cd472a363b16faa77c8d29addf86918c",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/reverse-13-front-accessibility.json": "44bd5ce396b96117998dbab30e828c7d25d33a1374ce528ccf851af12ea8cddf",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/reverse-13-front.png": "81a09e1ed7de93de17a195c581944b5b2cc3fc83fba5f0eef8d0ad2df448ee4f",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/reverse-inverted-8-front-accessibility.json": "8dbaa22927345b8c70330f0de2f8313960d0885a64c05b07422ddcf29cf8910d",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/app-review/reverse-inverted-8-front.png": "c60f0095788f2dab7380fa505a8fb538b8677086019011d5d7b0b71773b62c6b"
+  }
+}

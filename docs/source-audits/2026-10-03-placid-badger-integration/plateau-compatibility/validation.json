@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "owner": "placid-badger",
+  "baseHead": "7e12907150374f722446a0e8725123d1bc52b650",
+  "sourceFactMainRef": "d53c019c43319a70b32e6dc654814de29e87ab89",
+  "canonicalFilesChecked": 81,
+  "canonicalFilesUnchanged": true,
+  "cadGeometryChanged": false,
+  "routineSourceFactsChanged": false,
+  "actualIOS": {
+    "result": "Passed",
+    "total": 363,
+    "passed": 362,
+    "failed": 0,
+    "skipped": 1,
+    "configuration": "Debug with -O and -assert-config Debug",
+    "device": "iPhone 17 Pro, iOS 26.5",
+    "classes": [
+      "CustomRoutineStoreTests",
+      "CustomRoutineDraftTests",
+      "CustomRoutineAppStoreTests",
+      "PlanStorageTests",
+      "WorkoutActivityRecordingTests",
+      "SuspendedBoardPresentationTests"
+    ]
+  },
+  "allOwnedCommandGroupsAbsent": true,
+  "ownedSimulatorDeleted": true,
+  "ownedDerivedDataAndXCResultsDeleted": true,
+  "review": "Read-only reviewer /root/premerge_code_review found no concrete findings in the complete five-file diff. The rest guard matches WorkoutSessionHandResolver; work resolution is unchanged. Plateau compatibility and independent all-pose Penta camera regression retain the reviewed contracts. Review is separate from the actual iOS execution recorded here.",
+  "combinedRuntimeReadinessClaimed": false
+}

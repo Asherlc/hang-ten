@@ -1,0 +1,74 @@
+{
+  "timestampUTC": "2026-10-02T06:40:01.946026+00:00",
+  "board": "zlagboard-evo",
+  "reviewer": "evo_orientation_judgment",
+  "status": "geometry-and-static-selection-review-complete-workout-limitation-unresolved",
+  "scope": "Independent whole-image visual inspection of actual iOS26.4 detail-map geometry, material, all21 selections, jug crest/corner coverage and visible physical-pick outcomes. No UI operations or canonical edits.",
+  "geometrySelectionReviewPassed": true,
+  "appWorkflowPassed": false,
+  "humanAccepted": false,
+  "overallAppPassed": false,
+  "findings": [
+    "Seven top contacts and fourteen rounded pockets appear in the expected arrangement; primary manufacturer product01 supports the qualitative wood shape and soft transitions. Existing analytic shape remains a labeled display approximation.",
+    "All21 selections show one spatially appropriate red contact corresponding to the selected hold label. No visible cross-contact spill, left/right swap or missing selected hold in these captures.",
+    "Both elevated jug images expose continuous selected top depth through the crest and outer top corner; neighboring32degree sloper remains wood. Whole-board silhouette fits without clipping. No further orbit is needed for this scoped check.",
+    "Wood appearance covers the body, unselected top faces and pocket interiors; selected contact surfaces are visibly distinct red.",
+    "Physical-probe screenshots03\u201306 show respectively left20mm edge, right20mm edge, left jug and center35mm edge with matching labels/highlights. The retained final-validation JSON reports successful orbit/reset and picking checks; screenshots alone do not independently prove gesture execution."
+  ],
+  "publishedInventoryComparison": "Whole product02 agrees with seven top identities and both seven-pocket rows, including20/32degree labels and stated pocket depths. This visual review does not remeasure those values.",
+  "displayAdaptations": {
+    "troughRoundRadiusMM": 2,
+    "frontLipRoundRadiusMM": 1,
+    "radiusStatus": "estimated native display parameters, not manufacturer dimensions",
+    "cameraDirection": [
+      0,
+      -0.35,
+      -1
+    ],
+    "cameraStatus": "display estimate"
+  },
+  "limitations": [
+    "Known workout active/rest color transition failure remains unresolved on both tested runtime versions. Static red selection review is not evidence of correct workout phase colors.",
+    "No overall app workflow pass or human acceptance is granted.",
+    "Whole images were inspected without cropping, tracing, segmentation, alignment or pixel measurements. Hidden/rear surfaces and exact numerical geometry rely on retained native/export proofs, not these screenshots.",
+    "Soft analytic transitions and wood shade are display estimates; hardware, phone bracket and branding are intentionally omitted under retained package policy."
+  ],
+  "physicalValidationReport": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/physical-probes/final-validation.json",
+  "physicalValidation": {
+    "checks": {
+      "readyCanonicalHas21Contacts": true,
+      "actualOrbitDiffersFromReadyCanonical": true,
+      "actualContactTapRestoresReadyCanonical": true
+    },
+    "allPassed": true,
+    "canonicalReference": "../captures/edge-20-left-accessibility.json",
+    "priorFailure": "validation.json incorrectly used01-canonical AX while boardModel.loading (zero contacts). Raw failure remains unchanged.",
+    "rawOrbit": "02-orbit/accessibility.json",
+    "rawReset": "03-contact-reset/accessibility.json",
+    "pickChecks": "validation.json physicalright/jug/center IDs alltrue"
+  },
+  "imagesInspected": {
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/app-review.png": "49a2fe3de857dd8386e901fdb1f5658cd45dd58a3cf9589c25b7fe4bab46eb65",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/review-montages/selections-1.png": "cc789f649dff3513ba28c5c27aa9e269c177a02a2863846df9792fea74a87e10",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/review-montages/selections-2.png": "9d20ba748609cf4346f09ddf79a1068ec59b312e4d543f416ed6bafb0143285a",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/review-montages/selections-3.png": "a4f8c5d626a105a1114b4914a11856b87d94f0ff048efde7865b7358d09b66c3",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/review-montages/selections-4.png": "03d0cce17322d5ccb15554f60ace76a9760b473fbd7d8566c97cb5c5de160d07",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/review-montages/selections-5.png": "3e962fe30260e1bdd73714a65287fcbbdc5867363fc7158349bb07ca322b7a59",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/review-montages/selections-6.png": "c89f94953f9bbe2500e1b49e3bb8d39de0b2a62ed80010fa4033acd310d963d9",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/review-montages/selections-7.png": "cf4b1790cd1d30802b716875a4ca00b863801c79077d0cdedeaa0664cf55b7fd",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/elevated-jugs-gentle/left-elevated.png": "244a28e8815265b11ba12d7d3d09311931688fb78bfee3a2698e0d036c651493",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/elevated-jugs-gentle/right-elevated.png": "c6fc06d6178556b4d7c42549816da5262e91079e2b85c1da4073f79ebe2c33b4",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/physical-probes/03-contact-reset/view.png": "bbebcb8b99ebba52f5a6b084b52b109de0c6916b6a15ef0e360ef53619178e8e",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/physical-probes/04-right-pocket-pick/view.png": "f876508ce80d2f5840a569084da46eb4bebb3885fb95ebdd087f5815155f55c7",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/physical-probes/05-left-jug-pick/view.png": "e5b63210d8d11a679b5060ab5366703deb28fddff036640b9e5d68bfcb016ed6",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/physical-probes/06-center-pocket-pick/view.png": "77d871e145134930e587c031edd62ebf5db03c1f7a30e6172697142433bfdde3"
+  },
+  "wholeManufacturerSourcesInspected": {
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/sources/product-01.png": "fb153e0817b3e2ffc54e8fabd042ed5e7fffa804ef80388787da3b777004da3f",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/sources/product-02.png": "00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10"
+  },
+  "readFailureRetained": "Initial view attempt used nonexistent review-montages/app-review.png; file inventory located ios-26-4/app-review.png, which was then inspected. No image was omitted.",
+  "newGeometryCorrectionRecommended": false,
+  "additionalOrbitRequired": false,
+  "finalPackageAuditRun": false
+}

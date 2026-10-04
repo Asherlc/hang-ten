@@ -1,0 +1,28 @@
+{
+  "reviewedAt": "2026-09-30T17:46:44.374667+00:00",
+  "reviewer": "cad_wall_boards",
+  "status": "Current code cleared for sole-lane native probe3; native quality and final cache approval pending",
+  "blockingFindings": [],
+  "independentTests": "........................                                                 [100%]\n24 passed in 9.86s",
+  "review": {
+    "subchains": "Whole interior and contiguous runs separated by spans longer than4cord radii are generated search blocks. They do not introduce physical constraints or board-specific authored stations.",
+    "contactProposals": "Nearest-native-point vectors are normalized outward directions for certified exterior points within2r.16cyclic projections impose first-order nonpenetration half-spaces. The projected directions plus1%/10% outward steps are bounded proposals only, each followed by actual nonlinear clearance/length/tube checks.",
+    "surfaceCurvature": "Normal projection is not claimed to solve true surface geodesics. Explicit outward components accommodate curvature; rejected proposals cannot bypass full-solid validation.",
+    "quantization": "Changed points quantized before objective and original tube gate; rounded height/support checked during settling; original final cache checks unchanged.",
+    "workBudget": "128sweeps,256vertices/strand,20kchecked candidates/round,16height iterations. Candidate-generation arrays finite; shortcut and corner-insertion loops retain bounds.",
+    "stoppingTolerance": "One micrometre of polyline length is a display-quality search threshold, not an equilibrium or collision tolerance. Original solid/tube tolerances are unchanged.",
+    "isolation": "Option remains authoring-only; no-option seed path unchanged. No existing cache was used as an authored solve input.",
+    "evidence": "Independent24analytic regressions pass, including separate rim/aperture bearings at0/15degrees and a pure-axis collision resolved by native coupled lift/slide."
+  },
+  "pending": [
+    "Actual DUAL vertical final rounded result within budget.",
+    "Independent lateral displacement and substantial free-space corner-cut review.",
+    "Fresh apply/check on all DUAL poses and exact unrelated-cache preservation before publication."
+  ],
+  "fileSHA256": {
+    "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+    "Tools/HangboardCAD/tests/test_native_cord_tightening.py": "362679227649f45dbfab39a7eda39a7c648de4e928d3904e93750e51f2ab60e7",
+    "Tools/HangboardPackages/src/hangboard_packages/cord_paths.py": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250",
+    ".context/placid-badger/dual-vertical-review/subchain-independent-tests.log": "95ec43405f633d0cf71ad116531bf781dde664762a9fff411274f4350374d928"
+  }
+}

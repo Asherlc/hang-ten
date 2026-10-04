@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "rawFiles": 203,
+  "rawBytes": 12542331,
+  "originalFrozenFilesVerified": 202,
+  "previousPacketFilesUnchanged": 8063,
+  "wholePhaseImages": {
+    "control": 12,
+    "unmount": 12
+  },
+  "parentDirectVisualScope": 5,
+  "retentionManifestSHA256": "86b0e4af3f235ac54c6d333c6c7f9cef92b40dc988969d5d45a574ecbb3bdaef",
+  "sourceOrRuntimeChanged": false,
+  "stagedOrCommitted": false
+}

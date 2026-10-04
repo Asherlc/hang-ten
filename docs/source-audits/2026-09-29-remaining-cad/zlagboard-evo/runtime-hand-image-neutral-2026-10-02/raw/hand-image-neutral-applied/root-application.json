@@ -1,0 +1,36 @@
+{
+  "patchSHA256": "286a01d11af56d21310d27e7ac674ff55d173e2f8ea1f0e098f74a7582cdbcad",
+  "source": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "before": "37f32c3c9e45b85da06978aca49cb0f1066f092d3b62a1ac114e1dd3a90cf361",
+      "after": "37f32c3c9e45b85da06978aca49cb0f1066f092d3b62a1ac114e1dd3a90cf361"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "before": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+      "after": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "before": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+      "after": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "before": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba",
+      "after": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "before": "ccb0ab3f261ae0b172eac238eb9f40fe0c71ffc4e6112f6b3700ee743fc7b6e5",
+      "after": "66f77336b6bc1533e467c6165d7c35d330b1a817afddf8229f3b2bb7090fb542"
+    }
+  ],
+  "scope": "DEBUG fixed neutral white environment appearance adaptation",
+  "sourceColor": "sRGB white1 alpha1,32x16 constant",
+  "intensityExponent": 0,
+  "causeClaim": false,
+  "defaultIBLParityClaim": false,
+  "runtimeClaims": false
+}

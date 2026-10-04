@@ -1,0 +1,191 @@
+{
+  "owner": "placid-badger",
+  "date": "2026-10-01",
+  "phase": "finish-checks",
+  "simulator": "72312582-DB46-44A7-9C61-D8C0E9F75876",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS26.5",
+  "boardID": "metolius.simulator-3d",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+  "builtBinarySHA256": "a2f07cfc57a616c4ac6632a3510444312f4f161c7a63dbdd2d1f4a47bb534038",
+  "surfaceFinish": "plastic",
+  "checks": [
+    {
+      "contactID": "jug-1-left",
+      "image": "jug-left.png",
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30
+    },
+    {
+      "contactID": "jug-1-left",
+      "image": "jug-left-orbit.png",
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "flat-sloper-2-left",
+      "image": "jug-to-flat-restored-mint.png",
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30,
+      "sameInstanceSelectionChange": true,
+      "previousContactID": "jug-1-left",
+      "colorRestorationVerification": "Direct image review required; no pixel analysis."
+    },
+    {
+      "contactID": null,
+      "image": "unselected-train.png",
+      "selectionAXConfirmed": false,
+      "unselectedTrainCard": true,
+      "contactsAvailable": null
+    }
+  ],
+  "commands": [
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-plastic-review/ios/finish-checks-captures/jug-left.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "107.48000000000006",
+      "--start-y",
+      "354.93333333333334",
+      "--end-x",
+      "327.9200000000001",
+      "--end-y",
+      "328.71666666666664",
+      "--duration",
+      "1.0",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-plastic-review/ios/finish-checks-captures/jug-left-orbit.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "--id",
+      "boardDetail.holdLegend.flat-sloper-2-left",
+      "--tap-style",
+      "physical",
+      "--post-delay",
+      "1",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-plastic-review/ios/finish-checks-captures/jug-to-flat-restored-mint.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-plastic-review/ios/finish-checks-captures/unselected-train.png"
+    ]
+  ],
+  "humanGeometryAcceptance": "pending revised review #8",
+  "actualDragChecks": [],
+  "limits": "Full-frame app captures and AX selection; representative contacts and actual drags, not an all-contact visual sweep or manufacturer accuracy certification. Color-only phase is intermediate geometry and does not satisfy final corrected geometry review."
+}

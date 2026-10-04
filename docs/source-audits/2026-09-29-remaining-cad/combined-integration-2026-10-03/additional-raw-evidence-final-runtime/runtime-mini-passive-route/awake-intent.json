@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "resourceName": "placid-badger-cad-second-half-combined-mini-passive-route-idle-sleep-assertion",
+  "parentPID": 48986,
+  "command": [
+    "rtk",
+    "proxy",
+    "caffeinate",
+    "-i",
+    "-w",
+    "48986",
+    "-t",
+    "420"
+  ]
+}

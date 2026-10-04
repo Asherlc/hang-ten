@@ -1,0 +1,265 @@
+{
+  "sourceSHA256Before": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+  "checks": {
+    "noGrooveObjects": true,
+    "oneBodySolid": true,
+    "boundShapesValid": true,
+    "noMaterialName": true,
+    "fullyConstrainedSketches": true,
+    "contactsOnActualBodySurface": true,
+    "editChangesBody": true,
+    "editChangesOnlyEdge25": true,
+    "editedBoundShapesValid": true,
+    "restoredVolume": true,
+    "sourceBytesUnchanged": true
+  },
+  "scope": "Reopen, recompute, inspect, and in-memory parameter edit only; never save.",
+  "sketches": {
+    "BodyOutline": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "LeftSteppedOpening": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "RightSteppedOpening": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "BackOuterLeftOutline": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "BackInnerLeftOutline": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "BackCenterOutline": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "BackInnerRightOutline": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "BackOuterRightOutline": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    }
+  },
+  "contactSurfaceAreaErrorMM2": {
+    "yy_tray": 0.0,
+    "yy_edge_20": 0.0,
+    "yy_edge_25": 0.0,
+    "yy_edge_10": 0.0,
+    "yy_edge_15": 0.0,
+    "yy_edge_30": 0.0
+  },
+  "bodyVolumeBeforeMM3": 489161.8763147574,
+  "editedFeature": "LeftDepth25.Dir.y",
+  "editBeforeMM": 26.0,
+  "editAfterMM": 27.0,
+  "bodyVolumeAfterMM3": 487569.1418122869,
+  "contactsBefore": {
+    "yy_tray": {
+      "area": 18266.336052701583,
+      "center": [
+        -5.809027444149227e-17,
+        -1.0294239033434524e-14,
+        19.892005046895466
+      ],
+      "bbox": [
+        -216.0,
+        216.0,
+        -20.000000000000007,
+        19.999999999999993,
+        18.0,
+        20.000000000000004
+      ]
+    },
+    "yy_edge_20": {
+      "area": 10071.353815840032,
+      "center": [
+        0.0,
+        -6.9928015158846,
+        7.088210199742383e-16
+      ],
+      "bbox": [
+        -125.0,
+        125.0,
+        -20.000000000000007,
+        1.5395000000000003e-14,
+        -12.0,
+        12.0
+      ]
+    },
+    "yy_edge_25": {
+      "area": 14135.035164544655,
+      "center": [
+        3.4745377937883777e-15,
+        -2.7529528123745934,
+        7.907014242651371e-17
+      ],
+      "bbox": [
+        -204.0,
+        204.0,
+        -20.000000000000007,
+        5.000000000000015,
+        -12.0,
+        12.0
+      ]
+    },
+    "yy_edge_10": {
+      "area": 3151.287520586553,
+      "center": [
+        0.0,
+        15.207355150803423,
+        0.0
+      ],
+      "bbox": [
+        -196.0,
+        196.0,
+        9.999999999999996,
+        19.999999999999993,
+        -12.0,
+        12.0
+      ]
+    },
+    "yy_edge_15": {
+      "area": 4063.8051480754134,
+      "center": [
+        2.6856446171992018e-15,
+        12.464770995057023,
+        3.357055771499002e-16
+      ],
+      "bbox": [
+        -116.0,
+        116.0,
+        4.9999999999999964,
+        19.999999999999993,
+        -12.0,
+        12.0
+      ]
+    },
+    "yy_edge_30": {
+      "area": 6240.862652192724,
+      "center": [
+        0.0,
+        1.7566505369248475,
+        1.4573220922485413e-16
+      ],
+      "bbox": [
+        -35.5,
+        35.5,
+        -10.000000000000004,
+        19.999999999999993,
+        -12.0,
+        12.0
+      ]
+    }
+  },
+  "contactsAfter": {
+    "yy_tray": {
+      "area": 18266.336052701583,
+      "center": [
+        -5.809027444149227e-17,
+        -1.0294239033434524e-14,
+        19.892005046895466
+      ],
+      "bbox": [
+        -216.0,
+        216.0,
+        -20.000000000000007,
+        19.999999999999993,
+        18.0,
+        20.000000000000004
+      ]
+    },
+    "yy_edge_20": {
+      "area": 10071.353815840032,
+      "center": [
+        5.779526961104228e-15,
+        -6.9928015158846,
+        1.6699036737071697e-16
+      ],
+      "bbox": [
+        -125.0,
+        125.0,
+        -20.000000000000007,
+        1.5394071651089747e-14,
+        -12.0,
+        12.0
+      ]
+    },
+    "yy_edge_25": {
+      "area": 14324.309498426965,
+      "center": [
+        -2.1420113555627935,
+        -2.5327113655571285,
+        1.0984030566663257e-16
+      ],
+      "bbox": [
+        -204.0,
+        204.0,
+        -20.000000000000007,
+        6.000000000000017,
+        -12.0,
+        12.0
+      ]
+    },
+    "yy_edge_10": {
+      "area": 3151.287520586553,
+      "center": [
+        0.0,
+        15.207355150803423,
+        0.0
+      ],
+      "bbox": [
+        -196.0,
+        196.0,
+        9.999999999999996,
+        19.999999999999993,
+        -12.0,
+        12.0
+      ]
+    },
+    "yy_edge_15": {
+      "area": 4063.8051480754134,
+      "center": [
+        2.6856446171992018e-15,
+        12.464770995057023,
+        3.357055771499002e-16
+      ],
+      "bbox": [
+        -116.0,
+        116.0,
+        4.9999999999999964,
+        19.999999999999993,
+        -12.0,
+        12.0
+      ]
+    },
+    "yy_edge_30": {
+      "area": 6240.862652192724,
+      "center": [
+        0.0,
+        1.7566505369248475,
+        1.4573220922485413e-16
+      ],
+      "bbox": [
+        -35.5,
+        35.5,
+        -10.000000000000004,
+        19.999999999999993,
+        -12.0,
+        12.0
+      ]
+    }
+  },
+  "changedContacts": [
+    "yy_edge_25"
+  ],
+  "sourceSHA256After": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+  "passed": true
+}

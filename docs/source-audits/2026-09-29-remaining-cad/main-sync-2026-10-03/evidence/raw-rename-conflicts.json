@@ -1,0 +1,12 @@
+[
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/finish/before-manifest.json",
+    "resolution": "Original raw evidence unchanged; Main stage3 rename mapping requires trace",
+    "stage3Scratch": ".context/placid-badger-cad-second-half/main-sync-2026-10-03/rename-conflict-before-manifest.json"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/initial/metadata/final-wood-manifest.json",
+    "resolution": "Original raw evidence unchanged; Main stage3 rename mapping requires trace",
+    "stage3Scratch": ".context/placid-badger-cad-second-half/main-sync-2026-10-03/rename-conflict-final-wood-manifest.json"
+  }
+]

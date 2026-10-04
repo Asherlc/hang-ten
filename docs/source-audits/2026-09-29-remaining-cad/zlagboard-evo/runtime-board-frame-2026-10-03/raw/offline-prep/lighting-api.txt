@@ -1,0 +1,41 @@
+SDK: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/System/Library/Frameworks/RealityFoundation.framework/Modules/RealityFoundation.swiftmodule/arm64-apple-ios-simulator.swiftinterface
+struct DirectionalLightComponent : RealityFoundation::Component, Swift::Equatable {
+  public struct Shadow : RealityFoundation::Component, Swift::Equatable {
+    public var depthBias: Swift::Float
+    @available(macOS, introduced: 10.15, deprecated: 15.0, message: "Use .shadowProjection = .automatic(maximumDistance:)")
+    @available(iOS, introduced: 13.0, deprecated: 18.0, message: "Use .shadowProjection = .automatic(maximumDistance:)")
+    @available(macCatalyst, introduced: 13.0, deprecated: 18.0, message: "Use .shadowProjection = .automatic(maximumDistance:)")
+    @available(visionOS, unavailable, introduced: 2.0, message: "Use .shadowProjection = .automatic(maximumDistance:)")
+    @available(tvOS, unavailable)
+    public var maximumDistance: Swift::Float {
+      get
+      set
+    }
+    public init()
+    public init(maximumDistance: Swift::Float = 5.0, depthBias: Swift::Float = 1.0)
+    public static func __fromCore(_ coreComponent: RealityFoundation::__ComponentRef) -> RealityFoundation::DirectionalLightComponent.RealityFoundation::Shadow
+    public func __toCore(_ coreComponent: RealityFoundation::__ComponentRef)
+    public static var __coreComponentType: RealityFoundation::__ComponentTypeRef {
+      get
+    }
+    public static func == (a: RealityFoundation::DirectionalLightComponent.RealityFoundation::Shadow, b: RealityFoundation::DirectionalLightComponent.RealityFoundation::Shadow) -> Swift::Bool
+  }
+  public var __color: CoreGraphics::CGColor
+  public var intensity: Swift::Float
+  @available(visionOS, unavailable)
+  public var isRealWorldProxy: Swift::Bool
+  public static func __fromCore(_ coreComponent: RealityFoundation::__ComponentRef) -> RealityFoundation::DirectionalLightComponent
+  public func __toCore(_ coreComponent: RealityFoundation::__ComponentRef)
+  public static var __coreComponentType: RealityFoundation::__ComponentTypeRef {
+    get
+  }
+  public static func == (a: RealityFoundation::DirectionalLightComponent, b: RealityFoundation::DirectionalLightComponent) -> Swift::Bool
+}
+@available(visionOS 2.0, macOS 15.0, iOS 18.0, macCatalyst 18.0, tvOS 26.0, *)
+extension RealityFoundation::DirectionalLightComponent.RealityFoundation::Shadow {
+  public typealias ShadowMapCullMode = RealityFoundation::MaterialParameterTypes.RealityFoundation::FaceCulling
+  public var cullModeOverride: RealityFoundation::DirectionalLightComponent.RealityFoundation::Shadow.RealityFoundation::ShadowMapCullMode? {
+    get
+    set
+  }
+  public enum ShadowProjectionTy

@@ -1,0 +1,1161 @@
+{
+  "owner": "placid-badger",
+  "reviewNumber": 9,
+  "revision": "vertical-cord-seats",
+  "finalReady": false,
+  "holdReason": "Corrected native sourceee1890 is frozen; new exports, all16 routes/re-audit, fresh app/test/cleanup and final root completion are pending.",
+  "nativeBodyGeometryChanged": true,
+  "identity": {
+    "originalSourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+    "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+    "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+    "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+    "sidecarSHA256": null
+  },
+  "before": {
+    "identity": {
+      "sourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+      "modelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+      "descriptorSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
+      "sidecarSHA256": "7c24835c38c36ad16805c605970e939f02fa40007ee12b219a4d9da1860746fb"
+    },
+    "source": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/package/nature-stone-hanger.FCStd",
+    "model": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/package/assets/primary.usdz",
+    "descriptor": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/package/assets/primary.model.json",
+    "sidecar": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/package/suspension.json",
+    "historicalAppValidation": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/ios/final-captures/validation.json",
+    "historicalAppLimits": "Exact retained prior1b/7c binary/frame proof, superseded pending vertical-seat correction; no fresh old binary run."
+  },
+  "sourceEvidenceInventory": {
+    "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/evidence-hashes.json",
+    "sha256": "04c492d0223328991a8675cc1799e161ead426f5b1d617fbe0bdd9ce55177234"
+  },
+  "sourceScope": {
+    "addVerticalSeatsPerSide": 1,
+    "preserveTransverseNotchesPerSide": 3,
+    "entry": "Cord lies in vertical seat and enters the existing middle-level side opening.",
+    "unknowns": "Numeric groove dimensions, hidden continuation and maker exact poses/cord sizes unspecified."
+  },
+  "native": {
+    "sourceCandidate": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-author/nature-stone-hanger.FCStd",
+    "orientation": null,
+    "previewProvenance": null,
+    "evidenceLimit": "Fresh corrected geometry must preserve all8 contact facts and native contact surfaces; previous shape-valid passes are historical."
+  },
+  "geometryComparisons": [
+    {
+      "view": "front",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-previews/comparison-front.png",
+      "sha256": "3c2f6b1d8e8b89c9268a3b0b1ec99e2b08711073cdf5ed269371b9fe8c4e4fbc"
+    },
+    {
+      "view": "side",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-previews/comparison-side.png",
+      "sha256": "76b9726f56ba5781e3e6a60f6c2c548a82a99f799eff9128e5b3c757bae197ff"
+    },
+    {
+      "view": "top",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-previews/comparison-top.png",
+      "sha256": "ba1fdd0dc40be19aa497149a55c123f9663af041c657f8fb2b44d061589da4d2"
+    },
+    {
+      "view": "oblique",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-previews/comparison-oblique.png",
+      "sha256": "91bd50a0ab239f7ea8743b607df5ca668d6a0eac7f9d7d5439feea766b8bff35"
+    }
+  ],
+  "app": {
+    "installedProvenance": null,
+    "validation": null,
+    "checksPointer": "/checks",
+    "contactIDField": null
+  },
+  "reports": [
+    {
+      "role": "source-facts",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/inspection.json",
+      "sha256": "6c586e447239ad50db5eb534e39dbab3ece3bc6f1430caf186a729eb547280ed",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-read-only-source-distinction"
+        },
+        {
+          "pointer": "/sourceInterpretation/verticalSeatsPerSide",
+          "equals": 1
+        },
+        {
+          "pointer": "/sourceInterpretation/transverseNotchesPerSide",
+          "equals": 3
+        },
+        {
+          "pointer": "/sourceInterpretation/preserveTransverseNotches",
+          "equals": true
+        }
+      ],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "metadata-preservation",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/source-metadata-inspection.json",
+      "sha256": "18b269095d96296e58f3a76baec7f50a8d64b8b8cfeba74f4ac2231a47942f75",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-static-archive-metadata-only"
+        },
+        {
+          "pointer": "/manifestBytesIdentical",
+          "equals": true
+        },
+        {
+          "pointer": "/contacts",
+          "equals": 8
+        },
+        {
+          "pointer": "/allContactFactsUnchanged",
+          "equals": true
+        },
+        {
+          "pointer": "/allEightSingletonPositionsUnchanged",
+          "equals": true
+        },
+        {
+          "pointer": "/woodAndGraniteMetadataUnchanged",
+          "equals": true
+        },
+        {
+          "pointer": "/nativeBodyGeometryChanged",
+          "equals": true
+        },
+        {
+          "pointer": "/transverseNotchesPreserved",
+          "equals": 6
+        },
+        {
+          "pointer": "/transverseToolParametersAndCutLinksUnchanged",
+          "equals": true
+        },
+        {
+          "pointer": "/verticalSeats",
+          "length": 2
+        },
+        {
+          "pointer": "/blockingFindings",
+          "equals": []
+        }
+      ],
+      "identity": {
+        "/sourceSHA256": "sourceSHA256"
+      },
+      "linkedHashes": true
+    },
+    {
+      "role": "native-geometry",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-validation.json",
+      "sha256": "b6d423d79bcc0aaa595f720d2172423677955e904a422c2523d90312bf0daf7a",
+      "assertions": [
+        {
+          "pointer": "/nativeReopenRecompute",
+          "equals": "passed"
+        },
+        {
+          "pointer": "/oneValidSolid",
+          "equals": true
+        },
+        {
+          "pointer": "/contactNodeCount",
+          "equals": 8
+        },
+        {
+          "pointer": "/allContactShapesOpenValid",
+          "equals": true
+        },
+        {
+          "pointer": "/fullyConstrainedSketches",
+          "equals": true
+        },
+        {
+          "pointer": "/sourceBytesUnchanged",
+          "equals": true
+        },
+        {
+          "pointer": "/edit/restoredVolumeDeltaMM3",
+          "absoluteMaximum": 0.001
+        }
+      ],
+      "identity": {
+        "/sourceSHA256": "sourceSHA256"
+      },
+      "linkedHashes": false
+    },
+    {
+      "role": "native-contacts",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-author/author-probe.json",
+      "sha256": "90523bc7b3dc11fedc31192a04db19808c17131f1a1696cfd654923a00030626",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-author-probe"
+        },
+        {
+          "pointer": "/nativeBodyValid",
+          "equals": true
+        },
+        {
+          "pointer": "/solidCount",
+          "equals": 1
+        },
+        {
+          "pointer": "/manifestRawPreserved",
+          "equals": true
+        },
+        {
+          "pointer": "/transverseNotchesPreserved",
+          "equals": 6
+        },
+        {
+          "pointer": "/verticalGrooves/count",
+          "equals": 2
+        },
+        {
+          "pointer": "/contacts",
+          "setEquals": [
+            "edge-front-15mm-incut",
+            "edge-front-15mm-flat",
+            "edge-reverse-10mm-incut",
+            "edge-reverse-10mm-flat",
+            "edge-reverse-06mm-flat",
+            "edge-reverse-06mm-incut",
+            "edge-front-20mm-wood-flat",
+            "edge-front-20mm-granite"
+          ]
+        },
+        {
+          "pointer": "/contacts/edge-front-15mm-incut/areaDelta",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-front-15mm-incut/oldMinusNewArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-front-15mm-incut/newMinusOldArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-front-15mm-flat/areaDelta",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-front-15mm-flat/oldMinusNewArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-front-15mm-flat/newMinusOldArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-reverse-10mm-incut/areaDelta",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-reverse-10mm-incut/oldMinusNewArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-reverse-10mm-incut/newMinusOldArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-reverse-10mm-flat/areaDelta",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-reverse-10mm-flat/oldMinusNewArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-reverse-10mm-flat/newMinusOldArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-reverse-06mm-flat/areaDelta",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-reverse-06mm-flat/oldMinusNewArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-reverse-06mm-flat/newMinusOldArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-reverse-06mm-incut/areaDelta",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-reverse-06mm-incut/oldMinusNewArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-reverse-06mm-incut/newMinusOldArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-front-20mm-wood-flat/areaDelta",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-front-20mm-wood-flat/oldMinusNewArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-front-20mm-wood-flat/newMinusOldArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-front-20mm-granite/areaDelta",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-front-20mm-granite/oldMinusNewArea",
+          "equals": 0.0
+        },
+        {
+          "pointer": "/contacts/edge-front-20mm-granite/newMinusOldArea",
+          "equals": 0.0
+        }
+      ],
+      "identity": {
+        "/sourceSHA256": "sourceSHA256"
+      },
+      "linkedHashes": false
+    },
+    {
+      "role": "exports",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/compile-reproducibility.json",
+      "sha256": "5cf4a3bd0c542bcd8ad6685cf8b9f6da7eab8783fbadf56599a8df6231ac7bf0",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass"
+        },
+        {
+          "pointer": "/twoIndependentExportsByteIdentical",
+          "equals": true
+        },
+        {
+          "pointer": "/independentCheckPassed",
+          "equals": true
+        },
+        {
+          "pointer": "/unchangedDeflectionMM",
+          "equals": 0.15
+        },
+        {
+          "pointer": "/compilerSHA256",
+          "equals": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d"
+        },
+        {
+          "pointer": "/assets/primary.usdz/independent",
+          "equals": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba"
+        },
+        {
+          "pointer": "/assets/primary.model.json/independent",
+          "equals": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24"
+        }
+      ],
+      "identity": {
+        "/sourceSHA256": "sourceSHA256",
+        "/assets/primary.usdz/primary": "modelSHA256",
+        "/assets/primary.model.json/primary": "descriptorSHA256"
+      },
+      "linkedHashes": false,
+      "linkedHashGroups": [
+        {
+          "pointer": "/reports",
+          "pathBase": ".context/placid-badger/nature-stone-review9/vertical-groove-correction"
+        }
+      ]
+    },
+    {
+      "role": "pose-author",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "pose-check",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "route-certificates",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "support-reaction",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "native-visual",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/root-native-visual-review.json",
+      "sha256": "56af38bbbc11960fc4f935f917385de8e328f3f11429f5421b59f030cfeb6d40",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-native-visual-scope-only"
+        },
+        {
+          "pointer": "/blockingFindings",
+          "equals": []
+        },
+        {
+          "pointer": "/humanAcceptance",
+          "equals": "pending"
+        },
+        {
+          "pointer": "/wholeImagesViewed",
+          "length": 4
+        }
+      ],
+      "identity": {
+        "/sourceSHA256": "sourceSHA256"
+      },
+      "linkedHashes": false,
+      "linkedHashGroups": [
+        {
+          "pointer": "/wholeImagesViewed",
+          "pathBase": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-previews"
+        }
+      ]
+    },
+    {
+      "role": "author-cleanup",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "installed-app",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "captures",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "app-visual",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "python-tests",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "package-validation",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "staging-parity",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "ios-tests",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "ios-cleanup",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "pose-bearing",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/native-bearing/final-sidecar-native-bearing.json",
+      "sha256": null,
+      "identity": {
+        "/sourceSHA256": "sourceSHA256",
+        "/modelSHA256": "modelSHA256",
+        "/descriptorSHA256": "descriptorSHA256",
+        "/sidecarSHA256": "sidecarSHA256"
+      },
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-final-sidecar-bound-native-bearing"
+        },
+        {
+          "pointer": "/contactCount",
+          "equals": 8
+        },
+        {
+          "pointer": "/sampleCount",
+          "equals": 24
+        },
+        {
+          "pointer": "/minimumWorldUpDot",
+          "minimum": 0.98
+        },
+        {
+          "pointer": "/finalQuaternionsMatchFreshNativeCheck",
+          "equals": true
+        },
+        {
+          "pointer": "/oldThirtyDegreeAdaptationReused",
+          "equals": false
+        },
+        {
+          "pointer": "/ownedNativeResourcesVerifiedCleaned",
+          "equals": true
+        },
+        {
+          "pointer": "/blockingFindings",
+          "equals": []
+        }
+      ],
+      "linkedHashes": true
+    }
+  ],
+  "retainedEvidence": [
+    {
+      "label": "root primary vertical-seat interpretation",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/root-primary-visual-review.json",
+      "sha256": "6296e6b9015bc9150b5c9a5e328a0bbdc63e49124e50d83e71fbc294c981cb3e",
+      "scope": "Three whole approved primary sources confirm one longitudinal seat plus three transverse adjustment notches per side; no numeric groove or hidden-channel facts.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-primary-shape-interpretation"
+        },
+        {
+          "pointer": "/humanAcceptance",
+          "equals": "pending"
+        }
+      ],
+      "linkedHashes": true
+    },
+    {
+      "label": "root prior packet retention",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/prior-packet-retention.json",
+      "sha256": "d1eb12e43aff9b58739567ddc597e38de271df28df5a68b091881c3b0438ce97",
+      "scope": "The full891-file previous packet is retained verbatim outside the new packet; not duplicated here.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-historical-packet-retained"
+        },
+        {
+          "pointer": "/allBytesPreserved",
+          "equals": true
+        }
+      ],
+      "linkedHashes": false
+    },
+    {
+      "label": "root supersession before globals",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/root-supersession.json",
+      "sha256": "fcbcbe56cafb1eeefeedf0461f7375bcb82a11a60913a61884468aeaa6feda91",
+      "scope": "Old technical passes stay bound to prior1b/7c identities. User vertical-seat feedback requires new source/mesh/descriptor/sidecar and fresh gates.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "superseded-before-global-application"
+        },
+        {
+          "pointer": "/globalApplicationOccurred",
+          "equals": false
+        },
+        {
+          "pointer": "/humanAcceptance",
+          "equals": "pending"
+        }
+      ],
+      "linkedHashes": false
+    },
+    {
+      "label": "historical material-normal-v3-review.json",
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/independent-guide-feasibility/material-normal-v3-review.json",
+      "sha256": "028f83194fb0a3f8b211f1c63529f5be07ff6be8d184eaa8e0e5bed5be6e1979",
+      "scope": "Exact old failure/pass retained only as historical evidence on old geometry/collider; never a new package gate.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "blocked-empty-material-cones-and-facet-balance-failure"
+        }
+      ],
+      "linkedHashes": false
+    },
+    {
+      "label": "historical material-normal-v4-review.json",
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/independent-guide-feasibility/material-normal-v4-review.json",
+      "sha256": "fddefa6cae0155aa3efefe2cf7e638044b8b1cd5fdcf1be0572eb44965906780",
+      "scope": "Exact old failure/pass retained only as historical evidence on old geometry/collider; never a new package gate.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-independent-one-lead-discrete-envelope-review"
+        }
+      ],
+      "linkedHashes": false
+    },
+    {
+      "label": "historical sixteen-candidate-7c248-audit.json",
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/independent-guide-feasibility/sixteen-candidate-7c248-audit.json",
+      "sha256": "0f5dcd14cb107d62833d872838fc6c8cfd0973f7ff4ea5d9d469016f8ed2d2b1",
+      "scope": "Exact old failure/pass retained only as historical evidence on old geometry/collider; never a new package gate.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-independent-rounded-candidate-scope-only"
+        }
+      ],
+      "linkedHashes": false
+    },
+    {
+      "label": "historical final runtime proof",
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/ios/final-runtime-review.json",
+      "sha256": "3f33b299cf757f105ab53a0692c28fc84e495cac9f373e000f1dcfc12ccde85a",
+      "scope": "Old1b/7c installed binary and117 frames / 259 tests remain technically valid historical proof. Fresh corrected-source app/tests/cleanup are required.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "passed"
+        }
+      ],
+      "linkedHashes": false
+    },
+    {
+      "label": "corrected-export-visual",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/root-export-visual-review.json",
+      "sha256": "3f1ed42dd7baf6ef2654a006c6303bccf92a38fb8de053414197d51ad93bb2a0",
+      "scope": "Fresh source/export-bound whole-image visual inspection; cord and app gates remain pending.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-exported-visual-scope-only"
+        },
+        {
+          "pointer": "/blockingFindings",
+          "equals": []
+        },
+        {
+          "pointer": "/humanAcceptance",
+          "equals": "pending"
+        },
+        {
+          "pointer": "/wholeImagesViewed",
+          "length": 4
+        }
+      ],
+      "linkedHashes": false,
+      "linkedHashGroups": [
+        {
+          "pointer": "/wholeImagesViewed",
+          "pathBase": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/export-previews"
+        }
+      ]
+    },
+    {
+      "label": "corrected-native-preview-provenance",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-previews/provenance.json",
+      "sha256": "045801659cd0cc269e2da5f1b94a3bf4021d0c6ecdbead1321ca9ec1e8c5ed77",
+      "scope": "Exact whole native before/after frames and source-bound technical preview provenance; visualGate=pending is preserved as the original rendering-time state, separately closed by the root visual report.",
+      "assertions": [
+        {
+          "pointer": "/sourceSHA256",
+          "equals": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6"
+        },
+        {
+          "pointer": "/images",
+          "length": 12
+        }
+      ],
+      "linkedHashes": false,
+      "linkedHashGroups": [
+        {
+          "pointer": "/images",
+          "pathBase": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-previews"
+        }
+      ]
+    },
+    {
+      "label": "corrected-export-preview-provenance",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/export-previews/provenance.json",
+      "sha256": "3765560b7de8e38d14c63cd51e014e9b8a728795c9a3582612797df964cdfdd3",
+      "scope": "Exact unbound semantic export frames; cord and runtime material display are separate gates.",
+      "assertions": [
+        {
+          "pointer": "/sourceSHA256",
+          "equals": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6"
+        },
+        {
+          "pointer": "/modelSHA256",
+          "equals": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba"
+        },
+        {
+          "pointer": "/descriptorSHA256",
+          "equals": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24"
+        },
+        {
+          "pointer": "/semanticNodes",
+          "length": 9
+        },
+        {
+          "pointer": "/images",
+          "length": 12
+        }
+      ],
+      "linkedHashes": false,
+      "linkedHashGroups": [
+        {
+          "pointer": "/images",
+          "pathBase": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/export-previews"
+        }
+      ]
+    },
+    {
+      "label": "limited-force-settling-implementation-review",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/implementation-review.json",
+      "sha256": "c22760cebd08533fa2ac163c9e0c1013fce14a07c78ff344dc046aada4a216f1",
+      "scope": "Exact reviewed implementation and one-route failed planar/corrected 3D diagnostics. This is a limited structure review with pending final loaded helper, sixteen-route, runtime and human gates; no old or one-route pass supplies final acceptance.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-force-settling-structure-review-with-pending-final-gates"
+        },
+        {
+          "pointer": "/finalReady",
+          "equals": false
+        },
+        {
+          "pointer": "/canonicalMutation",
+          "equals": false
+        },
+        {
+          "pointer": "/resourceOrSolveStarted",
+          "equals": false
+        }
+      ],
+      "linkedHashes": true
+    },
+    {
+      "label": "frozen-2001-implementation-review",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/implementation-review-2001cb8f.json",
+      "sha256": "f618e02a20802c6e85b490416d3186d785683156294433f0bc0db75a723e21b9",
+      "scope": "Fresh final frozen-helper review. Actual weighted cone-error and vertex guards are fixed; exact support-line reuse recertifies each output. No all-sixteen witness or human gate is supplied by this code review.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-frozen-implementation-review-only"
+        }
+      ],
+      "linkedHashes": true
+    },
+    {
+      "label": "fresh-native-bearing-proposed-quaternions",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/native-bearing/new-native-bearing.json",
+      "sha256": "b3f52e79fa12d5a090c92c0c07afb295e18012e139b0996006ddff185a898137",
+      "scope": "Fresh reopened-source/body interior-exterior bearing checks on 24 native samples. Final sidecar binding remains separately required; old normals and 30 degree adaptation are not reused.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass-fresh-native-upward-bearing-sidecar-binding-pending"
+        }
+      ],
+      "linkedHashes": true
+    },
+    {
+      "label": "fresh-native-bearing-owned-cleanup",
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/native-bearing/placid-badger-stone-vertical-native-bearing-ownership.json",
+      "sha256": "26911d5ea5a87f5fc73dcdbef0d7764d6423085d36c1c72fffda27c80016441a",
+      "scope": "Exact read-only native job, exited with owned process group and temporary root deletion verified. No other resource was changed.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass"
+        }
+      ],
+      "linkedHashes": true
+    }
+  ],
+  "feedbackRecord": {
+    "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/human-feedback-extension.json",
+    "sha256": "74e6ad10a999a9aabac0a1d7aeca0a4d4697109ea76531e90009197de0bc1fb7"
+  },
+  "humanFeedback": [
+    "the stone hanger needs granite texture where appropriate",
+    "also cord is way too long",
+    "and its missing the notches",
+    "and the highlighted hold is in an impossible to weight position",
+    "the cord goes inside the side notches",
+    "there is 1 vertical groove on either side that the cord nestles into"
+  ],
+  "routingClarification": {
+    "question": "Enters center side holes with notch guides, or wraps around block in notch groove?",
+    "status": "answered",
+    "answer": "Enters side holes; notches guide it",
+    "source": "Exact user answer retained in human-feedback.json",
+    "hiddenConnection": "Visible side-hole entry and exterior notch guidance are established; the concealed connection remains unspecified."
+  },
+  "humanQuestion": "Does this look right now?",
+  "summary": null,
+  "reviewScope": "Shown whole front/side/top/oblique corrected geometry and fresh actual-app vertical seats, nested cords, all eight contact selections, representative real orbits and wood/granite restoration.",
+  "approvalLimit": "Displayed geometry/material/cord/pose estimates only. No hidden construction, supplied rope dimensions, load safety, continuum/global equilibrium or manufacturer-exact texture certification.",
+  "limits": [
+    "One vertical seat each side and existing three transverse adjustment notches per side are separate source-supported features; preserve both.",
+    "Groove radius, depth, numeric span/entry placement, cord dimensions, support and loaded poses remain deliberate display estimates.",
+    "The concealed connection remains unspecified beyond visible side-hole entry.",
+    "All four corrected package identities require fresh native/export/cord/runtime proof. Prior 1b/7c passes are preserved as history without carrying them to the new shape.",
+    "Raw images remain whole; no crop, registration, tracing or pixel-derived dimensions.",
+    "Generic runtime wood/granite shaders depict materials; USDZ stays unbound with no baked material/texture.",
+    "Material-facet frictionless discrete balance and numerical near-contact policy do not certify continuum cable or global board equilibrium or real load safety.",
+    "Maker video sheets include multiple variants. All 10 original sheets retained; this independent evidence review physically viewed sheets 4 and 5 and four exact-revision primary images.",
+    "Actual final Python/iOS/package counts and installed parity scope will come from the new source-bound reports, without adding overlapping historical suites.",
+    "The prior 30 degree pitch and 50 mm forward support offset belong to superseded routing adaptations. Final loaded pose and support values remain pending the new all-eight route proofs."
+  ],
+  "appPairs": [
+    {
+      "title": "Prior and corrected front incut display",
+      "before": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/ios/final-captures/01-edge-front-15mm-incut.png",
+      "after": null,
+      "labels": [
+        "Prior reviewed geometry and cord",
+        "Corrected vertical-seat geometry and cord"
+      ],
+      "output": "incut-reorientation.png"
+    },
+    {
+      "title": "Preserved wood body and granite finish",
+      "before": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/ios/final-captures/03-edge-front-20mm-wood-flat.png",
+      "after": null,
+      "labels": [
+        "Prior wood and granite display",
+        "Corrected geometry: wood and granite"
+      ],
+      "output": "wood-and-granite.png"
+    },
+    {
+      "title": "Fresh same-instance granite restoration",
+      "before": null,
+      "after": null,
+      "labels": [
+        "Granite selected in corrected app",
+        "Wood selected; granite restored"
+      ],
+      "output": "granite-restoration.png"
+    },
+    {
+      "title": "Added vertical cord seat and nested side entry",
+      "before": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/ios/final-captures/04-edge-front-20mm-granite-side-orbit.png",
+      "after": null,
+      "labels": [
+        "Prior side geometry: vertical seat omitted",
+        "Corrected side: cord nested in vertical seat"
+      ],
+      "output": "side-groove-entry.png"
+    }
+  ],
+  "rawFiles": [
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/package/nature-stone-hanger.FCStd",
+      "target": "raw/prior-package/nature-stone-hanger.FCStd"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd",
+      "target": "raw/corrected-package/nature-stone-hanger.FCStd"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/package/assets/primary.usdz",
+      "target": "raw/prior-package/assets/primary.usdz"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/assets/primary.usdz",
+      "target": "raw/corrected-package/assets/primary.usdz"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/package/assets/primary.model.json",
+      "target": "raw/prior-package/assets/primary.model.json"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/assets/primary.model.json",
+      "target": "raw/corrected-package/assets/primary.model.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/package/suspension.json",
+      "target": "raw/prior-package/suspension.json"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/suspension.json",
+      "target": "raw/corrected-package/suspension.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/root-primary-visual-review.json",
+      "target": "raw/history-reports/root-primary-visual-review.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/prior-packet-retention.json",
+      "target": "raw/history-reports/prior-packet-retention.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/root-supersession.json",
+      "target": "raw/history-reports/root-supersession.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/independent-guide-feasibility/material-normal-v3-review.json",
+      "target": "raw/history-reports/material-normal-v3-review.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/independent-guide-feasibility/material-normal-v4-review.json",
+      "target": "raw/history-reports/material-normal-v4-review.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/independent-guide-feasibility/sixteen-candidate-7c248-audit.json",
+      "target": "raw/history-reports/sixteen-candidate-7c248-audit.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/ios/final-runtime-review.json",
+      "target": "raw/history-reports/final-runtime-review.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/packet-hashes.json",
+      "target": "raw/history-reports/prior-full-packet-hashes.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/README.md",
+      "target": "raw/packet-preparation/README.md"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/historical-routing-attempts/anchor-plane-failed-path.json",
+      "target": "raw/history-reports/anchor-plane-failed-path.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/historical-routing-attempts/32c9-bypass-negative.json",
+      "target": "raw/history-reports/32c9-bypass-negative.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/historical-routing-attempts/offset-anchor-probe.json",
+      "target": "raw/history-reports/offset-anchor-probe.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/historical-routing-attempts/offset-anchor-probe-distributed-reaction-dense.json",
+      "target": "raw/history-reports/offset-anchor-probe-distributed-reaction-dense.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/historical-routing-attempts/offset-anchor-actual-feature-reactions.json",
+      "target": "raw/history-reports/offset-anchor-actual-feature-reactions.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/historical-routing-attempts/sixteen-guided-route-certificates.json",
+      "target": "raw/history-reports/sixteen-guided-route-certificates.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/historical-routing-attempts/final-solver-code-freeze.json",
+      "target": "raw/history-reports/final-solver-code-freeze.json"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/historical-routing-attempts/sixteen-certificate-loaded-helper.py",
+      "target": "raw/history-reports/sixteen-certificate-loaded-helper.py"
+    }
+  ],
+  "rawGroups": [
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence",
+      "target": "raw/vertical-source-evidence",
+      "suffixes": [
+        ".json",
+        ".md"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/raw/primary",
+      "target": "raw/primary",
+      "suffixes": [
+        ".json",
+        ".html",
+        ".jpg"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/raw/maker-video",
+      "target": "raw/maker-video",
+      "suffixes": [
+        ".json",
+        ".html",
+        ".jpg"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction",
+      "target": "raw/root-correction",
+      "suffixes": [
+        ".json",
+        ".md",
+        ".py",
+        ".log",
+        ".zsh"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/routing-history/material-normal-v3",
+      "target": "raw/rejected-history/material-normal-v3",
+      "suffixes": [
+        ".json",
+        ".py"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/routing-history/material-normal-v4",
+      "target": "raw/prior-passing-history/material-normal-v4",
+      "suffixes": [
+        ".json",
+        ".py"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet/raw/independent-guide-feasibility",
+      "target": "raw/prior-independent-history",
+      "suffixes": [
+        ".json",
+        ".md",
+        ".py"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation",
+      "target": "raw/new-packet-preparation",
+      "suffixes": [
+        ".json",
+        ".md",
+        ".py"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-author",
+      "target": "raw/native-author",
+      "suffixes": [
+        ".json"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-previews",
+      "target": "raw/native-previews",
+      "suffixes": [
+        ".json",
+        ".png"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/export-previews",
+      "target": "raw/export-previews",
+      "suffixes": [
+        ".json",
+        ".png"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility",
+      "target": "raw/new-independent-guide-review",
+      "suffixes": [
+        ".json",
+        ".md",
+        ".py"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/implementation-review-13975c3e",
+      "target": "raw/new-guide-implementation-snapshot",
+      "suffixes": [
+        ".json",
+        ".md",
+        ".py"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/implementation-review-2001cb8f",
+      "target": "raw/final-guide-implementation-snapshot",
+      "suffixes": [
+        ".json",
+        ".md",
+        ".py",
+        ".log"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/native-bearing",
+      "target": "raw/fresh-native-bearing",
+      "suffixes": [
+        ".json",
+        ".md",
+        ".py",
+        ".log"
+      ]
+    }
+  ],
+  "blockedFinalSidecarSHA256": [
+    "9520befe472f49778c32fd1747e25114fab5d9b8030b13f13359baf3dc874658",
+    "32c9cd6a1b5ef45796615392efb4382f1d557e2622f7d2aec21a4ec1153c15d3",
+    "7c24835c38c36ad16805c605970e939f02fa40007ee12b219a4d9da1860746fb"
+  ],
+  "priorFullPacket": {
+    "path": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet",
+    "inventorySHA256": "3845bea0a7756714fca83efb6d9d7ccdcca06f3fa737ff78858d3dd5bc65772b",
+    "status": "superseded-prior-geometry-human-pending",
+    "fileCount": 891
+  },
+  "pendingFields": [
+    "Final sidecar and all-eight loaded pose/support values; source/export identities are pinned but canonical integration remains pending",
+    "Fresh new-source author completion, all-eight regeneration, sixteen-route certificates and independent material-facet audit",
+    "Fresh app/binary/generated manifest/all eight selections/actual drags/finish restoration",
+    "Actual final Python/package/staging/iOS counts and owned cleanup",
+    "Root final visual summary, configured whole appPairs and completion authorization"
+  ]
+}

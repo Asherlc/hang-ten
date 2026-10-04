@@ -1,0 +1,69 @@
+diff --git a/Hangboards/owl-climb-poker/assets/primary.model.json b/Hangboards/owl-climb-poker/assets/primary.model.json
+index 9bde132e1..e77c861ab 100644
+--- a/Hangboards/owl-climb-poker/assets/primary.model.json
++++ b/Hangboards/owl-climb-poker/assets/primary.model.json
+@@ -1,7 +1,7 @@
+ {
+   "schemaVersion": 1,
+   "coordinateFrame": "hang-ten-board-v1",
+-  "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
++  "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+   "modelBounds": {
+     "min": [
+       -0.330000013,
+@@ -350,7 +350,7 @@
+       "facePlaneAABB": {
+         "min": [
+           0.200000014,
+-          0.592933
++          0.300000007
+         ],
+         "max": [
+           0.400000005,
+@@ -359,7 +359,7 @@
+       },
+       "center": [
+         0.300000009,
+-        0.7964665
++        0.650000003
+       ]
+     },
+     "face-b-left-dual-pocket": {
+@@ -426,7 +426,7 @@
+       "facePlaneAABB": {
+         "min": [
+           0.599999995,
+-          0.592933
++          0.300000007
+         ],
+         "max": [
+           0.799999986,
+@@ -435,7 +435,7 @@
+       },
+       "center": [
+         0.699999991,
+-        0.7964665
++        0.650000003
+       ]
+     },
+     "face-b-right-dual-pocket": {
+diff --git a/Hangboards/owl-climb-poker/assets/primary.usdz b/Hangboards/owl-climb-poker/assets/primary.usdz
+index 4374cd019..b589a2d47 100644
+--- a/Hangboards/owl-climb-poker/assets/primary.usdz
++++ b/Hangboards/owl-climb-poker/assets/primary.usdz
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874
+-size 2014725
++oid sha256:1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675
++size 2044005
+diff --git a/Hangboards/owl-climb-poker/owl-climb-poker.FCStd b/Hangboards/owl-climb-poker/owl-climb-poker.FCStd
+index 2732323e6..36172639c 100644
+--- a/Hangboards/owl-climb-poker/owl-climb-poker.FCStd
++++ b/Hangboards/owl-climb-poker/owl-climb-poker.FCStd
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1
+-size 4122179
++oid sha256:26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553
++size 4249025

@@ -1,0 +1,10 @@
+{
+  "owner": "placid-badger",
+  "purpose": "optional compiler process diagnostic",
+  "exactCommandPattern": "^sample 3293 1 -file .context/placid-badger/poker-review12/native-correction-2026-10-02/compile-1-process-sample.txt$",
+  "pids": [
+    21603
+  ],
+  "processesTerminatedAndAbsenceVerified": true,
+  "reason": "Optional macOS process sampling did not produce output promptly; exact owned diagnostic process terminated. Compiler processes left running."
+}

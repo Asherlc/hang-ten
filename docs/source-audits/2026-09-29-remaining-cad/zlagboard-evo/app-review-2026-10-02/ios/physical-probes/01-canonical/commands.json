@@ -1,0 +1,30 @@
+[
+  [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "launch",
+    "--terminate-running-process",
+    "1684856E-FC2D-4407-8063-9B343B99CAD6",
+    "com.hangten.training"
+  ],
+  [
+    "rtk",
+    "proxy",
+    "/opt/homebrew/bin/axe",
+    "describe-ui",
+    "--udid",
+    "1684856E-FC2D-4407-8063-9B343B99CAD6"
+  ],
+  [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "io",
+    "1684856E-FC2D-4407-8063-9B343B99CAD6",
+    "screenshot",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/physical-probes/01-canonical/view.png"
+  ]
+]

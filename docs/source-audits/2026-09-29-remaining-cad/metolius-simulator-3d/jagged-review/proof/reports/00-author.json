@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "beforeSourceSHA256": "40e42ed072a72946d11756cd6f92047fd0d5acd79eb33946cb2188441babbbde",
+  "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+  "enabledProperty": "HangTenUVNodeSurfaceNormals",
+  "analyticSurfaceNormals": true,
+  "tessellationDeflectionMM": 0.28,
+  "allBrepEntriesByteIdentical": true,
+  "brepEntryCount": 387,
+  "allNonDocumentMembersByteIdentical": true,
+  "onlyDocumentChange": "Native-generated Bool property insertion plus Properties Count increment",
+  "geometryChanged": false,
+  "rawManifestExact": true,
+  "reopenRecomputeClean": true,
+  "bodyVolumeAndAreaExact": true
+}

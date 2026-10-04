@@ -1,0 +1,42 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "cc82e69bf1ff3cd2e4c3e1cbc4667bc7838e15b0db321489b2f7b6959730f05b",
+  "boardFieldChanges": {
+    "productURL": {
+      "after": "https://natureclimbing.com/products/stone-hanger-mini-oak",
+      "before": "https://natureclimbing.com/products/stone-hanger-mini-beech"
+    }
+  },
+  "changedContacts": {},
+  "humanAcceptance": "pending one-by-one review",
+  "package": "nature-stone-hanger-mini",
+  "positionsAfter": [
+    {
+      "contactIDs": [
+        "pull-up-jug",
+        "granite-edge-15"
+      ],
+      "id": "front-upright",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "wood-edge-15-incut"
+      ],
+      "id": "wood-inverted",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "pinch-60"
+      ],
+      "id": "pinch-side",
+      "presentationID": "primary"
+    }
+  ],
+  "positionsBefore": [],
+  "removedContacts": [],
+  "sourceAudit": "nature-stone-hanger-mini/native-authoring.md",
+  "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371"
+}

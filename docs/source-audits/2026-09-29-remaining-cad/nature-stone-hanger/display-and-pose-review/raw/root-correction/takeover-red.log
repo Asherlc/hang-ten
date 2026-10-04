@@ -1,0 +1,113 @@
+...............FFFF                                                      [100%]
+=================================== FAILURES ===================================
+_______ test_native_physics_reuse_recertifies_every_presentation[0.0-2] ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bc01b80>
+depth_offset = 0.0, expected_frames = 2
+
+    @pytest.mark.parametrize("depth_offset,expected_frames",[(0.,2),(.01,4)])
+    def test_native_physics_reuse_recertifies_every_presentation(monkeypatch,depth_offset,expected_frames):
+        import native_cord_guides as module
+        poses={"a":{"rotation":[0,0,0,1],"translation":[0,0,0]},"b":{"rotation":[0,1,0,0],"translation":[0,0,0]},"c":{"rotation":[1,0,0,0],"translation":[0,0,0]},"d":{"rotation":[0,0,1,0],"translation":[0,0,0]}}
+        features={};terminals={};selections={};calls=[]
+        for side,sign in (("left",-1),("right",1)):
+            features[side+"Guide"]={"origin":[sign*.05,-.05,0],"axis":[0,1,0]}
+            features[side+"Bore"]={"origin":[sign*.05,0,0],"axis":[sign,0,0]}
+            terminals[side]={"points":[[sign*.05,0,0]],"mouthAxis":[sign,0,0]}
+        for name in poses:
+            selections[name]={side:{"feature":side+"Guide","boreFeature":side+"Bore","exitSign":1 if name in ('a','b') else -1} for side in ('left','right')}
+        data={"suspension":{"strands":[{"id":side,"radius":.0015,"restLength":.12} for side in ('left','right')],"anchor":{"offsetFromBoardBounds":[0,.025,depth_offset]},"canonicalPoses":poses},"ropeSolver":{"clearance":.0002,"terminalsByStrandID":terminals,"grooveGuides":{"byPoseID":selections}}}
+        monkeypatch.setattr(module,"validate_guide_bindings",lambda *a:features)
+        monkeypatch.setattr(module,"_seed",lambda mesh,support,terminal,*a:np.vstack([support,terminal]))
+        monkeypatch.setattr(module,"_optimize_lead",lambda mesh,path,*a,**kw:(path,{"testStub":True}))
+        def certify(mesh,full,*args):
+            calls.append({k:v.copy() for k,v in full.items()})
+            return {k:.002 for k in full},{k:1. for k in full},{k:{"status":"pass"} for k in full}
+>       monkeypatch.setattr(module,"_certify_guided_paths",certify)
+E       AttributeError: <module 'native_cord_guides' from '/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/native_cord_guides.py'> has no attribute '_certify_guided_paths'
+
+Tools/HangboardCAD/tests/test_native_cord_guides.py:173: AttributeError
+_______ test_native_physics_reuse_recertifies_every_presentation[0.01-4] _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bc03aa0>
+depth_offset = 0.01, expected_frames = 4
+
+    @pytest.mark.parametrize("depth_offset,expected_frames",[(0.,2),(.01,4)])
+    def test_native_physics_reuse_recertifies_every_presentation(monkeypatch,depth_offset,expected_frames):
+        import native_cord_guides as module
+        poses={"a":{"rotation":[0,0,0,1],"translation":[0,0,0]},"b":{"rotation":[0,1,0,0],"translation":[0,0,0]},"c":{"rotation":[1,0,0,0],"translation":[0,0,0]},"d":{"rotation":[0,0,1,0],"translation":[0,0,0]}}
+        features={};terminals={};selections={};calls=[]
+        for side,sign in (("left",-1),("right",1)):
+            features[side+"Guide"]={"origin":[sign*.05,-.05,0],"axis":[0,1,0]}
+            features[side+"Bore"]={"origin":[sign*.05,0,0],"axis":[sign,0,0]}
+            terminals[side]={"points":[[sign*.05,0,0]],"mouthAxis":[sign,0,0]}
+        for name in poses:
+            selections[name]={side:{"feature":side+"Guide","boreFeature":side+"Bore","exitSign":1 if name in ('a','b') else -1} for side in ('left','right')}
+        data={"suspension":{"strands":[{"id":side,"radius":.0015,"restLength":.12} for side in ('left','right')],"anchor":{"offsetFromBoardBounds":[0,.025,depth_offset]},"canonicalPoses":poses},"ropeSolver":{"clearance":.0002,"terminalsByStrandID":terminals,"grooveGuides":{"byPoseID":selections}}}
+        monkeypatch.setattr(module,"validate_guide_bindings",lambda *a:features)
+        monkeypatch.setattr(module,"_seed",lambda mesh,support,terminal,*a:np.vstack([support,terminal]))
+        monkeypatch.setattr(module,"_optimize_lead",lambda mesh,path,*a,**kw:(path,{"testStub":True}))
+        def certify(mesh,full,*args):
+            calls.append({k:v.copy() for k,v in full.items()})
+            return {k:.002 for k in full},{k:1. for k in full},{k:{"status":"pass"} for k in full}
+>       monkeypatch.setattr(module,"_certify_guided_paths",certify)
+E       AttributeError: <module 'native_cord_guides' from '/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/native_cord_guides.py'> has no attribute '_certify_guided_paths'
+
+Tools/HangboardCAD/tests/test_native_cord_guides.py:173: AttributeError
+_____ test_cancelled_cone_direction_errors_still_exceed_the_weighted_bound _____
+
+    def test_cancelled_cone_direction_errors_still_exceed_the_weighted_bound():
+        from native_cord_guides import facet_reconstructed_balance
+        mesh=trimesh.creation.box()
+        face=int(np.argmax(mesh.face_normals[:,0]))
+        contacts=[{"segment":0,"fraction":1.,"normal":[1.,sign*5e-6,0.],
+                   "incidentMaterialTriangles":[face],"materialNormalConeWeights":[1.]}
+                  for sign in (-1,1)]
+        result=facet_reconstructed_balance(mesh,np.array([[200.,0.,0.]]),contacts,[100.,100.])
+        assert result["maxFacetReconstructedNodalResidual"]==pytest.approx(0.)
+        assert result["maximumWeightedMaterialConeErrorBound"]==pytest.approx(.001)
+>       assert result["status"]=="fail"
+E       AssertionError: assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+Tools/HangboardCAD/tests/test_native_cord_guides.py:194: AssertionError
+_______ test_material_settling_rejects_oversize_paths_before_dense_work ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c0f6d20>
+
+    def test_material_settling_rejects_oversize_paths_before_dense_work(monkeypatch):
+        import native_cord_guides as module
+        import native_cord_routes
+        path=np.column_stack([np.linspace(0,.1,129),np.zeros(129),np.zeros(129)])
+        def forbidden(*args):
+            pytest.fail("oversized path reached material/clearance work")
+        monkeypatch.setattr(native_cord_routes,"checked_clearance",forbidden)
+        with pytest.raises(ValueError,match="vertex budget"):
+>           module.settle_material_forces(None,path,.0015)
+
+Tools/HangboardCAD/tests/test_native_cord_guides.py:205: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardCAD/native_cord_guides.py:278: in settle_material_forces
+    clearance=checked_clearance(mesh,p,radius)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (None, array([[0.        , 0.        , 0.        ],
+       [0.00078125, 0.        , 0.        ],
+       [0.0015625 , 0...     , 0.        ],
+       [0.09921875, 0.        , 0.        ],
+       [0.1       , 0.        , 0.        ]]), 0.0015)
+
+    def forbidden(*args):
+>       pytest.fail("oversized path reached material/clearance work")
+E       Failed: oversized path reached material/clearance work
+
+Tools/HangboardCAD/tests/test_native_cord_guides.py:202: Failed
+=========================== short test summary info ============================
+FAILED Tools/HangboardCAD/tests/test_native_cord_guides.py::test_native_physics_reuse_recertifies_every_presentation[0.0-2]
+FAILED Tools/HangboardCAD/tests/test_native_cord_guides.py::test_native_physics_reuse_recertifies_every_presentation[0.01-4]
+FAILED Tools/HangboardCAD/tests/test_native_cord_guides.py::test_cancelled_cone_direction_errors_still_exceed_the_weighted_bound
+FAILED Tools/HangboardCAD/tests/test_native_cord_guides.py::test_material_settling_rejects_oversize_paths_before_dense_work
+4 failed, 15 passed in 1.96s

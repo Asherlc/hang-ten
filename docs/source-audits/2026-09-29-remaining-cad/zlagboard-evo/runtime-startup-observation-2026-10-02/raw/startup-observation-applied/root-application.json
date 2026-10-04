@@ -1,0 +1,48 @@
+{
+  "epoch": 1791001692.162239,
+  "diagnosticOnly": true,
+  "patchSHA256": "c53b409f878296d440c9eb567163a7afcb0c8c2c9be3a1288995411008d8241d",
+  "files": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "inputSHA256": "72ffe2a766a128688510fa02c2c1a1cbcc56c0aa28b6202f74f59a567ed42f67",
+      "proposedSHA256": "a75b0fe069f6f8d03f0ecd21bf18f001d83e5d4c7ac173abd4809d3fba910b9b",
+      "trackedInputStillExact": true
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "inputSHA256": "d74f4fbb2bd260cdd777e3fd15c0d0fc92f9b7b2a9f9b5cd9daa9bdf54748426",
+      "proposedSHA256": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+      "trackedInputStillExact": true
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "inputSHA256": "5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926",
+      "proposedSHA256": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+      "trackedInputStillExact": true
+    }
+  ],
+  "priorFrozenEvidence": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-repeat-frozen-manifest.json",
+      "sha256": "a44d5f1bc0841bfbd7968257e2792045c7c90d449cb1a33d9e6055f4c7c038b3",
+      "filesVerified": 76
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-frozen-manifest.json",
+      "sha256": "2b7052ebde5e5bca2b6950675d749aafa6ae8f080805e33051c1314740567ab1",
+      "filesVerified": 44
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-frozen-manifest.json",
+      "sha256": "625345549e35d3231fdbb9f8222d7a46d6cc0b9b54f02e976e6ac61106e8b1eb",
+      "filesVerified": 152
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-frozen-manifest.json",
+      "sha256": "b9be609012589691867212e46caed8808508bf0f359996b92d98a1bb1e6ef685",
+      "filesVerified": 136
+    }
+  ],
+  "next": "Build and install preparation; exactly one 30-second startup observation requires separate runtime release; no production adoption"
+}

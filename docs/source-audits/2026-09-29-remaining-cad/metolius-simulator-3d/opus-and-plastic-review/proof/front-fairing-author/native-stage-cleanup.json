@@ -1,0 +1,105 @@
+{
+  "status": "pass",
+  "workspaceOwner": "placid-badger",
+  "scope": "Author native jobs only; independent validator ownership separate; no exports started",
+  "resources": [
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/author-probe-ownership.json",
+      "processGroup": 39522,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/author-probe-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/author-probe-v2-ownership.json",
+      "processGroup": 51442,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/author-probe-v2-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/author-probe-v3-ownership.json",
+      "processGroup": 55088,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/author-probe-v3-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/bounds-diagnosis-ownership.json",
+      "processGroup": 70774,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/bounds-diagnosis-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/cavity-boolean-ownership.json",
+      "processGroup": 47369,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/cavity-boolean-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/diagnose-cavity-ownership.json",
+      "processGroup": 44841,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/diagnose-cavity-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/diagnose-cavity-v2-ownership.json",
+      "processGroup": 46265,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/diagnose-cavity-v2-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/final-author-check-ownership.json",
+      "processGroup": 61366,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/final-author-check-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/final-author-check-v2-ownership.json",
+      "processGroup": 62086,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/final-author-check-v2-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/final-author-check-v3-ownership.json",
+      "processGroup": 65638,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/final-author-check-v3-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/lower-cut-probe-ownership.json",
+      "processGroup": 53958,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/lower-cut-probe-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/native-contacts-ownership.json",
+      "processGroup": 40662,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/native-contacts-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/native-contacts-v2-ownership.json",
+      "processGroup": 52825,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/native-contacts-v2-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-front-fairing/native-contacts-v3-ownership.json",
+      "processGroup": 56199,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/native-contacts-v3-tmp",
+      "tempAbsent": true
+    }
+  ]
+}

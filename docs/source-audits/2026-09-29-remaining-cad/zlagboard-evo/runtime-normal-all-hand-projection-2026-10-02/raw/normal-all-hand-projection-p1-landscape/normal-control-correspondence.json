@@ -1,0 +1,18 @@
+{
+  "checks": {
+    "exactNormalEndpoints": true,
+    "normalOwnPathAndCompletenessValid": true,
+    "boardRootTransformSetsEqual": true,
+    "boardCameraTransformSetsEqual": true,
+    "boardViewportSetsEqual": true,
+    "allHandCountsEqual": true,
+    "creationOrderEqual": false,
+    "handCameraTransformsEqual": true,
+    "handDepthsEqual": true
+  },
+  "control": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape",
+  "limits": [
+    "Normal-route endpoints compared only to normal control; no direct-root endpoint test.",
+    "Only sampled frame path and component configuration/order are compared, not identical initialization/workload/animation timing."
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "method": "Root opened all five full final-phase images, then verified byte equality of every capture to its own reviewed phase final",
+  "finalImages": [
+    {
+      "file": "phase-0-clear-plus-7.png",
+      "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+      "wholeImageOpenedByRoot": true,
+      "visibleHighlight": "none",
+      "correct": true
+    },
+    {
+      "file": "phase-1-active-plus-7.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "wholeImageOpenedByRoot": true,
+      "visibleHighlight": "red",
+      "correct": true
+    },
+    {
+      "file": "phase-2-preview-plus-7.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "wholeImageOpenedByRoot": true,
+      "visibleHighlight": "blue",
+      "correct": true
+    },
+    {
+      "file": "phase-3-active-plus-7.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "wholeImageOpenedByRoot": true,
+      "visibleHighlight": "red",
+      "correct": true
+    },
+    {
+      "file": "phase-4-preview-plus-7.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "wholeImageOpenedByRoot": true,
+      "visibleHighlight": "blue",
+      "correct": true
+    }
+  ],
+  "captures": [
+    {
+      "file": "phase-0-clear-plus-0.25.png",
+      "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-0-clear-plus-1.png",
+      "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-0-clear-plus-3.png",
+      "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-0-clear-plus-7.png",
+      "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-1-active-plus-0.25.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-1-active-plus-1.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-1-active-plus-3.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-1-active-plus-7.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-2-preview-plus-0.25.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-2-preview-plus-1.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-2-preview-plus-3.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-2-preview-plus-7.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-3-active-plus-0.25.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-3-active-plus-1.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-3-active-plus-3.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-3-active-plus-7.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-4-preview-plus-0.25.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-4-preview-plus-1.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-4-preview-plus-3.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesRootViewedPhaseFinal": true
+    },
+    {
+      "file": "phase-4-preview-plus-7.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesRootViewedPhaseFinal": true
+    }
+  ],
+  "checks": {
+    "structural-validation.json": {
+      "oneMakeWholeRun": true,
+      "oneScene": true,
+      "oneView": true,
+      "stableViewportDuringMeasurement": true,
+      "appActiveDuringMeasurement": true,
+      "windowActiveDuringMeasurement": true,
+      "rootAndCameraActive": true,
+      "noPeriodicSampler": true,
+      "noSecondHost": true,
+      "counterPresenceCorrect": true,
+      "scriptComplete": true,
+      "all20Brackets": true
+    },
+    "surface-placement-validation.json": {
+      "35SparseSnapshots": true,
+      "exactlyOneMatchedHost": true,
+      "stableLeafPlacement": true,
+      "exactLeaf210x36": true,
+      "resolvedInputsPresent": true,
+      "resolvedInputsMatchCPU": true,
+      "resolvedBoardPresentationAndInteraction": true,
+      "oneResolvedPositionAllPhases": true
+    }
+  },
+  "verdict": "PASS for all20 isolated constant-caption BoardMap states; no workout repair established"
+}

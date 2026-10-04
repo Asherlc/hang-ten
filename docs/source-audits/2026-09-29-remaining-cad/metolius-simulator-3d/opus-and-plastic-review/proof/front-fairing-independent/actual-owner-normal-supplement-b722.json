@@ -1,0 +1,3048 @@
+{
+  "status": "pass",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "rawLegacyComparison": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/final-normal-comparison.json",
+    "sha256": "2be544aefb3e9da417118cea2318f13af082075ef0dfc4afdd6ea21d876ce295",
+    "status": "review-required",
+    "maxAngleDegrees": 7.161516093117819
+  },
+  "cornersCompared": 192,
+  "legacyAgreementCorners": 191,
+  "actualOwnerDispositionCorners": 1,
+  "tolerances": {
+    "angleDegreesStrictlyLessThan": 0.001,
+    "uvPositionMM": 2e-05,
+    "exportPositionDifferenceMM": 0
+  },
+  "sourceAndCompilerAndRawComparisonUnchanged": true,
+  "interpretation": "Opt-in exact unique native facet ownership takes precedence over legacy nearest-centroid ownership. One legacy-normal behavior difference is resolved by actual-owner inverse evaluation; no angular or position tolerance is widened. This finite sample is not a universal normal-equivalence certificate.",
+  "blockingFindings": [],
+  "comparisons": [
+    {
+      "triangle": 0,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        0
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 0,
+      "ownerInversePositionErrorMM": 2.927254365728177e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.927254365728177e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 0,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        0
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 0,
+      "ownerInversePositionErrorMM": 2.9480399999999995e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.9480399999999995e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 0,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        0
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 0,
+      "ownerInversePositionErrorMM": 4.1108686246114995e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.1108686246114995e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 911,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 5.933930848798191e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.873298966133558e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 911,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 3.552713678800501e-15,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.869603311742354e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 911,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 5.684341886080802e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.310887241768095e-30,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 912,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 7.105427357601002e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.0194366942304644e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 912,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 1.863736123454487e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 912,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 1.4210854715202004e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4210854715202004e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 923,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 923,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 923,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 925,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 925,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 925,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 926,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 926,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 926,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 927,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 927,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 927,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 951,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 951,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 951,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 954,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 954,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 954,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 956,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 956,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 956,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 957,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 957,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 957,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 958,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 958,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 958,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 959,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 959,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 959,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 962,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 962,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 962,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 966,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 966,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 966,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 976,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 976,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 976,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 977,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 977,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 977,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 978,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 978,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 978,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1006,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 1.863736123454487e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 1006,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 8.526512829121202e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.355287432313019e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 1006,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 8.038873388460929e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.1776437161565096e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 1159,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1159,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1159,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1160,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1160,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1160,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1161,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1161,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1161,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1162,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1162,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1162,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1163,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1163,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1163,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1177,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1177,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1177,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1178,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1178,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1178,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1180,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1180,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1180,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1181,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1181,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1181,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true
+    },
+    {
+      "triangle": 1293,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 5.684341886080802e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.0194366942304644e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 1293,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 1.537138960314901e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4561792860887974e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 1293,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 4.0194366942304644e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.1776437161565096e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 4203,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 2.842170943040401e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.842170943040401e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 4203,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 8.038873388460929e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.3923737144427707e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 4203,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 4.0194366942304644e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.263256414560601e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 7479,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 4.0194366942304644e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.0194366942304644e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 7479,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 4.0194366942304644e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.0194366942304644e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 7479,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 8.987733679556355e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.0194366942304644e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 10755,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 6.51223174224333e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.0194366942304644e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 10755,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 5.684341886080802e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.1457157353758233e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 10755,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 4.263256414560601e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.859285502108464e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 14001,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 5.684341886080802e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.859285502108464e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 14001,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 5.859285502108464e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4210854715202004e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 14001,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        22
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 22,
+      "ownerInversePositionErrorMM": 2.842170943040401e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.842170943040401e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 19109,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 2.9912630806181737e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.913225216616411e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 19109,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 5.702782715024108e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.873298966133558e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 19109,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 5.684341886080802e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.310887241768095e-30,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 19110,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 1.863736123454487e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 19110,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 7.105427357601002e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.0194366942304644e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 19110,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 1.4210854715202004e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4210854715202004e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 19204,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 8.526512829121202e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.355287432313019e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 19204,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 1.863736123454487e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 19204,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 8.038873388460929e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.1776437161565096e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 19494,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 1.537138960314901e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4561792860887974e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 19494,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 5.684341886080802e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.0194366942304644e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 19494,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 4.0194366942304644e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.1776437161565096e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 22378,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 8.038873388460929e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.3923737144427707e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 22378,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 2.842170943040401e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.842170943040401e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 22378,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 4.0194366942304644e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.263256414560601e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 25631,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 5.859285502108464e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.859285502108464e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 25631,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 6.961868572213853e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.51223174224333e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 25631,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 8.526512829121202e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 9.099386826154683e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 28884,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 5.859285502108464e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.263256414560601e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 28884,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 9.099386826154683e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.263256414560601e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 28884,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 7.105427357601002e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.123796534383003e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 32107,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 6.355287432313019e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.0247593068766006e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 32107,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 1.4210854715202004e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4210854715202004e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 32107,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        33
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 33,
+      "ownerInversePositionErrorMM": 6.51223174224333e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 8.526512829121202e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33239,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 1.4210854715202004e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4210854715202004e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33239,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 2.842170943040401e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4210854715202004e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33239,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33241,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 1.7806149921485808e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.355287432313019e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33241,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 3.761855171511828e-10,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.9477633775193257e-10,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33241,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 5.859285502108464e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.842170943040401e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33277,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.859285502108464e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33277,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 6.355287432313019e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.0194366942304644e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33277,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4210854715202004e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33758,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 8.644125458514252e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.1776437161565096e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33758,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 1.0247593068766006e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.684341886080802e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33758,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 6.355287432313019e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33916,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 2.842170943040401e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.842170943040401e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33916,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 33916,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 34029,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.684341886080802e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 34029,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 8.163514517232825e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 8.163514517232825e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 34029,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 6.355287432313019e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.355287432313019e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 34593,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 8.526512829121202e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 8.644125458514252e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 34593,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 2.873967505387993e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.31335954426011e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 34593,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 2.842170943040401e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.842170943040401e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 35270,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 4.0194366942304644e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.961868572213853e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 35270,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 8.163514517232825e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.355287432313019e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 35270,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        48
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 48,
+      "ownerInversePositionErrorMM": 1.4210854715202004e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.1776437161565096e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 37469,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 1.4210854715202004e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4210854715202004e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 37469,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 3.1776437161565096e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.9227844771419234e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 37469,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 9.099386826154683e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 9.532931148469529e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 37470,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4210854715202004e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 37470,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 7.246142549764705e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.317214951750687e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 37470,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 2.842170943040401e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.842170943040401e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 37634,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 3.1776437161565096e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.1776437161565096e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 37634,
+      "corner": 1,
+      "legacyAngleDegrees": 7.161516093117819,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "unique exact native facet owner and same-owner UV/inverse agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 3.1776437161565096e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.1776437161565096e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 37634,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 4.9227844771419234e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.9227844771419234e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 37955,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 37955,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 1.4210854715202004e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.0194366942304644e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 37955,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 1.1457157353758233e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.1457157353758233e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 38407,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 5.362537773511954e-10,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.366902452263446e-10,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 38407,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 8.760159180054893e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.154495294690031e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 38407,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 1.2745574813294134e-09,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.2745850667768606e-09,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 38441,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 3.1776437161565096e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.1776437161565096e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 38441,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 8.644125458514252e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 8.644125458514252e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 38441,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 3.4809342861069267e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.0194366942304644e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 38927,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 1.10990323433763e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 9.845568954283847e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 38927,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 8.987733679556355e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 8.163514517232825e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 38927,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        52
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 52,
+      "ownerInversePositionErrorMM": 1.2789769243681803e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 8.163514517232825e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 44891,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 3.1776437161565096e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.1776437161565096e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 44891,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 1.4210854715202004e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4210854715202004e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 44891,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 44893,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 3.7620024645692056e-10,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.9476560653640107e-10,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 44893,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 1.2710574864626038e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4210854715202004e-13,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 44893,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 5.859285502108464e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.1776437161565096e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 44929,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 6.355287432313019e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 4.0194366942304644e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 44929,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.859285502108464e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 44929,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 1.4210854715202004e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 45410,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 1.0247593068766006e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.684341886080802e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 45410,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 8.644125458514252e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 3.1776437161565096e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 45410,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 6.355287432313019e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 45568,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 45568,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 2.842170943040401e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.842170943040401e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 45568,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 0.0,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 45681,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 5.684341886080802e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.684341886080802e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 45681,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 0.0,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.684341886080802e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 45681,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 6.355287432313019e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.355287432313019e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 46245,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 1.1718571004216928e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 2.842170943040401e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 46245,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 6.961868572213853e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 5.859285502108464e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 46245,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 1.180442248897588e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.51223174224333e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 46922,
+      "corner": 0,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 1.0345658394727079e-13,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 8.163514517232825e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 46922,
+      "corner": 1,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 2.842170943040401e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 6.961868572213853e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    },
+    {
+      "triangle": 46922,
+      "corner": 2,
+      "legacyAngleDegrees": 0.0,
+      "positionDifferenceMM": 0.0,
+      "normalLength": 1.0,
+      "nativeFacetOwners": [
+        60
+      ],
+      "basis": "legacy agreement",
+      "passed": true,
+      "cachedOwner": 60,
+      "ownerInversePositionErrorMM": 5.859285502108464e-14,
+      "ownerInverseNormalAngleDegrees": 0.0,
+      "ownerUVMatchCount": 1,
+      "ownerUVPositionErrorMM": 8.163514517232825e-14,
+      "ownerUVInverseNormalAngleDegrees": 0.0
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "original-9449": {
+    "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+    "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e",
+    "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+    "meshCount": 31,
+    "bodyNodeTriangleCount": 19065,
+    "completeShellTriangleCount": 34634
+  },
+  "candidate": {
+    "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+    "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+    "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+    "meshCount": 31,
+    "bodyNodeTriangleCount": 35301,
+    "completeShellTriangleCount": 86039
+  },
+  "method": "Exact USDZ mesh-plane intersections and complete exported shell views, including all 30 separately exported contact surfaces. Orange denotes actual exported top-contact meshes. CPU triangle-face shading, no reference-image processing.",
+  "images": {
+    "export-grasp-review/candidate-grasp-sections.png": "cc00f448a4b12e67e5d8678af5c7fef1bf1343025f8a357c8e789544189a6730",
+    "export-grasp-review/candidate-high-front.png": "29893a561fb3864ca4533ad07256c01c0cef2b4ee2eff03e40c49caa3f7ffb74",
+    "export-grasp-review/candidate-rear-center.png": "ad6c59fc95f8bd39708b25d77126a4398ee8b77bff0d42000dadc4cb99f9a0d1",
+    "export-grasp-review/candidate-rear-oblique.png": "c036f30953ac8d43607ee2be7b8f24ce0e50f57aed4da735831a2b2d55c2b8c8",
+    "export-grasp-review/comparison-grasp-sections.png": "389222b2a6b3892a5248178e93de05a3731277daf36431370b5bb77e54b4a0fb",
+    "export-grasp-review/comparison-high-front.png": "5deac2f657eeed960f5d2a96f1151726c2f155a309cd334286c91ed65b3adb9f",
+    "export-grasp-review/comparison-rear-center.png": "5d3ed21bdf117c6fea8cd72b27737f656f5b0414832b475c9cbd623bb313f196",
+    "export-grasp-review/comparison-rear-oblique.png": "1f2341b45348d03cb52ee1153edd174cdf62ac0d554a8e748229139d1553671f",
+    "export-grasp-review/original-9449-grasp-sections.png": "61d71e9cf5119a983810f6a99b1d7c33cc4475e9d7b860638b0ff9239fef37ef",
+    "export-grasp-review/original-9449-high-front.png": "28d6a49d26f222fe9db7cd238a2a2defa86378f989e0ff89654d22e874e38bce",
+    "export-grasp-review/original-9449-rear-center.png": "7ca66fdce731d344c74a3cb0882bd7a4cb373ef5b453912a7ec97d11250261bf",
+    "export-grasp-review/original-9449-rear-oblique.png": "d12ff98ab64d6c9f55e8506f785e6d13d592778c9aa688ae86ffac9bcf7ac1ad"
+  },
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+  "status": "pass",
+  "visualInspection": "All four complete comparison panels physically inspected; actual app finish/selection pending."
+}

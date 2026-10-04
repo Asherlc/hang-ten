@@ -1,0 +1,290 @@
+[
+  {
+    "type": "Application",
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 402,
+      "y": 0,
+      "x": 0,
+      "width": 874
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "Hold specs",
+    "AXValue": null,
+    "frame": {
+      "height": 54,
+      "x": 0,
+      "width": 874,
+      "y": 24
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Train",
+    "AXUniqueId": "BackButton",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "x": 38,
+      "width": 44,
+      "y": 24
+    }
+  },
+  {
+    "type": "Heading",
+    "AXLabel": "Hold specs",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 20.666666666666664,
+      "x": 392.6666666666667,
+      "width": 88.66666666666669,
+      "y": 35.666666666666664
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "boardDetail.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "height": 36,
+      "x": 796,
+      "width": 36,
+      "y": 28
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "boardDetail.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "height": 36,
+      "width": 33.33333333333326,
+      "x": 797.3333333333334,
+      "y": 28
+    }
+  },
+  {
+    "type": "ScrollArea",
+    "AXLabel": null,
+    "AXUniqueId": "boardDetail.screen",
+    "AXValue": null,
+    "frame": {
+      "height": 402,
+      "x": 0,
+      "width": 874,
+      "y": 0
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "NATURE CLIMBING",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 13.333333333333329,
+      "x": 74,
+      "width": 126,
+      "y": 86
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Stone Hanger Mini x KARMA8A",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 26.33333333333333,
+      "x": 74,
+      "width": 320.66666666666663,
+      "y": 101.33333333333333
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": "Board renderer diagnostic",
+    "AXUniqueId": "boardModel.renderDiagnostic",
+    "AXValue": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=",
+    "frame": {
+      "height": 1,
+      "x": 323,
+      "width": 1,
+      "y": 145.66666666666666
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "15 mm wood edge",
+    "AXUniqueId": "boardModel.contact.wood-edge-15",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 44,
+      "x": 415,
+      "y": 272.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "60 mm pinch block",
+    "AXUniqueId": "boardModel.contact.pinch-60",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 44,
+      "x": 415,
+      "y": 275
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "15 mm granite edge",
+    "AXUniqueId": "boardModel.contact.granite-edge-15",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "x": 415,
+      "width": 44,
+      "y": 295.66666666666663
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": null,
+    "AXUniqueId": "boardDetail.map",
+    "AXValue": null,
+    "frame": {
+      "height": 228.33333333333334,
+      "x": 323,
+      "width": 228,
+      "y": 145.66666666666666
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "boardDetail.selectedHold.granite-edge-15",
+    "AXValue": null,
+    "frame": {
+      "height": 184.3333282470703,
+      "y": 385.5,
+      "x": 81.5,
+      "width": 711
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "SELECTED HOLD",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 13.333333333333314,
+      "width": 111.66666666666666,
+      "x": 100,
+      "y": 404
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "15 mm granite edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 24,
+      "x": 100,
+      "width": 185.33333333333331,
+      "y": 431.3333333333333
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Kind",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666686,
+      "x": 100,
+      "width": 27.666666666666657,
+      "y": 471.3333333333333
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 18,
+      "x": 737.3333333333334,
+      "width": 36.66666666666663,
+      "y": 469.3333333333333
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Depth",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666686,
+      "width": 37.333333333333314,
+      "x": 100,
+      "y": 503.3333333333333
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "15 mm",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 17.999999999999943,
+      "x": 726.3333333333333,
+      "width": 47.66666666666663,
+      "y": 501.3333333333333
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Hand capacity",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666742,
+      "width": 87.33333333333331,
+      "x": 100,
+      "y": 535.3333333333333
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "1",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 18,
+      "y": 533.3333333333333,
+      "x": 766.3333333333333,
+      "width": 7.666666666666629
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "HOLD MAP",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 13.333333333333371,
+      "width": 72,
+      "y": 581.3333333333333,
+      "x": 82
+    }
+  }
+]

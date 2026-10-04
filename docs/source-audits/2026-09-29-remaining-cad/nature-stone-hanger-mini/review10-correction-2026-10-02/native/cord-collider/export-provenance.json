@@ -1,0 +1,42 @@
+{
+  "owner": "placid-badger",
+  "createdUTC": "2026-10-03T03:47:55.598174+00:00",
+  "operation": "read-only export via retained export_rope_collision_solid.py",
+  "sourceSHA256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4",
+  "sourceFeature": "FinalSolid",
+  "meshPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/cord-collider/native-collider.json",
+  "meshSHA256": "b73af61a65e79ed989434bcb0ea734d4bcd10f9d33b289c33c3536b5dc48d62e",
+  "vertices": 13990,
+  "triangles": 27976,
+  "nativeGrooveFeatures": [
+    "LeftFrontOpenGroove",
+    "LeftBackOpenGroove",
+    "RightFrontOpenGroove",
+    "RightBackOpenGroove",
+    "LeftTransverseOpenGroove",
+    "RightTransverseOpenGroove"
+  ],
+  "nativeBoreFeatures": [],
+  "environment": {
+    "HANGTEN_ROPE_PACKAGE": "nature-stone-hanger-mini",
+    "HANGTEN_ROPE_SOLID_FEATURE": "FinalSolid",
+    "HANGTEN_ROPE_SOLID_OUTPUT": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/cord-collider/native-collider.json",
+    "HANGTEN_ROPE_GROOVE_FEATURES": "LeftFrontOpenGroove,LeftBackOpenGroove,RightFrontOpenGroove,RightBackOpenGroove,LeftTransverseOpenGroove,RightTransverseOpenGroove",
+    "HANGTEN_ROPE_BORE_FEATURES": ""
+  },
+  "canonicalSourceModelDescriptorUnchanged": true,
+  "canonicalHashes": {
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+  },
+  "exporterSHA256": "b0ccac8584d701c645befb8d049c8e0202326a43e906a603f0ddba8f0bda3152",
+  "nativeFeatureExtractorSHA256": "dbf57a10bef757087ee263fef7b883ec660c5d2e45655dab1f98e40e8b4971c4",
+  "launchPattern": "exact copied native-author/run-owned.py; same pinned FreeCAD; finally cleanup and SIGINT/SIGTERM handling",
+  "commandReceipt": "collider-command.json",
+  "cleanupReceipt": "collider-cleanup.json",
+  "cleanupVerified": true,
+  "cordSolves": false,
+  "documentationOrGitEdits": false,
+  "rootOwnsArchive": true
+}

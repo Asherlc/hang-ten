@@ -1,0 +1,398 @@
+{
+  "status": "pass",
+  "scope": "final exact-package native apply/check and whole offline visual gate for explicitly conditional display adaptation; human/runtime acceptance excluded",
+  "blockers": [],
+  "candidatePackage": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-final-package/Hangboards/tension-flash-board",
+  "files": {
+    "tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+    "assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "suspension.json": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9"
+  },
+  "provisional": false,
+  "wrapAllowanceMeters": 0.109,
+  "finalPackageReady": true,
+  "nativeApply": {
+    "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-native-apply.json",
+    "sha256": "0b929594a2c6d224f31da70028f2f1c37c01b9d15a995283de0e5a3747ccbf8b",
+    "allFourPosesPresent": true,
+    "scope": "producer final native apply gates passed; read-only evidence reviewed"
+  },
+  "viewedRenderFiles": [
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-front-prior-current.png",
+      "sha256": "78dc82dd2ac3c8fac10b51c32e6fede7d33c2dd8a1af3012fd54d563dd543233"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-side-prior-current.png",
+      "sha256": "60e4540922471753d76fd1f55b12af7d9f4f6727afe15b3e2e6f24853a01a1b5"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-top-prior-current.png",
+      "sha256": "5fb7607b4e586c5c0778342e1cb2548428dda4a0c58e2c28112ef06972592cdb"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-reverse-oblique-prior-current.png",
+      "sha256": "d1c82e382a809b6faa085fb8b62ea8f66e4e09fb440421bc1a4d271ed93e34a3"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-inverted-front-prior-current.png",
+      "sha256": "11215903d5e3ab0e2093a6c9cb2cefd2462d9209c69f73a7645b5cd93ea4971a"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-inverted-side-prior-current.png",
+      "sha256": "2c36c95c946801ed63e503c72754d515108f121d7273d29f9f55fe4fb47c18ef"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-inverted-top-prior-current.png",
+      "sha256": "47f4101cb16bd1ee773ebd1fb77d79dd2876469b3faf58d77d00332baff3ff2c"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-inverted-reverse-oblique-prior-current.png",
+      "sha256": "7ed00d49647a4a783aa04ffe3133c785d7526440f4e8843ab0ab0cf172af6d76"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-front-prior-current.png",
+      "sha256": "272189ffe827b6074a0ba88b65f0774893cc87f2fe72adc2692cf8d4500b0479"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-side-prior-current.png",
+      "sha256": "5553aa95694339dda3d77197ba9896bc9a59fafb66b58c46aec6543395004122"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-top-prior-current.png",
+      "sha256": "11c01b6e7268e3747ba46e29f16b789a7e91fbfda5585d24eb021a9116240a07"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-reverse-oblique-prior-current.png",
+      "sha256": "58e89aec9c3ae4fe03bf69ccf684f23326a291577a0c306a3d788bbdbc5d0556"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-inverted-front-prior-current.png",
+      "sha256": "0270e9d8eb02e39b4232d59e3aed0cb37b8983141b19ccaacf5214d37a48135e"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-inverted-side-prior-current.png",
+      "sha256": "80507571cd55f9456db61e897041d25ec829b3c328a32ba2c14de2f288c10434"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-inverted-top-prior-current.png",
+      "sha256": "3e8d9a86cb910c96636f89b41cf1ef00ca16e4d5895788466a85eed3e60358e7"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-inverted-reverse-oblique-prior-current.png",
+      "sha256": "9be5e94cb89e9cda2d19deafb5e0160647ae7cdd9a781946ac6816c42d585162"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-current-inline.png",
+      "sha256": "434698306c42b0c4509d9873ae98f51e87bc6abbcd0e4d91761744211b90f8e5"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-rejected-current.png",
+      "sha256": "6decca5b6ad4e4e2449c83a0153bd2c4846bf8063aa5b2ee6a25f366a702d001"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-current-inline.png",
+      "sha256": "2eadaee78638a6a5135060fb0fc5dbb249c3f1dda40c21d65a1e4bd2c8184fd8"
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-rejected-current.png",
+      "sha256": "f7c44ac9767e7cefcd1cd444f259227f56e2e4a34945e8618182ed55b2aeff98"
+    }
+  ],
+  "renderProvenance": {
+    "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/render-provenance.json",
+    "sha256": "29b61a72485af0d5694d4f567d9ed0eee9e36a9e65a0474f350358fc4a3e40af"
+  },
+  "sourceImages": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard1.png",
+      "sha256": "aa00ab77e04c685acc4dee0e0704d25fd3165810387649a4e924bf3f7bfff148"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard2.png",
+      "sha256": "ae84f7d58def1c2f4e3b14c2e98ddf8e332b7f48e6c774312744b792d4ab97b4"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard3.png",
+      "sha256": "5753461d938adb19655556e8070f7361a0f9a1697752a861bacde4d240f0f63d"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/evidence/FlashBoard4.png",
+      "sha256": "7c078225890ae6d6975bff865e706e8858e7a56c3edc8df572637241ca6df200"
+    }
+  ],
+  "sourceVideo": {
+    "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/placid-badger-flash14-maker-overview.mp4",
+    "sha256": "c3805a162b8a11f9f4c0e29b39a5927145ee617e8e536a611ad9c16a30730190",
+    "sourceURL": "https://tensionclimbing.com/cdn/shop/videos/c/vp/70ce0899eac44f7b876cc98be9220958/70ce0899eac44f7b876cc98be9220958.HD-1080p-7.2Mbps-37591722.mp4?v=0"
+  },
+  "viewedVideoFrames": [
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/placid-badger-maker-whole-t0.png",
+      "sha256": "a2233f0bd7362b23e49bd5f89f7f7db347b3352d04c4d4d6f15727745f11563f",
+      "actualSeconds": 0,
+      "requestedSeconds": 0,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/placid-badger-maker-whole-t1.png",
+      "sha256": "856f5395d01f5b1e54d78d63256242b8f939ab8c7058706e4653deaaa5857d85",
+      "actualSeconds": 0.9593098958333334,
+      "requestedSeconds": 1,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/placid-badger-maker-whole-t1p5.png",
+      "sha256": "fa4ab068a6279e11b202da3287c5fb27ab323195b9be3091ff5bab356f2383ce",
+      "actualSeconds": 1.459765625,
+      "requestedSeconds": 1.5,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/placid-badger-maker-whole-t2.png",
+      "sha256": "b65464c0b821b158635fa0d4b35508c953edceea58b4558db8a364f1d52d6f24",
+      "actualSeconds": 1.9602864583333333,
+      "requestedSeconds": 2,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/placid-badger-maker-whole-t2p5.png",
+      "sha256": "1d16e147cf8f283317d099b4b8d7012b4caa42a8ba5e62db9909ad5e33187577",
+      "actualSeconds": 2.460807291666667,
+      "requestedSeconds": 2.5,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames-threading/placid-badger-maker-whole-t3.png",
+      "sha256": "f7aec4b89fdbfe1e7fea80a48a1e9beaabe0c6b3d293c36a9a28fb050afd169b",
+      "actualSeconds": 2.9612630208333335,
+      "requestedSeconds": 3,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/placid-badger-maker-whole-t4.png",
+      "sha256": "4b431c478fb0185db668db4fffc0bd502c8de193c73ec6a6c77d7376d46c5918",
+      "actualSeconds": 3.9623046875,
+      "requestedSeconds": 4,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/cord-entry-followup/manufacturer/whole-frames/placid-badger-maker-whole-t6.png",
+      "sha256": "edd41ceaad4c86b18fcda64dbe9f6f3629f46873001f1ab9335134bb89a068a3",
+      "actualSeconds": 5.964322916666666,
+      "requestedSeconds": 6,
+      "wholeEncodedFrame": true,
+      "viewed": true
+    }
+  ],
+  "findings": [
+    "Four free legs, two per end, divide between B_outer and F_inner stations.",
+    "Two-well upright shows B_outer free lead and separate B_inner strand over the crown at each end; the prior unsupported tiny horizontal rear links are absent.",
+    "Both oblique planar barrel segments remain on body +Y across all4 cache poses; whole side/top views show circumferential exterior geometry, not a chord through the barrel.",
+    "Three-edge orientations carry this same wrap below; two-edge orientations carry it above, as expected from retained pose rotations.",
+    "Per-pixel depth removes prior false through-wood strip artifacts.",
+    "No new visible problem with unchanged grip/body shape was identified; earlier native geometry/export/contact gates were not rerun."
+  ],
+  "wrapGeometry": [
+    {
+      "pose": "three-edge-upright",
+      "strand": "left-barrel-wrap",
+      "lengthMM": 107.34523909363882,
+      "modelBoundsMM": {
+        "min": [
+          16.769198999999997,
+          48.0,
+          0.130627
+        ],
+        "max": [
+          31.230803,
+          78.19934,
+          75.86936399999999
+        ]
+      },
+      "allowanceMM": 109
+    },
+    {
+      "pose": "three-edge-upright",
+      "strand": "right-barrel-wrap",
+      "lengthMM": 107.34521797876741,
+      "modelBoundsMM": {
+        "min": [
+          468.769199,
+          48.0,
+          0.130636
+        ],
+        "max": [
+          483.230837,
+          78.19934,
+          75.86955400000001
+        ]
+      },
+      "allowanceMM": 109
+    },
+    {
+      "pose": "three-edge-inverted",
+      "strand": "left-barrel-wrap",
+      "lengthMM": 107.34523909363882,
+      "modelBoundsMM": {
+        "min": [
+          16.769198999999997,
+          48.0,
+          0.130627
+        ],
+        "max": [
+          31.230803,
+          78.19934,
+          75.86936399999999
+        ]
+      },
+      "allowanceMM": 109
+    },
+    {
+      "pose": "three-edge-inverted",
+      "strand": "right-barrel-wrap",
+      "lengthMM": 107.34521797876741,
+      "modelBoundsMM": {
+        "min": [
+          468.769199,
+          48.0,
+          0.130636
+        ],
+        "max": [
+          483.230837,
+          78.19934,
+          75.86955400000001
+        ]
+      },
+      "allowanceMM": 109
+    },
+    {
+      "pose": "two-edge-upright",
+      "strand": "left-barrel-wrap",
+      "lengthMM": 107.34523909363882,
+      "modelBoundsMM": {
+        "min": [
+          16.769198999999997,
+          48.0,
+          0.130627
+        ],
+        "max": [
+          31.230803,
+          78.19934,
+          75.86936399999999
+        ]
+      },
+      "allowanceMM": 109
+    },
+    {
+      "pose": "two-edge-upright",
+      "strand": "right-barrel-wrap",
+      "lengthMM": 107.34521797876741,
+      "modelBoundsMM": {
+        "min": [
+          468.769199,
+          48.0,
+          0.130636
+        ],
+        "max": [
+          483.230837,
+          78.19934,
+          75.86955400000001
+        ]
+      },
+      "allowanceMM": 109
+    },
+    {
+      "pose": "two-edge-inverted",
+      "strand": "left-barrel-wrap",
+      "lengthMM": 107.34523909363882,
+      "modelBoundsMM": {
+        "min": [
+          16.769198999999997,
+          48.0,
+          0.130627
+        ],
+        "max": [
+          31.230803,
+          78.19934,
+          75.86936399999999
+        ]
+      },
+      "allowanceMM": 109
+    },
+    {
+      "pose": "two-edge-inverted",
+      "strand": "right-barrel-wrap",
+      "lengthMM": 107.34521797876741,
+      "modelBoundsMM": {
+        "min": [
+          468.769199,
+          48.0,
+          0.130636
+        ],
+        "max": [
+          483.230837,
+          78.19934,
+          75.86955400000001
+        ]
+      },
+      "allowanceMM": 109
+    }
+  ],
+  "sourceVsInference": {
+    "observed": "loaded four-leg silhouette; visible B_outer free/B_inner wrap roles; exterior crown shoulder continuation",
+    "inferred": "F_outer-to-B_inner endpoint pairing, four through-bores, internal continuity, winding topology beyond visible runs, over/under contact order, planar native route approximation",
+    "displayEstimates": "2mm radius, .20m anchor offset, .42m lead allowances, .109m wrap allowances, geometry dimensions apart from retained published depth facts"
+  },
+  "remaining": [
+    "Root integration/package/staging/build verification is separate.",
+    "Human and runtime acceptance remain pending; no app frames."
+  ],
+  "appFrames": 0,
+  "humanAcceptance": "pending",
+  "manufacturerAccuracyClaim": false,
+  "productionFilesChanged": false,
+  "cleanupVerified": true,
+  "technicalShapeReadyForHumanReview": true,
+  "strictCheck": {
+    "status": "pass",
+    "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-native-check.json",
+    "sha256": "0b929594a2c6d224f31da70028f2f1c37c01b9d15a995283de0e5a3747ccbf8b",
+    "byteIdenticalToApply": true,
+    "allFourPoses": true,
+    "sourceModelAndExactFourFileHandoffVerified": true,
+    "completedAfterInitialVisualVerdict": true
+  },
+  "finalPosesAndRoutesExactToProvisional": true,
+  "nativeDiagnostics": {
+    "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/conditional-native-diagnostics.json",
+    "sha256": "0b8e8fa5c02cbf8cff134b343151e57889195934ed4bd8dda2e48b3887191db2",
+    "diagnosticPassed": true,
+    "outwardApproachCount": 32,
+    "minimumOutwardApproachMM": 1.0287769999999945,
+    "centerlineBoreInteriorIntervalCount": 0,
+    "maximumMeaningfulBendDegrees": 11.829370365700239,
+    "maximumMeaningfulTubeToWoodGapMM": 0.17900888931392767,
+    "continuousRadiusLowerBoundMM": 1.9900339216856306,
+    "actualCordRadiusMM": 2,
+    "existingNumericalAllowanceMM": 0.01,
+    "mathematicalZeroOverlapClaim": false,
+    "equilibriumClaim": false
+  },
+  "contactCoverage": "Native body, seven contact selectors, grip facts, source/model/descriptor unchanged from independently reviewed boundary; no new native rebuild/contact/export gate repeated. Cord views inspect clearance of visible grip faces, not runtime picking.",
+  "finalHandoff": {
+    "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-handoff.json",
+    "sha256": "37820d4aaaf63b52b4ea5cecc67e29d07efb74e3c15de1708035a772b938644f",
+    "packageBindingVerified": true,
+    "historicalStatusNote": "handoff says independent whole-image review pending; subsequent exact-bound visual verdict has passed"
+  },
+  "finalPackageReadyScope": "native apply/check plus offline technical visual gate only; root owns integration/package/staging/build checks, runtime and human acceptance remain pending"
+}

@@ -1,0 +1,16 @@
+{
+  "recordedUTC": "2026-10-02T05:41:34.695345+00:00",
+  "scope": "Narrow retained RealityView highlight synchronization regression/fix during #20 review",
+  "authorization": "Parent no-overlap reservation, followed by direct coordination correction in this workspace",
+  "exactReply": "One correction to the exact file/commit references in my coordination reply: BoardModelRealityTypes.swift is HangTen/Models/BoardModelRealityTypes.swift in this checkout. Git diff HEAD is empty for the actual renderer files, RootView and focused tests. Existing shared changes to preserve include e60142f3e (Mammut runtime wood finish), 1e09ed9be (NUG), and 583a2d08e (original migration). Reservation and no-overlap confirmation apply to the actual Models path as well as BoardModelView.swift/RootView.swift/tests. No pending/planned root edits; proceed with your narrow fix on your branch.",
+  "plannedFiles": [
+    "HangTen/Views/BoardModelView.swift",
+    "HangTenTests/BoardModelRealityTests.swift"
+  ],
+  "otherReservedFilesOnlyIfNecessary": [
+    "HangTen/Models/BoardModelRealityTypes.swift",
+    "HangTen/Views/RootView.swift"
+  ],
+  "packageGeometryChanged": false,
+  "humanAcceptance": false
+}

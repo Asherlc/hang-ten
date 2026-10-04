@@ -1,0 +1,289 @@
+{
+  "sourceSHA256": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+  "sourceBytesUnchanged": true,
+  "states": [],
+  "phases": [
+    {
+      "phase": "before",
+      "geometry": {
+        "volumeMM3": 5579072.76840696,
+        "areaMM2": 389085.93568618875,
+        "boundsMM": [
+          -355.5000001,
+          -94.0304570730512,
+          -1.000000044408921e-07,
+          355.5000001,
+          1.000001140338511e-07,
+          222.0000001
+        ],
+        "valid": true,
+        "solids": 1,
+        "faces": 354,
+        "edges": 1014,
+        "vertices": 664,
+        "maximumToleranceMM": 0.004264171557605
+      }
+    },
+    {
+      "phase": "edited16",
+      "geometry": {
+        "volumeMM3": 5576623.379992811,
+        "areaMM2": 389413.9002705979,
+        "boundsMM": [
+          -355.5000001,
+          -94.0304570730512,
+          -1.000000044408921e-07,
+          355.5000001,
+          1.000001140338511e-07,
+          222.0000001
+        ],
+        "valid": true,
+        "solids": 1,
+        "faces": 354,
+        "edges": 1014,
+        "vertices": 664,
+        "maximumToleranceMM": 0.004264171557621369
+      }
+    },
+    {
+      "phase": "restored14",
+      "geometry": {
+        "volumeMM3": 5579263.691156513,
+        "areaMM2": 389085.93567629735,
+        "boundsMM": [
+          -355.5000001,
+          -94.0304570730512,
+          -1.000000044408921e-07,
+          355.5000001,
+          1.000001140338511e-07,
+          222.0000001
+        ],
+        "valid": true,
+        "solids": 1,
+        "faces": 354,
+        "edges": 1014,
+        "vertices": 664,
+        "maximumToleranceMM": 0.004264171557621369
+      }
+    },
+    {
+      "phase": "repeatRecompute",
+      "geometry": {
+        "volumeMM3": 5579263.691156513,
+        "areaMM2": 389085.93567629735,
+        "boundsMM": [
+          -355.5000001,
+          -94.0304570730512,
+          -1.000000044408921e-07,
+          355.5000001,
+          1.000001140338511e-07,
+          222.0000001
+        ],
+        "valid": true,
+        "solids": 1,
+        "faces": 354,
+        "edges": 1014,
+        "vertices": 664,
+        "maximumToleranceMM": 0.004264171557621369
+      }
+    }
+  ],
+  "restoreVolumeDeltaMM3": 190.92274955287576,
+  "relativeVolumeDelta": 3.422123307550827e-05,
+  "bidirectionalDifference": {
+    "missingVolumeMM3": 0.0,
+    "addedVolumeMM3": 0.0,
+    "missingSolids": 0,
+    "addedSolids": 0
+  },
+  "contacts": [
+    {
+      "id": "pocket-4-left",
+      "areaDeltaMM2": -5.505535227712244e-08,
+      "maximumBoundDeltaMM": 2.1316282072803006e-14,
+      "valid": true
+    },
+    {
+      "id": "edge-5-left",
+      "areaDeltaMM2": -1.1823431123048067e-11,
+      "maximumBoundDeltaMM": 5.684341886080802e-14,
+      "valid": true
+    },
+    {
+      "id": "edge-6-left",
+      "areaDeltaMM2": -5.4569682106375694e-12,
+      "maximumBoundDeltaMM": 2.842170943040401e-14,
+      "valid": true
+    },
+    {
+      "id": "edge-7-left",
+      "areaDeltaMM2": 1.0913936421275139e-11,
+      "maximumBoundDeltaMM": 3.552713678800501e-14,
+      "valid": true
+    },
+    {
+      "id": "pocket-8-left",
+      "areaDeltaMM2": -1.8189894035458565e-12,
+      "maximumBoundDeltaMM": 2.842170943040401e-14,
+      "valid": true
+    },
+    {
+      "id": "pocket-9-left",
+      "areaDeltaMM2": 3.183231456205249e-11,
+      "maximumBoundDeltaMM": 7.105427357601002e-14,
+      "valid": true
+    },
+    {
+      "id": "pocket-10-left",
+      "areaDeltaMM2": -1.546140993013978e-11,
+      "maximumBoundDeltaMM": 1.4210854715202004e-14,
+      "valid": true
+    },
+    {
+      "id": "edge-11-left",
+      "areaDeltaMM2": 5.9117155615240335e-12,
+      "maximumBoundDeltaMM": 2.842170943040401e-14,
+      "valid": true
+    },
+    {
+      "id": "pocket-12-left",
+      "areaDeltaMM2": 2.2737367544323206e-12,
+      "maximumBoundDeltaMM": 5.684341886080802e-14,
+      "valid": true
+    },
+    {
+      "id": "pocket-13-left",
+      "areaDeltaMM2": -1.2612417776836082e-09,
+      "maximumBoundDeltaMM": 2.842170943040401e-14,
+      "valid": true
+    },
+    {
+      "id": "pocket-15-center",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundDeltaMM": 0.0,
+      "valid": true
+    },
+    {
+      "id": "pocket-16-center",
+      "areaDeltaMM2": 2.7284841053187847e-12,
+      "maximumBoundDeltaMM": 2.1316282072803006e-14,
+      "valid": true
+    },
+    {
+      "id": "pocket-17-center",
+      "areaDeltaMM2": -9.094947017729282e-13,
+      "maximumBoundDeltaMM": 0.0,
+      "valid": true
+    },
+    {
+      "id": "pocket-18-center",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundDeltaMM": 5.329070518200751e-15,
+      "valid": true
+    },
+    {
+      "id": "pocket-13-right",
+      "areaDeltaMM2": -7.557900971733034e-10,
+      "maximumBoundDeltaMM": 2.6005864128819667e-12,
+      "valid": true
+    },
+    {
+      "id": "pocket-12-right",
+      "areaDeltaMM2": 2.2737367544323206e-12,
+      "maximumBoundDeltaMM": 4.263256414560601e-14,
+      "valid": true
+    },
+    {
+      "id": "edge-11-right",
+      "areaDeltaMM2": -1.9917933968827128e-10,
+      "maximumBoundDeltaMM": 2.842170943040401e-14,
+      "valid": true
+    },
+    {
+      "id": "pocket-10-right",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundDeltaMM": 1.4210854715202004e-14,
+      "valid": true
+    },
+    {
+      "id": "pocket-9-right",
+      "areaDeltaMM2": 9.094947017729282e-13,
+      "maximumBoundDeltaMM": 4.263256414560601e-14,
+      "valid": true
+    },
+    {
+      "id": "pocket-8-right",
+      "areaDeltaMM2": -5.6843418860808015e-11,
+      "maximumBoundDeltaMM": 1.1368683772161603e-13,
+      "valid": true
+    },
+    {
+      "id": "edge-7-right",
+      "areaDeltaMM2": -5.4569682106375694e-12,
+      "maximumBoundDeltaMM": 3.552713678800501e-14,
+      "valid": true
+    },
+    {
+      "id": "edge-6-right",
+      "areaDeltaMM2": -8.185452315956354e-12,
+      "maximumBoundDeltaMM": 5.684341886080802e-14,
+      "valid": true
+    },
+    {
+      "id": "edge-5-right",
+      "areaDeltaMM2": -2.7284841053187847e-12,
+      "maximumBoundDeltaMM": 5.684341886080802e-14,
+      "valid": true
+    },
+    {
+      "id": "pocket-4-right",
+      "areaDeltaMM2": -1.8189894035458565e-12,
+      "maximumBoundDeltaMM": 1.4210854715202004e-14,
+      "valid": true
+    },
+    {
+      "id": "jug-14-center",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundDeltaMM": 1.3964523981613297e-16,
+      "valid": true
+    },
+    {
+      "id": "round-sloper-3-center",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundDeltaMM": 0.0,
+      "valid": true
+    },
+    {
+      "id": "flat-sloper-2-left",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundDeltaMM": 0.0,
+      "valid": true
+    },
+    {
+      "id": "jug-1-left",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundDeltaMM": 2.2737367544323206e-13,
+      "valid": true
+    },
+    {
+      "id": "flat-sloper-2-right",
+      "areaDeltaMM2": 0.0,
+      "maximumBoundDeltaMM": 0.0,
+      "valid": true
+    },
+    {
+      "id": "jug-1-right",
+      "areaDeltaMM2": -1.8189894035458565e-12,
+      "maximumBoundDeltaMM": 0.0,
+      "valid": true
+    }
+  ],
+  "scope": "Read-only edit/restore diagnosis, no tolerances changed and no save."
+}
+
+								
+								
+								
+								
+								
+								

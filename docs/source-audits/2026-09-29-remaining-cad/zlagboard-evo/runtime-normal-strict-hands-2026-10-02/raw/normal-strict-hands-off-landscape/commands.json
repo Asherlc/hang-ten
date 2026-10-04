@@ -1,0 +1,241 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "data"
+    ],
+    "startEpoch": 1790987014.813897,
+    "endEpoch": 1790987014.980439,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1790987014.980907,
+    "endEpoch": 1790987015.317683,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "openurl",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "hangten://plan/research.max-hangs/workout"
+    ],
+    "startEpoch": 1790987015.317694,
+    "endEpoch": 1790987018.4669771,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/launch-initial.png"
+    ],
+    "startEpoch": 1790987018.467006,
+    "endEpoch": 1790987018.9596539,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-0-active-plus-0.25.png"
+    ],
+    "startEpoch": 1790987022.648795,
+    "endEpoch": 1790987023.5550878,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-0-active-plus-1.png"
+    ],
+    "startEpoch": 1790987023.59677,
+    "endEpoch": 1790987024.5314171,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-0-active-plus-3.png"
+    ],
+    "startEpoch": 1790987025.4036312,
+    "endEpoch": 1790987025.9161742,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-0-active-plus-5.png"
+    ],
+    "startEpoch": 1790987027.424747,
+    "endEpoch": 1790987027.923125,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-1-preview-plus-0.25.png"
+    ],
+    "startEpoch": 1790987029.4102101,
+    "endEpoch": 1790987029.894743,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-1-preview-plus-1.png"
+    ],
+    "startEpoch": 1790987030.1734889,
+    "endEpoch": 1790987030.623467,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-1-preview-plus-3.png"
+    ],
+    "startEpoch": 1790987032.148203,
+    "endEpoch": 1790987032.581886,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-1-preview-plus-5.png"
+    ],
+    "startEpoch": 1790987034.151472,
+    "endEpoch": 1790987034.587693,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-2-active-plus-0.25.png"
+    ],
+    "startEpoch": 1790987210.248095,
+    "endEpoch": 1790987210.705502,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-2-active-plus-1.png"
+    ],
+    "startEpoch": 1790987211.009184,
+    "endEpoch": 1790987211.457236,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-2-active-plus-3.png"
+    ],
+    "startEpoch": 1790987213.008381,
+    "endEpoch": 1790987213.445199,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/phase-2-active-plus-5.png"
+    ],
+    "startEpoch": 1790987215.013386,
+    "endEpoch": 1790987215.4596102,
+    "exitStatus": 0
+  }
+]

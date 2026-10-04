@@ -1,0 +1,78 @@
+[
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 0.25,
+    "targetEpoch": 1790978587.651709,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-landscape/phase-0-active-plus-0.25.png",
+    "sha256": "79164e793d325f44396f9eafe83df024b7758be7b03f5d71733d7a64af4e4b65",
+    "startEpoch": 1790978587.670163,
+    "endEpoch": 1790978588.153843,
+    "startDelayFromTarget": 0.01845383644104004,
+    "traceReadBefore": {
+      "observedEpoch": 1790978587.670163,
+      "lastSequence": 6
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790978588.1542022,
+      "lastSequence": 6
+    }
+  },
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 1,
+    "targetEpoch": 1790978588.401709,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-landscape/phase-0-active-plus-1.png",
+    "sha256": "65e6f109adaf9dd64d52caf0617c77032243be5d7e7d57b5d92e74ce2ba28e2f",
+    "startEpoch": 1790978588.404917,
+    "endEpoch": 1790978588.8865511,
+    "startDelayFromTarget": 0.0032079219818115234,
+    "traceReadBefore": {
+      "observedEpoch": 1790978588.404917,
+      "lastSequence": 6
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790978588.886945,
+      "lastSequence": 7
+    }
+  },
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 3,
+    "targetEpoch": 1790978590.401709,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-landscape/phase-0-active-plus-3.png",
+    "sha256": "0955bacd487d8f2215597fb5a009ef628baad8228fcb4f3c79ccb1a3289e87cd",
+    "startEpoch": 1790978590.4416552,
+    "endEpoch": 1790978590.90236,
+    "startDelayFromTarget": 0.03994607925415039,
+    "traceReadBefore": {
+      "observedEpoch": 1790978590.441654,
+      "lastSequence": 8
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790978590.902909,
+      "lastSequence": 9
+    }
+  },
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 5,
+    "targetEpoch": 1790978592.401709,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-landscape/phase-0-active-plus-5.png",
+    "sha256": "0955bacd487d8f2215597fb5a009ef628baad8228fcb4f3c79ccb1a3289e87cd",
+    "startEpoch": 1790978592.434407,
+    "endEpoch": 1790978592.890569,
+    "startDelayFromTarget": 0.03269791603088379,
+    "traceReadBefore": {
+      "observedEpoch": 1790978592.434407,
+      "lastSequence": 10
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790978592.89115,
+      "lastSequence": 11
+    }
+  }
+]

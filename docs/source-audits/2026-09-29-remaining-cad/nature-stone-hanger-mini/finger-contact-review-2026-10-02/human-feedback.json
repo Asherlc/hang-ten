@@ -1,0 +1,21 @@
+{
+  "owner": "placid-badger",
+  "reviewNumber": 10,
+  "boardID": "nature.stone-hanger-mini",
+  "recordedUTC": "2026-10-03T06:25:10.113937+00:00",
+  "rawFeedback": "That's not covering the actual area where the fingers are pinching. That's what needs to be highlighted.",
+  "clarification": {
+    "question": "By “Jokes should wrap all the way around,” do you mean the jug highlight should wrap around the top rail onto its front and back?",
+    "answer": "Yes, the jug highlight"
+  },
+  "interpretation": "Include the broad upper front/back finger-pressure surfaces and continuous upper side band, down to the existing rail opening boundary.",
+  "priorShownCommit": "d3811417c4c2d7efd87e7b856399fd860124fbbc",
+  "priorShownIdentity": {
+    "sourceSHA256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38",
+    "modelSHA256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
+    "descriptorSHA256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
+    "sidecarSHA256": "b7dbc671085b07eb071403df86dec17fcc52e7c1652437923f0786b2afcf15f6"
+  },
+  "currentHumanAcceptance": "pending",
+  "earlierOverallBodyApprovalPreserved": true
+}

@@ -1,0 +1,52 @@
+{
+  "owner": "placid-badger",
+  "jobName": "placid-badger-plateau13-native-routes-pytest",
+  "status": "cleaned",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-TMP"
+  ],
+  "processGroup": 35738,
+  "registeredUTC": "2026-10-02T19:12:41.309308+00:00",
+  "simulatorsCreated": 0,
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-TMP/placid-badger-pytest",
+    "--junitxml",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-junit.xml",
+    "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_exterior_wrap_uses_the_closed_solid_and_clearance",
+    "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_a_terminal_inside_wood_cannot_be_promoted_to_a_cord_route",
+    "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_clearance_certifies_thin_obstacles_between_sample_locations",
+    "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_noncoplanar_support_keeps_an_unobstructed_free_span_straight",
+    "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_independent_loop_legs_cannot_retrace_each_other"
+  ],
+  "timeoutSeconds": 300,
+  "logPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest.log",
+  "startedUTC": "2026-10-02T19:12:41.312126+00:00",
+  "exitCode": 0,
+  "elapsedSeconds": 0.7454779170002439,
+  "logSHA256": "f45f868d8aa06b206a57b1222c20fe0f56111900750d0ced0adc003a189e65c2",
+  "cleanup": {
+    "owner": "placid-badger",
+    "jobName": "placid-badger-plateau13-native-routes-pytest",
+    "resources": [
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-TMP",
+        "absent": true
+      }
+    ],
+    "errors": [],
+    "remainingProcesses": [],
+    "processGroupAbsent": true,
+    "allResourcesAbsent": true,
+    "passed": true,
+    "finishedUTC": "2026-10-02T19:12:42.210215+00:00"
+  }
+}

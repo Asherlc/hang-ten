@@ -1,0 +1,142 @@
+{
+  "owner": "placid-badger",
+  "allExactOwnedResourcesAbsent": true,
+  "receipts": [
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/author-cleanup.json",
+      "sha256": "9a1581be9b6efac9b0e7d0a053cc022b349d7f4ecf6b7a03fd31066d863973cf",
+      "exitCode": -15,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/author2-cleanup.json",
+      "sha256": "0d3d1c78ff982b6a2fafc1b205c32005ad8ae852478f5aa2f28f083f97b94d4f",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/author3-cleanup.json",
+      "sha256": "e9875c338918f9ed50df85d6ef6ec12dd97ab1f121ea30d09caa1bf7a1940a41",
+      "exitCode": 3,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/author4-cleanup.json",
+      "sha256": "ef1cb55a369bfbc318e17f5949eca6da887d4b64b818a8ec046be36ecfcdc875",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider-cleanup.json",
+      "sha256": "3f6084f532fa249a8fec8f73fb2825544a96926f54381fd4b72f63477bf2a192",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider2-cleanup.json",
+      "sha256": "efe10d9fb39c275229d75ce1e64d8517297df6fc18d0405e7d10034083db1b0a",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile1-cleanup.json",
+      "sha256": "821b021729b9406e945b6fba1c431d00084ac4161b010815c35a86222c8e61c3",
+      "exitCode": -15,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile2-cleanup.json",
+      "sha256": "3c02ea1fdf8db3c72bde6871e05995899317d143e3f7ce010d7aa9147614f105",
+      "exitCode": -15,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3-cleanup.json",
+      "sha256": "038856998f92dabeeebe5a28e3dde81bcd30318b77c4c0bb7cbc8fe30ea3133b",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile4-cleanup.json",
+      "sha256": "1ca57c9305485fdff961d27d1deeaf8d47672f98b3771dad602598bd02c101de",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/fresh-groove-cleanup.json",
+      "sha256": "3d7f53445b1f0306168ad28a68e7b816acb0630c6ddf65d629c2c2110ed4c463",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/inspect-cleanup.json",
+      "sha256": "ca2c7c6452098ba51e7e5305d134f0f8598c9b3a36f5061eccb7378f1f770721",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/mesh-counts-cleanup.json",
+      "sha256": "608f7734bdcf528e023363ef9ad73d143f78db1b791d1b167ed227887b8e0edf",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen-cleanup.json",
+      "sha256": "38d4c4ac7ac6359b8cd74767aa4e2982cfea96b044ae675f7050904cd1003df7",
+      "exitCode": 3,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen2-cleanup.json",
+      "sha256": "562b4b942cd5c35c0a8169955768364ef03d594b22d9b205cae5e85cd1a716bd",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/orientation-cleanup.json",
+      "sha256": "b9bb917abca50e9af68822ac4e0f20ac41ac5ca603f5055138e6669f7b80e27a",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters-cleanup.json",
+      "sha256": "05a4cb5ca926e3ea027e23b01c000ae0d5c13c6b1aaccfbef102bf5f5e6f28f9",
+      "exitCode": 3,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters2-cleanup.json",
+      "sha256": "4657eac92eb8b6e4ecb84ff547f2558466f7de5e79b63b722d0802a4af9b1705",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/previews-cleanup.json",
+      "sha256": "81136d638911f33fc909babaf5ae54047b94a594d0b02b43ebf333e7679a0c0a",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/reimport-cleanup.json",
+      "sha256": "c31ffa820af8342b7aad410d4c055acfcc790510fa876b4959cb59e1c57e0276",
+      "exitCode": 0,
+      "allExactOwnedResourcesAbsent": true
+    },
+    {
+      "receipt": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/shell-diagnosis-cleanup.json",
+      "sha256": "125302f43633304db76867ead153635798d4073262462fa88fbdeedc94198a97",
+      "exitCode": 3,
+      "allExactOwnedResourcesAbsent": true
+    }
+  ],
+  "removedInterruptedWorkspaceStaging": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile1/assets/.hangten-build-7ltruno2",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile2/assets/.hangten-build-kv80aeth"
+  ],
+  "canonicalPackageUnchanged": {
+    "nature-stone-hanger-mini.FCStd": true,
+    "suspension.json": true,
+    "assets/primary.usdz": true,
+    "assets/primary.model.json": true
+  }
+}

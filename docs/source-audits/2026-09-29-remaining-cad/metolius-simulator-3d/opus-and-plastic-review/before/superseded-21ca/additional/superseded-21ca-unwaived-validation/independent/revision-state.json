@@ -1,0 +1,9 @@
+{
+  "recordedAtUTC": "2026-10-01T16:04:59.098113+00:00",
+  "sourceSHA256": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+  "status": "intermediate-not-ready-for-promotion",
+  "newFeedback": "Center jug rear ridge obstructs grasp; sloper should extend all the way forward",
+  "priorChecksRetained": true,
+  "limits": "Native dome/no-sampled-roof-dip passes address prior Opus feedback only. Existing55/65mm contact YLength checks do not establish accessible front finger-contact surfaces. Awaiting native rear-jug/sloper sections and next author+Opus gate.",
+  "activeWork": "Finish already-running bounded restore-equivalence witness only; no new export validation."
+}

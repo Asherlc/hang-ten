@@ -1,0 +1,90 @@
+[
+  {
+    "name": "host-boot",
+    "command": [
+      "rtk",
+      "proxy",
+      "sysctl",
+      "kern.boottime"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.00980520248413086
+  },
+  {
+    "name": "clock",
+    "command": [
+      "rtk",
+      "proxy",
+      "date",
+      "-u"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.00986790657043457
+  },
+  {
+    "name": "disk",
+    "command": [
+      "rtk",
+      "proxy",
+      "df",
+      "-h",
+      "."
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.009917974472045898
+  },
+  {
+    "name": "macos",
+    "command": [
+      "rtk",
+      "proxy",
+      "sw_vers"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.015146970748901367
+  },
+  {
+    "name": "xcode",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcodebuild",
+      "-version"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.13014984130859375
+  },
+  {
+    "name": "runtime-inventory",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "list",
+      "runtimes",
+      "--json"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.16029810905456543
+  },
+  {
+    "name": "service-identity",
+    "command": [
+      "rtk",
+      "proxy",
+      "pgrep",
+      "-x",
+      "com.apple.CoreSimulator.CoreSimulatorService"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.034343719482421875
+  }
+]

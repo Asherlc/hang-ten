@@ -1,0 +1,839 @@
+{
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "bfe471b118a6bdd504e48e818f52a1039441f947d471e1670c25a87b56a8b14c",
+      "bytes": 2704
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "bytes": 2828
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-constructors.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "bytes": 3958
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-cpu-semantics.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "bytes": 3729
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-frames.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-navigation.py",
+      "sha256": "f10795e290a7eccb7076d0922f0ee4628de9cc33ccd512c1ad57ab0a9717a78d",
+      "bytes": 4404
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-navigation.py.diff",
+      "sha256": "734b89efc977c709ec9d0b76b1c3a701ae7104203d3f25d202a7723cae1b1510",
+      "bytes": 3765
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-ownership.py",
+      "sha256": "c99d436af6038ecd6a20754b80655839d126fe863c12711baef163f6ada883ed",
+      "bytes": 10101
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-ownership.py.diff",
+      "sha256": "0473c005a2899dba39218f6c93c09029fd77c985a4c736a36949414e1c5396e3",
+      "bytes": 7217
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-prestart-hands.py",
+      "sha256": "bb61b0a2c6d136a6a4c68b7132a3d165e39f97ad20cbcca09fe0c2a75e203b7f",
+      "bytes": 8325
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-prestart-hands.py.diff",
+      "sha256": "2b80bf474139ee6dc11f38e7517f5b013757257110f897b265ea6bf4f3df4fb1",
+      "bytes": 1595
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-real-hands.py",
+      "sha256": "b512f11cf03f78d468123b768166123508d38ad7ff85d1f6eff2f4444ce21277",
+      "bytes": 5031
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-real-hands.py.diff",
+      "sha256": "7fa429c50193a2cc605079290ef979a09f4e3be51f6a970c6c9d0cb61d38c5b0",
+      "bytes": 887
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-sync-counters.py",
+      "sha256": "5c8248232023d0a62bf77ef2bff380cbc27d826f6e3c49fb56e4a0e95f6aab20",
+      "bytes": 5349
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-sync-counters.py.diff",
+      "sha256": "a10a57b6d2a936ad679d52a2e7d1d1ac1a9a8428450fb6942bcc9cfe4ab7c4d1",
+      "bytes": 1205
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-weak-hand-census.py",
+      "sha256": "301db2caee1541b429be526a1c50699dca8d2b470129c59bf01ed2dabc408efd",
+      "bytes": 6594
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/check-weak-hand-census.py.diff",
+      "sha256": "32384a80e0622f262e6270f65d6f1a01f2f12c402daeb6248f3138460388d8c8",
+      "bytes": 911
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/compare.py",
+      "sha256": "e2df83e187e7b6bb5ddf50f030131e7239f9879c47640f41c11b1437eb029669",
+      "bytes": 2962
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/action/compare.py.diff",
+      "sha256": "7b58e51c19357173c6181e46a519c62ebecf3dff49a0357e31983a5c870d5f5a",
+      "bytes": 3744
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/capture.diff",
+      "sha256": "dac39f81edba680acf306129da56db8ce90295428675b0773b2b70933ba8ffa7",
+      "bytes": 18133
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/capture.py",
+      "sha256": "92c39f3c28e1fc940ae3aa8f1251098c68d4efe671d2638b5ce755dd3faf4466",
+      "bytes": 16774
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/check-supplemental-timing.py",
+      "sha256": "ba62ecddd10c4515fd84cf0049fc96c6e2c16a7f139fccabfdc1d014baec37a0",
+      "bytes": 6261
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "bytes": 2828
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-constructors.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "bytes": 3958
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-cpu-semantics.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "bytes": 3729
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-frames.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-navigation.py",
+      "sha256": "deda8bf3a760533892b428fce4f9810667eefcc1346a8585268adf1369235907",
+      "bytes": 4406
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-navigation.py.diff",
+      "sha256": "a59579d6d82a433abc848d6f00071eb50bb2ee6defe89950b661766577d82cb7",
+      "bytes": 3771
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-ownership.py",
+      "sha256": "2208c5c389d1bac54122d72a77500773a593742dddac3a260ac81f688fa5ced9",
+      "bytes": 10058
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-ownership.py.diff",
+      "sha256": "bb973c686c1dbc574c51748cf2cd8e5552e7b4f7a4691da40d1974a673ec6602",
+      "bytes": 7133
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-prestart-hands.py",
+      "sha256": "03f591bd6ed7a49fe6d53d6dd298dd4c8bcf7842f6e0485a875568d4045644a0",
+      "bytes": 8327
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-prestart-hands.py.diff",
+      "sha256": "3f44e4d802bba5e10f133b788b9a0756b8e72c68b7a3fda6bbcf805057a05dbe",
+      "bytes": 1601
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-real-hands.py",
+      "sha256": "012acaef4cee2bc734bb7524da7a5186df02c7d130c27ed1b2ae0f877e23cc18",
+      "bytes": 5032
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-real-hands.py.diff",
+      "sha256": "56fa89742807ae256468b9a4462f797bfbaaf0e62767e9f29ce68d03e575cad5",
+      "bytes": 891
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-sync-counters.py",
+      "sha256": "850061ffc495b5c4cf786589f6cdf52880067a47c7d4779606f31e5fab48c650",
+      "bytes": 5350
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-sync-counters.py.diff",
+      "sha256": "7793ea658fbeed615b31bdb62d93584779ecc4344ed47edd42efa82593e4ab96",
+      "bytes": 1209
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-weak-hand-census.py",
+      "sha256": "f0217e87e33c4ef3ea58315e27ea0cbcbffcece80ecdcab6f8393ba5d6ed7567",
+      "bytes": 6595
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/check-weak-hand-census.py.diff",
+      "sha256": "68be9cfc49527ac9a24903f478c342b9484885ea7536ab94146eee4364e08601",
+      "bytes": 915
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/compare.py",
+      "sha256": "2a95246c411ddccfc8b2b5bd9803454fe3ca1a5b4a84971618ad39e88a2dcbbf",
+      "bytes": 2959
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/control/compare.py.diff",
+      "sha256": "2a9a051f07dbf1823adf0d481e2642c0b11b709661bc30fefa89136a11a68379",
+      "bytes": 3745
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/marker-schema.json",
+      "sha256": "a4a9065f46d9a8f018dfd47ccf5a13c9d9c8eb4b6b22554e701e3fa678d23707",
+      "bytes": 10441
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/marker_correlations.py",
+      "sha256": "edfdd6480f5054c53607cc5bdbf2420feb80cf606138698a55551bb1b023a0cc",
+      "bytes": 5026
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/prior-full-capture.py.txt",
+      "sha256": "50858c43dced3f368ae696d55dbd57c7619dfd1de8687b34b9caec35e4749c45",
+      "bytes": 13446
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/prior-startup-capture.py.txt",
+      "sha256": "0a1eba05a5b797c3a9c63a47c0df28b3275b4d7273facf3ebee8919c8248c5b5",
+      "bytes": 13519
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/report.json",
+      "sha256": "680d617f1515bc5061d2db04ef41b8438d8dc1ed9204d065467895b5f95d7337",
+      "bytes": 7118
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/validate.py",
+      "sha256": "9d21e8b1498943c6d20d176d42defc709f34ff0b5d35bbb2415cc0e22b1f51b5",
+      "bytes": 2621
+    },
+    {
+      "path": "analysis/startup-full-color-runtime-prep/validator-copy-provenance.json",
+      "sha256": "4d6db278846f048ee2efa1dc953f6115c1f0acb76fe62af528c76cb7cb1df95f",
+      "bytes": 7937
+    },
+    {
+      "path": "index.md",
+      "sha256": "a9822504c20beef06590e844366242dbe4b8b706b6097dec4ff7a0d41a637d16",
+      "bytes": 1958
+    },
+    {
+      "path": "raw/startup-full-color-control-app-termination-verification.json",
+      "sha256": "203272f451ca1fb99be448c521fee995c959dbfb3ae13d331593449c34591857",
+      "bytes": 185
+    },
+    {
+      "path": "raw/startup-full-color-control-final-parity.json",
+      "sha256": "d79874c9099aaa79389d1e27459d87d585afcb88daddc924e7b2fb14240c37ff",
+      "bytes": 12855
+    },
+    {
+      "path": "raw/startup-full-color-control-findings.json",
+      "sha256": "befd78726c75bd6b7de9b7b7917894ff91b3619ced6f583eb741ffe06ab673b9",
+      "bytes": 8139
+    },
+    {
+      "path": "raw/startup-full-color-control-frozen-manifest.json",
+      "sha256": "82a4d5509ab9de6ffa8ab659b0d6fa1355cb150045f65ca92698a75da8298189",
+      "bytes": 43118
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/000-stdout.txt",
+      "sha256": "e9a0b7b0f55882d79f82898d311658c54c16e742a65133ce2af172cdd917da72",
+      "bytes": 176
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/001-stdout.txt",
+      "sha256": "b99433b23a26a8dd4ad9ed5e91b3e098cebfbbdda53fd07f3a90932a8b625067",
+      "bytes": 162
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/002-stdout.txt",
+      "sha256": "7e80718e857939671315ce76705926dfe0cc2850e294065c1d45161b668db4d8",
+      "bytes": 28
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/003-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/004-stderr.txt",
+      "sha256": "fcf79ed752799f5035e7010132d27564c32f2162c8266520a6d3660472eb72fd",
+      "bytes": 374
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/004-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/005-stderr.txt",
+      "sha256": "4ac6a6b00122d451504d34f45724c5e791c9976f09ddd6f98c8ec6d288c95b43",
+      "bytes": 384
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/005-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/006-stderr.txt",
+      "sha256": "6df2c9f5e36e38acae54303b511acb6d15bfb3436c3245cbd20040fb486614b5",
+      "bytes": 381
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/006-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/007-stderr.txt",
+      "sha256": "95fd610693a4fee539c7f00553c012eb0125dca88bb6df64c1a98ca3a039edbd",
+      "bytes": 381
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/007-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/008-stderr.txt",
+      "sha256": "20da0d2b039de6e349370617f3a58bd268274bcd15d1bf4f0af1f57a7c2ebc3c",
+      "bytes": 381
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/008-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/009-stderr.txt",
+      "sha256": "2e80df1202da91cd99000c4791c955ee342b617b25994f3500eee99ac935c94b",
+      "bytes": 385
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/009-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/010-stderr.txt",
+      "sha256": "d794a7e9576974fdc2ea34c6c7fe3c3ba4c33240e9692e7a3c566de6ca755a1d",
+      "bytes": 382
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/010-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/011-stderr.txt",
+      "sha256": "dbf92f4bb8579404a58eacea05c1ee4d0a53b64b5681fe5fe85e1ca0bd0c152d",
+      "bytes": 382
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/011-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/012-stderr.txt",
+      "sha256": "99ee914dc50a4b606684d69a5f2dc3094ab806a2cf508f9ff085ac1d72b83f33",
+      "bytes": 382
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/012-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/013-stderr.txt",
+      "sha256": "2caa2618256eed85f9d2dba4b5776a6a0c67578864a18e3820793d3372dfbc1d",
+      "bytes": 384
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/013-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/014-stderr.txt",
+      "sha256": "144051608fdd1c973fbf80331721aaf8303c8d8a2dcc80994a7de15c39663826",
+      "bytes": 381
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/014-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/015-stderr.txt",
+      "sha256": "4b0782c2c17cdbf1f62ae6e24af7ae756d45449402bf67dbd1d2cf34cb2b76a7",
+      "bytes": 381
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/015-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/016-stderr.txt",
+      "sha256": "71c987a3dd9444db1b0948eceaf99e08646c96ddfb1274f5d38654ee0fe47c40",
+      "bytes": 381
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/016-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/appearance-anchor.json",
+      "sha256": "bae5b2c5c15ca07a9d3acd7cc2907276d39b98eccf46ac0a084bb0f055860ef0",
+      "bytes": 1338
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/capture-schedule-validation.json",
+      "sha256": "e87de2ba2db957ad5906549253c71e7c5b25b9b9837d05d964ade94348459e3c",
+      "bytes": 116
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/captures.json",
+      "sha256": "345763563a98a5e73be279ded2f76fb95a0f2281ef21d084cdc90b6b60acf827",
+      "bytes": 7948
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-constructors.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-constructors.py.stdout",
+      "sha256": "ead9b3d7bb8fc863e0258fef33269be5cd16591ed1e0e899394036056c0df326",
+      "bytes": 423
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-cpu-semantics.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-cpu-semantics.py.stdout",
+      "sha256": "77d19ccd287081df354c8a4f565d9206687588e510c3a999f47696239536bd3e",
+      "bytes": 446
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-frames.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-frames.py.stdout",
+      "sha256": "a05bf5a7c32c377fe5009428b375125ab4c007a442d7c0cb6d867f3bc39bfef4",
+      "bytes": 594
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-navigation.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-navigation.py.stdout",
+      "sha256": "024b507109b6d9f74081ddb4294db78b2ba8c70b31cd881572b1154800a9a82a",
+      "bytes": 627
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-ownership.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-ownership.py.stdout",
+      "sha256": "71c06012c25073345b627590c6cf52bc7b5445dfdbbd17f029d9270d32ce0a90",
+      "bytes": 998
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-prestart-hands.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-prestart-hands.py.stdout",
+      "sha256": "a96f1533e3c09b74bc23dd4cf5f149dffb54adba8d53ef29515df0e27918749d",
+      "bytes": 201
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-real-hands.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-real-hands.py.stdout",
+      "sha256": "8665c7f2710359e57ee71b52635111571497737cce9194032229c338848f6376",
+      "bytes": 847
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-sync-counters.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-sync-counters.py.stdout",
+      "sha256": "172b51574c9f697755c9dc34427e2cf51c85b2366d730e1a87833581ed6e5184",
+      "bytes": 278
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-weak-hand-census.py.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/check-weak-hand-census.py.stdout",
+      "sha256": "5c38e2d4c5eef59160d0ce86c977fc3e479d186c936f1b360d6dca6f76883400",
+      "bytes": 358
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/commands.json",
+      "sha256": "6ab5739b720c6bf4d5ac1044e50fd77f3f4971761da190f3c3f627d32e3f5822",
+      "bytes": 11920
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/events-1997F51F-2511-469C-9EFF-FEB92DD28D75.jsonl",
+      "sha256": "5987710aae1a7c33171a2e6c122db1d62aa1141056ea4d8e226bfe3b625b7bc7",
+      "bytes": 1730811
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/first-eight-visual-review.json",
+      "sha256": "16f3caf5c7ac5f062d3c69655434575514c70ed0cf4e605bf753dc160a534b01",
+      "bytes": 4716
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/following-preview-tail.json",
+      "sha256": "3ffb3b4961e779784d6efda0c80925fff15186eb7f93b000a8eefd556444694c",
+      "bytes": 18982
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/full-visual-review.json",
+      "sha256": "f78b7d443e6cfc719cf95de767689008263e65cb497d77c90c32c2a6b78b4cb6",
+      "bytes": 7010
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/installed-binary-gate.json",
+      "sha256": "7d5751807175ae1f145fbffeae554e9e8f62dbdcecfbf623dc6b6f70e65cc5a5",
+      "bytes": 374
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/launch-initial-capture.json",
+      "sha256": "f099eac66d04132ade0866172c3b27d0c1e90b3946ad8bbd510e8f9902f6d868",
+      "bytes": 151
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/launch-initial.png",
+      "sha256": "7214b229b4b469f35a5d01ae3da0d7c2ef82a9dd7d02513f8a1fb435eba80d70",
+      "bytes": 718960
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/launch-review-environment.json",
+      "sha256": "b6a809d430018be8fe15bdb076b9bc300dd79ce6866838009ecee8042c6dd45e",
+      "bytes": 617
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/normal-host-frame-validation.json",
+      "sha256": "0b6f059c51796e7484ef94a3daf997fcd12a93ad6a839b0a387cbfab6c7a46af",
+      "bytes": 384941
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/phase-0-active-plus-0.25.png",
+      "sha256": "947fd784666b3a807892701021752eee92b19037f1ed680b69e6c24db4957b1c",
+      "bytes": 334487
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/phase-0-active-plus-1.png",
+      "sha256": "0d3ac53cf612919bc05e1137ce07bd148500fb65b039d9b1e7dc290e55b273ec",
+      "bytes": 336162
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/phase-0-active-plus-3.png",
+      "sha256": "37cced161e0e3120650580f8e5faf25ebfe7955e3b1240da3d1b0f021aed2ffc",
+      "bytes": 336641
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/phase-0-active-plus-5.png",
+      "sha256": "c16a8599ad9f3b0c813c173512795e157eefd6d96614cdffa8b28151af8c62d0",
+      "bytes": 337104
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/phase-1-preview-plus-0.25.png",
+      "sha256": "a5063938bec6a2520f1c05dec06e6ab75e616b120e2c1562fd2ebad918eb08bd",
+      "bytes": 302960
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/phase-1-preview-plus-1.png",
+      "sha256": "e3d428655a398779f8941225da623508e09b7f5e453e873167df6bc177933be6",
+      "bytes": 307292
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/phase-1-preview-plus-3.png",
+      "sha256": "33c5ceb3c943f0b4606db1eba61a431939722cf112737244615e08c6df23e9d1",
+      "bytes": 305577
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/phase-1-preview-plus-5.png",
+      "sha256": "1f2d4583b9a5d78496d15b0e44dba6283e32f96e9f1b0a798668237ed73201c9",
+      "bytes": 307162
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "2227d82298b64153848121dfb365797a2304d2a85cebf07f8abdfe8ce92fa475",
+      "bytes": 337584
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/phase-2-active-plus-1.png",
+      "sha256": "5e8dc1b9c7d5f308d8abf6633ffcfae60910043f11425239d32081732aef6a0a",
+      "bytes": 339410
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/phase-2-active-plus-3.png",
+      "sha256": "74b2b0267035ded02bbfbc2416f84db726e5b1ea03bc09dc197af28be01e7a79",
+      "bytes": 337856
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/phase-2-active-plus-5.png",
+      "sha256": "e63331888e50c041366c104d74026d7d8cadec6975f30fd5e75b4fcc64d47f16",
+      "bytes": 338344
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/prestart-hand-validation.json",
+      "sha256": "29c62a371d128c853c69dc6ae3a801129c225147fcf3173354b3888304638884",
+      "bytes": 65825
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/protocol.json",
+      "sha256": "f6cf3fed9659b6c13c7c3b1782c93c7ee38daffe03a428d1e2ecde596f9d458a",
+      "bytes": 698
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/real-hand-lifetime-camera-validation.json",
+      "sha256": "1a7fd10a81dcfa5afc4479c20715e02f1ee46d2e0af6ad214627f844c164c959",
+      "bytes": 19274
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/runtime-release.json",
+      "sha256": "6d3ca8b5148ef2e62cf5d794f1cbd4d641395a1e02ba964b3fa856ee565fc37a",
+      "bytes": 1825
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/startup-correlation-validation.json",
+      "sha256": "057b3160fee53e1b8b2c1c7d77996fd87624fe43b17b15b619deee4e127959dd",
+      "bytes": 33446
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/startup-marker-observations.json",
+      "sha256": "7d70493e7da4aea57c4a2b5e6ff6a37fb8a67def27a28961bbe6caf3f288fc16",
+      "bytes": 4024
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/structural-correspondence.json",
+      "sha256": "9c69088a75ab98ec7299708709ab434b81fb10f2651b086702761a667cbe9336",
+      "bytes": 510446
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/structural-dependency-navigation.json",
+      "sha256": "134e2ce7132df350fff530c98624d40b33a88e120c89d4a8c44ca39ffe7ca02e",
+      "bytes": 60841
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/structural-dependency-ownership.json",
+      "sha256": "bfd97154e63496f9b9943903ea94a92b46a1c0060dff9020d6c60fe7558b124b",
+      "bytes": 236587
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/supplemental-timing.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/supplemental-timing.stdout",
+      "sha256": "e4292c4f434fa25e0dd0a7eff3d281d6122aa5e0777fa0e2420f148ecfc9d85e",
+      "bytes": 183
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/sync-delivery-counter-validation.json",
+      "sha256": "54468b0ec3921a6eacf9ab5a49a2abeeb2380fec9c7a4b68d1ad458555698b13",
+      "bytes": 845233
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/trace-copy.json",
+      "sha256": "716342364af8564b9fa3245dc476b2c07263e42676377c25fa5e14942e2061c9",
+      "bytes": 728
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/train-constructor-validation.json",
+      "sha256": "24d860124b5a6ff6227b665e96b5388262c3537eb448ea941f241d78ea8d7feb",
+      "bytes": 328834
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/train-startup-readiness.json",
+      "sha256": "9f748bffef251e28b2e7f107f809cff71413f4e12917ba7cacfb6beb4581fda2",
+      "bytes": 22523
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/transition-observations.json",
+      "sha256": "3657cc11926da3fdc67706592ff3c3ce5ca7b34491b094ec69e4b7d282768412",
+      "bytes": 57332
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/validate-command.json",
+      "sha256": "f61b19574fc02bb93f33a4b41d6c348fa39e76f340f164c74e5f7fd2dd955c5e",
+      "bytes": 22
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/validate.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/validate.stdout",
+      "sha256": "857cad68f0fee11fbade1d81b8e290d80c6f5944284f8f806ded742cfa8cafa0",
+      "bytes": 960
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/validator-command-results.json",
+      "sha256": "a57bedd357faea105d71766c9efe11fc09cc81679b17531de5f75a5478ff4c6a",
+      "bytes": 685
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/weak-hand-census-validation.json",
+      "sha256": "bec94e3b74db18289bac72578e99f817c6227d863f112e8a7dd15a80949bf386",
+      "bytes": 427247
+    },
+    {
+      "path": "raw/startup-full-color-control-landscape/workout-openurl-timing.json",
+      "sha256": "b79b42473be07b1a95401fc3f00155eff18dbfe1a201607f43e39f949fa28b44",
+      "bytes": 152
+    },
+    {
+      "path": "raw/startup-full-color-control-prelaunch-parity.json",
+      "sha256": "d79874c9099aaa79389d1e27459d87d585afcb88daddc924e7b2fb14240c37ff",
+      "bytes": 12855
+    },
+    {
+      "path": "raw/startup-full-color-control-prior-freeze-verification.json",
+      "sha256": "d31e310513c4c0ab34589c19944591537fa5bfda8f4b5fbd8b097e0a19cf5981",
+      "bytes": 1395
+    },
+    {
+      "path": "raw/startup-full-color-control-root-gate.json",
+      "sha256": "8dfd1ad857eb33865573ebdaa322df529afcce3577b5f7ccd2a0d216f2d6fbfa",
+      "bytes": 849
+    },
+    {
+      "path": "raw/startup-full-color-control-root-visual.json",
+      "sha256": "d7451cde180c241fbb483b1fcd5adde190b0e8cbaaea8e2f31ee3fe5a85cf954",
+      "bytes": 1634
+    },
+    {
+      "path": "raw/startup-full-color-control-runtime-release.json",
+      "sha256": "6d3ca8b5148ef2e62cf5d794f1cbd4d641395a1e02ba964b3fa856ee565fc37a",
+      "bytes": 1825
+    },
+    {
+      "path": "raw/startup-full-color-control-supplemental-timing.json",
+      "sha256": "c1f6181b3faac6cd88c5c5cd3594979b7f2310a40cd492db279f821e0c980f3f",
+      "bytes": 18671
+    },
+    {
+      "path": "raw/startup-full-color-control-termination-ps.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-termination-ps.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-termination.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-control-termination.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/startup-full-color-helper-freeze.json",
+      "sha256": "4c94169146b50730ab8d36a39c583d2e3bbb97e46d82a328432451da87bb0889",
+      "bytes": 12191
+    },
+    {
+      "path": "retention-manifest.json",
+      "sha256": "2cf2eacda028d7bedecff15ca454f071ac712e44ff64d5ca282f7a0038dbec88",
+      "bytes": 58575
+    }
+  ]
+}

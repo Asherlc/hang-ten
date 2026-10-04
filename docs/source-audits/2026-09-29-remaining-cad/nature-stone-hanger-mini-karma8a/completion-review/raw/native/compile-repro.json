@@ -1,0 +1,34 @@
+{
+  "asset": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/assets-repro/primary.usdz",
+  "assetBytes": 576779,
+  "assetSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+  "board": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/native-author/nature-stone-hanger-mini-karma8a.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "granite-edge-15",
+    "pinch-60",
+    "wood-edge-15"
+  ],
+  "descriptor": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/assets-repro/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "granite-edge-15": 15.0,
+    "pinch-60": 60.0,
+    "wood-edge-15": 15.0
+  },
+  "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+  "nodes": [
+    "nature_body",
+    "nature_pinch",
+    "nature_stone",
+    "nature_wood"
+  ],
+  "package": "nature-stone-hanger-mini-karma8a",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/native-author/nature-stone-hanger-mini-karma8a.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 27064
+}

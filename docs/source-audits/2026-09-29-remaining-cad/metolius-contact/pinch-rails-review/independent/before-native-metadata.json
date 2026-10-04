@@ -1,0 +1,341 @@
+[
+  {
+    "object": {
+      "name": "Parameters",
+      "Extensions": "True"
+    },
+    "properties": {
+      "Depth_edge_16_center": "<Property name=\"Depth_edge_16_center\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"15.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_edge_17_center": "<Property name=\"Depth_edge_17_center\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"35.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_edge_18_center": "<Property name=\"Depth_edge_18_center\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"28.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_edge_19_center": "<Property name=\"Depth_edge_19_center\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"23.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_10_left": "<Property name=\"Depth_pocket_10_left\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"25.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_10_right": "<Property name=\"Depth_pocket_10_right\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"25.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_11_left": "<Property name=\"Depth_pocket_11_left\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"25.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_11_right": "<Property name=\"Depth_pocket_11_right\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"25.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_12_left": "<Property name=\"Depth_pocket_12_left\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"12.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_12_right": "<Property name=\"Depth_pocket_12_right\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"12.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_13_left": "<Property name=\"Depth_pocket_13_left\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"17.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_13_right": "<Property name=\"Depth_pocket_13_right\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"17.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_14_left": "<Property name=\"Depth_pocket_14_left\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"17.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_14_right": "<Property name=\"Depth_pocket_14_right\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"17.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_4_left": "<Property name=\"Depth_pocket_4_left\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"30.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_4_right": "<Property name=\"Depth_pocket_4_right\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"30.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_5_left": "<Property name=\"Depth_pocket_5_left\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"40.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_5_right": "<Property name=\"Depth_pocket_5_right\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"40.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_6_left": "<Property name=\"Depth_pocket_6_left\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_6_right": "<Property name=\"Depth_pocket_6_right\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_7_left": "<Property name=\"Depth_pocket_7_left\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"30.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_7_right": "<Property name=\"Depth_pocket_7_right\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"30.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_8_left": "<Property name=\"Depth_pocket_8_left\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"32.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_8_right": "<Property name=\"Depth_pocket_8_right\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"32.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_9_left": "<Property name=\"Depth_pocket_9_left\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>\n                ",
+      "Depth_pocket_9_right": "<Property name=\"Depth_pocket_9_right\" type=\"App::PropertyFloat\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "BodySolid"
+    },
+    "properties": {
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"body_board_001\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_4_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-4-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_4_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_4_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-4-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_4_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_5_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-5-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_5_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_5_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-5-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_5_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_6_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-6-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_6_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_6_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-6-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_6_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_7_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-7-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_7_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_7_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-7-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_7_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_8_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-8-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_8_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_8_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-8-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_8_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_9_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-9-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_9_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_9_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-9-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_9_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_10_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-10-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_10_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_10_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-10-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_10_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_11_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-11-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_11_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_11_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-11-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_11_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_12_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-12-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_12_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_12_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-12-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_12_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_13_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-13-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_13_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_13_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-13-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_13_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_14_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-14-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_14_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pocket_14_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pocket-14-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pocket_14_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_edge_16_center"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"edge-16-center\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_edge_16_center\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_edge_17_center"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"edge-17-center\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_edge_17_center\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_edge_18_center"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"edge-18-center\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_edge_18_center\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_edge_19_center"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"edge-19-center\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_edge_19_center\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_flat_sloper_center"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"flat-sloper-center\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_flat_sloper_center\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_round_sloper_3_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"round-sloper-3-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_round_sloper_3_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_jug_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"jug-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_jug_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pinch_left"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pinch-left\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pinch_left\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_round_sloper_3_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"round-sloper-3-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_round_sloper_3_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_jug_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"jug-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_jug_right\" />\n                </Property>\n                "
+    }
+  },
+  {
+    "object": {
+      "name": "Contact_pinch_right"
+    },
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pinch-right\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact_pinch_right\" />\n                </Property>\n                "
+    }
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "asset": ".context/placid-badger/cad-raster-boards/yy-baguette/candidate-assets/primary.usdz",
+  "assetBytes": 1757571,
+  "assetSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+  "board": ".context/placid-badger/cad-raster-boards/yy-baguette/yy-baguette.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "edge-10",
+    "edge-15",
+    "edge-20",
+    "edge-25",
+    "edge-30",
+    "tray"
+  ],
+  "descriptor": ".context/placid-badger/cad-raster-boards/yy-baguette/candidate-assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "edge-10": 10.0,
+    "edge-15": 15.0,
+    "edge-20": 20.0,
+    "edge-25": 25.0,
+    "edge-30": 30.0,
+    "tray": 40.0
+  },
+  "modelSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+  "nodes": [
+    "yy_body",
+    "yy_edge_10",
+    "yy_edge_15",
+    "yy_edge_20",
+    "yy_edge_25",
+    "yy_edge_30",
+    "yy_tray"
+  ],
+  "package": "yy-baguette",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": ".context/placid-badger/cad-raster-boards/yy-baguette/yy-baguette.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "da56d0479db356ff7da5c08ab01a20c9b2b5b7624e8f756fd29e9702bb663572",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 89578
+}

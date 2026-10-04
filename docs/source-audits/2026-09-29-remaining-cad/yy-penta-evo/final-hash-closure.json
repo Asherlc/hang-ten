@@ -1,0 +1,22 @@
+{
+  "package": "yy-penta-evo",
+  "independentFreshCompileCheck": true,
+  "sourceSHA256": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+  "actualAssetSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+  "descriptorModelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+  "compilerReturnedModelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+  "compilerReport": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/compile-final-check.json",
+  "compilerReportSHA256": "b3849aed7e00c84e7037e1b44da292f35832d7b273870631a8c502585e54ef54",
+  "sourceAssetDescriptorBefore": {
+    "yy-penta-evo.FCStd": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+    "primary.usdz": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+    "primary.model.json": "b0cd578994a9290d8bd52441ac615c3d8b20b059144b2dadcb85b733c566d764"
+  },
+  "sourceAssetDescriptorAfter": {
+    "yy-penta-evo.FCStd": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+    "primary.usdz": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+    "primary.model.json": "b0cd578994a9290d8bd52441ac615c3d8b20b059144b2dadcb85b733c566d764"
+  },
+  "elapsedSeconds": 84.3,
+  "closure": "passed"
+}

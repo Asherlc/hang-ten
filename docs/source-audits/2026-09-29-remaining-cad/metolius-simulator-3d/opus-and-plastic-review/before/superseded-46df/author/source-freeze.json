@@ -1,0 +1,14 @@
+{
+  "sourceSHA256": "46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264",
+  "sourceBytes": 8300327,
+  "rawPlasticManifestExact": true,
+  "normalFlagsPreserved": true,
+  "sourceBeforeSHA256": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+  "state": "native functional candidate; native visual gate pending; no export",
+  "status": "pass",
+  "scope": "Completed native authoring and independent native checks only",
+  "nativeVisualGate": "pending Opus review",
+  "exportGate": "pending",
+  "actualAppGate": "pending",
+  "humanAcceptance": "pending"
+}

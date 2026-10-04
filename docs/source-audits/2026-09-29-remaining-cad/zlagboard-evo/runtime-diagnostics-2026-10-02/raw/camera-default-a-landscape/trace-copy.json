@@ -1,0 +1,13 @@
+[
+  {
+    "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/6F1BA7C9-7B31-4264-9F24-7169376C61D3/Documents/HighlightDiagnostic-placid-badger-cad-second-half-camera-default-a/events-5F7B64BB-85D2-4146-8AB4-67B022928649.jsonl",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/camera-default-a-landscape/events-5F7B64BB-85D2-4146-8AB4-67B022928649.jsonl",
+    "sha256": "f9cb3f9225e1fd70289e30162d9bfae4208edeac791e41ebe1b34c1aee46c3ab",
+    "copyEpoch": 1790968043.508042,
+    "records": 88,
+    "newlineComplete": true,
+    "allComplete": true,
+    "contiguousSequences": true,
+    "limitReached": false
+  }
+]

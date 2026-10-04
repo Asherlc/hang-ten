@@ -102,7 +102,10 @@ struct BoardMapPresentationContent {
         let resolvedPresentation = board.presentation(id: selectedPresentationID)
             ?? board.defaultPresentation
         presentation = resolvedPresentation
-        holds = board.contacts(in: resolvedPresentation)
+        let configured = board.position(presentationID: resolvedPresentation.id).map {
+            Dictionary(uniqueKeysWithValues: board.contacts(inPosition: $0.id).map { ($0.id, $0) })
+        } ?? [:]
+        holds = board.contacts(in: resolvedPresentation).map { configured[$0.id] ?? $0 }
     }
 
     func pieces(for holdID: String) -> [BoardContactPiece] {
@@ -114,6 +117,17 @@ struct BoardMapPresentationContent {
 extension BoardPresentation {
     @MainActor
     func aspectRatio(for positionID: String?) -> CGFloat {
+        if case .model(let media) = media,
+           case .cadRoutedCord(let suspension) = media.suspension,
+           let positionID,
+           let pose = suspension.canonicalPoses[positionID],
+           let solved = try? SuspendedBoardPresentation.solve(
+               pose: pose, suspension: suspension, bounds: media.descriptor.modelBounds
+           ) {
+            // The camera includes the hanging cord, so a thin board's body
+            // ratio cannot size its viewport. Bound tall maps to a square.
+            return max(1, CGFloat(solved.cameraFraming.width / solved.cameraFraming.height))
+        }
         guard case .model(let media) = media,
               let orientation = media.orientation,
               let positionID,
@@ -338,6 +352,7 @@ private struct BoardRotationSelector: View {
 struct BoardDetailMapView: View {
     let board: BoardRevision
     @Binding var selectedHoldID: String?
+    @Binding var selectedPositionID: String?
     private let maximumMapHeight: CGFloat?
     private let selectedHoldContent: AnyView?
 
@@ -347,11 +362,13 @@ struct BoardDetailMapView: View {
     init(
         board: BoardRevision,
         selectedHoldID: Binding<String?>,
+        selectedPositionID: Binding<String?>,
         maximumMapHeight: CGFloat? = nil,
         selectedHoldContent: AnyView? = nil
     ) {
         self.board = board
         _selectedHoldID = selectedHoldID
+        _selectedPositionID = selectedPositionID
         self.maximumMapHeight = maximumMapHeight
         self.selectedHoldContent = selectedHoldContent
         let initialPresentation = BoardMapPresentationSelection(
@@ -384,11 +401,17 @@ struct BoardDetailMapView: View {
             }
         }
         .animation(.easeInOut(duration: 0.18), value: selectedHoldID)
-        .onChange(of: board.id) { _, _ in preferredPositionIDs.removeAll() }
+        .onAppear(perform: updateSelectedPosition)
+        .onChange(of: selectedHoldID) { _, _ in updateSelectedPosition() }
+        .onChange(of: board.id) { _, _ in preferredPositionIDs.removeAll(); updateSelectedPosition() }
     }
 
     @ViewBuilder
     private func mapContent(_ map: BoardDetailHoldMap) -> some View {
+        let positionID = BoardMapPresentationSelection.resolvePositionID(
+            board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID,
+            preferredPositionID: preferredPositionIDs[map.presentation.id]
+        )
         // Explicit VStack keeps the segmented picker above the sized map with
         // zero intra-section spacing (outer BoardDetailMapView spacing is 12).
         VStack(alignment: .leading, spacing: 0) {
@@ -416,7 +439,7 @@ struct BoardDetailMapView: View {
                         board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID,
                         preferredPositionID: preferredPositionIDs[map.presentation.id]
                     ) },
-                    set: { preferredPositionIDs[map.presentation.id] = $0 }
+                    set: { preferredPositionIDs[map.presentation.id] = $0; updateSelectedPosition() }
                 ),
                 accessibilityID: "boardDetail.rotationSelector"
             )
@@ -455,10 +478,7 @@ struct BoardDetailMapView: View {
                     BoardModelSurface(
                         board: board,
                         presentation: map.presentation,
-                        positionID: BoardMapPresentationSelection.resolvePositionID(
-                            board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID,
-                            preferredPositionID: preferredPositionIDs[map.presentation.id]
-                        ),
+                        positionID: positionID,
                         highlightedContactIDs: Set([selectedHoldID].compactMap { $0 }),
                         highlightMode: .active,
                         onContactTap: { select($0.id) }
@@ -467,7 +487,7 @@ struct BoardDetailMapView: View {
             }
             .modifier(
                 BoardDetailMapSizeModifier(
-                    aspectRatio: map.presentation.aspectRatio,
+                    aspectRatio: map.presentation.aspectRatio(for: positionID),
                     maximumHeight: maximumMapHeight
                 )
             )
@@ -527,10 +547,18 @@ struct BoardDetailMapView: View {
     private func selectPresentation(_ id: String) {
         presentationSelection.selectPresentation(id: id, on: board)
         selectedHoldID = BoardDetailHoldMap(board: board, presentationID: id).entries.first?.hold.id
+        updateSelectedPosition()
     }
 
     private func select(_ holdID: String) {
         selectedHoldID = holdID
+        updateSelectedPosition()
+    }
+
+    private func updateSelectedPosition() {
+        selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
+            board: board, presentationID: presentationSelection.presentationID, activeHoldID: selectedHoldID,
+            preferredPositionID: preferredPositionIDs[presentationSelection.presentationID])
     }
 
     private func markerPosition(
@@ -608,6 +636,9 @@ struct BoardMapView: View {
 
     @State private var presentationSelection: BoardMapPresentationSelection
     @State private var preferredPositionIDs: [String: String] = [:]
+
+    @Environment(\.workoutRendererPreparationID) private var preparationID
+    @State private var preparationHostID = UUID()
 
     init(
         board: BoardRevision,
@@ -703,6 +734,15 @@ struct BoardMapView: View {
                             }
                         }
                         .frame(width: boardBounds.width, height: boardBounds.height)
+                        // Raster presentations have no asynchronous 3D host.
+                        // Report the actual selected presentation, so a retained
+                        // picker selection cannot be mistaken for a model host.
+                        .preference(key: WorkoutRendererReadinessKey.self, value: preparationID == nil
+                                    ? .init() : .init(renderers: [preparationHostID: .init(
+                                        kind: .board,
+                                        isReady: boardBounds.width.isFinite && boardBounds.height.isFinite
+                                            && boardBounds.width > 0 && boardBounds.height > 0,
+                                        preparationID: preparationID)]))
                     }
                 case .model:
                     BoardModelSurface(
@@ -711,13 +751,19 @@ struct BoardMapView: View {
                         positionID: selectedPositionID,
                         highlightedContactIDs: highlightedHoldIDs,
                         highlightMode: highlightMode,
-                        onContactTap: onHoldTap,
+                        onContactTap: onHoldTap.map { callback in
+                            { contact in
+                                callback(selectedPositionID.flatMap { positionID in
+                                    board.contacts(inPosition: positionID).first { $0.id == contact.id }
+                                } ?? contact)
+                            }
+                        },
                         isDisplayOnly: isDisplayOnly
                     )
                 }
             }
             .modifier(BoardDetailMapSizeModifier(
-                aspectRatio: content.presentation.aspectRatio,
+                aspectRatio: content.presentation.aspectRatio(for: selectedPositionID),
                 maximumHeight: maximumMapHeight,
                 accessibilityIdentifier: nil
             ))

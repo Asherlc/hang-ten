@@ -1,0 +1,35 @@
+{
+  "assetBytes": 406675,
+  "board": "Hangboards/captain-fingerfood-dual/captain-fingerfood-dual.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "curved-edge-20",
+    "outer-jug",
+    "pocket-end-wall-20",
+    "straight-edge-20"
+  ],
+  "measuredRegionDepthsMM": {
+    "curved-edge-20": 20.0,
+    "outer-jug": 24.0,
+    "pocket-end-wall-20": 20.0,
+    "straight-edge-20": 20.0
+  },
+  "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+  "nodes": [
+    "DUAL_skin_body_001",
+    "DUAL_skin_curved_edge_20_001",
+    "DUAL_skin_outer_jug_001",
+    "DUAL_skin_pocket_end_wall_20_001",
+    "DUAL_skin_straight_edge_20_001"
+  ],
+  "package": "captain-fingerfood-dual",
+  "presentationID": "primary",
+  "published": false,
+  "schemaVersion": 1,
+  "source": "Hangboards/captain-fingerfood-dual/captain-fingerfood-dual.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "sourceUnchanged": true,
+  "staging": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Hangboards/captain-fingerfood-dual/assets/.hangten-build-ouunqvjm",
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 20032
+}

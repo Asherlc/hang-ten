@@ -1,0 +1,16 @@
+{
+  "package": "yy-penta-evo",
+  "allRetainedBytesAndHashesMatch": true,
+  "sources": [
+    {
+      "path": "evidence/yy-penta-evo-front-reverse.webp",
+      "bytes": 124425,
+      "sha256": "83b95adc297d634659654f6f27bb43ebae1c53b171b747568ac5e022754e6571"
+    },
+    {
+      "path": "evidence/yy-penta-evo-close-up.webp",
+      "bytes": 1542797,
+      "sha256": "1107039ef6d2877cd68a293683c72ec93f3166633199d45484f58c13b48aa2fc"
+    }
+  ]
+}

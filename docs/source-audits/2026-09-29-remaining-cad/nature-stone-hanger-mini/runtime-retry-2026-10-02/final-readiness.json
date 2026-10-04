@@ -1,0 +1,14 @@
+[
+  {
+    "name": "final-bootstatus",
+    "command": [
+      "xcrun",
+      "simctl",
+      "bootstatus",
+      "2397F02F-15E4-48C9-8E5C-37DE8CC995B2",
+      "-b"
+    ],
+    "processGroup": 92820,
+    "timeoutSeconds": 25
+  }
+]

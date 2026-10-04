@@ -1,0 +1,5 @@
+{
+  "process": "33554       03:31 /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl bootstatus 61FEA8D3-E5C1-4886-B056-F84CA2D7170C -b",
+  "action": "SIGTERM exact owned bootstatus after prolonged AddressBookLegacy migration; binary products preserved for available iOS26.4 runtime",
+  "reason": "No application test or capture ran on this device."
+}

@@ -1,0 +1,25 @@
+{
+  "action": "apply",
+  "rawExitCode": 0,
+  "boundedTimeoutSeconds": 900,
+  "performanceIncomplete": false,
+  "durationSeconds": 10.710619957986637,
+  "inputSidecar": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/suspension.json",
+    "sha256": "bf4d24e0d2a72c1e94f718985450476231271198346fe28ea9be3dcc9574f60a"
+  },
+  "outputSidecar": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/suspension.json",
+    "sha256": "688b6c5407264453b818d78d6aea28734d72c418987288893faec505599b279b"
+  },
+  "rawLog": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/apply.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "report": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/apply-report.json",
+    "sha256": "9395bcd55846bbcbe23dde78db16c8e10f511623d253fc27fb5d34e9f1a62b82"
+  },
+  "processGroupAbsentAtReturn": true,
+  "strictGatePass": true
+}

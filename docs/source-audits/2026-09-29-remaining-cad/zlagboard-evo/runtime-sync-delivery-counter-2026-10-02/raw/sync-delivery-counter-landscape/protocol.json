@@ -1,0 +1,20 @@
+{
+  "hardBoundSeconds": 300,
+  "plannedPhases": [
+    "active",
+    "preview",
+    "active"
+  ],
+  "captureOffsetsAfterActualMutation": [
+    0.25,
+    1,
+    3,
+    5
+  ],
+  "afterLaunchUIAccess": "screenshots only; no AX queries/taps/Skip",
+  "externalTracePollingSeconds": 0.03,
+  "routineUnchanged": true,
+  "samplerLimit": "Existing120-iteration sampler remains; new identical both-arm boundary census on actual highlight-before/after supplies sparse late-phase app/window/placement evidence, not every capture instant",
+  "arm": "sync-delivery-counter",
+  "startup": "One counter observational orthographic reproduction. Same prior O normal route, actual hands, UNMOUNT, weak hand and board census, ordinary ownership, external20s Train attachment readiness and natural7/180/7 passive12captures+tail. Only SYNC_DELIVERY_COUNTERS and fresh run ID differ in environment; new binary adds scalar counts/times at existing calls without new observer or mutation. No projection/retention/detach/other experimental flags. Counter values represent CPU calls and assignments, not changed values or GPU commits. No additional arm authorized."
+}

@@ -1,0 +1,53 @@
+{
+  "status": "UNAPPLIED_TEMPORARY_DIAGNOSTIC",
+  "owner": "placid-badger-cad-second-half",
+  "patchPath": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/pause-diagnostic.patch",
+  "patchSHA256": "03bb7d03c34f69677da05a038d505d974fe29a54d1b81d9d57acf4d3006ca21d",
+  "files": [
+    {
+      "path": "HangTen/Models/LiveRopeController.swift",
+      "beforeSHA256": "464db176a840c98d99afaaf182811df804d9aaa70a2d92f1aca0f2bcdebfbfbe",
+      "proposedSHA256": "dbfb578e0e4d6078173e5bf604d0879fc6ff5108ca299ee9f081517aaaf22a31"
+    },
+    {
+      "path": "HangTen/Models/RopeDynamicsSolver.swift",
+      "beforeSHA256": "dee89d0888131dbb78f2c87a058d395c3d2c43d9ee421c1cefe922ba73eccf56",
+      "proposedSHA256": "5a1267f1e9f8d39e610e791d06fbce0caf336dd716f88f21b42fd27223690119"
+    },
+    {
+      "path": "HangTenTests/LiveRopeControllerTests.swift",
+      "beforeSHA256": "0eee5438630ad2e5f15e02b07a6717d88b3889ef82cec7b4417df0192272b072",
+      "proposedSHA256": "df705af991e471349b483e7fa072825cf1fbe34b07404daac1bed504de735721"
+    },
+    {
+      "path": "HangTenTests/BoardModelRealityTests.swift",
+      "beforeSHA256": "50c21812849e329d5b47883fad1ff8c18c37fa1f2f1678ab3e94c00cd07c9cbb",
+      "proposedSHA256": "b6d9139e0d7d07e64461688121c082f49ea817dc93878fade0866e53c7f24152"
+    }
+  ],
+  "assertionsAnd30SecondTimeoutsUnchanged": true,
+  "observableOrSynchronizationAdded": false,
+  "solverProgressMaxForWorker1200StepBound": 11,
+  "diagnosticFields": [
+    "systemUptime",
+    "elapsedSeconds",
+    "stepIndex",
+    "simulationTime",
+    "maximumSpeed",
+    "boardDisplacement",
+    "maximumLocalStrain",
+    "minimumClearanceMargin",
+    "settled",
+    "workerMainThread",
+    "workerError"
+  ],
+  "gates": [
+    "Apply only after parent reservation acknowledgement",
+    "Root rebuild required before run; test-without-building alone cannot exercise proposed instrumentation",
+    "One focused method per process preferred to separate cold fixture and canceled previous work",
+    "settled.enter with no settled.progress => step0 remains executing or throws/cancels; worker.error disambiguates",
+    "progress ending before30seconds with no worker.complete => active numerical work not finished or pending cancellation",
+    "worker.complete beforewaitEnd with no callback => next diagnostic is controller identity/resume boundary, not numerical timeout bump"
+  ],
+  "executionPerformed": false
+}

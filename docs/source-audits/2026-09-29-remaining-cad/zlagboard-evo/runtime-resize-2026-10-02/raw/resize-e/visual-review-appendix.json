@@ -1,0 +1,21 @@
+{
+  "priorEqualityAssertionPassed": false,
+  "preservedPriorReport": true,
+  "19WholeFilesEqualIndividuallyReviewedReferences": true,
+  "differentImage": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-e/phase-4-preview-plus-1.png",
+    "targetEpoch": 1790976489.6874192,
+    "startEpoch": 1790976489.69764,
+    "endEpoch": 1790976490.171031,
+    "phase": "preview",
+    "phaseIndex": 4,
+    "offset": 1,
+    "sha256": "7d35b71fe116d74a7ce3188c327d803b9f56a8f0b971dc287d2737ff4ad87687",
+    "priorReference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-4-preview-plus-1.png",
+    "wholeFileEqual": false
+  },
+  "wholeImageViewedIndividually": true,
+  "observation": "Board pockets are correctly BLUE. Transient black rounded capsule at far left; no app input inferred. Five final phase frames all match reviewed expected images.",
+  "boardHighlightSequencePassed": true,
+  "limitation": "One full screenshot differs due visible far-left artifact; do not claim all20 equal."
+}

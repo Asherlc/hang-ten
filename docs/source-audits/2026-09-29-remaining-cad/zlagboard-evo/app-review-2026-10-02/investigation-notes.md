@@ -1,0 +1,45 @@
+# #20 Zlagboard Evo — fresh app review
+
+Human acceptance is pending. This review uses the unchanged native/export revision committed in `3fcf41dae`, with the existing renderer's wood finish and a downward display camera that exposes the top surfaces.
+
+The native corrections round the demonstrated top lip/trough transitions and add omitted jug crests and outer rounded corners to their existing contact bindings. The 2 mm and 1 mm rounds are display estimates. Published angles and depths, all 21 contact identities and all 14 pocket surfaces remain preserved. [Native evidence and original/prior/corrected front–side–top comparisons](../individual-review-2026-10-01/review.md) remain unchanged.
+
+## Runtime recovery history
+
+The host had rebooted after the earlier failed attempts. On this new isolated device, bootstatus initially reported success in 66 seconds, yet the whole screenshot still showed Apple startup. The fresh build passed, but the test host produced no method results and was canceled; its raw Failed result, one failure and zero passes are retained. Opening the exact device frontend and pressing Home did not resolve the startup screen.
+
+One ordinary shutdown and boot of the same owned device then completed. Its location-service migration waited several minutes before completing naturally. A proposed service restart was canceled before execution when those progress logs arrived. No location service, migration database or permission state was changed. The actual Home screen and then the Hang Ten board view were verified before resuming visual review.
+
+The earlier failed capture and every raw failure remain separate from subsequent app captures and any test retry. No historical evidence is rewritten. Fresh installed manifest, descriptor, USDZ and app binary parity are checked against the exact built package.
+
+The unchanged `research.max-hangs` routine is used only for runtime integration validation of bilateral 20 mm highlights, not as a Zlagboard manufacturer prescription. Display checks do not establish manufacturing or ergonomic accuracy.
+
+The first workout harness used the incorrect route `research.max-hangs20mm` and stayed on Train. Its active/rest flags remain false in the raw proof. The corrected route is the existing `research.max-hangs` plan; no routine content was edited.
+
+## Additional highlight defect found during review
+
+Before any shared-code edit, the landscape workout stayed red on its first rest even though “Next hold preview” was visible. Independent captures at 02:57 and 02:51 retain that failure; a later fourth-step rest was blue before an attempted orbit, so it was not a permanent inability to render blue. Portrait first rest was blue. The attempted orbit probe did not visibly change pose and does not establish refresh causality.
+
+A first hosted SwiftUI regression, driven by direct observable state, passed against unchanged production. Its raw result remains under the historical `highlight-regression/red` directory name; that name is a planned phase label and does not mean the test failed. Timer-driven invalidation is being investigated separately. No geometry or routine prescription changed in this investigation.
+
+A second hosted test deriving mode from `TimelineView` context dates also passed unchanged production. Both isolated tests are retained as passing diagnostics, not a demonstrated red/green fix. Actual-workout instrumentation follows to distinguish the input synchronization boundary from material application.
+
+The temporary actual-workout trace also reached blue correctly on the first landscape rest: the same scene received preview mode, applied blue material RGBA, and the whole screenshot at 02:51 visibly shows the blue pair. This diagnostic build did not demonstrate a fix. The logging patch is retained separately and removed before final validation. Its first launch harness used unsupported console-redirection flags and timed out; the corrected launch uses the documented `simctl launch --stdout/--stderr` options, with both attempts preserved.
+
+After removing the trace, the normal build reproduced the opposite stale transition: STEP 1 was red and STEP 2 was blue, but STEP 3 remained blue during the next active hang at 00:04. The visible Skip step control was used to advance through rest, with no routine change. This third actual-app failure justified an explicit semantic-input update on the retained RealityView, while preserving scene identity and camera state. The passing isolated tests remain coverage with a documented reproduction limit; actual before/after app evidence is the regression proof.
+
+The subsequent normal-build portrait rest also remained red at 02:56, so the defect is described as an intermittent retained-model update issue across layouts, not a landscape-only defect. The final source fix observes an Equatable tuple of contact IDs, mode and position ID, then invokes the existing synchronization method on change. It does not reload the scene or change the camera identity, renderer finishes, source geometry or training content. Four focused tests passed. The first after-fix landscape automation captured a blue first rest but its following AX query timed out; that incomplete run remains a recorded automation failure and is not counted as a complete transition pass.
+
+The first explicit-update patch did not resolve the actual issue: the second after-fix landscape run still shows red pockets during rest at 02:56. This candidate remains failed despite four passing focused tests. Its next-active screenshot window was missed by the capture harness; that is distinct from the first run’s AX timeout. Further callback-order investigation is required before claiming a fix or final runtime pass.
+
+A second diagnostic build with callback-order logging again showed correct blue preview and no stale overwrite in that run. It therefore does not establish a callback race as the cause. The failed first candidate is retained separately. The next correction separates selection updates from the retained GeometryReader/RealityView callbacks: one observer outside the layout reader applies the explicit current selection, while make/update callbacks handle framing only. Normal, uninstrumented app transitions remain the decisive validation; logging runs and material-only tests do not substitute for visible checks.
+
+The second candidate also failed visible blue-to-red transition (STEP 3 at 00:06 and 00:04), despite its single outer selection writer and passing tests. Complete installed-code parity was then added: all six Mach-O payloads, including `HangTen.debug.dylib`, match the build. Earlier launcher-only parity reports are retained unchanged and are explicitly incomplete code checks. Further tracing is confined to the scene’s material method, avoiding SwiftUI-body instrumentation that may influence view evaluation.
+
+The scene-only diagnostic finally reproduced the failure without SwiftUI instrumentation: `scene-trace-a-landscape/following-rest-settled.png` shows red at 02:56, while the same attached scene’s post-highlight log records blue RGBA on both selected contacts. The next active screenshot is red. This establishes a material-state/displayed-frame mismatch for that run, rather than a missing preview value. The next revision bridges the current selection through SwiftUI state read directly by RealityView’s update callback, where selection is applied; the outer observer changes state rather than mutating scene materials directly. This is intended to schedule the render update explicitly, and still requires normal-build visual validation.
+
+The state-bridge candidate also failed the return to active: `candidate3-a-landscape/next-active-timed-2.png` (SHA-256 `6806ee0b4b98b43655ad0ad4d5fddbd3fc87b019b838331c64cde1331fee4602`) shows blue board pockets at STEP 3, Hang 00:06. A worker’s initial batch-image pass judgment was incorrect; root and a second reviewer inspected the whole original image individually and confirmed blue. The correction is retained without altering raw images. Next investigation targets explicit whole ModelComponent assignment rather than nested optional material-array mutation.
+
+Explicit whole ModelComponent replacement also failed the reverse transition on the same iOS 26.5 device. None of the four production candidates is considered a fix. All candidate patches and actual failures remain retained; production files are being restored to baseline for a comparison on another installed runtime. The comparison must not imply a proven runtime cause merely because a different device passes.
+
+The baseline app on a fresh iOS 26.4 device also retains red during the first rest (STEP 2 at 02:55), then correctly shows red at the next active hang. The issue therefore is not limited to the original iOS 26.5 device. No app or test changes are being shipped. The CAD review proceeds with static selection, contact coverage, material and comparison evidence; overall workout highlighting remains failed/unresolved. Human geometry review is separate from an app-workflow acceptance claim.

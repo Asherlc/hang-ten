@@ -1,0 +1,21 @@
+{
+  "status": "pass-native-visual-scope-only",
+  "atUTC": "2026-10-01T22:43:52.383633+00:00",
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "nativePreviewProvenanceSHA256": "045801659cd0cc269e2da5f1b94a3bf4021d0c6ecdbead1321ca9ec1e8c5ed77",
+  "wholeImagesViewed": {
+    "comparison-front.png": "3c2f6b1d8e8b89c9268a3b0b1ec99e2b08711073cdf5ed269371b9fe8c4e4fbc",
+    "comparison-side.png": "76b9726f56ba5781e3e6a60f6c2c548a82a99f799eff9128e5b3c757bae197ff",
+    "comparison-top.png": "ba1fdd0dc40be19aa497149a55c123f9663af041c657f8fb2b44d061589da4d2",
+    "comparison-oblique.png": "91bd50a0ab239f7ea8743b607df5ca668d6a0eac7f9d7d5439feea766b8bff35"
+  },
+  "findings": [
+    "One longitudinal center groove is visible on each side in side/top and oblique views.",
+    "The three transverse adjustment notches remain.",
+    "The front holds and granite insert outline match the prior committed model.",
+    "The silhouette and overall block proportions remain consistent with the retained manufacturer photo and drawing."
+  ],
+  "blockingFindings": [],
+  "limits": "Native display geometry judgment only. Groove dimensions are estimates. Cord seating, exported model and actual app review still require fresh checks.",
+  "humanAcceptance": "pending"
+}

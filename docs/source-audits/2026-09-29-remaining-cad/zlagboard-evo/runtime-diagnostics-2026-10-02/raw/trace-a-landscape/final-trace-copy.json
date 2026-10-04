@@ -1,0 +1,9 @@
+{
+  "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/1808AAA3-C81F-4D7E-B0C1-7DA0146BF32C/Documents/HighlightDiagnostic-placid-badger-cad-second-half-evo-trace-a/events-3E7D9036-7A9D-4294-9A5B-05AC27DB67C1.jsonl",
+  "destination": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/trace-a-landscape/final-events-3E7D9036-7A9D-4294-9A5B-05AC27DB67C1.jsonl",
+  "sha256": "e273afd250ccfbcd469ec6eee0200ed26c4e983ec4894fec3a3b3647be40e65c",
+  "copyEpoch": 1790967686.7177138,
+  "records": 147,
+  "lastEvent": "view-update",
+  "sampleEndPresent": true
+}

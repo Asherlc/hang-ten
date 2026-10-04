@@ -1,0 +1,96 @@
+{
+  "owner": "placid-badger",
+  "recordedAtUTC": "2026-10-01T18:02:50.183098+00:00",
+  "status": "held: technical configuration verified; actual-app waviness diagnosis unresolved",
+  "candidateHashes": {
+    "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+    "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+    "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df"
+  },
+  "inputSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/prepare_simulator_packet.py": "a6f8d4f371c01deb3ebc428569fda575b5ad87f8814ec3f98b16677767b7aa0e",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/packet-config.json": "e0d9c26406ac94b59f02db9d701a5de4ecab33a2f149ead6b51535c2adcb26cb",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/README.md": "5d029d6e14f9ec4bbd76aab4f7743fbd2bcea49c348cc4c905297c96ed37f048"
+  },
+  "technicalReportAssertionsChecked": [
+    {
+      "role": "author",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-report.json",
+      "sha256": "4d52a00ffe51bbb0feb73cfcd51ca92b975584e2d8080cfd2c6a939eabc4741a"
+    },
+    {
+      "role": "independent-native",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-check-3ff3.json",
+      "sha256": "094f051ddf77a64f4960c40fd86c99bdc719fcbd69753a08d3c84ad6acd59394"
+    },
+    {
+      "role": "independent-export",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/final-independent-export-review-3ff3.json",
+      "sha256": "d8cfd5544aa3a37514d312ae2a0cb39516d11d87e04a07884174426ddf89a359"
+    },
+    {
+      "role": "compiler",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproducibility.json",
+      "sha256": "a5eb794179150b324ee87cffe7c1f6f738edd118f9ae7f1732c7fbf16316d08e"
+    },
+    {
+      "role": "independent-native",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/functional-sections-3ff3.json",
+      "sha256": "3071cf33a5fec611b69f3533d34116c45dfb1144539cab746d660965a11c5bcc"
+    },
+    {
+      "role": "independent-native",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins-3ff3.json",
+      "sha256": "a46cc5e397af5714eb08b5a2df24812df28deb36257ecc7b8b4221b454c9f817"
+    },
+    {
+      "role": "independent-native",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-review-3ff3.json",
+      "sha256": "66a0fa39e932cd03fefc35fe2137630815d01a0976479cc5285fec40c22b388c"
+    },
+    {
+      "role": "independent-native",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-check-3ff3-ownership.json",
+      "sha256": "b5abd41e71ed1100dde84bd89e2650d2437f3f1d627a94c86a527f44f5df9df1"
+    },
+    {
+      "role": "independent-native",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/functional-sections-3ff3-ownership.json",
+      "sha256": "9e29c7c1fda29961c1f4afb9dff662d297dfa2f7d7ce8d8a8ae70ebe375e448b"
+    },
+    {
+      "role": "independent-native",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins-3ff3-ownership.json",
+      "sha256": "704ea5dffb9f084554f1922710b572c662682151b0428766d8c948197c8e6b51"
+    },
+    {
+      "role": "compiler",
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/cleanup.json",
+      "sha256": "5816b6d97a451181e703f3f8527043c82783f4974c79e6afaf23c8fce4a95b19"
+    }
+  ],
+  "selfTest": {
+    "command": "rtk proxy python3 .context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/prepare_simulator_packet.py self-test",
+    "exitCode": 0,
+    "exactToolStdout": "{\"selfTest\": \"passed\", \"trackedMutation\": false, \"externalResources\": []}\n"
+  },
+  "syntaxAndTechnicalAuditToolStdout": "{\"syntax\": \"pass\", \"technicalReportAssertionsPassed\": 11, \"exact3HashesAnd203OutsideFiles\": \"pass\", \"reproducedAssetsByteExact\": true, \"nativeAndExactExportImageHashClosure\": \"pass\", \"rawFailureAndSupplementClosure\": \"pass\", \"rawGroupPathsExist\": true, \"buildApplyStage\": false}\n",
+  "remainingConfigFields": [
+    "/summary",
+    "/opus/finalMarkdown",
+    "/opus/finalActivity",
+    "/opus/cleanupReport",
+    "/opus/cleanupEquals",
+    "/cleanupLogProvenance",
+    "/reports/4/equals/~1status",
+    "/reports/11/equals/~1status",
+    "/reports/13/equals/~1status"
+  ],
+  "rootRelayedUserQuestion": "why does it look kind of... wavy?",
+  "questionProvenance": "Exact quoted question relayed by root while reviewing the mint actual app; no independent visual/shape judgment by this preparer.",
+  "technicalPassIsVisualAcceptance": false,
+  "appOrHumanAccepted": false,
+  "buildApplyStage": false,
+  "trackedMutationByThisPreparation": false,
+  "externalResourcesCreated": []
+}

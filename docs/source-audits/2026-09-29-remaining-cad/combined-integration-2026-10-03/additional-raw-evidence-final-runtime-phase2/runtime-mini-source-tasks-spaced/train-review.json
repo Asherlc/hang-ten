@@ -1,0 +1,20 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "stage": "train",
+  "simulatorUUID": "055BDCE2-3263-470D-89DF-04B967EF7790",
+  "appPID": 68951,
+  "image": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/train-setup.png",
+  "imageSHA256": "5b8e954ed3f99dd13be4cad6be8b59d8d69ba042c69ea65f73576023f67e4567",
+  "binarySHA256": "92411c81d2a3cc4bf8fbb019c3022f77337e74a07ad31c7090f18e315e624fb3",
+  "sourceReferenceSHA256": "50327ed1b8eb201d12d53b6657dd5216244b6689d144960bc168aaf827ef096c",
+  "paritySHA256": "258452357cffe83b35c6de235917251fb571930f7be96092189a5bc5ab6097c3",
+  "expectedControl": "normal Train with Stone Hanger Mini",
+  "deadlineSeconds": 45,
+  "rootAgentWholeImageReview": true,
+  "reviewer": "root-agent",
+  "wholeImageReviewed": true,
+  "approved": true,
+  "observedControl": "normal Train with Stone Hanger Mini",
+  "observation": "Whole landscape screenshot shows Stone Hanger Mini wood body, dark granite edge and cord in normal Train controls with no modal. Black device island appears at left screen boundary; no board obstruction.",
+  "reviewEpoch": 1791076268.540798
+}

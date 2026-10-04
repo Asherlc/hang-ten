@@ -1,0 +1,12 @@
+{
+  "primary.usdz": {
+    "firstSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "secondSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "byteExact": true
+  },
+  "primary.model.json": {
+    "firstSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+    "secondSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+    "byteExact": true
+  }
+}

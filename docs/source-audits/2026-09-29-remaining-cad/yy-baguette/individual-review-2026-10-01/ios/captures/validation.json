@@ -1,0 +1,360 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "simulator": "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS26.5",
+  "boardID": "yy.baguette",
+  "sourceSHA256": "9e56cec4e8494d26bc97629c8a73a11dc7b4adf9e5071a0963eafe3827c95d52",
+  "modelSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+  "descriptorSHA256": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5",
+  "suspensionSHA256": "7765417f4b49ff1efeded274a70a5c69907a3126aeb73f4a7d12d2fec14c688b",
+  "builtBinarySHA256": "f5441426acb74d95b6d1ae19d833495b5b6803a98f99ad87653ec6b405403041",
+  "surfaceFinish": "wood",
+  "checks": [
+    {
+      "image": "front-edge-20.png",
+      "contactID": "edge-20",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "front-edge-20-orbit.png",
+      "contactID": "edge-20",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true,
+      "actualOrbitVerified": true
+    },
+    {
+      "image": "front-edge-20-contact-tap-reset.png",
+      "contactID": "edge-20",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true,
+      "actualContactTap": true,
+      "projectedFramesChangedAfterTap": false
+    },
+    {
+      "image": "default.png",
+      "contactID": null,
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": false
+    },
+    {
+      "image": "edge-25.png",
+      "contactID": "edge-25",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "edge-30.png",
+      "contactID": "edge-30",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "edge-15.png",
+      "contactID": "edge-15",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "edge-10.png",
+      "contactID": "edge-10",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true
+    },
+    {
+      "image": "tray.png",
+      "contactID": "tray",
+      "contactsAvailable": 6,
+      "selectedAXConfirmed": true
+    }
+  ],
+  "commands": [
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/ios/captures/front-edge-20.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "107.48000000000003",
+      "--start-y",
+      "382.56",
+      "--end-x",
+      "327.9200000000001",
+      "--end-y",
+      "332.36",
+      "--duration",
+      "1.0",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/ios/captures/front-edge-20-orbit.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "--id",
+      "boardModel.contact.edge-20",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/ios/captures/front-edge-20-contact-tap-reset.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/ios/captures/default.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/ios/captures/edge-25.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/ios/captures/edge-30.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/ios/captures/edge-15.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/ios/captures/edge-10.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "40D4FEF9-1824-49A7-A31E-D08E20DB90F7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/ios/captures/tray.png"
+    ]
+  ],
+  "humanGeometryAcceptance": "pending user review #16",
+  "limits": "Full-frame fresh app screenshots and AX identity/orbit probes; no factory geometry or ergonomic certification."
+}

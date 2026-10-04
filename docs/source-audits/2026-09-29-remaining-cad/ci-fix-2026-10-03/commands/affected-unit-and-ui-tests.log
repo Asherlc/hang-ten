@@ -1,0 +1,576 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=774B34D7-CF16-4C65-99F1-D8F81A52008D" -derivedDataPath .context/DerivedData -parallel-testing-enabled NO -collect-test-diagnostics never -resultBundlePath .context/placid-badger/ci-fix-2026-10-03/placid-badger-ci-targeted-tests.xcresult "-only-testing:HangTenTests/SuspendedBoardPresentationTests" "-only-testing:HangTenUITests/OwlClimbPokerBoardMapInteractionUITests" test-without-building
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  Sentry: https://github.com/getsentry/sentry-cocoa.git @ 8.58.4
+  Amplitude-Swift: https://github.com/amplitude/Amplitude-Swift @ 1.18.8
+  AmplitudeCore: https://github.com/amplitude/AmplitudeCore-Swift.git @ 1.5.0
+  analytics-connector-ios: https://github.com/amplitude/analytics-connector-ios.git @ 1.3.2
+
+Writing result bundle at path:
+	/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/ci-fix-2026-10-03/placid-badger-ci-targeted-tests.xcresult
+
+[Sentry] [error] [1791064113.316961] [SentryOptions:251] Could not parse the DSN: Error Domain=SentryErrorDomain Code=100 "Host component of DSN is missing" UserInfo={NSLocalizedDescription=Host component of DSN is missing}.
+[Sentry] [fatal] [1791064113.322077] [SentryFileManager:162] No DSN provided, using base path for envelopes: /Users/asherlc/Library/Developer/CoreSimulator/Devices/774B34D7-CF16-4C65-99F1-D8F81A52008D/data/Containers/Data/Application/6ED4ED04-948B-4E18-A973-F2E842C55D7A/Library/Caches/io.sentry
+[Sentry] [fatal] [1791064113.327328] [SentryFileManager:162] No DSN provided, using base path for envelopes: /Users/asherlc/Library/Developer/CoreSimulator/Devices/774B34D7-CF16-4C65-99F1-D8F81A52008D/data/Containers/Data/Application/6ED4ED04-948B-4E18-A973-F2E842C55D7A/Library/Caches/io.sentry
+Test Suite 'Selected tests' started at 2026-10-03 14:48:36.438.
+Test Suite 'HangTenTests.xctest' started at 2026-10-03 14:48:36.439.
+Test Suite 'SuspendedBoardPresentationTests' started at 2026-10-03 14:48:36.439.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testCachedSeatedRoutesPreserveTheirSolvedAnchor]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testCachedSeatedRoutesPreserveTheirSolvedAnchor]' passed (0.005 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testClosedBranchPolicyRejectsEndpointTouchNearAnotherSegmentEndpoint]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testClosedBranchPolicyRejectsEndpointTouchNearAnotherSegmentEndpoint]' passed (0.003 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testClosedBranchPolicyRejectsInitialAndFinalSegmentContactAwayFromAnchor]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testClosedBranchPolicyRejectsInitialAndFinalSegmentContactAwayFromAnchor]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testClosedBranchPolicyRejectsNonClosureEndpointToInteriorContact]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testClosedBranchPolicyRejectsNonClosureEndpointToInteriorContact]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testCrossPairedRepeatedEndpointIsRejectedByValidationHook]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testCrossPairedRepeatedEndpointIsRejectedByValidationHook]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testEachCanonicalPoseFramesItsAttachmentAndCord]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testEachCanonicalPoseFramesItsAttachmentAndCord]' passed (0.002 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testExactTautCordIsAThirtyTwoSampleStraightSegment]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testExactTautCordIsAThirtyTwoSampleStraightSegment]' passed (0.002 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testHeliumThroughBoreLoopSolvesWhenChannelEqualsMouthChord]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testHeliumThroughBoreLoopSolvesWhenChannelEqualsMouthChord]' passed (0.022 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testIdentityPoseKeepsAttachmentAtModelPoint]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testIdentityPoseKeepsAttachmentAtModelPoint]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testInstanceRoutedPairedLeadsPreserveAuthoredWorldAnchor]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testInstanceRoutedPairedLeadsPreserveAuthoredWorldAnchor]' passed (0.003 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testInstanceRoutedPairedLeadsRejectLengthRequiringAnchorRelocation]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testInstanceRoutedPairedLeadsRejectLengthRequiringAnchorRelocation]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testInstanceSuspensionSolvesInWorldSpaceWithFixedAnchor]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testInstanceSuspensionSolvesInWorldSpaceWithFixedAnchor]' passed (0.003 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testLegacyRoutedPairedLeadsRetainProjectionWithExplicitModelTransform]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testLegacyRoutedPairedLeadsRetainProjectionWithExplicitModelTransform]' passed (0.003 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testMiniBarInternalLoopSolvesFourLeadsForEveryGripPose]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testMiniBarInternalLoopSolvesFourLeadsForEveryGripPose]' passed (0.629 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testMiniBarSettledLoopKeepsItsLengthAndLowersBoard]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testMiniBarSettledLoopKeepsItsLengthAndLowersBoard]' passed (0.064 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADInstanceComposesCanonicalPoseAfterRotatedReflectedBase]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADInstanceComposesCanonicalPoseAfterRotatedReflectedBase]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADPathsAllowOnlyWholeStrandTerminalJoinsAndClosedLoops]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADPathsAllowOnlyWholeStrandTerminalJoinsAndClosedLoops]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADPathsRejectCrossingAtInteriorSampleVertices]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADPathsRejectCrossingAtInteriorSampleVertices]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADPathsRejectOverlappingLeadsButAllowTheSharedSupport]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADPathsRejectOverlappingLeadsButAllowTheSharedSupport]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADPentaInstancesKeepTheirAuthoredPoseAndInextensibleLoop]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADPentaInstancesKeepTheirAuthoredPoseAndInextensibleLoop]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADRouteRejectsSelfIntersection]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADRouteRejectsSelfIntersection]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADRouteRejectsStretchInsteadOfMovingItsSupport]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADRouteRejectsStretchInsteadOfMovingItsSupport]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADRoutesKeepTheWorldSupportAndExactBodyPose]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNativeCADRoutesKeepTheWorldSupportAndExactBodyPose]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNonUnitPoseIsRejected]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testNonUnitPoseIsRejected]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadAllowsACommonInitialTrunkThatGenuinelyForks]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadAllowsACommonInitialTrunkThatGenuinelyForks]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadAllowsAdjacentInitialSegmentsInsideTheSharedAnchorKnot]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadAllowsAdjacentInitialSegmentsInsideTheSharedAnchorKnot]' passed (0.003 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadAllowsTwoTubeClearanceOnlyInsideTheSharedAnchorKnot]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadAllowsTwoTubeClearanceOnlyInsideTheSharedAnchorKnot]' passed (0.003 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadAllowsUnequalSamplingAlongDistinctStraightAnchorRays]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadAllowsUnequalSamplingAlongDistinctStraightAnchorRays]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadExitsAlongBoreAxisToTheDeclaredTerminal]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadExitsAlongBoreAxisToTheDeclaredTerminal]' passed (0.003 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsACommonTrunkThatNeverForks]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsACommonTrunkThatNeverForks]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsAReapproachAfterItsCommonTrunkForks]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsAReapproachAfterItsCommonTrunkForks]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsAReapproachToTheSharedAnchorAfterLeavingItsKnot]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsAReapproachToTheSharedAnchorAfterLeavingItsKnot]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsCoincidentAttachmentsBeyondItsSharedAnchor]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsCoincidentAttachmentsBeyondItsSharedAnchor]' passed (0.002 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsDistinctLeadsThatAreTooCloseAfterTheirSharedAnchor]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsDistinctLeadsThatAreTooCloseAfterTheirSharedAnchor]' passed (0.002 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsDivergingLeadsThatNeverReachFullClearance]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsDivergingLeadsThatNeverReachFullClearance]' passed (0.002 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsFullyOverlappingLeadsThatNeverExitTheSharedAnchorKnot]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsFullyOverlappingLeadsThatNeverExitTheSharedAnchorKnot]' passed (0.002 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsLeadsCloserThanTheirTwoTubeDiameterClearance]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsLeadsCloserThanTheirTwoTubeDiameterClearance]' passed (0.002 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsReapproachAfterDistinctStraightAnchorRays]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsReapproachAfterDistinctStraightAnchorRays]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsShallowBendsThatCrossAfterInitiallySeparating]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsShallowBendsThatCrossAfterInitiallySeparating]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsWhenEitherIndependentLeadIsTooShort]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadRejectsWhenEitherIndependentLeadIsTooShort]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadSolvesExactlyTwoIndependentAnchorToAttachmentCenterlines]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadSolvesExactlyTwoIndependentAnchorToAttachmentCenterlines]' passed (0.003 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadUsesExplicitPoseMouthsInsteadOfRotatingTheOtherFaceMouths]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadUsesExplicitPoseMouthsInsteadOfRotatingTheOtherFaceMouths]' passed (0.003 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadUsesOrderedPoseContactsWithoutMovingItsTerminal]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPairedLeadUsesOrderedPoseContactsWithoutMovingItsTerminal]' passed (0.003 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPresentationExposesClearanceAndFramingThatContainCord]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testPresentationExposesClearanceAndFramingThatContainCord]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testQuarterTurnPoseTransformsAttachment]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testQuarterTurnPoseTransformsAttachment]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testQuarterTurnRejectsItsActuallyShortCord]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testQuarterTurnRejectsItsActuallyShortCord]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testRepeatedSolveIsBitwiseDeterministic]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testRepeatedSolveIsBitwiseDeterministic]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testRockRingLoopTraversesChannelBetweenFreeSpans]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testRockRingLoopTraversesChannelBetweenFreeSpans]' passed (0.008 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSceneRuntimeDispatchesTwoBranchSuspensionToTwoBranchSolver]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSceneRuntimeDispatchesTwoBranchSuspensionToTwoBranchSolver]' passed (0.007 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSeatedCatalogRoutesSolveEveryCachedPose]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSeatedCatalogRoutesSolveEveryCachedPose]' passed (0.041 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSeatedPentaSourceLoadsInTheProductionScene]' started.
+2026-10-03 14:48:37.374023-0700 HangTen[32721:7246915] [Foundation.IO] Could not locate file 'default-binaryarchive.metallib' in bundle.
+2026-10-03 14:48:37.387684-0700 HangTen[32721:7246915] [Assets] asset string 'engine:throttleGhosted.rematerial' parse failed: Invalid asset path: Unknown asset type suffix 'engine:throttleGhosted.rematerial'
+2026-10-03 14:48:37.422150-0700 HangTen[32721:7247291] [tbbmain] TBB Global TLS count is not == 1, instead it is: 2
+2026-10-03 14:48:37.590422-0700 HangTen[32721:7247291] fopen failed for data file: errno = 2 (No such file or directory)
+2026-10-03 14:48:37.863631-0700 HangTen[32721:7247550] fopen failed for data file: errno = 2 (No such file or directory)
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSeatedPentaSourceLoadsInTheProductionScene]' passed (1.540 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSelfIntersectingCenterlineIsRejectedByValidationHook]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSelfIntersectingCenterlineIsRejectedByValidationHook]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSelfIntersectionRejectsEndpointTouchNearAnotherSegmentEndpoint]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSelfIntersectionRejectsEndpointTouchNearAnotherSegmentEndpoint]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testShortCordIsRejected]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testShortCordIsRejected]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSingleCachedThreadedLoopHasTwoSpansWithoutADuplicateLoop]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSingleCachedThreadedLoopHasTwoSpansWithoutADuplicateLoop]' passed (0.092 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSingleCordSamplesAreStraightAndTautForSupportedPoses]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSingleCordSamplesAreStraightAndTautForSupportedPoses]' passed (0.002 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSingleProfileSolverCharacterizesTautCordAndFacadeCompatibility]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSingleProfileSolverCharacterizesTautCordAndFacadeCompatibility]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSingleProfileSolverCharacterizesTautSlackAndInvalidInputs]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSingleProfileSolverCharacterizesTautSlackAndInvalidInputs]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSingleProfileSolverUsesStraightSamplesAndConstantTangents]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testSingleProfileSolverUsesStraightSamplesAndConstantTangents]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTautCordHasExactEndpointsFiniteSamplesAndContinuousTangents]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTautCordHasExactEndpointsFiniteSamplesAndContinuousTangents]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testThroughBoreFreeSpansStayTautWhenCapacityExceedsRoute]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testThroughBoreFreeSpansStayTautWhenCapacityExceedsRoute]' passed (0.008 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchAcceptsVerticalFreeSpanAndRejectsNonfiniteInputs]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchAcceptsVerticalFreeSpanAndRejectsNonfiniteInputs]' passed (0.007 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchCameraIncludesBoardCornersPassagesBranchesAndAnchor]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchCameraIncludesBoardCornersPassagesBranchesAndAnchor]' passed (0.008 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchExactTautRouteReturnsStraightThirtyTwoSampleFreeSpans]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchExactTautRouteReturnsStraightThirtyTwoSampleFreeSpans]' passed (0.008 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchIdentityTransformsAllPassagesAndSharesFixedAnchor]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchIdentityTransformsAllPassagesAndSharesFixedAnchor]' passed (0.007 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchPreservesInteriorPassageSpanAndContinuousJoins]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchPreservesInteriorPassageSpanAndContinuousJoins]' passed (0.007 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchQuarterTurnTransformsAllFourPassagesButNotAnchor]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchQuarterTurnTransformsAllFourPassagesButNotAnchor]' passed (0.007 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchRejectsSelfIntersectionAcrossInteriorRouteAndFreeSpan]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchRejectsSelfIntersectionAcrossInteriorRouteAndFreeSpan]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchRejectsShortRestLength]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchRejectsShortRestLength]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchSamplesAreStraightPerFreeAndAuthoredRouteSpan]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchSamplesAreStraightPerFreeAndAuthoredRouteSpan]' passed (0.009 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchSolveIsBitwiseDeterministicAndPreservesDeclaredOrder]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testTwoBranchSolveIsBitwiseDeterministicAndPreservesDeclaredOrder]' passed (0.014 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testVerticalCordWithExtraDeclaredLengthRemainsStraightAndTaut]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testVerticalCordWithExtraDeclaredLengthRemainsStraightAndTaut]' passed (0.001 seconds).
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testVeryShortTautCordDoesNotLookSelfIntersecting]' started.
+Test Case '-[HangTenTests.SuspendedBoardPresentationTests testVeryShortTautCordDoesNotLookSelfIntersecting]' passed (0.001 seconds).
+Test Suite 'SuspendedBoardPresentationTests' passed at 2026-10-03 14:48:39.024.
+	 Executed 73 tests, with 0 failures (0 unexpected) in 2.560 (2.585) seconds
+Test Suite 'HangTenTests.xctest' passed at 2026-10-03 14:48:39.024.
+	 Executed 73 tests, with 0 failures (0 unexpected) in 2.560 (2.586) seconds
+Test Suite 'Selected tests' passed at 2026-10-03 14:48:39.024.
+	 Executed 73 tests, with 0 failures (0 unexpected) in 2.560 (2.586) seconds
+2026-10-03 14:48:40.350221-0700 HangTenUITests-Runner[32838:7247708] [Default] Running tests...
+objc[32838]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x10a2f8310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x10a394398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-03 14:48:43.170.
+Test Suite 'HangTenUITests.xctest' started at 2026-10-03 14:48:43.171.
+Test Suite 'OwlClimbPokerBoardMapInteractionUITests' started at 2026-10-03 14:48:43.171.
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport]' started.
+    t =     0.00s Start Test at 2026-10-03 14:48:43.172
+    t =     0.23s Set Up
+    t =     0.25s Open com.hangten.training
+    t =     0.25s     Launch com.hangten.training
+2026-10-03 14:48:43.757 xcodebuild[32689:7246188] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 14:48:43.757 xcodebuild[32689:7246188] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.80s         Setting up automation session
+    t =     1.78s         Wait for com.hangten.training to idle
+    t =     5.35s             Interface orientation changed to Landscape Right
+    t =     6.81s Waiting 10.0s for "Hold specs" NavigationBar to exist
+    t =     7.85s     Checking `Expect predicate `existsNoRetry == 1` for object "Hold specs" NavigationBar`
+    t =     7.85s         Checking existence of `"Hold specs" NavigationBar`
+    t =     8.23s Waiting 5.0s for "Unlimited Board" StaticText to exist
+    t =     9.27s     Checking `Expect predicate `existsNoRetry == 1` for object "Unlimited Board" StaticText`
+    t =     9.27s         Checking existence of `"Unlimited Board" StaticText`
+    t =     9.31s Checking existence of `TabBar (First Match)`
+    t =     9.36s Waiting 10.0s for "boardDetail.map" Other to exist
+    t =    10.41s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.map" Other`
+    t =    10.42s         Checking existence of `"boardDetail.map" Other`
+    t =    10.45s Find the "boardDetail.map" Other
+    t =    10.49s Find the Target Application 'com.hangten.training'
+    t =    10.53s Find the "boardDetail.map" Other
+    t =    10.58s Setting device orientation to Portrait
+    t =    10.59s     Device orientation changed to Portrait
+    t =    10.62s     Interface orientation changed to Portrait
+    t =    10.63s     Wait for com.hangten.training to idle
+    t =    12.01s Tear Down
+    t =    12.01s     Setting device orientation to Portrait
+    t =    12.01s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport]' passed (12.373 seconds).
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapeMultiPresentationBoardDetailKeepsMapInViewport]' started.
+    t =     0.00s Start Test at 2026-10-03 14:48:55.546
+    t =     0.02s Set Up
+    t =     0.02s Open com.hangten.training
+    t =     0.03s     Launch com.hangten.training
+    t =     0.03s         Terminate com.hangten.training:32855
+2026-10-03 14:48:56.648 xcodebuild[32689:7246188] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 14:48:56.648 xcodebuild[32689:7246188] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.31s         Setting up automation session
+    t =     2.28s         Wait for com.hangten.training to idle
+    t =     5.72s             Interface orientation changed to Landscape Right
+    t =     7.09s Waiting 10.0s for "Hold specs" NavigationBar to exist
+    t =     8.12s     Checking `Expect predicate `existsNoRetry == 1` for object "Hold specs" NavigationBar`
+    t =     8.12s         Checking existence of `"Hold specs" NavigationBar`
+    t =     8.21s Waiting 5.0s for "Lifting Edge" StaticText to exist
+    t =     9.25s     Checking `Expect predicate `existsNoRetry == 1` for object "Lifting Edge" StaticText`
+    t =     9.25s         Checking existence of `"Lifting Edge" StaticText`
+    t =     9.28s Checking existence of `TabBar (First Match)`
+    t =     9.33s Waiting 10.0s for "boardDetail.map" Other to exist
+    t =    10.37s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.map" Other`
+    t =    10.38s         Checking existence of `"boardDetail.map" Other`
+    t =    10.42s Find the "boardDetail.map" Other
+    t =    10.48s Find the Target Application 'com.hangten.training'
+    t =    10.52s Find the "boardDetail.map" Other
+    t =    10.60s Waiting 5.0s for "boardDetail.presentationSelector" SegmentedControl to exist
+    t =    11.67s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.presentationSelector" SegmentedControl`
+    t =    11.67s         Checking existence of `"boardDetail.presentationSelector" SegmentedControl`
+    t =    11.71s Find the "boardDetail.presentationSelector" SegmentedControl
+    t =    11.76s Find the Target Application 'com.hangten.training'
+    t =    11.80s Find the "boardDetail.presentationSelector" SegmentedControl
+    t =    11.87s Find the "boardDetail.map" Other
+    t =    11.93s Setting device orientation to Portrait
+    t =    11.94s     Wait for com.hangten.training to idle
+    t =    11.96s Tear Down
+    t =    11.96s     Setting device orientation to Portrait
+    t =    11.98s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapeMultiPresentationBoardDetailKeepsMapInViewport]' passed (12.335 seconds).
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapeSquareBoardDetailKeepsMapInViewport]' started.
+    t =     0.00s Start Test at 2026-10-03 14:49:07.885
+    t =     0.04s Set Up
+    t =     0.05s Open com.hangten.training
+    t =     0.05s     Launch com.hangten.training
+    t =     0.05s         Terminate com.hangten.training:35265
+    t =     0.10s             Interface orientation changed to Portrait
+2026-10-03 14:49:08.941 xcodebuild[32689:7246188] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 14:49:08.941 xcodebuild[32689:7246188] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.35s         Setting up automation session
+    t =     2.36s         Wait for com.hangten.training to idle
+    t =     5.82s             Interface orientation changed to Landscape Right
+    t =     7.28s Waiting 10.0s for "Hold specs" NavigationBar to exist
+    t =     8.34s     Checking `Expect predicate `existsNoRetry == 1` for object "Hold specs" NavigationBar`
+    t =     8.34s         Checking existence of `"Hold specs" NavigationBar`
+    t =     8.48s Waiting 5.0s for "Stone Hanger" StaticText to exist
+    t =     9.53s     Checking `Expect predicate `existsNoRetry == 1` for object "Stone Hanger" StaticText`
+    t =     9.53s         Checking existence of `"Stone Hanger" StaticText`
+    t =     9.58s Checking existence of `TabBar (First Match)`
+    t =     9.66s Waiting 10.0s for "boardDetail.map" Other to exist
+    t =    10.71s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.map" Other`
+    t =    10.71s         Checking existence of `"boardDetail.map" Other`
+    t =    10.74s Find the "boardDetail.map" Other
+    t =    10.78s Find the Target Application 'com.hangten.training'
+    t =    10.81s Find the "boardDetail.map" Other
+    t =    10.89s Find the "boardDetail.map" Other
+    t =    10.95s Find the Target Application 'com.hangten.training'
+    t =    10.98s Find the "boardDetail.map" Other
+    t =    11.03s Find the "boardDetail.map" Other
+    t =    11.07s Setting device orientation to Portrait
+    t =    11.07s     Wait for com.hangten.training to idle
+    t =    11.08s Tear Down
+    t =    11.08s     Setting device orientation to Portrait
+    t =    11.08s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapeSquareBoardDetailKeepsMapInViewport]' passed (11.436 seconds).
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testModelBoardDetailRendersAndSelectsHold]' started.
+    t =     0.00s Start Test at 2026-10-03 14:49:19.320
+    t =     0.03s Set Up
+    t =     0.04s Open com.hangten.training
+    t =     0.04s     Launch com.hangten.training
+    t =     0.04s         Terminate com.hangten.training:35406
+    t =     0.19s             Interface orientation changed to Portrait
+2026-10-03 14:49:20.366 xcodebuild[32689:7246188] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 14:49:20.366 xcodebuild[32689:7246188] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.41s         Setting up automation session
+    t =     2.32s         Wait for com.hangten.training to idle
+    t =     7.06s Waiting 30.0s for "Hold specs" NavigationBar to exist
+    t =     8.12s     Checking `Expect predicate `existsNoRetry == 1` for object "Hold specs" NavigationBar`
+    t =     8.12s         Checking existence of `"Hold specs" NavigationBar`
+    t =     8.86s Waiting 30.0s for "boardDetail.map" Other to exist
+    t =     9.91s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.map" Other`
+    t =     9.91s         Checking existence of `"boardDetail.map" Other`
+    t =    10.03s Waiting 10.0s for "boardDetail.holdLegend.face-a-left-outer-slot" Button to exist
+    t =    11.09s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.holdLegend.face-a-left-outer-slot" Button`
+    t =    11.09s         Checking existence of `"boardDetail.holdLegend.face-a-left-outer-slot" Button`
+    t =    11.23s Find the "boardDetail.holdLegend.face-a-left-outer-slot" Button
+    t =    11.51s Added attachment named 'Poker Face A normal'
+    t =    11.51s Checking existence of `"boardDetail.selectedHold.face-a-left-outer-slot" Other`
+    t =    11.76s Added attachment named 'Poker Face A selected'
+    t =    11.76s Tear Down
+    t =    11.76s     Setting device orientation to Portrait
+    t =    11.77s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testModelBoardDetailRendersAndSelectsHold]' passed (12.125 seconds).
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testPivotRotationPresetsPersistWhenSelectingHolds]' started.
+    t =     0.00s Start Test at 2026-10-03 14:49:31.445
+    t =     0.03s Set Up
+    t =     0.03s Open com.hangten.training
+    t =     0.03s     Launch com.hangten.training
+    t =     0.03s         Terminate com.hangten.training:35457
+2026-10-03 14:49:32.585 xcodebuild[32689:7246188] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 14:49:32.585 xcodebuild[32689:7246188] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.36s         Setting up automation session
+    t =     2.44s         Wait for com.hangten.training to idle
+    t =     7.16s Waiting 30.0s for "boardDetail.rotationSelector" SegmentedControl to exist
+    t =     8.22s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.rotationSelector" SegmentedControl`
+    t =     8.22s         Checking existence of `"boardDetail.rotationSelector" SegmentedControl`
+    t =    10.94s Checking existence of `"boardDetail.rotationSelector" SegmentedControl`
+    t =    11.03s Waiting 120.0s for "boardModel.contact.two-finger-pocket-left" Button to exist
+    t =    12.08s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.contact.two-finger-pocket-left" Button`
+    t =    12.09s         Checking existence of `"boardModel.contact.two-finger-pocket-left" Button`
+    t =    12.17s Waiting 10.0s for "boardDetail.map" Any to exist
+    t =    13.23s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.map" Any`
+    t =    13.23s         Checking existence of `"boardDetail.map" Any`
+    t =    13.54s Waiting 10.0s for "boardModel.renderDiagnostic" Other to exist
+    t =    14.58s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.renderDiagnostic" Other`
+    t =    14.58s         Checking existence of `"boardModel.renderDiagnostic" Other`
+    t =    14.77s Added attachment named 'Pivot position 1'
+    t =    15.81s Find the "boardModel.renderDiagnostic" Other
+    t =    15.91s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    16.85s Find the "boardModel.renderDiagnostic" Other
+    t =    16.92s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    17.83s Find the "boardModel.renderDiagnostic" Other
+    t =    17.91s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    18.03s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    18.14s Tap "Position 2" Button
+    t =    18.15s     Wait for com.hangten.training to idle
+    t =    18.15s     Find the "Position 2" Button
+    t =    18.21s     Check for interrupting elements affecting "Position 2" Button
+    t =    18.29s     Synthesize event
+    t =    18.75s     Wait for com.hangten.training to idle
+    t =    19.93s Find the "Position 2" Button
+    t =    21.06s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    21.14s Waiting 10.0s for "boardModel.contact.outer-sloped-crimp-right" Button to exist
+    t =    22.18s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.contact.outer-sloped-crimp-right" Button`
+    t =    22.18s         Checking existence of `"boardModel.contact.outer-sloped-crimp-right" Button`
+    t =    23.30s Find the "boardModel.renderDiagnostic" Other
+    t =    23.40s Find the "boardModel.contact.outer-sloped-crimp-right" Button
+    t =    24.26s Find the "boardModel.renderDiagnostic" Other
+    t =    24.33s Find the "boardModel.contact.outer-sloped-crimp-right" Button
+    t =    25.27s Find the "boardModel.renderDiagnostic" Other
+    t =    25.36s Find the "boardModel.contact.outer-sloped-crimp-right" Button
+    t =    25.47s Checking existence of `"boardDetail.selectedHold.outer-sloped-crimp-right" Other`
+    t =    25.55s Find the "boardModel.contact.outer-sloped-crimp-right" Button
+    t =    25.64s Find the "boardDetail.map" Any
+    t =    25.91s Tap "boardDetail.map" Other[0.70, 0.20]
+    t =    25.91s     Wait for com.hangten.training to idle
+    t =    25.92s     Find the "boardDetail.map" Other
+    t =    26.18s     Check for interrupting elements affecting "boardDetail.map" Other
+    t =    26.33s     Synthesize event
+    t =    26.33s         Find the "boardDetail.map" Other
+    t =    26.54s         Find the "boardDetail.map" Other
+    t =    26.78s         Find the "boardDetail.map" Other
+    t =    27.26s     Wait for com.hangten.training to idle
+    t =    27.27s Waiting 10.0s for "boardDetail.selectedHold.outer-sloped-crimp-right" Other to exist
+    t =    28.31s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.outer-sloped-crimp-right" Other`
+    t =    28.31s         Checking existence of `"boardDetail.selectedHold.outer-sloped-crimp-right" Other`
+    t =    28.40s Find the "Position 2" Button
+    t =    28.48s Tap "boardDetail.holdLegend.outer-sloped-crimp-right" Button
+    t =    28.48s     Wait for com.hangten.training to idle
+    t =    28.48s     Find the "boardDetail.holdLegend.outer-sloped-crimp-right" Button
+    t =    28.55s     Check for interrupting elements affecting "boardDetail.holdLegend.outer-sloped-crimp-right" Button
+    t =    28.65s     Synthesize event
+    t =    28.97s     Wait for com.hangten.training to idle
+    t =    28.98s Waiting 10.0s for "boardDetail.selectedHold.outer-sloped-crimp-right" Other to exist
+    t =    29.99s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.outer-sloped-crimp-right" Other`
+    t =    29.99s         Checking existence of `"boardDetail.selectedHold.outer-sloped-crimp-right" Other`
+    t =    30.07s Find the "Position 2" Button
+    t =    30.26s Added attachment named 'Pivot position 2 selected outer-sloped-crimp-right'
+    t =    31.31s Find the "boardModel.renderDiagnostic" Other
+    t =    31.38s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    32.33s Find the "boardModel.renderDiagnostic" Other
+    t =    32.56s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    33.29s Find the "boardModel.renderDiagnostic" Other
+    t =    33.37s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    33.45s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    33.59s Tap "Position 3" Button
+    t =    33.59s     Wait for com.hangten.training to idle
+    t =    33.60s     Find the "Position 3" Button
+    t =    33.68s     Check for interrupting elements affecting "Position 3" Button
+    t =    33.78s     Synthesize event
+    t =    34.11s     Wait for com.hangten.training to idle
+    t =    35.30s Find the "Position 3" Button
+    t =    36.43s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    36.52s Waiting 10.0s for "boardModel.contact.outer-sloped-crimp-left" Button to exist
+    t =    37.56s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.contact.outer-sloped-crimp-left" Button`
+    t =    37.56s         Checking existence of `"boardModel.contact.outer-sloped-crimp-left" Button`
+    t =    38.68s Find the "boardModel.renderDiagnostic" Other
+    t =    38.76s Find the "boardModel.contact.outer-sloped-crimp-left" Button
+    t =    39.66s Find the "boardModel.renderDiagnostic" Other
+    t =    39.75s Find the "boardModel.contact.outer-sloped-crimp-left" Button
+    t =    40.69s Find the "boardModel.renderDiagnostic" Other
+    t =    40.78s Find the "boardModel.contact.outer-sloped-crimp-left" Button
+    t =    40.88s Checking existence of `"boardDetail.selectedHold.outer-sloped-crimp-left" Other`
+    t =    40.99s Find the "boardModel.contact.outer-sloped-crimp-left" Button
+    t =    41.08s Find the "boardDetail.map" Other
+    t =    41.29s Tap "boardDetail.map" Other[0.16, 0.56]
+    t =    41.29s     Wait for com.hangten.training to idle
+    t =    41.29s     Find the "boardDetail.map" Other
+    t =    41.47s     Check for interrupting elements affecting "boardDetail.map" Other
+    t =    41.63s     Synthesize event
+    t =    41.63s         Find the "boardDetail.map" Other
+    t =    42.01s         Find the "boardDetail.map" Other
+    t =    42.64s         Find the "boardDetail.map" Other
+    t =    43.13s     Wait for com.hangten.training to idle
+    t =    43.14s Waiting 10.0s for "boardDetail.selectedHold.outer-sloped-crimp-left" Other to exist
+    t =    44.20s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.outer-sloped-crimp-left" Other`
+    t =    44.20s         Checking existence of `"boardDetail.selectedHold.outer-sloped-crimp-left" Other`
+    t =    44.33s Find the "Position 3" Button
+    t =    44.42s Tap "boardDetail.holdLegend.outer-sloped-crimp-left" Button
+    t =    44.42s     Wait for com.hangten.training to idle
+    t =    44.45s     Find the "boardDetail.holdLegend.outer-sloped-crimp-left" Button
+    t =    44.57s     Check for interrupting elements affecting "boardDetail.holdLegend.outer-sloped-crimp-left" Button
+    t =    44.76s     Synthesize event
+    t =    45.12s     Wait for com.hangten.training to idle
+    t =    45.23s Waiting 10.0s for "boardDetail.selectedHold.outer-sloped-crimp-left" Other to exist
+    t =    46.27s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.outer-sloped-crimp-left" Other`
+    t =    46.27s         Checking existence of `"boardDetail.selectedHold.outer-sloped-crimp-left" Other`
+    t =    46.40s Find the "Position 3" Button
+    t =    46.62s Added attachment named 'Pivot position 3 selected outer-sloped-crimp-left'
+    t =    47.67s Find the "boardModel.renderDiagnostic" Other
+    t =    47.75s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    48.66s Find the "boardModel.renderDiagnostic" Other
+    t =    48.78s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    49.69s Find the "boardModel.renderDiagnostic" Other
+    t =    49.78s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    49.87s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    49.96s Tap "Position 5" Button
+    t =    49.96s     Wait for com.hangten.training to idle
+    t =    49.97s     Find the "Position 5" Button
+    t =    50.04s     Check for interrupting elements affecting "Position 5" Button
+    t =    50.12s     Synthesize event
+    t =    50.45s     Wait for com.hangten.training to idle
+    t =    51.61s Find the "Position 5" Button
+    t =    52.74s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    52.83s Waiting 10.0s for "boardModel.contact.upper-sloped-crimp-right" Button to exist
+    t =    53.89s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.contact.upper-sloped-crimp-right" Button`
+    t =    53.89s         Checking existence of `"boardModel.contact.upper-sloped-crimp-right" Button`
+    t =    55.02s Find the "boardModel.renderDiagnostic" Other
+    t =    55.10s Find the "boardModel.contact.upper-sloped-crimp-right" Button
+    t =    56.03s Find the "boardModel.renderDiagnostic" Other
+    t =    56.10s Find the "boardModel.contact.upper-sloped-crimp-right" Button
+    t =    57.00s Find the "boardModel.renderDiagnostic" Other
+    t =    57.07s Find the "boardModel.contact.upper-sloped-crimp-right" Button
+    t =    57.15s Checking existence of `"boardDetail.selectedHold.upper-sloped-crimp-right" Other`
+    t =    57.24s Find the "boardModel.contact.upper-sloped-crimp-right" Button
+    t =    57.33s Find the "boardDetail.map" Other
+    t =    57.54s Tap "boardDetail.map" Other[0.21, 0.74]
+    t =    57.54s     Wait for com.hangten.training to idle
+    t =    57.55s     Find the "boardDetail.map" Other
+    t =    57.71s     Check for interrupting elements affecting "boardDetail.map" Other
+    t =    57.85s     Synthesize event
+    t =    57.85s         Find the "boardDetail.map" Other
+    t =    58.04s         Find the "boardDetail.map" Other
+    t =    58.25s         Find the "boardDetail.map" Other
+    t =    58.83s     Wait for com.hangten.training to idle
+    t =    58.84s Waiting 10.0s for "boardDetail.selectedHold.upper-sloped-crimp-right" Other to exist
+    t =    59.88s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.upper-sloped-crimp-right" Other`
+    t =    59.88s         Checking existence of `"boardDetail.selectedHold.upper-sloped-crimp-right" Other`
+    t =    59.95s Find the "Position 5" Button
+    t =    60.02s Tap "boardDetail.holdLegend.upper-sloped-crimp-right" Button
+    t =    60.02s     Wait for com.hangten.training to idle
+    t =    60.04s     Find the "boardDetail.holdLegend.upper-sloped-crimp-right" Button
+    t =    60.11s     Check for interrupting elements affecting "boardDetail.holdLegend.upper-sloped-crimp-right" Button
+    t =    60.19s     Synthesize event
+    t =    60.51s     Wait for com.hangten.training to idle
+    t =    60.52s Waiting 10.0s for "boardDetail.selectedHold.upper-sloped-crimp-right" Other to exist
+    t =    61.58s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.upper-sloped-crimp-right" Other`
+    t =    61.58s         Checking existence of `"boardDetail.selectedHold.upper-sloped-crimp-right" Other`
+    t =    61.67s Find the "Position 5" Button
+    t =    61.86s Added attachment named 'Pivot position 5 selected upper-sloped-crimp-right'
+    t =    61.86s Tear Down
+    t =    61.86s     Setting device orientation to Portrait
+    t =    61.87s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testPivotRotationPresetsPersistWhenSelectingHolds]' passed (62.293 seconds).
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testSelectedTopSloperAnimatesAndPocketReturnsToFront]' started.
+    t =     0.00s Start Test at 2026-10-03 14:50:33.738
+    t =     0.02s Set Up
+    t =     0.02s Open com.hangten.training
+    t =     0.02s     Launch com.hangten.training
+    t =     0.02s         Terminate com.hangten.training:35485
+2026-10-03 14:50:34.772 xcodebuild[32689:7246188] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 14:50:34.772 xcodebuild[32689:7246188] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.24s         Setting up automation session
+    t =     2.33s         Wait for com.hangten.training to idle
+    t =     7.22s Waiting 30.0s for "boardModel.renderDiagnostic" Other to exist
+    t =     8.26s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.renderDiagnostic" Other`
+    t =     8.26s         Checking existence of `"boardModel.renderDiagnostic" Other`
+    t =     8.43s Waiting 10.0s for "boardDetail.holdLegend.sloper-center" Button to exist
+    t =     9.47s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.holdLegend.sloper-center" Button`
+    t =     9.47s         Checking existence of `"boardDetail.holdLegend.sloper-center" Button`
+    t =     9.55s Find the "boardDetail.holdLegend.sloper-center" Button
+    t =     9.68s Tap "boardDetail.holdLegend.sloper-center" Button
+    t =     9.68s     Wait for com.hangten.training to idle
+    t =     9.69s     Find the "boardDetail.holdLegend.sloper-center" Button
+    t =     9.77s     Check for interrupting elements affecting "boardDetail.holdLegend.sloper-center" Button
+    t =     9.85s     Synthesize event
+    t =    10.18s     Wait for com.hangten.training to idle
+    t =    11.24s Waiting 10.0s for "boardDetail.selectedHold.sloper-center" Other to exist
+    t =    12.30s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.sloper-center" Other`
+    t =    12.30s         Checking existence of `"boardDetail.selectedHold.sloper-center" Other`
+    t =    13.42s Checking `Expect predicate `BLOCKPREDICATE(0x109ed7780)` for object "boardModel.renderDiagnostic" Other`
+    t =    13.42s     Find the "boardModel.renderDiagnostic" Other
+    t =    13.64s Added attachment named 'Beastmaker top sloper pivoted'
+    t =    13.64s Find the "boardModel.renderDiagnostic" Other
+    t =    13.72s Waiting 10.0s for "boardModel.contact.sloper-center" Button to exist
+    t =    14.76s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.contact.sloper-center" Button`
+    t =    14.77s         Checking existence of `"boardModel.contact.sloper-center" Button`
+    t =    14.85s Press "boardModel.contact.sloper-center" Button[0.50, 0.50] for 0.3 seconds, then drag to "boardModel.contact.sloper-center" Button[0.50, 0.50] -> (80.0, 0.0) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =    14.85s     Wait for com.hangten.training to idle
+    t =    14.87s     Find the "boardModel.contact.sloper-center" Button
+    t =    14.97s     Check for interrupting elements affecting "boardModel.contact.sloper-center" Button
+    t =    15.07s     Synthesize event
+    t =    15.08s         Find the "boardModel.contact.sloper-center" Button
+    t =    15.19s         Find the "boardModel.contact.sloper-center" Button
+    t =    15.31s         Find the "boardModel.contact.sloper-center" Button
+    t =    15.43s         Find the "boardModel.contact.sloper-center" Button
+    t =    15.57s         Find the "boardModel.contact.sloper-center" Button
+    t =    16.77s     Wait for com.hangten.training to idle
+    t =    17.84s Checking `Expect predicate `BLOCKPREDICATE(0x10aad1a70)` for object "boardModel.renderDiagnostic" Other`
+    t =    17.84s     Find the "boardModel.renderDiagnostic" Other
+    t =    18.14s Added attachment named 'Beastmaker manual orbit after selection'
+    t =    18.14s Waiting 10.0s for "boardDetail.holdLegend.pocket-middle-center" Button to exist
+    t =    19.17s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.holdLegend.pocket-middle-center" Button`
+    t =    19.17s         Checking existence of `"boardDetail.holdLegend.pocket-middle-center" Button`
+    t =    19.25s Find the "boardDetail.holdLegend.pocket-middle-center" Button
+    t =    19.38s Tap "boardDetail.holdLegend.pocket-middle-center" Button
+    t =    19.38s     Wait for com.hangten.training to idle
+    t =    19.38s     Find the "boardDetail.holdLegend.pocket-middle-center" Button
+    t =    19.48s     Check for interrupting elements affecting "boardDetail.holdLegend.pocket-middle-center" Button
+    t =    19.56s     Synthesize event
+    t =    19.87s     Wait for com.hangten.training to idle
+    t =    21.95s Checking `Expect predicate `BLOCKPREDICATE(0x109ed6eb0)` for object "boardModel.renderDiagnostic" Other`
+    t =    21.95s     Find the "boardModel.renderDiagnostic" Other
+    t =    22.18s Added attachment named 'Beastmaker pocket returns to front'
+    t =    22.18s Tear Down
+    t =    22.18s     Setting device orientation to Portrait
+    t =    22.19s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testSelectedTopSloperAnimatesAndPocketReturnsToFront]' passed (22.584 seconds).
+Test Suite 'OwlClimbPokerBoardMapInteractionUITests' passed at 2026-10-03 14:50:56.322.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 133.146 (133.151) seconds
+Test Suite 'HangTenUITests.xctest' passed at 2026-10-03 14:50:56.323.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 133.146 (133.152) seconds
+Test Suite 'Selected tests' passed at 2026-10-03 14:50:56.323.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 133.146 (133.153) seconds
+2026-10-03 14:50:56.658 xcodebuild[32689:7246188] [MT] IDETestOperationsObserverDebug: 156.274 elapsed -- Testing started completed.
+2026-10-03 14:50:56.658 xcodebuild[32689:7246188] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-03 14:50:56.658 xcodebuild[32689:7246188] [MT] IDETestOperationsObserverDebug: 156.274 sec, +156.274 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/ci-fix-2026-10-03/placid-badger-ci-targeted-tests.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

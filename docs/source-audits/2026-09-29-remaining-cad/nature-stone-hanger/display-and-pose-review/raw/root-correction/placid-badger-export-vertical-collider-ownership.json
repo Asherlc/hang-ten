@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "placid-badger-export-vertical-collider",
+  "script": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/export_candidate_collider.py",
+  "timeoutSeconds": 300,
+  "startedUTC": "2026-10-01T22:40:20.077369+00:00",
+  "ownedProcessGroup": 47838,
+  "elapsedSeconds": 2.58497579197865,
+  "exitCode": 3,
+  "ownedProcessGroupExited": true
+}

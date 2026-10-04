@@ -1,0 +1,11 @@
+{
+  "reviewedAtUTC": "2026-10-02T14:55:38.965513+00:00",
+  "reviewer": "root Astra",
+  "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/ios-uninterrupted/startup-after-eight-minutes.png",
+  "sha256": "1241524c70d486353cf3d05a5b6fb065166a2b810e28fe258dc7cd4a174a7622",
+  "wholeImageReviewed": true,
+  "observed": "Apple startup logo and progress bar on black screen; no Home screen or Hang Ten app",
+  "actualHomeConfirmed": false,
+  "appValidationProvided": false,
+  "imageProcessing": "None"
+}

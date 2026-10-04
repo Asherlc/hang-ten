@@ -1,0 +1,397 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=055BDCE2-3263-470D-89DF-04B967EF7790" -derivedDataPath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/DerivedData-placid-badger-cad-second-half -resultBundlePath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/tests-placid-badger-cad-second-half-board-ui-clean-modal-setup.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never -maximum-concurrent-test-simulator-destinations 1 "-only-testing:HangTenUITests/OwlClimbPokerBoardMapInteractionUITests" test-without-building
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  AmplitudeCore: https://github.com/amplitude/AmplitudeCore-Swift.git @ 1.5.0
+  Amplitude-Swift: https://github.com/amplitude/Amplitude-Swift @ 1.18.8
+  analytics-connector-ios: https://github.com/amplitude/analytics-connector-ios.git @ 1.3.2
+  Sentry: https://github.com/getsentry/sentry-cocoa.git @ 8.58.4
+
+Writing result bundle at path:
+	/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/tests-placid-badger-cad-second-half-board-ui-clean-modal-setup.xcresult
+
+2026-10-03 17:14:45.986803-0700 HangTenUITests-Runner[70043:7862245] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-03 17:14:46.729.
+Test Suite 'HangTenUITests.xctest' started at 2026-10-03 17:14:46.729.
+Test Suite 'OwlClimbPokerBoardMapInteractionUITests' started at 2026-10-03 17:14:46.729.
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport]' started.
+    t =     0.00s Start Test at 2026-10-03 17:14:46.730
+    t =     0.02s Set Up
+    t =     0.03s Open com.hangten.training
+    t =     0.03s     Launch com.hangten.training
+objc[70043]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x108554310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x1085f0398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.33s         Setting up automation session
+    t =     2.26s         Wait for com.hangten.training to idle
+    t =     3.32s             Interface orientation changed to Landscape Right
+    t =     4.66s Waiting 10.0s for "Hold specs" NavigationBar to exist
+    t =     5.69s     Checking `Expect predicate `existsNoRetry == 1` for object "Hold specs" NavigationBar`
+    t =     5.69s         Checking existence of `"Hold specs" NavigationBar`
+    t =     5.79s Waiting 5.0s for "Unlimited Board" StaticText to exist
+    t =     6.87s     Checking `Expect predicate `existsNoRetry == 1` for object "Unlimited Board" StaticText`
+    t =     6.87s         Checking existence of `"Unlimited Board" StaticText`
+    t =     6.91s Checking existence of `TabBar (First Match)`
+    t =     7.00s Waiting 10.0s for "boardDetail.map" Other to exist
+    t =     8.09s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.map" Other`
+    t =     8.09s         Checking existence of `"boardDetail.map" Other`
+    t =     8.13s Find the "boardDetail.map" Other
+    t =     8.19s Find the Target Application 'com.hangten.training'
+    t =     8.23s Find the "boardDetail.map" Other
+    t =     8.29s Setting device orientation to Portrait
+    t =     8.29s     Wait for com.hangten.training to idle
+    t =     8.30s Tear Down
+    t =     8.30s     Setting device orientation to Portrait
+    t =     8.30s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport]' passed (8.729 seconds).
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapeMultiPresentationBoardDetailKeepsMapInViewport]' started.
+    t =     0.00s Start Test at 2026-10-03 17:14:55.460
+    t =     0.03s Set Up
+    t =     0.03s Open com.hangten.training
+    t =     0.03s     Launch com.hangten.training
+    t =     0.03s         Terminate com.hangten.training:70054
+    t =     2.71s             Interface orientation changed to Portrait
+    t =     3.35s         Setting up automation session
+    t =     4.39s         Wait for com.hangten.training to idle
+    t =     5.55s             Interface orientation changed to Landscape Right
+    t =     6.90s Waiting 10.0s for "Hold specs" NavigationBar to exist
+    t =     7.97s     Checking `Expect predicate `existsNoRetry == 1` for object "Hold specs" NavigationBar`
+    t =     7.98s         Checking existence of `"Hold specs" NavigationBar`
+    t =     8.08s Waiting 5.0s for "Lifting Edge" StaticText to exist
+    t =     9.14s     Checking `Expect predicate `existsNoRetry == 1` for object "Lifting Edge" StaticText`
+    t =     9.14s         Checking existence of `"Lifting Edge" StaticText`
+    t =     9.17s Checking existence of `TabBar (First Match)`
+    t =     9.23s Waiting 10.0s for "boardDetail.map" Other to exist
+    t =    10.31s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.map" Other`
+    t =    10.31s         Checking existence of `"boardDetail.map" Other`
+    t =    10.33s Find the "boardDetail.map" Other
+    t =    10.37s Find the Target Application 'com.hangten.training'
+    t =    10.39s Find the "boardDetail.map" Other
+    t =    10.43s Waiting 5.0s for "boardDetail.presentationSelector" SegmentedControl to exist
+    t =    11.51s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.presentationSelector" SegmentedControl`
+    t =    11.51s         Checking existence of `"boardDetail.presentationSelector" SegmentedControl`
+    t =    11.55s Find the "boardDetail.presentationSelector" SegmentedControl
+    t =    11.58s Find the Target Application 'com.hangten.training'
+    t =    11.61s Find the "boardDetail.presentationSelector" SegmentedControl
+    t =    11.65s Find the "boardDetail.map" Other
+    t =    11.68s Setting device orientation to Portrait
+    t =    11.68s     Wait for com.hangten.training to idle
+    t =    11.69s Tear Down
+    t =    11.69s     Setting device orientation to Portrait
+    t =    11.69s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapeMultiPresentationBoardDetailKeepsMapInViewport]' passed (12.029 seconds).
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapeSquareBoardDetailKeepsMapInViewport]' started.
+    t =     0.00s Start Test at 2026-10-03 17:15:07.490
+    t =     0.02s Set Up
+    t =     0.02s Open com.hangten.training
+    t =     0.03s     Launch com.hangten.training
+    t =     0.03s         Terminate com.hangten.training:71008
+    t =     0.11s             Interface orientation changed to Portrait
+    t =     1.27s         Setting up automation session
+    t =     2.24s         Wait for com.hangten.training to idle
+    t =     3.28s             Interface orientation changed to Landscape Right
+    t =     4.64s Waiting 10.0s for "Hold specs" NavigationBar to exist
+    t =     5.69s     Checking `Expect predicate `existsNoRetry == 1` for object "Hold specs" NavigationBar`
+    t =     5.70s         Checking existence of `"Hold specs" NavigationBar`
+    t =     5.77s Waiting 5.0s for "Stone Hanger" StaticText to exist
+    t =     6.83s     Checking `Expect predicate `existsNoRetry == 1` for object "Stone Hanger" StaticText`
+    t =     6.83s         Checking existence of `"Stone Hanger" StaticText`
+    t =     6.88s Checking existence of `TabBar (First Match)`
+    t =     6.93s Waiting 10.0s for "boardDetail.map" Other to exist
+    t =     7.98s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.map" Other`
+    t =     7.98s         Checking existence of `"boardDetail.map" Other`
+    t =     8.02s Find the "boardDetail.map" Other
+    t =     8.05s Find the Target Application 'com.hangten.training'
+    t =     8.08s Find the "boardDetail.map" Other
+    t =     8.14s Find the "boardDetail.map" Other
+    t =     8.17s Find the Target Application 'com.hangten.training'
+    t =     8.20s Find the "boardDetail.map" Other
+    t =     8.24s Find the "boardDetail.map" Other
+    t =     8.28s Setting device orientation to Portrait
+    t =     8.28s     Wait for com.hangten.training to idle
+    t =     8.28s Tear Down
+    t =     8.28s     Setting device orientation to Portrait
+    t =     8.29s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapeSquareBoardDetailKeepsMapInViewport]' passed (8.633 seconds).
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testModelBoardDetailRendersAndSelectsHold]' started.
+    t =     0.00s Start Test at 2026-10-03 17:15:16.124
+    t =     0.03s Set Up
+    t =     0.03s Open com.hangten.training
+    t =     0.03s     Launch com.hangten.training
+    t =     0.03s         Terminate com.hangten.training:71083
+    t =     0.18s             Interface orientation changed to Portrait
+    t =     1.35s         Setting up automation session
+    t =     2.25s         Wait for com.hangten.training to idle
+    t =     4.44s Waiting 30.0s for "Hold specs" NavigationBar to exist
+    t =     5.51s     Checking `Expect predicate `existsNoRetry == 1` for object "Hold specs" NavigationBar`
+    t =     5.52s         Checking existence of `"Hold specs" NavigationBar`
+    t =     5.66s Waiting 30.0s for "boardDetail.map" Other to exist
+    t =     6.73s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.map" Other`
+    t =     6.73s         Checking existence of `"boardDetail.map" Other`
+    t =     6.81s Waiting 10.0s for "boardDetail.holdLegend.face-a-left-outer-slot" Button to exist
+    t =     7.86s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.holdLegend.face-a-left-outer-slot" Button`
+    t =     7.87s         Checking existence of `"boardDetail.holdLegend.face-a-left-outer-slot" Button`
+    t =     7.96s Find the "boardDetail.holdLegend.face-a-left-outer-slot" Button
+    t =     8.18s Added attachment named 'Poker Face A normal'
+    t =     8.18s Checking existence of `"boardDetail.selectedHold.face-a-left-outer-slot" Other`
+    t =     8.37s Added attachment named 'Poker Face A selected'
+    t =     8.37s Tear Down
+    t =     8.37s     Setting device orientation to Portrait
+    t =     8.37s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testModelBoardDetailRendersAndSelectsHold]' passed (8.703 seconds).
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testPivotRotationPresetsPersistWhenSelectingHolds]' started.
+    t =     0.00s Start Test at 2026-10-03 17:15:24.827
+    t =     0.03s Set Up
+    t =     0.03s Open com.hangten.training
+    t =     0.03s     Launch com.hangten.training
+    t =     0.03s         Terminate com.hangten.training:71247
+    t =     1.30s         Setting up automation session
+    t =     2.20s         Wait for com.hangten.training to idle
+    t =     4.39s Waiting 30.0s for "boardDetail.rotationSelector" SegmentedControl to exist
+    t =     5.46s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.rotationSelector" SegmentedControl`
+    t =     5.46s         Checking existence of `"boardDetail.rotationSelector" SegmentedControl`
+    t =     5.58s Checking existence of `"boardDetail.rotationSelector" SegmentedControl`
+    t =     5.63s Waiting 120.0s for "boardModel.contact.two-finger-pocket-left" Button to exist
+    t =     6.70s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.contact.two-finger-pocket-left" Button`
+    t =     6.70s         Checking existence of `"boardModel.contact.two-finger-pocket-left" Button`
+    t =     6.76s Waiting 10.0s for "boardDetail.map" Any to exist
+    t =     7.83s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.map" Any`
+    t =     7.83s         Checking existence of `"boardDetail.map" Any`
+    t =     7.99s Waiting 10.0s for "boardModel.renderDiagnostic" Other to exist
+    t =     9.04s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.renderDiagnostic" Other`
+    t =     9.04s         Checking existence of `"boardModel.renderDiagnostic" Other`
+    t =     9.21s Added attachment named 'Pivot position 1'
+    t =    10.28s Find the "boardModel.renderDiagnostic" Other
+    t =    10.36s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    11.28s Find the "boardModel.renderDiagnostic" Other
+    t =    11.34s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    12.25s Find the "boardModel.renderDiagnostic" Other
+    t =    12.31s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    12.36s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    12.42s Tap "Position 2" Button
+    t =    12.42s     Wait for com.hangten.training to idle
+    t =    12.42s     Find the "Position 2" Button
+    t =    12.47s     Check for interrupting elements affecting "Position 2" Button
+    t =    12.52s     Synthesize event
+    t =    12.82s     Wait for com.hangten.training to idle
+    t =    14.01s Find the "Position 2" Button
+    t =    15.15s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    15.21s Waiting 10.0s for "boardModel.contact.outer-sloped-crimp-right" Button to exist
+    t =    16.27s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.contact.outer-sloped-crimp-right" Button`
+    t =    16.27s         Checking existence of `"boardModel.contact.outer-sloped-crimp-right" Button`
+    t =    17.42s Find the "boardModel.renderDiagnostic" Other
+    t =    17.47s Find the "boardModel.contact.outer-sloped-crimp-right" Button
+    t =    18.38s Find the "boardModel.renderDiagnostic" Other
+    t =    18.45s Find the "boardModel.contact.outer-sloped-crimp-right" Button
+    t =    19.37s Find the "boardModel.renderDiagnostic" Other
+    t =    19.42s Find the "boardModel.contact.outer-sloped-crimp-right" Button
+    t =    19.48s Checking existence of `"boardDetail.selectedHold.outer-sloped-crimp-right" Other`
+    t =    19.53s Find the "boardModel.contact.outer-sloped-crimp-right" Button
+    t =    19.59s Find the "boardDetail.map" Any
+    t =    19.72s Tap "boardDetail.map" Other[0.70, 0.20]
+    t =    19.72s     Wait for com.hangten.training to idle
+    t =    19.72s     Find the "boardDetail.map" Other
+    t =    19.85s     Check for interrupting elements affecting "boardDetail.map" Other
+    t =    19.93s     Synthesize event
+    t =    19.93s         Find the "boardDetail.map" Other
+    t =    20.06s         Find the "boardDetail.map" Other
+    t =    20.18s         Find the "boardDetail.map" Other
+    t =    20.59s     Wait for com.hangten.training to idle
+    t =    20.60s Waiting 10.0s for "boardDetail.selectedHold.outer-sloped-crimp-right" Other to exist
+    t =    21.62s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.outer-sloped-crimp-right" Other`
+    t =    21.62s         Checking existence of `"boardDetail.selectedHold.outer-sloped-crimp-right" Other`
+    t =    21.69s Find the "Position 2" Button
+    t =    21.75s Tap "boardDetail.holdLegend.outer-sloped-crimp-right" Button
+    t =    21.75s     Wait for com.hangten.training to idle
+    t =    21.75s     Find the "boardDetail.holdLegend.outer-sloped-crimp-right" Button
+    t =    21.81s     Check for interrupting elements affecting "boardDetail.holdLegend.outer-sloped-crimp-right" Button
+    t =    21.87s     Synthesize event
+    t =    22.17s     Wait for com.hangten.training to idle
+    t =    22.18s Waiting 10.0s for "boardDetail.selectedHold.outer-sloped-crimp-right" Other to exist
+    t =    23.23s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.outer-sloped-crimp-right" Other`
+    t =    23.23s         Checking existence of `"boardDetail.selectedHold.outer-sloped-crimp-right" Other`
+    t =    23.29s Find the "Position 2" Button
+    t =    23.45s Added attachment named 'Pivot position 2 selected outer-sloped-crimp-right'
+    t =    24.50s Find the "boardModel.renderDiagnostic" Other
+    t =    24.57s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    25.50s Find the "boardModel.renderDiagnostic" Other
+    t =    25.56s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    26.46s Find the "boardModel.renderDiagnostic" Other
+    t =    26.54s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    26.60s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    26.66s Tap "Position 3" Button
+    t =    26.66s     Wait for com.hangten.training to idle
+    t =    26.66s     Find the "Position 3" Button
+    t =    26.72s     Check for interrupting elements affecting "Position 3" Button
+    t =    26.77s     Synthesize event
+    t =    27.07s     Wait for com.hangten.training to idle
+    t =    28.25s Find the "Position 3" Button
+    t =    29.40s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    29.46s Waiting 10.0s for "boardModel.contact.outer-sloped-crimp-left" Button to exist
+    t =    30.48s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.contact.outer-sloped-crimp-left" Button`
+    t =    30.48s         Checking existence of `"boardModel.contact.outer-sloped-crimp-left" Button`
+    t =    31.59s Find the "boardModel.renderDiagnostic" Other
+    t =    31.65s Find the "boardModel.contact.outer-sloped-crimp-left" Button
+    t =    32.56s Find the "boardModel.renderDiagnostic" Other
+    t =    32.64s Find the "boardModel.contact.outer-sloped-crimp-left" Button
+    t =    33.55s Find the "boardModel.renderDiagnostic" Other
+    t =    33.62s Find the "boardModel.contact.outer-sloped-crimp-left" Button
+    t =    33.68s Checking existence of `"boardDetail.selectedHold.outer-sloped-crimp-left" Other`
+    t =    33.73s Find the "boardModel.contact.outer-sloped-crimp-left" Button
+    t =    33.79s Find the "boardDetail.map" Other
+    t =    33.92s Tap "boardDetail.map" Other[0.16, 0.56]
+    t =    33.92s     Wait for com.hangten.training to idle
+    t =    33.93s     Find the "boardDetail.map" Other
+    t =    34.06s     Check for interrupting elements affecting "boardDetail.map" Other
+    t =    34.13s     Synthesize event
+    t =    34.14s         Find the "boardDetail.map" Other
+    t =    34.26s         Find the "boardDetail.map" Other
+    t =    34.38s         Find the "boardDetail.map" Other
+    t =    34.79s     Wait for com.hangten.training to idle
+    t =    34.79s Waiting 10.0s for "boardDetail.selectedHold.outer-sloped-crimp-left" Other to exist
+    t =    35.82s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.outer-sloped-crimp-left" Other`
+    t =    35.83s         Checking existence of `"boardDetail.selectedHold.outer-sloped-crimp-left" Other`
+    t =    35.90s Find the "Position 3" Button
+    t =    35.95s Tap "boardDetail.holdLegend.outer-sloped-crimp-left" Button
+    t =    35.95s     Wait for com.hangten.training to idle
+    t =    35.95s     Find the "boardDetail.holdLegend.outer-sloped-crimp-left" Button
+    t =    36.02s     Check for interrupting elements affecting "boardDetail.holdLegend.outer-sloped-crimp-left" Button
+    t =    36.08s     Synthesize event
+    t =    36.38s     Wait for com.hangten.training to idle
+    t =    36.39s Waiting 10.0s for "boardDetail.selectedHold.outer-sloped-crimp-left" Other to exist
+    t =    37.46s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.outer-sloped-crimp-left" Other`
+    t =    37.46s         Checking existence of `"boardDetail.selectedHold.outer-sloped-crimp-left" Other`
+    t =    37.52s Find the "Position 3" Button
+    t =    37.68s Added attachment named 'Pivot position 3 selected outer-sloped-crimp-left'
+    t =    38.73s Find the "boardModel.renderDiagnostic" Other
+    t =    38.79s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    39.78s Find the "boardModel.renderDiagnostic" Other
+    t =    39.86s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    40.77s Find the "boardModel.renderDiagnostic" Other
+    t =    40.82s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    40.88s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    40.94s Tap "Position 5" Button
+    t =    40.94s     Wait for com.hangten.training to idle
+    t =    40.95s     Find the "Position 5" Button
+    t =    41.00s     Check for interrupting elements affecting "Position 5" Button
+    t =    41.06s     Synthesize event
+    t =    41.36s     Wait for com.hangten.training to idle
+    t =    42.55s Find the "Position 5" Button
+    t =    43.66s Find the "boardModel.contact.two-finger-pocket-left" Button
+    t =    43.74s Waiting 10.0s for "boardModel.contact.upper-sloped-crimp-right" Button to exist
+    t =    44.77s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.contact.upper-sloped-crimp-right" Button`
+    t =    44.77s         Checking existence of `"boardModel.contact.upper-sloped-crimp-right" Button`
+    t =    45.89s Find the "boardModel.renderDiagnostic" Other
+    t =    45.96s Find the "boardModel.contact.upper-sloped-crimp-right" Button
+    t =    46.86s Find the "boardModel.renderDiagnostic" Other
+    t =    46.97s Find the "boardModel.contact.upper-sloped-crimp-right" Button
+    t =    47.88s Find the "boardModel.renderDiagnostic" Other
+    t =    47.95s Find the "boardModel.contact.upper-sloped-crimp-right" Button
+    t =    48.02s Checking existence of `"boardDetail.selectedHold.upper-sloped-crimp-right" Other`
+    t =    48.08s Find the "boardModel.contact.upper-sloped-crimp-right" Button
+    t =    48.14s Find the "boardDetail.map" Other
+    t =    48.34s Tap "boardDetail.map" Other[0.21, 0.74]
+    t =    48.34s     Wait for com.hangten.training to idle
+    t =    48.34s     Find the "boardDetail.map" Other
+    t =    48.48s     Check for interrupting elements affecting "boardDetail.map" Other
+    t =    48.56s     Synthesize event
+    t =    48.56s         Find the "boardDetail.map" Other
+    t =    48.70s         Find the "boardDetail.map" Other
+    t =    48.83s         Find the "boardDetail.map" Other
+    t =    49.25s     Wait for com.hangten.training to idle
+    t =    49.26s Waiting 10.0s for "boardDetail.selectedHold.upper-sloped-crimp-right" Other to exist
+    t =    50.27s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.upper-sloped-crimp-right" Other`
+    t =    50.28s         Checking existence of `"boardDetail.selectedHold.upper-sloped-crimp-right" Other`
+    t =    50.34s Find the "Position 5" Button
+    t =    50.39s Tap "boardDetail.holdLegend.upper-sloped-crimp-right" Button
+    t =    50.39s     Wait for com.hangten.training to idle
+    t =    50.40s     Find the "boardDetail.holdLegend.upper-sloped-crimp-right" Button
+    t =    50.46s     Check for interrupting elements affecting "boardDetail.holdLegend.upper-sloped-crimp-right" Button
+    t =    50.51s     Synthesize event
+    t =    50.82s     Wait for com.hangten.training to idle
+    t =    50.82s Waiting 10.0s for "boardDetail.selectedHold.upper-sloped-crimp-right" Other to exist
+    t =    51.86s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.upper-sloped-crimp-right" Other`
+    t =    51.86s         Checking existence of `"boardDetail.selectedHold.upper-sloped-crimp-right" Other`
+    t =    51.92s Find the "Position 5" Button
+    t =    52.08s Added attachment named 'Pivot position 5 selected upper-sloped-crimp-right'
+    t =    52.08s Tear Down
+    t =    52.08s     Setting device orientation to Portrait
+    t =    52.08s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testPivotRotationPresetsPersistWhenSelectingHolds]' passed (52.469 seconds).
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testSelectedTopSloperAnimatesAndPocketReturnsToFront]' started.
+    t =     0.00s Start Test at 2026-10-03 17:16:17.297
+    t =     0.02s Set Up
+    t =     0.02s Open com.hangten.training
+    t =     0.02s     Launch com.hangten.training
+    t =     0.02s         Terminate com.hangten.training:71410
+    t =     1.32s         Setting up automation session
+    t =     2.27s         Wait for com.hangten.training to idle
+    t =     4.63s Waiting 30.0s for "boardModel.renderDiagnostic" Other to exist
+    t =     5.69s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.renderDiagnostic" Other`
+    t =     5.69s         Checking existence of `"boardModel.renderDiagnostic" Other`
+    t =     5.84s Waiting 10.0s for "boardDetail.holdLegend.sloper-center" Button to exist
+    t =     6.89s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.holdLegend.sloper-center" Button`
+    t =     6.89s         Checking existence of `"boardDetail.holdLegend.sloper-center" Button`
+    t =     6.99s Find the "boardDetail.holdLegend.sloper-center" Button
+    t =     7.15s Tap "boardDetail.holdLegend.sloper-center" Button
+    t =     7.15s     Wait for com.hangten.training to idle
+    t =     7.15s     Find the "boardDetail.holdLegend.sloper-center" Button
+    t =     7.22s     Check for interrupting elements affecting "boardDetail.holdLegend.sloper-center" Button
+    t =     7.28s     Synthesize event
+    t =     7.60s     Wait for com.hangten.training to idle
+    t =     8.63s Waiting 10.0s for "boardDetail.selectedHold.sloper-center" Other to exist
+    t =     9.67s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.selectedHold.sloper-center" Other`
+    t =     9.67s         Checking existence of `"boardDetail.selectedHold.sloper-center" Other`
+    t =    10.79s Checking `Expect predicate `BLOCKPREDICATE(0x108c99500)` for object "boardModel.renderDiagnostic" Other`
+    t =    10.79s     Find the "boardModel.renderDiagnostic" Other
+    t =    10.96s Added attachment named 'Beastmaker top sloper pivoted'
+    t =    10.97s Find the "boardModel.renderDiagnostic" Other
+    t =    11.04s Waiting 10.0s for "boardModel.contact.sloper-center" Button to exist
+    t =    12.06s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.contact.sloper-center" Button`
+    t =    12.06s         Checking existence of `"boardModel.contact.sloper-center" Button`
+    t =    12.12s Press "boardModel.contact.sloper-center" Button[0.50, 0.50] for 0.3 seconds, then drag to "boardModel.contact.sloper-center" Button[0.50, 0.50] -> (80.0, 0.0) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =    12.12s     Wait for com.hangten.training to idle
+    t =    12.12s     Find the "boardModel.contact.sloper-center" Button
+    t =    12.19s     Check for interrupting elements affecting "boardModel.contact.sloper-center" Button
+    t =    12.26s     Synthesize event
+    t =    12.26s         Find the "boardModel.contact.sloper-center" Button
+    t =    12.33s         Find the "boardModel.contact.sloper-center" Button
+    t =    12.40s         Find the "boardModel.contact.sloper-center" Button
+    t =    12.47s         Find the "boardModel.contact.sloper-center" Button
+    t =    12.55s         Find the "boardModel.contact.sloper-center" Button
+    t =    13.69s     Wait for com.hangten.training to idle
+    t =    14.74s Checking `Expect predicate `BLOCKPREDICATE(0x10823e580)` for object "boardModel.renderDiagnostic" Other`
+    t =    14.74s     Find the "boardModel.renderDiagnostic" Other
+    t =    15.00s Added attachment named 'Beastmaker manual orbit after selection'
+    t =    15.00s Waiting 10.0s for "boardDetail.holdLegend.pocket-middle-center" Button to exist
+    t =    16.04s     Checking `Expect predicate `existsNoRetry == 1` for object "boardDetail.holdLegend.pocket-middle-center" Button`
+    t =    16.04s         Checking existence of `"boardDetail.holdLegend.pocket-middle-center" Button`
+    t =    16.10s Find the "boardDetail.holdLegend.pocket-middle-center" Button
+    t =    16.19s Tap "boardDetail.holdLegend.pocket-middle-center" Button
+    t =    16.19s     Wait for com.hangten.training to idle
+    t =    16.20s     Find the "boardDetail.holdLegend.pocket-middle-center" Button
+    t =    16.27s     Check for interrupting elements affecting "boardDetail.holdLegend.pocket-middle-center" Button
+    t =    16.36s     Synthesize event
+    t =    16.68s     Wait for com.hangten.training to idle
+    t =    18.75s Checking `Expect predicate `BLOCKPREDICATE(0x108c98c90)` for object "boardModel.renderDiagnostic" Other`
+    t =    18.76s     Find the "boardModel.renderDiagnostic" Other
+    t =    18.94s Added attachment named 'Beastmaker pocket returns to front'
+    t =    18.94s Tear Down
+    t =    18.94s     Setting device orientation to Portrait
+    t =    18.95s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testSelectedTopSloperAnimatesAndPocketReturnsToFront]' passed (19.358 seconds).
+Test Suite 'OwlClimbPokerBoardMapInteractionUITests' passed at 2026-10-03 17:16:36.654.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 109.922 (109.925) seconds
+Test Suite 'HangTenUITests.xctest' passed at 2026-10-03 17:16:36.655.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 109.922 (109.925) seconds
+Test Suite 'Selected tests' passed at 2026-10-03 17:16:36.655.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 109.922 (109.926) seconds
+
+Test session results, code coverage, and logs:
+	/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/tests-placid-badger-cad-second-half-board-ui-clean-modal-setup.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

@@ -1,0 +1,8 @@
+{
+  "helperExact": true,
+  "helperSHA256": "d1bdd6cf716bfcba3b0f9a7857c8c6d696e040422756860a0284b26c85a68905",
+  "changedReferenceFiles": [
+    "HangTen/Views/BoardModelView.swift"
+  ],
+  "geometryOrMaterialOrCameraChanges": false
+}

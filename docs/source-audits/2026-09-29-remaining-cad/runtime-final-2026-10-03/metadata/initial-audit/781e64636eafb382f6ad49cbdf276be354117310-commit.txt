@@ -1,0 +1,49 @@
+commit 781e64636eafb382f6ad49cbdf276be354117310
+Author:     Asher Cohen <asherlc@asherlc.com>
+AuthorDate: Wed Sep 30 13:30:36 2026 -0700
+Commit:     GitHub <noreply@github.com>
+CommitDate: Wed Sep 30 13:30:36 2026 -0700
+
+    Highlight both hands for plan hold tasks (#516)
+    
+    * Highlight paired holds for two-hand repeaters
+    
+    * docs: specify per-hand plan targets
+    
+    * docs: plan per-hand target migration
+    
+    * feat: add per-hand plan target schema and decoder
+    
+    * feat: resolve simultaneous hand targets
+    
+    * feat: preserve hand counts with any targets and legacy custom pins
+    
+    * Migrate bundled plans to ordered hand tasks
+    
+    * Show and record active per-hand plan tasks
+    
+    * Correct sourced one-arm and offset plan tasks
+    
+    * Document Contact guide hold-number conflicts
+    
+    * Fix plan-task CI regressions
+    
+    * Pause guided hang in resume UI test
+    
+    * Fix plan task preview and recording fallbacks
+    
+    * Fix task cues and stabilize authorization test
+    
+    * Resolve active task cues and review notes
+    
+    * Correct hold capacity evidence and test selected side
+    
+    * Allow CI time for async health history test
+    
+    * fix: mark Compact II center sloper for two hands
+    
+    * fix: align hand cues with highlighted preview
+    
+    * test: align one-hand task picker expectation
+    
+    * Increase async history test wait allowance

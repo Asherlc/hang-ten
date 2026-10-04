@@ -1,0 +1,35 @@
+{
+  "package": "captain-fingerfood-dual",
+  "independentFreshCompileCheck": true,
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "actualAssetSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+  "descriptorModelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+  "compilerReturnedModelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+  "compilerReport": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/compile-final-check.json",
+  "compilerReportSHA256": "4fb6b7638c371a0ff13d42d5b2b09055708891cb2d12f862b7a496281fd9a8ce",
+  "sourceAssetDescriptorBefore": {
+    "captain-fingerfood-dual.FCStd": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+    "primary.usdz": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+    "primary.model.json": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699"
+  },
+  "sourceAssetDescriptorAfter": {
+    "captain-fingerfood-dual.FCStd": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+    "primary.usdz": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+    "primary.model.json": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699"
+  },
+  "elapsedSeconds": 9.932,
+  "closure": "passed",
+  "sidecarSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+  "generatedManifestSHA256": "13c588a09f81a5ba2c7529e211fc6fdf610a948e5cdcf01b70a1ee19bd958ef4",
+  "cordSolverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "cordEntryReview": "cord-entry-review.md",
+  "continuousCordCertificateSHA256": "d3dba06366bda65ba14f45e18e9b89ce2a34b0985a48add9de879d73c95cd119",
+  "nativeRouteCheckSHA256": "f345c21d91abebf80c2eb3548d67bb7563daa00fb2f5d7d5405441a2ab8af682",
+  "geometryUnchangedDuringCordEntryCorrection": true,
+  "cordEntryReviewIsHistorical": true,
+  "continuousCordCertificate": "vertical-tightening-review/continuous-cord-clearance.json",
+  "cordReview": "vertical-tightening-review/review.md",
+  "currentCordVerification": "vertical-tightening-review/verification.json",
+  "currentCordRuntimeVerification": "vertical-tightening-review/runtime-validation.json",
+  "nativeSolidUnchangedDuringVerticalTightening": true
+}

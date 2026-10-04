@@ -1,0 +1,423 @@
+FFFFFFFFFFFFFFFFFF                                                       [100%]
+=================================== FAILURES ===================================
+___ test_astar_matches_shortest_route_and_avoids_irrelevant_graph_expansion ____
+
+    def test_astar_matches_shortest_route_and_avoids_irrelevant_graph_expansion():
+        mesh = trimesh.creation.box(extents=[.10, .06, .06])
+        start, finish = np.array([0, .3, 0]), np.array([0, -.034, .034])
+        legacy = NativeSection(mesh, finish, [1, 0, 0], .002, .0002)
+        expected = legacy.route(start, finish)
+>       accelerated = NativeSection(mesh, finish, [1, 0, 0], .002, .0002, path_search="aStar")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: NativeSection.__init__() got an unexpected keyword argument 'path_search'
+
+Tools/HangboardCAD/tests/test_native_path_search.py:16: TypeError
+__________ test_astar_symmetric_equal_length_routes_are_deterministic __________
+
+    def test_astar_symmetric_equal_length_routes_are_deterministic():
+        mesh = trimesh.creation.box(extents=[.10, .04, .04])
+        start, finish = [0, .1, 0], [0, -.1, 0]
+>       paths = [NativeSection(mesh, finish, [1, 0, 0], .002, .0002, path_search="aStar").route(start, finish)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 for _ in range(3)]
+E       TypeError: NativeSection.__init__() got an unexpected keyword argument 'path_search'
+
+Tools/HangboardCAD/tests/test_native_path_search.py:27: TypeError
+___________ test_astar_tilted_span_preserves_actual_endpoint_weights ___________
+
+    def test_astar_tilted_span_preserves_actual_endpoint_weights():
+        mesh = trimesh.creation.box(extents=[.10, .06, .06])
+        start, finish = np.array([.04, .3, 0]), np.array([-.02, -.034, .034])
+        legacy = NativeSection.for_span(mesh, start, finish, [1, 0, 0], .002, .0002)
+>       accelerated = NativeSection.for_span(mesh, start, finish, [1, 0, 0], .002, .0002, path_search="aStar")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: NativeSection.for_span() got an unexpected keyword argument 'path_search'
+
+Tools/HangboardCAD/tests/test_native_path_search.py:39: TypeError
+________ test_public_solver_rejects_invalid_explicit_path_search[None] _________
+
+selector = None
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_public_solver_rejects_invalid_explicit_path_search(selector):
+        with pytest.raises(ValueError, match="pathSearch"):
+>           solve_native_routes(None, {"ropeSolver": {"pathSearch": selector}}, {})
+
+Tools/HangboardCAD/tests/test_native_path_search.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardCAD/native_cord_routes.py:460: in solve_native_routes
+    return _solve_native_seed(mesh, data, descriptor)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mesh = None, data = {'ropeSolver': {'pathSearch': None}}, descriptor = {}
+
+    def _solve_native_seed(mesh, data, descriptor):
+        """Preserve valid preferred routes; recover collared-lead conflicts only.
+    
+        Recovery is a bounded deterministic search of native section orientations,
+        not a global minimum or a full rope-physics simulation. Actual mouths and
+        bore axes stay fixed; each attempt derives its collar endpoint from the
+        native support plane and clearance margin, then settles and certifies anew.
+        """
+>       setup = data["suspension"]
+                ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'suspension'
+
+Tools/HangboardCAD/native_cord_routes.py:566: KeyError
+______ test_public_solver_rejects_invalid_explicit_path_search[dijkstra] _______
+
+selector = 'dijkstra'
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_public_solver_rejects_invalid_explicit_path_search(selector):
+        with pytest.raises(ValueError, match="pathSearch"):
+>           solve_native_routes(None, {"ropeSolver": {"pathSearch": selector}}, {})
+
+Tools/HangboardCAD/tests/test_native_path_search.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardCAD/native_cord_routes.py:460: in solve_native_routes
+    return _solve_native_seed(mesh, data, descriptor)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mesh = None, data = {'ropeSolver': {'pathSearch': 'dijkstra'}}, descriptor = {}
+
+    def _solve_native_seed(mesh, data, descriptor):
+        """Preserve valid preferred routes; recover collared-lead conflicts only.
+    
+        Recovery is a bounded deterministic search of native section orientations,
+        not a global minimum or a full rope-physics simulation. Actual mouths and
+        bore axes stay fixed; each attempt derives its collar endpoint from the
+        native support plane and clearance margin, then settles and certifies anew.
+        """
+>       setup = data["suspension"]
+                ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'suspension'
+
+Tools/HangboardCAD/native_cord_routes.py:566: KeyError
+________ test_public_solver_rejects_invalid_explicit_path_search[astar] ________
+
+selector = 'astar'
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_public_solver_rejects_invalid_explicit_path_search(selector):
+        with pytest.raises(ValueError, match="pathSearch"):
+>           solve_native_routes(None, {"ropeSolver": {"pathSearch": selector}}, {})
+
+Tools/HangboardCAD/tests/test_native_path_search.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardCAD/native_cord_routes.py:460: in solve_native_routes
+    return _solve_native_seed(mesh, data, descriptor)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mesh = None, data = {'ropeSolver': {'pathSearch': 'astar'}}, descriptor = {}
+
+    def _solve_native_seed(mesh, data, descriptor):
+        """Preserve valid preferred routes; recover collared-lead conflicts only.
+    
+        Recovery is a bounded deterministic search of native section orientations,
+        not a global minimum or a full rope-physics simulation. Actual mouths and
+        bore axes stay fixed; each attempt derives its collar endpoint from the
+        native support plane and clearance margin, then settles and certifies anew.
+        """
+>       setup = data["suspension"]
+                ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'suspension'
+
+Tools/HangboardCAD/native_cord_routes.py:566: KeyError
+_______ test_public_solver_rejects_invalid_explicit_path_search[unknown] _______
+
+selector = 'unknown'
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_public_solver_rejects_invalid_explicit_path_search(selector):
+        with pytest.raises(ValueError, match="pathSearch"):
+>           solve_native_routes(None, {"ropeSolver": {"pathSearch": selector}}, {})
+
+Tools/HangboardCAD/tests/test_native_path_search.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardCAD/native_cord_routes.py:460: in solve_native_routes
+    return _solve_native_seed(mesh, data, descriptor)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mesh = None, data = {'ropeSolver': {'pathSearch': 'unknown'}}, descriptor = {}
+
+    def _solve_native_seed(mesh, data, descriptor):
+        """Preserve valid preferred routes; recover collared-lead conflicts only.
+    
+        Recovery is a bounded deterministic search of native section orientations,
+        not a global minimum or a full rope-physics simulation. Actual mouths and
+        bore axes stay fixed; each attempt derives its collar endpoint from the
+        native support plane and clearance margin, then settles and certifies anew.
+        """
+>       setup = data["suspension"]
+                ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'suspension'
+
+Tools/HangboardCAD/native_cord_routes.py:566: KeyError
+__________ test_public_solver_rejects_invalid_explicit_path_search[1] __________
+
+selector = 1
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_public_solver_rejects_invalid_explicit_path_search(selector):
+        with pytest.raises(ValueError, match="pathSearch"):
+>           solve_native_routes(None, {"ropeSolver": {"pathSearch": selector}}, {})
+
+Tools/HangboardCAD/tests/test_native_path_search.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardCAD/native_cord_routes.py:460: in solve_native_routes
+    return _solve_native_seed(mesh, data, descriptor)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mesh = None, data = {'ropeSolver': {'pathSearch': 1}}, descriptor = {}
+
+    def _solve_native_seed(mesh, data, descriptor):
+        """Preserve valid preferred routes; recover collared-lead conflicts only.
+    
+        Recovery is a bounded deterministic search of native section orientations,
+        not a global minimum or a full rope-physics simulation. Actual mouths and
+        bore axes stay fixed; each attempt derives its collar endpoint from the
+        native support plane and clearance margin, then settles and certifies anew.
+        """
+>       setup = data["suspension"]
+                ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'suspension'
+
+Tools/HangboardCAD/native_cord_routes.py:566: KeyError
+______ test_public_solver_rejects_invalid_explicit_path_search[selector5] ______
+
+selector = []
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_public_solver_rejects_invalid_explicit_path_search(selector):
+        with pytest.raises(ValueError, match="pathSearch"):
+>           solve_native_routes(None, {"ropeSolver": {"pathSearch": selector}}, {})
+
+Tools/HangboardCAD/tests/test_native_path_search.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardCAD/native_cord_routes.py:460: in solve_native_routes
+    return _solve_native_seed(mesh, data, descriptor)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mesh = None, data = {'ropeSolver': {'pathSearch': []}}, descriptor = {}
+
+    def _solve_native_seed(mesh, data, descriptor):
+        """Preserve valid preferred routes; recover collared-lead conflicts only.
+    
+        Recovery is a bounded deterministic search of native section orientations,
+        not a global minimum or a full rope-physics simulation. Actual mouths and
+        bore axes stay fixed; each attempt derives its collar endpoint from the
+        native support plane and clearance margin, then settles and certifies anew.
+        """
+>       setup = data["suspension"]
+                ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'suspension'
+
+Tools/HangboardCAD/native_cord_routes.py:566: KeyError
+______ test_public_solver_rejects_invalid_explicit_path_search[selector6] ______
+
+selector = {}
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_public_solver_rejects_invalid_explicit_path_search(selector):
+        with pytest.raises(ValueError, match="pathSearch"):
+>           solve_native_routes(None, {"ropeSolver": {"pathSearch": selector}}, {})
+
+Tools/HangboardCAD/tests/test_native_path_search.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardCAD/native_cord_routes.py:460: in solve_native_routes
+    return _solve_native_seed(mesh, data, descriptor)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mesh = None, data = {'ropeSolver': {'pathSearch': {}}}, descriptor = {}
+
+    def _solve_native_seed(mesh, data, descriptor):
+        """Preserve valid preferred routes; recover collared-lead conflicts only.
+    
+        Recovery is a bounded deterministic search of native section orientations,
+        not a global minimum or a full rope-physics simulation. Actual mouths and
+        bore axes stay fixed; each attempt derives its collar endpoint from the
+        native support plane and clearance margin, then settles and certifies anew.
+        """
+>       setup = data["suspension"]
+                ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'suspension'
+
+Tools/HangboardCAD/native_cord_routes.py:566: KeyError
+_____________________ test_native_astar_is_authoring_only ______________________
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-396/test_native_astar_is_authoring0')
+
+    def test_native_astar_is_authoring_only(tmp_path):
+        board, entries = package(tmp_path)
+        solver = front_entry_authoring(entries)
+        solver["pathSearch"] = "aStar"
+>       merged = merge(tmp_path, board, entries)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Tools/HangboardCAD/tests/test_cad_sidecars.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardCAD/tests/test_cad_sidecars.py:34: in merge
+    return cad_source.merge_suspension_sidecar(board, tmp_path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/cad_source.py:385: in merge_suspension_sidecar
+    board = _merge_suspension_entry(board, package_root, {"schemaVersion": 1, **entry})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+board = {'presentations': [{'id': 'pair', 'media': {'type': 'model', 'descriptorPath': 'assets/primary.model.json', 'instances...ation': [...]}]}}, {'id': 'configured', 'media': {'type': 'model', 'descriptorPath': 'assets/configured.model.json'}}]}
+package_root = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-396/test_native_astar_is_authoring0')
+document = {'schemaVersion': 1, 'presentationID': 'pair', 'equipmentObjectID': 'left', 'modelSHA256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', ...}
+
+    def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> dict:
+        required = {"schemaVersion", "presentationID", "modelSHA256", "suspension"}
+        if not isinstance(document, dict) or not required <= set(document) \
+                or set(document) - required - {"ropeSolver", "equipmentObjectID"} or document["schemaVersion"] != 1:
+            raise ManifestError("suspension.json has invalid schema or members")
+        # Authoring-only settings for Tools/HangboardCAD/solve_threaded_rope.py;
+        # never merged into board.json.
+        solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
+        if isinstance(solver, dict) and solver.get("method") == "nativeRoutes":
+            if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
+                    or isinstance(solver["clearance"], bool) \
+                    or not isinstance(solver["clearance"], (int,float)) or not math.isfinite(solver["clearance"]) \
+                    or not 0 < solver["clearance"] <= .01 \
+                    or not isinstance(solver["terminalsByStrandID"], dict) or not solver["terminalsByStrandID"] \
+                    or isinstance(solver.get("supportDirection", 1), bool) or solver.get("supportDirection", 1) not in (-1,1) \
+                    or solver.get("sectionPlane", "fixed") not in ("fixed", "anchor"):
+>               raise ManifestError("suspension.json nativeRoutes solver settings are invalid")
+E               hangboard_packages.cad_source.ManifestError: suspension.json nativeRoutes solver settings are invalid
+
+Tools/HangboardPackages/src/hangboard_packages/cad_source.py:406: ManifestError
+_______ test_native_path_search_rejects_invalid_explicit_selector[None] ________
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-396/test_native_path_search_reject0')
+selector = None
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_native_path_search_rejects_invalid_explicit_selector(tmp_path, selector):
+        board, entries = package(tmp_path)
+        front_entry_authoring(entries)["pathSearch"] = selector
+>       with pytest.raises(cad_source.ManifestError, match="pathSearch"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'pathSearch'
+E         Actual message: 'suspension.json nativeRoutes solver settings are invalid'
+
+Tools/HangboardCAD/tests/test_cad_sidecars.py:169: AssertionError
+_____ test_native_path_search_rejects_invalid_explicit_selector[dijkstra] ______
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-396/test_native_path_search_reject1')
+selector = 'dijkstra'
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_native_path_search_rejects_invalid_explicit_selector(tmp_path, selector):
+        board, entries = package(tmp_path)
+        front_entry_authoring(entries)["pathSearch"] = selector
+>       with pytest.raises(cad_source.ManifestError, match="pathSearch"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'pathSearch'
+E         Actual message: 'suspension.json nativeRoutes solver settings are invalid'
+
+Tools/HangboardCAD/tests/test_cad_sidecars.py:169: AssertionError
+_______ test_native_path_search_rejects_invalid_explicit_selector[astar] _______
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-396/test_native_path_search_reject2')
+selector = 'astar'
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_native_path_search_rejects_invalid_explicit_selector(tmp_path, selector):
+        board, entries = package(tmp_path)
+        front_entry_authoring(entries)["pathSearch"] = selector
+>       with pytest.raises(cad_source.ManifestError, match="pathSearch"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'pathSearch'
+E         Actual message: 'suspension.json nativeRoutes solver settings are invalid'
+
+Tools/HangboardCAD/tests/test_cad_sidecars.py:169: AssertionError
+______ test_native_path_search_rejects_invalid_explicit_selector[unknown] ______
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-396/test_native_path_search_reject3')
+selector = 'unknown'
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_native_path_search_rejects_invalid_explicit_selector(tmp_path, selector):
+        board, entries = package(tmp_path)
+        front_entry_authoring(entries)["pathSearch"] = selector
+>       with pytest.raises(cad_source.ManifestError, match="pathSearch"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'pathSearch'
+E         Actual message: 'suspension.json nativeRoutes solver settings are invalid'
+
+Tools/HangboardCAD/tests/test_cad_sidecars.py:169: AssertionError
+_________ test_native_path_search_rejects_invalid_explicit_selector[1] _________
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-396/test_native_path_search_reject4')
+selector = 1
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_native_path_search_rejects_invalid_explicit_selector(tmp_path, selector):
+        board, entries = package(tmp_path)
+        front_entry_authoring(entries)["pathSearch"] = selector
+>       with pytest.raises(cad_source.ManifestError, match="pathSearch"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'pathSearch'
+E         Actual message: 'suspension.json nativeRoutes solver settings are invalid'
+
+Tools/HangboardCAD/tests/test_cad_sidecars.py:169: AssertionError
+_____ test_native_path_search_rejects_invalid_explicit_selector[selector5] _____
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-396/test_native_path_search_reject5')
+selector = []
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_native_path_search_rejects_invalid_explicit_selector(tmp_path, selector):
+        board, entries = package(tmp_path)
+        front_entry_authoring(entries)["pathSearch"] = selector
+>       with pytest.raises(cad_source.ManifestError, match="pathSearch"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'pathSearch'
+E         Actual message: 'suspension.json nativeRoutes solver settings are invalid'
+
+Tools/HangboardCAD/tests/test_cad_sidecars.py:169: AssertionError
+_____ test_native_path_search_rejects_invalid_explicit_selector[selector6] _____
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-396/test_native_path_search_reject6')
+selector = {}
+
+    @pytest.mark.parametrize("selector", [None, "dijkstra", "astar", "unknown", 1, [], {}])
+    def test_native_path_search_rejects_invalid_explicit_selector(tmp_path, selector):
+        board, entries = package(tmp_path)
+        front_entry_authoring(entries)["pathSearch"] = selector
+>       with pytest.raises(cad_source.ManifestError, match="pathSearch"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'pathSearch'
+E         Actual message: 'suspension.json nativeRoutes solver settings are invalid'
+
+Tools/HangboardCAD/tests/test_cad_sidecars.py:169: AssertionError
+=========================== short test summary info ============================
+FAILED Tools/HangboardCAD/tests/test_native_path_search.py::test_astar_matches_shortest_route_and_avoids_irrelevant_graph_expansion
+FAILED Tools/HangboardCAD/tests/test_native_path_search.py::test_astar_symmetric_equal_length_routes_are_deterministic
+FAILED Tools/HangboardCAD/tests/test_native_path_search.py::test_astar_tilted_span_preserves_actual_endpoint_weights
+FAILED Tools/HangboardCAD/tests/test_native_path_search.py::test_public_solver_rejects_invalid_explicit_path_search[None]
+FAILED Tools/HangboardCAD/tests/test_native_path_search.py::test_public_solver_rejects_invalid_explicit_path_search[dijkstra]
+FAILED Tools/HangboardCAD/tests/test_native_path_search.py::test_public_solver_rejects_invalid_explicit_path_search[astar]
+FAILED Tools/HangboardCAD/tests/test_native_path_search.py::test_public_solver_rejects_invalid_explicit_path_search[unknown]
+FAILED Tools/HangboardCAD/tests/test_native_path_search.py::test_public_solver_rejects_invalid_explicit_path_search[1]
+FAILED Tools/HangboardCAD/tests/test_native_path_search.py::test_public_solver_rejects_invalid_explicit_path_search[selector5]
+FAILED Tools/HangboardCAD/tests/test_native_path_search.py::test_public_solver_rejects_invalid_explicit_path_search[selector6]
+FAILED Tools/HangboardCAD/tests/test_cad_sidecars.py::test_native_astar_is_authoring_only
+FAILED Tools/HangboardCAD/tests/test_cad_sidecars.py::test_native_path_search_rejects_invalid_explicit_selector[None]
+FAILED Tools/HangboardCAD/tests/test_cad_sidecars.py::test_native_path_search_rejects_invalid_explicit_selector[dijkstra]
+FAILED Tools/HangboardCAD/tests/test_cad_sidecars.py::test_native_path_search_rejects_invalid_explicit_selector[astar]
+FAILED Tools/HangboardCAD/tests/test_cad_sidecars.py::test_native_path_search_rejects_invalid_explicit_selector[unknown]
+FAILED Tools/HangboardCAD/tests/test_cad_sidecars.py::test_native_path_search_rejects_invalid_explicit_selector[1]
+FAILED Tools/HangboardCAD/tests/test_cad_sidecars.py::test_native_path_search_rejects_invalid_explicit_selector[selector5]
+FAILED Tools/HangboardCAD/tests/test_cad_sidecars.py::test_native_path_search_rejects_invalid_explicit_selector[selector6]
+18 failed, 24 deselected in 4.17s

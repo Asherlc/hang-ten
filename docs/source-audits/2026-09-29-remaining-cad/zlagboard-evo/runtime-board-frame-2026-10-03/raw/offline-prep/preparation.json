@@ -1,0 +1,15 @@
+{
+  "preparedOnly": true,
+  "executedAgainstRuns": false,
+  "copierExecuted": false,
+  "pythonASTPassed": true,
+  "validatorScope": "Retained predicates plus28parity/newarm flags; no visual/CPU claim",
+  "files": {
+    "README.md": "737413d3873ffae527ca412040dda0225792c640337c98f75b4def9c666068f3",
+    "copy-frozen-packet.py": "a59c769844c16fc368995791b7357cd5b6d355ccd2e5156fc87bf6917badc8c0",
+    "copy-gate.NOT-AUTHORIZED.json": "76146d9d34dca01cb9b741de69baf0de2ab996513c0d124d1cc9a8ec092b70d4",
+    "validate-completed.original.py": "bd95d351f41c4557418ab387a7389a26b6e8e15c888ff35983e8b4ff9cf7bb06",
+    "validate-completed.py": "d5cfda9041c02419edf17eb7f0e32364fcd1acda7286645323b8a6ff736a5519",
+    "validator.diff": "a3ec56fa544bd1b12488b9da5776d62b6a5bd55eff011529d8e829379b608717"
+  }
+}

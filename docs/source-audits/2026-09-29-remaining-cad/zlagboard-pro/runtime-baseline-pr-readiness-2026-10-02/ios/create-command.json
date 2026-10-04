@@ -1,0 +1,17 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "create",
+    "Hang Ten Paseo placid-badger-cad-second-half Review Pro MigrationDiagnosis20261002 96137",
+    "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+    "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+  ],
+  "boundSeconds": 30.0,
+  "timedOut": false,
+  "interruptedBySignal": null,
+  "exitStatus": 0,
+  "elapsedSeconds": 0.2635894580016611
+}

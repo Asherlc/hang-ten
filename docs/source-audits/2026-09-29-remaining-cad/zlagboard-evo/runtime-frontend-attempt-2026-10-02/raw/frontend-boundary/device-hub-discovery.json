@@ -1,0 +1,56 @@
+{
+  "status": "READ_ONLY_DISCOVERY_NO_FRONTEND_LAUNCHED",
+  "epoch": 1790986638.2437708,
+  "staticFiles": [
+    {
+      "path": "/Applications/Xcode.app/Contents/Info.plist",
+      "sha256": "537783b4c639af6ee31208fe2ec12a40bacbb0fc8f5dd2820f54e03063c4dbe8",
+      "bytes": 34501
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/Info.plist",
+      "sha256": "8b239ac00770a730c4c32a1f62fd36e4234ef52001b4ec918b2449232bf8e78c",
+      "bytes": 2305
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DevicesTrampoline",
+      "sha256": "033b97fcdb2aea4a3d3e98d4c0fa104f171ad970abbd530a4cb1997cfc4cffe6",
+      "bytes": 72352
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DeviceHub",
+      "sha256": "6998679109e812b237f5a894882a562ac8aa7f8e95caffba7b98db0675a40563",
+      "bytes": 440208
+    }
+  ],
+  "xcodeVersion": "27.0",
+  "deviceHubBundleIdentifier": "com.apple.dt.Devices",
+  "outerBundleExecutable": "DevicesTrampoline",
+  "actualUIExecutable": "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DeviceHub",
+  "sources": [
+    {
+      "url": "https://developer.apple.com/documentation/xcode/device-hub",
+      "supports": "Device Hub manages simulated and physical run destinations, with live device windows and sidebar selection."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/xcode/interacting-with-your-app-in-device-hub",
+      "supports": "Use selected device and View Screen in Device Hub; root retained official markdown scratch only."
+    },
+    {
+      "url": "https://developer.apple.com/videos/play/wwdc2026/260/",
+      "supports": "Device Hub ships with Xcode27 and can be used without launching Xcode."
+    }
+  ],
+  "supportedRoute": "Launch Device Hub app, choose owned simulator in sidebar, verify Info device ID and live View Screen via computer-use before measurement.",
+  "cliSelection": "No documented exact-device CLI argument found in inspected primary docs; no CurrentDeviceUDID strings in either local executable. Absence of strings is not a proof no internal support exists. Do not guess URL syntax or transfer old Simulator flags.",
+  "lifecycleFindings": [
+    "Outer bundle entry is DevicesTrampoline, whose imports include first-launch package installer and posix_spawnp. Its postlaunch PID relationship is not established by static inspection.",
+    "Actual DeviceHub executable imports NSApplication. Directly spawning it provides an exact child process for ownership, but this is a local entry-point inference, not a documented DeviceHub command-line interface.",
+    "Any next controller needs guards covering Simulator, DeviceHub, Devices, DevicesTrampoline and actual app paths; current absence is only a point-in-time observation."
+  ],
+  "recommendation": "Prepare revised actual-DeviceHub direct-child lifecycle for root review, with no old CurrentDeviceUDID argument; exact owned device selected and verified through sky after registered launch. Do not proceed from static evidence alone to claim visible window or successful launch.",
+  "priorSetupFailure": "Reviewed Simulator controller failed BIN.is_file before Popen; preserved cleanup says noFrontendCreated. No changes to old failure records.",
+  "historyQualification": "Historical open -a Simulator exit0 does not prove how long that frontend remained alive. Later Simulator-name-only absence did not exclude DeviceHub/other frontend.",
+  "noSourceChanges": true,
+  "noProcessLaunch": true
+}

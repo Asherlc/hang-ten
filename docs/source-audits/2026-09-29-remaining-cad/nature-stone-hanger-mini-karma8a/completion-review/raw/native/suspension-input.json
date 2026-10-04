@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "presentationID": "primary",
+  "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+  "suspension": {
+    "type": "cadRoutedCord",
+    "bodyNodeID": "nature_body",
+    "strands": [
+      {
+        "id": "left-lead",
+        "kind": "lead",
+        "restLength": 0.11,
+        "radius": 0.001,
+        "material": "matteCord",
+        "provenance": "Retained side view shows one exposed vertical lead seated in this end groove. Length and radius are display estimates; route and settled height come from native CAD collision solving. Compact 110 mm visible-lead display estimate follows the operator request for shorter cord; it is not a supplied-cord measurement."
+      },
+      {
+        "id": "left-cross-return",
+        "kind": "segment",
+        "restLength": 0.04,
+        "radius": 0.001,
+        "material": "matteCord",
+        "provenance": "Retained side view shows the transverse exterior return between the two cross-groove intersections. The route stops there; no concealed connection is asserted. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+      },
+      {
+        "id": "right-lead",
+        "kind": "lead",
+        "restLength": 0.11,
+        "radius": 0.001,
+        "material": "matteCord",
+        "provenance": "Retained side view shows one exposed vertical lead seated in this end groove. Length and radius are display estimates; route and settled height come from native CAD collision solving. Compact 110 mm visible-lead display estimate follows the operator request for shorter cord; it is not a supplied-cord measurement."
+      },
+      {
+        "id": "right-cross-return",
+        "kind": "segment",
+        "restLength": 0.04,
+        "radius": 0.001,
+        "material": "matteCord",
+        "provenance": "Retained side view shows the transverse exterior return between the two cross-groove intersections. The route stops there; no concealed connection is asserted. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+      }
+    ],
+    "anchor": {
+      "offsetFromBoardBounds": [
+        0,
+        0.015,
+        0
+      ],
+      "visibility": "invisible",
+      "provenance": "Display support location only. Source-visible route graph retained; native solver derives clearance and settled height. Compact 15 mm initial anchor offset is a display estimate; final height is solver-generated."
+    },
+    "canonicalPoses": {
+      "granite-front": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            -0.3,
+            -1
+          ],
+          "fitPadding": 0.12
+        }
+      },
+      "wood-inverted": {
+        "rotation": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0.3,
+            -1
+          ],
+          "fitPadding": 0.12
+        }
+      },
+      "pinch-side": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            -0.3,
+            -1
+          ],
+          "fitPadding": 0.12
+        }
+      }
+    }
+  },
+  "ropeSolver": {
+    "method": "nativeRoutes",
+    "clearance": 0.0002,
+    "terminalsByStrandID": {
+      "left-lead": {
+        "points": [
+          [
+            -0.0525,
+            0.0,
+            0.0075
+          ]
+        ],
+        "planeNormal": [
+          0,
+          0,
+          1
+        ]
+      },
+      "left-cross-return": {
+        "points": [
+          [
+            -0.0525,
+            0.0,
+            0.0075
+          ],
+          [
+            -0.0525,
+            0.0,
+            -0.0075
+          ]
+        ],
+        "planeNormal": [
+          0,
+          1,
+          0
+        ]
+      },
+      "right-lead": {
+        "points": [
+          [
+            0.0525,
+            0.0,
+            0.0075
+          ]
+        ],
+        "planeNormal": [
+          0,
+          0,
+          1
+        ]
+      },
+      "right-cross-return": {
+        "points": [
+          [
+            0.0525,
+            0.0,
+            0.0075
+          ],
+          [
+            0.0525,
+            0.0,
+            -0.0075
+          ]
+        ],
+        "planeNormal": [
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "supportDirection": 1
+  }
+}

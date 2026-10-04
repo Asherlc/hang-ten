@@ -1,0 +1,11 @@
+{
+  "before": {
+    "HangTen/Views/RootView.swift": "41d8186fbe2c1a7411332215a2c8bb3aa4190f6ffaf7201d02eb831e9bcfb195",
+    "HangTen/Models/BoardModelRealityTypes.swift": "423f51cf19d896fe6160ca1ac11f02e40af9c70eb3d5ec19336c3e3849687d88"
+  },
+  "after": {
+    "HangTen/Views/RootView.swift": "4fdc38991e7904f37ed106bc74ed7320e1b6ca96f334938e09f669b2712b8554",
+    "HangTen/Models/BoardModelRealityTypes.swift": "edc62a3db0a40b2c08ec6b13f05b78d5962768a5fb7fca83f84a07d592140cc4"
+  },
+  "patchSHA256": "2fd05042e81203e47bc4996d652e7cdf0a907f57a2513ddce2cba77c73a452c4"
+}

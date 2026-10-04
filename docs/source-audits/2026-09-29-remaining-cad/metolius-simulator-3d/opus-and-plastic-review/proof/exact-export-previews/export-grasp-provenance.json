@@ -1,0 +1,33 @@
+{
+  "original-9449": {
+    "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+    "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e",
+    "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+    "meshCount": 31,
+    "bodyNodeTriangleCount": 19065,
+    "completeShellTriangleCount": 34634
+  },
+  "candidate": {
+    "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+    "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+    "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+    "meshCount": 31,
+    "bodyNodeTriangleCount": 24844,
+    "completeShellTriangleCount": 75174
+  },
+  "method": "Exact USDZ mesh-plane intersections and complete exported shell views, including all 30 separately exported contact surfaces. Orange denotes actual exported top-contact meshes. CPU triangle-face shading, no reference-image processing.",
+  "images": {
+    "export-grasp-review/candidate-grasp-sections.png": "27ee5a9167b2aa6def35e9c699c9737a5ea643d1dbdf771187c656bb15550240",
+    "export-grasp-review/candidate-high-front.png": "6f8964d0ea33068fbcfb7d89d846477b693c0970d1cafd0a31ac02ee203ea404",
+    "export-grasp-review/candidate-rear-center.png": "b554f9e1f4805d63b44ef4a00f0d8a376d05157db713e0ef6b595f84e6f84b8b",
+    "export-grasp-review/candidate-rear-oblique.png": "cc092425f158b0f45815c875e7edfbfbfa7db0739272fb64cd53ab295ec5f37f",
+    "export-grasp-review/comparison-grasp-sections.png": "29193cef2046dac7008176a8f600d4cae2a641fba9f9f2911e25d913c7e5edf4",
+    "export-grasp-review/comparison-high-front.png": "c30d99f3dbdd047218fe3818d0ea4ea01fa5a9471193a51398ef4ab6ee2077ee",
+    "export-grasp-review/comparison-rear-center.png": "475d6a6eec724e5712b9c2db98e8cdea5f8dfca3461096012428183b2929e9ca",
+    "export-grasp-review/comparison-rear-oblique.png": "835313b105e71018c71c6dd6ed4d585a8e124579dae69512863bf6741ce9cccf",
+    "export-grasp-review/original-9449-grasp-sections.png": "61d71e9cf5119a983810f6a99b1d7c33cc4475e9d7b860638b0ff9239fef37ef",
+    "export-grasp-review/original-9449-high-front.png": "28d6a49d26f222fe9db7cd238a2a2defa86378f989e0ff89654d22e874e38bce",
+    "export-grasp-review/original-9449-rear-center.png": "7ca66fdce731d344c74a3cb0882bd7a4cb373ef5b453912a7ec97d11250261bf",
+    "export-grasp-review/original-9449-rear-oblique.png": "d12ff98ab64d6c9f55e8506f785e6d13d592778c9aa688ae86ffac9bcf7ac1ad"
+  }
+}

@@ -1,0 +1,343 @@
+[
+  {
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 0,
+      "x": 0,
+      "height": 402,
+      "width": 874
+    }
+  },
+  {
+    "AXLabel": null,
+    "AXUniqueId": "Session",
+    "AXValue": null,
+    "frame": {
+      "y": 24,
+      "x": 0,
+      "width": 874,
+      "height": 54
+    }
+  },
+  {
+    "AXLabel": "Back",
+    "AXUniqueId": "BackButton",
+    "AXValue": null,
+    "frame": {
+      "y": 24,
+      "width": 44,
+      "height": 44,
+      "x": 38
+    }
+  },
+  {
+    "AXLabel": "Session",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 35.666666666666664,
+      "height": 20.666666666666664,
+      "x": 405.6666666666667,
+      "width": 62.333333333333314
+    }
+  },
+  {
+    "AXLabel": "Turn off spoken cues",
+    "AXUniqueId": "speaker.wave.2.fill",
+    "AXValue": null,
+    "frame": {
+      "y": 28,
+      "x": 673,
+      "width": 45,
+      "height": 36
+    }
+  },
+  {
+    "AXLabel": "Turn off spoken cues",
+    "AXUniqueId": "speaker.wave.2.fill",
+    "AXValue": null,
+    "frame": {
+      "y": 28,
+      "x": 673,
+      "height": 36,
+      "width": 45
+    }
+  },
+  {
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "workout.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "y": 28,
+      "width": 43.66666666666663,
+      "x": 734,
+      "height": 36
+    }
+  },
+  {
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "workout.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "y": 28,
+      "height": 36,
+      "x": 734,
+      "width": 43.66666666666663
+    }
+  },
+  {
+    "AXLabel": "End",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 28,
+      "x": 793.6666666666667,
+      "width": 38.33333333333337,
+      "height": 36
+    }
+  },
+  {
+    "AXLabel": "End",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 28,
+      "height": 36,
+      "width": 38.33333333333337,
+      "x": 793.6666666666667
+    }
+  },
+  {
+    "AXLabel": "STEP 2 OF 9",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 88,
+      "height": 13.333333333333329,
+      "width": 83,
+      "x": 78
+    }
+  },
+  {
+    "AXLabel": "Rest",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 104.33333333333333,
+      "x": 78,
+      "width": 47,
+      "height": 26.33333333333333
+    }
+  },
+  {
+    "AXLabel": "Rest",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 102.16666666666667,
+      "width": 26.33333333333337,
+      "x": 575.3333333333333,
+      "height": 14.333333333333329
+    }
+  },
+  {
+    "AXLabel": "03:00",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 89,
+      "height": 40.66666666666666,
+      "x": 627.6666666666666,
+      "width": 103
+    }
+  },
+  {
+    "AXLabel": "Routine, current step 2: Rest",
+    "AXUniqueId": "workout.routinePicker",
+    "AXValue": null,
+    "frame": {
+      "y": 101.66666666666666,
+      "x": 746.6666666666666,
+      "width": 49.33333333333337,
+      "height": 15.666666666666671
+    }
+  },
+  {
+    "AXLabel": "Half crimp, Exact fingers: index, middle, ring, and pinky",
+    "AXUniqueId": "workout.gripCue.left",
+    "AXValue": null,
+    "frame": {
+      "width": 143,
+      "y": 222.16666666666666,
+      "height": 54.33333206176755,
+      "x": 77.5
+    }
+  },
+  {
+    "AXLabel": "Explore left hand in 3D",
+    "AXUniqueId": "workout.gripCue.left.model",
+    "AXValue": null,
+    "frame": {
+      "y": 229.66666666666666,
+      "width": 126,
+      "x": 86,
+      "height": 27.99999999999997
+    }
+  },
+  {
+    "AXLabel": "Half crimp",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 37,
+      "y": 260.66666666666663,
+      "height": 8.333333333333314,
+      "x": 130.5
+    }
+  },
+  {
+    "AXLabel": "NEXT HOLD PREVIEW",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 143.66666666666669,
+      "y": 222.66666666666666,
+      "height": 13.333333333333343,
+      "x": 365.1666666666667
+    }
+  },
+  {
+    "AXLabel": "Zlagboard.Evo hangboard",
+    "AXUniqueId": "boardModel.3d",
+    "AXValue": "",
+    "frame": {
+      "width": 210,
+      "y": 240,
+      "height": 36,
+      "x": 332
+    }
+  },
+  {
+    "AXLabel": "Half crimp, Exact fingers: index, middle, ring, and pinky",
+    "AXUniqueId": "workout.gripCue.right",
+    "AXValue": null,
+    "frame": {
+      "width": 143,
+      "y": 222.16666666666666,
+      "height": 54.33333206176755,
+      "x": 653.5
+    }
+  },
+  {
+    "AXLabel": "Explore right hand in 3D",
+    "AXUniqueId": "workout.gripCue.right.model",
+    "AXValue": null,
+    "frame": {
+      "width": 126,
+      "y": 229.66666666666666,
+      "height": 27.99999999999997,
+      "x": 662
+    }
+  },
+  {
+    "AXLabel": "Half crimp",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 37,
+      "y": 260.66666666666663,
+      "height": 8.333333333333314,
+      "x": 706.5
+    }
+  },
+  {
+    "AXLabel": "RECOVERY",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 73,
+      "y": 318.3333333333333,
+      "height": 13.333333333333314,
+      "x": 90
+    }
+  },
+  {
+    "AXLabel": "180s rest",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 52,
+      "y": 336.66666666666663,
+      "height": 13.333333333333314,
+      "x": 90
+    }
+  },
+  {
+    "AXLabel": "Pause",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 224,
+      "y": 285,
+      "height": 51.333343505859375,
+      "x": 572
+    }
+  },
+  {
+    "AXLabel": "Pause",
+    "AXUniqueId": "pause.fill",
+    "AXValue": null,
+    "frame": {
+      "width": 11,
+      "y": 303.66666666666663,
+      "height": 14.333333969116211,
+      "x": 651
+    }
+  },
+  {
+    "AXLabel": "Pause",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 46.66666666666663,
+      "y": 301,
+      "height": 19.333333333333314,
+      "x": 672.1666666666666
+    }
+  },
+  {
+    "AXLabel": "Skip step 2: Rest",
+    "AXUniqueId": "workout.skipStep",
+    "AXValue": null,
+    "frame": {
+      "width": 224,
+      "y": 346.3333333333333,
+      "height": 37,
+      "x": 572
+    }
+  },
+  {
+    "AXLabel": "Forward",
+    "AXUniqueId": "forward.fill",
+    "AXValue": null,
+    "frame": {
+      "width": 20.666667938232422,
+      "y": 358.66666666666663,
+      "height": 11.666666984558105,
+      "x": 638.6666666666666
+    }
+  },
+  {
+    "AXLabel": "Skip step",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 92.33331298828125,
+      "y": 356.3333435058594,
+      "height": 17,
+      "x": 638.6666870117188
+    }
+  }
+]

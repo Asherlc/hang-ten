@@ -1,0 +1,205 @@
+{
+  "reviewedAtUTC": "2026-10-04T00:05:32.033004+00:00",
+  "sourceHeadAtReview": "3497b01405386ce388cb478d60c8e915cafc5dc6",
+  "scope": "Read-only source and archived xcresult review; exported retained attachments and activity trees to workspace-owned scratch only. No Simulator/app/build/test actions or source edits. Two temporary xcresult resources registered through prep/common before creation, signal/finally cleanup installed before extraction, both removed and deletion verified.",
+  "conclusion": "Both hit-test failures occurred under a real system URL confirmation modal. The archived run does not establish an async native-loading race or a map hit-testing regression.",
+  "cases": [
+    {
+      "testIdentifier": "OwlClimbPokerBoardMapInteractionUITests/testLandscapeMultiPresentationBoardDetailKeepsMapInViewport()",
+      "attachmentMetadata": [
+        {
+          "configurationName": "Test Scheme Action",
+          "deviceId": "055BDCE2-3263-470D-89DF-04B967EF7790",
+          "deviceName": "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+          "exportedFileName": "FF88F87E-A40C-45C0-AAF9-397DD661E934.mp4",
+          "isAssociatedWithFailure": false,
+          "suggestedHumanReadableName": "Screen Recording 2026-10-03 at 04.58.16 PM.mp4",
+          "timestamp": 1791071896.06
+        }
+      ],
+      "activityTree": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/all/plateau-activities.stdout",
+      "activityTreeSHA256": "fb4c9bf7ae384971366fe800caf5d318013247999150cd88d0030a9d1b6e1f51",
+      "relevantActivityTimeline": [
+        {
+          "title": "Waiting 10.0s for \"boardDetail.map\" Other to exist",
+          "startTime": 1791071902.921,
+          "isAssociatedWithFailure": false
+        },
+        {
+          "title": "Checking `Expect predicate `existsNoRetry == 1` for object \"boardDetail.map\" Other`",
+          "startTime": 1791071903.968,
+          "isAssociatedWithFailure": false
+        },
+        {
+          "title": "Checking existence of `\"boardDetail.map\" Other`",
+          "startTime": 1791071903.969,
+          "isAssociatedWithFailure": false
+        },
+        {
+          "title": "Find the \"boardDetail.map\" Other",
+          "startTime": 1791071903.997,
+          "isAssociatedWithFailure": false
+        },
+        {
+          "title": "Find the \"boardDetail.map\" Other",
+          "startTime": 1791071904.054,
+          "isAssociatedWithFailure": false
+        },
+        {
+          "title": "Checking existence of `\"boardModel.3d\" Any`",
+          "startTime": 1791071904.144,
+          "isAssociatedWithFailure": false
+        },
+        {
+          "title": "XCTAssertTrue failed - Map (or a hold marker / 3D surface on it) must remain hittable in compact landscape.",
+          "startTime": 1791071904.173,
+          "isAssociatedWithFailure": true
+        }
+      ],
+      "wholeFrames": [
+        {
+          "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/frames/plateau-5.000s.png",
+          "sha256": "ff4ad0a4ecbe272952d73186b700129865f3846f4795d038b36fbaf23de62fe8"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/frames/plateau-7.500s.png",
+          "sha256": "2e1c79ae0de95f1440269b14ecfc78a3a4247a5c57edf62514f55edb7fc14a09"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/frames/plateau-8.000s.png",
+          "sha256": "236a9d0a9dfb1e09b74ec42090a66c8d29b7f0be744e53e6984ae0fe868537b6"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/frames/plateau-8.067s.png",
+          "sha256": "5284cdb9f15154f7c88ac372ed9bfb66e35c7be5a64a7735e70040cd81501ba4"
+        }
+      ],
+      "visualFinding": "Actual system Open in \u201cHang Ten\u201d? alert with Cancel/Open buttons covers the native board throughout the inspected 5-second and failure-boundary frames. The native board is already visibly loaded behind the alert."
+    },
+    {
+      "testIdentifier": "OwlClimbPokerBoardMapInteractionUITests/testLandscapeSquareBoardDetailKeepsMapInViewport()",
+      "attachmentMetadata": [
+        {
+          "configurationName": "Test Scheme Action",
+          "deviceId": "055BDCE2-3263-470D-89DF-04B967EF7790",
+          "deviceName": "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+          "exportedFileName": "B254B326-C8AE-4EC0-AC92-CBB2EE98F119.mp4",
+          "isAssociatedWithFailure": false,
+          "suggestedHumanReadableName": "Screen Recording 2026-10-03 at 04.58.24 PM.mp4",
+          "timestamp": 1791071904.576
+        }
+      ],
+      "activityTree": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/all/stone-activities.stdout",
+      "activityTreeSHA256": "321776eb9d282aa744c354f64f3e82d896671649fc09eaa2e1ae0d91871bd478",
+      "relevantActivityTimeline": [
+        {
+          "title": "Waiting 10.0s for \"boardDetail.map\" Other to exist",
+          "startTime": 1791071911.302,
+          "isAssociatedWithFailure": false
+        },
+        {
+          "title": "Checking `Expect predicate `existsNoRetry == 1` for object \"boardDetail.map\" Other`",
+          "startTime": 1791071912.367,
+          "isAssociatedWithFailure": false
+        },
+        {
+          "title": "Checking existence of `\"boardDetail.map\" Other`",
+          "startTime": 1791071912.368,
+          "isAssociatedWithFailure": false
+        },
+        {
+          "title": "Find the \"boardDetail.map\" Other",
+          "startTime": 1791071912.398,
+          "isAssociatedWithFailure": false
+        },
+        {
+          "title": "Find the \"boardDetail.map\" Other",
+          "startTime": 1791071912.464,
+          "isAssociatedWithFailure": false
+        },
+        {
+          "title": "Checking existence of `\"boardModel.3d\" Any`",
+          "startTime": 1791071912.571,
+          "isAssociatedWithFailure": false
+        },
+        {
+          "title": "XCTAssertTrue failed - Map (or a hold marker / 3D surface on it) must remain hittable in compact landscape.",
+          "startTime": 1791071912.6,
+          "isAssociatedWithFailure": true
+        }
+      ],
+      "wholeFrames": [
+        {
+          "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/frames/stone-5.000s.png",
+          "sha256": "d8060e5eea09202c6f8458f36aed3e870ffde96ca8fa8705bc36359f2e22c74f"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/frames/stone-7.500s.png",
+          "sha256": "11dd287007940960b9c68e351e306e1fc1ce33b84221a7e7a8da010d8f9cd1ce"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/frames/stone-7.935s.png",
+          "sha256": "53333b36564ff6a9092da5f715097ff2926549af75e39b0f9864fc33b07e149d"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/frames/stone-8.000s.png",
+          "sha256": "0f721660190d09371936f69cf029e1acbf3ac1573b9f0a3199b712a9cf53a8fe"
+        }
+      ],
+      "visualFinding": "Actual system Open in \u201cHang Ten\u201d? alert with Cancel/Open buttons covers the native board throughout the inspected 5-second and failure-boundary frames. The native board is already visibly loaded behind the alert."
+    }
+  ],
+  "sourceEvidence": [
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "7c6a9d3902870dcc30d2035ef89a4c0515b22587da1f9496997b049aeffcec65"
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "4a023bf0e3ce4115fcb69862b2373bf7bedfebece9b4f856298c18f57874602a"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "b8720ac7c42252f22dceecb8a58f96a1de297068bbb7a3972bddac8c7072fccf"
+    },
+    {
+      "path": "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests.swift",
+      "sha256": "ec935f517127bd701d259ab79bd3a88700ec204e506349c5933e6dcf7739225f"
+    }
+  ],
+  "sourceInterpretation": [
+    "launchLandscapeBoardDetail uses the DEBUG board-detail environment route, waits for the navigation bar/name/map existence, then assertMap checks viewport bounds and immediate hittability. It does not open an external URL or dismiss a system alert.",
+    "assertMap preserves checks for map, a hold marker or boardModel.3d hittability. These failed while a modal obstructed the app. Viewport bounds and dimensions did not produce failures in this run.",
+    "BoardModelSurface async loading placeholder is non-hittable by design. Although that makes a readiness wait a possible general test design choice, loading is not the observed cause here: native boards are visibly rendered in the recordings.",
+    "The prior invalid runtime URL confirmation is a plausible residual source, but the archive does not prove the modal\u2019s originating request. This causation is an inference, not an observed tree fact."
+  ],
+  "recommendation": "Preserve every existing viewport and hit assertion. Do not add a longer model-loading wait based on this evidence. Clear or account for the actual owned-device Cancel/Open modal during explicitly logged setup, verify it is gone before testing board-detail interaction, and rerun the unchanged cases on the final source/build. Avoid selecting Open blindly because the pending route can change the tested screen.",
+  "boundedLoadingWaitSuggested": false,
+  "evidenceLimits": "No AX hierarchy attachment was retained for these failures. Actual xcresult activity trees and whole recorded frames are preserved. The frame extraction applies only the video track\u2019s preferred orientation, with no crop, resizing, pixel measurement or image modification. Frame timestamps and requests are recorded in frames/exportframes.stdout.",
+  "exportEvidence": {
+    "originalArchive": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-reviewed-corrections/tests-placid-badger-cad-second-half-board-ui-reviewed-corrections.xcresult.zip",
+    "originalArchiveSHA256": "ff0ac08391499b45fa760709d0ca69dcc4158fea67715ab1dda441d53e808a4b",
+    "failureOnlyExportManifest": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/export/manifest.json",
+    "failureOnlyExportEmpty": true,
+    "allAttachmentManifest": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/all/export/manifest.json",
+    "wholeFrameExportCommand": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/frames/exportframes.command.json",
+    "wholeFrameExportExit": {
+      "exitStatus": 0,
+      "processExitStatus": 0,
+      "exception": null,
+      "childReaped": true,
+      "elapsedSeconds": 6.516315221786499
+    },
+    "temporaryCleanup": [
+      {
+        "exactTemporaryResource": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/placid-badger-cad-second-half-readonly-ui-failure.xcresult",
+        "deleted": true
+      },
+      {
+        "exactTemporaryResource": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/placid-badger-cad-second-half-readonly-ui-failure-all.xcresult",
+        "deleted": true
+      }
+    ]
+  },
+  "testClaims": "No test execution by this reviewer. The failed UI run remains failed; successful independent unit results do not turn this UI run into success."
+}

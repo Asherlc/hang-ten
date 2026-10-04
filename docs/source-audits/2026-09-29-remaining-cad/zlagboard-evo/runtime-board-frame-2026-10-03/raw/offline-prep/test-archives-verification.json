@@ -1,0 +1,8 @@
+{
+  "redArchiveSHA256": "0b04ed5e8787f3a476c43eebb09f87502814570facf269739d18e3b58ab08ddc",
+  "redRawMembersVerified": 1496,
+  "greenArchiveSHA256": "46888338f803b5feaab1750e369a16e48c6813afe23228663fd2eef8b7826a86",
+  "greenRawMembersVerified": 38,
+  "redHistoricalRawManifestUntouched": true,
+  "greenExactOriginalVerifiedBeforeCleanup": true
+}

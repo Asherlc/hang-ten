@@ -1,0 +1,489 @@
+{
+  "package": "yy-baguette-evo",
+  "scope": "Read-only orientation audit; no geometry edits, exports or package changes.",
+  "sourceSHA256": "4fb7a667d4bccea4edb2bb3eebfd4fa44bb463fa9b2c68ba9e169a0359cd4f06",
+  "sourceBytesUnchanged": true,
+  "nativeBasis": "Native mm X right Z up front -Y; runtime (X,Z,-Y)/1000.",
+  "normalVerification": "For every face, test +/-0.05 mm from exact native surface against final closed solid. All supplied normals point out of the wood (plus outside, minus inside).",
+  "groups": [
+    {
+      "recommendedPositionID": "paired-10-15",
+      "rotationXDegrees": 0,
+      "rotation": [
+        0.0,
+        0,
+        0,
+        1.0
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          -0.342020143,
+          -0.939692621
+        ],
+        "fitPadding": 0.1
+      },
+      "contactIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "provenance": "Display adaptation: align native bearing with world +Y; camera above the selected opening. No maker angle claim.",
+      "nativeChecks": [
+        {
+          "contactID": "edge-10-left",
+          "nativeBearingNormalRuntime": [
+            0,
+            1,
+            0
+          ],
+          "bearingAreaMM2": 820.0,
+          "currentPositionID": "paired-25-20-15-10",
+          "currentBearingUpDot": 1.0,
+          "recommendedBearingUpDot": 1.0
+        },
+        {
+          "contactID": "edge-10-right",
+          "nativeBearingNormalRuntime": [
+            0,
+            1,
+            0
+          ],
+          "bearingAreaMM2": 820.0,
+          "currentPositionID": "paired-25-20-15-10",
+          "currentBearingUpDot": 1.0,
+          "recommendedBearingUpDot": 1.0
+        },
+        {
+          "contactID": "edge-15-left",
+          "nativeBearingNormalRuntime": [
+            0,
+            1,
+            0
+          ],
+          "bearingAreaMM2": 1155.0,
+          "currentPositionID": "paired-25-20-15-10",
+          "currentBearingUpDot": 1.0,
+          "recommendedBearingUpDot": 1.0
+        },
+        {
+          "contactID": "edge-15-right",
+          "nativeBearingNormalRuntime": [
+            0,
+            1,
+            0
+          ],
+          "bearingAreaMM2": 1155.0,
+          "currentPositionID": "paired-25-20-15-10",
+          "currentBearingUpDot": 1.0,
+          "recommendedBearingUpDot": 1.0
+        }
+      ]
+    },
+    {
+      "recommendedPositionID": "paired-20-25",
+      "rotationXDegrees": 180,
+      "rotation": [
+        1.0,
+        0,
+        0,
+        0.0
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          -0.342020143,
+          0.939692621
+        ],
+        "fitPadding": 0.1
+      },
+      "contactIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right"
+      ],
+      "provenance": "Display adaptation: align native bearing with world +Y; camera above the selected opening. No maker angle claim.",
+      "nativeChecks": [
+        {
+          "contactID": "edge-20-left",
+          "nativeBearingNormalRuntime": [
+            0,
+            -1,
+            0
+          ],
+          "bearingAreaMM2": 1640.0,
+          "currentPositionID": "paired-25-20-15-10",
+          "currentBearingUpDot": -1.0,
+          "recommendedBearingUpDot": 1.0
+        },
+        {
+          "contactID": "edge-20-right",
+          "nativeBearingNormalRuntime": [
+            0,
+            -1,
+            0
+          ],
+          "bearingAreaMM2": 1640.0,
+          "currentPositionID": "paired-25-20-15-10",
+          "currentBearingUpDot": -1.0,
+          "recommendedBearingUpDot": 1.0
+        },
+        {
+          "contactID": "edge-25-left",
+          "nativeBearingNormalRuntime": [
+            0,
+            -1,
+            0
+          ],
+          "bearingAreaMM2": 1924.9999999999998,
+          "currentPositionID": "paired-25-20-15-10",
+          "currentBearingUpDot": -1.0,
+          "recommendedBearingUpDot": 1.0
+        },
+        {
+          "contactID": "edge-25-right",
+          "nativeBearingNormalRuntime": [
+            0,
+            -1,
+            0
+          ],
+          "bearingAreaMM2": 1924.9999999999998,
+          "currentPositionID": "paired-25-20-15-10",
+          "currentBearingUpDot": -1.0,
+          "recommendedBearingUpDot": 1.0
+        }
+      ]
+    },
+    {
+      "recommendedPositionID": "paired-12",
+      "rotationXDegrees": 90,
+      "rotation": [
+        0.707106781,
+        0,
+        0,
+        0.707106781
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          -0.342020143,
+          -0.939692621
+        ],
+        "fitPadding": 0.1
+      },
+      "contactIDs": [
+        "edge-12-left",
+        "edge-12-right"
+      ],
+      "provenance": "Display adaptation: align native bearing with world +Y; camera above the selected opening. No maker angle claim.",
+      "nativeChecks": [
+        {
+          "contactID": "edge-12-left",
+          "nativeBearingNormalRuntime": [
+            0,
+            0,
+            -1
+          ],
+          "bearingAreaMM2": 924.0000000000027,
+          "currentPositionID": "paired-12-8-6",
+          "currentBearingUpDot": 1.0,
+          "recommendedBearingUpDot": 1.0
+        },
+        {
+          "contactID": "edge-12-right",
+          "nativeBearingNormalRuntime": [
+            0,
+            0,
+            -1
+          ],
+          "bearingAreaMM2": 924.000000000006,
+          "currentPositionID": "paired-12-8-6",
+          "currentBearingUpDot": 1.0,
+          "recommendedBearingUpDot": 1.0
+        }
+      ]
+    },
+    {
+      "recommendedPositionID": "paired-8-6",
+      "rotationXDegrees": -90,
+      "rotation": [
+        -0.707106781,
+        0,
+        0,
+        0.707106781
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          -0.342020143,
+          0.939692621
+        ],
+        "fitPadding": 0.1
+      },
+      "contactIDs": [
+        "edge-8-left",
+        "edge-8-right",
+        "edge-6-upper",
+        "edge-6-lower"
+      ],
+      "provenance": "Display adaptation: align native bearing with world +Y; camera above the selected opening. No maker angle claim.",
+      "nativeChecks": [
+        {
+          "contactID": "edge-8-left",
+          "nativeBearingNormalRuntime": [
+            0,
+            0,
+            1
+          ],
+          "bearingAreaMM2": 616.0000000000027,
+          "currentPositionID": "paired-12-8-6",
+          "currentBearingUpDot": -1.0,
+          "recommendedBearingUpDot": 1.0
+        },
+        {
+          "contactID": "edge-8-right",
+          "nativeBearingNormalRuntime": [
+            0,
+            0,
+            1
+          ],
+          "bearingAreaMM2": 616.000000000006,
+          "currentPositionID": "paired-12-8-6",
+          "currentBearingUpDot": -1.0,
+          "recommendedBearingUpDot": 1.0
+        },
+        {
+          "contactID": "edge-6-upper",
+          "nativeBearingNormalRuntime": [
+            0,
+            0,
+            1
+          ],
+          "bearingAreaMM2": 462.0000000000013,
+          "currentPositionID": "paired-12-8-6",
+          "currentBearingUpDot": -1.0,
+          "recommendedBearingUpDot": 1.0
+        },
+        {
+          "contactID": "edge-6-lower",
+          "nativeBearingNormalRuntime": [
+            0,
+            0,
+            1
+          ],
+          "bearingAreaMM2": 462.0000000000074,
+          "currentPositionID": "paired-12-8-6",
+          "currentBearingUpDot": -1.0,
+          "recommendedBearingUpDot": 1.0
+        }
+      ]
+    },
+    {
+      "recommendedPositionID": "central-25",
+      "rotationXDegrees": 0,
+      "rotation": [
+        0.0,
+        0,
+        0,
+        1.0
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          -0.342020143,
+          0.939692621
+        ],
+        "fitPadding": 0.1
+      },
+      "contactIDs": [
+        "edge-central-25"
+      ],
+      "provenance": "Display adaptation: align native bearing with world +Y; camera above the selected opening. No maker angle claim.",
+      "nativeChecks": [
+        {
+          "contactID": "edge-central-25",
+          "nativeBearingNormalRuntime": [
+            0,
+            1,
+            0
+          ],
+          "bearingAreaMM2": 2000.0,
+          "currentPositionID": "central-30-25",
+          "currentBearingUpDot": -1.0,
+          "recommendedBearingUpDot": 1.0
+        }
+      ]
+    },
+    {
+      "recommendedPositionID": "central-30",
+      "rotationXDegrees": 180,
+      "rotation": [
+        1.0,
+        0,
+        0,
+        0.0
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          -0.342020143,
+          -0.939692621
+        ],
+        "fitPadding": 0.1
+      },
+      "contactIDs": [
+        "edge-central-30"
+      ],
+      "provenance": "Display adaptation: align native bearing with world +Y; camera above the selected opening. No maker angle claim.",
+      "nativeChecks": [
+        {
+          "contactID": "edge-central-30",
+          "nativeBearingNormalRuntime": [
+            0,
+            -1,
+            0
+          ],
+          "bearingAreaMM2": 2400.0,
+          "currentPositionID": "central-30-25",
+          "currentBearingUpDot": 1.0,
+          "recommendedBearingUpDot": 1.0
+        }
+      ]
+    },
+    {
+      "recommendedPositionID": "central-20",
+      "rotationXDegrees": 90,
+      "rotation": [
+        0.707106781,
+        0,
+        0,
+        0.707106781
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          -0.342020143,
+          -0.939692621
+        ],
+        "fitPadding": 0.1
+      },
+      "contactIDs": [
+        "edge-central-20"
+      ],
+      "provenance": "Display adaptation: align native bearing with world +Y; camera above the selected opening. No maker angle claim.",
+      "nativeChecks": [
+        {
+          "contactID": "edge-central-20",
+          "nativeBearingNormalRuntime": [
+            0,
+            0,
+            -1
+          ],
+          "bearingAreaMM2": 1600.0000000000045,
+          "currentPositionID": "central-20-6",
+          "currentBearingUpDot": 0.8660254036766579,
+          "recommendedBearingUpDot": 1.0
+        }
+      ]
+    },
+    {
+      "recommendedPositionID": "central-6",
+      "rotationXDegrees": -90,
+      "rotation": [
+        -0.707106781,
+        0,
+        0,
+        0.707106781
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          -0.342020143,
+          0.939692621
+        ],
+        "fitPadding": 0.1
+      },
+      "contactIDs": [
+        "edge-central-6"
+      ],
+      "provenance": "Display adaptation: align native bearing with world +Y; camera above the selected opening. No maker angle claim.",
+      "nativeChecks": [
+        {
+          "contactID": "edge-central-6",
+          "nativeBearingNormalRuntime": [
+            0,
+            0,
+            1
+          ],
+          "bearingAreaMM2": 480.00000000000455,
+          "currentPositionID": "central-20-6",
+          "currentBearingUpDot": -0.8660254036766579,
+          "recommendedBearingUpDot": 1.0
+        }
+      ]
+    },
+    {
+      "recommendedPositionID": "rounded-tray",
+      "rotationXDegrees": 180,
+      "rotation": [
+        1.0,
+        0,
+        0,
+        0.0
+      ],
+      "camera": {
+        "viewDirection": [
+          0,
+          -0.5,
+          -0.866025404
+        ],
+        "fitPadding": 0.1
+      },
+      "contactIDs": [
+        "rounded-tray"
+      ],
+      "provenance": "Display adaptation: align native bearing with world +Y; camera above the selected opening. No maker angle claim.",
+      "nativeChecks": [
+        {
+          "contactID": "rounded-tray",
+          "currentPositionID": "rounded-tray",
+          "currentSampledUpDots": [
+            0.7257015544737561,
+            0.5709475743316416,
+            0.20430964368922047,
+            -0.5224985647159487,
+            0.7257015544737554,
+            0.5709475743316416,
+            0.20430964368922047,
+            -0.522498564715948
+          ],
+          "recommendedSampledUpDots": [
+            0.6880096320796489,
+            0.8209865208179818,
+            0.9789063129307032,
+            0.8526401643540924,
+            0.6880096320796496,
+            0.8209865208179818,
+            0.9789063129307032,
+            0.8526401643540927
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Exact canonical rotations and camera inclinations are display adaptations, not sourced manufacturer angles.",
+    "Upward bearing is a necessary geometric test; this audit is not a full hand/rope equilibrium simulation. Regenerate native routes and visually review each selected grip.",
+    "edge-6-upper and edge-6-lower are legacy names bound to mirrored left/right complete U grooves; both contain both opposing sidewalls and a bottom. Both retained depth witnesses choose native Y=+9 sidewall, runtime +Z. Preserving identities therefore permits both at X=-90, but their highlighted region is broader than the single bearing rail.",
+    "Other contact regions include both their maker-depth bearing rail and partial sloped backwall. No incorrect identity interchange was found."
+  ],
+  "sourceEvidence": [
+    "Retained YY_BAGUETTE_EVO_02 (yy-baguette-evo-image.webp): paired labels 10/20 and 15/25 face opposing directions.",
+    "Retained YY_BAGUETTE_EVO_03_FG.webp: central25/30 opposing rails and inverted opposite labels.",
+    "Retained YY_BAGUETTE_EVO_07_FG.webp: oblique cavity relief and central20 opposite upper lip.",
+    "Retained YY_BAGUETTE_EVO_10_FG.webp: Turn & Pull marking and rotating bar suspension.",
+    "Retained utilisation-22.webp: two-handed lower-rail loading in logo-upright front pose."
+  ]
+}

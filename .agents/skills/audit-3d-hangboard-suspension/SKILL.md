@@ -63,10 +63,19 @@ cord remains a display estimate: adjust its anchor geometry and rest length
 coherently, and keep `restLength` at least as long as every required solved
 route. Never shorten `restLength` alone to force less visible slack.
 
-For the current Captain Fingerfood DUAL, POCKET, and UNLEVEL revisions, retain
-the evidenced upper-lip-to-recess path as ordered paired-lead
-`contactPointsInModel`; do not collapse it into a front-floor hole or upgrade it
-to an unevidenced through-bore.
+For the native Captain Fingerfood DUAL revision, the retained maker title photo
+shows both visible leads entering the front cavity's floor openings. Preserve
+those front mouth centers and set authoring `mouthAxis: [0, 0, 1]` (runtime
+front) for each native lead, then regenerate every pose with the native solver.
+A clearance-valid approach through the rear opening contradicts this visible
+threading. Do not infer a hidden connection between the two holes. See the
+dated DUAL source audit and cord-entry review.
+
+For the older non-CAD Captain Fingerfood POCKET and any retained non-CAD
+UNLEVEL revision, keep the source-backed upper-lip-to-recess route as ordered
+paired-lead `contactPointsInModel`; a visible recess alone does not establish
+an additional through-bore. Native revisions use their current CAD source audit
+and native solver metadata.
 
 ## Prove the result
 

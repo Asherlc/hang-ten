@@ -1,0 +1,13 @@
+{
+  "sourcePath": ".context/placid-badger/metolius-simulator-3d-functional-correction/candidate/metolius-simulator-3d.FCStd",
+  "sourceSHA256": "46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264",
+  "sectionsSHA256": "4098fdd522ce10174e712e435366fbf09f1829d007d6eb8183a4ae80289da3b9",
+  "nativeBodyMeshSHA256": "8bebebb08be3d9f901ff5c2dfb99b366f1d1a0c451b70fb8bcb384f519609257",
+  "images": {
+    "grasp-review/high-front.png": "b0e3cb4a42e445214fc961ee79e64711d20cac85d6c1b151edbc27fb0de671ed",
+    "grasp-review/native-grasp-sections.png": "b8fb14f6254588c49d314ed5178cb4fbfda46c075180b8fc14de5b038519d11f",
+    "grasp-review/rear-center.png": "3328dbe3df3647267832ece9976a0965cda4b6afb3d9e28228711d81a7c0d3a0",
+    "grasp-review/rear-oblique.png": "b60ba62ddb1e170a2adb55c01b28346baf24fcff0c5974c3d959cc62d47645d1"
+  },
+  "method": "Full native final-body and contact sections; orange is final native contact. Full native body mesh rear/upper views. No reference-image processing."
+}

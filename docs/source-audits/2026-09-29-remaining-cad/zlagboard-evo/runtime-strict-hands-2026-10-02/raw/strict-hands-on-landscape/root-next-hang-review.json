@@ -1,0 +1,16 @@
+{
+  "attribution": "Root independent review sent via collaboration",
+  "scope": "Four phase2 wholeimages only; no claim root viewed first8",
+  "observed": [
+    "blue",
+    "blue",
+    "red",
+    "red"
+  ],
+  "timers": [
+    "00:07",
+    "00:06",
+    "00:04",
+    "00:02"
+  ]
+}

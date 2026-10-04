@@ -1,0 +1,200 @@
+{
+  "owner": "placid-badger",
+  "date": "2026-10-03",
+  "number": 14,
+  "boardID": "tension.flash-board",
+  "package": "tension-flash-board",
+  "status": "bounded appearance/pick/touch evidence; fresh app human acceptance pending",
+  "appWorkflowPassed": false,
+  "currentAppHumanAcceptance": "pending",
+  "acceptedGeometry": {
+    "humanReview": "Shown #14 CAD shape and inferred barrel-wrap cord accepted; current app appearance, picking, highlights and workout behavior remain unverified",
+    "acceptedScope": "Shown #14 native CAD shape and corrected inferred barrel-wrap cord display on both faces, with whole prior/current front, side and top comparisons.",
+    "reviewAnswer": "Y",
+    "humanReviewRecord": "tension-flash-board/human-review.json",
+    "reviewPage": "tension-flash-board/review14-2026-10-02/index.html",
+    "unchangedAcceptedGeometry": true,
+    "newHumanAppAcceptance": "pending"
+  },
+  "immutablePackageSHA256": {
+    "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+    "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "Hangboards/tension-flash-board/suspension.json": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9"
+  },
+  "installedAppProvenance": {
+    "path": "installed-app-provenance.json",
+    "sha256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+    "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca"
+  },
+  "representativeContactCoverage": "All 7 logical contacts; left/right semantic naming remains unresolved.",
+  "selectedContactIDsCaptured": [
+    "small-crimp-left",
+    "small-crimp-right",
+    "three-edge-center",
+    "three-edge-left",
+    "three-edge-right",
+    "two-edge-left",
+    "two-edge-right"
+  ],
+  "wholeFrameVisualAudit": {
+    "status": "supplied audit complete",
+    "path": "visual-audits/14-visual-audit.json",
+    "sha256": "06a51dab904356610a4e1d05c926b672ee574a263444a7a84f68ecaa5b7debed",
+    "findingStatuses": [
+      {
+        "check": "wood finish and inactive appearance",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": null,
+        "frames": [
+          "app-captures/14-live-hold-three-edge-center.png",
+          "app-captures/14-live-hold-two-edge-left.png",
+          "app-captures/14-live-hold-small-crimp-left.png",
+          "app-captures/14-live-unselected-train.png"
+        ]
+      },
+      {
+        "check": "seven individual contact highlights",
+        "status": "PASS_VISIBLE_CONTACT_COVERAGE",
+        "limitation": "Coverage is judged on visible surfaces. The image-only audit does not resolve the left/right semantic naming convention or certify hidden surfaces at every saved pose.",
+        "frames": [
+          "app-captures/14-live-hold-three-edge-left.png",
+          "app-captures/14-live-hold-three-edge-center.png",
+          "app-captures/14-live-hold-three-edge-right.png",
+          "app-captures/14-live-hold-two-edge-left.png",
+          "app-captures/14-live-hold-two-edge-right.png",
+          "app-captures/14-live-hold-small-crimp-left.png",
+          "app-captures/14-live-hold-small-crimp-right.png",
+          "app-captures/14-live-horizontal-orbit-1.png"
+        ]
+      },
+      {
+        "check": "left/right screen convention",
+        "status": "UNRESOLVED_SOURCE_CONVENTION",
+        "limitation": "Intrinsic model-side versus screen-side meaning cannot be decided from these frames alone. Root is conducting the source convention review; no correction is assumed and no side-label correctness pass is claimed here.",
+        "frames": [
+          "app-captures/14-live-hold-three-edge-left.png",
+          "app-captures/14-live-hold-three-edge-right.png",
+          "app-captures/14-live-hold-two-edge-left.png",
+          "app-captures/14-live-hold-two-edge-right.png",
+          "app-captures/14-live-hold-small-crimp-left.png",
+          "app-captures/14-live-hold-small-crimp-right.png"
+        ]
+      },
+      {
+        "check": "native cord and end seating",
+        "status": "PASS_VISIBLE_ROUTE",
+        "limitation": "Projected line overlaps are not treated as penetration. Hidden bore clearance and source-solved body/cord transform preservation require their separate numerical/scene gates.",
+        "frames": [
+          "app-captures/14-live-front.png",
+          "app-captures/14-live-horizontal-orbit-1.png",
+          "app-captures/14-live-horizontal-orbit-2.png",
+          "app-captures/14-live-horizontal-orbit-3.png",
+          "app-captures/14-live-top-oblique.png"
+        ]
+      },
+      {
+        "check": "ordinary touch orbit",
+        "status": "PASS_SUPPLIED_SETTLED_VIEWS",
+        "limitation": "The selected two-edge contact is occluded at the end-on angle, while the card retains its ID. Unseen animation frames and orbit-reset behavior are not audited.",
+        "frames": [
+          "app-captures/14-live-horizontal-orbit-1.png",
+          "app-captures/14-live-horizontal-orbit-2.png",
+          "app-captures/14-live-horizontal-orbit-3.png",
+          "app-captures/14-live-top-oblique.png"
+        ]
+      },
+      {
+        "check": "physical contact pick",
+        "status": "PASS_ONE_SUPPLIED_LOGICAL_CONTACT_PICK",
+        "limitation": "This confirms logical picking, not the still-unresolved left/right naming meaning. Picks of the other six contacts, cord/body rejection and deselection are not claimed.",
+        "frames": [
+          "app-captures/14-edge-physical-mesh-pick.png"
+        ]
+      },
+      {
+        "check": "same-scene outer-well material restoration",
+        "status": "PASS_SUPPLIED_SAME_SCENE_SEQUENCE",
+        "limitation": "Restoration on the two-edge face and the small crimps is not claimed from this supplied sequence.",
+        "frames": [
+          "app-captures/14-edge-physical-mesh-pick.png",
+          "app-captures/14-left-restored-right-selected-same-scene.png",
+          "app-captures/14-right-restored-left-selected-same-scene.png"
+        ]
+      },
+      {
+        "check": "selected UI and landscape map fit",
+        "status": "PASS_ID_KIND_DISPLAY_AND_BOARD_FIT",
+        "limitation": "The landscape selected card is below the captured viewport. Lower portrait map rows are partly behind the floating tab bar, and labels use ellipsis. Scrolling and chip input are not audited. Side-name interpretation remains unresolved.",
+        "frames": [
+          "app-captures/14-live-hold-three-edge-left.png",
+          "app-captures/14-live-hold-two-edge-right.png",
+          "app-captures/14-live-hold-small-crimp-left.png",
+          "app-captures/14-live-landscape.png",
+          "app-captures/14-live-normal-lens.png",
+          "app-captures/14-live-unselected-train.png"
+        ]
+      }
+    ]
+  },
+  "physicalMeshPick": {
+    "status": "pass one supplied physical mesh tap",
+    "pickedContactID": "three-edge-left",
+    "receipt": "app-captures/14-edge-physical-mesh-pick-receipt.json",
+    "receiptSHA256": "9233d4dda78752ea377e3e34241ae105f09aa11feb1601b67ba6336133076ee4",
+    "frame": "app-captures/14-edge-physical-mesh-pick.png",
+    "imageSHA256": "a8de9ff817887cc721bc3b008ac31345bbdd2723c373aaabf0650431dd472481",
+    "before": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-left;tapRevision=0;pickedContact=",
+    "after": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-left;tapRevision=1;pickedContact=three-edge-left"
+  },
+  "representativeFrames": [
+    "app-captures/14-live-front.png",
+    "app-captures/14-edge-physical-mesh-pick.png",
+    "app-captures/14-live-hold-small-crimp-left.png",
+    "app-captures/14-live-hold-small-crimp-right.png",
+    "app-captures/14-live-hold-three-edge-center.png",
+    "app-captures/14-live-hold-three-edge-left.png",
+    "app-captures/14-live-hold-three-edge-right.png",
+    "app-captures/14-live-hold-two-edge-left.png",
+    "app-captures/14-live-hold-two-edge-right.png"
+  ],
+  "touchEvidence": {
+    "status": "settled ordinary touch capture sequence; scope limited to supplied states",
+    "frames": [
+      "app-captures/14-live-horizontal-orbit-1.png",
+      "app-captures/14-live-horizontal-orbit-2.png",
+      "app-captures/14-live-horizontal-orbit-3.png"
+    ],
+    "visualAuditPending": false
+  },
+  "limitations": [
+    "Left-named contacts appear viewer-right and vice versa; intrinsic-versus-screen convention unresolved.",
+    "Explicit inverted-pose visual audit is not claimed."
+  ],
+  "workout": {
+    "passed": false,
+    "status": "not executed after common #10 workout gate failed",
+    "commonGateEvidence": "capture-traces/10-workout-observation.json",
+    "trace": "capture-traces/workout-multi.json",
+    "workFrame": "app-captures/10-workout-landscape-work-highlight.png",
+    "restFrame": "app-captures/10-workout-landscape-rest-preview.png"
+  },
+  "focusedVerification": {
+    "path": "validation/final-strong-summary.json",
+    "sha256": "6c5f8e87f5a23babe0dbf11b7150c5e1b0a24ce41a3bfeb5fb622aa03cf0d8be",
+    "passed": 455,
+    "failed": 0,
+    "skipped": 1,
+    "fullSuitePassed": false,
+    "refinement": "validation/final-test-refinement.json"
+  },
+  "productionGeometryChanged": false,
+  "newManufacturerFactsOrRoutineChanges": false,
+  "sideConventionEvidence": {
+    "path": "flash-hand-convention.json",
+    "sha256": "4d8c3f5d86b7f7ce1a569238895ceb15d11fc48533d6b89f76213b871156f9b9",
+    "mappingDefectEstablished": false,
+    "completeRuntimePresentationExplanation": false,
+    "disposition": "Intrinsic model-side labels retained; three-edge screen orientation lacks active-pose proof. No swap or side-correctness pass claimed."
+  }
+}

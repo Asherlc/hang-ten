@@ -1,0 +1,3879 @@
+{
+  "status": "pass-independent-one-lead-discrete-envelope-review",
+  "sourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+  "helperSHA256": "827a12d93a2cffc75e5175d853063857eff04bda401bd7602e4097801301362c",
+  "collisionMeshSHA256": "79a27178727825a8ef467ad1526356636b9694dd8f0d6c5028367dff70df2ab6",
+  "scriptSHA256": "b2bab99fc5a467c79560f0b0f739c569ee19cf498513b12f3a07e2cb8952d097",
+  "inputSHA256": {
+    "notch-guide-implementation/material-normal-v4/summary.json": "f3dc707cf318dbd20307b96604292902e1f75f6f6dfb9310d679d2b4658bcd57",
+    "notch-guide-implementation/material-normal-v4/native_cord_guides.py": "827a12d93a2cffc75e5175d853063857eff04bda401bd7602e4097801301362c",
+    "notch-guide-implementation/material-normal-v4/offset-anchor-probe-reactions.json": "8e8f8d5a6283a5022a971c9435e71a8caa573c15b7db134fdf207ab6d07dedba",
+    "notch-guide-implementation/material-normal-v4/native-seed-no-free-knee-probe-reactions.json": "7a9ed63da10172daa94120f2c2e68576c047dfe4f27699d01bc06acd79f53f24",
+    "notch-guide-implementation/offset-anchor-probe.json": "ae610ee52e8cd20a6687bf408a1585997e45561b885bc2b3eb00e6e7de350686",
+    "notch-guide-implementation/native-seed-no-free-knee-probe.json": "88edd2864ffcf4804fe9ef96e146c3253ddb673ba7e2ec600eb790342dbe9375",
+    "pose-review/native-collision-final-source.json": "79a27178727825a8ef467ad1526356636b9694dd8f0d6c5028367dff70df2ab6",
+    "review-preparation/independent-guide-feasibility/distributed-contact-supplement.json": "f6ae5993a1e64fe91735a5ddf3a81e5e2b8b7c172fad2c8ee9578181289e6cb6",
+    "review-preparation/packet-config.json": "a8e8855069f941a91b5e67d21ba476825ef06a9641cae39872a86be7eca5693d",
+    "review-preparation/independent-guide-feasibility/material-normal-v3-review.json": "028f83194fb0a3f8b211f1c63529f5be07ff6be8d184eaa8e0e5bed5be6e1979"
+  },
+  "method": "Stdlib closest-point Voronoi calculations and exhaustive triangle AABB lower bounds, supplied cone-weight reconstruction, and local barycentric force/moment arithmetic. No NNLS, optimizer, route solver, CAD runtime or resource.",
+  "meshSignedVolumeM3": 0.00030069875884595495,
+  "reviewedTrials": [
+    {
+      "pathReport": "offset-anchor-probe.json",
+      "status": "pass-scoped-discrete-envelope-witness",
+      "routeLengthMM": 118.47605311218865,
+      "retainedWholeSegmentClearanceCertificate": {
+        "clearance": 0.0014900295665783048,
+        "status": "pass"
+      },
+      "contactsChecked": 33,
+      "polylineVertices": 13,
+      "maxIndependentlyAssembledNodalResidual": 2.3469468764647177e-16,
+      "maxActualFacetConeNodalResidual": 1.7228540062967505e-15,
+      "maxForceWeightedNormalApproximationBound": 1.8660116557166094e-15,
+      "materialNodalResiduals": [
+        2.1854762094519229e-16,
+        3.1309716410295113e-16,
+        1.9040911533613541e-16,
+        1.3947004136484323e-16,
+        7.025630077706069e-17,
+        3.582781472451387e-16,
+        6.951927664295317e-16,
+        4.4107114032069723e-16,
+        6.161272831979416e-16,
+        1.7228540062967505e-15,
+        1.378240774005059e-15
+      ],
+      "normalApproximationNodalBounds": [
+        1.2937661515974284e-16,
+        1.3029112764057448e-16,
+        8.441722422521773e-17,
+        6.42018134247797e-17,
+        5.725133792457305e-17,
+        4.686307310485241e-16,
+        1.3526505495597506e-15,
+        8.173382880132001e-16,
+        1.056695391677634e-15,
+        1.8660116557166094e-15,
+        1.411858391167224e-15
+      ],
+      "actualFacetBalancePassesUnchangedTolerance": true,
+      "invalidMaterialConeContacts": [],
+      "unchangedReactionResidualLimit": 1e-05,
+      "maxClosestFeatureTieGapMicrometres": 6.823388943215077,
+      "maxReconstructedMaterialConeResidual": 2.88911544987286e-14,
+      "maxGlobalDistanceErrorM": 6.938893903907228e-18,
+      "maxCarrierProjectionCoordinateDifferenceM": 6.1850433754333086e-06,
+      "contactDistanceMMRange": [
+        1.5032944321384376,
+        1.5299654466941566
+      ],
+      "samePointOpposingComponentWitnesses": [
+        {
+          "contacts": [
+            21,
+            22
+          ],
+          "point": [
+            -0.05206709408820085,
+            -0.002399658252717567,
+            0.0011660649672456584
+          ],
+          "opposingRuntimeYComponents": [
+            0.7387584262318859,
+            -0.6447658549651774
+          ],
+          "tieGapMicrometres": [
+            0.9621178652442254,
+            1.0323794167480058
+          ],
+          "coneResiduals": [
+            2.874277142073027e-15,
+            2.4973849386715747e-15
+          ]
+        },
+        {
+          "contacts": [
+            24,
+            25
+          ],
+          "point": [
+            -0.05193483796779456,
+            -0.0023999366292942184,
+            0.0009771129966276
+          ],
+          "opposingRuntimeYComponents": [
+            -0.7611980536194253,
+            0.6462516464387781
+          ],
+          "tieGapMicrometres": [
+            0.9319949689802747,
+            2.277496547127599
+          ],
+          "coneResiduals": [
+            2.646549077902675e-15,
+            3.400256261246416e-15
+          ]
+        },
+        {
+          "contacts": [
+            27,
+            28
+          ],
+          "point": [
+            -0.051758993936279994,
+            -0.0023996522125154284,
+            0.0008135553995609455
+          ],
+          "opposingRuntimeYComponents": [
+            -0.7246585553962339,
+            0.6011033413569998
+          ],
+          "tieGapMicrometres": [
+            1.0175109347004396,
+            2.2797028854896086
+          ],
+          "coneResiduals": [
+            1.3817817210206685e-14,
+            1.3414875847488985e-15
+          ]
+        }
+      ],
+      "perContribution": [
+        {
+          "contact": 0,
+          "segment": 0,
+          "fraction": 0.9945476575121164,
+          "point": [
+            -0.05206096454294319,
+            -0.0033312880811919017,
+            0.018218132379833062
+          ],
+          "materialPoint": [
+            -0.05111214616908868,
+            -0.003466002699944628,
+            0.017030016751365527
+          ],
+          "normal": [
+            -0.6215885051368115,
+            0.08825404397514584,
+            0.7783565725320349
+          ],
+          "weight": 0.03027441087540614,
+          "distanceMM": 1.526441312883801,
+          "independentGlobalClosestDistanceMM": 1.5264313866191455,
+          "independentClosestTriangle": 20688,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.009926264655504488,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9476,
+            9301,
+            9475,
+            20688,
+            20687,
+            20686
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9301,
+            9475,
+            9476,
+            20686,
+            20687,
+            20688
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.576213700060856e-16,
+          "reportedConeResidual": 1.1188630228279524e-16,
+          "reconstructedMaterialNormal": [
+            -0.6215885051368116,
+            0.08825404397514583,
+            0.7783565725320348
+          ],
+          "forceWeightTimesConeResidual": 4.771894118308654e-18,
+          "firstMomentError": 1.1175700191704681e-19
+        },
+        {
+          "contact": 1,
+          "segment": 0,
+          "fraction": 0.9979806138933764,
+          "point": [
+            -0.05224066736471579,
+            -0.0031675153114966567,
+            0.017980535762013854
+          ],
+          "materialPoint": [
+            -0.051152090594424,
+            -0.0035160825427719075,
+            0.017004115949555795
+          ],
+          "normal": [
+            -0.7241274543558897,
+            0.23186890327227094,
+            0.6495200085781602
+          ],
+          "weight": 0.011359974102359366,
+          "distanceMM": 1.5032944321384376,
+          "independentGlobalClosestDistanceMM": 1.5032084589870538,
+          "independentClosestTriangle": 20690,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.08597315138362399,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9477,
+            9293,
+            9476,
+            20690,
+            20688
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9293,
+            9476,
+            9477,
+            20688,
+            20690
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.498001805406602e-16,
+          "reportedConeResidual": 4.0125770192081414e-16,
+          "reconstructedMaterialNormal": [
+            -0.7241274543558899,
+            0.23186890327227097,
+            0.6495200085781603
+          ],
+          "forceWeightTimesConeResidual": 2.837723581706594e-18,
+          "firstMomentError": 1.3552527156068805e-20
+        },
+        {
+          "contact": 2,
+          "segment": 0,
+          "fraction": 0.999394184168013,
+          "point": [
+            -0.052314662644269205,
+            -0.0031000794651515552,
+            0.017882701860558882
+          ],
+          "materialPoint": [
+            -0.0511935895353207,
+            -0.0035643846811066844,
+            0.016976237964455625
+          ],
+          "normal": [
+            -0.7401699516477254,
+            0.3065498284635788,
+            0.5984777734776408
+          ],
+          "weight": 0.11428043549935399,
+          "distanceMM": 1.5146158074275136,
+          "independentGlobalClosestDistanceMM": 1.5145216548458742,
+          "independentClosestTriangle": 20690,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.09415258163934272,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9284,
+            9288,
+            9477,
+            20689,
+            20692,
+            20690
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9284,
+            9288,
+            9477,
+            20689,
+            20690,
+            20692
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 3.510833468576701e-16,
+          "reportedConeResidual": 4.041272810440265e-16,
+          "reconstructedMaterialNormal": [
+            -0.7401699516477257,
+            0.3065498284635788,
+            0.5984777734776409
+          ],
+          "forceWeightTimesConeResidual": 4.0121957775465296e-17,
+          "firstMomentError": 6.22826730135561e-19
+        },
+        {
+          "contact": 3,
+          "segment": 1,
+          "fraction": 0.46,
+          "point": [
+            -0.05239182501666037,
+            -0.003019656647634624,
+            0.017738174967680594
+          ],
+          "materialPoint": [
+            -0.05122292556976568,
+            -0.0035961260846353125,
+            0.016955796545119563
+          ],
+          "normal": [
+            -0.7689530672015361,
+            0.3792267529146663,
+            0.5146826695306037
+          ],
+          "weight": 0.11816750483863979,
+          "distanceMM": 1.5201180627950213,
+          "independentGlobalClosestDistanceMM": 1.5201180627950213,
+          "independentClosestTriangle": 20692,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 1.3010426069826053e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.0,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9284,
+            20692
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9284,
+            20692
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.2803716525534355e-15,
+          "reportedConeResidual": 1.336885555457667e-15,
+          "reconstructedMaterialNormal": [
+            -0.7689530672015371,
+            0.3792267529146656,
+            0.5146826695306033
+          ],
+          "forceWeightTimesConeResidual": 1.5129832344836532e-16,
+          "firstMomentError": 2.168404344971009e-19
+        },
+        {
+          "contact": 4,
+          "segment": 1,
+          "fraction": 1.0,
+          "point": [
+            -0.052445179493294546,
+            -0.0029591746044250146,
+            0.01761773374571696
+          ],
+          "materialPoint": [
+            -0.05128059933675947,
+            -0.0036552139420830392,
+            0.01691442871951244
+          ],
+          "normal": [
+            -0.76206649988994,
+            0.4554673706728125,
+            0.4602218204278136
+          ],
+          "weight": 0.010902596762949034,
+          "distanceMM": 1.5281870502157846,
+          "independentGlobalClosestDistanceMM": 1.5279245341479204,
+          "independentClosestTriangle": 20693,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.2625160678640121,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9479,
+            9472,
+            9478,
+            20695,
+            20693
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9472,
+            9478,
+            9479,
+            20693,
+            20695
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.2887833992611187e-16,
+          "reportedConeResidual": 3.3766115072321297e-16,
+          "reconstructedMaterialNormal": [
+            -0.7620664998899398,
+            0.4554673706728125,
+            0.46022182042781357
+          ],
+          "forceWeightTimesConeResidual": 2.495368247987576e-18,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 5,
+          "segment": 1,
+          "fraction": 1.0,
+          "point": [
+            -0.052445179493294546,
+            -0.0029591746044250146,
+            0.01761773374571696
+          ],
+          "materialPoint": [
+            -0.05126281751955868,
+            -0.0036373101835626555,
+            0.01692729498563593
+          ],
+          "normal": [
+            -0.7738353219095548,
+            0.4438279273497088,
+            0.451880145026972
+          ],
+          "weight": 0.08813316737553877,
+          "distanceMM": 1.5279245341479204,
+          "independentGlobalClosestDistanceMM": 1.5279245341479204,
+          "independentClosestTriangle": 20693,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 8.673617379884035e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.0,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9478,
+            20693
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9478,
+            20693
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 5.768888059150692e-16,
+          "reportedConeResidual": 5.578801654593729e-16,
+          "reconstructedMaterialNormal": [
+            -0.7738353219095552,
+            0.44382792734970844,
+            0.45188014502697166
+          ],
+          "forceWeightTimesConeResidual": 5.084303768878749e-17,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 6,
+          "segment": 2,
+          "fraction": 0.64,
+          "point": [
+            -0.05249764266884786,
+            -0.0028809765164408575,
+            0.017403541632763815
+          ],
+          "materialPoint": [
+            -0.05132576570072027,
+            -0.0036975645727182313,
+            0.016880457860958927
+          ],
+          "normal": [
+            -0.7704169659009126,
+            0.5368424415007702,
+            0.3438864516893971
+          ],
+          "weight": 0.06261820510629708,
+          "distanceMM": 1.5210944462486247,
+          "independentGlobalClosestDistanceMM": 1.520760950149696,
+          "independentClosestTriangle": 20697,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.33349609892857796,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9480,
+            9471,
+            9479,
+            20695,
+            20697,
+            20694
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9471,
+            9479,
+            9480,
+            20694,
+            20695,
+            20697
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.7194799110210365e-16,
+          "reportedConeResidual": 1.9229626863835638e-16,
+          "reconstructedMaterialNormal": [
+            -0.7704169659009125,
+            0.5368424415007704,
+            0.34388645168939697
+          ],
+          "forceWeightTimesConeResidual": 1.702889508507698e-17,
+          "firstMomentError": 2.2351400383409363e-19
+        },
+        {
+          "contact": 7,
+          "segment": 2,
+          "fraction": 0.68,
+          "point": [
+            -0.05250092161731995,
+            -0.0028760891359418477,
+            0.017390154625704243
+          ],
+          "materialPoint": [
+            -0.051371792461518906,
+            -0.003737777165244143,
+            0.016844438735301916
+          ],
+          "normal": [
+            -0.7420705019072477,
+            0.5663065780443727,
+            0.35864777967080497
+          ],
+          "weight": 0.03448323725702755,
+          "distanceMM": 1.5215928310032414,
+          "independentGlobalClosestDistanceMM": 1.5212362703160995,
+          "independentClosestTriangle": 20697,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.3565606871418648,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9481,
+            9470,
+            9480,
+            20696,
+            20698,
+            20697
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9470,
+            9480,
+            9481,
+            20696,
+            20697,
+            20698
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.1102230246251565e-16,
+          "reportedConeResidual": 1.1102230246251565e-16,
+          "reconstructedMaterialNormal": [
+            -0.7420705019072477,
+            0.5663065780443728,
+            0.35864777967080497
+          ],
+          "forceWeightTimesConeResidual": 3.8284083966364015e-18,
+          "firstMomentError": 5.421010862427522e-20
+        },
+        {
+          "contact": 8,
+          "segment": 2,
+          "fraction": 1.0,
+          "point": [
+            -0.05252715320509661,
+            -0.002836990091949769,
+            0.01728305856922767
+          ],
+          "materialPoint": [
+            -0.051399444135850056,
+            -0.0037602951717183573,
+            0.016821903880071043
+          ],
+          "normal": [
+            -0.7376978656561296,
+            0.6039857311334904,
+            0.30166719343265347
+          ],
+          "weight": 0.06908357202678582,
+          "distanceMM": 1.5286869079437293,
+          "independentGlobalClosestDistanceMM": 1.5286869079437293,
+          "independentClosestTriangle": 20698,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 8.673617379884035e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.0,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9481,
+            20698
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9481,
+            20698
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 8.741904837807691e-16,
+          "reportedConeResidual": 8.741904837807691e-16,
+          "reconstructedMaterialNormal": [
+            -0.7376978656561297,
+            0.6039857311334897,
+            0.3016671934326529
+          ],
+          "forceWeightTimesConeResidual": 6.03922012513995e-17,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 9,
+          "segment": 3,
+          "fraction": 0.42,
+          "point": [
+            -0.05254519477045416,
+            -0.00279399031812891,
+            0.017099801895814844
+          ],
+          "materialPoint": [
+            -0.05151283063446709,
+            -0.003844990190699577,
+            0.016724525305343248
+          ],
+          "normal": [
+            -0.6790680579246555,
+            0.691326265090792,
+            0.24684928175316315
+          ],
+          "weight": 0.07263193178064101,
+          "distanceMM": 1.5202660822276717,
+          "independentGlobalClosestDistanceMM": 1.5199886383350827,
+          "independentClosestTriangle": 20702,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.2774438925890518,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20703,
+            20701,
+            20702,
+            9259,
+            9260
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9259,
+            9260,
+            20701,
+            20702,
+            20703
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.498001805406602e-16,
+          "reportedConeResidual": 3.521787733787174e-16,
+          "reconstructedMaterialNormal": [
+            -0.6790680579246553,
+            0.6913262650907919,
+            0.24684928175316317
+          ],
+          "forceWeightTimesConeResidual": 1.814346967182104e-17,
+          "firstMomentError": 1.21217487951527e-19
+        },
+        {
+          "contact": 10,
+          "segment": 3,
+          "fraction": 0.92,
+          "point": [
+            -0.05256667282445124,
+            -0.002742800111199316,
+            0.016881639189371
+          ],
+          "materialPoint": [
+            -0.051607366572694505,
+            -0.0039052260816090064,
+            0.016635182926924945
+          ],
+          "normal": [
+            -0.6281600994914849,
+            0.7611642391435209,
+            0.1613811961038602
+          ],
+          "weight": 0.019273920050134466,
+          "distanceMM": 1.5271683962947054,
+          "independentGlobalClosestDistanceMM": 1.5268823167101833,
+          "independentClosestTriangle": 20706,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.2860795845220816,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20706,
+            20705,
+            20704,
+            9482,
+            9467,
+            9253
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9253,
+            9467,
+            9482,
+            20704,
+            20705,
+            20706
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 0.0,
+          "reportedConeResidual": 1.1443916996305594e-16,
+          "reconstructedMaterialNormal": [
+            -0.6281600994914849,
+            0.7611642391435209,
+            0.1613811961038602
+          ],
+          "forceWeightTimesConeResidual": 0.0,
+          "firstMomentError": 1.0863176909312428e-19
+        },
+        {
+          "contact": 11,
+          "segment": 3,
+          "fraction": 1.0,
+          "point": [
+            -0.05257010931309077,
+            -0.002734609678090581,
+            0.016846733156339985
+          ],
+          "materialPoint": [
+            -0.05165628184217313,
+            -0.003933141250324561,
+            0.016585726499608648
+          ],
+          "normal": [
+            -0.5974281676005481,
+            0.7835576668450592,
+            0.17063694584051403
+          ],
+          "weight": 0.06060940381916837,
+          "distanceMM": 1.5296022525818482,
+          "independentGlobalClosestDistanceMM": 1.529474718113531,
+          "independentClosestTriangle": 20706,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.12753446831698273,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20708,
+            9483
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9483,
+            20708
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 6.087272963323595e-16,
+          "reportedConeResidual": 6.335327934766281e-16,
+          "reconstructedMaterialNormal": [
+            -0.5974281676005486,
+            0.7835576668450592,
+            0.17063694584051378
+          ],
+          "forceWeightTimesConeResidual": 3.6894598519158546e-17,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 12,
+          "segment": 4,
+          "fraction": 0.5,
+          "point": [
+            -0.05257420289410606,
+            -0.0026926546829082023,
+            0.016481080807370554
+          ],
+          "materialPoint": [
+            -0.05187865596485048,
+            -0.0040359637860192055,
+            0.016328076300097076
+          ],
+          "normal": [
+            -0.4574704279044308,
+            0.8835121892721338,
+            0.10063309098153594
+          ],
+          "weight": 0.0709297400857029,
+          "distanceMM": 1.5204194344139892,
+          "independentGlobalClosestDistanceMM": 1.5203349574593392,
+          "independentClosestTriangle": 20714,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.08447695465005865,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9487,
+            20716
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9487,
+            20716
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 5.551115123125783e-16,
+          "reportedConeResidual": 5.551115123125783e-16,
+          "reconstructedMaterialNormal": [
+            -0.4574704279044305,
+            0.8835121892721338,
+            0.10063309098153639
+          ],
+          "forceWeightTimesConeResidual": 3.937391528691264e-17,
+          "firstMomentError": 4.4702800766818725e-19
+        },
+        {
+          "contact": 13,
+          "segment": 5,
+          "fraction": 0.006963788300835654,
+          "point": [
+            -0.052576076152868356,
+            -0.002648954185374162,
+            0.016015589465795073
+          ],
+          "materialPoint": [
+            -0.05212919920336372,
+            -0.004110115233416971,
+            0.015944020989430804
+          ],
+          "normal": [
+            -0.29214429528078173,
+            0.955229096388577,
+            0.04678764951948302
+          ],
+          "weight": 0.0559381527072483,
+          "distanceMM": 1.5296446198791498,
+          "independentGlobalClosestDistanceMM": 1.5296446198791498,
+          "independentClosestTriangle": 20725,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.0,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9490,
+            20725
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9490,
+            20725
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 5.398084850998442e-16,
+          "reportedConeResidual": 5.398084850998442e-16,
+          "reconstructedMaterialNormal": [
+            -0.29214429528078134,
+            0.955229096388577,
+            0.046787649519483394
+          ],
+          "forceWeightTimesConeResidual": 3.019588947218345e-17,
+          "firstMomentError": 4.336808689942018e-19
+        },
+        {
+          "contact": 14,
+          "segment": 5,
+          "fraction": 0.10724233983286909,
+          "point": [
+            -0.052544103512425284,
+            -0.0026238189515102343,
+            0.014577907972267988
+          ],
+          "materialPoint": [
+            -0.05249895305947532,
+            -0.004149999534138059,
+            0.014576403329100167
+          ],
+          "normal": [
+            -0.029570999946595462,
+            0.9995621965830005,
+            0.0009854564047136782
+          ],
+          "weight": 0.013626541268175151,
+          "distanceMM": 1.5268490423558105,
+          "independentGlobalClosestDistanceMM": 1.5268490423558105,
+          "independentClosestTriangle": 20746,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.0,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20746,
+            9197
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9197,
+            20746
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 6.049159867532172e-16,
+          "reportedConeResidual": 6.071473696162986e-16,
+          "reconstructedMaterialNormal": [
+            -0.029570999946595827,
+            0.9995621965830009,
+            0.000985456404713868
+          ],
+          "forceWeightTimesConeResidual": 8.242912657271608e-18,
+          "firstMomentError": 2.710505431213761e-20
+        },
+        {
+          "contact": 15,
+          "segment": 5,
+          "fraction": 0.9846796657381616,
+          "point": [
+            -0.05226434290854841,
+            -0.0024038856552008638,
+            0.001998194903906011
+          ],
+          "materialPoint": [
+            -0.050754495229480806,
+            -0.0022746487847039266,
+            0.001998180165201202
+          ],
+          "normal": [
+            -0.9963566731704169,
+            -0.08528411185080802,
+            9.726151249312494e-06
+          ],
+          "weight": 0.03535511346432859,
+          "distanceMM": 1.5153686623719316,
+          "independentGlobalClosestDistanceMM": 1.5141101127313221,
+          "independentClosestTriangle": 23208,
+          "globalClosestDistanceErrorM": 6.938893903907228e-18,
+          "materialPointDistanceToCarrierTriangleM": 1.734723475976807e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 6.1850433754333086e-06,
+          "tieGapMicrometres": 1.2585496406095769,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20646,
+            20649
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20646,
+            20648,
+            20649
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [
+            20648
+          ],
+          "reconstructedConeResidual": 4.0587888631768013e-16,
+          "reportedConeResidual": 3.89651975827848e-16,
+          "reconstructedMaterialNormal": [
+            -0.9963566731704168,
+            -0.08528411185080799,
+            9.726151248923082e-06
+          ],
+          "forceWeightTimesConeResidual": 1.4349894078536906e-17,
+          "firstMomentError": 4.066640377089639e-20
+        },
+        {
+          "contact": 16,
+          "segment": 5,
+          "fraction": 1.0,
+          "point": [
+            -0.052259458199591824,
+            -0.002400045550027208,
+            0.0017785491201727063
+          ],
+          "materialPoint": [
+            -0.05075542830085092,
+            -0.002534003689647701,
+            0.0019952523291720792
+          ],
+          "normal": [
+            -0.9859553583040024,
+            0.08781523934984814,
+            -0.1420581401031113
+          ],
+          "weight": 0.13892614816681567,
+          "distanceMM": 1.5254543586314822,
+          "independentGlobalClosestDistanceMM": 1.5253103086518112,
+          "independentClosestTriangle": 20651,
+          "globalClosestDistanceErrorM": 2.168404344971009e-19,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 1.734723475976807e-18,
+          "tieGapMicrometres": 0.14404997967110839,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            23205,
+            20657
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20657,
+            23205
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.7823493677931487e-15,
+          "reportedConeResidual": 2.754662226278516e-15,
+          "reconstructedMaterialNormal": [
+            -0.9859553583040024,
+            0.08781523934985092,
+            -0.1420581401031111
+          ],
+          "forceWeightTimesConeResidual": 3.8654108052187687e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 17,
+          "segment": 6,
+          "fraction": 0.34,
+          "point": [
+            -0.05223225915270674,
+            -0.0023999838208408147,
+            0.001659190590365244
+          ],
+          "materialPoint": [
+            -0.05087601168111639,
+            -0.0017480191826826862,
+            0.001890725100378113
+          ],
+          "normal": [
+            -0.8907900493205108,
+            -0.4282135999111575,
+            -0.1520730116841544
+          ],
+          "weight": 0.01600080972683257,
+          "distanceMM": 1.5225220270757238,
+          "independentGlobalClosestDistanceMM": 1.5202471295625697,
+          "independentClosestTriangle": 20662,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 3.0665868333667484e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 2.2748975131541007,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            23227,
+            20629
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20629,
+            23227
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 4.685680459230494e-16,
+          "reportedConeResidual": 5.23691153334427e-16,
+          "reconstructedMaterialNormal": [
+            -0.890790049320511,
+            -0.4282135999111571,
+            -0.15207301168415455
+          ],
+          "forceWeightTimesConeResidual": 7.49746814688846e-18,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 18,
+          "segment": 6,
+          "fraction": 0.42,
+          "point": [
+            -0.05222585937696908,
+            -0.0023999692963263693,
+            0.0016311062304105472
+          ],
+          "materialPoint": [
+            -0.05091071446748141,
+            -0.0031325457540006796,
+            0.0018610026917937259
+          ],
+          "normal": [
+            -0.8635974725028913,
+            0.48105054636839406,
+            -0.1509628342516373
+          ],
+          "weight": 0.03738404424223399,
+          "distanceMM": 1.522867946424272,
+          "independentGlobalClosestDistanceMM": 1.5199942815288625,
+          "independentClosestTriangle": 20636,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 1.0842021724855044e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 2.873664895409588,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20676,
+            23189
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20676,
+            23189
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.855588798222804e-15,
+          "reportedConeResidual": 2.8104490544966175e-15,
+          "reconstructedMaterialNormal": [
+            -0.8635974725028926,
+            0.48105054636839173,
+            -0.15096283425163828
+          ],
+          "forceWeightTimesConeResidual": 1.0675345797038908e-16,
+          "firstMomentError": 3.3881317890172014e-21
+        },
+        {
+          "contact": 19,
+          "segment": 6,
+          "fraction": 1.0,
+          "point": [
+            -0.052179461002870985,
+            -0.0023998639935966393,
+            0.0014274946207389937
+          ],
+          "materialPoint": [
+            -0.05102632904816512,
+            -0.0014562759463959726,
+            0.0017632987834854095
+          ],
+          "normal": [
+            -0.7549825075926039,
+            -0.6177892019232797,
+            -0.21985885294020158
+          ],
+          "weight": 0.07862364186117099,
+          "distanceMM": 1.5273624794074119,
+          "independentGlobalClosestDistanceMM": 1.5265156899950831,
+          "independentClosestTriangle": 23184,
+          "globalClosestDistanceErrorM": 1.0842021724855044e-18,
+          "materialPointDistanceToCarrierTriangleM": 1.2643861424099487e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.8467894123287846,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20619,
+            23236
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20619,
+            23236
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 7.0436301535069936e-15,
+          "reportedConeResidual": 7.0549410159680436e-15,
+          "reconstructedMaterialNormal": [
+            -0.7549825075926004,
+            -0.6177892019232851,
+            -0.21985885294019872
+          ],
+          "forceWeightTimesConeResidual": 5.537958545918787e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 20,
+          "segment": 7,
+          "fraction": 0.06,
+          "point": [
+            -0.05217271898799077,
+            -0.002399851649143895,
+            0.0014118088415293936
+          ],
+          "materialPoint": [
+            -0.05085545616437017,
+            -0.002998278156353198,
+            0.0019084091574813682
+          ],
+          "normal": [
+            -0.8611386660811702,
+            0.3912113778094884,
+            -0.3246441985502663
+          ],
+          "weight": 0.11728583772108486,
+          "distanceMM": 1.5296756207860696,
+          "independentGlobalClosestDistanceMM": 1.5251291904124653,
+          "independentClosestTriangle": 23184,
+          "globalClosestDistanceErrorM": 1.734723475976807e-18,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 4.54643037360418,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20670,
+            23194
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20670,
+            23194
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 6.816127436781253e-15,
+          "reportedConeResidual": 6.7150139688573605e-15,
+          "reconstructedMaterialNormal": [
+            -0.8611386660811681,
+            0.3912113778094946,
+            -0.3246441985502645
+          ],
+          "forceWeightTimesConeResidual": 7.994352164365602e-16,
+          "firstMomentError": 6.1335479945233245e-19
+        },
+        {
+          "contact": 21,
+          "segment": 7,
+          "fraction": 1.0,
+          "point": [
+            -0.05206709408820085,
+            -0.002399658252717567,
+            0.0011660649672456584
+          ],
+          "materialPoint": [
+            -0.051161247723303355,
+            -0.003526557713017964,
+            0.0016522482810987886
+          ],
+          "normal": [
+            -0.5938432473480465,
+            0.7387584262318859,
+            -0.31872587791159046
+          ],
+          "weight": 0.10967906680396423,
+          "distanceMM": 1.5253964222760406,
+          "independentGlobalClosestDistanceMM": 1.5244343044107964,
+          "independentClosestTriangle": 23240,
+          "globalClosestDistanceErrorM": 8.673617379884035e-19,
+          "materialPointDistanceToCarrierTriangleM": 6.133173666733497e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.9621178652442254,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20689,
+            23177
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20689,
+            23177
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.874277142073027e-15,
+          "reportedConeResidual": 2.811408275538296e-15,
+          "reconstructedMaterialNormal": [
+            -0.5938432473480482,
+            0.738758426231884,
+            -0.31872587791159185
+          ],
+          "forceWeightTimesConeResidual": 3.1524803467853494e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 22,
+          "segment": 7,
+          "fraction": 1.0,
+          "point": [
+            -0.05206709408820085,
+            -0.002399658252717567,
+            0.0011660649672456584
+          ],
+          "materialPoint": [
+            -0.05105278940407308,
+            -0.0014160894220986067,
+            0.0017412405636152563
+          ],
+          "normal": [
+            -0.6649143471182076,
+            -0.6447658549651774,
+            -0.37704894014887713
+          ],
+          "weight": 0.14467094442536543,
+          "distanceMM": 1.5254666838275444,
+          "independentGlobalClosestDistanceMM": 1.5244343044107964,
+          "independentClosestTriangle": 23240,
+          "globalClosestDistanceErrorM": 8.673617379884035e-19,
+          "materialPointDistanceToCarrierTriangleM": 1.454609855418324e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 1.0323794167480058,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20619,
+            23236
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20619,
+            23236
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.4973849386715747e-15,
+          "reportedConeResidual": 2.5389904903037657e-15,
+          "reconstructedMaterialNormal": [
+            -0.6649143471182066,
+            -0.6447658549651795,
+            -0.37704894014887624
+          ],
+          "forceWeightTimesConeResidual": 3.6129903767130006e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 23,
+          "segment": 8,
+          "fraction": 0.44,
+          "point": [
+            -0.05200890139522209,
+            -0.0023997807384112937,
+            0.0010829261001737128
+          ],
+          "materialPoint": [
+            -0.051050929804398626,
+            -0.003380855687420401,
+            0.0017428024037223707
+          ],
+          "normal": [
+            -0.6295290300864745,
+            0.6447113536644085,
+            -0.4336363346568053
+          ],
+          "weight": 0.031657410071106694,
+          "distanceMM": 1.521727426441114,
+          "independentGlobalClosestDistanceMM": 1.520075204438522,
+          "independentClosestTriangle": 23241,
+          "globalClosestDistanceErrorM": 6.505213034913027e-19,
+          "materialPointDistanceToCarrierTriangleM": 1.454609855418324e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 1.652222002592081,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20683,
+            23183
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20683,
+            23183
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 5.236028833413848e-15,
+          "reportedConeResidual": 5.1469944211195045e-15,
+          "reconstructedMaterialNormal": [
+            -0.6295290300864723,
+            0.6447113536644127,
+            -0.4336363346568031
+          ],
+          "forceWeightTimesConeResidual": 1.6575911192352058e-16,
+          "firstMomentError": 1.6940658945086007e-21
+        },
+        {
+          "contact": 24,
+          "segment": 8,
+          "fraction": 1.0,
+          "point": [
+            -0.05193483796779456,
+            -0.0023999366292942184,
+            0.0009771129966276
+          ],
+          "materialPoint": [
+            -0.05119065032744255,
+            -0.0012391111215006925,
+            0.0016284867680341946
+          ],
+          "normal": [
+            -0.48799253596720504,
+            -0.7611980536194253,
+            -0.42713090265900305
+          ],
+          "weight": 0.12297875368196715,
+          "distanceMM": 1.5249979979243373,
+          "independentGlobalClosestDistanceMM": 1.524066002955357,
+          "independentClosestTriangle": 23179,
+          "globalClosestDistanceErrorM": 1.734723475976807e-18,
+          "materialPointDistanceToCarrierTriangleM": 1.2266347333466993e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.9319949689802747,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20608,
+            23243
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20608,
+            23243
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.646549077902675e-15,
+          "reportedConeResidual": 2.6225714513423072e-15,
+          "reconstructedMaterialNormal": [
+            -0.4879925359672036,
+            -0.7611980536194272,
+            -0.4271309026590019
+          ],
+          "forceWeightTimesConeResidual": 3.254693071586303e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 25,
+          "segment": 8,
+          "fraction": 1.0,
+          "point": [
+            -0.05193483796779456,
+            -0.0023999366292942184,
+            0.0009771129966276
+          ],
+          "materialPoint": [
+            -0.051054495346671974,
+            -0.0033863386288788253,
+            0.001739826863765205
+          ],
+          "normal": [
+            -0.5767657289525805,
+            0.6462516464387781,
+            -0.49970001338900033
+          ],
+          "weight": 0.14289180607073487,
+          "distanceMM": 1.5263434995024847,
+          "independentGlobalClosestDistanceMM": 1.524066002955357,
+          "independentClosestTriangle": 23179,
+          "globalClosestDistanceErrorM": 1.734723475976807e-18,
+          "materialPointDistanceToCarrierTriangleM": 2.168404344971009e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 2.277496547127599,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20683,
+            23183
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20683,
+            23183
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 3.400256261246416e-15,
+          "reportedConeResidual": 3.310252409044606e-15,
+          "reconstructedMaterialNormal": [
+            -0.5767657289525792,
+            0.6462516464387809,
+            -0.4997000133889989
+          ],
+          "forceWeightTimesConeResidual": 4.858687582728249e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 26,
+          "segment": 9,
+          "fraction": 0.52,
+          "point": [
+            -0.05184339907140698,
+            -0.0023997887325692474,
+            0.0008920630461529396
+          ],
+          "materialPoint": [
+            -0.051077497591997936,
+            -0.001380866503660088,
+            0.0017207701022519555
+          ],
+          "normal": [
+            -0.5037557822176806,
+            -0.6701749222878618,
+            -0.5450648451502914
+          ],
+          "weight": 0.031411366961384274,
+          "distanceMM": 1.520382507645518,
+          "independentGlobalClosestDistanceMM": 1.5200125152407467,
+          "independentClosestTriangle": 20614,
+          "globalClosestDistanceErrorM": 2.168404344971009e-19,
+          "materialPointDistanceToCarrierTriangleM": 2.2638805996750743e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.3699924047712716,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20616,
+            23237
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20616,
+            23237
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.1435836084155407e-14,
+          "reportedConeResidual": 1.1435836084155407e-14,
+          "reconstructedMaterialNormal": [
+            -0.5037557822176865,
+            -0.6701749222878534,
+            -0.5450648451502964
+          ],
+          "forceWeightTimesConeResidual": 3.5921524374964527e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 27,
+          "segment": 9,
+          "fraction": 1.0,
+          "point": [
+            -0.051758993936279994,
+            -0.0023996522125154284,
+            0.0008135553995609455
+          ],
+          "materialPoint": [
+            -0.051143864873204464,
+            -0.0012939407760910139,
+            0.0016663153501857947
+          ],
+          "normal": [
+            -0.4031418356963191,
+            -0.7246585553962339,
+            -0.5588798067585241
+          ],
+          "weight": 0.10782257665050615,
+          "distanceMM": 1.5258378282994616,
+          "independentGlobalClosestDistanceMM": 1.524820317364761,
+          "independentClosestTriangle": 23240,
+          "globalClosestDistanceErrorM": 1.734723475976807e-18,
+          "materialPointDistanceToCarrierTriangleM": 1.2643861424099487e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 1.0175109347004396,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20610,
+            23242
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20610,
+            23242
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.3817817210206685e-14,
+          "reportedConeResidual": 1.3752544619620349e-14,
+          "reconstructedMaterialNormal": [
+            -0.4031418356963273,
+            -0.7246585553962248,
+            -0.5588798067585306
+          ],
+          "forceWeightTimesConeResidual": 1.4898726552901933e-15,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 28,
+          "segment": 9,
+          "fraction": 1.0,
+          "point": [
+            -0.051758993936279994,
+            -0.0023996522125154284,
+            0.0008135553995609455
+          ],
+          "materialPoint": [
+            -0.051009917395396356,
+            -0.003317597137274196,
+            0.0017770365477188842
+          ],
+          "normal": [
+            -0.49052225194842464,
+            0.6011033413569998,
+            -0.630922097689482
+          ],
+          "weight": 0.1351323206175172,
+          "distanceMM": 1.5271000202502507,
+          "independentGlobalClosestDistanceMM": 1.524820317364761,
+          "independentClosestTriangle": 23240,
+          "globalClosestDistanceErrorM": 1.734723475976807e-18,
+          "materialPointDistanceToCarrierTriangleM": 4.336808689942018e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 4.363829566254972e-18,
+          "tieGapMicrometres": 2.2797028854896086,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20681,
+            23184
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20681,
+            23184
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.3414875847488985e-15,
+          "reportedConeResidual": 1.1430445635548515e-15,
+          "reconstructedMaterialNormal": [
+            -0.4905222519484243,
+            0.601103341357001,
+            -0.6309220976894816
+          ],
+          "forceWeightTimesConeResidual": 1.8127833040670694e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 29,
+          "segment": 10,
+          "fraction": 0.36,
+          "point": [
+            -0.05166680604228596,
+            -0.002399741281198654,
+            0.0007577556231532453
+          ],
+          "materialPoint": [
+            -0.05110227435703819,
+            -0.003453019885744665,
+            0.0017003348324701485
+          ],
+          "normal": [
+            -0.3709093029208049,
+            0.6920264056074938,
+            -0.6192945526554992
+          ],
+          "weight": 0.02227045138700853,
+          "distanceMM": 1.5220208304354983,
+          "independentGlobalClosestDistanceMM": 1.520174121995475,
+          "independentClosestTriangle": 23236,
+          "globalClosestDistanceErrorM": 1.951563910473908e-18,
+          "materialPointDistanceToCarrierTriangleM": 1.0842021724855044e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 1.8467084400234506,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20687,
+            23179
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20687,
+            23179
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 5.661048867003676e-16,
+          "reportedConeResidual": 5.087681048627601e-16,
+          "reconstructedMaterialNormal": [
+            -0.37090930292080476,
+            0.6920264056074943,
+            -0.6192945526554988
+          ],
+          "forceWeightTimesConeResidual": 1.2607411359208507e-17,
+          "firstMomentError": 1.084731438893638e-19
+        },
+        {
+          "contact": 30,
+          "segment": 10,
+          "fraction": 1.0,
+          "point": [
+            -0.05150291645296324,
+            -0.0023998996255243884,
+            0.000658556020650667
+          ],
+          "materialPoint": [
+            -0.05099676053670145,
+            -0.0015040270680458734,
+            0.0017880797364163712
+          ],
+          "normal": [
+            -0.33126655115598663,
+            -0.5863264714616252,
+            -0.7392453861530541
+          ],
+          "weight": 0.0298239339355492,
+          "distanceMM": 1.5279415156631717,
+          "independentGlobalClosestDistanceMM": 1.5269039505583228,
+          "independentClosestTriangle": 20679,
+          "globalClosestDistanceErrorM": 1.3010426069826053e-18,
+          "materialPointDistanceToCarrierTriangleM": 1.454609855418324e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 1.0375651048489392,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20618,
+            23235
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20618,
+            23235
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.3334236103572998e-15,
+          "reportedConeResidual": 1.3334236103572998e-15,
+          "reconstructedMaterialNormal": [
+            -0.3312665511559876,
+            -0.5863264714616245,
+            -0.7392453861530548
+          ],
+          "forceWeightTimesConeResidual": 3.976793766339761e-17,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 31,
+          "segment": 11,
+          "fraction": 0.031914893617021274,
+          "point": [
+            -0.05144697231084739,
+            -0.0023999028289650995,
+            0.000637538275310752
+          ],
+          "materialPoint": [
+            -0.05075228900423521,
+            -0.002485693706968053,
+            0.0019979974980895527
+          ],
+          "normal": [
+            -0.45405163110918956,
+            0.056073735644373145,
+            -0.889209116270166
+          ],
+          "weight": 0.1470751392000113,
+          "distanceMM": 1.5299654466941566,
+          "independentGlobalClosestDistanceMM": 1.5231420577509416,
+          "independentClosestTriangle": 20674,
+          "globalClosestDistanceErrorM": 1.951563910473908e-18,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 6.823388943215077,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            23207,
+            20655
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20655,
+            23207
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 6.911030342653279e-15,
+          "reportedConeResidual": 6.911030342653279e-15,
+          "reconstructedMaterialNormal": [
+            -0.45405163110919033,
+            0.05607373564436631,
+            -0.8892091162701666
+          ],
+          "forceWeightTimesConeResidual": 1.0164407496612328e-15,
+          "firstMomentError": 8.690541527449943e-19
+        },
+        {
+          "contact": 32,
+          "segment": 11,
+          "fraction": 0.20212765957446807,
+          "point": [
+            -0.0511486035528962,
+            -0.0023999199139822245,
+            0.0005254436334978725
+          ],
+          "materialPoint": [
+            -0.05078893634580973,
+            -0.0027664347867511568,
+            0.001966022547907783
+          ],
+          "normal": [
+            -0.23517401197898932,
+            0.2396514649674887,
+            -0.9419449874746628
+          ],
+          "weight": 0.0166388918386207,
+          "distanceMM": 1.5293662937493577,
+          "independentGlobalClosestDistanceMM": 1.5271792421351205,
+          "independentClosestTriangle": 23210,
+          "globalClosestDistanceErrorM": 2.168404344971009e-19,
+          "materialPointDistanceToCarrierTriangleM": 1.788112030672749e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 2.1870516142374723,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            23199,
+            20664
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20664,
+            23199
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.88911544987286e-14,
+          "reportedConeResidual": 2.88911544987286e-14,
+          "reconstructedMaterialNormal": [
+            -0.2351740119789956,
+            0.23965146496746104,
+            -0.9419449874746683
+          ],
+          "forceWeightTimesConeResidual": 4.80716794797225e-16,
+          "firstMomentError": 6.776263578034403e-21
+        }
+      ]
+    },
+    {
+      "pathReport": "native-seed-no-free-knee-probe.json",
+      "status": "pass-scoped-discrete-envelope-witness",
+      "routeLengthMM": 120.40361158741064,
+      "retainedWholeSegmentClearanceCertificate": {
+        "clearance": 0.0014900135750723657,
+        "status": "pass"
+      },
+      "contactsChecked": 36,
+      "polylineVertices": 14,
+      "maxIndependentlyAssembledNodalResidual": 2.220446049250313e-16,
+      "maxActualFacetConeNodalResidual": 1.4039492078076904e-07,
+      "maxForceWeightedNormalApproximationBound": 1.403949207639648e-07,
+      "materialNodalResiduals": [
+        1.4039492078076904e-07,
+        1.2959531161911243e-07,
+        2.5286532809710436e-16,
+        2.0642480475845822e-16,
+        1.072306095343089e-16,
+        4.4218778545309695e-16,
+        8.165592347215316e-16,
+        5.580527502014626e-16,
+        8.056296565884867e-16,
+        4.0689202864926677e-08,
+        4.068920242042846e-08,
+        6.815527784976441e-16
+      ],
+      "normalApproximationNodalBounds": [
+        1.403949207639648e-07,
+        1.2959531154529692e-07,
+        4.1151865496703444e-17,
+        1.1019123580024707e-16,
+        4.6687261082730606e-17,
+        4.444485771896317e-16,
+        1.049974223086368e-15,
+        9.45574144768385e-16,
+        9.822823267475244e-16,
+        4.06892032058436e-08,
+        4.068920323379774e-08,
+        6.916248804484649e-16
+      ],
+      "actualFacetBalancePassesUnchangedTolerance": true,
+      "invalidMaterialConeContacts": [],
+      "unchangedReactionResidualLimit": 1e-05,
+      "maxClosestFeatureTieGapMicrometres": 9.165162807121732,
+      "maxReconstructedMaterialConeResidual": 5.580240982766863e-06,
+      "maxGlobalDistanceErrorM": 1.4748035481867636e-08,
+      "maxCarrierProjectionCoordinateDifferenceM": 5.83786945282448e-06,
+      "contactDistanceMMRange": [
+        1.5149173332105603,
+        1.5299207234818848
+      ],
+      "samePointOpposingComponentWitnesses": [
+        {
+          "contacts": [
+            18,
+            19
+          ],
+          "point": [
+            -0.05219905829777307,
+            -0.002399503923506269,
+            0.001500183726268656
+          ],
+          "opposingRuntimeYComponents": [
+            0.6030831503492666,
+            -0.5602312587094753
+          ],
+          "tieGapMicrometres": [
+            2.8531400539518694,
+            0.8093035092195457
+          ],
+          "coneResiduals": [
+            1.6354606405429e-15,
+            9.688286336686901e-15
+          ]
+        },
+        {
+          "contacts": [
+            22,
+            23
+          ],
+          "point": [
+            -0.05210761308195929,
+            -0.0024000650329237022,
+            0.0012490919758535069
+          ],
+          "opposingRuntimeYComponents": [
+            -0.6145250074046638,
+            0.7318931287583054
+          ],
+          "tieGapMicrometres": [
+            1.2178917454808147,
+            1.963248486242875
+          ],
+          "coneResiduals": [
+            3.360144595992222e-15,
+            4.56981876806725e-15
+          ]
+        },
+        {
+          "contacts": [
+            25,
+            26
+          ],
+          "point": [
+            -0.05200278702453142,
+            -0.0023996605212112778,
+            0.0010664945854342318
+          ],
+          "opposingRuntimeYComponents": [
+            0.645173872043772,
+            -0.7607519436667778
+          ],
+          "tieGapMicrometres": [
+            2.18338829750548,
+            0.9100927520703638
+          ],
+          "coneResiduals": [
+            6.35548137733442e-15,
+            1.066334393690002e-15
+          ]
+        },
+        {
+          "contacts": [
+            28,
+            29
+          ],
+          "point": [
+            -0.05187717710790836,
+            -0.0023999415820642966,
+            0.0009179685591627507
+          ],
+          "opposingRuntimeYComponents": [
+            0.6448143081116188,
+            -0.7589001567648372
+          ],
+          "tieGapMicrometres": [
+            1.8414633382881316,
+            1.3252203857330378
+          ],
+          "coneResiduals": [
+            3.992174279235972e-15,
+            3.1912877566774988e-15
+          ]
+        },
+        {
+          "contacts": [
+            31,
+            32
+          ],
+          "point": [
+            -0.051712912043945646,
+            -0.0023996983551036358,
+            0.0007825501125207929
+          ],
+          "opposingRuntimeYComponents": [
+            0.6974181133475844,
+            -0.6791978241052002
+          ],
+          "tieGapMicrometres": [
+            0.9467678672484513,
+            0.23180684253576792
+          ],
+          "coneResiduals": [
+            4.611102534756203e-16,
+            6.854896728262034e-15
+          ]
+        }
+      ],
+      "perContribution": [
+        {
+          "contact": 0,
+          "segment": 0,
+          "fraction": 0.9946524064171123,
+          "point": [
+            -0.052098429352165763,
+            -0.003367654516445716,
+            0.01819259944799408
+          ],
+          "materialPoint": [
+            -0.0511486187995096,
+            -0.0035117298216554497,
+            0.017006367134076467
+          ],
+          "normal": [
+            -0.6222355889550651,
+            0.09438596164293465,
+            0.7771191427847353
+          ],
+          "weight": 0.03947204171558147,
+          "distanceMM": 1.5264484537941738,
+          "independentGlobalClosestDistanceMM": 1.5264484537941738,
+          "independentClosestTriangle": 20688,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.0,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9476,
+            20688
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9476,
+            20688
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.482534153247273e-16,
+          "reportedConeResidual": 3.1401849173675503e-16,
+          "reconstructedMaterialNormal": [
+            -0.622235588955065,
+            0.09438596164293488,
+            0.7771191427847353
+          ],
+          "forceWeightTimesConeResidual": 9.799069165733208e-18,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 1,
+          "segment": 0,
+          "fraction": 0.9996038819568231,
+          "point": [
+            -0.05235778035451625,
+            -0.0031208672214230455,
+            0.01784359172825479
+          ],
+          "materialPoint": [
+            -0.051236482108436926,
+            -0.0036107941736445003,
+            0.016946350316378447
+          ],
+          "normal": [
+            -0.7389798730144574,
+            0.32288123004283986,
+            0.5913175615230442
+          ],
+          "weight": 0.09465805145884883,
+          "distanceMM": 1.517359656231647,
+          "independentGlobalClosestDistanceMM": 1.5172162456030853,
+          "independentClosestTriangle": 20692,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.14341062856172704,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9478,
+            9473,
+            9284,
+            20693,
+            20691,
+            20692
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9284,
+            9473,
+            9478,
+            20691,
+            20692,
+            20693
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.5438405243138006e-16,
+          "reportedConeResidual": 1.5700924586837752e-16,
+          "reconstructedMaterialNormal": [
+            -0.7389798730144573,
+            0.3228812300428399,
+            0.5913175615230439
+          ],
+          "forceWeightTimesConeResidual": 2.407949872536007e-17,
+          "firstMomentError": 3.0665868333667484e-19
+        },
+        {
+          "contact": 2,
+          "segment": 1,
+          "fraction": 0.28,
+          "point": [
+            -0.052406232659693394,
+            -0.0030681568961111166,
+            0.017751812013383793
+          ],
+          "materialPoint": [
+            -0.051236482108436926,
+            -0.0036107941736445003,
+            0.016946350316378447
+          ],
+          "normal": [
+            -0.7693829209101339,
+            0.3569101575843769,
+            0.5297783125278778
+          ],
+          "weight": 0.08255223666951811,
+          "distanceMM": 1.5203749907428714,
+          "independentGlobalClosestDistanceMM": 1.5201614359694635,
+          "independentClosestTriangle": 20693,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.2135547734077609,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9478,
+            9473,
+            9284,
+            20693,
+            20691,
+            20692
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9284,
+            9473,
+            9478,
+            20691,
+            20692,
+            20693
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.5438405243138006e-16,
+          "reportedConeResidual": 2.5438405243138006e-16,
+          "reconstructedMaterialNormal": [
+            -0.7693829209101342,
+            0.35691015758437694,
+            0.5297783125278779
+          ],
+          "forceWeightTimesConeResidual": 2.099997250126639e-17,
+          "firstMomentError": 2.168404344971009e-19
+        },
+        {
+          "contact": 3,
+          "segment": 1,
+          "fraction": 0.48,
+          "point": [
+            -0.052426021391828476,
+            -0.0030446087948896054,
+            0.01770619837246104
+          ],
+          "materialPoint": [
+            -0.05128059933675947,
+            -0.0036552139420830392,
+            0.01691442871951244
+          ],
+          "normal": [
+            -0.753350415950724,
+            0.40159837990208264,
+            0.5207512765677043
+          ],
+          "weight": 0.048383256740717875,
+          "distanceMM": 1.520437277018675,
+          "independentGlobalClosestDistanceMM": 1.5202057309341108,
+          "independentClosestTriangle": 20693,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.23154608456412915,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9479,
+            9472,
+            9478,
+            20695,
+            20693
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9472,
+            9478,
+            9479,
+            20693,
+            20695
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 5.580240982766863e-06,
+          "reportedConeResidual": 5.580240982766863e-06,
+          "reconstructedMaterialNormal": [
+            -0.7533540159196017,
+            0.4015950043578917,
+            0.5207486717615847
+          ],
+          "forceWeightTimesConeResidual": 2.6999023214428496e-07,
+          "firstMomentError": 2.2351400383409363e-19
+        },
+        {
+          "contact": 4,
+          "segment": 1,
+          "fraction": 1.0,
+          "point": [
+            -0.05247747209537968,
+            -0.0029833837317136762,
+            0.017587602906061886
+          ],
+          "materialPoint": [
+            -0.05130539080307252,
+            -0.003678459874247068,
+            0.016895782379147614
+          ],
+          "normal": [
+            -0.7669478636471533,
+            0.45482098049593733,
+            0.4526906782205503
+          ],
+          "weight": 0.0831873162261475,
+          "distanceMM": 1.5282411593578646,
+          "independentGlobalClosestDistanceMM": 1.5282411593578646,
+          "independentClosestTriangle": 20695,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 1.3010426069826053e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.0,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9479,
+            20695
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9479,
+            20695
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.2237659599594665e-15,
+          "reportedConeResidual": 1.1970346188077032e-15,
+          "reconstructedMaterialNormal": [
+            -0.7669478636471541,
+            0.4548209804959366,
+            0.4526906782205497
+          ],
+          "forceWeightTimesConeResidual": 1.0180180589794309e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 5,
+          "segment": 2,
+          "fraction": 0.38,
+          "point": [
+            -0.05250858768069061,
+            -0.0029343256791003226,
+            0.01745612336181027
+          ],
+          "materialPoint": [
+            -0.051371792461518906,
+            -0.003737777165244143,
+            0.016844438735301916
+          ],
+          "normal": [
+            -0.7476334490131534,
+            0.5284040569225149,
+            0.40228519553237896
+          ],
+          "weight": 0.0925173408937591,
+          "distanceMM": 1.5205248249288863,
+          "independentGlobalClosestDistanceMM": 1.5202586727817282,
+          "independentClosestTriangle": 20697,
+          "globalClosestDistanceErrorM": 2.168404344971009e-19,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.2661521471582218,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9481,
+            9470,
+            9480,
+            20696,
+            20698,
+            20697
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9470,
+            9480,
+            9481,
+            20696,
+            20697,
+            20698
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.2412670766236366e-16,
+          "reportedConeResidual": 1.2412670766236366e-16,
+          "reconstructedMaterialNormal": [
+            -0.7476334490131533,
+            0.5284040569225149,
+            0.402285195532379
+          ],
+          "forceWeightTimesConeResidual": 1.1483872926818878e-17,
+          "firstMomentError": 4.84869951806108e-19
+        },
+        {
+          "contact": 6,
+          "segment": 2,
+          "fraction": 0.92,
+          "point": [
+            -0.052552804565079825,
+            -0.0028646116043339782,
+            0.01726928400945271
+          ],
+          "materialPoint": [
+            -0.05141844489654515,
+            -0.003775768348757234,
+            0.016806419125462234
+          ],
+          "normal": [
+            -0.742948869131992,
+            0.5967621131538436,
+            0.30315335749361805
+          ],
+          "weight": 0.021200606184360822,
+          "distanceMM": 1.5268341007907824,
+          "independentGlobalClosestDistanceMM": 1.5264849120183352,
+          "independentClosestTriangle": 20700,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.34918877244707536,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9469,
+            9481,
+            20700,
+            20698,
+            9264
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9264,
+            9469,
+            9481,
+            20698,
+            20700
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 7.301351988545593e-16,
+          "reportedConeResidual": 7.468261590855957e-16,
+          "reconstructedMaterialNormal": [
+            -0.7429488691319914,
+            0.5967621131538432,
+            0.3031533574936182
+          ],
+          "forceWeightTimesConeResidual": 1.547930881225549e-17,
+          "firstMomentError": 1.3552527156068805e-20
+        },
+        {
+          "contact": 7,
+          "segment": 2,
+          "fraction": 1.0,
+          "point": [
+            -0.05255935521461897,
+            -0.0028542835932574826,
+            0.017241604105399738
+          ],
+          "materialPoint": [
+            -0.05146552228532846,
+            -0.003811508365019455,
+            0.01676643379406088
+          ],
+          "normal": [
+            -0.7152846595064359,
+            0.6259531749377821,
+            0.3107257289959623
+          ],
+          "weight": 0.07917327151700927,
+          "distanceMM": 1.5292274407859945,
+          "independentGlobalClosestDistanceMM": 1.529038306468772,
+          "independentClosestTriangle": 20700,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.18913431722254043,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20702,
+            20699,
+            20700,
+            9260,
+            9468,
+            9264
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9260,
+            9264,
+            9468,
+            20699,
+            20700,
+            20702
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.2887833992611187e-16,
+          "reportedConeResidual": 2.5438405243138006e-16,
+          "reconstructedMaterialNormal": [
+            -0.7152846595064358,
+            0.625953174937782,
+            0.31072572899596246
+          ],
+          "forceWeightTimesConeResidual": 1.8121046951332398e-17,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 8,
+          "segment": 3,
+          "fraction": 0.5,
+          "point": [
+            -0.05258170040708833,
+            -0.002797592052914346,
+            0.017003838683887006
+          ],
+          "materialPoint": [
+            -0.0515601762163805,
+            -0.0038762219514410566,
+            0.016680750779062368
+          ],
+          "normal": [
+            -0.6719187264408719,
+            0.7094806313073453,
+            0.21251460857505203
+          ],
+          "weight": 0.049302499309353334,
+          "distanceMM": 1.520309154231796,
+          "independentGlobalClosestDistanceMM": 1.5200000106958078,
+          "independentClosestTriangle": 20704,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.3091435359879862,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20704,
+            20703,
+            9253,
+            9258,
+            9259
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9253,
+            9258,
+            9259,
+            20703,
+            20704
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.594436429147036e-16,
+          "reportedConeResidual": 1.594436429147036e-16,
+          "reconstructedMaterialNormal": [
+            -0.6719187264408718,
+            0.7094806313073452,
+            0.212514608575052
+          ],
+          "forceWeightTimesConeResidual": 7.860970094682954e-18,
+          "firstMomentError": 1.0842021724855044e-19
+        },
+        {
+          "contact": 9,
+          "segment": 3,
+          "fraction": 0.54,
+          "point": [
+            -0.052583488022485886,
+            -0.002793056729686895,
+            0.016984817450165987
+          ],
+          "materialPoint": [
+            -0.051607366572694505,
+            -0.0039052260816090064,
+            0.016635182926924945
+          ],
+          "normal": [
+            -0.6419659636117689,
+            0.7314406110620221,
+            0.22994419769419858
+          ],
+          "weight": 0.03880909844418798,
+          "distanceMM": 1.5205190074246582,
+          "independentGlobalClosestDistanceMM": 1.5202300544998175,
+          "independentClosestTriangle": 20704,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.28895292484079627,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20706,
+            20705,
+            20704,
+            9482,
+            9467,
+            9253
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9253,
+            9467,
+            9482,
+            20704,
+            20705,
+            20706
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.7755575615628914e-17,
+          "reportedConeResidual": 1.2412670766236366e-16,
+          "reconstructedMaterialNormal": [
+            -0.6419659636117689,
+            0.7314406110620221,
+            0.2299441976941986
+          ],
+          "forceWeightTimesConeResidual": 1.0771688664420459e-18,
+          "firstMomentError": 2.42434975903054e-19
+        },
+        {
+          "contact": 10,
+          "segment": 4,
+          "fraction": 0.04,
+          "point": [
+            -0.052604223523292575,
+            -0.002737330586508866,
+            0.016733791710826253
+          ],
+          "materialPoint": [
+            -0.0517474255487877,
+            -0.003979893377988717,
+            0.01648719557166361
+          ],
+          "normal": [
+            -0.5602410814118857,
+            0.8124840892896912,
+            0.1612437141396282
+          ],
+          "weight": 0.08534659499223358,
+          "distanceMM": 1.5293379991799634,
+          "independentGlobalClosestDistanceMM": 1.5292378916228446,
+          "independentClosestTriangle": 20709,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.10010755711865015,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9485,
+            20711
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9485,
+            20711
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.0796169701996884e-15,
+          "reportedConeResidual": 1.2539255187600815e-15,
+          "reconstructedMaterialNormal": [
+            -0.5602410814118864,
+            0.8124840892896912,
+            0.16124371413962746
+          ],
+          "forceWeightTimesConeResidual": 9.214163230237513e-17,
+          "firstMomentError": 4.543635057563099e-19
+        },
+        {
+          "contact": 11,
+          "segment": 4,
+          "fraction": 0.58,
+          "point": [
+            -0.05260662549371346,
+            -0.002689136584667232,
+            0.01629799076492797
+          ],
+          "materialPoint": [
+            -0.05199042870986299,
+            -0.004074085025718913,
+            0.016172414462863827
+          ],
+          "normal": [
+            -0.40511654102375216,
+            0.9105297798361219,
+            0.08255972517234812
+          ],
+          "weight": 0.05665753223183964,
+          "distanceMM": 1.521035853765206,
+          "independentGlobalClosestDistanceMM": 1.521035853765206,
+          "independentClosestTriangle": 20719,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.0,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9230,
+            20719
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9230,
+            20719
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 7.2377686124476805e-16,
+          "reportedConeResidual": 7.32242375526988e-16,
+          "reconstructedMaterialNormal": [
+            -0.4051165410237528,
+            0.9105297798361219,
+            0.08255972517234773
+          ],
+          "forceWeightTimesConeResidual": 4.1007410844635175e-17,
+          "firstMomentError": 1.0842021724855044e-19
+        },
+        {
+          "contact": 12,
+          "segment": 5,
+          "fraction": 0.007052186177715091,
+          "point": [
+            -0.05260602500664244,
+            -0.0026498795968834168,
+            0.015859086674323924
+          ],
+          "materialPoint": [
+            -0.05220993963014736,
+            -0.004125684745076424,
+            0.01578614098195576
+          ],
+          "normal": [
+            -0.2589177399154554,
+            0.964721638821922,
+            0.04768399674752436
+          ],
+          "weight": 0.04960384983079987,
+          "distanceMM": 1.529773033799884,
+          "independentGlobalClosestDistanceMM": 1.529773033799884,
+          "independentClosestTriangle": 20729,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.0,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            9218,
+            20729
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            9218,
+            20729
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.576213700060856e-16,
+          "reportedConeResidual": 1.5716250041522723e-16,
+          "reconstructedMaterialNormal": [
+            -0.2589177399154553,
+            0.9647216388219221,
+            0.04768399674752435
+          ],
+          "forceWeightTimesConeResidual": 7.818626767906813e-18,
+          "firstMomentError": 4.338925755574552e-19
+        },
+        {
+          "contact": 13,
+          "segment": 5,
+          "fraction": 0.10296191819464033,
+          "point": [
+            -0.05257245087313561,
+            -0.00262577000472614,
+            0.014499796603166333
+          ],
+          "materialPoint": [
+            -0.0525,
+            -0.004150000000000105,
+            0.014499796603166321
+          ],
+          "normal": [
+            -0.04747916347021677,
+            0.9988722285839008,
+            7.957703081942182e-15
+          ],
+          "weight": 0.013462015985921694,
+          "distanceMM": 1.5259509191028995,
+          "independentGlobalClosestDistanceMM": 1.5259509191028995,
+          "independentClosestTriangle": 20760,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.0,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20747,
+            20760
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20747,
+            20748,
+            20760
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [
+            20748
+          ],
+          "reconstructedConeResidual": 8.634765999172495e-16,
+          "reportedConeResidual": 8.634762970411969e-16,
+          "reconstructedMaterialNormal": [
+            -0.047479163470217425,
+            0.9988722285839013,
+            8.067270973167466e-15
+          ],
+          "forceWeightTimesConeResidual": 1.1624135791555324e-17,
+          "firstMomentError": 1.1175700191704681e-19
+        },
+        {
+          "contact": 14,
+          "segment": 5,
+          "fraction": 0.9421720733427362,
+          "point": [
+            -0.0522786772049508,
+            -0.0024148110733499665,
+            0.0026060084805374258
+          ],
+          "materialPoint": [
+            -0.05075119305379002,
+            -0.0023357525206115933,
+            0.002605988085953378
+          ],
+          "normal": [
+            -0.9986632726081417,
+            -0.05168817820163207,
+            1.3333900736704288e-05
+          ],
+          "weight": 0.026256837526134974,
+          "distanceMM": 1.5295287140895382,
+          "independentGlobalClosestDistanceMM": 1.5279119378290946,
+          "independentClosestTriangle": 20657,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 4.109684030751589e-17,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 3.205510508740075e-06,
+          "tieGapMicrometres": 1.6167762604435854,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20648,
+            20650
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20648,
+            20650
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 6.541095124747628e-16,
+          "reportedConeResidual": 5.844903723673064e-16,
+          "reconstructedMaterialNormal": [
+            -0.9986632726081421,
+            -0.05168817820163207,
+            1.3333900737184542e-05
+          ],
+          "forceWeightTimesConeResidual": 1.7174847193349206e-17,
+          "firstMomentError": 1.1866021645663622e-20
+        },
+        {
+          "contact": 15,
+          "segment": 5,
+          "fraction": 0.9844851904090268,
+          "point": [
+            -0.0522638650872272,
+            -0.0024041744885746974,
+            0.0020063216844384887
+          ],
+          "materialPoint": [
+            -0.05075449658369015,
+            -0.0022746320370251286,
+            0.0020063062360823145
+          ],
+          "normal": [
+            -0.9963372062937909,
+            -0.08551123464607134,
+            1.0197491200003179e-05
+          ],
+          "weight": 0.006389612528830422,
+          "distanceMM": 1.5149173332105603,
+          "independentGlobalClosestDistanceMM": 1.513627269392497,
+          "independentClosestTriangle": 20653,
+          "globalClosestDistanceErrorM": 1.4748035481867636e-08,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 5.83786945282448e-06,
+          "tieGapMicrometres": 1.2900638180631756,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20646,
+            20649
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20646,
+            20649
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 3.362216261903713e-16,
+          "reportedConeResidual": 3.1614149503551153e-16,
+          "reconstructedMaterialNormal": [
+            -0.9963372062937907,
+            -0.08551123464607131,
+            1.0197491199687032e-05
+          ],
+          "forceWeightTimesConeResidual": 2.1483259151697355e-18,
+          "firstMomentError": 2.4051112366651246e-21
+        },
+        {
+          "contact": 16,
+          "segment": 5,
+          "fraction": 1.0,
+          "point": [
+            -0.05225843397739521,
+            -0.002400274407490432,
+            0.0017864365258688788
+          ],
+          "materialPoint": [
+            -0.05075539718929632,
+            -0.0025336103774479535,
+            0.001995279530717829
+          ],
+          "normal": [
+            -0.9866828140540083,
+            0.08752966733349982,
+            -0.13709697949608635
+          ],
+          "weight": 0.14298310916270576,
+          "distanceMM": 1.5233231659557607,
+          "independentGlobalClosestDistanceMM": 1.523178262426036,
+          "independentClosestTriangle": 23210,
+          "globalClosestDistanceErrorM": 2.168404344971009e-19,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.14490352972466175,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            23205,
+            20657
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20657,
+            23205
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.8431519766945463e-15,
+          "reportedConeResidual": 2.8568362440521138e-15,
+          "reconstructedMaterialNormal": [
+            -0.9866828140540087,
+            0.08752966733349701,
+            -0.1370969794960865
+          ],
+          "forceWeightTimesConeResidual": 4.0652270944987898e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 17,
+          "segment": 6,
+          "fraction": 0.2,
+          "point": [
+            -0.05224655884147079,
+            -0.0024001203106935997,
+            0.0017291859659488342
+          ],
+          "materialPoint": [
+            -0.05085581410521139,
+            -0.002999265691755925,
+            0.0019081007413472495
+          ],
+          "normal": [
+            -0.9120556126927749,
+            0.3929217874206079,
+            -0.117332980554496
+          ],
+          "weight": 0.008502121151324954,
+          "distanceMM": 1.5248464204428631,
+          "independentGlobalClosestDistanceMM": 1.520548163886421,
+          "independentClosestTriangle": 20651,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 8.940560153363745e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 4.298256556442126,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20672,
+            23192
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20672,
+            23192
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 2.7018595191470222e-15,
+          "reportedConeResidual": 2.7018595191470222e-15,
+          "reconstructedMaterialNormal": [
+            -0.9120556126927759,
+            0.3929217874206055,
+            -0.11733298055449677
+          ],
+          "forceWeightTimesConeResidual": 2.2971536965648568e-17,
+          "firstMomentError": 3.031620732205212e-20
+        },
+        {
+          "contact": 18,
+          "segment": 6,
+          "fraction": 1.0,
+          "point": [
+            -0.05219905829777307,
+            -0.002399503923506269,
+            0.001500183726268656
+          ],
+          "materialPoint": [
+            -0.05101190588990016,
+            -0.0033208463473901376,
+            0.0017753688993556289
+          ],
+          "normal": [
+            -0.7770744030939757,
+            0.6030831503492666,
+            -0.18012797067902986
+          ],
+          "weight": 0.06221976135605231,
+          "distanceMM": 1.5277203870648464,
+          "independentGlobalClosestDistanceMM": 1.5248672470108944,
+          "independentClosestTriangle": 23229,
+          "globalClosestDistanceErrorM": 2.8189256484623115e-18,
+          "materialPointDistanceToCarrierTriangleM": 6.133173666733497e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 2.8531400539518694,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20683,
+            23183
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20683,
+            23183
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.6354606405429e-15,
+          "reportedConeResidual": 1.646960756567983e-15,
+          "reconstructedMaterialNormal": [
+            -0.7770744030939767,
+            0.6030831503492655,
+            -0.18012797067903052
+          ],
+          "forceWeightTimesConeResidual": 1.0175797076179569e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 19,
+          "segment": 6,
+          "fraction": 1.0,
+          "point": [
+            -0.05219905829777307,
+            -0.002399503923506269,
+            0.001500183726268656
+          ],
+          "materialPoint": [
+            -0.05097330719754776,
+            -0.0015447722292248553,
+            0.0018078473541062938
+          ],
+          "normal": [
+            -0.8034147865793991,
+            -0.5602312587094753,
+            -0.20165717807798314
+          ],
+          "weight": 0.05621491660737364,
+          "distanceMM": 1.525676550520114,
+          "independentGlobalClosestDistanceMM": 1.5248672470108944,
+          "independentClosestTriangle": 23229,
+          "globalClosestDistanceErrorM": 2.8189256484623115e-18,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.8093035092195457,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20621,
+            23234
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20621,
+            23234
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 9.688286336686901e-15,
+          "reportedConeResidual": 9.688286336686901e-15,
+          "reconstructedMaterialNormal": [
+            -0.8034147865794037,
+            -0.5602312587094677,
+            -0.20165717807798694
+          ],
+          "forceWeightTimesConeResidual": 5.446262084852116e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 20,
+          "segment": 7,
+          "fraction": 0.32,
+          "point": [
+            -0.05216979582871266,
+            -0.0023996834785198476,
+            0.0014198343661358083
+          ],
+          "materialPoint": [
+            -0.05078613543172995,
+            -0.002753451075589198,
+            0.0019684597512801285
+          ],
+          "normal": [
+            -0.9044000618762099,
+            0.23123263293291774,
+            -0.35859726371685835
+          ],
+          "weight": 0.05296728258329763,
+          "distanceMM": 1.5299207234818848,
+          "independentGlobalClosestDistanceMM": 1.5207555606747631,
+          "independentClosestTriangle": 23232,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 6.133173666733497e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 9.165162807121732,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            23200,
+            20662
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20662,
+            23200
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 7.639794664951527e-15,
+          "reportedConeResidual": 7.610090919279607e-15,
+          "reconstructedMaterialNormal": [
+            -0.9044000618762085,
+            0.23123263293292512,
+            -0.358597263716857
+          ],
+          "forceWeightTimesConeResidual": 4.046591628968572e-16,
+          "firstMomentError": 1.084731438893638e-19
+        },
+        {
+          "contact": 21,
+          "segment": 7,
+          "fraction": 0.52,
+          "point": [
+            -0.0521515067855499,
+            -0.002399795700403334,
+            0.0013696160160527786
+          ],
+          "materialPoint": [
+            -0.05105395327606451,
+            -0.0014144289240546964,
+            0.0017402762349341952
+          ],
+          "normal": [
+            -0.7216749075312611,
+            -0.647908708832974,
+            -0.24372039893725422
+          ],
+          "weight": 0.03309262261757394,
+          "distanceMM": 1.5208419996753861,
+          "independentGlobalClosestDistanceMM": 1.5199717040973721,
+          "independentClosestTriangle": 23235,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 1.0842021724855044e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.870295578013925,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20616,
+            23237
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20616,
+            23237
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 7.795513010265399e-15,
+          "reportedConeResidual": 7.81037163382904e-15,
+          "reconstructedMaterialNormal": [
+            -0.7216749075312651,
+            -0.6479087088329682,
+            -0.2437203989372576
+          ],
+          "forceWeightTimesConeResidual": 2.5797397015910063e-16,
+          "firstMomentError": 5.463198353652111e-20
+        },
+        {
+          "contact": 22,
+          "segment": 7,
+          "fraction": 1.0,
+          "point": [
+            -0.05210761308195929,
+            -0.0024000650329237022,
+            0.0012490919758535069
+          ],
+          "materialPoint": [
+            -0.05102198251902765,
+            -0.0014631152733230828,
+            0.0017669332139824499
+          ],
+          "normal": [
+            -0.7120415186494874,
+            -0.6145250074046638,
+            -0.33964082645293053
+          ],
+          "weight": 0.09531100738068424,
+          "distanceMM": 1.5246731187680365,
+          "independentGlobalClosestDistanceMM": 1.5234552270225556,
+          "independentClosestTriangle": 23181,
+          "globalClosestDistanceErrorM": 1.5178830414797062e-18,
+          "materialPointDistanceToCarrierTriangleM": 6.505213034913027e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 1.2178917454808147,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20618,
+            23235
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20618,
+            23235
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 3.360144595992222e-15,
+          "reportedConeResidual": 3.2728049099669922e-15,
+          "reconstructedMaterialNormal": [
+            -0.712041518649489,
+            -0.6145250074046611,
+            -0.33964082645293187
+          ],
+          "forceWeightTimesConeResidual": 3.202587663887809e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 23,
+          "segment": 7,
+          "fraction": 1.0,
+          "point": [
+            -0.05210761308195929,
+            -0.0024000650329237022,
+            0.0012490919758535069
+          ],
+          "materialPoint": [
+            -0.05115252277753077,
+            -0.0035165083336295613,
+            0.0016592850914944515
+          ],
+          "normal": [
+            -0.6261169113675219,
+            0.7318931287583054,
+            -0.2689053018740487
+          ],
+          "weight": 0.05086807433343773,
+          "distanceMM": 1.5254184755087985,
+          "independentGlobalClosestDistanceMM": 1.5234552270225556,
+          "independentClosestTriangle": 23181,
+          "globalClosestDistanceErrorM": 1.5178830414797062e-18,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 1.963248486242875,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20689,
+            23177
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20689,
+            23177
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 4.56981876806725e-15,
+          "reportedConeResidual": 4.5005133084051296e-15,
+          "reconstructedMaterialNormal": [
+            -0.6261169113675248,
+            0.7318931287583025,
+            -0.26890530187405076
+          ],
+          "forceWeightTimesConeResidual": 2.324578807843837e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 24,
+          "segment": 8,
+          "fraction": 0.4,
+          "point": [
+            -0.052065682658988144,
+            -0.0023999032282387323,
+            0.0011760530196857967
+          ],
+          "materialPoint": [
+            -0.05101037320812866,
+            -0.003318371663092784,
+            0.001776653007864295
+          ],
+          "normal": [
+            -0.6931460251797008,
+            0.6032664109599396,
+            -0.39448475912903774
+          ],
+          "weight": 0.06782533446734904,
+          "distanceMM": 1.5224922491417199,
+          "independentGlobalClosestDistanceMM": 1.5201159754191582,
+          "independentClosestTriangle": 20685,
+          "globalClosestDistanceErrorM": 2.168404344971009e-19,
+          "materialPointDistanceToCarrierTriangleM": 4.336808689942018e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 2.376273722561658,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20681,
+            23184
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20681,
+            23184
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 3.175315487452555e-15,
+          "reportedConeResidual": 2.9914279021231404e-15,
+          "reconstructedMaterialNormal": [
+            -0.6931460251796996,
+            0.6032664109599423,
+            -0.3944847591290365
+          ],
+          "forceWeightTimesConeResidual": 2.1536683497582298e-16,
+          "firstMomentError": 4.337338053226252e-19
+        },
+        {
+          "contact": 25,
+          "segment": 8,
+          "fraction": 1.0,
+          "point": [
+            -0.05200278702453142,
+            -0.0023996605212112778,
+            0.0010664945854342318
+          ],
+          "materialPoint": [
+            -0.05105275523043564,
+            -0.00338366275106748,
+            0.0017412790370937962
+          ],
+          "normal": [
+            -0.6229007136000466,
+            0.645173872043772,
+            -0.44243121027861426
+          ],
+          "weight": 0.10923446776691198,
+          "distanceMM": 1.525173712845957,
+          "independentGlobalClosestDistanceMM": 1.5229903245484515,
+          "independentClosestTriangle": 20612,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 1.454609855418324e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 2.18338829750548,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20683,
+            23183
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20683,
+            23183
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 6.35548137733442e-15,
+          "reportedConeResidual": 6.2685830808342686e-15,
+          "reconstructedMaterialNormal": [
+            -0.6229007136000437,
+            0.645173872043777,
+            -0.4424312102786116
+          ],
+          "forceWeightTimesConeResidual": 6.942376256556461e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 26,
+          "segment": 8,
+          "fraction": 1.0,
+          "point": [
+            -0.05200278702453142,
+            -0.0023996605212112778,
+            0.0010664945854342318
+          ],
+          "materialPoint": [
+            -0.05118951317176214,
+            -0.001240350316795292,
+            0.0016293959730568582
+          ],
+          "normal": [
+            -0.5336791325314663,
+            -0.7607519436667778,
+            -0.36938200241441305
+          ],
+          "weight": 0.08566793159239072,
+          "distanceMM": 1.523900417300522,
+          "independentGlobalClosestDistanceMM": 1.5229903245484515,
+          "independentClosestTriangle": 20612,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 3.0665868333667484e-19,
+          "tieGapMicrometres": 0.9100927520703638,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20608,
+            23243
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20608,
+            23243
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.066334393690002e-15,
+          "reportedConeResidual": 1.041481514324134e-15,
+          "reconstructedMaterialNormal": [
+            -0.5336791325314656,
+            -0.7607519436667785,
+            -0.36938200241441255
+          ],
+          "forceWeightTimesConeResidual": 9.135066189324852e-17,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 27,
+          "segment": 9,
+          "fraction": 0.52,
+          "point": [
+            -0.05193746986788743,
+            -0.0023998066728548473,
+            0.0009892610517730615
+          ],
+          "materialPoint": [
+            -0.05108113300207348,
+            -0.0013756842269013496,
+            0.0017177582164325325
+          ],
+          "normal": [
+            -0.5630813204079465,
+            -0.6734081436267402,
+            -0.47902077064030446
+          ],
+          "weight": 0.05662659333999182,
+          "distanceMM": 1.520804961516998,
+          "independentGlobalClosestDistanceMM": 1.5200016466094683,
+          "independentClosestTriangle": 20687,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 1.2643861424099487e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 9.314047621237762e-18,
+          "tieGapMicrometres": 0.8033149075296984,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20616,
+            23237
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20616,
+            23237
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 4.067115329856419e-15,
+          "reportedConeResidual": 4.149621000377914e-15,
+          "reconstructedMaterialNormal": [
+            -0.5630813204079484,
+            -0.6734081436267372,
+            -0.47902077064030635
+          ],
+          "forceWeightTimesConeResidual": 2.3030688585062616e-16,
+          "firstMomentError": 2.1852793414608445e-19
+        },
+        {
+          "contact": 28,
+          "segment": 9,
+          "fraction": 1.0,
+          "point": [
+            -0.05187717710790836,
+            -0.0023999415820642966,
+            0.0009179685591627507
+          ],
+          "materialPoint": [
+            -0.05105245265743181,
+            -0.0033831974669845276,
+            0.0017415315423212833
+          ],
+          "normal": [
+            -0.5408501836324277,
+            0.6448143081116188,
+            -0.5400884991548178
+          ],
+          "weight": 0.10057667114653719,
+          "distanceMM": 1.5248667291514681,
+          "independentGlobalClosestDistanceMM": 1.52302526581318,
+          "independentClosestTriangle": 20687,
+          "globalClosestDistanceErrorM": 2.168404344971009e-19,
+          "materialPointDistanceToCarrierTriangleM": 1.0842021724855044e-18,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 1.8414633382881316,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20683,
+            23183
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20683,
+            23183
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 3.992174279235972e-15,
+          "reportedConeResidual": 3.903187957565046e-15,
+          "reconstructedMaterialNormal": [
+            -0.5408501836324259,
+            0.644814308111622,
+            -0.5400884991548163
+          ],
+          "forceWeightTimesConeResidual": 4.015195996423805e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 29,
+          "segment": 9,
+          "fraction": 1.0,
+          "point": [
+            -0.05187717710790836,
+            -0.0023999415820642966,
+            0.0009179685591627507
+          ],
+          "materialPoint": [
+            -0.05118697911611878,
+            -0.0012431117591233855,
+            0.0016314220598612876
+          ],
+          "normal": [
+            -0.4527816916374922,
+            -0.7589001567648372,
+            -0.468037703374628
+          ],
+          "weight": 0.0868157124654029,
+          "distanceMM": 1.524350486198913,
+          "independentGlobalClosestDistanceMM": 1.52302526581318,
+          "independentClosestTriangle": 20687,
+          "globalClosestDistanceErrorM": 2.168404344971009e-19,
+          "materialPointDistanceToCarrierTriangleM": 9.199760500100244e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 2.168404344971009e-19,
+          "tieGapMicrometres": 1.3252203857330378,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20608,
+            23243
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20608,
+            23243
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 3.1912877566774988e-15,
+          "reportedConeResidual": 3.1490043025789915e-15,
+          "reconstructedMaterialNormal": [
+            -0.45278169163749393,
+            -0.7589001567648351,
+            -0.4680377033746297
+          ],
+          "forceWeightTimesConeResidual": 2.770539202780744e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 30,
+          "segment": 10,
+          "fraction": 0.5,
+          "point": [
+            -0.051795044575927,
+            -0.002399819968583966,
+            0.0008502593358417718
+          ],
+          "materialPoint": [
+            -0.051011102736076064,
+            -0.0033196112911035996,
+            0.0017760391526052413
+          ],
+          "normal": [
+            -0.5149439941489723,
+            0.6041787710831806,
+            -0.6081124036412354
+          ],
+          "weight": 0.060488166160342305,
+          "distanceMM": 1.522382722700796,
+          "independentGlobalClosestDistanceMM": 1.5199998216016946,
+          "independentClosestTriangle": 23240,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 2.3829010991013604,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20683,
+            20681,
+            20682,
+            23183,
+            23184
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20681,
+            20682,
+            20683,
+            23183,
+            23184
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.3453607536935863e-06,
+          "reportedConeResidual": 1.345360753605583e-06,
+          "reconstructedMaterialNormal": [
+            -0.514943366555406,
+            0.6041798375023185,
+            -0.6081118755578183
+          ],
+          "forceWeightTimesConeResidual": 8.1378404815021e-08,
+          "firstMomentError": 4.84869951806108e-19
+        },
+        {
+          "contact": 31,
+          "segment": 10,
+          "fraction": 1.0,
+          "point": [
+            -0.051712912043945646,
+            -0.0023996983551036358,
+            0.0007825501125207929
+          ],
+          "materialPoint": [
+            -0.05111015016048864,
+            -0.0034630014906681847,
+            0.001693897951356672
+          ],
+          "normal": [
+            -0.39535015133311396,
+            0.6974181133475844,
+            -0.5977509791004777
+          ],
+          "weight": 0.08736805096188283,
+          "distanceMM": 1.5246279315298084,
+          "independentGlobalClosestDistanceMM": 1.5236811636625598,
+          "independentClosestTriangle": 23237,
+          "globalClosestDistanceErrorM": 1.0842021724855044e-18,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 0.9467678672484513,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20687,
+            23179
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20687,
+            23179
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 4.611102534756203e-16,
+          "reportedConeResidual": 4.611102534756203e-16,
+          "reconstructedMaterialNormal": [
+            -0.39535015133311435,
+            0.6974181133475842,
+            -0.5977509791004778
+          ],
+          "forceWeightTimesConeResidual": 4.0286304124704706e-17,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 32,
+          "segment": 10,
+          "fraction": 1.0,
+          "point": [
+            -0.051712912043945646,
+            -0.0023996983551036358,
+            0.0007825501125207929
+          ],
+          "materialPoint": [
+            -0.0510892865467972,
+            -0.0013646599814108825,
+            0.001711042194319815
+          ],
+          "normal": [
+            -0.4092264513909509,
+            -0.6791978241052002,
+            -0.6092815664475095
+          ],
+          "weight": 0.1142911464722175,
+          "distanceMM": 1.5239129705050956,
+          "independentGlobalClosestDistanceMM": 1.5236811636625598,
+          "independentClosestTriangle": 23237,
+          "globalClosestDistanceErrorM": 1.0842021724855044e-18,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 6.321930712049743e-18,
+          "tieGapMicrometres": 0.23180684253576792,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20614,
+            23240
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20614,
+            23240
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 6.854896728262034e-15,
+          "reportedConeResidual": 6.706519033689664e-15,
+          "reconstructedMaterialNormal": [
+            -0.4092264513909546,
+            -0.6791978241051955,
+            -0.6092815664475127
+          ],
+          "forceWeightTimesConeResidual": 7.834540060217206e-16,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 33,
+          "segment": 11,
+          "fraction": 0.9400000000000001,
+          "point": [
+            -0.0514933781687099,
+            -0.002399931421791984,
+            0.000657396704832915
+          ],
+          "materialPoint": [
+            -0.051011488634064385,
+            -0.003320204708855143,
+            0.0017757171104597254
+          ],
+          "normal": [
+            -0.3157125248588322,
+            0.602922002098622,
+            -0.7326736388274457
+          ],
+          "weight": 0.013440456773967964,
+          "distanceMM": 1.5263554553655632,
+          "independentGlobalClosestDistanceMM": 1.5242439925682807,
+          "independentClosestTriangle": 23189,
+          "globalClosestDistanceErrorM": 2.168404344971009e-19,
+          "materialPointDistanceToCarrierTriangleM": 4.84869951806108e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 2.1114627972826545,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            20683,
+            23183
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20683,
+            23183
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 3.158286935661542e-15,
+          "reportedConeResidual": 3.158286935661542e-15,
+          "reconstructedMaterialNormal": [
+            -0.31571252485883394,
+            0.6029220020986198,
+            -0.7326736388274472
+          ],
+          "forceWeightTimesConeResidual": 4.2448819038546696e-17,
+          "firstMomentError": 0.0
+        },
+        {
+          "contact": 34,
+          "segment": 12,
+          "fraction": 0.021505376344086023,
+          "point": [
+            -0.05144217471508416,
+            -0.0023999474532624653,
+            0.0006354424219335591
+          ],
+          "materialPoint": [
+            -0.05075060936391251,
+            -0.0023660818835225944,
+            0.001999466841384588
+          ],
+          "normal": [
+            -0.4520931053052201,
+            -0.02213874735148304,
+            -0.8916959683665674
+          ],
+          "weight": 0.13277477408318714,
+          "distanceMM": 1.5296967440030993,
+          "independentGlobalClosestDistanceMM": 1.5230972016969164,
+          "independentClosestTriangle": 20674,
+          "globalClosestDistanceErrorM": 1.0842021724855044e-18,
+          "materialPointDistanceToCarrierTriangleM": 0.0,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 7.37257477290143e-18,
+          "tieGapMicrometres": 6.599542306182744,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            23210,
+            20651
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20651,
+            23210
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 4.852595531424842e-15,
+          "reportedConeResidual": 4.849101671916473e-15,
+          "reconstructedMaterialNormal": [
+            -0.4520931053052198,
+            -0.02213874735148788,
+            -0.8916959683665673
+          ],
+          "forceWeightTimesConeResidual": 6.443022754020169e-16,
+          "firstMomentError": 8.705887703015845e-19
+        },
+        {
+          "contact": 35,
+          "segment": 12,
+          "fraction": 0.1827956989247312,
+          "point": [
+            -0.051163244816993365,
+            -0.0023999561148126077,
+            0.0005306991655708844
+          ],
+          "materialPoint": [
+            -0.05080389387513252,
+            -0.0019692447856454577,
+            0.001953017891371263
+          ],
+          "normal": [
+            -0.23503381650722788,
+            -0.28170714394914925,
+            -0.9302688805641409
+          ],
+          "weight": 0.024474399352501716,
+          "distanceMM": 1.5289329305929755,
+          "independentGlobalClosestDistanceMM": 1.5260021602088532,
+          "independentClosestTriangle": 20651,
+          "globalClosestDistanceErrorM": 0.0,
+          "materialPointDistanceToCarrierTriangleM": 8.940560153363745e-19,
+          "carrierTriangleClosestPointCoordinateDifferenceM": 0.0,
+          "tieGapMicrometres": 2.9307703841223267,
+          "allSuppliedIncidentTrianglesIndependentlyLocal": true,
+          "suppliedIncidentTriangleIDs": [
+            23221,
+            20636
+          ],
+          "independentlyNearbyIncidentTriangleIDs": [
+            20636,
+            23221
+          ],
+          "nonemptyMaterialConeWitness": true,
+          "materialConeWitnessPasses": true,
+          "additionalNearbyIncidentTrianglesNotUsed": [],
+          "reconstructedConeResidual": 1.0638028178764803e-15,
+          "reportedConeResidual": 1.0579936123048482e-15,
+          "reconstructedMaterialNormal": [
+            -0.23503381650722796,
+            -0.2817071439491503,
+            -0.930268880564141
+          ],
+          "forceWeightTimesConeResidual": 2.603593499702563e-17,
+          "firstMomentError": 2.2351400383409363e-19
+        }
+      ]
+    }
+  ],
+  "independentClosestDistanceErrorsRecordedWithoutExactProjectionClaim": true,
+  "falseTangentialDirectionRegressions": [
+    {
+      "originalContact": 0,
+      "residualAgainstCurrentIncidentMeshCone": 0.04739799405406031,
+      "rejected": true,
+      "incidentTriangleIDs": [
+        9305,
+        9474,
+        9475,
+        20684,
+        20685,
+        20686
+      ]
+    },
+    {
+      "originalContact": 1,
+      "residualAgainstCurrentIncidentMeshCone": 0.18261455080551867,
+      "rejected": true,
+      "incidentTriangleIDs": [
+        9471,
+        9479,
+        9480,
+        20694,
+        20695,
+        20697
+      ]
+    }
+  ],
+  "tieInterpretation": "Independent global-nearest calculations verify the unchanged 10 micrometre near-tie activity; small differences from reported generic projections are recorded. Nonempty supplied incident cones establish local outward directions, including genuine opposing wall components near the bore/rim. The force-weighted actual-facet reconstruction is checked separately against the unchanged nodal tolerance. This remains numerical near-contact activity, not exact simultaneous contact of a physical 1.5 mm tube.",
+  "blockingFindings": [],
+  "frozenHelperReview": {
+    "emptyConeExplicitlyRejected": true,
+    "residualIndependentlyRecomputed": true,
+    "finiteTriangleIncidenceMethod": "Orthonormal plane/barycentric membership with 10 nm plane proximity and 1e-6 barycentric tolerance; audited against independent stdlib triangle calculations.",
+    "sharedImplementationOrFullSolverApproval": false
+  },
+  "priorV3FailureSHA256": "028f83194fb0a3f8b211f1c63529f5be07ff6be8d184eaa8e0e5bed5be6e1979",
+  "limits": [
+    "Material direction, local mapping and tie-distance arithmetic pass for two frozen one-lead trials only; final sixteen routes, settled lengths, caches and app proof remain pending.",
+    "The tie tolerance is a distance to the global closest material feature. It is distinct from the 20 micrometre proposal margin, 10 micrometre contact-envelope allowance and unchanged full-radius continuous-clearance gate.",
+    "Cone incidence uses a separately documented 10 nanometre mesh proximity, not exact native BRep incidence. No fresh native-surface normal query was performed.",
+    "Some generic carrier-triangle foot coordinates differ from independent exact triangle projections. The material points themselves lie on the retained triangles and pass the global near-tie distance rule; do not claim exact per-triangle projections.",
+    "Positive cone membership is a local unilateral direction check. Barycentric stationarity is a discrete frictionless envelope approximation; it does not prove exact continuum rope curvature, mechanical board equilibrium, load capacity or safety.",
+    "The frozen helper also contains route generation and metadata validation code, which was read but not executed or approved as a complete shared implementation in this review."
+  ],
+  "inputBytesUnchanged": true,
+  "packetConfigUnchanged": true,
+  "packetFinalReady": false,
+  "canonicalMutation": false,
+  "newSolveOrResource": false
+}

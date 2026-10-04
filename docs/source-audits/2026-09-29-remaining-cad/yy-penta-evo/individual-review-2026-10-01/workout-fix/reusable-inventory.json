@@ -1,0 +1,124 @@
+[
+  {
+    "package": "metolius-rock-rings-3d",
+    "presentation": "primary",
+    "count": 2,
+    "instances": [
+      {
+        "id": "left-ring",
+        "slots": [
+          "jug",
+          "pocket-25",
+          "pocket-32",
+          "pocket-40"
+        ]
+      },
+      {
+        "id": "right-ring",
+        "slots": [
+          "jug",
+          "pocket-25",
+          "pocket-32",
+          "pocket-40"
+        ]
+      }
+    ]
+  },
+  {
+    "package": "trango-rock-prodigy-pivot",
+    "presentation": "primary",
+    "count": 2,
+    "instances": [
+      {
+        "id": "left-half",
+        "slots": [
+          "large-crimp",
+          "lower-sloper",
+          "medium-crimp",
+          "outer-sloped-crimp",
+          "outer-wedge-pinch",
+          "three-finger-pocket",
+          "two-finger-pocket",
+          "upper-sloped-crimp",
+          "variable-edge"
+        ]
+      },
+      {
+        "id": "right-half",
+        "slots": [
+          "large-crimp",
+          "lower-sloper",
+          "medium-crimp",
+          "outer-sloped-crimp",
+          "outer-wedge-pinch",
+          "three-finger-pocket",
+          "two-finger-pocket",
+          "upper-sloped-crimp",
+          "variable-edge"
+        ]
+      }
+    ]
+  },
+  {
+    "package": "yy-penta-evo",
+    "presentation": "front-pair",
+    "count": 2,
+    "instances": [
+      {
+        "id": "left-penta",
+        "slots": [
+          "duo",
+          "edge-10",
+          "edge-15",
+          "edge-20",
+          "edge-25",
+          "mono",
+          "tray"
+        ]
+      },
+      {
+        "id": "right-penta",
+        "slots": [
+          "duo",
+          "edge-10",
+          "edge-15",
+          "edge-20",
+          "edge-25",
+          "mono",
+          "tray"
+        ]
+      }
+    ]
+  },
+  {
+    "package": "soill-split-palm",
+    "presentation": "primary",
+    "count": 2,
+    "instances": [
+      {
+        "id": "left-half",
+        "slots": [
+          "bottom-crimp",
+          "flat-rail",
+          "large-sloper",
+          "outer-crimp",
+          "sloping-rail",
+          "small-sloper-pinch",
+          "top-jug"
+        ]
+      },
+      {
+        "id": "right-half",
+        "slots": [
+          "bottom-crimp",
+          "flat-rail",
+          "large-sloper",
+          "outer-crimp",
+          "sloping-rail",
+          "small-sloper-pinch",
+          "top-jug"
+        ]
+      }
+    ]
+  }
+]

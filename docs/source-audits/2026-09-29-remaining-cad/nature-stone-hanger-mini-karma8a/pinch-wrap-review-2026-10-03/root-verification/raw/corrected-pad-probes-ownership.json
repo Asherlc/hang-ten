@@ -1,0 +1,24 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-corrected-pad-probes-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-corrected-pad-probes-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/placid-badger-corrected-pad-probes-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 39471,
+      "pgid": 39471,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/root/check-finger-probes.py",
+        ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3/assets/primary.usdz",
+        ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3/assets/primary.model.json",
+        ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/corrected-finger-probes.json",
+        "corrected"
+      ]
+    }
+  ]
+}

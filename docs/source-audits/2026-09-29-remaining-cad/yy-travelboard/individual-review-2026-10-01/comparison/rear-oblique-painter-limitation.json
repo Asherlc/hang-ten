@@ -1,0 +1,1 @@
+{"status":"unsuitable for final visual comparison","files":["rear-oblique-raking.png","rear-depth-cue-comparison.png"],"reason":"Existing preview._render painter sorting shows overlapping triangle artifacts at oblique angle. Raw output retained unchanged; depth-buffered render follows from same USDZ geometry."}
