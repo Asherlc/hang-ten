@@ -1,0 +1,42 @@
+import Foundation
+import simd
+import Darwin
+let root=URL(fileURLWithPath:CommandLine.arguments[1])
+let data=try Data(contentsOf:URL(fileURLWithPath:"Hangboards/clavellium-training-block/assets/primary.physics.json"))
+let raw=try JSONSerialization.jsonObject(with:data) as! [String:Any]
+let input=try RopePhysicsDescriptor.decode(data).validated(modelSHA256:raw["modelSHA256"] as! String),collider=try RopeTriangleCollider(input:input)
+let initial=try Data(contentsOf:URL(fileURLWithPath:CommandLine.arguments[2])),target=simd_quatd(angle:Double.pi/6,axis:SIMD3<Double>(0,0,1))
+var baseline=try RopeDynamicsSolver.restoreBundle(input:input,collider:collider,data:initial,strict:false)
+baseline.woodMajorizerExperiment=true;baseline.woodResidualExperiment=true;baseline.woodFeatureIdentityExperiment=true;baseline.preconditionedResidualExperiment=true;baseline.stationaryResidualExperiment=true
+SolverCollection.collect=false;ResidualStopTrace.enabled=true
+_ = try baseline.step(dt:1.0/240,targetOrientation:target)
+var candidate=baseline;candidate.retainedCorrectionExperiment=true
+func bytes(_ x:RopeDynamicsSolver)throws->Data {try JSONSerialization.data(withJSONObject:x.bundleCheckpoint(),options:.sortedKeys)}
+let checkpoint=try bytes(baseline);try checkpoint.write(to:root.appendingPathComponent("input.json"))
+var strict=try RopeDynamicsSolver.restoreBundle(input:input,collider:collider,data:checkpoint,strict:true)
+func diff(_ a:RopeDynamicsSolver,_ b:RopeDynamicsSolver)->Double {max(abs(a.state.boardHeight-b.state.boardHeight),zip(a.state.ropes,b.state.ropes).flatMap{zip($0.positions,$1.positions).map{simd_distance($0,$1)}}.max() ?? 0)}
+var result:[String:Any]=["owner":"strong-owl-live-physics","adopted":false,"checkpoint":2,"pass":false]
+func save()throws{try JSONSerialization.data(withJSONObject:result,options:[.sortedKeys,.prettyPrinted]).write(to:root.appendingPathComponent("result.json"))}
+do {
+ alarm(10);let t=DispatchTime.now().uptimeNanoseconds,f=try candidate.step(dt:1.0/240,targetOrientation:target);alarm(0)
+ let seconds=Double(DispatchTime.now().uptimeNanoseconds-t)/1e9
+ let u=DispatchTime.now().uptimeNanoseconds,b=try baseline.step(dt:1.0/240,targetOrientation:target),control=Double(DispatchTime.now().uptimeNanoseconds-u)/1e9
+ let sf=try strict.step(dt:1.0/240,targetOrientation:target)
+ let m=try RopeSimulationMetrics.measure(state:candidate.state,input:input,collider:collider,boardHistory:(candidate.foundationCheckpoint()["history"] as! [[Double]]).map{$0[1]})
+ result["candidateSeconds"]=seconds;result["controlSeconds"]=control;result["candidateQPs"]=candidate.reviewStepCorrections;result["controlQPs"]=baseline.reviewStepCorrections
+ result["currentDifference"]=diff(candidate,baseline);result["strictDifference"]=diff(candidate,strict);result["retainedStepAccepted"]=candidate.reviewRetainedStepAccepted
+ result["feasibilitySolves"]=RetainedCorrectionTrace.feasibilitySolves
+ result["attempts"]=RetainedCorrectionTrace.attempts;result["rejections"]=RetainedCorrectionTrace.rejections;result["reason"]=RetainedCorrectionTrace.reason
+ result["omittedWoodRows"]=RetainedCorrectionTrace.omittedWoodRows;result["omittedWoodDeficit"]=RetainedCorrectionTrace.omittedWoodDeficit
+ result["meritBefore"]=RetainedCorrectionTrace.meritBefore.isFinite ? RetainedCorrectionTrace.meritBefore as Any:NSNull()
+ result["meritAfter"]=RetainedCorrectionTrace.meritAfter.isFinite ? RetainedCorrectionTrace.meritAfter as Any:NSNull()
+ result["beforeParts"]=RetainedCorrectionTrace.beforeParts;result["afterParts"]=RetainedCorrectionTrace.afterParts
+ result["rejectedGeometryAccepted"]=RetainedCorrectionTrace.rejectedGeometryAccepted
+ result["rejectedClearanceMargin"]=RetainedCorrectionTrace.rejectedClearanceMargin.isFinite ? RetainedCorrectionTrace.rejectedClearanceMargin as Any:NSNull()
+ result["remainingEstimate"]=RetainedCorrectionTrace.remaining.isFinite ? RetainedCorrectionTrace.remaining as Any:NSNull()
+ result["completeFallbackCheckpointIdentity"]=try bytes(candidate)==bytes(baseline)
+ result["uncachedGeometryAccepted"]=m.geometryAccepted;result["strain"]=m.maximumLocalStrain;result["materialError"]=m.totalLengthError;result["clearanceMargin"]=m.minimumClearanceMargin
+ result["pass"]=candidate.reviewRetainedStepAccepted && candidate.reviewStepCorrections==0 && baseline.reviewStepCorrections>0 && diff(candidate,baseline)<=0.00005 && diff(candidate,strict)<=0.00005 && m.geometryAccepted && [f,b,sf].allSatisfy{$0.metrics.geometryAccepted} && [candidate,baseline,strict].allSatisfy{$0.reviewStepCaps==0 && $0.reviewStepRetries==0}
+ try save();print(result)
+ if !(result["pass"] as! Bool) {exit(3)}
+} catch {result["failure"]=String(describing:error);try save();print("FAIL",error);exit(3)}
