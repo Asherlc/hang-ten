@@ -496,7 +496,9 @@ struct PlanDetailView: View {
     }
 
     private func stepsCard(for currentPlan: TrainingPlan) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
+        let groups = PlanFlowPresentation.groups(for: currentPlan.steps)
+
+        return VStack(alignment: .leading, spacing: 0) {
             HStack {
                 SectionLabel(title: "Session flow")
                 Spacer()
@@ -506,12 +508,11 @@ struct PlanDetailView: View {
             }
             .padding(.bottom, 14)
 
-            ForEach(Array(currentPlan.steps.enumerated()), id: \.element.id) { index, step in
-                StepRow(step: step, isLast: index == currentPlan.steps.count - 1)
-            }
-
+            PlanFlowRows(groups: groups)
         }
         .hangCard()
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("plan.sessionFlow")
     }
 
     @ViewBuilder
@@ -670,20 +671,79 @@ private struct FullRowSwitchToggleStyle: ToggleStyle {
     }
 }
 
+private struct PlanFlowRows: View {
+    let groups: [PlanFlowGroup]
+    var depth = 0
+
+    private var isNested: Bool { depth > 0 }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(Array(groups.enumerated()), id: \.element.id) { index, group in
+                let isLast = index == groups.count - 1
+                if group.repeatCount > 1 {
+                    VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                                Label("Repeat \(group.repeatCount) times", systemImage: "repeat")
+                                    .font(.system(.subheadline, design: .rounded, weight: .bold))
+                                    .foregroundStyle(Color.hangGreenDark)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .layoutPriority(1)
+                                Spacer(minLength: 0)
+                                Text("\(group.durationLabel) total")
+                                    .font(.system(.caption, design: .rounded, weight: .semibold))
+                                    .foregroundStyle(Color.hangMuted)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                            if !isNested, let first = group.sourceSteps.first, let last = group.sourceSteps.last {
+                                Text("Steps \(first.number)–\(last.number)")
+                                    .font(.system(.caption2, design: .rounded, weight: .medium))
+                                    .foregroundStyle(Color.hangMuted)
+                            }
+                        }
+                        PlanFlowRows(groups: group.children, depth: depth + 1)
+                    }
+                    .padding(14)
+                    .background(
+                        isNested ? Color.white.opacity(0.72) : Color.hangBackground,
+                        in: RoundedRectangle(cornerRadius: 14)
+                    )
+                    .accessibilityElement(children: .contain)
+                    .accessibilityIdentifier("plan.flow.repeat.\(depth).\(group.id)")
+                    .padding(.bottom, isLast ? 0 : 14)
+                } else if let step = group.sourceSteps.first {
+                    StepRow(step: step, title: group.title, isLast: isLast, showsNumber: !isNested)
+                }
+            }
+        }
+    }
+}
+
 private struct StepRow: View {
     let step: WorkoutStep
+    let title: String
     let isLast: Bool
+    let showsNumber: Bool
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(spacing: 0) {
-                Text("\(step.number)")
-                    .font(.system(.caption, design: .rounded, weight: .bold))
-                    .foregroundStyle(step.phase.textTint)
-                    .fixedSize()
-                    .frame(minWidth: 31, minHeight: 31)
-                    .padding(2)
-                    .background(step.phase.tint.opacity(0.17), in: Circle())
+                if showsNumber {
+                    Text("\(step.number)")
+                        .font(.system(.caption, design: .rounded, weight: .bold))
+                        .foregroundStyle(step.phase.textTint)
+                        .fixedSize()
+                        .frame(minWidth: 31, minHeight: 31)
+                        .padding(2)
+                        .background(step.phase.tint.opacity(0.17), in: Circle())
+                } else {
+                    Circle()
+                        .fill(step.phase.textTint)
+                        .frame(width: 8, height: 8)
+                        .frame(width: 20, height: 24)
+                        .accessibilityHidden(true)
+                }
                 if !isLast {
                     Rectangle()
                         .fill(Color.hangLine)
@@ -693,7 +753,7 @@ private struct StepRow: View {
 
             VStack(alignment: .leading, spacing: 5) {
                 HStack(alignment: .firstTextBaseline) {
-                    Text(step.title)
+                    Text(title)
                         .font(.system(.subheadline, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
                     Spacer()

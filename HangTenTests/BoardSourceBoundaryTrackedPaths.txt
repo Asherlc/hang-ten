@@ -105,6 +105,7 @@ HangTen/Views/MotherboardViews.swift
 HangTen/Views/MotherboardWorkoutPreparationView.swift
 HangTen/Views/OrbitPanGestureDelegate.swift
 HangTen/Views/PlanDetailView.swift
+HangTen/Views/PlanFlowPresentation.swift
 HangTen/Views/PlansView.swift
 HangTen/Views/ReportProblemView.swift
 HangTen/Views/RootView.swift
