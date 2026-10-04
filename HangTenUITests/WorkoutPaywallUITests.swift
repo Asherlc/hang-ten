@@ -1,6 +1,46 @@
 import XCTest
 
 final class CustomRoutineEditorUITests: XCTestCase {
+    func testFirstInvalidSaveRevealsValidationFromSteps() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = ["HANGTEN_REVIEW_PLANS": "1", "HANGTEN_REVIEW_PORTRAIT": "1"]
+        defer { app.terminate() }
+        app.launch()
+        let create = app.buttons["customRoutine.create"]
+        XCTAssertTrue(create.waitForExistence(timeout: 30))
+        create.tap()
+        let mode = app.segmentedControls["customRoutine.targetMode"]
+        XCTAssertTrue(mode.waitForExistence(timeout: 10))
+        mode.buttons["Generic"].tap()
+        app.buttons["Add step"].tap()
+        let step = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "New step")).firstMatch
+        XCTAssertTrue(step.waitForExistence(timeout: 5))
+        step.tap()
+        XCTAssertTrue(app.textFields["Step title"].waitForExistence(timeout: 5))
+        let editor = app.collectionViews.firstMatch
+        XCTAssertTrue(editor.waitForExistence(timeout: 5))
+        for _ in 0..<3 { editor.swipeUp() }
+        XCTAssertFalse(app.textFields["customRoutine.name"].isHittable)
+        let beforeSave = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        beforeSave.name = "Editor scrolled into steps before first Save"
+        beforeSave.lifetime = .keepAlways
+        add(beforeSave)
+
+        app.buttons["customRoutine.save"].tap()
+        let issues = app.staticTexts["customRoutine.validationErrors"]
+        let visible = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"), object: issues
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [visible], timeout: 5), .completed,
+                       "The first invalid Save must reveal feedback above the scrolled steps")
+        XCTAssertTrue(issues.label.contains("A routine name is required."))
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "First failed Save reveals validation from scrolled steps"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
     func testValidationRemainsVisibleWhileCorrectingRoutine() {
         continueAfterFailure = false
         let app = XCUIApplication()

@@ -10,6 +10,7 @@ struct CustomRoutineEditorView: View {
     @State private var selectedBoardID: String
     @State private var persistenceError: String?
     @State private var hasAttemptedSave = false
+    @State private var validationScrollRequest = 0
     @State private var editMode = EditMode.inactive
 
     init(
@@ -65,6 +66,12 @@ struct CustomRoutineEditorView: View {
                 .onChange(of: draft.steps.count) { _, count in
                     if count < 2 { editMode = .inactive }
                 }
+                .onChange(of: validationScrollRequest) { _, _ in
+                    guard !validationIssues.isEmpty else { return }
+                    withAnimation {
+                        scrollProxy.scrollTo("customRoutine.validation", anchor: .top)
+                    }
+                }
                 .navigationTitle(isExistingRoutine ? "Edit routine" : "Create routine")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -77,9 +84,7 @@ struct CustomRoutineEditorView: View {
                         Button("Save") {
                             save()
                             if !validationIssues.isEmpty {
-                                withAnimation {
-                                    scrollProxy.scrollTo("customRoutine.validation", anchor: .top)
-                                }
+                                validationScrollRequest += 1
                             }
                         }
                         .buttonStyle(.borderedProminent)
