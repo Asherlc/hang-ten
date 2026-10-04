@@ -1,0 +1,66 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "accuracyPass": true,
+  "hostRealtimePass": false,
+  "measuredSteps": 540,
+  "candidateQPs": 196,
+  "stationaryAcceptedSteps": 378,
+  "maxPropagatedDifference": 4.5305383979492165e-05,
+  "maxStrictDifference": 1.6543252002025042e-05,
+  "strictSettledContinuationCount": 192,
+  "engineSeconds": 1.383432874630671,
+  "simulatedSeconds": 2.25,
+  "p95Seconds": 0.007075500005157664,
+  "cleanup": [
+    {
+      "group": 35339,
+      "absent": true
+    },
+    {
+      "group": 35613,
+      "absent": true
+    },
+    {
+      "group": 36045,
+      "absent": true
+    },
+    {
+      "group": 36231,
+      "absent": true
+    },
+    {
+      "group": 37107,
+      "absent": true
+    },
+    {
+      "group": 40016,
+      "absent": true
+    }
+  ],
+  "limits": [
+    "Empirical old-factor displacement estimate, not certified error",
+    "Stationary acceptance deliberately reconstructs velocity as zero; every settled frame mandatory strictcontinuation",
+    "Internal stationary status/context stamp not persisted; restoredsolverineligible",
+    "Changed target/dt, failedsource/compression/inactivechecks, or nonquietoldstate fallback unchanged",
+    "540host includes192frames theapp sleeps through; no sleeping saving claim",
+    "Moving p95 fails4ms gate; simulator/video stillrequired and no productadoption"
+  ],
+  "evidenceSHA256": {
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-140/result.json": "8761e16f26bf019dcdcfd4960e8e0836c9ab6921cea6d54037f5ac544e087968",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-140/provenance.json": "83f0cc9fbd91c97ea525023bfe9cfdc4a2dd3c9e1e47180a9977a404dfd1bf94",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-140/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-140/run.log": "93f8df2505bc2bedbdca0802e2af8bbcdca5522912190976a2e02545585aaecb",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-140/resources.jsonl": "14b9cb1cb1596f7b9814393640dae293184675e2a4efa762bb02f2d60798d899",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-3/result.json": "eb8a1a14e178cde3d4959142727e5acbd1f97c749fbc0f44f8ff282932591fc0",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-3/provenance.json": "f4afff1948ab5e698e5feaea3912f0adcfb7a20ed82ddde4a9c7518906f15746",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-3/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-3/run.log": "8bb0c7d252d5a92865573dccd184121f7112c8db1b980955fc415711dda7a336",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-3/resources.jsonl": "23ace494b5d7c28c8357a6980fc6ae37a1c9b375405cb74725ecd1bb90915afe",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-540/result.json": "ff90c2336196793080968de46cd8bc473e99afc597c25282fddba6adfb954cf1",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-540/provenance.json": "1b7406b5cf466df059287b45268673620c1d79642b2b75d4a06ffcc464b91c4b",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-540/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-540/run.log": "f10f26f16ed06a46b7ba7b716885cf7d0e2e36469fec87254f3d9305d8f1bc14",
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-540/resources.jsonl": "398e5218548edc8686e72f79f591b01562b8c8ef5b4cb27150ab7d612c720444"
+  }
+}

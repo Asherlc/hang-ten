@@ -1,0 +1,34 @@
+import Foundation
+import simd
+import Darwin
+let root=URL(fileURLWithPath:CommandLine.arguments[1])
+let index=Int(CommandLine.arguments[2])!
+precondition(index==3 || index==140)
+let data=try Data(contentsOf:URL(fileURLWithPath:"Hangboards/clavellium-training-block/assets/primary.physics.json"))
+let raw=try JSONSerialization.jsonObject(with:data) as! [String:Any]
+let input=try RopePhysicsDescriptor.decode(data).validated(modelSHA256:raw["modelSHA256"] as! String)
+let collider=try RopeTriangleCollider(input:input)
+let upright=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1)),turned=simd_quatd(angle:Double.pi/6,axis:SIMD3<Double>(0,0,1))
+let seed=try RopeThreadedSeed.make(input:input,profileID:input.profiles[0].id,orientation:upright,collider:collider)
+var baseline=try RopeDynamicsSolver.prepareDisplay(input:input,state:seed,collider:collider).solver
+baseline.woodMajorizerExperiment=true;baseline.woodResidualExperiment=true;baseline.woodFeatureIdentityExperiment=true;baseline.preconditionedResidualExperiment=true
+SolverCollection.collect=false;ResidualStopTrace.enabled=true
+for _ in 1..<index {_ = try baseline.step(dt:1.0/240,targetOrientation:turned)}
+var candidate=baseline;candidate.stationaryResidualExperiment=true
+func bytes(_ x:RopeDynamicsSolver)throws->Data {try JSONSerialization.data(withJSONObject:x.bundleCheckpoint(),options:.sortedKeys)}
+let checkpoint=try bytes(baseline);try checkpoint.write(to:root.appendingPathComponent("input.json"))
+var strict=try RopeDynamicsSolver.restoreBundle(input:input,collider:collider,data:checkpoint,strict:true)
+let start=DispatchTime.now().uptimeNanoseconds
+let frame=try candidate.step(dt:1.0/240,targetOrientation:turned)
+let candidateSeconds=Double(DispatchTime.now().uptimeNanoseconds-start)/1e9
+let controlStart=DispatchTime.now().uptimeNanoseconds
+let control=try baseline.step(dt:1.0/240,targetOrientation:turned)
+let controlSeconds=Double(DispatchTime.now().uptimeNanoseconds-controlStart)/1e9
+let strictFrame=try strict.step(dt:1.0/240,targetOrientation:turned)
+func difference(_ a:RopeDynamicsSolver,_ b:RopeDynamicsSolver)->Double {max(abs(a.state.boardHeight-b.state.boardHeight),zip(a.state.ropes,b.state.ropes).flatMap{zip($0.positions,$1.positions).map{simd_distance($0,$1)}}.max() ?? 0)}
+let uncached=try RopeSimulationMetrics.measure(state:candidate.state,input:input,collider:collider,boardHistory:(candidate.foundationCheckpoint()["history"] as! [[Double]]).map{$0[1]})
+let identity=try bytes(candidate)==bytes(baseline)
+let accuracy=frame.metrics.geometryAccepted && uncached.geometryAccepted && control.metrics.geometryAccepted && strictFrame.metrics.geometryAccepted && difference(candidate,strict)<=0.00005 && difference(candidate,baseline)<=0.00005 && [candidate,baseline,strict].allSatisfy{$0.reviewStepCaps==0 && $0.reviewStepRetries==0}
+let gate=accuracy && (index==140 ? candidate.reviewStepCorrections==0 && StationaryResidualTrace.accepted==1:identity && candidate.reviewStepCorrections==baseline.reviewStepCorrections && StationaryResidualTrace.accepted==0)
+let result:[String:Any]=["owner":"strong-owl-live-physics","adopted":false,"checkpoint":index,"pass":gate,"accuracyPass":accuracy,"candidateQPs":candidate.reviewStepCorrections,"controlQPs":baseline.reviewStepCorrections,"strictQPs":strict.reviewStepCorrections,"stationaryAccepted":StationaryResidualTrace.accepted,"stationaryRejected":StationaryResidualTrace.rejected,"estimates":StationaryResidualTrace.estimates,"candidateSeconds":candidateSeconds,"controlSeconds":controlSeconds,"strictDifference":difference(candidate,strict),"currentDifference":difference(candidate,baseline),"completeCheckpointIdentity":identity,"uncachedStrain":uncached.maximumLocalStrain,"uncachedClearanceMargin":uncached.minimumClearanceMargin,"uncachedMaterialError":uncached.totalLengthError,"candidateSpeed":frame.metrics.maximumSpeed,"strictSpeed":strictFrame.metrics.maximumSpeed]
+try JSONSerialization.data(withJSONObject:result,options:[.sortedKeys,.prettyPrinted]).write(to:root.appendingPathComponent("result.json"));print(result)
