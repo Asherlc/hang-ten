@@ -60,7 +60,7 @@ class VerifyTrangoRockProdigyTrainingCenterTests(unittest.TestCase):
               <Property name="ContactSlotID"><String value="edge"/></Property>
               <Property name="HangTenHoldOutline"><String value="[[-250,200],[-200,200],[-200,600],[-250,600]]"/></Property>
             </Properties></Object></ObjectData></Document>"""
-            with zipfile.ZipFile(package / "fixture.FCStd", "w") as archive:
+            with zipfile.ZipFile(package.parent / "fixture.FCStd", "w") as archive:
                 archive.writestr("Document.xml", document)
             verifier.require_reusable_descriptor_matches_source(package, model_bytes, model, expected)
             for field in ("modelBounds", "contactSlots"):

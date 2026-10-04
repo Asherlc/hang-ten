@@ -40,7 +40,7 @@ requires_native_toolchain = pytest.mark.skipif(
 ])
 def test_verticalboard_native_source_and_persisted_edit(slug):
     """Run native recompute and persisted depth-edit checks in disposable workspace-owned scratch."""
-    source = REPOSITORY / "Hangboards" / slug / f"{slug}.FCStd"
+    source = REPOSITORY / "Hangboards" / f"{slug}.FCStd"
     context = REPOSITORY / ".context"
     context.mkdir(exist_ok=True)
     owner = Path(os.environ.get("PASEO_WORKTREE_PATH", str(REPOSITORY))).name

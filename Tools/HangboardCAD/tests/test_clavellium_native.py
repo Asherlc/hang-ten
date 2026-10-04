@@ -17,7 +17,7 @@ def test_all_three_sling_channels_are_open_and_contacts_stay_valid(tmp_path):
     script = tmp_path / "check.py"
     script.write_text('''import FreeCAD as App
 from pathlib import Path
-d = App.openDocument(str(Path("Hangboards/clavellium-training-block/clavellium-training-block.FCStd").resolve()))
+d = App.openDocument(str(Path("Hangboards/clavellium-training-block.FCStd").resolve()))
 s = d.getObject("Pinch100BottomReliefCut").Shape
 assert s.isValid() and len(s.Solids) == 1
 for x, z in [(0, 2.5), (-24, -33.5), (24, -33.5)]:
@@ -47,7 +47,7 @@ def test_all_pinch_contact_faces_point_outward(tmp_path):
     script = tmp_path / "pinch_normals.py"
     script.write_text('''import FreeCAD as App
 from pathlib import Path
-d = App.openDocument(str(Path("Hangboards/clavellium-training-block/clavellium-training-block.FCStd").resolve()))
+d = App.openDocument(str(Path("Hangboards/clavellium-training-block.FCStd").resolve()))
 for name, expected in {
     "Pinch80Left": (-1, 0, 0), "Pinch80Right": (1, 0, 0),
     "Pinch90Front": (0, -1, 0), "Pinch90Back": (0, 1, 0),
@@ -87,7 +87,7 @@ def test_cached_single_loop_matches_the_native_solid_solve(tmp_path):
     source = json.loads(solid_path.read_text())
     mesh = trimesh.Trimesh(vertices=source["vertices"], faces=source["triangles"], process=False)
     package = ROOT / "Hangboards/clavellium-training-block"
-    sidecar = json.loads((package / "suspension.json").read_text())
+    sidecar = json.loads((package / "assets/suspension.json").read_text())
     assert sidecar["suspension"]["branches"][0]["radius"] == 0.0035, "owner-confirmed 7 mm diameter"
     descriptor = json.loads((package / "assets/primary.model.json").read_text())
     solved = solve_package("clavellium-training-block", mesh, sidecar, descriptor)["front"]
@@ -125,13 +125,13 @@ for axis,length in [("x",10),("y",20),("z",30)]:
  assert abs(values[0][index])<1e-9 and abs(values[1][index]-length)<1e-9
 App.closeDocument(d.Name)
 p=Path("Hangboards/clavellium-training-block")
-d=App.openDocument(str((p/"clavellium-training-block.FCStd").resolve()))
+d=App.openDocument(str(p.with_suffix(".FCStd").resolve()))
 for name in ["CenterChannelTool","LowerLeftChannelTool","LowerRightChannelTool"]:
  box=d.getObject(name)
  assert box.HangTenChannelAxis=="y" and float(box.Width)==92
  samples=box_axis_samples(box)
  assert abs(samples[0].distanceToPoint(samples[-1])-92)<1e-9
-s=json.loads((p/"suspension.json").read_text())["suspension"]
+s=json.loads(d.HangTenSuspensionAuthoring)["suspension"]
 passages=s["passages"]["left"]
 samples=channel_samples(d.getObject("CenterChannelTool"),"CenterChannelTool")
 stations=[station_on_spine(model_to_native(p["pointInModel"]),samples) for p in passages]

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import re
 import struct
 import zlib
@@ -1090,71 +1091,59 @@ def test_a_cad_backed_package_validates_its_generated_board_json(tmp_path: Path)
     assert not (package_root / "board.json").exists()
 
 
-def test_cad_suspension_sidecar_merges_without_entering_the_source(tmp_path: Path) -> None:
+def _cad_suspension_artifact_fixture(tmp_path: Path):
     module = load_board_catalog_module()
-    package_root = tmp_path / "cad-model"
-    (package_root / "assets").mkdir(parents=True)
+    package_root = write_board_package(tmp_path / "cad-model")
+    source = write_cad_source(package_root)
     (package_root / "assets/primary.model.json").write_text(json.dumps({"modelSHA256": "a" * 64}))
     board = {"presentations": [{"id": "primary", "media": {
         "type": "model", "descriptorPath": "assets/primary.model.json"}}]}
-    suspension = {"type": "twoBranchCord"}
-    (package_root / "suspension.json").write_text(json.dumps({
+    authoring = {
         "schemaVersion": 1,
         "presentationID": "primary",
-        "modelSHA256": "a" * 64,
-        "suspension": suspension,
-    }))
-
-    generated = module.cad_source.merge_suspension_sidecar(board, package_root)
-    assert "suspension" not in board["presentations"][0]["media"]
-    assert generated["presentations"][0]["media"]["suspension"] == suspension
-
-
-def test_cad_suspension_sidecar_rope_solver_setting_stays_out_of_board(tmp_path: Path) -> None:
-    module = load_board_catalog_module()
-    package_root = tmp_path / "cad-model"
-    (package_root / "assets").mkdir(parents=True)
-    (package_root / "assets/primary.model.json").write_text(json.dumps({"modelSHA256": "a" * 64}))
-    board = {"presentations": [{"id": "primary", "media": {
-        "type": "model", "descriptorPath": "assets/primary.model.json"}}]}
-    document = {
-        "schemaVersion": 1,
-        "presentationID": "primary",
-        "modelSHA256": "a" * 64,
         "ropeSolver": {"sectionPlane": "anchor"},
-        "suspension": {"type": "twoBranchCord"},
+        "suspension": {"type": "twoBranchCord", "passages": {"left": [{"id": "mouth"}], "right": []}, "canonicalPoses": {
+            "front": {"rotation": [0, 0, 0, 1], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}}},
     }
-    (package_root / "suspension.json").write_text(json.dumps(document))
+    module.cad_source.embed_authoring(source, suspension=authoring)
+    artifact = module.cad_source.materialize_suspension(authoring, {"primary": "a" * 64},
+        hashlib.sha256(source.read_bytes()).hexdigest())
+    artifact["suspension"]["canonicalPoses"]["front"].update({
+        "translation": [0, -0.04, 0], "cordContactPoints": {"mouth": [[0, 0, 0]]}})
+    (package_root / "assets/suspension.json").write_bytes(module.cad_source.render_board(artifact))
+    return module, source, package_root, board, artifact
 
-    generated = module.cad_source.merge_suspension_sidecar(board, package_root)
+
+def test_cad_suspension_artifact_merges_without_mutating_the_source(tmp_path: Path) -> None:
+    module, source, package_root, board, artifact = _cad_suspension_artifact_fixture(tmp_path)
+    before = source.read_bytes()
+    generated = module.cad_source.merge_suspension_artifact(board, package_root, source)
+    assert "suspension" not in board["presentations"][0]["media"]
+    assert generated["presentations"][0]["media"]["suspension"] == artifact["suspension"]
+    assert source.read_bytes() == before
+
+
+def test_native_suspension_rope_solver_setting_stays_out_of_board(tmp_path: Path) -> None:
+    module, source, package_root, board, _ = _cad_suspension_artifact_fixture(tmp_path)
+    generated = module.cad_source.merge_suspension_artifact(board, package_root, source)
     assert "ropeSolver" not in json.dumps(generated)
 
     for invalid in ({"sectionPlane": "diagonal"}, {"sectionPlane": "anchor", "extra": 1}, "anchor"):
+        document = module.cad_source.load_suspension_authoring(source)
         document["ropeSolver"] = invalid
-        (package_root / "suspension.json").write_text(json.dumps(document))
         with pytest.raises(module.cad_source.ManifestError, match="ropeSolver"):
-            module.cad_source.merge_suspension_sidecar(board, package_root)
+            module.cad_source.embed_authoring(source, suspension=document)
 
 
-def test_cad_suspension_sidecar_rejects_mismatched_asset(tmp_path: Path) -> None:
-    module = load_board_catalog_module()
-    package_root = tmp_path / "cad-model"
-    (package_root / "assets").mkdir(parents=True)
-    (package_root / "assets/primary.model.json").write_text(json.dumps({"modelSHA256": "a" * 64}))
-    board = {"presentations": [{"id": "primary", "media": {
-        "type": "model", "descriptorPath": "assets/primary.model.json"}}]}
-    (package_root / "suspension.json").write_text(json.dumps({
-        "schemaVersion": 1,
-        "presentationID": "primary",
-        "modelSHA256": "0" * 64,
-        "suspension": {"type": "twoBranchCord"},
-    }))
-
+def test_compiled_suspension_rejects_mismatched_asset(tmp_path: Path) -> None:
+    module, source, package_root, board, artifact = _cad_suspension_artifact_fixture(tmp_path)
+    artifact["modelSHA256"] = "0" * 64
+    (package_root / "assets/suspension.json").write_bytes(module.cad_source.render_board(artifact))
     with pytest.raises(module.cad_source.ManifestError, match="modelSHA256"):
-        module.cad_source.merge_suspension_sidecar(board, package_root)
+        module.cad_source.merge_suspension_artifact(board, package_root, source)
 
 
-def test_mini_bar_keeps_cord_metadata_out_of_its_cad_source() -> None:
+def test_mini_bar_embeds_cord_authoring_and_generates_runtime_routes() -> None:
     module = load_board_catalog_module()
     root = Path(__file__).resolve().parents[3] / "Hangboards/lattice-mini-bar"
     source = module.cad_source.package_source_path(root)
@@ -1164,7 +1153,11 @@ def test_mini_bar_keeps_cord_metadata_out_of_its_cad_source() -> None:
     generated = module.load_board_package(root)
 
     assert "suspension" not in cad_board["presentations"][0]["media"]
-    assert (root / "suspension.json").is_file()
+    authored = module.cad_source.load_suspension_authoring(source)
+    assert authored["suspension"]["type"] == "twoBranchCord"
+    assert all("translation" not in pose and "cordContactPoints" not in pose
+               for pose in authored["suspension"]["canonicalPoses"].values())
+    assert not (root / "suspension.json").exists()
     suspension = generated.board.presentations[0].media.suspension
     assert suspension.mesh_wrap_clearance is None
     assert suspension.internal_loop_clearance == 0.0001

@@ -205,8 +205,10 @@ rtk git lfs pull
 rtk proxy bash scripts/build-runtime-assets.sh
 ```
 
-This produces ignored board USDZ/descriptors, grip hand mesh JSON, and plan
-JSON. The FCStd, hand Blender source, and Swift plan definitions remain
+This produces ignored board USDZ/descriptors, optional suspension/physics
+artifacts, grip hand mesh JSON, and plan JSON. Each flat
+`Hangboards/<slug>.FCStd` embeds board, cord, and simulation inputs; the hand
+Blender source and Swift plan definitions also remain
 authoritative. CI consumers receive the same runtime files from the producer
 artifact. See [generated artifacts](GENERATED_ARTIFACTS.md).
 

@@ -32,7 +32,11 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
    target `booted`.
 2. Fetch native and hand Git LFS sources and run
    `rtk proxy bash scripts/build-runtime-assets.sh` before Xcode. This generates
-   the ignored board assets, grip hand mesh and plan library; a fresh checkout
+   the ignored board assets, including solved `assets/suspension.json` and
+   optional physics descriptors, grip hand mesh and plan library. Each flat
+   `Hangboards/<slug>.FCStd` embeds board/cord/simulation inputs; staging merges
+   validated generated suspension into bundled `board.json` and excludes the
+   source and standalone artifact. A fresh checkout
    does not contain their exported bytes. See `docs/GENERATED_ARTIFACTS.md`.
    Wait for launch services, then build with the local workspace-specific
    `.context/DerivedData` path and explicit destination.

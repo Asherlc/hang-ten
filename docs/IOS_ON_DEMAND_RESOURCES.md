@@ -14,9 +14,11 @@ archive/upload, and App Store Connect hosts and distributes them with the app.
 
 Before Xcode, run `rtk proxy bash scripts/build-runtime-assets.sh` from a checkout
 with its Git LFS sources fetched. Native board USDZ, model descriptors, and
-optional physics descriptors are ignored build outputs; `board.json` is
-generated from each retained FCStd manifest and suspension sidecar during
-staging. CI consumers download these runtime files from the producer artifact.
+optional physics descriptors and `assets/suspension.json` are ignored build
+outputs; `board.json` is generated from the manifest in flat
+`Hangboards/<slug>.FCStd` and validated generated suspension during staging.
+The FCStd also embeds cord/simulation authoring inputs; it is never staged.
+CI consumers download these runtime files from the producer artifact.
 See [generated artifacts](GENERATED_ARTIFACTS.md).
 
 The `Stage Board Packages` phase first validates the complete compiled

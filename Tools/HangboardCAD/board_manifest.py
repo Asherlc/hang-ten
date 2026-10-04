@@ -1,13 +1,15 @@
 """Generate a CAD-backed board's ``board.json`` from its FreeCAD source.
 
-For a package with a native source (``Hangboards/<slug>/<slug>.FCStd``) the
-FCStd owns geometry and most logical metadata. An optional adjacent
-``suspension.json`` owns cord setup for a model presentation. The CAD metadata
-lives in two document-level string properties:
+For a package with a native source (``Hangboards/<slug>.FCStd``) the
+FCStd owns geometry and logical metadata. Authored cord setup and simulation
+configuration live in the same document. The CAD metadata lives in
+document-level string properties:
 
 * ``HangTenBoardID`` -- the board ``id`` (also bound by the compiler);
 * ``HangTenBoardManifest`` -- compact JSON of ``board.json`` *minus* ``id``, in
   the key order ``board.json`` is emitted in.
+* ``HangTenSuspensionAuthoring`` -- authored cord setup without generated routes;
+* ``HangTenRopePhysics`` -- authored native feature and simulation bindings.
 
 ``board.json`` is generated at build time from these authoring sources and is
 **not committed**: the package
@@ -38,6 +40,8 @@ FreeCAD, so it runs anywhere, including CI on Linux.
     python3 Tools/HangboardCAD/board_manifest.py --all                     # generate every CAD board
     python3 Tools/HangboardCAD/board_manifest.py --all --output-dir <dir>  # <dir>/<slug>/board.json
     python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug>   # manifest
+    python3 Tools/HangboardCAD/board_manifest.py --dump-authoring suspension --package <slug>
+    python3 Tools/HangboardCAD/board_manifest.py --dump-authoring rope-physics --package <slug>
     python3 Tools/HangboardCAD/board_manifest.py --dump-file <path.FCStd>  # textconv
 """
 
@@ -66,15 +70,15 @@ REPOSITORY = Path(__file__).resolve().parents[2]
 
 def package_source(root: Path, package: str) -> Path:
     """Return the path to the FCStd authoring source for ``package``."""
-    return root / "Hangboards" / package / f"{package}.FCStd"
+    return cad_source.package_source_path(root / "Hangboards" / package)
 
 
 def source_backed_packages(root: Path) -> list[str]:
     """Return the sorted slugs of packages that carry an FCStd authoring source."""
     return sorted(
-        path.parent.name
-        for path in (root / "Hangboards").glob("*/*.FCStd")
-        if path.stem == path.parent.name
+        path.stem
+        for path in (root / "Hangboards").glob("*.FCStd")
+        if path.is_file() and not path.is_symlink()
     )
 
 
@@ -85,7 +89,7 @@ def write_board_json(source: Path, target: Path) -> bool:
     kept on disk for a CAD-backed package.
     """
     source, target = Path(source), Path(target)
-    if target.resolve() == (source.parent / "board.json").resolve():
+    if target.resolve() == (source.parent / source.stem / "board.json").resolve():
         raise cad_source.ManifestError(
             f"refusing to write {target}: a CAD-backed package's board.json is generated "
             "at build time and must not exist in the package"
@@ -128,7 +132,7 @@ def _resolve_lfs_pointer(path: Path) -> Path | None:
 def describe_source(path: Path) -> str:
     """A stable text rendering of an FCStd for ``git diff`` (textconv).
 
-    HangTen document properties, the pretty-printed board manifest, and one
+    HangTen document properties, the pretty-printed native JSON properties, and one
     ``sha256 size name`` line per archive member, so metadata edits read as JSON
     diffs and geometry edits show up as changed member digests.
     """
@@ -155,19 +159,25 @@ def describe_source(path: Path) -> str:
         properties = {}
         lines.append(f"# unreadable Document.xml: {error}")
     lines.append("# HangTen document properties")
+    json_properties = (
+        cad_source.MANIFEST_PROPERTY,
+        cad_source.SUSPENSION_PROPERTY,
+        cad_source.ROPE_PHYSICS_PROPERTY,
+    )
     for name in sorted(properties):
-        if name.startswith("HangTen") and name != cad_source.MANIFEST_PROPERTY:
+        if name.startswith("HangTen") and name not in json_properties:
             lines.append(f"{name} = {properties[name][1]}")
-    lines.append("")
-    lines.append(f"# {cad_source.MANIFEST_PROPERTY}")
-    kind, text = properties.get(cad_source.MANIFEST_PROPERTY, ("", None))
-    if text is None:
-        lines.append("(absent)")
-    else:
-        try:
-            lines.append(cad_source._encode(cad_source.loads(text), 2))
-        except json.JSONDecodeError:
-            lines.append(f"(invalid JSON) {text}")
+    for name in json_properties:
+        lines.append("")
+        lines.append(f"# {name}")
+        _kind, text = properties.get(name, ("", None))
+        if text is None:
+            lines.append("(absent)")
+        else:
+            try:
+                lines.append(cad_source._encode(cad_source.loads(text), 2))
+            except json.JSONDecodeError:
+                lines.append(f"(invalid JSON) {text}")
     lines.append("")
     lines.append("# archive members (sha256 size name)")
     for name, data in members:
@@ -189,7 +199,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--output-dir", type=Path, help="write <dir>/<slug>/board.json for each package"
     )
-    parser.add_argument("--dump", action="store_true", help="print the manifest JSON")
+    dump = parser.add_mutually_exclusive_group()
+    dump.add_argument("--dump", action="store_true", help="print the manifest JSON")
+    dump.add_argument(
+        "--dump-authoring", choices=("suspension", "rope-physics"),
+        help="print embedded authoring JSON (null when absent)",
+    )
     parser.add_argument("--dump-file", type=Path, help="textconv rendering of an FCStd path")
     parser.add_argument("--root", type=Path, default=REPOSITORY, help=argparse.SUPPRESS)
     arguments = parser.parse_args(argv)
@@ -216,6 +231,16 @@ def main(argv: list[str] | None = None) -> int:
         for package in packages:
             board = cad_source.load_board(package_source(root, package))
             print(cad_source._encode(cad_source.board_to_manifest(board), 2))
+        return 0
+
+    if arguments.dump_authoring:
+        loader = (
+            cad_source.load_suspension_authoring
+            if arguments.dump_authoring == "suspension"
+            else cad_source.load_rope_physics_authoring
+        )
+        for package in packages:
+            print(cad_source._encode(loader(package_source(root, package)), 2))
         return 0
 
     if arguments.output is not None:

@@ -15,8 +15,11 @@ def compiler(tmp_path, monkeypatch):
     repository = tmp_path / "repository"
     package = repository / "Hangboards" / "fixture"
     package.mkdir(parents=True)
-    (package / "fixture.FCStd").write_bytes(b"authored source")
+    (package.parent / "fixture.FCStd").write_bytes(b"authored source")
     monkeypatch.setattr(prepare_assets, "REPOSITORY", repository)
+    authoring = {"physics": None, "suspension": None}
+    monkeypatch.setattr(prepare_assets.cad_source, "load_rope_physics_authoring", lambda source: authoring["physics"], raising=False)
+    monkeypatch.setattr(prepare_assets.cad_source, "load_suspension_authoring", lambda source: authoring["suspension"], raising=False)
     targets = {"primary": ("primary.usdz", "primary.model.json")}
     monkeypatch.setattr(prepare_assets, "source_targets", lambda source: targets)
 
@@ -28,17 +31,17 @@ def compiler(tmp_path, monkeypatch):
         (destination / descriptor_name).write_text(json.dumps({
             "modelSHA256": hashlib.sha256(data).hexdigest(),
         }))
-        if (repository / "Hangboards" / package / "rope-physics.json").exists():
+        if authoring["physics"] is not None:
             (destination / "primary.physics.json").write_text(json.dumps({
                 "modelSHA256": hashlib.sha256(data).hexdigest(),
             }))
 
     monkeypatch.setattr(prepare_assets, "_run_build", build)
-    return package, targets, build
+    return package, targets, build, authoring
 
 
 def test_compiles_without_any_committed_descriptor(compiler, tmp_path):
-    package, _, _ = compiler
+    package, _, _, _ = compiler
     out = tmp_path / "compiled"
     report = prepare_assets.prepare(package.name, out, Path("freecad"), "")
     assert report["package"] == "fixture"
@@ -48,7 +51,7 @@ def test_compiles_without_any_committed_descriptor(compiler, tmp_path):
 
 
 def test_carries_all_configurations(compiler, tmp_path):
-    package, targets, _ = compiler
+    package, targets, _, _ = compiler
     targets["depth-10mm"] = ("depth-10mm.usdz", "depth-10mm.model.json")
     out = tmp_path / "compiled"
     prepare_assets.prepare(package.name, out, Path("freecad"), "")
@@ -59,8 +62,8 @@ def test_carries_all_configurations(compiler, tmp_path):
 
 
 def test_carries_matching_physics_descriptor(compiler, tmp_path):
-    package, _, _ = compiler
-    (package / "rope-physics.json").write_text("{}")
+    package, _, _, authoring = compiler
+    authoring["physics"] = {}
     out = tmp_path / "compiled"
     prepare_assets.prepare(package.name, out, Path("freecad"), "")
     physics = json.loads((out / "fixture/assets/primary.physics.json").read_text())
@@ -68,7 +71,7 @@ def test_carries_matching_physics_descriptor(compiler, tmp_path):
 
 
 def test_rejects_mismatched_compiled_hash_before_publication(compiler, tmp_path, monkeypatch):
-    package, _, build = compiler
+    package, _, build, _ = compiler
 
     def corrupt(*args):
         build(*args)
@@ -82,7 +85,7 @@ def test_rejects_mismatched_compiled_hash_before_publication(compiler, tmp_path,
 
 
 def test_failed_configuration_leaves_previous_complete_outputs(compiler, tmp_path, monkeypatch):
-    package, targets, build = compiler
+    package, targets, build, _ = compiler
     targets["depth-10mm"] = ("depth-10mm.usdz", "depth-10mm.model.json")
     out = tmp_path / "compiled"
     existing = out / "fixture/assets/primary.usdz"
@@ -101,7 +104,7 @@ def test_failed_configuration_leaves_previous_complete_outputs(compiler, tmp_pat
 
 
 def test_removed_configuration_is_pruned_after_successful_build(compiler, tmp_path):
-    package, targets, _ = compiler
+    package, targets, _, _ = compiler
     targets["depth-10mm"] = ("depth-10mm.usdz", "depth-10mm.model.json")
     out = tmp_path / "compiled"
     prepare_assets.prepare(package.name, out, Path("freecad"), "")
@@ -113,3 +116,20 @@ def test_removed_configuration_is_pruned_after_successful_build(compiler, tmp_pa
         "primary.usdz", "primary.model.json", "source-evidence.txt",
     }
     assert authored.read_text() == "retain authored evidence"
+
+
+def test_suspension_failure_preserves_previous_complete_package(compiler, tmp_path, monkeypatch):
+    package, _, _, authoring = compiler
+    authoring["suspension"] = {}
+    out = tmp_path / "compiled"
+    existing = out / "fixture/assets/primary.usdz"
+    existing.parent.mkdir(parents=True)
+    existing.write_bytes(b"previous")
+
+    def fail(*args):
+        raise RuntimeError("native cord route could not be solved")
+
+    monkeypatch.setattr(prepare_assets, "_run_suspension", fail, raising=False)
+    with pytest.raises(RuntimeError, match="cord route"):
+        prepare_assets.prepare(package.name, out, Path("freecad"), "")
+    assert existing.read_bytes() == b"previous"

@@ -8,8 +8,10 @@ sculpted `lattice-mxedge-lift-small`; then the vector-profile
 avoid repeating the same detours.
 
 The numerical examples describe historical migrations. The maintained build now
-uses the retained FCStd as the sole board geometry and embedded metadata source,
-generating ignored runtime exports with pinned FreeCAD 1.1.3/OpenUSD 26.8.
+uses one flat `Hangboards/<slug>.FCStd` as the sole board geometry and embedded
+board/cord/simulation input source, generating ignored runtime exports with
+pinned FreeCAD 1.1.3/OpenUSD 26.8. Solved suspension lives in generated
+`Hangboards/<slug>/assets/suspension.json` and is merged into bundled `board.json`.
 Run `scripts/build-runtime-assets.sh` before a fresh-checkout app build;
 `scripts/build-board-assets.sh` is the board-only entrypoint. See
 [the CAD guide](../Tools/HangboardCAD/README.md) and
@@ -388,7 +390,13 @@ a second screenshot pass is a full rebuild.
 - A CAD board's `board.json` is generated from the FCStd's document-level
   `HangTenBoardManifest` property (`hangboard_packages.cad_source`, with
   `Tools/HangboardCAD/board_manifest.py` as its command line) whenever the
-  package is validated or staged into the iOS or Android app. It is never
+  package is validated or staged into the iOS or Android app. Generated
+  `assets/suspension.json` is validated and merged when the source declares
+  `HangTenSuspensionAuthoring`; the legacy POCKET manifest setup is unchanged.
+  Cord/simulation inputs live in document-level string properties
+  `HangTenSuspensionAuthoring` and `HangTenRopePhysics`, edited with
+  `set_cad_authoring.py`. Hashes, settled heights, and solved routes stay in
+  generated artifacts. `board.json` is never
   committed: an earlier design committed it and checked it for freshness in
   CI, which left a hand-editable second copy of the metadata. The validator now
   rejects an on-disk `board.json` in a CAD package. Edit the manifest with

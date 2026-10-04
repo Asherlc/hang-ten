@@ -382,16 +382,13 @@ final class BoardSourceBoundaryTests: XCTestCase {
             )
             let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
-            // CAD authoring sidecars are distinct from the declared runtime assets.
-            let authoringSource = "\(packagePath).FCStd"
             let extraEntries = packageEntries.subtracting(["assets", "board.json"])
             XCTAssertTrue(
-                extraEntries.isEmpty || extraEntries == [authoringSource]
-                    || extraEntries == [authoringSource, "suspension.json"]
-                    || extraEntries == [authoringSource, "suspension.json", "rope-physics.json"],
+                extraEntries.isEmpty,
                 "unexpected package entries: \(extraEntries.sorted())"
             )
-            if packageEntries.contains(authoringSource) {
+            let authoringSourceURL = hangboardsURL.appendingPathComponent("\(packagePath).FCStd")
+            if FileManager.default.fileExists(atPath: authoringSourceURL.path) {
                 XCTAssertFalse(
                     packageEntries.contains("board.json"),
                     "CAD-backed package \(packagePath) must not commit board.json"
@@ -416,7 +413,10 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 }
                 return paths
             })
-            XCTAssertEqual(assetPaths, declaredAssets)
+            // The build cache is verified by the host generator and merged
+            // into board.json; it is not a separate app resource.
+            let generatedCachePaths: Set<String> = ["assets/suspension.json"]
+            XCTAssertEqual(assetPaths.subtracting(generatedCachePaths), declaredAssets)
             XCTAssertEqual(boardDocument["id"] as? String, board.id)
             XCTAssertFalse(holds.isEmpty)
             XCTAssertTrue(holds.allSatisfy { $0["cueStyle"] == nil })
@@ -487,13 +487,13 @@ final class BoardSourceBoundaryTests: XCTestCase {
                             for: board, presentationID: presentation.id))
                     }
                 }
-                if packageEntries.contains("rope-physics.json") {
+                if assetPaths.contains("assets/primary.physics.json") {
                     XCTAssertTrue(board.presentations.contains { presentation in
                         guard case .model(let model) = presentation.media else { return false }
                         return model.physicsDescriptorPath != nil
                     })
                 }
-                XCTAssertEqual(assetPaths, modelAssets)
+                XCTAssertEqual(assetPaths.subtracting(generatedCachePaths), modelAssets)
                 XCTAssertTrue(
                     presentations.allSatisfy { presentation in
                         guard let media = presentation["media"] as? [String: Any] else {
@@ -1004,6 +1004,10 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 .isRegularFileKey,
                 .isSymbolicLinkKey
             ])
+            if values.isRegularFile == true, values.isSymbolicLink != true,
+               child.pathExtension == "FCStd" {
+                continue
+            }
             guard values.isDirectory == true, values.isSymbolicLink != true else {
                 throw PackageDiscoveryError.invalidRootChild(child.lastPathComponent)
             }

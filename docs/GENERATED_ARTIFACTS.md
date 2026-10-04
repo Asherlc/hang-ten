@@ -7,18 +7,23 @@ first so the CAD documents are actual files rather than LFS pointers.
 
 | Retained source | Generated, ignored output | Compiler |
 | --- | --- | --- |
-| 66 `Hangboards/<slug>/<slug>.FCStd` documents, including `HangTenBoardManifest` | 68 USDZ models and 68 `.model.json` contact descriptors | FreeCAD 1.1.3 and OpenUSD 26.8 |
-| CAD manifest and optional `suspension.json` | `board.json` in staged app resources | Package generator and validator |
-| `rope-physics.json` and its CAD solid | `primary.physics.json` | Native CAD compiler |
+| 66 flat `Hangboards/<slug>.FCStd` documents, including `HangTenBoardManifest` | 68 USDZ models and 68 `.model.json` contact descriptors | FreeCAD 1.1.3 and OpenUSD 26.8 |
+| Embedded `HangTenSuspensionAuthoring` and its native CAD solid | `Hangboards/<slug>/assets/suspension.json`, including source/model hashes and solved poses/routes | `compile_suspension.py` and pinned native cord solvers |
+| CAD manifest and validated generated suspension | `board.json` in staged app resources | Package generator and validator |
+| Embedded `HangTenRopePhysics` and its CAD solid | `primary.physics.json` | Native CAD compiler |
 | `Art/GripHand/GripHand.blend`, original hand GLB, and license | `HangTen/Resources/GripHand/hand-mesh.json` | Blender 5.2.0 |
 | Source-audited Swift plan definitions and board metadata | `HangTen/Resources/PlanLibrary.json` | Swift exporter |
 
-The 139 generated runtime files total 95,364,779 bytes. `primary.model.json`
-contains compiled contact bindings, mesh measurements, and the model hash; it
+`primary.model.json` contains compiled contact bindings, mesh measurements, and the model hash; it
 is generated alongside its USDZ, without a previously exported descriptor.
 The build covers every declared presentation, including Plateau's three depth
-configurations. It validates descriptor and suspension hashes before installing
-a complete package and removes superseded generated configurations.
+configurations. Suspension authoring remains inside the FCStd as topology,
+dimensions, solver settings, evidence, pose rotations/cameras, and optional
+`offsetXZ: [x, z]`. Generated hashes, settled heights, and routes never become
+source metadata. The producer validates source/model/physics/suspension bindings
+before installing a complete package and removes superseded generated
+configurations. Package generation rejects missing or stale suspension artifacts,
+including an artifact whose authoring inputs differ from the current source.
 
 CI generates these resources once and distributes them to package tests,
 platform staging, and app builds. Release compilation runs against the tested
@@ -75,7 +80,8 @@ suspension authoring metadata are also retained inputs.
 
 ## Reproduction checks
 
-All 66 boards rebuilt from their native sources: all 137 board runtime files
+The source-only cleanup before CAD consolidation rebuilt all 66 boards from
+their native sources: all 137 board runtime files
 reproduced byte for byte, and every retained CAD source remained unchanged.
 The hand mesh and all 31 plans also reproduced byte for byte. Package/CAD/script
 tests, the retained Models suite, CI gate regressions, workflow lint, and the
@@ -86,3 +92,15 @@ Its display-depth exception is bound to that exact CAD hash and those exact
 published labels in `Tools/HangboardCAD/display_depth_audits.json`; new geometry
 or label changes require a new audit. Other depth checks retain their existing
 strict behavior.
+
+CAD consolidation retains one flat FCStd per board and embeds the 18 cord
+configurations and the physics configuration. All geometry archive members and
+native object data remain unchanged. All 18 suspension artifacts regenerate
+from native CAD; delivered board facts and cord curves match the prior runtime
+data within native numerical precision. Fresh source-only Clavellium and
+Beastmaker 1000 builds preserve their USDZ and model-descriptor bytes; the
+physics descriptor changes only its source hash. The consolidated host suite
+passes 1,027 tests with 14 environment-specific native skips and seven subtests.
+All 66 packages validate and stage for both platforms, and the iOS test targets
+build successfully. Generated suspension stays outside the app bundle; the 68
+USDZs retain their existing ODR placement.

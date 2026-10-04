@@ -14,7 +14,7 @@ PACKAGE = Path(__file__).resolve().parents[3] / "Hangboards" / "tension-whetston
 
 
 def test_whetstone_cad_preserves_contacts_and_photographed_depth_order():
-    source = PACKAGE / "tension-whetstone.FCStd"
+    source = cad_source.package_source_path(PACKAGE)
     assert source.is_file(), "Whetstone must have its own native CAD source"
     board = cad_source.load_board(source)
     expected = {"top-ergo-jug", "edge-40-center"}
@@ -48,7 +48,7 @@ def test_whetstone_native_edits_keep_contact_surfaces_on_body():
         [sys.executable, str(tools / "run_freecad.py"), "--freecad",
          os.environ.get("HANGTEN_FREECAD_CMD", "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd"),
          str(tools / "tests" / "whetstone_native_source_checks.py"),
-         str(PACKAGE / "tension-whetstone.FCStd")],
+         str(cad_source.package_source_path(PACKAGE))],
         capture_output=True, text=True, timeout=300,
     )
     assert result.returncode == 0, result.stdout + result.stderr

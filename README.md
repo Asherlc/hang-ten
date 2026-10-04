@@ -4,10 +4,11 @@ Hang Ten is a SwiftUI hangboard coach built around a simple promise: show the
 athlete the exact holds to use, the intended grip and fingers, and the current
 task without making them translate a paper routine while they train.
 
-Each catalog board retains a native FreeCAD source containing its geometry and
-schema-v3 contact-first metadata. The build generates a material-free USDZ and
-hash-bound contact descriptor; staging generates `board.json` from the embedded
-manifest and any authored suspension sidecar. `contacts[]` owns sourced physical
+Each catalog board retains one flat native FreeCAD source containing its
+geometry, schema-v3 contact-first metadata, and authored cord/simulation inputs.
+The build generates a material-free USDZ, hash-bound contact descriptor, and
+optional suspension/physics artifacts; staging generates `board.json` from the
+embedded manifest and validated generated suspension. `contacts[]` owns sourced physical
 facts without presentation geometry. The selected presentation supplies
 rendering, highlighting, and interaction data.
 
@@ -41,7 +42,8 @@ Runtime routine definitions are generated as
 `TrainingModels.swift`. `HangTen/Models/PlanStorage.swift` decodes and validates
 the bundled schema-versioned document; DEBUG builds compare it with those
 definitions. Board sources live in directly discovered
-`Hangboards/<board-folder>/<board-folder>.FCStd` packages. The grip hand retains
+`Hangboards/<slug>.FCStd` files. Generated package assets remain under
+`Hangboards/<slug>/assets/`. The grip hand retains
 its editable `Art/GripHand/GripHand.blend` and licensed upstream source; its
 runtime mesh JSON is generated. The app loads the compiled and staged outputs
 without rewriting geometry or maintaining another geometry source.
@@ -67,7 +69,8 @@ indexes and build output disappear with the workspace.
 
 The runtime build uses pinned FreeCAD 1.1.3/OpenUSD 26.8 for board exports,
 Blender 5.2.0 for the grip hand export, and Swift for the plan library. Generated
-USDZ, descriptors, hand mesh JSON, and plan JSON are ignored by Git. Commit their
+USDZ, descriptors, `assets/suspension.json`, hand mesh JSON, and plan JSON are
+ignored by Git. Commit their
 authoring sources and evidence. For board-only work use
 `rtk proxy bash scripts/build-board-assets.sh`; see
 [generated artifacts](docs/GENERATED_ARTIFACTS.md) for the full build boundary.
@@ -226,9 +229,13 @@ no Blender board compiler or importer. Blender remains the grip hand export
 tool. Model packages have no raster fallback and are read-only in the apps.
 
 The apps only read bundled `Hangboards/*/board.json` packages; there is no
-in-app board editor or package sync. Edit native source geometry in the FCStd
-and metadata with `Tools/HangboardCAD/set_board_manifest.py`, then rebuild the
-ignored runtime outputs.
+in-app board editor or package sync. Edit native source geometry in
+`Hangboards/<slug>.FCStd`, board metadata with
+`Tools/HangboardCAD/set_board_manifest.py`, and embedded cord/simulation inputs
+with `Tools/HangboardCAD/set_cad_authoring.py`, then rebuild the ignored runtime
+outputs. Authored suspension contains topology, dimensions, solver settings,
+evidence, pose rotations/cameras, and optional `offsetXZ: [x, z]`; hashes,
+settled heights, and solved routes are generated.
 
 Regenerate the bundled routine document after an audited plan change:
 

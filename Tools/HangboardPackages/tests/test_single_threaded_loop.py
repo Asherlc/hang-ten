@@ -10,7 +10,7 @@ from conftest import load_board_catalog_module
 
 def single_loop():
     root = Path(__file__).resolve().parents[3]
-    setup = json.loads((root / "Hangboards/lattice-mini-bar/suspension.json").read_text())["suspension"]
+    setup = json.loads((root / "Hangboards/lattice-mini-bar/assets/suspension.json").read_text())["suspension"]
     setup["passages"]["right"] = []
     setup["branches"] = setup["branches"][:1]
     ids = {p["id"] for p in setup["passages"]["left"]}

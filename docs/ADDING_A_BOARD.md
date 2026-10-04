@@ -5,7 +5,8 @@ the exact revision, record source mappings, author canonical geometry directly,
 validate the package, and visually review it. Never invent training content or
 derive a contact fact from the image or model.
 
-Catalog boards retain native FreeCAD geometry and embedded metadata; runtime
+Catalog boards retain one flat `Hangboards/<slug>.FCStd` containing native
+FreeCAD geometry and embedded board, cord, and simulation inputs; runtime
 assets are generated. Use `migrate-hangboard-to-3d` for CAD geometry or model
 integration work. For a portable 3D
 board's cord, attachment, suspension audit, or suspected Apple offline/ODR
@@ -50,17 +51,17 @@ bounds.
 
 ## 3. Create one schema-v3 package
 
-Every catalog board is one direct child of `Hangboards/`. Commit the native
-source and any authored sidecars; generate the runtime files:
+Every catalog board has one flat native source in `Hangboards/`. Generated
+runtime assets keep the existing package directory. Commit the FCStd and source
+audits; generate the runtime files:
 
 ```text
-Hangboards/manufacturer-model/
-  manufacturer-model.FCStd
-  suspension.json             # optional authored cord setup
-  rope-physics.json           # optional authored physics configuration
-  assets/
+Hangboards/
+  manufacturer-model.FCStd     # geometry + embedded board/cord/physics inputs
+  manufacturer-model/assets/
     primary.usdz              # ignored build output
     primary.model.json        # ignored build output
+    suspension.json           # optional ignored solved suspension artifact
     primary.physics.json      # optional ignored build output
 ```
 
@@ -68,7 +69,8 @@ In the FCStd's `HangTenBoardManifest`, set `schemaVersion` to `3` and declare st
 `equipmentObjects[]`, `contacts[]`, any sourced positions, and one or more
 presentations. Exactly one presentation is default. Keep evidence, source
 photos, drafts, and review output outside the board package. Only the supported
-source documents, authored sidecars, and declared generated assets belong there.
+flat source documents and declared generated package assets belong under
+`Hangboards/`; no authored JSON sidecars belong in the package.
 
 For model media, declare only the USDZ asset, descriptor, display, and any
 audited orientation/suspension configuration. The descriptor binds source
@@ -76,9 +78,14 @@ contacts to actual model nodes and cached measurements. A model package has no
 raster fallback and is read-only in the apps.
 
 The package has no committed `board.json`. The board document is generated from
-the FCStd's `HangTenBoardManifest` property at build time (package validation,
-iOS and Android staging), and the validator rejects an on-disk copy. Change the
-metadata as in "Board metadata" in `Tools/HangboardCAD/README.md`. To author a
+the FCStd's `HangTenBoardManifest` property plus validated generated
+`assets/suspension.json` at build time (package validation, iOS and Android
+staging), and the validator rejects an on-disk copy. Cord topology, dimensions,
+solver settings, evidence, pose rotations/cameras, and optional
+`offsetXZ: [x, z]` live in document-level `App::PropertyString`
+`HangTenSuspensionAuthoring`; optional simulation inputs live in
+`HangTenRopePhysics`. Hashes, settled heights, and generated routes are outputs.
+Change the metadata as in "Board metadata" in `Tools/HangboardCAD/README.md`. To author a
 new CAD-backed board, follow
 [the CAD authoring guide](../Tools/HangboardCAD/README.md).
 
@@ -142,7 +149,8 @@ ignored. See [generated artifacts](GENERATED_ARTIFACTS.md).
 
 - Every factual field maps to cited primary evidence; unsupported fields are absent.
 - The package is schema v3 with exact declared assets and one default presentation.
-- Native geometry and board metadata are retained in the FCStd; generated files are ignored.
+- Native geometry, board metadata, and authored cord/simulation inputs are retained
+  in the flat FCStd; generated files are ignored.
 - Contact facts appear only in `contacts[]`; raster paths appear only in
   `media.contactGeometry` and model bindings only in the descriptor.
 - Every raster path was directly authored and human reviewed; no geometry was inferred.

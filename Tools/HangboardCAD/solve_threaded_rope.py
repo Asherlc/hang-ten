@@ -1,10 +1,10 @@
 """Solve settled threaded-rope routes against a native CAD wood solid.
 
-The source sidecar supplies mouths, a connected-channel length, one overhead
-anchor, loop length, pose rotations, and winding. This authoring command finds
+The native CAD metadata supplies mouths, a connected-channel length, one overhead
+anchor, loop length, pose rotations, and winding. This generation command finds
 the shortest nonpenetrating route in each winding class on a rope-radius
 offset CAD section, then lowers the board until the longest loop is taut.
-Its generated route cache stays in suspension.json, outside the USDZ.
+Its generated route cache stays in assets/suspension.json, outside the USDZ.
 
 A connected channel may be a curved pipe whose mouths lie in different
 sections (Lattice Mini Bar) or a straight through-bore whose mouths share one
@@ -12,7 +12,7 @@ section (Crimptonite Helium Mobile). A through-bore splits its own section in
 two; the solver bridges that gap to recover the exterior bearing outline and
 reopens only the notch at the mouth being solved.
 
-The sidecar's optional authoring-only `ropeSolver.sectionPlane` selects each
+The CAD's optional authoring-only `ropeSolver.sectionPlane` selects each
 mouth's section plane. `mouth-x` (the default) cuts at the mouth's x, which
 suits mouths on a constant-section bar (Mini Bar). `anchor` cuts the plane
 through the mouth that contains the model depth axis and the overhead anchor,
@@ -450,45 +450,46 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--package", required=True)
     parser.add_argument("--solid", type=Path, required=True)
-    parser.add_argument("--presentation", help="select a schema-2 sidecar entry")
-    parser.add_argument("--equipment-object", help="select a reusable unit's sidecar entry")
+    parser.add_argument("--presentation", help="select a generated presentation entry")
+    parser.add_argument("--equipment-object", help="select a reusable unit's generated entry")
     parser.add_argument("--report", type=Path, help="retain generated length and native-clearance results")
     action = parser.add_mutually_exclusive_group(required=True)
     action.add_argument(
-        "--apply", action="store_true", help="update generated poses in suspension.json"
+        "--apply", action="store_true", help="update generated poses in assets/suspension.json"
     )
     action.add_argument(
         "--check",
         action="store_true",
-        help="verify generated poses match suspension.json",
+        help="verify generated poses match assets/suspension.json",
     )
     arguments = parser.parse_args()
     package = ROOT / "Hangboards" / arguments.package
-    sidecar = package / "suspension.json"
+    artifact = package / "assets/suspension.json"
     source = json.loads(arguments.solid.read_text())
     if source.get("sourcePackage") != arguments.package:
         raise ValueError("collision solid belongs to another package")
-    cad_source = package / f"{arguments.package}.FCStd"
+    cad_source = package.parent / f"{arguments.package}.FCStd"
     if (
         source.get("sourceSHA256")
         != hashlib.sha256(cad_source.read_bytes()).hexdigest()
     ):
         raise ValueError("collision solid is stale relative to the native CAD source")
-    document = json.loads(sidecar.read_text())
+    import use_hangboard_packages  # noqa: F401
+    from hangboard_packages import cad_source as source_metadata
+    source_metadata.merge_suspension_artifact(source_metadata.load_board(cad_source), package, cad_source)
+    document = json.loads(artifact.read_text())
     if document.get("schemaVersion") == 2 and "entries" in document:
         selected = [entry for entry in document["entries"] if entry["presentationID"] == arguments.presentation
                     and entry.get("equipmentObjectID") == arguments.equipment_object]
         if len(selected) != 1:
-            raise ValueError("select exactly one sidecar entry with --presentation and optional --equipment-object")
+            raise ValueError("select exactly one generated entry with --presentation and optional --equipment-object")
         data = selected[0]
     else:
         data = document
         if arguments.presentation is not None and arguments.presentation != data.get("presentationID"):
-            raise ValueError("--presentation does not match the sidecar presentation")
+            raise ValueError("--presentation does not match the generated presentation")
         if arguments.equipment_object is not None and "instanceSuspensions" not in data:
-            raise ValueError("--equipment-object requires an instance sidecar")
-    import use_hangboard_packages
-    from hangboard_packages import cad_source as source_metadata
+            raise ValueError("--equipment-object requires a generated instance entry")
     board = source_metadata.load_board(cad_source)
     presentation = next(item for item in board["presentations"] if item["id"] == data["presentationID"])
     descriptor = package / presentation["media"]["descriptorPath"]
@@ -502,7 +503,7 @@ def main():
     setups = data.get("instanceSuspensions", {"single": data.get("suspension")})
     if "instanceSuspensions" in data and arguments.equipment_object is not None:
         if arguments.equipment_object not in setups:
-            raise ValueError("--equipment-object must identify a sidecar instance")
+            raise ValueError("--equipment-object must identify a generated instance")
         setups = {arguments.equipment_object: setups[arguments.equipment_object]}
     native_document = None
     results = {}
@@ -563,7 +564,7 @@ def main():
         )
         if json.loads(formatted) != document:
             raise AssertionError("route formatting changed the JSON data")
-        sidecar.write_text(formatted + "\n")
+        artifact.write_text(formatted + "\n")
 
 
 if __name__ == "__main__":

@@ -1,9 +1,8 @@
 """Compile every source-backed board into a directory of runtime assets.
 
-The FCStd and optional authoring sidecars are the only inputs. USDZ files,
-model descriptors, and rope-physics descriptors are generated together; no
-previous export is needed. Hash-bound suspension sidecars still reject a
-changed model until its geometry and cord setup have been reviewed.
+The flat FCStd sources contain every authored input. USDZ files, model/physics
+descriptors and solved suspension artifacts are generated together; no
+previous export or cord route cache is needed.
 
     python3 Tools/HangboardCAD/prepare_assets.py --out <directory>
     python3 Tools/HangboardCAD/prepare_assets.py --out <dir> --package <slug>
@@ -43,33 +42,44 @@ FACETED_IMPORT_PACKAGES = frozenset({
 
 def source_backed_packages() -> list[str]:
     return sorted(
-        path.parent.name
-        for path in (REPOSITORY / "Hangboards").glob(f"*/*{SOURCE_SUFFIX}")
-        if path.name == f"{path.parent.name}{SOURCE_SUFFIX}"
+        path.stem
+        for path in (REPOSITORY / "Hangboards").glob(f"*{SOURCE_SUFFIX}")
     )
 
 
 def _run_build(package: str, destination: Path, freecad: Path, extra_path: str, presentation_id: str | None = None) -> None:
-    """Run one board's build into a scratch directory, in a fresh process.
-
-    FreeCAD's launcher consumes unrecognised options before the script ever sees
-    them, so the arguments are embedded in a generated wrapper.
-    """
-    destination.mkdir(parents=True, exist_ok=True)
-    wrapper = destination / "_build.py"
     arguments = [
         "--package", package,
-        "--source", str(REPOSITORY / "Hangboards" / package / f"{package}{SOURCE_SUFFIX}"),
+        "--source", str(REPOSITORY / "Hangboards" / f"{package}{SOURCE_SUFFIX}"),
         "--assets", str(destination),
     ]
     if presentation_id is not None:
         arguments.extend(["--presentation", presentation_id])
     if package in FACETED_IMPORT_PACKAGES:
         arguments.append("--allow-faceted-import")
+    _run_native(package, destination, freecad, extra_path, "compile_board.py", arguments)
+
+
+def _run_suspension(package: str, destination: Path, freecad: Path, extra_path: str) -> None:
+    _run_native(package, destination, freecad, extra_path, "compile_suspension.py", [
+        "--source", str(REPOSITORY / "Hangboards" / f"{package}{SOURCE_SUFFIX}"),
+        "--assets", str(destination),
+    ])
+
+
+def _run_native(package: str, destination: Path, freecad: Path, extra_path: str,
+                script_name: str, arguments: list[str]) -> None:
+    """Run one board's build into a scratch directory, in a fresh process.
+
+    FreeCAD's launcher consumes unrecognised options before the script ever sees
+    them, so the arguments are embedded in a generated wrapper.
+    """
+    destination.mkdir(parents=True, exist_ok=True)
+    wrapper = destination / f"_{script_name}"
     wrapper.write_text(
         "import sys, traceback\n"
         f"sys.path[:0] = {extra_path.split(os.pathsep) if extra_path else []!r}\n"
-        f"path = {str(TOOLS / 'compile_board.py')!r}\n"
+        f"path = {str(TOOLS / script_name)!r}\n"
         f"sys.argv = [path] + {arguments!r}\n"
         "try:\n"
         "    import FreeCAD as App\n"
@@ -110,7 +120,8 @@ def sha256(path: Path) -> str:
 def publish_assets(source: Path, target: Path, names: set[str] | None = None) -> None:
     """Install a validated runtime set and prune superseded generated files."""
     def generated(path: Path) -> bool:
-        return path.is_file() and path.name.endswith((".usdz", ".model.json", ".physics.json"))
+        return path.is_file() and (path.name == "suspension.json" or
+                                  path.name.endswith((".usdz", ".model.json", ".physics.json")))
 
     names = names if names is not None else {path.name for path in source.iterdir() if generated(path)}
     target.mkdir(parents=True, exist_ok=True)
@@ -123,7 +134,7 @@ def publish_assets(source: Path, target: Path, names: set[str] | None = None) ->
 
 def prepare(package: str, out: Path, freecad: Path, extra_path: str) -> dict:
     package_root = REPOSITORY / "Hangboards" / package
-    source = package_root / f"{package}{SOURCE_SUFFIX}"
+    source = package_root.parent / f"{package}{SOURCE_SUFFIX}"
     targets = source_targets(source)
     source_digest = sha256(source)
     reports = []
@@ -144,7 +155,7 @@ def prepare(package: str, out: Path, freecad: Path, extra_path: str) -> dict:
             if derived.get("modelSHA256") != digest:
                 raise RuntimeError(f"{package}/{presentation_id}: the compiled asset does not hash to the descriptor")
             generated_files.update({asset_name, descriptor_name})
-            if (package_root / "rope-physics.json").is_file():
+            if cad_source.load_rope_physics_authoring(source) is not None:
                 physics_path = staging / "primary.physics.json"
                 if not physics_path.is_file():
                     raise RuntimeError(f"{package}: the build produced no rope-physics descriptor")
@@ -156,11 +167,14 @@ def prepare(package: str, out: Path, freecad: Path, extra_path: str) -> dict:
             reports.append((presentation_id, built_asset, built_descriptor, digest))
         if sha256(source) != source_digest:
             raise RuntimeError(f"{package}: compiling modified the authored source")
-        if (package_root / "suspension.json").is_file():
-            shutil.copyfile(package_root / "suspension.json", staged_package / "suspension.json")
-            # Check every sidecar entry against the freshly built descriptors,
-            # not against any stale export left in the source workspace.
-            cad_source.merge_suspension_sidecar(cad_source.load_board(source), staged_package)
+        if cad_source.load_suspension_authoring(source) is not None:
+            _run_suspension(package, staging, freecad, extra_path)
+            if not (staging / "suspension.json").is_file():
+                raise RuntimeError(f"{package}: the build produced no solved suspension")
+            cad_source.merge_suspension_artifact(cad_source.load_board(source), staged_package, source)
+            generated_files.add("suspension.json")
+        if sha256(source) != source_digest:
+            raise RuntimeError(f"{package}: compiling modified the authored source")
         # Validate all configurations before copying any of the delivered pairs.
         target = out / package / "assets"
         publish_assets(staging, target, generated_files)

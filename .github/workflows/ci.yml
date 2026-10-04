@@ -101,7 +101,7 @@ jobs:
       needs.changes.outputs.shared_board_content == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
-    timeout-minutes: 180
+    timeout-minutes: 360
     outputs:
       artifact-name: ${{ steps.compile.outputs.owner }}-board-assets-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
@@ -123,6 +123,7 @@ jobs:
             Hangboards/*/assets/*.usdz
             Hangboards/*/assets/*.model.json
             Hangboards/*/assets/*.physics.json
+            Hangboards/*/assets/suspension.json
             HangTen/Resources/GripHand/hand-mesh.json
             HangTen/Resources/PlanLibrary.json
           if-no-files-found: error
@@ -214,8 +215,8 @@ jobs:
             --target android \
             --repository-root "$GITHUB_WORKSPACE" \
             --destination "$asset_root/Hangboards"
-          for source in Hangboards/*/*.FCStd; do
-            slug=$(basename "$(dirname "$source")")
+          for source in Hangboards/*.FCStd; do
+            slug=$(basename "$source" .FCStd)
             test -s "$asset_root/Hangboards/$slug/board.json"
             test -s "$asset_root/Hangboards/$slug/assets/primary.usdz"
           done
@@ -236,7 +237,11 @@ jobs:
         run: >-
           python -m pytest
           ../HangboardCAD/tests/test_board_manifest.py
+          ../HangboardCAD/tests/test_embedded_authoring.py
           ../HangboardCAD/tests/test_prepare_assets.py
+          ../HangboardCAD/tests/test_compile_suspension.py
+          ../HangboardCAD/tests/test_cad_consumers.py
+          ../HangboardCAD/tests/test_cad_sidecars.py
           ../HangboardCAD/tests/test_contract.py
           ../HangboardCAD/tests/test_whetstone_package.py
           ../HangboardCAD/tests/test_transgression_packages.py
@@ -346,6 +351,9 @@ jobs:
             Tools/HangboardCAD/tests/test_clavellium_native.py \
             Tools/HangboardCAD/tests/test_confirmed_cord_diameter.py \
             Tools/HangboardCAD/tests/test_rope_physics_export.py \
+            Tools/HangboardCAD/tests/test_native_pose_terminals.py \
+            Tools/HangboardCAD/tests/test_solver_sidecar_dispatch.py \
+            Tools/HangboardCAD/tests/test_native_cord_routes.py \
             Tools/HangboardCAD/tests/test_compile_v2_depths.py \
             Tools/HangboardCAD/tests/test_rectangular_channel_section.py \
             Tools/HangboardCAD/tests/test_verticalboards_native.py \

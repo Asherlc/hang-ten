@@ -23,7 +23,7 @@ def test_honestone_recomputes_and_persists_physical_depth_edit():
             [sys.executable, str(ROOT / "Tools/HangboardCAD/run_freecad.py"),
              "--freecad", str(FREECAD),
              str(ROOT / "Tools/HangboardCAD/tests/honestone_native_source_checks.py"),
-             str(ROOT / "Hangboards/tension-honestone/tension-honestone.FCStd"), scratch],
+             str(ROOT / "Hangboards/tension-honestone.FCStd"), scratch],
             cwd=ROOT, env=environment, capture_output=True, text=True, timeout=300,
         )
     assert result.returncode == 0, result.stdout + result.stderr

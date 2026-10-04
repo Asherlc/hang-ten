@@ -5,20 +5,28 @@ for the repository's schema-v3 hangboard packages.
 
 ## Package contract
 
-Every catalog package is a direct child of `Hangboards/` retaining
-`<package-directory>.FCStd` and any authored suspension or rope-physics sidecar.
-Its USDZ, `*.model.json`, and optional `*.physics.json` files under `assets/`
-are ignored build outputs. Run `scripts/build-board-assets.sh` before validation
+Every catalog board retains one flat `Hangboards/<slug>.FCStd`; its generated
+package is the adjacent `Hangboards/<slug>/` directory. Discovery starts from
+the flat source files, so a fresh source-only checkout need not contain package
+directories. USDZ, `*.model.json`, optional `*.physics.json`, and
+`assets/suspension.json` files in those directories are ignored build outputs.
+Run `scripts/build-board-assets.sh` before validation
 to compile them from the sources using pinned FreeCAD 1.1.3/OpenUSD 26.8.
 
 The board document is generated in memory from the FCStd's
-`HangTenBoardManifest` and any suspension sidecar
+`HangTenBoardManifest` and validated generated `assets/suspension.json`
 (`hangboard_packages.cad_source`; see [the CAD guide](../HangboardCAD/README.md)).
 There is **no** on-disk `board.json` in a native package: the validator rejects
 one as a stale hand edit. Use `board_catalog.read_board_json(package_root)` or
-`BoardPackage.generated_board_json`. Staging writes the same generated document
+`BoardPackage.generated_board_json`. Cord/simulation authoring lives in the
+document-level string properties `HangTenSuspensionAuthoring` and
+`HangTenRopePhysics`; hashes, settled heights, and routes are generated outputs.
+The package generator rejects absent/stale suspension artifacts and authoring
+payload mismatches. Staging writes the same generated document
 into iOS and Android packages. A package may have several presentations, with
-exactly one default.
+exactly one default. POCKET's pre-existing manifest suspension remains the
+documented legacy exception; an artifact is required for embedded
+`HangTenSuspensionAuthoring`, not for a source with no such property.
 
 `contacts[]` is the only physical-fact inventory. Each contact has a stable ID,
 an equipment object, a sourced name and kind, and only those optional facts that
@@ -64,8 +72,8 @@ rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards --manife
 ```
 
 These commands validate their respective closed audit schemas. A package's
-`suspension.json` is an authoring sidecar, not a cord-audit manifest. Historical
-catalog-wide audit inputs are not supplied by this package; use current retained
+`assets/suspension.json` is generated runtime metadata, not a cord-audit manifest.
+Historical catalog-wide audit inputs are not supplied by this package; use current retained
 source evidence and an explicit manifest when running an audit command.
 Run `rtk scripts/hangboard-packages.sh <command> --help` for its options.
 
@@ -74,8 +82,8 @@ Run `rtk scripts/hangboard-packages.sh <command> --help` for its options.
 A package's native source is compiled by
 `Tools/HangboardCAD/compile_board.py`. The shared producer compiles every declared
 model presentation, verifies model/descriptor/physics hash bindings, checks
-authored suspension sidecars against the new exports, and installs the generated
-files at their existing ignored runtime paths:
+embedded suspension authoring against the generated routes and new exports,
+and installs the generated files at their existing ignored runtime paths:
 
 ```sh
 rtk git lfs pull

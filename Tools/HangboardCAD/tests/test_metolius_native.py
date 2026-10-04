@@ -19,7 +19,7 @@ FREECAD = Path("/Applications/FreeCAD.app/Contents/Resources")
 FREECAD_CMD = FREECAD / "bin" / "freecadcmd"
 EXTRA_PATH = os.environ.get("HANGTEN_CAD_PYTHONPATH")
 PACKAGE = "metolius-rock-rings-3d"
-SOURCE = REPOSITORY / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
+SOURCE = REPOSITORY / "Hangboards" / f"{PACKAGE}.FCStd"
 ASSET = REPOSITORY / "Hangboards" / PACKAGE / "assets" / "primary.usdz"
 
 requires_freecad = pytest.mark.skipif(

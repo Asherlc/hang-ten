@@ -53,7 +53,8 @@ fi
 
 # Use FreeCAD's Python ABI even when the host Python has a different version.
 "$python_command" -m pip install --disable-pip-version-check --only-binary=:all: \
-    --python-version 3.11 --target "$build_root/usd" usd-core==26.8
+    --python-version 3.11 --target "$build_root/usd" usd-core==26.8 \
+    -r "$repository_root/Tools/HangboardCAD/rope_solver_requirements.txt"
 
 "$python_command" "$repository_root/Tools/HangboardCAD/prepare_assets.py" \
     --out "$build_root/compiled" \

@@ -14,7 +14,7 @@ enum BoardSourceBoundaryAudit {
     ]
 
     /// The board document of the package at `packageURL` in the checkout: the
-    /// checked-in `board.json`, or, for a CAD-backed package (`<slug>.FCStd`,
+    /// checked-in `board.json`, or, for a CAD-backed package (adjacent `<slug>.FCStd`,
     /// whose `board.json` is generated at build time and never committed), the
     /// copy the Stage Board Packages build phase generated into the app bundle.
     static func boardDocumentURL(forPackageAt packageURL: URL) -> URL? {
@@ -23,7 +23,8 @@ enum BoardSourceBoundaryAudit {
             return checkedInURL
         }
         let slug = packageURL.lastPathComponent
-        let authoringSourceURL = packageURL.appendingPathComponent("\(slug).FCStd")
+        let authoringSourceURL = packageURL.deletingLastPathComponent()
+            .appendingPathComponent("\(slug).FCStd")
         guard FileManager.default.fileExists(atPath: authoringSourceURL.path),
               let resourceURL = Bundle.main.resourceURL else {
             return nil

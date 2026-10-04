@@ -4,7 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from hangboard_packages.cad_source import load_board
+from hangboard_packages.cad_source import load_board, package_source_path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -12,7 +12,7 @@ PACKAGE_ROOT = REPO_ROOT / "Hangboards" / "trango-rock-prodigy-training-center"
 
 
 def test_training_center_is_a_hash_bound_model_only_package() -> None:
-    source = PACKAGE_ROOT / "trango-rock-prodigy-training-center.FCStd"
+    source = package_source_path(PACKAGE_ROOT)
     board = load_board(source)
     presentations = board["presentations"]
     assert isinstance(presentations, list) and len(presentations) == 1
@@ -25,7 +25,7 @@ def test_training_center_is_a_hash_bound_model_only_package() -> None:
         path.relative_to(PACKAGE_ROOT).as_posix()
         for path in PACKAGE_ROOT.rglob("*")
         if path.is_file()
-    } == {source.name, "assets/primary.usdz", "assets/primary.model.json"}
+    } == {"assets/primary.usdz", "assets/primary.model.json"}
 
     descriptor = json.loads(
         (PACKAGE_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")

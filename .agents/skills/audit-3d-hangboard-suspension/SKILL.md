@@ -12,7 +12,7 @@ cache cannot make a metadata-driven cord appear.
 Read [3D suspension and ODR](../../../docs/3D_SUSPENSION_AND_ODR.md) before
 diagnosis or edits. Read the board's current source audit and retained evidence;
 when an explicit closed cord-audit manifest is supplied, validate it rather
-than relying on an older design note. A package's `suspension.json` is not that
+than relying on an older design note. Generated `assets/suspension.json` is not that
 audit manifest.
 For a cord entering two connected mouths, read
 [CAD cord authoring](../../../docs/HANGBOARD_CORD_AUTHORING.md) before choosing
@@ -27,18 +27,25 @@ For a cord entering two connected mouths, read
 - An older installed/prebuilt app is evidence only when its commit provenance
   includes the suspension renderer and current bundled metadata.
 
-For a package with a native `<slug>.FCStd`, there is no committed `board.json`:
-it is generated from the FCStd's `HangTenBoardManifest` and any adjacent
-`suspension.json` at build time (read it with
+For a board with one flat `Hangboards/<slug>.FCStd`, there is no committed
+`board.json`: it is generated from the FCStd's `HangTenBoardManifest` and
+validated generated `assets/suspension.json` at build time (read it with
 `rtk python3 Tools/HangboardCAD/board_manifest.py --package <slug>`). Edit the
-sidecar when present; otherwise edit suspension in the manifest with
-`Tools/HangboardCAD/set_board_manifest.py`. The sidecar must match the model
-descriptor's SHA-256. Never create a `board.json` in the package.
+document-level `App::PropertyString` `HangTenSuspensionAuthoring` with
+`Tools/HangboardCAD/set_cad_authoring.py`; inspect it with
+`board_manifest.py --package <slug> --dump-authoring suspension`. Optional
+simulation inputs live in `HangTenRopePhysics`. Suspension authoring contains
+only topology, dimensions, solver settings, evidence, pose rotations/cameras,
+and optional `offsetXZ: [x, z]`. Source/model hashes, settled heights, and
+solved routes are generated; never save them into CAD. Package generation
+rejects absent/stale artifacts and mismatches with current authoring inputs.
+Never create `board.json` or authored JSON sidecars in the package.
 
-USDZ, model descriptors and physics descriptors are generated, ignored files.
+USDZ, model/physics descriptors, and `assets/suspension.json` are generated,
+ignored files at the existing `Hangboards/<slug>/assets/` paths.
 Run `rtk proxy bash scripts/build-board-assets.sh` before package validation;
 before an app build use `rtk proxy bash scripts/build-runtime-assets.sh`.
-Both retain the FCStd and authored sidecars as inputs. CI consumers download
+Both use the flat FCStd with its embedded authoring as input. CI consumers download
 the producer artifact before validation/staging. Read
 [generated artifacts](../../../docs/GENERATED_ARTIFACTS.md) for the boundary.
 
@@ -52,20 +59,22 @@ decision needs an independent `sourceFact`, retained exact-revision evidence,
 a ruling, and human approval. Current validated evidence outranks superseded
 assumptions; in particular, native `yy.baguette-evo` retains source-backed
 `cadRoutedCord` alongside orientation metadata. Its descriptor-bound
-`suspension.json` supplies the current suspension, authored with
+generated `assets/suspension.json` supplies the current suspension from CAD
+authoring with
 `ropeSolver.method: "nativeRoutes"`.
 
-For a CAD board (a package with `<slug>.FCStd`), preserve the evidenced
+For a CAD board (with flat `Hangboards/<slug>.FCStd`), preserve the evidenced
 connection graph and use the native solver in
 [CAD cord authoring](../../../docs/HANGBOARD_CORD_AUTHORING.md). For evidenced
 connected internal mouth pairs, the standard method uses a CAD passage void,
 `twoBranchCord` (or the single-loop `threadedLoopCord`) with `internalLoop` in
-`suspension.json`, and a CAD-measured channel length. For independent visible
+`HangTenSuspensionAuthoring`, and a CAD-measured channel length. For independent visible
 leads, exterior wraps, or mouths whose hidden connection is unknown, use the
 documented `cadRoutedCord` / `ropeSolver.method: "nativeRoutes"` contract;
 do not invent a connecting channel. Generate every canonical pose against the
-actual native solid with `solve_threaded_rope.py --apply`, then reproduce it
-with `--check` and retain clearance, length, tube and topology checks. Replace
+actual native solid through the pinned build's `compile_suspension.py` and
+retained solvers, then reproduce generated artifacts with
+`solve_threaded_rope.py --check` and retain clearance, length, tube and topology checks. Replace
 hand-authored `pairedLeadCord` routes when a board moves to CAD, and extend the
 solver with evidence and tests instead of hand-placing routes.
 
@@ -90,7 +99,8 @@ threading. Do not infer a hidden connection between the two holes. See the
 dated DUAL source audit and cord-entry review.
 
 Captain Fingerfood POCKET is already native CAD, with suspension embedded in
-its `HangTenBoardManifest`. Its retained `pairedLeadCord` and ordered
+its flat FCStd's `HangTenBoardManifest`. Consolidation preserves that existing
+CAD-contained setup unchanged. Its retained `pairedLeadCord` and ordered
 `contactPointsInModel` are legacy metadata, not proof of a completed native
 solver migration. Retaining this pre-existing suspension is an intentional,
 POCKET-only legacy exception pending a separate evidence-backed cord revision;

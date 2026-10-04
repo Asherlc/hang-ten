@@ -1,4 +1,4 @@
-"""Authoring overlays must survive multi-asset and reusable-instance staging."""
+"""Native authoring must survive multi-asset and reusable-instance staging."""
 import copy
 import json
 from pathlib import Path
@@ -9,6 +9,22 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import use_hangboard_packages  # noqa: E402,F401
 from hangboard_packages import cad_source  # noqa: E402
+from cad_authoring_fixtures import canonical_pose, merge_native_artifact, source_pose_fields  # noqa: E402
+
+
+def connected_setup(tag):
+    return {"type": "twoBranchCord", "tag": tag,
+            "passages": {
+                "left": [
+                    {"id": "left-front", "pointInModel": [-.04, 0, -.01]},
+                    {"id": "left-rear", "pointInModel": [-.04, 0, .01]},
+                ],
+                "right": [
+                    {"id": "right-front", "pointInModel": [.04, 0, -.01]},
+                    {"id": "right-rear", "pointInModel": [.04, 0, .01]},
+                ],
+            },
+            "canonicalPoses": {"front": canonical_pose()}}
 
 
 def package(tmp_path):
@@ -22,16 +38,23 @@ def package(tmp_path):
                     {"equipmentObjectID":"right","translation":[0.100000000,0.000000000,0.000000000]}]}},
       {"id":"configured","media":{"type":"model","descriptorPath":"assets/configured.model.json"}}]}''')
     entries = [
-        {"presentationID": "pair", "equipmentObjectID": "left", "modelSHA256": "a" * 64, "suspension": {"tag": "left"}},
-        {"presentationID": "pair", "equipmentObjectID": "right", "modelSHA256": "a" * 64, "suspension": {"tag": "right"}},
-        {"presentationID": "configured", "modelSHA256": "b" * 64, "suspension": {"tag": "configured"}},
+        {"presentationID": "pair", "equipmentObjectID": "left", "modelSHA256": "a" * 64,
+         "suspension": connected_setup("left")},
+        {"presentationID": "pair", "equipmentObjectID": "right", "modelSHA256": "a" * 64,
+         "suspension": connected_setup("right")},
+        {"presentationID": "configured", "modelSHA256": "b" * 64,
+         "suspension": connected_setup("configured")},
     ]
     return board, entries
 
 
 def merge(tmp_path, board, entries):
-    (tmp_path / "suspension.json").write_text(json.dumps({"schemaVersion": 2, "entries": entries}))
-    return cad_source.merge_suspension_sidecar(board, tmp_path)
+    authored_entries = [{key: value for key, value in entry.items() if key != "modelSHA256"}
+                        for entry in entries]
+    return merge_native_artifact(
+        tmp_path, board, {"schemaVersion": 2, "entries": authored_entries},
+        [entry["modelSHA256"] for entry in entries],
+    )
 
 
 def test_two_instances_and_another_asset_keep_distinct_hash_bound_overlays(tmp_path):
@@ -93,7 +116,8 @@ def test_native_route_stations_require_finite_vectors_and_a_real_plane(tmp_path,
 ])
 def test_native_authoring_cannot_hide_a_mismatched_terminal_graph(tmp_path, terminal_id, kind, points):
     board, entries = package(tmp_path)
-    entries[0]["suspension"] = {"type": "cadRoutedCord", "strands": [{"id": "lead", "kind": kind}]}
+    entries[0]["suspension"] = {"type": "cadRoutedCord", "strands": [{"id": "lead", "kind": kind}],
+                                "canonicalPoses": {"front": canonical_pose()}}
     entries[0]["ropeSolver"] = {"method": "nativeRoutes", "clearance": .0002,
         "terminalsByStrandID": {terminal_id: {"points": points, "planeNormal": [1, 0, 0]}}}
     with pytest.raises(cad_source.ManifestError, match="terminals|stations"):
@@ -102,7 +126,8 @@ def test_native_authoring_cannot_hide_a_mismatched_terminal_graph(tmp_path, term
 
 def test_matching_native_authoring_graph_merges_without_runtime_solver_settings(tmp_path):
     board, entries = package(tmp_path)
-    entries[0]["suspension"] = {"type": "cadRoutedCord", "strands": [{"id": "lead", "kind": "lead"}]}
+    entries[0]["suspension"] = {"type": "cadRoutedCord", "strands": [{"id": "lead", "kind": "lead"}],
+                                "canonicalPoses": {"front": canonical_pose()}}
     entries[0]["ropeSolver"] = {"method": "nativeRoutes", "clearance": .0002, "sectionPlane": "anchor",
         "terminalsByStrandID": {"lead": {"points": [[0, 0, 0]], "planeNormal": [1, 0, 0], "planeAxis": [0, 0, 1]}}}
     merged = merge(tmp_path, board, entries)
@@ -111,7 +136,8 @@ def test_matching_native_authoring_graph_merges_without_runtime_solver_settings(
 
 
 def front_entry_authoring(entries):
-    entries[0]["suspension"] = {"type": "cadRoutedCord", "strands": [{"id": "lead", "kind": "lead"}]}
+    entries[0]["suspension"] = {"type": "cadRoutedCord", "strands": [{"id": "lead", "kind": "lead"}],
+                                "canonicalPoses": {"front": canonical_pose()}}
     entries[0]["ropeSolver"] = {"method": "nativeRoutes", "clearance": .0002,
         "sectionPlane": "anchor", "tightening": "coupled3D",
         "terminalsByStrandID": {"lead": {"points": [[0, 0, 0]],
@@ -123,7 +149,7 @@ def test_native_coupled_tightening_is_authoring_only(tmp_path):
     board, entries = package(tmp_path)
     front_entry_authoring(entries)
     merged = merge(tmp_path, board, entries)
-    assert merged["presentations"][0]["media"]["instances"][0]["suspension"] == entries[0]["suspension"]
+    assert source_pose_fields(merged["presentations"][0]["media"]["instances"][0]["suspension"]) == entries[0]["suspension"]
     assert "coupled3D" not in cad_source.render_board(merged).decode()
     assert "ropeSolver" not in cad_source.render_board(merged).decode()
 
@@ -173,8 +199,8 @@ def test_native_path_search_rejects_invalid_explicit_selector(tmp_path, selector
 def guided_authoring(entries):
     solver=front_entry_authoring(entries)
     solver.pop("tightening")
-    entries[0]["suspension"]["canonicalPoses"]={"front":{}}
-    solver["grooveGuides"]={"sourceSHA256":"c"*64,"byPoseID":{"front":{"lead":{"feature":"NativeGroove","boreFeature":"NativeBore","exitSign":1}}}}
+    entries[0]["suspension"]["canonicalPoses"]={"front":canonical_pose()}
+    solver["grooveGuides"]={"byPoseID":{"front":{"lead":{"feature":"NativeGroove","boreFeature":"NativeBore","exitSign":1}}}}
     return solver
 
 
@@ -194,5 +220,5 @@ def test_native_guides_reject_incomplete_or_authored_route_contract(tmp_path,cha
     if change=="bad-source":guides["sourceSHA256"]="stale"
     if change=="bad-exit":guides["byPoseID"]["front"]["lead"]["exitSign"]=True
     if change=="mixed-tightening":solver["tightening"]="coupled3D"
-    with pytest.raises(cad_source.ManifestError,match="grooveGuides"):
+    with pytest.raises(cad_source.ManifestError,match="grooveGuides|sourceSHA256"):
         merge(tmp_path,board,entries)

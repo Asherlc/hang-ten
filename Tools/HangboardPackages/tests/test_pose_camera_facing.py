@@ -179,20 +179,20 @@ def _stone_reverse_six_bearing_samples(position_id: str):
     runtime = json.loads((audit / "granite-seat-review/runtime-validation.json").read_bytes())
     package = HANGBOARDS_ROOT / "nature-stone-hanger"
     descriptor = json.loads((package / "assets/primary.model.json").read_bytes())
-    sidecar = json.loads((package / "suspension.json").read_bytes())
+    artifact = json.loads((package / "assets/suspension.json").read_bytes())
+    source = load_board_catalog_module().cad_source.package_source_path(package)
     assert preserved["status"] == runtime["status"] == "pass"
     assert preserved["beforeSHA256"] == native["sourceSHA256"]
-    assert preserved["sourceSHA256"] == runtime["sourceSHA256"] == hashlib.sha256(
-        (package / "nature-stone-hanger.FCStd").read_bytes()
-    ).hexdigest()
-    assert runtime["modelSHA256"] == descriptor["modelSHA256"] == sidecar["modelSHA256"] == hashlib.sha256(
+    # The audit records the source before metadata was consolidated. Its
+    # exported model still binds the native bearing proof to current geometry;
+    # the compiled suspension separately binds the current flat CAD document.
+    assert preserved["sourceSHA256"] == runtime["sourceSHA256"]
+    assert artifact["sourceSHA256"] == hashlib.sha256(source.read_bytes()).hexdigest()
+    assert runtime["modelSHA256"] == descriptor["modelSHA256"] == artifact["modelSHA256"] == hashlib.sha256(
         (package / "assets/primary.usdz").read_bytes()
     ).hexdigest()
     assert runtime["descriptorSHA256"] == hashlib.sha256(
         (package / "assets/primary.model.json").read_bytes()
-    ).hexdigest()
-    assert runtime["suspensionSHA256"] == hashlib.sha256(
-        (package / "suspension.json").read_bytes()
     ).hexdigest()
     preserved_wood = {
         contact_id for contact_id, proof in preserved["contactInventory"].items()

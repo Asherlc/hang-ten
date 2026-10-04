@@ -65,7 +65,7 @@ def require_reusable_descriptor_matches_source(package, model_bytes, model, desc
     import xml.etree.ElementTree as ET
     from contact_model_descriptor import SlotNodeBinding, compile_reusable_descriptor
 
-    with zipfile.ZipFile(package / f"{package.name}.FCStd") as archive:
+    with zipfile.ZipFile(package.parent / f"{package.name}.FCStd") as archive:
         document = ET.fromstring(archive.read("Document.xml"))
     nodes, outlines = [], {}
     for obj in document.findall("./ObjectData/Object"):
@@ -98,12 +98,12 @@ def _verify_reusable_package(package: Path) -> dict[str, object]:
     cad_tools = _TOOLS.parent / "HangboardCAD"
     sys.path.insert(0, str(cad_tools))
     import board_manifest  # Installs the shared package module search path.
-    from hangboard_packages.cad_source import load_board
+    from hangboard_packages.cad_source import load_board, package_source_path
     from usdz_writer import read_usdz
 
     model_path = package / "assets/primary.usdz"
     descriptor = _load_object(package / "assets/primary.model.json", "descriptor")
-    board = load_board(package / f"{package.name}.FCStd")
+    board = load_board(package_source_path(package))
     if tuple(c["id"] for c in board["contacts"]) != EXPECTED_CONTACT_IDS:
         raise ValueError("physical Training Center contact inventory changed")
     digest = hashlib.sha256(model_path.read_bytes()).hexdigest()

@@ -1153,12 +1153,15 @@ def build(
         json.loads(descriptor_path.read_text())
         usdz_writer.read_usdz(asset)
         physics_path = None
-        physics_config = source.parent / "rope-physics.json"
-        if physics_config.is_file():
+        try:
+            physics_config = cad_source.load_rope_physics_authoring(source)
+        except (ValueError, OSError) as error:
+            raise BuildError(f"invalid rope physics authoring: {error}") from error
+        if physics_config is not None:
             from export_rope_physics import build_physics_descriptor
             try:
                 physics = build_physics_descriptor(document, source,
-                    descriptor_json["modelSHA256"], json.loads(physics_config.read_text()))
+                    descriptor_json["modelSHA256"], physics_config)
             except (OSError, AttributeError, ValueError, TypeError, KeyError, RecursionError) as error:
                 raise BuildError(f"invalid rope physics authoring: {error}") from error
             physics_path = staging / "primary.physics.json"
@@ -1239,7 +1242,7 @@ def build(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--package", required=True, help="Hangboards/<package-directory>")
-    parser.add_argument("--source", help="defaults to Hangboards/<package>/<package>.FCStd")
+    parser.add_argument("--source", help="defaults to Hangboards/<package>.FCStd")
     parser.add_argument(
         "--board",
         help="explicit board metadata JSON; defaults to the source's HangTenBoardManifest",
@@ -1257,7 +1260,7 @@ def main(argv: list[str] | None = None) -> int:
 
     package = arguments.package
     source = (Path(arguments.source) if arguments.source
-              else REPOSITORY / "Hangboards" / package / f"{package}.FCStd")
+              else REPOSITORY / "Hangboards" / f"{package}.FCStd")
     assets = Path(arguments.assets) if arguments.assets else REPOSITORY / "Hangboards" / package / "assets"
     if not source.is_file():
         raise BuildError(f"missing required input: {source}")

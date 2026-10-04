@@ -21,7 +21,10 @@ separate factual inventory.
 5. Target the narrowest truthful semantic `ContactRequirement` predicate;
    never embed board contact IDs or visual references in a routine.
 6. Generate board assets before running the plan exporter, which stages board
-   metadata. Regenerate `HangTen/Resources/PlanLibrary.json` with
+   metadata from each flat `Hangboards/<slug>.FCStd` document's
+   `HangTenBoardManifest` and validated generated suspension. Cord/simulation
+   inputs remain embedded CAD data; their generated artifacts do not establish
+   training prescriptions. Regenerate `HangTen/Resources/PlanLibrary.json` with
    `rtk scripts/export-plan-library.sh`, then run it with `--check`.
    This JSON is an ignored build output; commit the audited Swift definitions
    and source mappings. CI generates the same library from those definitions.

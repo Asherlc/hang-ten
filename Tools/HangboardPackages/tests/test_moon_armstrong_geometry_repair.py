@@ -33,7 +33,7 @@ def test_moon_armstrong_model_descriptor_is_complete_with_reviewed_right_side_se
     assert "contactGeometry" not in media
     assert {
         path.relative_to(root).as_posix() for path in root.rglob("*") if path.is_file()
-    } == {"moon-armstrong.FCStd", "assets/primary.usdz", "assets/primary.model.json"}
+    } == {"assets/primary.usdz", "assets/primary.model.json"}
 
     descriptor = json.loads(
         (root / media["descriptorPath"]).read_text(encoding="utf-8")

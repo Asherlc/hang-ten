@@ -24,7 +24,7 @@ FREECAD_CMD = Path(
 )
 EXTRA_PATH = os.environ.get("HANGTEN_CAD_PYTHONPATH")
 PACKAGE = "metolius-prime-rib"
-SOURCE = REPOSITORY / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
+SOURCE = REPOSITORY / "Hangboards" / f"{PACKAGE}.FCStd"
 
 requires_freecad = pytest.mark.skipif(
     not FREECAD_CMD.is_file() or not EXTRA_PATH,

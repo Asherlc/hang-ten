@@ -6,8 +6,8 @@ description: Use when migrating an existing Hang Ten hangboard to native CAD, re
 # Migrate a hangboard to 3D
 
 Deliver a faithful model-only schema-v3 package with selectable physical
-contacts. Retain `Hangboards/<slug>/<slug>.FCStd` as the geometry and embedded
-metadata source. Its generated USDZ and hash-bound descriptor drive rendering,
+contacts. Retain one flat `Hangboards/<slug>.FCStd` as the geometry and embedded
+board/cord/simulation input source. Its generated USDZ and hash-bound descriptor drive rendering,
 highlighting, hit testing, and resolved spatial geometry. Do not retain raster
 media, canonical paths, cached frames, or fallback geometry in a model package.
 Preserve contact identity and source-backed factual metadata exactly.
@@ -25,8 +25,13 @@ solver-generated routes. Connected internal mouth pairs use the standard CAD
 void, measured channel and `internalLoop` method; source-backed independent
 leads, exterior wraps and unknown interior joins use `cadRoutedCord` with
 `ropeSolver.method: "nativeRoutes"`. Never infer hidden connectivity. Generate
-every canonical pose with `solve_threaded_rope.py --apply`, reproduce it with
-`--check`, and retain native-solid clearance, length, tube and topology checks.
+every canonical pose through `scripts/build-board-assets.sh` and
+`compile_suspension.py`, reproduce the generated artifact with
+`solve_threaded_rope.py --check`, and retain native-solid clearance, length,
+tube and topology checks. Change CAD inputs and rebuild; solved heights and
+routes never become source metadata. POCKET's pre-existing manifest suspension
+remains the documented legacy exception pending a separate evidence-backed
+revision; consolidation does not infer new threading for it.
 The cord route is not live physics; document its mesh and topology assumptions.
 
 ## Evidence and scope
@@ -60,11 +65,17 @@ Use only the retained native tools:
 - `Tools/HangboardModels/contact_model_descriptor.py` validates and compiles
   descriptor-v1/v2 bindings and read-only mesh-derived bounds.
 - `Tools/HangboardCAD/compile_board.py` compiles a native FreeCAD source
-  (`Hangboards/<slug>/<slug>.FCStd`) directly into the USDZ and descriptor. For
+  (`Hangboards/<slug>.FCStd`) directly into the USDZ and descriptor. For
   such a package, `board.json` is generated from the FCStd's embedded
-  `HangTenBoardManifest` and any adjacent `suspension.json` at build time and
-  is not committed: embed reviewed CAD metadata with `set_board_manifest.py`
-  and keep optional cord setup in the descriptor-bound sidecar. Follow
+  `HangTenBoardManifest` and validated generated `assets/suspension.json` at
+  build time and is not committed. Embed reviewed board metadata with
+  `set_board_manifest.py` and cord/simulation inputs with `set_cad_authoring.py`
+  in document-level `App::PropertyString` `HangTenSuspensionAuthoring` and
+  `HangTenRopePhysics`. Suspension authoring retains topology, dimensions,
+  solver settings, evidence, pose rotations/cameras, and optional
+  `offsetXZ: [x, z]`. Source/model hashes, settled heights, and solved routes
+  belong in the generated artifact. Missing/stale artifacts and changed
+  authoring payloads fail package validation. Follow
   "Authoring a new CAD board" in `Tools/HangboardCAD/README.md`; any authoring
   script is a throwaway under
   `.context/`, and its provenance goes in a dated `docs/source-audits/` record.
@@ -74,8 +85,9 @@ Use only the retained native tools:
 - `Tools/HangboardModels/verify_owl_climb_poker.py` and the native Training
   Center verifier retain actual-export regressions for those boards.
 
-Commit the FCStd, authored sidecars and evidence; keep USDZ, `*.model.json`,
-`*.physics.json` and generated `board.json` out of Git. Do not recreate retired
+Commit the flat FCStd and evidence; keep USDZ, `*.model.json`, `*.physics.json`,
+`assets/suspension.json`, and generated `board.json` out of Git. Runtime assets
+retain their existing `Hangboards/<slug>/assets/` paths. Do not recreate retired
 Blender board compilers/importers, per-board authors, mesh cleanup/simplification,
 raster converters, or compatibility aliases.
 

@@ -8,10 +8,13 @@ import pytest
 
 ROOT=Path(__file__).resolve().parents[3]
 TOOLS=ROOT/"Tools/HangboardCAD"
+sys.path.insert(0, str(TOOLS))
+import use_hangboard_packages  # noqa: E402,F401
+from hangboard_packages import cad_source  # noqa: E402
 FREECAD = Path(os.environ.get("HANGTEN_FREECAD_CMD", "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd"))
 
 def test_mini_bar_uses_the_confirmed_seven_mm_cord():
-    document=json.loads((ROOT/"Hangboards/lattice-mini-bar/suspension.json").read_text())
+    document=cad_source.load_suspension_authoring(ROOT/"Hangboards/lattice-mini-bar.FCStd")
     branches = document["suspension"]["branches"]
     assert len(branches) == 2, "mini bar must define both cord branches"
     assert all(branch["radius"] == .0035 for branch in branches)
@@ -30,7 +33,7 @@ def test_exported_contact_regions_leave_the_native_cord_mouths_open():
         vertices.extend(node["points_m"])
     mesh=trimesh.Trimesh(vertices=vertices,faces=faces,process=False)
     package = ROOT / "Hangboards/lattice-mini-bar"
-    suspension = json.loads((package / "suspension.json").read_text())["suspension"]
+    suspension = cad_source.load_suspension_authoring(cad_source.package_source_path(package))["suspension"]
     mouths = np.asarray([p["pointInModel"] for side in suspension["passages"].values() for p in side])
     assert len(mouths) == 4
     bounds = json.loads((package / "assets/primary.model.json").read_text())["modelBounds"]
@@ -72,7 +75,7 @@ def test_mini_bar_native_passages_fit_seven_mm_without_changing_board_scale(tmp_
     script=tmp_path/"confirmed-diameter.py"
     script.write_text('''import FreeCAD as App
 from pathlib import Path
-d=App.openDocument(str(Path("Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd").resolve()))
+d=App.openDocument(str(Path("Hangboards/lattice-mini-bar.FCStd").resolve()))
 for name in ["LeftChannelDiameter","RightChannelDiameter"]:
     sketch=d.getObject(name)
     assert sketch.Geometry[0].Radius >= 3.6, "Native display bore must admit the owner's 7 mm cord plus clearance"

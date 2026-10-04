@@ -250,6 +250,9 @@ def stage_live_model_packages(
     hangboards.mkdir(parents=True)
     for slug in LIVE_MODEL_PACKAGE_SLUGS:
         shutil.copytree(REPO_ROOT / "Hangboards" / slug, hangboards / slug)
+        native_source = REPO_ROOT / "Hangboards" / f"{slug}.FCStd"
+        if native_source.is_file():
+            shutil.copyfile(native_source, hangboards / native_source.name)
     package_source = REPO_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
     shutil.copytree(
         package_source,
@@ -603,8 +606,9 @@ def test_staging_preserves_live_descriptors_and_odr_model_hash_bindings(
             for path in staged_package.rglob("*")
             if path.is_file() and not path.is_symlink() and path.relative_to(staged_package).parts[:1] == ("assets",)
         }
-        assert source_assets == declared_assets
+        assert source_assets - {"assets/suspension.json"} == declared_assets
         assert staged_assets == {presentation.media.descriptor_path for presentation in model_presentations}
+        assert "assets/suspension.json" not in staged_assets
         for presentation in model_presentations:
             media = presentation.media
             assert (staged_package / media.descriptor_path).read_bytes() == (source_package / media.descriptor_path).read_bytes()
@@ -637,15 +641,14 @@ def test_staging_splits_every_live_model_package_without_duplication(
             for path in odr_package_root.rglob("*")
             if path.is_file() and not path.is_symlink()
         }
-        # A CAD-backed package's own authoring source (<slug>.FCStd) is never
-        # staged; staging writes the board.json generated from it instead.
+        # Native sources are adjacent to the packages. The generated suspension
+        # cache is merged into board.json and omitted from staged resources.
         expected_base_files = {
             relative: contents
             for relative, contents in source_files.items()
-            if not relative.endswith(".usdz") and relative != f"{slug}.FCStd"
-                and (relative != "suspension.json" or f"{slug}.FCStd" not in source_files)
+            if not relative.endswith(".usdz") and relative != "assets/suspension.json"
         }
-        if f"{slug}.FCStd" in source_files:
+        if (source_package.parent / f"{slug}.FCStd").is_file():
             assert "board.json" not in source_files
             expected_base_files["board.json"] = package_board_text(
                 source_package

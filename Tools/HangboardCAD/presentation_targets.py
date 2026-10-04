@@ -32,6 +32,6 @@ def model_targets(board: dict) -> dict[str, tuple[str, str]]:
 def source_targets(source):
     import use_hangboard_packages  # noqa: F401
     from hangboard_packages import cad_source
-    # Select build targets before exports exist or a cord sidecar is refreshed.
+    # Select build targets before exports or the generated suspension artifact exist.
     # Staging separately validates and merges descriptor-bound suspension data.
     return model_targets(cad_source.load_board(source))

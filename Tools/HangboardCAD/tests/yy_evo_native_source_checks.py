@@ -13,7 +13,7 @@ import FreeCAD as App
 import Part
 
 REPOSITORY = Path(__file__).resolve().parents[3]
-SOURCE = REPOSITORY / "Hangboards/yy-verticalboard-evo/yy-verticalboard-evo.FCStd"
+SOURCE = REPOSITORY / "Hangboards/yy-verticalboard-evo.FCStd"
 
 
 def bound(document):

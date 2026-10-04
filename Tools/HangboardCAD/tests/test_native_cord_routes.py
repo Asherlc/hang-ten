@@ -16,7 +16,7 @@ def test_captain_dual_cached_leads_enter_the_front_recess_mouth(pose_id):
     # into the FRONT recess opening. A collision-free rear-to-front bore path
     # is geometrically possible, but contradicts that sourced entry direction.
     package = Path(__file__).resolve().parents[3] / "Hangboards/captain-fingerfood-dual"
-    data = json.loads((package / "suspension.json").read_text())
+    data = json.loads((package / "assets/suspension.json").read_text())
     routes = data["suspension"]["canonicalPoses"][pose_id]["wrappedRoutes"]
     for strand_id, x in [("left-lead", -.026), ("right-lead", .026)]:
         route = np.asarray(routes[strand_id])

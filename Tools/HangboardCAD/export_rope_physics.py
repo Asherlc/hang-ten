@@ -200,7 +200,7 @@ def export_rope_physics(document, body_feature: str, channel_features: dict) -> 
 
 def build_physics_descriptor(document, source: Path, model_sha256: str, config: dict) -> dict:
     if set(config) != {"bodyFeature", "channelFeatures", "profiles"}:
-        raise ValueError("rope-physics.json needs bodyFeature, channelFeatures and profiles only")
+        raise ValueError("HangTenRopePhysics needs bodyFeature, channelFeatures and profiles only")
     from hangboard_packages.rope_physics import validate_rope_physics
     descriptor = {"schemaVersion": 1,
                   "sourceSHA256": hashlib.sha256(source.read_bytes()).hexdigest(),

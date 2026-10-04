@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from _board_package_helpers import document_contact_geometry
-from hangboard_packages.cad_source import load_board as load_cad_board
+from hangboard_packages.cad_source import load_board as load_cad_board, package_source_path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 MIRRORED_PAIRS = {
@@ -114,7 +114,7 @@ def _assert_mirrored_piece(left: dict[str, object], right: dict[str, object]) ->
 @pytest.mark.parametrize("board_id", MIRRORED_PAIRS)
 def test_coderabbit_flagged_pairs_preserve_mirrored_geometry(board_id: str) -> None:
     package = REPO_ROOT / "Hangboards" / board_id
-    cad_source = package / f"{board_id}.FCStd"
+    cad_source = package_source_path(package)
     board = (
         load_cad_board(cad_source)
         if cad_source.is_file()

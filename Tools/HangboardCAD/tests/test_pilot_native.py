@@ -18,7 +18,7 @@ FREECAD = Path("/Applications/FreeCAD.app/Contents/Resources")
 FREECAD_CMD = FREECAD / "bin" / "freecadcmd"
 EXTRA_PATH = os.environ.get("HANGTEN_CAD_PYTHONPATH")
 PACKAGE = "lattice-triple-rung"
-SOURCE = REPOSITORY / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
+SOURCE = REPOSITORY / "Hangboards" / f"{PACKAGE}.FCStd"
 
 requires_freecad = pytest.mark.skipif(
     not FREECAD_CMD.is_file() or not EXTRA_PATH,
