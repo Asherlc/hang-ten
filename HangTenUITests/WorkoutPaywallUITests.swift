@@ -122,8 +122,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertEqual(purchase.label, "Unlock for $2.99")
         purchase.tap()
 
-        XCTAssertTrue(app.buttons["workout.primaryControl"].waitForExistence(timeout: 5))
-        XCTAssertFalse(app.otherElements["paywall.lifetimeUnlock"].exists)
+        assertWorkoutOpened(in: app)
     }
 
     func testVerifiedFakeRestoreContinuesIntoSession() {
@@ -137,8 +136,7 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         app.buttons["paywall.restore"].tap()
 
-        XCTAssertTrue(app.buttons["workout.primaryControl"].waitForExistence(timeout: 5))
-        XCTAssertFalse(app.otherElements["paywall.lifetimeUnlock"].exists)
+        assertWorkoutOpened(in: app)
     }
 
     func testVerifiedPurchaseCarriesScaleSnapshotIntoSensorPreparation() {
@@ -456,6 +454,21 @@ final class WorkoutPaywallUITests: XCTestCase {
             "We couldn’t complete the purchase. Please try again or restore purchases."
         ].exists)
         XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
+    }
+
+    private func assertWorkoutOpened(
+        in app: XCUIApplication,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        // Verified access opens the session before on-demand 3D preparation finishes.
+        XCTAssertTrue(app.buttons["workout.end"].waitForExistence(timeout: 10), file: file, line: line)
+        XCTAssertTrue(app.staticTexts["workout.timer"].exists, file: file, line: line)
+        XCTAssertFalse(app.otherElements["paywall.lifetimeUnlock"].exists, file: file, line: line)
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "Workout opened after verified access"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     private func lockedPlanApp() -> XCUIApplication {
