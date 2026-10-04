@@ -1,0 +1,58 @@
+import Foundation
+import simd
+import Darwin
+let root=URL(fileURLWithPath:CommandLine.arguments[1])
+let rawData=try Data(contentsOf:URL(fileURLWithPath:"Hangboards/clavellium-training-block/assets/primary.physics.json"))
+let raw=try JSONSerialization.jsonObject(with:rawData) as! [String:Any]
+let input=try RopePhysicsDescriptor.decode(rawData).validated(modelSHA256:raw["modelSHA256"] as! String)
+let collider=try RopeTriangleCollider(input:input)
+let upright=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1)),turned=simd_quatd(angle:Double.pi/6,axis:SIMD3<Double>(0,0,1))
+let seed=try RopeThreadedSeed.make(input:input,profileID:input.profiles[0].id,orientation:upright,collider:collider)
+var base=try RopeDynamicsSolver.prepareDisplay(input:input,state:seed,collider:collider).solver
+base.woodMajorizerExperiment=true;base.woodResidualExperiment=true;base.woodFeatureIdentityExperiment=true;base.preconditionedResidualExperiment=true
+var solvers=[base,base,base],records:[[String:Any]]=[]
+let prior=try decodeCheckpointJSON(Data(contentsOf:URL(fileURLWithPath:CommandLine.arguments[2])))
+let priorSteps=prior["steps"] as! [[String:Any]]
+func bytes(_ x:RopeDynamicsSolver)throws->Data {try JSONSerialization.data(withJSONObject:x.bundleCheckpoint(),options:.sortedKeys)}
+func quantile(_ x:[Double],_ p:Double)->Double {let v=x.sorted();return v[Int(ceil(p*Double(v.count-1)))]}
+var report:[String:Any]=["owner":"strong-owl-live-physics","adopted":false,"steps":records]
+func save()throws {report["steps"]=records;try JSONSerialization.data(withJSONObject:report,options:[.sortedKeys,.prettyPrinted]).write(to:root.appendingPathComponent("result.json"))}
+do {
+ for step in 1...540 {
+  let target=step<=240 ? turned:upright
+  var times=[Double](repeating:0,count:3),batches=[Double](repeating:0,count:3),narrow=[Double](repeating:0,count:3),traces=[[[String:Any]]](repeating:[],count:3)
+  for mode in (0..<3).map({($0+step)%3}) {
+   SolverCollection.collect=mode==0;SolverCollection.profile=mode==2
+   SolverCollection.batchNanos=0;SolverCollection.narrowNanos=0
+   ArmijoTrace.corrections=[];ResidualStopTrace.enabled=true;ResidualStopTrace.estimates=[];ResidualStopTrace.eligible=0;ResidualStopTrace.stops=0
+   alarm(10);let start=DispatchTime.now().uptimeNanoseconds
+   let frame=try solvers[mode].step(dt:1.0/240,targetOrientation:target)
+   times[mode]=Double(DispatchTime.now().uptimeNanoseconds-start)/1e9;alarm(0)
+   batches[mode]=Double(SolverCollection.batchNanos)/1e9;narrow[mode]=Double(SolverCollection.narrowNanos)/1e9
+   traces[mode]=ArmijoTrace.corrections
+   guard frame.metrics.geometryAccepted,solvers[mode].reviewStepCaps==0,solvers[mode].reviewStepRetries==0 else {throw RopePhysicsError.invalid("physical/cap/retry")}
+  }
+  let identities=try solvers.map{try bytes($0)}
+  guard identities[0]==identities[1],identities[0]==identities[2],
+     solvers[0].reviewStepCorrections==solvers[1].reviewStepCorrections,solvers[0].reviewStepCorrections==solvers[2].reviewStepCorrections else {throw RopePhysicsError.invalid("complete checkpoint/correction count identity")}
+  let old=priorSteps[step-1]["trace"] as! [[String:Any]]
+  guard traces[0].count==old.count else {throw RopePhysicsError.invalid("prior correction count identity")}
+  for (a,b) in zip(traces[0],old) {for k in ["alpha","movement","strain"] {guard (a[k] as! Double)==(b[k] as! Double) else {throw RopePhysicsError.invalid("prior numerical prefix identity")}}}
+  guard traces[1].isEmpty,traces[2].isEmpty else {throw RopePhysicsError.invalid("diagnostics unexpectedly collected")}
+  records.append(["step":step,"seconds":times,"batchSeconds":batches[2],"narrowSeconds":narrow[2],"qps":solvers[0].reviewStepCorrections,"completeCheckpointIdentity":true,"priorNumericalIdentity":true])
+  if step<=20 || step%20==0 {try save();print("step",step,"ms",times.map{$0*1000});fflush(stdout)}
+ }
+ let on=records.map{($0["seconds"] as! [Double])[0]},off=records.map{($0["seconds"] as! [Double])[1]},profile=records.map{($0["seconds"] as! [Double])[2]}
+ let batch=records.map{$0["batchSeconds"] as! Double},narrow=records.map{$0["narrowSeconds"] as! Double}
+ let remainder=zip(profile,narrow).map{$0-$1},allGeometryRemainder=zip(profile,batch).map{$0-$1}
+ report["identityPass"]=true;report["diagnosticRatio"]=zip(off,on).map{$0/$1}.reduce(0,+)/Double(on.count)
+ report["engineRatio"]=off.reduce(0,+)/on.reduce(0,+)
+ report["onEngineSeconds"]=on.reduce(0,+);report["offEngineSeconds"]=off.reduce(0,+)
+ report["offP95Ms"]=1000*quantile(off,0.95);report["profileOverheadMedianSeconds"]=quantile(zip(profile,off).map{$0-$1},0.5)
+ report["narrowFreeRemainderP95Ms"]=1000*quantile(remainder,0.95)
+ report["allFusedFreeRemainderP95Ms"]=1000*quantile(allGeometryRemainder,0.95)
+ report["narrowPortNecessaryCeilingPass"]=quantile(remainder,0.95)<=0.004
+ report["diagnosticNecessarySavingPass"]=(off.reduce(0,+)/on.reduce(0,+))<=0.88
+ report["limits"]="Identity-preserving diagnostic removal. Raw clocks, no calibration subtraction or clipping. Profiled zero-geometry remainders are optimistic work-removal estimates, not measured replacement speed, simulator or device gates. Parity remains outside the narrow-port bucket. Full540 includes settled frames that the app sleeps through."
+ try save();print(report.filter{$0.key != "steps"})
+} catch {report["failure"]=String(describing:error);try save();throw error}
