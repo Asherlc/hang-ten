@@ -824,6 +824,7 @@ enum WorkoutHighlightResolver {
     ) -> String? {
         guard let step,
               let selection = selection(for: step, on: board, taskIndex: taskIndex, selectedHandSide: selectedHandSide),
+              !selection.contacts.isEmpty,
               let position = board.position(id: selection.positionID) else { return nil }
         return position.presentationID
     }

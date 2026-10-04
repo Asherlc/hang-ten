@@ -125,11 +125,19 @@ otherwise.
 
 ## Select the narrowest truthful topology
 
-For a CAD board this choice is already made: its cord follows the standard
-method in [CAD cord authoring](HANGBOARD_CORD_AUTHORING.md), a
-`twoBranchCord` with `internalLoop` whose routes are solved against the CAD
-solid. The table below governs older non-CAD packages; when one of them moves
-to CAD, migrate its cord to the standard method with it.
+For a CAD board, preserve the evidenced connection graph and follow
+[CAD cord authoring](HANGBOARD_CORD_AUTHORING.md). Connected internal mouth
+pairs use the standard CAD passage void, measured channel length and
+`twoBranchCord` (or `threadedLoopCord`) with `internalLoop`. Source-backed
+independent visible leads, exterior wraps and unknown interior joins use
+`cadRoutedCord` with authoring `ropeSolver.method: "nativeRoutes"`; do not
+invent a hidden connection. Generate every canonical pose against the actual
+native solid with `solve_threaded_rope.py --apply`, reproduce it with `--check`,
+and retain native-solid clearance, length, tube and topology checks. The table
+below governs older non-CAD packages; migrate their cords to the native method
+matching the evidence when they move to CAD. Do not retain hand-authored routes
+or `pairedLeadCord` on a CAD board; extend the solver with evidence and tests
+when the supported native methods do not fit.
 
 | Type | Package meaning | Evidence and geometry boundary |
 | --- | --- | --- |

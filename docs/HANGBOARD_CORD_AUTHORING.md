@@ -2,18 +2,32 @@
 
 ## The standard method
 
-Every corded CAD board uses this method: the cord's hidden passage is a void
-in the native FreeCAD solid, the topology lives in `suspension.json` as a
-`twoBranchCord` (or the single-loop `threadedLoopCord`) with `internalLoop`, the channel length is measured from CAD
-with `Tools/HangboardCAD/measure_channel_spines.py`, and the visible routes
-and hanging height are solved against the exported CAD solid with
-`Tools/HangboardCAD/solve_threaded_rope.py`. Do not hand-place cord contact
-points, anchors that stand in for a solve, or `pairedLeadCord` leads on a CAD
-board. The runtime's convex-section fallback and hand-authored
-`pairedLeadCord` / `singleCord` metadata remain only for older non-CAD
-packages; migrate a board's cord to this method when the board moves to CAD.
+Every corded CAD board generates its routes and hanging height against the
+native solid with `Tools/HangboardCAD/solve_threaded_rope.py`, preserving the
+connection graph established by the retained evidence. For connected internal
+mouth pairs, model the hidden passage as a void in the native FreeCAD solid
+and store the topology in `suspension.json` as a `twoBranchCord` (or the
+single-loop `threadedLoopCord`) with `internalLoop`. Measure the channel length
+with `Tools/HangboardCAD/measure_channel_spines.py`, then solve the visible
+routes and hanging height against the exported CAD solid.
 
-These boards use it:
+For independent visible leads, exterior wraps, or mouths whose hidden
+connection is unknown, use the source-backed `cadRoutedCord` topology and
+authoring `ropeSolver.method: "nativeRoutes"` described in
+[Evidenced exterior wraps and incomplete passage evidence](#evidenced-exterior-wraps-and-incomplete-passage-evidence).
+The DUAL front-entry leads are one such case: visible front threading does not
+establish a hidden connection between its two holes. Do not invent that join
+to fit the connected-channel method. For either native method, generate every
+canonical pose with `--apply`, reproduce it with `--check`, and retain the
+native-solid clearance, length, tube and topology checks.
+
+Do not hand-place cord contact points, anchors that stand in for a solve, or
+`pairedLeadCord` leads on a CAD board. The runtime's convex-section fallback and hand-authored
+`pairedLeadCord` / `singleCord` metadata remain only for older non-CAD
+packages; migrate a board's cord to the native method matching its evidenced
+connection graph when the board moves to CAD.
+
+These boards use the connected-channel method:
 
 | Board | Channel | Section plane | Notes |
 | --- | --- | --- | --- |
@@ -244,7 +258,7 @@ external wrap without connected internal mouths, a different connection
 graph, or a moving anchor, extend the schema and solver with evidence and
 tests. No solver choice can recover hidden threading from the mesh alone.
 
-## Authoring sequence for another board
+## Authoring sequence for connected internal mouths
 
 1. Inspect the exact product revision from several manufacturer views and
    record the route graph and unknowns in a source audit. Confirm whether

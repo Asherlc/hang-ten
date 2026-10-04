@@ -260,6 +260,8 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         let board = app.otherElements["boardModel.3d"]
         XCTAssertTrue(board.waitForExistence(timeout: 5))
         XCTAssertGreaterThan(board.frame.height, 30, "Configuration controls must not collapse the workout board.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
         XCTAssertGreaterThan(board.frame.width, 30)
         XCTAssertGreaterThanOrEqual(board.frame.minY, selector.frame.maxY)
         XCTAssertLessThanOrEqual(board.frame.maxY, app.frame.maxY)
@@ -272,6 +274,8 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         pause.tap()
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
         XCTAssertGreaterThan(board.frame.height, 30)
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
         XCTAssertGreaterThanOrEqual(board.frame.minY, selector.frame.maxY)
         addScreenshot(named: "Plateau landscape natural Rest board preview")
     }
@@ -295,6 +299,8 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCTAssertTrue(board.waitForExistence(timeout: 5))
         board.swipeUp()
         XCTAssertGreaterThan(board.frame.height, 30)
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
         addScreenshot(named: "Mini portrait paused Hang board and finger cues")
 
         app.buttons["Resume"].tap()
@@ -305,6 +311,8 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
         board.swipeUp()
         XCTAssertGreaterThan(board.frame.height, 30)
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
         addScreenshot(named: "Mini portrait natural Rest board and finger cues")
     }
 

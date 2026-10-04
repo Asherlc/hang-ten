@@ -2,6 +2,42 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineDraftTests: XCTestCase {
+    func testConfiguredDepthToggleUsesResolvedPositionWithinSharedPresentation() throws {
+        let contact = PhysicalContact(id: "edge", name: "Fixture edge", kind: .edge,
+            handCapacity: 1, depth: .range(.init(minimum: 18, maximum: 18)))
+        let geometry = [contact.id: [BoardContactPiece(id: "edge-piece", contactID: contact.id,
+            frame: CGRect(x: 0.4, y: 0.4, width: 0.2, height: 0.1),
+            shape: .roundedRect(cornerRadiusFraction: 0), treatment: .surface)]]
+        let board = BoardRevision(id: "fixture.shared-presentation-depths", revisionID: "fixture",
+            manufacturer: "Fixture", name: "Fixture", subtitle: "", dimensions: "", aspectRatio: 1,
+            contacts: [contact], productURL: URL(string: "https://example.com/fixture")!, photoAssetName: nil,
+            presentations: [BoardPresentation(id: "front", name: "Fixture", aspectRatio: 1, isDefault: true,
+                media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry)))],
+            positions: [18, 10].map { depth in
+                BoardPosition(id: "depth-\(depth)", presentationID: "front", contactIDs: [contact.id],
+                    effectiveDepths: [contact.id: .range(.init(minimum: Double(depth), maximum: Double(depth)))])
+            })
+        let original = CustomRoutineStepDraft(id: "configured", title: "", instruction: "", accessory: "",
+            duration: 10, phase: .hang, targets: [.edge(depth: .range(.init(minimum: 10, maximum: 10)))],
+            timing: .fixed, handUse: .single, side: .left)
+        XCTAssertEqual(CustomRoutineBoardPreview.presentationID(for: original, on: board), "front")
+        XCTAssertEqual(CustomRoutineBoardPreview.contactIDs(for: original, on: board), ["edge"])
+
+        var removing = original
+        let shallow = try XCTUnwrap(board.contacts(inPosition: "depth-10").first)
+        CustomRoutineBoardPreview.toggle(shallow, in: &removing, on: board)
+        XCTAssertTrue(removing.targets.isEmpty, "Tapping the selected 10 mm configuration must remove it.")
+
+        var changing = original
+        let deeper = try XCTUnwrap(board.contacts(inPosition: "depth-18").first)
+        CustomRoutineBoardPreview.toggle(deeper, in: &changing, on: board)
+        XCTAssertEqual(changing.targets.first?.contactID, "edge")
+        XCTAssertEqual(changing.targets.first?.depth, .range(.init(minimum: 18, maximum: 18)),
+            "Tapping another depth in the same presentation must change the target.")
+        CustomRoutineBoardPreview.toggle(deeper, in: &changing, on: board)
+        XCTAssertTrue(changing.targets.isEmpty)
+    }
+
     func testConfiguredTargetReopensItsModelAndChangingDepthKeepsTheContact() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
         var step = CustomRoutineStepDraft(id: "configured", title: "", instruction: "", accessory: "", duration: 10,

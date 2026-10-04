@@ -1,0 +1,18 @@
+{
+  "baseHead": "184e4a70bd320922a4083b581ed2757490ad20c5",
+  "files": {
+    ".agents/skills/audit-3d-hangboard-suspension/SKILL.md": "146052fe1c643cf4853b39225baf5e5f13b108f484fcdc4ff0b6f3885a55928d",
+    ".agents/skills/migrate-hangboard-to-3d/SKILL.md": "8e4a33128fc05983f7fd12346c36ad34871a126b24ef791f892126703a815199",
+    "AGENTS.md": "9a438207cf13eeade2020c83c2ae4946d4deb6baec6b0072b42597ab49d4bf85",
+    "HangTen/Models/CustomRoutineDraft.swift": "8e49fe6ea26933436c1cd83fb23f42e063be91bf02accad301d185434877a4a6",
+    "HangTen/Models/WorkoutTimeline.swift": "5532987671ed5bab37e0898a12dc5e8a735dbc72e3862511aded10805a3e9981",
+    "HangTenTests/CustomRoutineDraftTests.swift": "c74045a410b256511314205760651d829242836bfd0863996f0490493f371484",
+    "HangTenTests/SuspendedBoardPresentationTests.swift": "680ac44660e74c46f6391e311e44ac5455a21afca5b6dfad02ec30ee1b2b3a19",
+    "HangTenTests/WorkoutTimelineTests.swift": "e94de652c514d971ce93d96b0fa8f3ff4932d26a8124ef414831af979b86b4b7",
+    "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests.swift": "0c8e96f22089e3dc3776d379fae474aa9a9f30bef5899e79c893bfcb4972252c",
+    "Tools/HangboardPackages/tests/test_pose_camera_facing.py": "af73c63ea7b21a4f5e499c7ab4a36c6998cb233a554d98ebacc49ae0ca2ec342",
+    "docs/3D_SUSPENSION_AND_ODR.md": "074aea50010e5db650c214619ff604766fca3f32efad3583a66f812316b2b89f",
+    "docs/HANGBOARD_CORD_AUTHORING.md": "ce465f9205a1bbd14c5aed7eb56d2ad4e1a941f3b274c1cb206526844f43d0bb"
+  },
+  "canonicalPackageMutation": false
+}

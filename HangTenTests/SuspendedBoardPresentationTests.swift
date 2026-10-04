@@ -31,6 +31,7 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         let canonicalRotation = simd_quatf(ix: 0, iy: 1, iz: 0, r: 0)
         let canonicalTranslation = SIMD3<Float>(0.7, -0.2, 0.1)
         let sourcePoints = canonical.wrappedRoutes!["segment"]!
+        XCTAssertEqual(sourcePoints.count, solved.branches[0].centerlineSamples.count)
         for (point, actual) in zip(sourcePoints, solved.branches[0].centerlineSamples) {
             let source = SIMD3<Float>(point.map(Float.init))
             let reflected = SIMD3<Float>(2 * center.x - source.x, source.y, source.z)

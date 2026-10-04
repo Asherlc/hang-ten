@@ -8,11 +8,11 @@ rotation baked into the USDZ (see ``usd_mesh_chain`` docstring). The mistake
 was invisible in that mapping's own self-check because the board's body
 happens to have a square cross-section, so a plain translation reproduces
 the same overall bounding box as the real rotation while silently scrambling
-individual contact positions. Two *other* boards (``nature-stone-hanger``
-and ``yy-baguette-evo``) turned out to have a real, simpler instance of the
-same failure family: a canonical pose rotates the board 180 degrees but
-keeps the unposed ``camera.viewDirection``, so the camera ends up looking at
-the board from behind the newly-presented face.
+individual contact positions. Earlier revisions of ``nature-stone-hanger``
+and ``yy-baguette-evo`` also had camera declarations inconsistent with their
+selected local faces. The direction is model-relative: a pose half-turn
+alone does not require changing its sign, because the renderer rotates the
+declared direction with the board.
 
 This test catches that family mechanically. A pose's rotation is applied
 identically to both the declared camera direction and every contact
@@ -41,6 +41,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -111,6 +112,14 @@ def _iter_suspended_presentations(module, package):
 @pytest.mark.parametrize(
     ("slug", "position_id", "camera_z_sign"),
     [
+        ("nature-stone-hanger", "edge-front-15mm-incut", -1),
+        ("nature-stone-hanger", "edge-front-15mm-flat", -1),
+        ("nature-stone-hanger", "edge-front-20mm-wood-flat", -1),
+        ("nature-stone-hanger", "edge-front-20mm-granite", -1),
+        ("nature-stone-hanger", "edge-reverse-10mm-incut", 1),
+        ("nature-stone-hanger", "edge-reverse-10mm-flat", 1),
+        ("nature-stone-hanger", "edge-reverse-06mm-flat", 1),
+        ("nature-stone-hanger", "edge-reverse-06mm-incut", 1),
         ("frictitious-nug", "front-25", -1),
         ("frictitious-nug", "front-inverted-20", -1),
         ("frictitious-nug", "reverse-13", 1),
@@ -147,6 +156,98 @@ def test_native_front_and_reverse_positions_select_the_evidenced_face(
     assert direction is not None
     assert direction[2] * camera_z_sign > _MIN_OPPOSING_DOT
 
+
+
+def _stone_reverse_six_bearing_samples(position_id: str):
+    """Bind native display normals through the current contact-preservation proof.
+
+    These are deliberately checked CAD face normals, not maker-measured angles.
+    The fitted granite revision preserves all seven wood contact surfaces even
+    though its recomputed BRep serialization and overall source hash changed.
+    """
+    audit = REPO_ROOT / "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger"
+    native_path = audit / "display-and-pose-review/raw/fresh-native-bearing/new-native-bearing.json"
+    preserved_path = audit / "granite-seat-review/independent-native-check.json"
+    assert hashlib.sha256(native_path.read_bytes()).hexdigest() == (
+        "b3f52e79fa12d5a090c92c0c07afb295e18012e139b0996006ddff185a898137"
+    )
+    assert hashlib.sha256(preserved_path.read_bytes()).hexdigest() == (
+        "42875cd202ca7781150275f1f9310dbbed07fa3686d380927b67c9cc4322ab2b"
+    )
+    native = json.loads(native_path.read_bytes())
+    preserved = json.loads(preserved_path.read_bytes())
+    runtime = json.loads((audit / "granite-seat-review/runtime-validation.json").read_bytes())
+    package = HANGBOARDS_ROOT / "nature-stone-hanger"
+    descriptor = json.loads((package / "assets/primary.model.json").read_bytes())
+    sidecar = json.loads((package / "suspension.json").read_bytes())
+    assert preserved["status"] == runtime["status"] == "pass"
+    assert preserved["beforeSHA256"] == native["sourceSHA256"]
+    assert preserved["sourceSHA256"] == runtime["sourceSHA256"] == hashlib.sha256(
+        (package / "nature-stone-hanger.FCStd").read_bytes()
+    ).hexdigest()
+    assert runtime["modelSHA256"] == descriptor["modelSHA256"] == sidecar["modelSHA256"] == hashlib.sha256(
+        (package / "assets/primary.usdz").read_bytes()
+    ).hexdigest()
+    assert runtime["descriptorSHA256"] == hashlib.sha256(
+        (package / "assets/primary.model.json").read_bytes()
+    ).hexdigest()
+    assert runtime["suspensionSHA256"] == hashlib.sha256(
+        (package / "suspension.json").read_bytes()
+    ).hexdigest()
+    preserved_wood = {
+        contact_id for contact_id, proof in preserved["contactInventory"].items()
+        if proof["oldMinusNewAreaMM2"] == proof["newMinusOldAreaMM2"] == 0
+    }
+    assert len(preserved_wood) == 7 and position_id in preserved_wood
+    return native["poses"][position_id]["samples"]
+
+
+def _assert_stone_reverse_six_bearing_and_camera(pose, samples) -> None:
+    # Native (X,Y,Z) -> importer (X,Z,-Y). The rear opening faces native +Y,
+    # hence model -Z. Rotate the opening normal AND camera with the board.
+    x, y, z, w = pose.rotation
+    norm2 = x*x + y*y + z*z + w*w
+    def rotate(v):
+        return (
+            ((w*w+x*x-y*y-z*z)*v[0] + 2*(x*y-w*z)*v[1] + 2*(x*z+w*y)*v[2])/norm2,
+            (2*(x*y+w*z)*v[0] + (w*w-x*x+y*y-z*z)*v[1] + 2*(y*z-w*x)*v[2])/norm2,
+            (2*(x*z-w*y)*v[0] + 2*(y*z+w*x)*v[1] + (w*w-x*x-y*y+z*z)*v[2])/norm2,
+        )
+    opening = rotate((0, 0, -1))
+    camera = _normalized(rotate(tuple(pose.camera["viewDirection"])))
+    assert camera is not None and _dot(opening, camera) < -_MIN_OPPOSING_DOT, (
+        "camera does not face the native rear opening"
+    )
+    assert samples
+    for sample in samples:
+        nx, ny, nz = sample["nativeOutwardBearingNormal"]
+        native_to_model = (nx, nz, -ny)
+        assert native_to_model == pytest.approx(sample["runtimeBearingNormal"], abs=1e-12)
+        assert rotate(native_to_model)[1] > .98, "selected native rail does not bear upward"
+
+
+@pytest.mark.parametrize("position_id", ["edge-reverse-06mm-flat", "edge-reverse-06mm-incut"])
+@pytest.mark.parametrize("mutation", [None, "swapped-rotation", "reversed-camera"])
+def test_native_stone_reverse_six_retains_upward_bearing_and_rear_camera(
+    position_id: str, mutation: str | None
+) -> None:
+    module = load_board_catalog_module()
+    package = module.load_board_package(HANGBOARDS_ROOT / "nature-stone-hanger")
+    pose = package.board.presentations[0].media.suspension.canonical_poses[position_id]
+    samples = _stone_reverse_six_bearing_samples(position_id)
+    if mutation == "swapped-rotation":
+        # The maker drawing puts 6 mm flat above incut, opposite the 10 mm pair.
+        # Swapping rotations by name turns both actual 6 mm bearings downward.
+        other = "edge-reverse-06mm-incut" if position_id.endswith("flat") else "edge-reverse-06mm-flat"
+        other_pose = package.board.presentations[0].media.suspension.canonical_poses[other]
+        with pytest.raises(AssertionError, match="does not bear upward"):
+            _assert_stone_reverse_six_bearing_and_camera(replace(pose, rotation=other_pose.rotation), samples)
+    elif mutation == "reversed-camera":
+        camera = {**pose.camera, "viewDirection": [0, 0, -1]}
+        with pytest.raises(AssertionError, match="does not face the native rear opening"):
+            _assert_stone_reverse_six_bearing_and_camera(replace(pose, camera=camera), samples)
+    else:
+        _assert_stone_reverse_six_bearing_and_camera(pose, samples)
 
 
 def _assert_native_baguette_central_pose(board, pose) -> None:

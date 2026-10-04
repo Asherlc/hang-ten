@@ -112,11 +112,11 @@ enum CustomRoutineBoardPreview {
     ) {
         let selected = contactIDs(for: step, on: board).contains(hold.id)
         let configured = board.positions.contains { !$0.effectiveDepths.isEmpty }
-        let selectedDepth = presentationID(for: step, on: board).flatMap { presentationID in
-            board.positions.first { $0.presentationID == presentationID }.flatMap { position in
-                board.contacts(inPosition: position.id).first { $0.id == hold.id }?.depth
-            }
-        }
+        let selectedDepth = resolvedSteps(for: step, boardIsOneHanded: board.isOneHanded).lazy.compactMap { resolved in
+            let selection = try? ContactResolver.resolveSelection(
+                resolved.workRequirements, step: resolved, board: board)
+            return selection?.contacts.first { $0.id == hold.id }?.depth
+        }.first
         if selected && (!configured || selectedDepth == hold.depth) {
             step.targets = []
             return

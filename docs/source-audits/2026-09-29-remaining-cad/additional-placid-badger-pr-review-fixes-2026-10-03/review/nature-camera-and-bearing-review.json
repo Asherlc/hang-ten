@@ -1,0 +1,118 @@
+{
+  "status": "bot-finding-invalid",
+  "reviewedCommit": "184e4a70bd320922a4083b581ed2757490ad20c5",
+  "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+  "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+  "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+  "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
+  "nativeNormalsSource": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/raw/fresh-native-bearing/new-native-bearing.json",
+  "nativeNormalSourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "currentSevenWoodContactPreservation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/independent-native-check.json",
+  "currentSuspensionDataEqualApprovedPrior": true,
+  "retainedHistoricalSidecarSHA256": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
+  "sevenWoodContacts": 7,
+  "checkedRetainedNativeNormalSamples": 21,
+  "minimumWorldUpDot": 0.981615724669084,
+  "reverseSix": {
+    "edge-reverse-06mm-flat": {
+      "rotation": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "modelBearingNormal": [
+        0.0,
+        -1.0,
+        -0.0
+      ],
+      "worldBearingNormal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "worldUpAfterBotSuggestedSwap": -1.0,
+      "declaredModelCameraDirection": [
+        0,
+        0,
+        1
+      ],
+      "worldCameraDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "worldOpeningNormal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "posedCameraOpeningDot": -1.0
+    },
+    "edge-reverse-06mm-incut": {
+      "rotation": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "modelBearingNormal": [
+        0.0,
+        0.9870077111602391,
+        0.16067289164705414
+      ],
+      "worldBearingNormal": [
+        0.0,
+        0.9870077111602391,
+        -0.16067289164705414
+      ],
+      "worldUpAfterBotSuggestedSwap": -0.9870077111602391,
+      "declaredModelCameraDirection": [
+        0,
+        0,
+        1
+      ],
+      "worldCameraDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "worldOpeningNormal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "posedCameraOpeningDot": -1.0
+    }
+  },
+  "fileSHA256": {
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/raw/fresh-native-bearing/new-native-bearing.json": "b3f52e79fa12d5a090c92c0c07afb295e18012e139b0996006ddff185a898137",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/independent-native-check.json": "42875cd202ca7781150275f1f9310dbbed07fa3686d380927b67c9cc4322ab2b",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/runtime-validation.json": "a0670ed5df33c2f0b7ca7c1d1424a64b025056e263e6a1ed395c2ead11f0626b",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/root-app-review.json": "c216223837921f57b8aca69834a07a8d26e3b42d1a113bfbac89659712801748",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/app/07-edge-reverse-06mm-flat.png": "816662369cd76c16c2b05570f3d94803b69be67738a28aa4ca36442a4dfa5c53",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/app/08-edge-reverse-06mm-incut.png": "7b361d47a4bf33a79b849bbeb862dd4d1bf837f06cb99f24ac0dc54b4a8453dd",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/evidence/StonehangerTechDrawing_Draft1.jpg": "57287e539da523b0366c3cf5a0d1c0b551a0ee65f2fddae202c9c4614bc1d7ee",
+    "HangTen/Views/SuspendedBoardPresentation.swift": "0a0eecdbc4cdca2869828601a53299af461dacad9177bf7dec141647d171a61b",
+    "Tools/HangboardPackages/tests/test_pose_camera_facing.py": "af73c63ea7b21a4f5e499c7ab4a36c6998cb233a554d98ebacc49ae0ca2ec342",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/evidence/captain-fingerfood-dual-title.jpg": "f57fb751f63c5258e8cb85a9d0f0ad27f6b9cb5eede94b5e1caccc496ec9468e",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/source-register.json": "b2f358fa34c62c3100cfb112580634ab77ccd37849841ec415cc770c7f31d6ed"
+  },
+  "wholeImagesPhysicallyViewedThisReview": [
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/app/07-edge-reverse-06mm-flat.png",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/app/08-edge-reverse-06mm-incut.png",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/evidence/StonehangerTechDrawing_Draft1.jpg",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/evidence/captain-fingerfood-dual-title.jpg"
+  ],
+  "findings": [
+    "Maker drawing places 10 mm incut above flat, but 6 mm flat above incut; matching the 10 mm rotations by name is incorrect.",
+    "Both model-space camera and opening are rotated with the board, preserving their opposing dot product.",
+    "The suggested reverse-6 quaternion swap turns both verified native wood bearing normals downward."
+  ],
+  "limits": [
+    "Read-only arithmetic and retained whole-image review; no fresh native reopen, solve, export, app launch or resource creation.",
+    "Angles/normals are native display geometry measurements, not manufacturer dimension facts or load/safety claims.",
+    "The old granite-bearing surface is not reused; only the seven wood contacts preserved by the current native proof are used.",
+    "No existing source-audit, package or historical approval bytes were edited."
+  ]
+}

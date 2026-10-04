@@ -44,12 +44,19 @@ a ruling, and human approval. Current validated evidence outranks superseded
 assumptions; in particular, `yy.baguette-evo` intentionally retains its
 source-backed `twoBranchCord` alongside orientation metadata.
 
-For a CAD board (a package with `<slug>.FCStd`), use the standard method in
-[CAD cord authoring](../../../docs/HANGBOARD_CORD_AUTHORING.md): the cord
-passage is a CAD void, the topology is `twoBranchCord` with `internalLoop` in
-`suspension.json`, and `solve_threaded_rope.py` solves the routes. Replace a
-hand-authored `pairedLeadCord` when its board moves to CAD, and extend the
-solver instead of hand-placing routes when a board does not fit it.
+For a CAD board (a package with `<slug>.FCStd`), preserve the evidenced
+connection graph and use the native solver in
+[CAD cord authoring](../../../docs/HANGBOARD_CORD_AUTHORING.md). For evidenced
+connected internal mouth pairs, the standard method uses a CAD passage void,
+`twoBranchCord` (or the single-loop `threadedLoopCord`) with `internalLoop` in
+`suspension.json`, and a CAD-measured channel length. For independent visible
+leads, exterior wraps, or mouths whose hidden connection is unknown, use the
+documented `cadRoutedCord` / `ropeSolver.method: "nativeRoutes"` contract;
+do not invent a connecting channel. Generate every canonical pose against the
+actual native solid with `solve_threaded_rope.py --apply`, then reproduce it
+with `--check` and retain clearance, length, tube and topology checks. Replace
+hand-authored `pairedLeadCord` routes when a board moves to CAD, and extend the
+solver with evidence and tests instead of hand-placing routes.
 
 For older non-CAD packages, choose the narrowest supported topology: `singleCord` for one attachment,
 `pairedLeadCord` for two independent exterior leads, or `twoBranchCord` for

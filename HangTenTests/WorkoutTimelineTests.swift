@@ -63,6 +63,39 @@ final class WorkoutSpeechVoiceSelectorTests: XCTestCase {
 }
 
 final class WorkoutTimelineTests: XCTestCase {
+    func testSelfSelectedWorkDoesNotRequestAConfiguredPresentation() {
+        let contact = PhysicalContact(id: "edge", name: "Fixture edge", kind: .edge,
+            handCapacity: 1, depth: .range(.init(minimum: 18, maximum: 18)))
+        let geometry = [contact.id: [BoardContactPiece(id: "edge-piece", contactID: contact.id,
+            frame: CGRect(x: 0.4, y: 0.4, width: 0.2, height: 0.1),
+            shape: .roundedRect(cornerRadiusFraction: 0), treatment: .surface)]]
+        let board = BoardRevision(id: "fixture.self-selected-positions", revisionID: "fixture",
+            manufacturer: "Fixture", name: "Fixture", subtitle: "", dimensions: "", aspectRatio: 1,
+            contacts: [contact], productURL: URL(string: "https://example.com/fixture")!, photoAssetName: nil,
+            presentations: [18, 10].map { depth in
+                BoardPresentation(id: "depth-\(depth)", name: "Fixture", aspectRatio: 1, isDefault: depth == 18,
+                    media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry)))
+            },
+            positions: [18, 10].map { depth in
+                BoardPosition(id: "depth-\(depth)", presentationID: "depth-\(depth)", contactIDs: [contact.id],
+                    effectiveDepths: [contact.id: .range(.init(minimum: Double(depth), maximum: Double(depth)))])
+            })
+        let targets: [WorkoutSegmentTarget] = [
+            .selfSelected,
+            .tasks([[PlanHandTarget(target: nil, side: .left)]])
+        ]
+        for target in targets {
+            let step = WorkoutStep(id: "fixture-self-selected", number: 1, title: "Fixture", instruction: "",
+                accessory: "", duration: 10, phase: .hang,
+                segments: [.init(kind: .work, target: target, timing: .fixed, duration: 10)],
+                handUse: .single, side: .left)
+
+            XCTAssertTrue(WorkoutHighlightResolver.contactIDs(for: step, on: board).isEmpty)
+            XCTAssertNil(WorkoutHighlightResolver.presentationID(for: step, on: board),
+                "Work without a prescribed contact must not choose a configured board presentation.")
+        }
+    }
+
     func testCurrentTaskSelectsEffectiveDepthPresentationAndChosenHand() throws {
         let contacts = ["left", "right"].map {
             PhysicalContact(id: $0, name: $0, kind: .edge,
@@ -5307,9 +5340,13 @@ final class WorkoutDrawablePresentationTests: XCTestCase {
             previous?.makeKey()
         }
         window.makeKeyAndVisible()
-        let settled = expectation(description: "Bounded drawable discovery")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { settled.fulfill() }
-        await fulfillment(of: [settled], timeout: 2)
+        let configured = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !matching.presentsWithTransaction || !other.presentsWithTransaction
+        }, object: nil)
+        // A unique match must change; ambiguous matches must stay untouched
+        // throughout the same bounded observation window.
+        configured.isInverted = ambiguous
+        await fulfillment(of: [configured], timeout: 2)
         XCTAssertEqual(matching.presentsWithTransaction, ambiguous)
         XCTAssertTrue(other.presentsWithTransaction,
                       "Unrelated or ambiguous drawables must not be changed")
