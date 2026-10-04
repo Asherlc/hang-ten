@@ -1,0 +1,8 @@
+{
+  "allBuiltAppInventoryAndBytesEqual": false,
+  "changed": [
+    "HangTen"
+  ],
+  "checks": 205,
+  "scope": "Signed app/plan/generated packages/model asset parity inventory before and after test-only audit change; test bundle may differ."
+}

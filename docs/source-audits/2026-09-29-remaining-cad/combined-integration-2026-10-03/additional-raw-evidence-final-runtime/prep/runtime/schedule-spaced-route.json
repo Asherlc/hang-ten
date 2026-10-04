@@ -1,0 +1,28 @@
+{
+  "anchor": "Production openurl command completion, all58 passive captures immediately. No guessed system consent or hand selection. Actual modal/failed route invalidates the arm.",
+  "offsetSeconds": [
+    1,
+    6,
+    11,
+    16,
+    21,
+    90,
+    190,
+    195,
+    200,
+    205,
+    210,
+    215,
+    220,
+    225
+  ],
+  "maximumStartLatenessSeconds": 0.25,
+  "hardBoundSeconds": 420,
+  "classification": "Whole-image actual phase/timer required; no CPU/app-phase brackets",
+  "noRetries": true,
+  "sourceCadence": "Unchanged Main10s Hang/180s Rest/3s countdown. Prospective5s screenshot spacing; no prior missed deadlines backfilled.",
+  "miniDifferences": "Current production MaxHangs tasks prescribe both hands. On the one-handed Mini, normal UI explicitly says Use two boards, one hand on each and auto-starts. No chosen hand, routine target, or duration is changed.",
+  "protocolCorrection": "Separate14-image observation protocol after first screenshot took3.108s and invalidated1s schedule. Sameapp and sourcetasks; no causal contrast or reclassification.",
+  "setup": "Whole-image root Train gate, then passive normal URL route. No AX or UI action after route command completion.",
+  "measurementAnchor": "Production openurl command completion, all58 passive captures immediately. No guessed system consent or hand selection. Actual modal/failed route invalidates the arm."
+}

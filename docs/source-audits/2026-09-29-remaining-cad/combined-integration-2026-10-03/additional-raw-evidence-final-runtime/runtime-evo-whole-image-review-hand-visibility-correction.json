@@ -1,0 +1,189 @@
+{
+  "reviewedAtUTC": "2026-10-04T00:55:44.018321+00:00",
+  "scope": "Additive correction only; original image bytes and inaccurate reports preserved. No source/helper/device/process/AX/build/test changes.",
+  "classification": "Original reviewer visual classification error. Exact unchanged image bytes show both hands in all four disputed Rest images.",
+  "supersededReports": [
+    {
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-whole-image-review-initial23.json",
+      "sha256": "561db501d904f592f37c5eb72850453f93f02645c8e66996855db558968c11a2"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-whole-image-review-initial23-corrected.json",
+      "sha256": "28f1c32ef3f6c7cedf5b7aca4435b7f68f7aaefda45e7a37c9cdaa5964d64a47"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-whole-image-review-all58.json",
+      "sha256": "b62a394fb80fbc700bbb0577adf43b62b8315a260f355ab90d55e43eaca0b3d3"
+    }
+  ],
+  "perImageCorrections": [
+    {
+      "offsetSeconds": 14,
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-reviewed-setup/elapsed-014s.png",
+      "sha256": "68843cf11d16414b3f1fcdf415b05fefd28a0fcd26787946268418a7cc87ccab",
+      "matchesOriginalReportSHA256": true,
+      "verification": "Exact original whole file reopened individually with view_image and image(r.image_url) forwarded to vision before this record was written.",
+      "correctedObservation": {
+        "actualPhase": "Rest",
+        "visibleTimer": "03:00",
+        "handModelsVisible": true,
+        "handObservation": "Both complete half-crimp hand models plainly visible above the board, with engaged fingers red; neither hand is absent.",
+        "selectedContactsVisual": "Same bilateral lower-row outer pockets, highlighted blue as next-hold preview",
+        "boardVisible": true,
+        "materialObservation": "Tan board body and unselected contacts; complete board fits below the hands",
+        "blankingObservation": "No missing hand models, board blanking or system modal in this image."
+      },
+      "supersededFields": [
+        "handModelsVisible",
+        "handObservation"
+      ]
+    },
+    {
+      "offsetSeconds": 15,
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-reviewed-setup/elapsed-015s.png",
+      "sha256": "d9ade4fd39acebba25acef1a6ebe98d514724853c28998b71d30d65ea9374f68",
+      "matchesOriginalReportSHA256": true,
+      "verification": "Exact original whole file reopened individually with view_image and image(r.image_url) forwarded to vision before this record was written.",
+      "correctedObservation": {
+        "actualPhase": "Rest",
+        "visibleTimer": "02:59",
+        "handModelsVisible": true,
+        "handObservation": "Both complete half-crimp hand models plainly visible above the board, with engaged fingers red; neither hand is absent.",
+        "selectedContactsVisual": "Same bilateral lower-row outer pockets, highlighted blue as next-hold preview",
+        "boardVisible": true,
+        "materialObservation": "Tan board body and unselected contacts; complete board fits below the hands",
+        "blankingObservation": "No missing hand models, board blanking or system modal in this image."
+      },
+      "supersededFields": [
+        "handModelsVisible",
+        "handObservation",
+        "visibleTimer"
+      ]
+    },
+    {
+      "offsetSeconds": 204,
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-reviewed-setup/elapsed-204s.png",
+      "sha256": "dc18184c399bc222c7f8254f35cdabc82327f375a69b50a373bcdb7222451b4e",
+      "matchesOriginalReportSHA256": true,
+      "verification": "Exact original whole file reopened individually with view_image and image(r.image_url) forwarded to vision before this record was written.",
+      "correctedObservation": {
+        "actualPhase": "Rest",
+        "visibleTimer": "03:00",
+        "handModelsVisible": true,
+        "handObservation": "Both complete half-crimp hand models plainly visible above the board, with engaged fingers red; neither hand is absent.",
+        "selectedContactsVisual": "Same bilateral lower-row outer pockets, highlighted blue as next-hold preview",
+        "boardVisible": true,
+        "materialObservation": "Tan board body and unselected contacts; complete board fits below the hands",
+        "blankingObservation": "No missing hand models, board blanking or system modal in this image."
+      },
+      "supersededFields": [
+        "handModelsVisible",
+        "handObservation"
+      ]
+    },
+    {
+      "offsetSeconds": 205,
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-reviewed-setup/elapsed-205s.png",
+      "sha256": "a357e4ce3bb5167322d9cec1238d0d0cad96c62b2f45d52a0c6bfac2634ce96f",
+      "matchesOriginalReportSHA256": true,
+      "verification": "Exact original whole file reopened individually with view_image and image(r.image_url) forwarded to vision before this record was written.",
+      "correctedObservation": {
+        "actualPhase": "Rest",
+        "visibleTimer": "02:59",
+        "handModelsVisible": true,
+        "handObservation": "Both complete half-crimp hand models plainly visible above the board, with engaged fingers red; neither hand is absent.",
+        "selectedContactsVisual": "Same bilateral lower-row outer pockets, highlighted blue as next-hold preview",
+        "boardVisible": true,
+        "materialObservation": "Tan board body and unselected contacts; complete board fits below the hands",
+        "blankingObservation": "No missing hand models, board blanking or system modal in this image."
+      },
+      "supersededFields": [
+        "handModelsVisible",
+        "handObservation"
+      ]
+    }
+  ],
+  "aggregateCorrection": {
+    "superseded": [
+      "Early Rest hand absence findings at +14/+15/+204/+205",
+      "Claim that both hands return only by +16/+206",
+      "Aggregate claim of four missing-hand Rest samples",
+      "Any recommendation or production change justified by that claimed hand gap"
+    ],
+    "replacement": "Both half-crimp hands are visible in all four exact disputed images. The reported Rest hand-visibility gap is withdrawn and must not be treated as a runtime defect. No hand-gap production change is justified by the original report."
+  },
+  "imageForwardingAudit": {
+    "original58ImageBlocksForwarded": true,
+    "mechanism": "For every expected offset, tools.view_image returned the exact local file image_url; image(r.image_url) forwarded it as an actual image block. Original calls grouped up to six distinct files; no crop or pixel measurement was performed.",
+    "originalOffsetsForwarded": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      90,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      203,
+      204,
+      205,
+      206,
+      207,
+      208,
+      209,
+      210,
+      211,
+      212,
+      213,
+      214,
+      215,
+      216,
+      217,
+      218,
+      219,
+      220,
+      221,
+      222,
+      223,
+      224
+    ],
+    "genuinelyUnviewedImages": [],
+    "limitation": "Forwarding all image blocks did not prevent my incorrect interpretation of four transitions. The incorrect classifications are superseded by these individually reopened whole images; no claim that tool text or paths certify visual correctness is made."
+  },
+  "additionalTranscriptCorrection": "+15 visibly reads 02:59, superseding the original 03:00 transcription.",
+  "rawCompletionHandling": {
+    "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-reviewed-setup/completion.json",
+    "sha256": "fec44bf46e834ae08dda306bbe9ca3faf77b4e37f5284188a8378f85ca1b5d02",
+    "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+    "unchanged": true
+  },
+  "humanAcceptance": "Prior user acceptance remains unchanged; supplemental Simulator visual correction only."
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/elapsed-001s.png",
+    "sha256": "399cef923cc7a0ca1b25018e39fc8b2c3ef31bac2dc999ec4e0c2ea7caadf99d",
+    "scheduledOffset": 1,
+    "targetMonotonic": 137764.393800166,
+    "startEpoch": 1791076120.1990259,
+    "endEpoch": 1791076123.307001,
+    "startMonotonic": 137764.394618375,
+    "endMonotonic": 137767.5026045,
+    "latenessSeconds": 0.0008182089950423688,
+    "phase": "UNCLASSIFIED_REQUIRES_WHOLE_IMAGE_REVIEW"
+  }
+]

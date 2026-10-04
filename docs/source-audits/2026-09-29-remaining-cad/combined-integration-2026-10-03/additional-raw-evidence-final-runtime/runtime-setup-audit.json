@@ -1,0 +1,120 @@
+{
+  "scope": "Read-only helper/source/retained-image review. No simulator, process, build, UI device command, source/helper edit, or external resource action performed. Active device tests left untouched.",
+  "reviewedSkill": "Repository-local validate-hang-ten-ios/SKILL.md and runtime/validation documentation consulted for explicit device ownership and actual visual verification requirements; this audit does not execute validation.",
+  "hashesSHA256": {
+    ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture.py": "5f641c85ba71027e860cb621d9517bfd44cdf291e08133e1bee5659d6b02c3fe",
+    ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/schedule.json": "f44a8a6b4d28911cea2b6c7301a7748c2806f0e7733aa466f1ce34bd8149fb9d",
+    ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-modal-preflight-binary/before.png": "709de247901f947cbb79e70b587995d6a68e3505fb0ab99bdfc6c67a9828e08e",
+    ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-modal-preflight-binary/before-ax.stdout": "7166150679ed5acf75e6a517467db5e87837ec86e4fb34e67b30e90e5da6fc3d",
+    ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-modal-preflight-binary/app-registration.json": "88615812505f0c8fbf4f8393e221e6b74e5cceca300f3c07b15f4c1c067a884d",
+    "HangTen/Models/AppStore.swift": "48ce4d87e27cef4ba06a8d4077523f550dee89abd64d167c8ea924601b0b6107",
+    "HangTen/Views/RootView.swift": "6d4439ffa97e0a93c25fc2b253710c2711186bbbc1515f830d33dd11a36a8b89",
+    "HangTen/Views/WorkoutView.swift": "4de76a2fbb3fcf8f5968706e67b63260dcb50be08611e6e7088177ac8cd474d8"
+  },
+  "retainedEvidence": {
+    "directory": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-modal-preflight-binary",
+    "wholeImage": "before.png reviewed in full: normal Train, visible Wood Grips Compact II board, settings button and normal navigation; no system alert visible.",
+    "ax": [
+      {
+        "children": [],
+        "traits": [],
+        "AXUniqueId": null,
+        "AXFrame": "{{0, 0}, {0, 0}}",
+        "title": null,
+        "role_description": "application",
+        "custom_actions": [],
+        "type": "Application",
+        "AXLabel": null,
+        "enabled": true,
+        "subrole": null,
+        "AXValue": null,
+        "frame": {
+          "width": 0,
+          "y": 0,
+          "height": 0,
+          "x": 0
+        },
+        "role": "AXApplication",
+        "help": null,
+        "pid": 69238,
+        "content_required": false
+      }
+    ],
+    "registeredApp": {
+      "owner": "placid-badger-cad-second-half",
+      "simulatorUUID": "055BDCE2-3263-470D-89DF-04B967EF7790",
+      "bundle": "com.hangten.training",
+      "pid": 69238
+    },
+    "interpretation": "Matching application PID with zero frame and empty children is an inconclusive AX observation. It is not evidence that Train controls are absent, that the app is blocked, or that a dialog exists. This preflight image is not proof of the board selected in later arm launches."
+  },
+  "currentHelperFailureGates": {
+    "Train": {
+      "line": 116,
+      "fact": "Requires train.settings and expected train.board AX nodes before capturing Train setup screenshot; an empty tree aborts despite a visible normal UI."
+    },
+    "URL": {
+      "line": 122,
+      "fact": "Open/Cancel AX nodes decide whether a consent tap occurs; no screenshot is taken at the actual consent boundary. Empty AX cannot prove no alert."
+    },
+    "workout": {
+      "line": 135,
+      "fact": "Requires AX routinePicker node; empty AX can abort even if normal workout is displayed."
+    },
+    "Mini": {
+      "line": 142,
+      "fact": "Hand selector/menu/Left idle/Start are setup-only AX gates; coordinate-based physical tap fallback can be bound to fresh reviewed actual controls."
+    }
+  },
+  "sourceBoundary": [
+    {
+      "location": "HangTen/Models/AppStore.swift:61",
+      "fact": "DEBUG board review flag selects catalog board at initialization; verify literal board name in fresh Train screenshot rather than assuming flag success."
+    },
+    {
+      "location": "HangTen/Views/RootView.swift:124",
+      "fact": "Normal onOpenURL routes production deep link to Train/workout."
+    },
+    {
+      "location": "HangTen/Views/WorkoutView.swift:418",
+      "fact": "Normal auto-start occurs when plan does not require hand choice; screenshot/setup review delay can consume initial countdown/hang."
+    },
+    {
+      "location": "HangTen/Views/WorkoutView.swift:1179",
+      "fact": "Normal menu contains Left hand; user hand choice stays editable only before first Start."
+    },
+    {
+      "location": "HangTen/Views/WorkoutView.swift:1147",
+      "fact": "Normal primary control calls toggleRunning; no review autostart or renderer preparation bypass is needed."
+    }
+  ],
+  "smallestFreshSetupRecommendation": {
+    "protocol": "New uniquely named arm, same normal app launch through all setup stages and measurement. Preserve original failed runtime-evo and all former helper bytes/proofs. Retain AX stdout as diagnostic evidence; replace only its required setup-control assertions with fresh whole-image root review when AX is empty.",
+    "Train": "Immediately capture whole Train image after existing launch wait. Root verifies actual normal Train, arm expected board name and absence of obstructing modal. Bind acknowledgement to screenshot SHA, exact UID/app PID, current source/parity/binary SHA and stage nonce. No guessed controls or inherited previous-launch UI facts.",
+    "consent": "Open production workout URL once, retain command start/end, then capture fresh full screen at consent checkpoint. If actual Cancel/Open alert is visible, root identifies Open in that fresh image and a physical tap occurs exactly once. Prefer AX label when available; otherwise record fresh visible-control point and authoritative screenshot-to-logical-point/orientation mapping. If no alert is visible and actual workout is already visible, explicitly record physicalOpenCount0. Unknown/partial alert or ambiguous control fails without tap/retry. Empty AX alone does not choose either branch.",
+    "EvoPro": "Immediately capture route checkpoint after observed consent handling or direct route. Establish external measurement anchor at that screenshot command completion and begin unchanged fixed-offset screenshots while root reviews the checkpoint passively. Route review failure invalidates the arm; it does not authorize UI correction/backfill. Record this prospective anchor change, since prior helper used final AX command completion. Root review does not infer app phase/time from anchor.",
+    "Mini": "Normal route screenshot must show idle Start and real hand selector. Root reviews fresh screen then physical hand-selector tap once, captures actual menu and verifies Left hand before physical Left hand tap once. Capture fresh left-selected idle screen and require visible Left hand + Start. Tap actual visible Start once and anchor at that command completion. From this anchor only screenshots; validate actual running/countdown later from whole images.",
+    "afterAnchor": "Exactly the retained58 scheduled screenshots, original fixed offsets/lateness bound, no AX, tap, gesture, pause, Skip, relaunch, or synthetic state forcing. Whole-image setup review is passive host image review, not a device query."
+  },
+  "boundedReviewImplementation": {
+    "acknowledgements": "Helper writes immutable stage image/manifest and waits for an explicit root-written acceptance JSON bound to stage nonce/image SHA/UID/app PID. Root is operator already authorized by task; no additional user confirmation is needed.",
+    "bounds": "Use an aggregate setup deadline that leaves the existing224-second capture window within the300-second helper lifetime, or declare a new setup/lifetime bound before execution and update wake assertion coherently. Never extend or reset the deadline silently. Check acknowledgements in short bounded intervals; a missing/mismatched/rejected acknowledgement fails with retained artifacts and exact cleanup.",
+    "autoStartConstraint": "Do not block Evo/Pro capture waiting for root route-image review after workout appears: initial10-second Hang can elapse during review. Begin passive schedule immediately at route checkpoint, allow root to accept/reject while it runs, and mark failed if acknowledgement is absent by predeclared bound. Earlier setup-stage acknowledgements can block while Train/URL consent is still idle.",
+    "coordinatePolicy": "Coordinates target only visible ordinary UI buttons/menu choices from fresh setup screenshots, never board geometry. Derive scale/orientation from device/screenshot metadata; record mapping and chosen point. Do not reuse stale preflight coordinates or hardcode a guessed dialog placement."
+  },
+  "preserveExistingGates": [
+    "Exact owned UUID/controller and exclusive runtime release; no actions while unit/UI tests are active.",
+    "Same source commit/file hashes, binary, successful build/install/container commands, selected81 canonical files and66 native package parity.",
+    "Unchanged flags limited to board ID, plan ID and landscape; audio-off arguments retained.",
+    "No source, training routine timing, CAD facts, geometry, renderer readiness, countdown or preparation modifications.",
+    "Immutable command stdout/stderr/exit, source/parity snapshots, setup screenshot SHA/review ACK/tap command timestamps, capture hashes/deadlines and host clock stability.",
+    "Exact helper children/app cleanup and reaping; persistent Simulator/DD remain root-controller-owned.",
+    "No retries/backfill; incomplete setup or failed route review is an invalid arm, not a passing runtime result."
+  ],
+  "limitations": [
+    "First arm screenshot offset is relative to external route screenshot completion, not known app countdown/phase boundary. Classify actual phase/timer exclusively by whole images.",
+    "Original runtime-evo system dialog result remains invalid and unchanged.",
+    "Physical iPhone unavailable; this recommendation covers Simulator setup/runtime evidence only."
+  ],
+  "status": "Recommendation prepared only; no helper changes or fresh runtime execution performed."
+}

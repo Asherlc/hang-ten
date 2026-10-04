@@ -1,0 +1,19 @@
+{
+  "scope": "Scratch helper update only; no runtime execution, app action, build or external resource creation.",
+  "reason": "Initial build failed65; corrected retry succeeded, later build-ci will bind final source/installed binary.",
+  "retainedHistory": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/history-proof-directory-v1",
+  "change": "Required explicit successful proof-directory argument, confined under integration owner; build/install/container exit proofs must all be success0, noexception, childreaped. Capture verifies release proof-dir/source/parity correspondence and hashes/statuses again.",
+  "priorSHA256": {
+    "prepare-release.py": "8ce208182ea1acd2e9ecab82e11a734f54d93a7e8d6fb248502ee9295ed11d31",
+    "capture.py": "e3b6c1fc9b3767789a58bb86d35f078c9e79f4b5ce3bd242650b897aea045003",
+    "README.md": "f70f6cfaf8b60cd3218f89bb0799b34569cf286238f04bb02aa139286de42aa5"
+  },
+  "newSHA256": {
+    "prepare-release.py": "cb4b3e7dbb00bd0adfa1b1413445097f4ba320de116956ee4d5736daaf896d85",
+    "capture.py": "e04ae6d955e183ae1b76f2dca82fc12d841c39edebd5b7255dd304d246691764",
+    "README.md": "d3859fbae9ea70041018d4d39d202424c873d54cf51009fc436a4a3bdbf0b09f"
+  },
+  "originalPreparationAuditUnchanged": true,
+  "initialFailedBuildUnchanged": true,
+  "syntaxCheckedInMemory": true
+}
