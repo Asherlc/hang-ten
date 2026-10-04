@@ -19,6 +19,8 @@ parser.add_argument('--quiet-strain',action='store_true')
 parser.add_argument('--fullstep-feasible',action='store_true')
 parser.add_argument('--retained-initializer',action='store_true')
 parser.add_argument('--wood-majorizer',action='store_true')
+parser.add_argument('--wood-residual',action='store_true')
+parser.add_argument('--wood-residual-red',action='store_true')
 parser.add_argument('--wood-assembly-red',action='store_true')
 parser.add_argument('--wood-checkpoint',type=int,choices=[3,109,140],default=109)
 parser.add_argument('--arrival-checkpoint',type=int,choices=[109,140],default=109)
@@ -41,6 +43,8 @@ parser.add_argument('--geometry-profile',action='store_true')
 parser.add_argument('--spectral-trajectory',action='store_true')
 parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=109)
 parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
+if args.wood_residual and (not args.wood_majorizer or args.step_rate or args.fixtures_only):parser.error('--wood-residual requires isolated majorizer checkpoint')
+if args.wood_residual_red and not args.wood_residual:parser.error('--wood-residual-red requires --wood-residual')
 if args.wood_assembly_red and (not args.wood_majorizer or not args.fixtures_only):parser.error('--wood-assembly-red requires isolated wood fixtures')
 if args.wood_majorizer and (args.retained_initializer or args.arrival_stop or args.quiet_strain or args.fullstep_feasible or args.full_merit or args.trajectory or args.step_rate==120 or args.composed_step or args.mass_only or args.planar_regions or args.spectral_step or args.clearance_bounds or args.scaled_merit or args.geometry_hints or args.lagged_reaction):parser.error('--wood-majorizer is isolated')
 if args.retained_initializer and (args.quiet_strain or args.fullstep_feasible or args.arrival_stop or args.full_merit or args.trajectory or args.step_rate or args.composed_step or args.mass_only or args.planar_regions or args.spectral_step or args.clearance_bounds or args.scaled_merit or args.geometry_hints or args.lagged_reaction):parser.error('--retained-initializer is isolated fixed140')
@@ -107,8 +111,14 @@ for name in NAMES:
             from plane_reuse.snapshot import collider_source as plane_collider
             text=plane_collider(text)
     if args.wood_majorizer and name=='RopeTriangleCollider.swift':
-        from wood_majorizer.snapshot import collider_source as wood_collider
+        if args.wood_residual:
+            from wood_residual.snapshot import collider_source as wood_collider
+        else:
+            from wood_majorizer.snapshot import collider_source as wood_collider
         text=wood_collider(text)
+    if args.wood_residual and name=='RopeContactSystem.swift':
+        from wood_residual.snapshot import contact_source as wood_contact
+        text=wood_contact(text)
     if args.retained_initializer and name=='RopeContactSystem.swift':
         from retained_initializer.snapshot import contact_source as retained_contact
         text=retained_contact(text)
@@ -116,7 +126,10 @@ for name in NAMES:
         text=solver_source(text).replace('private extension SIMD4','extension SIMD4')
         text+='\n'+(tool/'stock_chain/CheckpointAdapter.swift').read_text()+'\n'+(tool/'contact_bundle/CheckpointExtras.swift').read_text()
         if args.wood_majorizer:
-            from wood_majorizer.snapshot import solver_source as wood_solver
+            if args.wood_residual:
+                from wood_residual.snapshot import solver_source as wood_solver
+            else:
+                from wood_majorizer.snapshot import solver_source as wood_solver
             text=wood_solver(text)
         if args.retained_initializer:
             from retained_initializer.snapshot import solver_source as retained_solver
@@ -180,7 +193,11 @@ for name in ['Math.swift','Trace.swift','main.swift']:
         text=text.replace('    ArmijoTrace.collectOracleBranches=x.verifyArmijoDerivative\n','')
     if name=='main.swift' and args.wood_majorizer:
         from wood_majorizer.snapshot import driver_source as wood_driver,trajectory_source as wood_trajectory
-        text=wood_trajectory(text) if args.step_rate else wood_driver(text,args.wood_checkpoint)
+        if args.wood_residual:
+            from wood_residual.snapshot import driver_source as wood_driver
+            text=wood_driver(text,args.wood_checkpoint,not args.wood_residual_red)
+        else:
+            text=wood_trajectory(text) if args.step_rate else wood_driver(text,args.wood_checkpoint)
     if name=='main.swift' and args.retained_initializer:
         from retained_initializer.snapshot import driver_source as retained_driver
         text=retained_driver(text)
@@ -315,6 +332,7 @@ if args.spectral_step:inputs += list((tool/'spectral_step').glob('*.*'))
 if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
 if args.region_queries or args.planar_rows:inputs += [REPO/'.context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/result.json']
 if args.planar_regions:inputs += [*list((tool/'planar_regions').glob('*.*')),tool/'census_planar_regions.py',stage/'region-topology.json']
+if args.wood_residual:inputs += list((tool/'wood_residual').glob('*.*'))+list((tool/'residual_stop').glob('*.*'))
 if args.wood_majorizer:inputs += list((tool/'wood_majorizer').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
 if args.retained_initializer:inputs += list((tool/'retained_initializer').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
 if args.fullstep_feasible:inputs += list((tool/'fullstep_feasible').glob('*.*'))+list((tool/'quiet_strain').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))

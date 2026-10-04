@@ -1,0 +1,57 @@
+{
+  "owner": "strong-owl-live-physics",
+  "base": "0afd515b3",
+  "adopted": false,
+  "screen": {
+    "adopted": false,
+    "candidateCaps": 0,
+    "candidateMetrics": {
+      "clearanceMargin": 9.999999954215383e-05,
+      "geometryAccepted": true,
+      "lengthError": 4.160302435884944e-09,
+      "speed": 0.00021260473030487178,
+      "strain": 9.732255790151356e-07
+    },
+    "candidateQPs": 2,
+    "candidateResidualEligible": 0,
+    "candidateResidualStops": 0,
+    "candidateRetries": 0,
+    "candidateSeconds": 0.00622258335351944,
+    "candidateSettled": false,
+    "controlSeconds": 0.0055947916698642075,
+    "currentDifferenceMeters": 1.7222249029268318e-06,
+    "failure": "invalid(\"fixed <=1-QP physical-residual work gate\")",
+    "fixturesPass": true,
+    "originalQPs": 2,
+    "owner": "strong-owl-live-physics",
+    "prefixIdentitySteps": 139,
+    "step": 140,
+    "strictConverged": true,
+    "strictDifferenceMeters": 1.3782951670800334e-07,
+    "strictRetries": 0,
+    "woodMajorizer": true,
+    "woodResidual": true
+  },
+  "independentlyAbsentGroups": [
+    52162,
+    52683,
+    56272,
+    56537,
+    57196
+  ],
+  "inputs": {
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-red-v2/native/compile.log": "e59bad56944469bf62b36ef508d4012d60e0d1b2e67171e8d9830e7a43ee4301",
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-red-v2/native/provenance.json": "4363968f1ddcd0600e7cf2608dc9afb8c24d797d9ece9c0dfa62e9c35beeaca0",
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-red-v2/native/resources.jsonl": "9f42e003a522113e30b992911acc60478c1ef3e226cac01421f9b25d7ab1195a",
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-red-v3/native/result.json": "a8bb52268dfdbffe1a505532cd40240de757d85fad59f0b2dc1aa01e3452474f",
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-red-v3/native/run.log": "eecc2d75657af701a911d406da295516ae16c686494ebe711e8a0d0e70fc7355",
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-red-v3/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-red-v3/native/provenance.json": "47888947f1b0106b051e700bb97d8e8b318b7beecde2522bd7392fd3d7584543",
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-red-v3/native/resources.jsonl": "50e70e63ebe0469c5074bd854e034a18c9a1dc30f2106a79e8cfd17957ca5edc",
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-140/native/result.json": "21e2b1e9d54ce9cb2e49f12e59d4a10ba3836e05f56248ce02e76d1f9c337536",
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-140/native/run.log": "eecc2d75657af701a911d406da295516ae16c686494ebe711e8a0d0e70fc7355",
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-140/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-140/native/provenance.json": "02071e7db151c362d5cea96cd32df4a878c81f5b1dc0c3a2e85a94870e92cf31",
+    ".context/strong-owl-live-physics-armijo-0afd515b3-wood-residual-140/native/resources.jsonl": "d1db6e626d89ffb56d84b50a99e3e6f6cba4c1334954468a652baa376a6fb69b"
+  }
+}

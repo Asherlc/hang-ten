@@ -21,8 +21,12 @@ def solver_source(source):
     private struct WoodTerm {let rope:Int,first:Int;let vector:[Double];let scale:Double}
     private var woodTerms:[WoodTerm]=[]""")
     source=once(source,'        var secondRope:Int?=nil','        var secondRope:Int?=nil\n        var woodHit:RopeSegmentContact?=nil')
-    source=once(source,'residual:0.00005-hit.penetrationDepth,contact:true,lengthSegment:nil))\n                }\n            }',
-        'residual:0.00005-hit.penetrationDepth,contact:true,lengthSegment:nil,woodHit:hit))\n                }\n            }')
+    if 'var sourceID:String?' in source:
+        old='sourceID:hit.sourceFeature.map{"wood-link/\\(r)/\\(i)/\\($0.x)/\\($0.y)"}))'
+        source=once(source,old,old[:-2]+',woodHit:hit))')
+    else:
+        source=once(source,'residual:0.00005-hit.penetrationDepth,contact:true,lengthSegment:nil))\n                }\n            }',
+            'residual:0.00005-hit.penetrationDepth,contact:true,lengthSegment:nil,woodHit:hit))\n                }\n            }')
     # The identical equality layout is prepared before hints; numeric factor only once, after H terms.
     start=source.index('        let borderRows=rows.indices.filter',source.index('    private func constraintBackbone'))
     end=source.index('        var bandwidth=0',start)
