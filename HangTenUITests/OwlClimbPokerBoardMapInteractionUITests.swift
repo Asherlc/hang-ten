@@ -62,8 +62,16 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         addScreenshot(named: "Beastmaker manual orbit after selection")
         let pocket = app.buttons["boardDetail.holdLegend.pocket-middle-center"]
         XCTAssertTrue(pocket.waitForExistence(timeout: 10))
+        let scrollView = app.scrollViews.firstMatch
+        // Wrapped names and full-sized row targets can put this hold below
+        // the viewport. Exercise the same scroll a person uses to reach it.
+        for _ in 0..<3 {
+            if pocket.isHittable { break }
+            scrollView.swipeUp()
+        }
         XCTAssertTrue(pocket.isHittable)
         pocket.tap()
+        scrollView.swipeDown()
         let front = NSPredicate { _, _ in
             guard let value = diagnostic.value as? String,
                   value.contains("cameraSettled=true"),

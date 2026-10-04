@@ -146,6 +146,9 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         defer { XCUIDevice.shared.orientation = .portrait }
         app.terminate()
         app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
+        // This test covers the clock and navigation, independently of the
+        // simulator's audio service and speech playback.
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
         XCUIDevice.shared.orientation = .landscapeLeft
         app.launch()
         openWorkoutDeepLinkAndChooseLeftHandIfNeeded()
@@ -183,10 +186,20 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         portraitScreenshot.lifetime = .keepAlways
         add(portraitScreenshot)
 
-        app.buttons["Resume"].tap()
-        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 10))
         let skip = app.buttons["workout.skipStep"]
+        if skip.label != "Skip step 1: Max hang · set 1" {
+            app.buttons["workout.routinePicker"].tap()
+            let firstStep = app.buttons.matching(NSPredicate(
+                format: "identifier BEGINSWITH %@ AND label BEGINSWITH %@",
+                "workout.step.", "Step 1, "
+            )).firstMatch
+            XCTAssertTrue(firstStep.waitForExistence(timeout: 10))
+            firstStep.tap()
+        }
+        XCTAssertEqual(skip.label, "Skip step 1: Max hang · set 1")
         XCTAssertTrue(skip.isEnabled)
+        // Keep the work step paused until the skip. Slow CI queries after
+        // resuming can otherwise let its ten-second hang reach rest first.
         skip.tap()
         // Entering a rest step is immediate; the next work step gets a countdown.
         let restStep = XCTNSPredicateExpectation(
@@ -194,10 +207,18 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             object: skip
         )
         XCTAssertEqual(XCTWaiter.wait(for: [restStep], timeout: 5), .completed)
+        XCTAssertTrue(app.buttons["Resume"].exists, "Skipping to rest preserves the paused clock")
+        app.buttons["Resume"].tap()
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 10))
         skip.tap()
         XCTAssertTrue(app.buttons["Cancel countdown"].waitForExistence(timeout: 5))
         app.buttons["Cancel countdown"].tap()
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10))
+
+        let cancelledCountdown = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        cancelledCountdown.name = "Next work step paused after cancelling skip countdown"
+        cancelledCountdown.lifetime = .keepAlways
+        add(cancelledCountdown)
     }
 
     func testLandscapeManualWorkoutHidesStreamingSensorMeter() throws {

@@ -526,14 +526,19 @@ final class BoardSourceBoundaryTests: XCTestCase {
             .appendingPathComponent("HangTen/Views/BoardMapView.swift")
         let source = try String(contentsOf: sourceURL, encoding: .utf8)
 
-        XCTAssertTrue(source.contains("BoardPresentationImage"))
-        XCTAssertTrue(source.contains("BoardContactPathShape(pieces: pieces)"))
-        XCTAssertTrue(source.contains(".contentShape(.interaction, shape)"))
-        XCTAssertTrue(source.contains(".contentShape(.accessibility, shape)"))
-        XCTAssertTrue(source.contains(".accessibilityElement(children: .combine)"))
-        XCTAssertFalse(source.contains("contentShape(Rectangle())"))
-        XCTAssertFalse(source.contains("Canvas("))
-        XCTAssertFalse(source.contains("BoardDesign"))
+        // The textual hold legend has rectangular row targets. Only the board
+        // renderer and its physical hold visuals must use canonical paths.
+        let rendererStart = try XCTUnwrap(source.range(of: "struct BoardMapView: View {"))
+        let rendererSource = source[rendererStart.lowerBound...]
+
+        XCTAssertTrue(rendererSource.contains("BoardPresentationImage"))
+        XCTAssertTrue(rendererSource.contains("BoardContactPathShape(pieces: pieces)"))
+        XCTAssertTrue(rendererSource.contains(".contentShape(.interaction, shape)"))
+        XCTAssertTrue(rendererSource.contains(".contentShape(.accessibility, shape)"))
+        XCTAssertTrue(rendererSource.contains(".accessibilityElement(children: .combine)"))
+        XCTAssertFalse(rendererSource.contains("contentShape(Rectangle())"))
+        XCTAssertFalse(rendererSource.contains("Canvas("))
+        XCTAssertFalse(rendererSource.contains("BoardDesign"))
     }
 
     func testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds() throws {
