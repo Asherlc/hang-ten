@@ -1,0 +1,388 @@
+{
+  "head": "069f24da9a2d0a0f66fd6f4feb2ffe9bf9460af5",
+  "reviewer": "/root/premerge_code_review",
+  "independentlyBoundBy": "placid-badger",
+  "nativeSourceCount": 66,
+  "nativeInventorySHA256": "cbae1a448332d408f038d6a9b7936b258d3c4bccc544542f5170a1b314132e84",
+  "nativeSources": [
+    {
+      "path": "Hangboards/aelith-cyclops-011/aelith-cyclops-011.FCStd",
+      "sha256": "6caa7db79f8c92ff3801c15e7cf42016b92808ac312dbb99b7e3dbfedf4e32da"
+    },
+    {
+      "path": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
+      "sha256": "de2bd04820b49ab077828234c2199f28b6a45b18ae2369f2b97096880ba48723"
+    },
+    {
+      "path": "Hangboards/beastmaker-2000/beastmaker-2000.FCStd",
+      "sha256": "217a5431eca468092a2fb7daafefbe7084d8e1618a82afff9381cd5ab7a1df7d"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/captain-fingerfood-dual.FCStd",
+      "sha256": "10b254fc3e2ad3c3b4c25b2876c2c0fc086d9ed4f634025d42397352e0e5cd8e"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
+      "sha256": "3165dc49577a93e82cd2b1ec3f8ea4a24965b89ac0b2d4c00ccfb7a36c8c7ff6"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/captain-fingerfood-unlevel.FCStd",
+      "sha256": "b4e8941017237f1196ab8c29632e0c19b7c9301ed92b5fd2011bb3229cb05e87"
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/clavellium-training-block.FCStd",
+      "sha256": "62fd932ed815fe02041cc1f798da08348827b0f69a8abbc273213bb2b2d2627b"
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/crimptonite-helium-mobile.FCStd",
+      "sha256": "95885d03bebd378a25c91230d8cace2b2d904a8412fe0396342a7b1e6e56fb2c"
+    },
+    {
+      "path": "Hangboards/dewoodstok-woodbord/dewoodstok-woodbord.FCStd",
+      "sha256": "02c55948ebbec3e32f3fe9c206ac21d9917f749da33117ff35c8503eb638ee01"
+    },
+    {
+      "path": "Hangboards/escape-beta-22/escape-beta-22.FCStd",
+      "sha256": "4bd4b717970805ebfe58005f9d2659dc94927f39cac31ae736a1f5338067a528"
+    },
+    {
+      "path": "Hangboards/escape-unlimited/escape-unlimited.FCStd",
+      "sha256": "f9ee95e5a53230d579a97a3c69613003d1526ae7028b8f7a573ea430e5dba2ff"
+    },
+    {
+      "path": "Hangboards/evolv-kilter-basic-long/evolv-kilter-basic-long.FCStd",
+      "sha256": "b18d962a2366682d558666169be2363efa53a9e914df7baa922799ccc6536a2e"
+    },
+    {
+      "path": "Hangboards/frictitious-doormount-pro-7/frictitious-doormount-pro-7.FCStd",
+      "sha256": "82a27ae8dae37228c30918873cb39bfc03e14ae2d3b2897f84a0ce5ded852b72"
+    },
+    {
+      "path": "Hangboards/frictitious-megalith/frictitious-megalith.FCStd",
+      "sha256": "75d4def0edafe8bfc95004d9928f029520e2d4240941c52761563188f609b9e5"
+    },
+    {
+      "path": "Hangboards/frictitious-nug/frictitious-nug.FCStd",
+      "sha256": "b01c9692af21073b1e0a67af4fd7fcea350decd87fe24fbced569ce3a830e2fa"
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/frictitious-port-a-board.FCStd",
+      "sha256": "45ca78a21b1f0f25f1c471a0e1244bfd8a77ca57abac37dcc99cde034e29a289"
+    },
+    {
+      "path": "Hangboards/j-bryant-ftg-32/j-bryant-ftg-32.FCStd",
+      "sha256": "1eb35bba2fb9c337efaa3ee599d08f02fedde61d34f9ee4de2241d669d12db22"
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd",
+      "sha256": "ae4e480cd1d26c02c0f89c085b2921b45413c904c0c47d5aaaa47c89c37fbe2b"
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-large/lattice-mxedge-lift-large.FCStd",
+      "sha256": "a44dc7de549c3a9c1f9dddafcba983bd1ea095443f63cad58b147e0d86960720"
+    },
+    {
+      "path": "Hangboards/lattice-mxedge-lift-small/lattice-mxedge-lift-small.FCStd",
+      "sha256": "6724c8548eaa71235f75e924e4306448c02cf47e6d822e22967abb61e50d009e"
+    },
+    {
+      "path": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
+      "sha256": "821beadb22810a96da35b2952e9932f60796202a8782ca5275eaa37498d96786"
+    },
+    {
+      "path": "Hangboards/mammut-diamond-finger/mammut-diamond-finger.FCStd",
+      "sha256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe"
+    },
+    {
+      "path": "Hangboards/metolius-climbers-edge/metolius-climbers-edge.FCStd",
+      "sha256": "183559334d57680c01268973d7af4f29257d209c1055ed81062f4b9c659f0ece"
+    },
+    {
+      "path": "Hangboards/metolius-contact/metolius-contact.FCStd",
+      "sha256": "732ee95e7b434e188708b96f974bd3afdacdd62fedc93d382f66e7401a480be1"
+    },
+    {
+      "path": "Hangboards/metolius-foundry/metolius-foundry.FCStd",
+      "sha256": "a3bc8f2e5ada0957c37b4b39a848a8866d6595cb6deea2fc57f6c5597c00eb90"
+    },
+    {
+      "path": "Hangboards/metolius-light-rail-2/metolius-light-rail-2.FCStd",
+      "sha256": "7dd18930697bba18079fc0328a3254072ee5b0bbe8d73d31f9fe0d9d75a50ddb"
+    },
+    {
+      "path": "Hangboards/metolius-prime-rib/metolius-prime-rib.FCStd",
+      "sha256": "481381c0bbc020d6a48c6c0d76b796b306d7faab64e362335697d2f688377117"
+    },
+    {
+      "path": "Hangboards/metolius-project/metolius-project.FCStd",
+      "sha256": "85914eac2bd23cf99fdaf3dfea39345377f94318da0bcd502e72b2a2aa269999"
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/metolius-rock-rings-3d.FCStd",
+      "sha256": "b6f6d5a8ae57289c838ca409eae01bee5995ad562d21b3bd2762d15f0f0142db"
+    },
+    {
+      "path": "Hangboards/metolius-simulator-3d/metolius-simulator-3d.FCStd",
+      "sha256": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e"
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-compact-ii/metolius-wood-grips-compact-ii.FCStd",
+      "sha256": "1caf7bccda3892a816c7eb9f47589aab0e334fd3751b982bec3be047e78b234b"
+    },
+    {
+      "path": "Hangboards/metolius-wood-grips-deluxe-ii/metolius-wood-grips-deluxe-ii.FCStd",
+      "sha256": "0e13ed6ecd996c735ead7344fb2d7f5a6fef4d247c7c4deb8aea8b57d5c64cfe"
+    },
+    {
+      "path": "Hangboards/moon-armstrong/moon-armstrong.FCStd",
+      "sha256": "cdb73bb79c0d971b179e246dce75c8f7332f1e0353f2f53a44f0ce249efbede7"
+    },
+    {
+      "path": "Hangboards/nature-stoak-board-iii/nature-stoak-board-iii.FCStd",
+      "sha256": "8755cf56a180400b8641ae24dd6a39d1b884af64c775a1837e4f283f871bfeee"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd",
+      "sha256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd",
+      "sha256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9"
+    },
+    {
+      "path": "Hangboards/owl-climb-poker/owl-climb-poker.FCStd",
+      "sha256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553"
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+      "sha256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986"
+    },
+    {
+      "path": "Hangboards/soill-iron-palm-2/soill-iron-palm-2.FCStd",
+      "sha256": "ba86f4813c7d42f846608a0b89c2610db3a3f83753d04e63f4b0bbb5f0139a4d"
+    },
+    {
+      "path": "Hangboards/soill-split-palm/soill-split-palm.FCStd",
+      "sha256": "cb7e592fd903612db83e15b37280eeb466d98018e735c821b19db0e7b95e78e7"
+    },
+    {
+      "path": "Hangboards/soill-training-tiles/soill-training-tiles.FCStd",
+      "sha256": "3b47e3f69514c8a3ebb12dce2659b40e809798630fc6e2ff3ed2c262048390ac"
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2011/surfaces-for-climbing-transgression-2011.FCStd",
+      "sha256": "a5042032b5e7b01306608fdc6690ce097ed2bd4bc34bbc84a3313596524b7f67"
+    },
+    {
+      "path": "Hangboards/surfaces-for-climbing-transgression-2013/surfaces-for-climbing-transgression-2013.FCStd",
+      "sha256": "00990671ccb446a3d6b6293df6cfcc5ca4d63fc98238a49b51d5ebe771ca578d"
+    },
+    {
+      "path": "Hangboards/target10a-linebreaker-base/target10a-linebreaker-base.FCStd",
+      "sha256": "393be4f238e6cfa3584c642d6373f575fa5f11823502fe04d8a6a9e6a780d6ac"
+    },
+    {
+      "path": "Hangboards/tension-flash-board/tension-flash-board.FCStd",
+      "sha256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+    },
+    {
+      "path": "Hangboards/tension-grindstone-original/tension-grindstone-original.FCStd",
+      "sha256": "f67e4056da41ed3076ff7688a0d3bba4e02e6e880ef2d8cf34c0cecd965ee95f"
+    },
+    {
+      "path": "Hangboards/tension-grindstone-pro/tension-grindstone-pro.FCStd",
+      "sha256": "84b1e281a13c2a65f7b7efcf949a3fc22ad009c5d86a5f7a301d9a7d0665ffcf"
+    },
+    {
+      "path": "Hangboards/tension-grindstone/tension-grindstone.FCStd",
+      "sha256": "3ef21f4328ea2b0f2f6d6f7714c9ceb72d4725f563fae664f22b5d3783cedabd"
+    },
+    {
+      "path": "Hangboards/tension-honestone/tension-honestone.FCStd",
+      "sha256": "9b647d84fc3258c3cf3657c1f045519ac0906669f0d17803c9d14c35d7da2c1e"
+    },
+    {
+      "path": "Hangboards/tension-whetstone/tension-whetstone.FCStd",
+      "sha256": "42834773e456df1f97a9e8cac75cbab3313556aa13f14d0f0370cc381ad1ac48"
+    },
+    {
+      "path": "Hangboards/the-hangboard/the-hangboard.FCStd",
+      "sha256": "a57761033e8706e3ec759bc006a2c48860141673a90e308e0e1c49e41f0945e5"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd",
+      "sha256": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-natural/trango-rock-prodigy-natural.FCStd",
+      "sha256": "886faa151410caaffa57ecad9a9c14591f6951cc874d89542b87b9fe601b51f8"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-pivot/trango-rock-prodigy-pivot.FCStd",
+      "sha256": "6ef486646953db5c692d6fd7b24ebb4dc9dd98f4f278f9f51e69bfed4edacd75"
+    },
+    {
+      "path": "Hangboards/trango-rock-prodigy-training-center/trango-rock-prodigy-training-center.FCStd",
+      "sha256": "6002324b42f5bf49d119bf32c52607ebd5c797fb12557f851f5de0378de86f4d"
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd",
+      "sha256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448"
+    },
+    {
+      "path": "Hangboards/yy-baguette/yy-baguette.FCStd",
+      "sha256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689"
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+      "sha256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef"
+    },
+    {
+      "path": "Hangboards/yy-travelboard/yy-travelboard.FCStd",
+      "sha256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-evo/yy-verticalboard-evo.FCStd",
+      "sha256": "40416fa721ae1f9b89ace5bd20273136ed2678b284f4e51f3bfe12d68dfb18ca"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-first/yy-verticalboard-first.FCStd",
+      "sha256": "7272fc88543714d4fca319648f973dd57c017440d8da9283f8cd361e0bf7205b"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-light/yy-verticalboard-light.FCStd",
+      "sha256": "348106184e4a84094f3a071eebfed521ac39e1d5847c40d325d6ca77314f6b98"
+    },
+    {
+      "path": "Hangboards/yy-verticalboard-one/yy-verticalboard-one.FCStd",
+      "sha256": "860f16dc5af25ee834e6f3b282f0e51fd6d404ce6693581896abde1c7066f33e"
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/zlagboard-evo.FCStd",
+      "sha256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c"
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
+      "sha256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a"
+    }
+  ],
+  "suspensionSidecarCount": 18,
+  "sidecarInventorySHA256": "190f8448162497847d00862a3d12fabadb3434a5114e56e1e28f644e1401c0a1",
+  "sidecars": [
+    {
+      "path": "Hangboards/aelith-cyclops-011/suspension.json",
+      "sha256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-dual/suspension.json",
+      "sha256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf"
+    },
+    {
+      "path": "Hangboards/captain-fingerfood-unlevel/suspension.json",
+      "sha256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e"
+    },
+    {
+      "path": "Hangboards/clavellium-training-block/suspension.json",
+      "sha256": "514366d1579ad467b0c6ef761f1841aa8f5147fa2b868b1007b12ad23b08d85c"
+    },
+    {
+      "path": "Hangboards/crimptonite-helium-mobile/suspension.json",
+      "sha256": "e37139047d86f44e5c5987c97e6b940874471e008a10b1bf16f9505fe6b8aa56"
+    },
+    {
+      "path": "Hangboards/frictitious-nug/suspension.json",
+      "sha256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472"
+    },
+    {
+      "path": "Hangboards/frictitious-port-a-board/suspension.json",
+      "sha256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf"
+    },
+    {
+      "path": "Hangboards/lattice-mini-bar/suspension.json",
+      "sha256": "45481d896ccbe73ed2f89c77cea8d56391da3aecc1ed434c7b55aba0739cee14"
+    },
+    {
+      "path": "Hangboards/metolius-rock-rings-3d/suspension.json",
+      "sha256": "1504f218cc69eb8a09259a23c4bf7458e93a3bab03e468a974d1727a2b8dad1b"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini-karma8a/suspension.json",
+      "sha256": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger-mini/suspension.json",
+      "sha256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/suspension.json",
+      "sha256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a"
+    },
+    {
+      "path": "Hangboards/plateau-lifting-edge/suspension.json",
+      "sha256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+    },
+    {
+      "path": "Hangboards/tension-flash-board/suspension.json",
+      "sha256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9"
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/suspension.json",
+      "sha256": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282"
+    },
+    {
+      "path": "Hangboards/yy-baguette/suspension.json",
+      "sha256": "c69c11dc9708bc1e2dc9f235004f55a7c0ecd524fdf5b073c40dda1d9b0c956f"
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/suspension.json",
+      "sha256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97"
+    },
+    {
+      "path": "Hangboards/yy-travelboard/suspension.json",
+      "sha256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4"
+    }
+  ],
+  "legacyBoardJSONCount": 0,
+  "sidecarsContainEffectiveDepths": false,
+  "sharedPresentationContactsWithDifferingResolvedDepths": 0,
+  "onlyBoardWithEffectiveDepths": {
+    "boardID": "plateau.lifting-edge",
+    "source": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+    "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+    "positions": [
+      {
+        "positionID": "depth-18mm",
+        "presentationID": "depth-18mm",
+        "contactID": "edge-18",
+        "effectiveDepthMM": [
+          18,
+          18
+        ]
+      },
+      {
+        "positionID": "depth-15mm",
+        "presentationID": "depth-15mm",
+        "contactID": "edge-18",
+        "effectiveDepthMM": [
+          15,
+          15
+        ]
+      },
+      {
+        "positionID": "depth-10mm",
+        "presentationID": "depth-10mm",
+        "contactID": "edge-18",
+        "effectiveDepthMM": [
+          10,
+          10
+        ]
+      }
+    ]
+  },
+  "disposition": "The synthetic grouped-presentation callback limitation is acknowledged. No current canonical board uses it. The existing model-level regression takes an explicit configured contact; it does not certify a grouped-configuration editor UI. No new UI/API is added for this unshipped representation.",
+  "sidecarMergeSource": "Tools/HangboardCAD/cad_source.py:361-387,481-574 overlays only suspension on presentation media/instances, preserving positions/contact facts."
+}

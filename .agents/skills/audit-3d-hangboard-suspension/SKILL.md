@@ -78,11 +78,13 @@ A clearance-valid approach through the rear opening contradicts this visible
 threading. Do not infer a hidden connection between the two holes. See the
 dated DUAL source audit and cord-entry review.
 
-For the older non-CAD Captain Fingerfood POCKET and any retained non-CAD
-UNLEVEL revision, keep the source-backed upper-lip-to-recess route as ordered
-paired-lead `contactPointsInModel`; a visible recess alone does not establish
-an additional through-bore. Native revisions use their current CAD source audit
-and native solver metadata.
+Captain Fingerfood POCKET is already native CAD, with suspension embedded in
+its `HangTenBoardManifest`. Its retained `pairedLeadCord` and ordered
+`contactPointsInModel` are legacy metadata, not proof of a completed native
+solver migration. Any cord revision must follow the evidence-matched native
+solver contract above and reproduce every canonical pose; a visible recess
+alone does not establish an additional through-bore or hidden connection.
+Native UNLEVEL uses its current CAD source audit and `nativeRoutes` metadata.
 
 ## Prove the result
 
