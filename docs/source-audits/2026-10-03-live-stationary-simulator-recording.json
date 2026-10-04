@@ -1,0 +1,182 @@
+{
+  "owner": "strong-owl-live-physics",
+  "steps": 350,
+  "simulatedSeconds": 1.4583333333333333,
+  "engineSeconds": 1.083857113,
+  "firstToLastEngineSeconds": 1.685166167,
+  "p50StepMs": 0.973625,
+  "p95StepMs": 7.097167,
+  "maxStepMs": 36.456083,
+  "p95BatchMs": 43.511458,
+  "bothSettled": true,
+  "caps": 0,
+  "retries": 0,
+  "adopted": false,
+  "deviceMeasured": false,
+  "groupsIndependentlyAbsent": [
+    51032,
+    51069,
+    51226,
+    52192,
+    59883,
+    59966,
+    59987,
+    59991,
+    60003,
+    60033,
+    60068,
+    60088,
+    60102,
+    60126,
+    60148,
+    60164,
+    60182,
+    60197,
+    60239,
+    60258,
+    60283,
+    60302,
+    77975,
+    78473,
+    79200,
+    79321,
+    83697,
+    84018,
+    84049
+  ],
+  "simulatorCleanup": {
+    "simulator": {
+      "owner": "strong-owl-live-physics",
+      "uuid": "675B0EAB-DDA0-49BF-8497-DD1A3740E722",
+      "derived": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/DerivedData",
+      "freshInvocation": true
+    },
+    "simulatorAbsent": true,
+    "groups": [
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/resources.jsonl",
+        "group": 51032,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/resources.jsonl",
+        "group": 51069,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/resources.jsonl",
+        "group": 51226,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/resources.jsonl",
+        "group": 52192,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/resources.jsonl",
+        "group": 59883,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/resources.jsonl",
+        "group": 59966,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/resources.jsonl",
+        "group": 59987,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 59991,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60003,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60033,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60068,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60088,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60102,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60126,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60148,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60164,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60182,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60197,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60239,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60258,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60283,
+        "absent": true
+      },
+      {
+        "manifest": "/Users/asherlc/.paseo/worktrees/0h78jp9r/strong-owl-live-physics/.context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/resources.jsonl",
+        "group": 60302,
+        "absent": true
+      }
+    ],
+    "derivedDataAbsent": true
+  },
+  "publicVideo": "https://github.com/Asherlc/hang-ten/releases/download/strong-owl-live-physics-stationary-20261003/strong-owl-live-physics-preconditioned-motion.mp4",
+  "evidenceSHA256": {
+    ".context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/staged-source.json": "5109f73fe32fe50d45a6ee66f703aec906e2e81e0aca1450a16ba81d8aeedabe",
+    ".context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/published-release.json": "8ebc95d5db6f14d475304b56ae375311c488d7bff1e0b1406e0cd8c3aef08c64",
+    ".context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/runtime-summary.json": "3646730060e35263255d9d7073ca66732ddb37dadc3e1323008aca5c65dc32a6",
+    ".context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/installed-binary.json": "d711b04dd4b3d0c87dcd250f2367819ba7217b36348b066538c175b4fd314dc4",
+    ".context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/stderr.log": "2cd216663f2c04bc552b63c949678e0ec44dbec952ad2f4d339655202eeb067b",
+    ".context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/demonstration-metadata.json": "5d0080c31fdd6b35de8271c18275ef8401f8280247a87017e7e1c86b3ccfe0c7",
+    ".context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/timestamp-verification.json": "757d058db8021c1dd4c1d5d77a0b8efb20b980fdebeb701d41dd30b3d002640d",
+    ".context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/strong-owl-live-physics-preconditioned-motion.mp4": "469ab456ec2f9246acfdd88f0b312240aaae40cbd9a4fa42c3a7020a25e5143c",
+    ".context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/capture/strong-owl-live-physics-motion.mp4": "7bfe8c4047ded33310efcf9996d0e169fba9f8af2e42faf7463f155fd46962de",
+    ".context/strong-owl-live-physics-preconditioned-ios-ab04d57-stationary-v2/strong-owl-live-physics/.context/cleanup-verified.json": "134125f3fd9ed8e9cb52e07034d713832862f5fa1c5d2ada2e39152a73c9ca6d"
+  }
+}

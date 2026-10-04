@@ -4,7 +4,7 @@ sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1]))
 from run_native_contact_screen import REPO,OwnedCommands
 from stationary_residual.snapshot import solver_source
 from diagnostic_collection.snapshot import solver_source as diagnostic_solver
-ap=argparse.ArgumentParser();ap.add_argument('--label',required=True);mode=ap.add_mutually_exclusive_group(required=True);mode.add_argument('--checkpoint',type=int,choices=[3,140]);mode.add_argument('--trajectory',action='store_true');args=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('--label',required=True);mode=ap.add_mutually_exclusive_group(required=True);mode.add_argument('--checkpoint',type=int,choices=[3,140]);mode.add_argument('--trajectory',action='store_true');mode.add_argument('--loaded-start',action='store_true');mode.add_argument('--loaded-trajectory',action='store_true');args=ap.parse_args()
 assert REPO.name=='strong-owl-live-physics' and all(c in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in args.label)
 root=REPO/'.context'/f'{REPO.name}-stationary-residual-{args.label}';root.mkdir();sources=root/'sources';sources.mkdir()
 prior=REPO/'.context/strong-owl-live-physics-armijo-b4c2027fc-preconditioned-stop-540/native';tool=pathlib.Path(__file__).resolve().parent
@@ -19,7 +19,11 @@ for p in (prior/'sources').glob('*.swift'):
  (sources/p.name).write_text(s)
 (sources/'StationaryResidualTrace.swift').write_text((tool/'Trace.swift').read_text())
 (sources/'SolverCollection.swift').write_text((tool.parent/'diagnostic_collection/Trace.swift').read_text())
-if args.trajectory:
+if args.loaded_start or args.loaded_trajectory:
+ if args.loaded_trajectory:
+  assert json.loads((REPO/'.context/strong-owl-live-physics-stationary-residual-e09fc8a-loaded-start-3/result.json').read_text())['pass']
+ (sources/'main.swift').write_text((tool/('LoadedTrajectory.swift.txt' if args.loaded_trajectory else 'LoadedStart.swift.txt')).read_text())
+elif args.trajectory:
  for checkpoint in [3,140]:
   evidence=REPO/'.context'/f'{REPO.name}-stationary-residual-e540f8ff4-{checkpoint}'/'result.json'
   assert json.loads(evidence.read_text())['pass']
@@ -36,6 +40,6 @@ c=OwnedCommands(REPO.name,root)
 for sig in [signal.SIGINT,signal.SIGTERM]:signal.signal(sig,c.interrupted)
 try:
  status=c.run('compile',['perl','-e','alarm 180;exec @ARGV',*command],root/'compile.log',dict(os.environ))
- if not status:status=c.run('run',['perl','-e','alarm 600;exec @ARGV' if args.trajectory else 'alarm 90;exec @ARGV',str(root/(REPO.name+'-stationary-residual')),str(root),*([str(REPO/'.context/strong-owl-live-physics-current-diagnostic-trajectory/native/result.json'),'--candidate-hz','240'] if args.trajectory else [str(args.checkpoint)])],root/'run.log',dict(os.environ,HANGTEN_REVIEW_PHYSICAL_CONVERGENCE='1'))
+ if not status:status=c.run('run',['perl','-e','alarm 600;exec @ARGV' if args.trajectory or args.loaded_trajectory else 'alarm 90;exec @ARGV',str(root/(REPO.name+'-stationary-residual')),str(root),*([str(REPO/'.context/strong-owl-live-physics-current-diagnostic-trajectory/native/result.json'),'--candidate-hz','240'] if args.trajectory else (["--loaded-trajectory"] if args.loaded_trajectory else []) if args.loaded_start or args.loaded_trajectory else [str(args.checkpoint)])],root/'run.log',dict(os.environ,HANGTEN_REVIEW_PHYSICAL_CONVERGENCE='1'))
 finally:c.cleanup()
 print((root/('run.log' if (root/'run.log').exists() else 'compile.log')).read_text()[-6000:]);raise SystemExit(status)

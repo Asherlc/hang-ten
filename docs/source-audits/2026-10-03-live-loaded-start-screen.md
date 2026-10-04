@@ -1,0 +1,7 @@
+# Strict loaded startup screen
+
+The strict solver settled the unchanged upright seed after 123 steps (0.5125 simulated seconds, 608 QPs), then an independent strict readiness continuation stayed settled. The full physical checkpoint preserves velocities, tensions, history, material and contact hints. This changes the initial condition: the loaded rope differs by 0.883 mm from the geometric-only seed. Warmup wall timings (first screen 2.168 s, full screen 1.805 s) exclude seed preparation and the readiness continuation; preparation is not free.
+
+Both original strict reference and experimental solver start from that identical loaded checkpoint. First three motion steps need one candidate QP each and pass uncached physical checks and 50 µm propagated/same-input strict comparisons. The full 540-step turn/return passes those comparisons at EVERY step, including 192 strict false-settle continuations and both quarter-second settled tails. Maximum propagated error 46.043 µm; maximum same-input strict error 37.872 µm. Candidate 178 QPs, engine 1.273 s for 2.25 s simulated. Step p95 6.888 ms still fails 4 ms. No product adoption, device result or catalog-wide claim. JSON binds sources/results; temporary exact groups were independently checked absent.
+
+Astra found no mathematical harness blocker. Future failure reporting must persist the current frame before false-settle or immutable guards throw. Existing completed passing evidence is retained unchanged. Propagated baseline is original strict physics, not the prior convergence-experiment control.

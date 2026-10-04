@@ -5,11 +5,18 @@ sys.dont_write_bytecode=True
 sys.path.insert(0,str(pathlib.Path(__file__).resolve().parent))
 from run_native_contact_screen import OwnedCommands,REPO
 from run_live_speed_screen import NAMES
-ap=argparse.ArgumentParser();ap.add_argument('mode',choices=['stage','record']);ap.add_argument('--label',required=True);ap.add_argument('--stationary',action='store_true');a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('mode',choices=['stage','record']);ap.add_argument('--label',required=True);ap.add_argument('--stationary',action='store_true');ap.add_argument('--loaded-start',action='store_true');a=ap.parse_args()
 assert REPO.name=='strong-owl-live-physics' and all(c in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in a.label)
 root=REPO/'.context'/f'{REPO.name}-preconditioned-ios-{a.label}';workspace=root/REPO.name;logs=workspace/'.context'
 def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+assert not a.loaded_start or a.stationary
 if a.mode=='stage':
+    if a.loaded_start:
+        loadedNative=REPO/'.context/strong-owl-live-physics-stationary-residual-e09fc8a-loaded-full-540'
+        loadedReport=json.loads((loadedNative/'result.json').read_text())
+        loadedAudit=json.loads((REPO/'docs/source-audits/2026-10-03-live-loaded-start-screen.json').read_text())
+        assert loadedReport['pass'] and len(loadedReport['steps'])==540
+        assert loadedAudit['evidenceSHA256'][str((loadedNative/'result.json').relative_to(REPO))]==digest(loadedNative/'result.json')
     root.mkdir();workspace.mkdir();logs.mkdir()
     native=REPO/('.context/strong-owl-live-physics-stationary-residual-ab04d57-retry-guard-540' if a.stationary else '.context/strong-owl-live-physics-armijo-b4c2027fc-preconditioned-stop-540/native')
     report=json.loads((native/'result.json').read_text())
@@ -18,7 +25,7 @@ if a.mode=='stage':
     assert audit['evidenceSHA256'][str((native/'result.json').relative_to(REPO))]==digest(native/'result.json')
     hashes=json.loads((native/'provenance.json').read_text())['hashes']
     for p in (native/'sources').glob('*.swift'):assert hashes[str(p.relative_to(REPO))]==digest(p)
-    (root/'stage-ownership.json').write_text(json.dumps({'owner':REPO.name,'parentWorkspace':str(REPO),'stagedWorkspace':str(workspace),'resourcesStarted':False,'stationaryResidual':a.stationary},indent=2))
+    (root/'stage-ownership.json').write_text(json.dumps({'owner':REPO.name,'parentWorkspace':str(REPO),'stagedWorkspace':str(workspace),'resourcesStarted':False,'stationaryResidual':a.stationary,'loadedStart':a.loaded_start},indent=2))
     shutil.copytree(REPO/'HangTen',workspace/'HangTen');shutil.copytree(REPO/'HangTen.xcodeproj',workspace/'HangTen.xcodeproj')
     project=workspace/'HangTen.xcodeproj/project.pbxproj';text=project.read_text();assert text.count('path = HangTen;')==1
     # Only the app group points to copied experimental source. Build scripts,
@@ -60,8 +67,36 @@ if a.mode=='stage':
                     }
                 }
 """)
+    if a.loaded_start:
+        prepare='                return try RopeDynamicsSolver.prepareDisplay(input:physics,state:state,collider:collider)'
+        assert text.count(prepare)==1
+        text=text.replace(prepare,r"""                let geometric=try RopeDynamicsSolver.prepareDisplay(input:physics,state:state,collider:collider)
+                guard ProcessInfo.processInfo.environment["HANGTEN_REVIEW_LOADED_START"] == "1" else{return geometric}
+                let readyStart=DispatchTime.now().uptimeNanoseconds
+                let encoded=try JSONSerialization.data(withJSONObject:geometric.solver.bundleCheckpoint(),options:.sortedKeys)
+                var loaded=try RopeDynamicsSolver.restoreBundle(input:physics,collider:collider,data:encoded,strict:true)
+                SolverCollection.collect=false;ResidualStopTrace.enabled=false
+                var ready:RopeFrameSnapshot?;var qps=0
+                for i in 1...1200 {
+                    try Task.checkCancellation()
+                    let frame=try loaded.step(dt:1.0/240,targetOrientation:q)
+                    qps += loaded.reviewStepCorrections
+                    guard frame.metrics.geometryAccepted,loaded.reviewStepCaps==0,loaded.reviewStepRetries==0 else{throw RopePhysicsError.invalid("strict loaded startup")}
+                    if frame.settled {
+                        var continuation=loaded
+                        let check=try continuation.step(dt:1.0/240,targetOrientation:q)
+                        guard check.settled,continuation.reviewStepCaps==0,continuation.reviewStepRetries==0 else{throw RopePhysicsError.invalid("loaded startup false settle")}
+                        ready=frame
+                        LiveRopeReviewTrace.log("loaded initialization steps=\(i) qps=\(qps) readyMs=\(Double(DispatchTime.now().uptimeNanoseconds-readyStart)/1e6)")
+                        break
+                    }
+                }
+                guard let ready else{throw RopePhysicsError.invalid("loaded startup five-second limit")}
+                let checkpoint=try JSONSerialization.data(withJSONObject:loaded.bundleCheckpoint(),options:.sortedKeys)
+                let candidate=try RopeDynamicsSolver.restoreBundle(input:physics,collider:collider,data:checkpoint,strict:false)
+                return (candidate,ready)""")
     scene.write_text(text)
-    (root/'staged-source.json').write_text(json.dumps({'owner':REPO.name,'accurateNativeResultSHA256':digest(native/'result.json'),'nativeHostRealtimePass':False,'stationaryResidual':a.stationary,'diagnosticStorageEnabled':not a.stationary,'capturePreRollSeconds':1.5,'adopted':False,
+    (root/'staged-source.json').write_text(json.dumps({'owner':REPO.name,'accurateNativeResultSHA256':digest(native/'result.json'),'nativeHostRealtimePass':False,'stationaryResidual':a.stationary,'diagnosticStorageEnabled':not a.stationary,'loadedStart':a.loaded_start,'capturePreRollSeconds':1.5,'adopted':False,
         'hashes':{str(p.relative_to(workspace)):digest(p) for p in [project,*list((workspace/'HangTen/Models').glob('*.swift'))]}},indent=2))
     print('STAGED',workspace)
     raise SystemExit(0)
@@ -101,7 +136,7 @@ try:
     # Retained SCRIPT is read as evidence/template, never its historical UUID,
     # binary or ownership manifest. This fresh recorder binds only the new UUID.
     source=(REPO/'.context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/candidate-capture/run.py').read_text()
-    source=source.replace("'HANGTEN_REVIEW_PHYSICAL_CONVERGENCE':'1'","'HANGTEN_REVIEW_PHYSICAL_CONVERGENCE':'1','HANGTEN_REVIEW_PRECONDITIONED_ROPE':'1','HANGTEN_REVIEW_ROPE_START_DELAY_SECONDS':'1.5'")
+    source=source.replace("'HANGTEN_REVIEW_PHYSICAL_CONVERGENCE':'1'","'HANGTEN_REVIEW_PHYSICAL_CONVERGENCE':'1','HANGTEN_REVIEW_PRECONDITIONED_ROPE':'1','HANGTEN_REVIEW_ROPE_START_DELAY_SECONDS':'1.5','HANGTEN_REVIEW_LOADED_START':'1'")
     source=source.replace('range(8)','range(12)')
     source=source.replace("c.run('launch',", "assert c.run('launch',").replace("root/'launch.log',boardenv)", "root/'launch.log',boardenv)==0")
     source=source.replace("c.run('frame-'+str(i),", "assert c.run('frame-'+str(i),").replace("root/('frame-'+str(i)+'.log'),env)", "root/('frame-'+str(i)+'.log'),env)==0")
