@@ -1,0 +1,7 @@
+# Narrower wood discovery: closed cost screen
+
+Compare old/new-window solvers on input140 propagated by139 steps of the accurate preconditioned-stop trajectory. Prefix correction traces match exactly. Wood lookahead50→10µm changes both point/link offsets and query cutoff together, preserving100µm target. Merit, portal/self/intercord and physical gates unchanged. Effective window is in cache identity and passed explicitly into infinity-receipt interpretation; original exactfallback/globalminimum condition stays. Astra reviewed receipt/cache/counter ownership with no defect.
+
+Outside fused queries compare all ordered merit witness values and provenance against the same-config original wider query; signed/inside fallback is unchanged but does not reach this assertion. New and control both use one correction, no caps/retries. Pose difference1.39e-17m; strict2.717µm and original uncached mesh/material/CCD pass. Faces9956→9836, both receipt exactfallback and launchedCCD counts0. Counters use distinct worker slots joined before sums, and are disabled for timing.
+
+Seven paired complete-step clocks fail registered ratio<=.85: median.913077. No trajectory, threshold tune or adoption. The retained error text incorrectly says.80; the executed guard is.85. Source reporting is corrected without retiming. An initial fresh compile failed a harness Any-to-Double comparison; corrected before successful run. Three exact new groups independently absent. Accurate preconditioned foundation remains separate; no new screen recording yet.

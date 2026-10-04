@@ -1,0 +1,41 @@
+{
+  "adopted": false,
+  "closed": true,
+  "guardRatio": 0.85,
+  "medianRatio": 0.91307682069662,
+  "controlWork": {
+    "ccdQueries": 0,
+    "faces": 9956,
+    "fallbackQueries": 0
+  },
+  "candidateWork": {
+    "ccdQueries": 0,
+    "faces": 9836,
+    "fallbackQueries": 0
+  },
+  "strictDifferenceMeters": 2.7169527457432528e-06,
+  "currentDifferenceMeters": 1.3904866443919908e-17,
+  "candidateMetrics": {
+    "clearanceMargin": 9.99999995522677e-05,
+    "geometryAccepted": true,
+    "lengthError": 7.473020965376165e-07,
+    "speed": 4.8423848042532564e-14,
+    "strain": 0.00018757806214431128
+  },
+  "candidateQPs": 1,
+  "meritVerificationScope": "outside fused queries; inside signed fallback unchanged but bypasses this assertion",
+  "groupsIndependentlyAbsent": [
+    67492,
+    72933,
+    73730
+  ],
+  "evidenceSHA256": {
+    ".context/strong-owl-live-physics-armijo-264209a9b-narrow-discovery-140/native/resources.jsonl": "b2f2ca2584884762adbc54542ecf65d39a57a9a28a233753887c39577efc2410",
+    ".context/strong-owl-live-physics-armijo-264209a9b-narrow-discovery-140/native/provenance.json": "48a0c8e92091ee38d1b6ad026f78e64033375fa1f88d6c741afac279a038b194",
+    ".context/strong-owl-live-physics-armijo-264209a9b-narrow-discovery-140-v2/native/result.json": "ed9176ed575283c677b1e805227952e0d878f1df6d49d43a541812c7bb705ff2",
+    ".context/strong-owl-live-physics-armijo-264209a9b-narrow-discovery-140-v2/native/resources.jsonl": "699eed72ba86f572b7be15cfc61b2a035be7ad4978d26dbc939e33f701b81bbc",
+    ".context/strong-owl-live-physics-armijo-264209a9b-narrow-discovery-140-v2/native/provenance.json": "a2d5c4e8bb22fa6274d5bfae11207e603012d077d935213840151bd6597215a3",
+    "Tools/HangboardRopePrototype/narrow_discovery/Trace.swift": "5dd99a7bdf032b35ad83510d13fe7e802832e537d881a98c3dbaf088439c2531",
+    "Tools/HangboardRopePrototype/narrow_discovery/snapshot.py": "d925ae80e25680480c18bd90e0a2415ad6759ce8e0fdae73ec938bdddd188db4"
+  }
+}

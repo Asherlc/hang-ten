@@ -28,6 +28,7 @@ parser.add_argument('--wood-residual-red',action='store_true')
 parser.add_argument('--wood-residual-diagnostic',action='store_true')
 parser.add_argument('--wood-feature-ids',action='store_true')
 parser.add_argument('--wood-feature-ids-red',action='store_true')
+parser.add_argument('--narrow-wood-window',action='store_true')
 parser.add_argument('--preconditioned-stop',action='store_true')
 parser.add_argument('--preconditioned-stop-red',action='store_true')
 parser.add_argument('--fresh-active-stop',action='store_true')
@@ -66,6 +67,7 @@ if args.float_face_red and not args.float_face_reject:parser.error('--float-face
 if args.float_face_verification_only and not args.float_face_reject:parser.error('--float-face-verification-only requires --float-face-reject')
 if args.wood_feature_ids and (not args.wood_residual or args.wood_residual_red):parser.error('--wood-feature-ids requires isolated residual majorizer')
 if args.wood_feature_ids_red and not args.wood_feature_ids:parser.error('--wood-feature-ids-red requires --wood-feature-ids')
+if args.narrow_wood_window and (not args.preconditioned_stop or args.preconditioned_stop_red or args.wood_checkpoint!=140 or args.step_rate):parser.error('--narrow-wood-window requires fixed140 preconditioned screen')
 if args.preconditioned_stop and (not args.wood_feature_ids or args.wood_feature_ids_red or args.wood_residual_diagnostic or args.fresh_active_stop):parser.error('--preconditioned-stop requires isolated canonical residual checkpoint')
 if args.preconditioned_stop_red and args.step_rate:parser.error('--preconditioned-stop-red is a fixed checkpoint negative control')
 if args.preconditioned_stop_red and not args.preconditioned_stop:parser.error('--preconditioned-stop-red requires --preconditioned-stop')
@@ -145,12 +147,18 @@ for name in NAMES:
         if args.plane_reuse and name=='RopeTriangleCollider.swift':
             from plane_reuse.snapshot import collider_source as plane_collider
             text=plane_collider(text)
+    if args.narrow_wood_window and name=='RopeSimulationMetrics.swift':
+        from narrow_discovery.snapshot import metrics_source
+        text=metrics_source(text)
     if args.wood_majorizer and name=='RopeTriangleCollider.swift':
         if args.wood_residual:
             from wood_residual.snapshot import collider_source as wood_collider
         else:
             from wood_majorizer.snapshot import collider_source as wood_collider
         text=wood_collider(text)
+        if args.narrow_wood_window:
+            from narrow_discovery.snapshot import collider_source as narrow_collider
+            text=narrow_collider(text)
         if args.foreground_qos:
             from foreground_qos.snapshot import collider_source as qos_collider
             text=qos_collider(text)
@@ -192,6 +200,9 @@ for name in NAMES:
             if args.preconditioned_stop:
                 from preconditioned_stop.snapshot import solver_source as preconditioned_solver
                 text=preconditioned_solver(text)
+                if args.narrow_wood_window:
+                    from narrow_discovery.snapshot import solver_source as narrow_solver
+                    text=narrow_solver(text)
             if args.fresh_active_stop:
                 from fresh_active_stop.snapshot import solver_source as fresh_solver
                 text=fresh_solver(text)
@@ -285,6 +296,9 @@ for name in ['Math.swift','Trace.swift','main.swift']:
             if args.preconditioned_stop:
                 from preconditioned_stop.snapshot import driver_source as preconditioned_driver
                 text=preconditioned_driver(text,not args.preconditioned_stop_red)
+                if args.narrow_wood_window:
+                    from narrow_discovery.snapshot import driver_source as narrow_driver
+                    text=narrow_driver(text)
             if args.fresh_active_stop:
                 from fresh_active_stop.snapshot import driver_source as fresh_driver
                 text=fresh_driver(text,not args.fresh_active_stop_red)
@@ -422,6 +436,7 @@ if args.wood_majorizer:
         from armijo.snapshot import once
         p.write_text(once(text,'columns[0][indices[a]] += scale*values[a]*height','columns[0][indices[a]] -= scale*values[a]*height'))
 if args.empty_face_floor:(sources/'EmptyFaceFloor.swift').write_bytes((tool/'empty_face_floor/Trace.swift').read_bytes())
+if args.narrow_wood_window:(sources/'NarrowDiscoveryTrace.swift').write_bytes((tool/'narrow_discovery/Trace.swift').read_bytes())
 if args.foreground_qos:(sources/'ForegroundQoSTrace.swift').write_bytes((tool/'foreground_qos/Trace.swift').read_bytes())
 if args.material_basis_census:(sources/'MaterialBasisTrace.swift').write_bytes((tool/'material_basis_census/Trace.swift').read_bytes())
 if args.material_basis_cost:(sources/'MaterialBasisCost.swift').write_bytes((tool/'material_basis_census/Cost.swift').read_bytes())
@@ -458,6 +473,9 @@ if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
 if args.region_queries or args.planar_rows:inputs += [REPO/'.context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/result.json']
 if args.planar_regions:inputs += [*list((tool/'planar_regions').glob('*.*')),tool/'census_planar_regions.py',stage/'region-topology.json']
 if args.wood_feature_ids:inputs += list((tool/'wood_feature_ids').glob('*.*'))
+if args.narrow_wood_window:
+    from narrow_discovery.snapshot import PRIOR
+    inputs += list((tool/'narrow_discovery').glob('*.*'))+[REPO/PRIOR]
 if args.preconditioned_stop:inputs += list((tool/'preconditioned_stop').glob('*.*'))
 if args.fresh_active_stop:inputs += list((tool/'fresh_active_stop').glob('*.*'))
 if args.foreground_qos:inputs += list((tool/'foreground_qos').glob('*.*'))
