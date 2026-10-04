@@ -234,6 +234,9 @@
 		D10000000000000000000034 /* yy-verticalboard-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000034 /* yy-verticalboard-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-verticalboard-evo", ); }; };
 		D10000000000000000000035 /* tension-honestone Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000035 /* tension-honestone Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-honestone", ); }; };
 		D10000000000000000000036 /* tension-grindstone-original Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000036 /* tension-grindstone-original Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-grindstone-original", ); }; };
+		F8BB00000000000000000001 /* PlanFlowPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000002 /* PlanFlowPresentation.swift */; };
+		F8BB00000000000000000003 /* PlanFlowPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000004 /* PlanFlowPresentationTests.swift */; };
+		F8BB00000000000000000005 /* PlanFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000006 /* PlanFlowUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -483,6 +486,9 @@
 		D20000000000000000000034 /* yy-verticalboard-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-verticalboard-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-verticalboard-evo/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000035 /* tension-honestone Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-honestone Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-honestone/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000036 /* tension-grindstone-original Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-grindstone-original Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-grindstone-original/Hangboards"; sourceTree = "<absolute>"; };
+		F8BB00000000000000000002 /* PlanFlowPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowPresentation.swift; sourceTree = "<group>"; };
+		F8BB00000000000000000004 /* PlanFlowPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowPresentationTests.swift; sourceTree = "<group>"; };
+		F8BB00000000000000000006 /* PlanFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowUITests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -524,6 +530,7 @@
 				BF0000000000000000000005 /* WorkoutPaywallUITests.swift */,
 				C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */,
 				6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */,
+				F8BB00000000000000000006 /* PlanFlowUITests.swift */,
 			);
 			path = HangTenUITests;
 			sourceTree = "<group>";
@@ -701,6 +708,7 @@
 				280981D68BAEDAE6071622C2 /* WorkoutView.swift */,
 				2CF2C8B2702AF877EC0A9457 /* WorkoutSessionState.swift */,
 				D692AE3B1846C8951E234D90 /* PlanDetailView.swift */,
+				F8BB00000000000000000002 /* PlanFlowPresentation.swift */,
 				96F75E43E3A9E27C57CE4FD4 /* PlansView.swift */,
 				BB0000000000000000000091 /* TrainView.swift */,
 				BB00000000000000000000E8 /* ReportProblemView.swift */,
@@ -770,6 +778,7 @@
 				BB0000000000000000000057 /* HealthKitServiceTests.swift */,
 				BB0000000000000000000058 /* WorkoutHistoryServiceTests.swift */,
 				BB0000000000000000000060 /* WorkoutStepNormalizationTests.swift */,
+				F8BB00000000000000000004 /* PlanFlowPresentationTests.swift */,
 				BB0000000000000000000061 /* CustomRoutineStoreTests.swift */,
 				BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */,
 				BB0000000000000000000065 /* CustomRoutineDraftTests.swift */,
@@ -1048,6 +1057,7 @@
 				AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */,
 				C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */,
 				5F8F1B1E5F16242FFEF5C807 /* FreeWorkoutUITests.swift in Sources */,
+				F8BB00000000000000000005 /* PlanFlowUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1084,6 +1094,7 @@
 				89F55463D090314CD394F45A /* WorkoutView.swift in Sources */,
 				876CF8149B56E504650BEB86 /* WorkoutSessionState.swift in Sources */,
 				5666BC4BFB710FEDA2BB1488 /* PlanDetailView.swift in Sources */,
+				F8BB00000000000000000001 /* PlanFlowPresentation.swift in Sources */,
 				CB707FE2387AC0729033FBAF /* PlansView.swift in Sources */,
 				AA0000000000000000000091 /* TrainView.swift in Sources */,
 				AA0000000000000000000092 /* AppSettingsView.swift in Sources */,
@@ -1186,6 +1197,7 @@
 				AA0000000000000000000057 /* HealthKitServiceTests.swift in Sources */,
 				AA0000000000000000000058 /* WorkoutHistoryServiceTests.swift in Sources */,
 				AA0000000000000000000060 /* WorkoutStepNormalizationTests.swift in Sources */,
+				F8BB00000000000000000003 /* PlanFlowPresentationTests.swift in Sources */,
 				AA0000000000000000000061 /* CustomRoutineStoreTests.swift in Sources */,
 				AA0000000000000000000063 /* CustomRoutineAppStoreTests.swift in Sources */,
 				AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */,
