@@ -28,6 +28,8 @@ struct WorkoutView: View {
         static let sideCueSlotWidth: CGFloat = 142
         static let boardMaxHeight: CGFloat = 132
         static let normalCueRowHeight: CGFloat = 149
+        // A segmented selector plus its spacing must not consume the board viewport.
+        static let presentationSelectorHeight: CGFloat = 40
         static let previewLabelHeight: CGFloat = 13
     }
 
@@ -752,7 +754,8 @@ struct WorkoutView: View {
 					)
 					}
 				}
-				.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
+				.frame(maxHeight: LandscapeLayout.normalCueRowHeight
+                    + (board.presentations.count > 1 ? LandscapeLayout.presentationSelectorHeight : 0))
 
 				if WorkoutLandscapeControlLayoutPolicy.usesCompactControls(
 					isFirstStart: WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),

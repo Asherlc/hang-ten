@@ -238,6 +238,34 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
+    func testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "plateau.lifting-edge",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_LANDSCAPE": "1",
+            "HANGTEN_REVIEW_STEP": "17",
+        ]
+        app.launch()
+        XCTAssertTrue(app.otherElements["train.board"].waitForExistence(timeout: 30))
+        app.open(URL(string: "hangten://plan/research.abrahangs/workout")!)
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 30))
+        pause.tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+
+        let selector = app.segmentedControls["boardMap.presentationSelector"]
+        XCTAssertTrue(selector.waitForExistence(timeout: 5))
+        XCTAssertTrue(selector.isHittable)
+        let board = app.otherElements["boardModel.3d"]
+        XCTAssertTrue(board.waitForExistence(timeout: 5))
+        XCTAssertGreaterThan(board.frame.height, 30, "Configuration controls must not collapse the workout board.")
+        XCTAssertGreaterThan(board.frame.width, 30)
+        XCTAssertGreaterThanOrEqual(board.frame.minY, selector.frame.maxY)
+        XCTAssertLessThanOrEqual(board.frame.maxY, app.frame.maxY)
+        addScreenshot(named: "Plateau landscape workout board below configuration selector")
+    }
+
     private func launchLandscapeBoardDetail(
         boardID: String,
         expectedBoardName: String
