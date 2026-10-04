@@ -1455,6 +1455,49 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: board))
     }
 
+    func testFixedSingleHandWorkAndRestOnOneHandedBoardRecordWithoutHandChoice() throws {
+        let board = oneHandedRecordingBoard()
+        let workPlan = portablePlan(handUse: .single, side: .left, boardID: board.id)
+        for restHandUse in [WorkoutHandUse.double, .either] {
+            let rest = WorkoutStep(
+                id: "portable-rest",
+                number: 2,
+                title: "Rest",
+                instruction: "",
+                accessory: "",
+                duration: 30,
+                phase: .rest,
+                segments: [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 30)],
+                handUse: restHandUse,
+                side: .both
+            )
+            let workout = TrainingPlan(
+                id: workPlan.id,
+                title: workPlan.title,
+                subtitle: workPlan.subtitle,
+                level: workPlan.level,
+                sourceLabel: workPlan.sourceLabel,
+                sourceURL: workPlan.sourceURL,
+                provenance: workPlan.provenance,
+                boardID: workPlan.boardID,
+                steps: workPlan.steps + [rest]
+            )
+            XCTAssertFalse(WorkoutSessionHandResolver.needsHandChoice(plan: workout, board: board))
+
+            let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
+
+            XCTAssertEqual(records.map(\.stepID), ["portable-step", "portable-rest"])
+            XCTAssertEqual(records.map(\.kind), [.work, .rest])
+            XCTAssertEqual(records.map(\.durationSeconds), [10, 30])
+            XCTAssertEqual(records[0].handUse, .single)
+            XCTAssertEqual(records[0].side, .left)
+            XCTAssertEqual(records[0].target?.resolvedContactSnapshot?.contactIDs, ["one-handed-pocket"])
+            XCTAssertNil(records[1].target)
+            XCTAssertNil(records[1].handUse)
+            XCTAssertNil(records[1].side)
+        }
+    }
+
     func testEitherHandActivityRequiresAChoiceAndRecordsTheSelectedRightHand() throws {
         let board = portableBoard(handCapacity: 1)
         let workout = portablePlan(handUse: .either, side: .both)

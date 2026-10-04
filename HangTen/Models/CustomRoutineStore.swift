@@ -676,8 +676,85 @@ final class CustomRoutineStore: CustomRoutineStoring {
             targetMode: definition.targetMode,
             steps: definition.steps.map {
                 let step = $0.strippingUnsupportedCustomCueFields()
+                if case let .boardSpecific(boardID) = definition.targetMode,
+                   boardID == "plateau.lifting-edge" {
+                    return migratingLegacyPlateauTargets(in: step)
+                }
                 return definition.targetMode.isBoardSpecific ? step : step.strippingExactContactIDs()
             }
+        )
+    }
+
+    /// The pre-native Plateau package represented its 10/15 mm configurations
+    /// as separate blocker contacts. Persisted exact selections must now retain
+    /// those depths on the one physical edge, rather than select its default 18 mm.
+    private static func migratingLegacyPlateauTargets(
+        in step: WorkoutStepDefinition
+    ) -> WorkoutStepDefinition {
+        guard step.phase != .rest, step.handUse != .double else { return step }
+        let segments = step.segments.map { segment in
+            guard segment.kind == .work,
+                  case let .requirements(requirements) = segment.target else { return segment }
+            return WorkoutSegmentDefinition(
+                kind: segment.kind,
+                target: .requirements(requirements.map(migratingLegacyPlateauRequirement)),
+                timing: segment.timing,
+                duration: segment.duration
+            )
+        }
+        guard segments != step.segments else { return step }
+        return WorkoutStepDefinition(
+            id: step.id,
+            title: step.title,
+            instruction: step.instruction,
+            accessory: step.accessory,
+            duration: step.duration,
+            phase: step.phase,
+            segments: segments,
+            gripType: step.gripType,
+            fingerConfiguration: step.fingerConfiguration,
+            activeDuration: step.activeDuration,
+            handUse: step.handUse,
+            side: step.side,
+            action: step.action,
+            repetitions: step.repetitions,
+            externalLoadKGF: step.externalLoadKGF
+        )
+    }
+
+    private static func migratingLegacyPlateauRequirement(
+        _ requirement: ContactRequirement
+    ) -> ContactRequirement {
+        let historicDepth: Double
+        switch requirement.contactID {
+        case "blocker-edge-10": historicDepth = 10
+        case "blocker-edge-15": historicDepth = 15
+        default: return requirement
+        }
+        // Main's contacts were one-hand edges without shape/finger-capacity
+        // facts. Do not reinterpret an incompatible or unknown prescription.
+        guard requirement.kind == nil || requirement.kind == .edge,
+              requirement.shape == nil,
+              requirement.fingerCapacity == nil,
+              requirement.handCapacity == nil || requirement.handCapacity == 1,
+              requirement.selection == .single else { return requirement }
+        if let depth = requirement.depth {
+            switch depth {
+            case let .range(range):
+                guard historicDepth >= range.minimum,
+                      historicDepth <= range.maximum else { return requirement }
+            case let .category(size):
+                guard size.depthRange.contains(historicDepth) else { return requirement }
+            }
+        }
+        return ContactRequirement(
+            contactID: "edge-18",
+            kind: requirement.kind,
+            shape: requirement.shape,
+            depth: .range(.init(minimum: historicDepth, maximum: historicDepth)),
+            fingerCapacity: requirement.fingerCapacity,
+            handCapacity: requirement.handCapacity,
+            selection: requirement.selection
         )
     }
 
