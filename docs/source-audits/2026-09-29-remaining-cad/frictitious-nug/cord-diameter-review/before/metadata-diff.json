@@ -1,0 +1,57 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "7279b0a75bce5a77d38d62cb2ea6ccaf0a228154248ecd1ed4bd5eb84dd04732",
+  "boardFieldChanges": {},
+  "changedContacts": {},
+  "humanAcceptance": "pending one-by-one review",
+  "package": "frictitious-nug",
+  "positionsAfter": [
+    {
+      "contactIDs": [
+        "edge-25"
+      ],
+      "id": "front-25",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-20"
+      ],
+      "id": "front-inverted-20",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-13"
+      ],
+      "id": "reverse-13",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-8"
+      ],
+      "id": "reverse-inverted-8",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "jug-40"
+      ],
+      "id": "outer-upper",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "pinch-60"
+      ],
+      "id": "outer-lower",
+      "presentationID": "primary"
+    }
+  ],
+  "positionsBefore": [],
+  "removedContacts": [],
+  "sourceAudit": "frictitious-nug/native-authoring.md",
+  "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851"
+}

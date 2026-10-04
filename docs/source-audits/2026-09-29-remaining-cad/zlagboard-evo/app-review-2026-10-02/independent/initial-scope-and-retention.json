@@ -1,0 +1,51 @@
+{
+  "timestampUTC": "2026-10-02T05:13:24.039934+00:00",
+  "baseline": "1f5a5865050c96bf89e67b1929099205dcbd6827",
+  "head": "1f5a5865050c96bf89e67b1929099205dcbd6827",
+  "canonicalHashes": {
+    "Hangboards/zlagboard-evo/zlagboard-evo.FCStd": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+    "Hangboards/zlagboard-evo/assets/primary.usdz": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "Hangboards/zlagboard-evo/assets/primary.model.json": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe"
+  },
+  "canonicalHashesMatchExpected": true,
+  "nativeLFS": {
+    "stagedOID": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+    "bytes": 1000365,
+    "workingTreeRealZIP": true,
+    "objectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/6f/44/6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+    "objectMatches": true
+  },
+  "allPackages": {
+    "filesCompared": 206,
+    "baselineByteMismatches": [],
+    "outOfScopeFilesCompared": 203
+  },
+  "queueByteExact": true,
+  "deliveryLockByteExact": true,
+  "retainedPackets": {
+    "individual-review-2026-10-01": {
+      "declaredFiles": 199,
+      "trackedFilesIncludingManifest": 200,
+      "manifestSHA256": "fdc7c01137f3ff3a635c972bf08587bd4f3514ba7f90e7a4ac0ce44d7ec449ca",
+      "manifestHashMismatches": [],
+      "baselineByteMismatches": [
+        "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/initial/comparison/original-lfs-pointer.txt"
+      ],
+      "unlistedFiles": [],
+      "pass": false
+    },
+    "runtime-recovery-2026-10-02": {
+      "declaredFiles": 38,
+      "trackedFilesIncludingManifest": 39,
+      "manifestSHA256": "2b1f09209e7449fcc35be8817f0602f1c4933b310bc5c681fa464ee455d61e2f",
+      "manifestHashMismatches": [],
+      "baselineByteMismatches": [],
+      "unlistedFiles": [],
+      "pass": true
+    }
+  },
+  "changedTrackedFiles": [],
+  "untrackedFiles": [],
+  "runtime": "Fresh build and runtime outputs intentionally not treated as final.",
+  "pass": false
+}

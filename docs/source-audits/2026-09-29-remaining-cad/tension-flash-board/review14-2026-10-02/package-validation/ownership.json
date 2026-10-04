@@ -1,0 +1,290 @@
+{
+  "owner": "placid-badger",
+  "task": "flash-board-review14/task3",
+  "recordedAt": "2026-10-02T22:52:59.814539+00:00",
+  "authorizationPath": ".context/placid-badger/flash-board-review14/root/final-verification-authorization.json",
+  "authorizationSHA256": "2700e5c07c27ec06879b776107745bba10024fdefdaa44bf0317f89723f5ba3c",
+  "exactTemporaryResources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-tmp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-xcode-stage",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-android-stage",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD"
+  ],
+  "externalResources": [],
+  "ownedChildProcessGroups": [
+    {
+      "phase": "git-head",
+      "processGroup": 50117,
+      "argv": [
+        "rtk",
+        "proxy",
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "leaderStartedAt": "Fri Oct 2 15:52:59 2026",
+      "membersImmediatelyAfterLaunch": [
+        {
+          "pid": 50117,
+          "parentPID": 50116,
+          "processGroup": 50117,
+          "startedAt": "Fri Oct 2 15:52:59 2026",
+          "command": "(rtk)"
+        }
+      ],
+      "membersAfterExit": [],
+      "absenceVerifiedAfterExit": true
+    },
+    {
+      "phase": "package-validation",
+      "processGroup": 50121,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "-m",
+        "hangboard_packages.cli",
+        "validate",
+        "--root",
+        "Hangboards",
+        "--final-inventory"
+      ],
+      "leaderStartedAt": "Fri Oct 2 15:52:59 2026",
+      "membersImmediatelyAfterLaunch": [
+        {
+          "pid": 50121,
+          "parentPID": 50116,
+          "processGroup": 50121,
+          "startedAt": "Fri Oct 2 15:52:59 2026",
+          "command": "rtk proxy /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python -m hangboard_packages.cli validate --root Hangboards --final-inventory"
+        }
+      ],
+      "membersAfterExit": [],
+      "absenceVerifiedAfterExit": true
+    },
+    {
+      "phase": "delivery-validation",
+      "processGroup": 50127,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/scripts/verify-model-delivery.py",
+        "--root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/delivery-validation.json"
+      ],
+      "leaderStartedAt": "Fri Oct 2 15:53:02 2026",
+      "membersImmediatelyAfterLaunch": [
+        {
+          "pid": 50127,
+          "parentPID": 50116,
+          "processGroup": 50127,
+          "startedAt": "Fri Oct 2 15:53:02 2026",
+          "command": "rtk proxy /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/scripts/verify-model-delivery.py --root /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger --report /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/delivery-validation.json"
+        }
+      ],
+      "membersAfterExit": [],
+      "absenceVerifiedAfterExit": true
+    },
+    {
+      "phase": "xcode-staging",
+      "processGroup": 50185,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/scripts/stage-board-packages.py",
+        "--repository-root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--destination",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-xcode-stage/Build/HangTen.app/Hangboards",
+        "--target",
+        "xcode"
+      ],
+      "leaderStartedAt": "Fri Oct 2 15:53:06 2026",
+      "membersImmediatelyAfterLaunch": [
+        {
+          "pid": 50185,
+          "parentPID": 50116,
+          "processGroup": 50185,
+          "startedAt": "Fri Oct 2 15:53:06 2026",
+          "command": "rtk proxy /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/scripts/stage-board-packages.py --repository-root /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger --destination /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-xcode-stage/Build/HangTen.app/Hangboards --target xcode"
+        }
+      ],
+      "membersAfterExit": [],
+      "absenceVerifiedAfterExit": true
+    },
+    {
+      "phase": "android-staging",
+      "processGroup": 50218,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/scripts/stage-board-packages.py",
+        "--repository-root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--destination",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-android-stage/Hangboards",
+        "--target",
+        "android"
+      ],
+      "leaderStartedAt": "Fri Oct 2 15:53:08 2026",
+      "membersImmediatelyAfterLaunch": [
+        {
+          "pid": 50218,
+          "parentPID": 50116,
+          "processGroup": 50218,
+          "startedAt": "Fri Oct 2 15:53:08 2026",
+          "command": "rtk proxy /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/scripts/stage-board-packages.py --repository-root /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger --destination /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-android-stage/Hangboards --target android"
+        }
+      ],
+      "membersAfterExit": [],
+      "absenceVerifiedAfterExit": true
+    },
+    {
+      "phase": "focused-python-tests",
+      "processGroup": 50225,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_noncoplanar_support_keeps_an_unobstructed_free_span_straight",
+        "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_source_backed_mouth_axis_does_not_bypass_full_solid_clearance",
+        "Tools/HangboardPackages/tests/test_cad_routed_cord.py",
+        "Tools/HangboardPackages/tests/test_board_package_staging.py::test_staging_preserves_package_authored_surface_finishes_without_model_edits",
+        "--basetemp=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-tmp/pytest",
+        "-o",
+        "cache_dir=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-cache/pytest",
+        "--junitxml=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/python-junit.xml"
+      ],
+      "leaderStartedAt": "Fri Oct 2 15:53:11 2026",
+      "membersImmediatelyAfterLaunch": [
+        {
+          "pid": 50225,
+          "parentPID": 50116,
+          "processGroup": 50225,
+          "startedAt": "Fri Oct 2 15:53:11 2026",
+          "command": "rtk proxy /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python -m pytest -q Tools/HangboardCAD/tests/test_native_cord_routes.py::test_noncoplanar_support_keeps_an_unobstructed_free_span_straight Tools/HangboardCAD/tests/test_native_cord_routes.py::test_source_backed_mouth_axis_does_not_bypass_full_solid_clearance Tools/HangboardPackages/tests/test_cad_routed_cord.py Tools/HangboardPackages/tests/test_board_package_staging.py::test_staging_preserves_package_authored_surface_finishes_without_model_edits --basetemp=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-tmp/pytest -o cache_dir=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-cache/pytest --junitxml=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/python-junit.xml"
+        }
+      ],
+      "membersAfterExit": [],
+      "absenceVerifiedAfterExit": true
+    },
+    {
+      "phase": "build-time-git-head",
+      "processGroup": 50230,
+      "argv": [
+        "rtk",
+        "proxy",
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "leaderStartedAt": "Fri Oct 2 15:53:11 2026",
+      "membersImmediatelyAfterLaunch": [
+        {
+          "pid": 50230,
+          "parentPID": 50116,
+          "processGroup": 50230,
+          "startedAt": "Fri Oct 2 15:53:11 2026",
+          "command": "(rtk)"
+        }
+      ],
+      "membersAfterExit": [],
+      "absenceVerifiedAfterExit": true
+    },
+    {
+      "phase": "build-time-git-status",
+      "processGroup": 50246,
+      "argv": [
+        "rtk",
+        "proxy",
+        "git",
+        "status",
+        "--porcelain=v2",
+        "-z",
+        "--untracked-files=all"
+      ],
+      "leaderStartedAt": "Fri Oct 2 15:53:12 2026",
+      "membersImmediatelyAfterLaunch": [
+        {
+          "pid": 50246,
+          "parentPID": 50116,
+          "processGroup": 50246,
+          "startedAt": "Fri Oct 2 15:53:12 2026",
+          "command": "(rtk)"
+        }
+      ],
+      "membersAfterExit": [],
+      "absenceVerifiedAfterExit": true
+    },
+    {
+      "phase": "build-time-git-binary-diff",
+      "processGroup": 50250,
+      "argv": [
+        "rtk",
+        "proxy",
+        "git",
+        "diff",
+        "--binary",
+        "--no-ext-diff",
+        "--no-textconv",
+        "HEAD",
+        "--"
+      ],
+      "leaderStartedAt": "Fri Oct 2 15:53:12 2026",
+      "membersImmediatelyAfterLaunch": [
+        {
+          "pid": 50250,
+          "parentPID": 50116,
+          "processGroup": 50250,
+          "startedAt": "Fri Oct 2 15:53:12 2026",
+          "command": "rtk proxy git diff --binary --no-ext-diff --no-textconv HEAD --"
+        }
+      ],
+      "membersAfterExit": [],
+      "absenceVerifiedAfterExit": true
+    },
+    {
+      "phase": "generic-ios-build",
+      "processGroup": 50265,
+      "argv": [
+        "rtk",
+        "proxy",
+        "xcodebuild",
+        "-project",
+        "HangTen.xcodeproj",
+        "-scheme",
+        "HangTen",
+        "-configuration",
+        "Debug",
+        "-destination",
+        "generic/platform=iOS Simulator",
+        "-derivedDataPath",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD",
+        "build-for-testing"
+      ],
+      "leaderStartedAt": "Fri Oct 2 15:53:12 2026",
+      "membersImmediatelyAfterLaunch": [
+        {
+          "pid": 50265,
+          "parentPID": 50116,
+          "processGroup": 50265,
+          "startedAt": "Fri Oct 2 15:53:12 2026",
+          "command": "rtk proxy xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination generic/platform=iOS Simulator -derivedDataPath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD build-for-testing"
+        }
+      ],
+      "membersAfterExit": [],
+      "absenceVerifiedAfterExit": true
+    }
+  ],
+  "canonicalMutation": false
+}

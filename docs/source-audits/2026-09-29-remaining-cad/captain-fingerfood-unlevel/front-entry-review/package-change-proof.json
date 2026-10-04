@@ -1,0 +1,13 @@
+{
+  "changedPackageFiles": [
+    "Hangboards/captain-fingerfood-unlevel/suspension.json"
+  ],
+  "changedLockedFiles": [
+    "Hangboards/captain-fingerfood-unlevel/suspension.json"
+  ],
+  "sha256Manifest": "57c0654a52e3c8b4cb4c3dd6e610dced580daf8ccfb71dbd2f1d4028c4ad66be",
+  "beforeSuspensionSHA256": "d689a72a606c7e429ff3050da9f4daa3d57ba02c55f9a100c56d71f019ddde18",
+  "afterSuspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+  "preservedPackageFiles": 205,
+  "permittedChanges": "Source-backed front mouth axes, existing tightening selector, native-generated routes and translation Y only"
+}

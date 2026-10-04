@@ -1,0 +1,270 @@
+{
+  "primary": {
+    "assetSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+    "nodes": {
+      "plateau_body": {
+        "triangles": 72,
+        "boundsRuntimeM": [
+          [
+            -0.05000000074505806,
+            0.01999999955296516,
+            4.440891999238953e-18
+          ],
+          [
+            0.05000000074505806,
+            0.03999999910593033,
+            0.01799999922513963
+          ]
+        ],
+        "keys": [
+          "path",
+          "points_m",
+          "triangles",
+          "material",
+          "normals",
+          "uvs"
+        ]
+      },
+      "plateau_edge_18": {
+        "triangles": 66,
+        "boundsRuntimeM": [
+          [
+            -0.05000000074505806,
+            0.01999999955296516,
+            4.440891999238953e-18
+          ],
+          [
+            0.05000000074505806,
+            0.02300000004470348,
+            0.01799999922513962
+          ]
+        ],
+        "keys": [
+          "path",
+          "points_m",
+          "triangles",
+          "material",
+          "normals",
+          "uvs"
+        ]
+      },
+      "plateau_metal_exterior": {
+        "triangles": 786,
+        "boundsRuntimeM": [
+          [
+            -0.05000000074505806,
+            -0.03999999910593033,
+            -0.0030000000260770377
+          ],
+          [
+            0.05000000074505806,
+            0.03999999910593033,
+            0.020997202023863785
+          ]
+        ],
+        "keys": [
+          "path",
+          "points_m",
+          "triangles",
+          "material",
+          "normals",
+          "uvs"
+        ]
+      }
+    }
+  },
+  "depth-15mm": {
+    "assetSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+    "nodes": {
+      "plateau_body": {
+        "triangles": 74,
+        "boundsRuntimeM": [
+          [
+            -0.05000000074505806,
+            0.01999999955296516,
+            4.440891999238953e-18
+          ],
+          [
+            0.05000000074505806,
+            0.03999999910593033,
+            0.01799999922513963
+          ]
+        ],
+        "keys": [
+          "path",
+          "points_m",
+          "triangles",
+          "material",
+          "normals",
+          "uvs"
+        ]
+      },
+      "plateau_edge_18": {
+        "triangles": 66,
+        "boundsRuntimeM": [
+          [
+            -0.05000000074505806,
+            0.01999999955296516,
+            0.0030000000260770364
+          ],
+          [
+            0.05000000074505806,
+            0.02300000004470348,
+            0.01799999922513962
+          ]
+        ],
+        "keys": [
+          "path",
+          "points_m",
+          "triangles",
+          "material",
+          "normals",
+          "uvs"
+        ]
+      },
+      "plateau_metal_exterior": {
+        "triangles": 790,
+        "boundsRuntimeM": [
+          [
+            -0.05000000074505806,
+            -0.03999999910593033,
+            -0.0030000000260770377
+          ],
+          [
+            0.05000000074505806,
+            0.03999999910593033,
+            0.020997202023863785
+          ]
+        ],
+        "keys": [
+          "path",
+          "points_m",
+          "triangles",
+          "material",
+          "normals",
+          "uvs"
+        ]
+      },
+      "plateau_blocker_exterior": {
+        "triangles": 18,
+        "boundsRuntimeM": [
+          [
+            -0.05000000074505806,
+            -0.009999999776482584,
+            -2.2204459996194763e-18
+          ],
+          [
+            0.05000000074505806,
+            0.019999999552965164,
+            0.008000000379979612
+          ]
+        ],
+        "keys": [
+          "path",
+          "points_m",
+          "triangles",
+          "material",
+          "normals",
+          "uvs"
+        ]
+      }
+    }
+  },
+  "depth-10mm": {
+    "assetSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+    "nodes": {
+      "plateau_body": {
+        "triangles": 74,
+        "boundsRuntimeM": [
+          [
+            -0.05000000074505806,
+            0.01999999955296516,
+            4.440891999238953e-18
+          ],
+          [
+            0.05000000074505806,
+            0.03999999910593033,
+            0.01799999922513963
+          ]
+        ],
+        "keys": [
+          "path",
+          "points_m",
+          "triangles",
+          "material",
+          "normals",
+          "uvs"
+        ]
+      },
+      "plateau_edge_18": {
+        "triangles": 66,
+        "boundsRuntimeM": [
+          [
+            -0.05000000074505806,
+            0.01999999955296516,
+            0.008000000379979616
+          ],
+          [
+            0.05000000074505806,
+            0.02300000004470348,
+            0.01799999922513962
+          ]
+        ],
+        "keys": [
+          "path",
+          "points_m",
+          "triangles",
+          "material",
+          "normals",
+          "uvs"
+        ]
+      },
+      "plateau_metal_exterior": {
+        "triangles": 790,
+        "boundsRuntimeM": [
+          [
+            -0.05000000074505806,
+            -0.03999999910593033,
+            -0.0030000000260770377
+          ],
+          [
+            0.05000000074505806,
+            0.03999999910593033,
+            0.020997202023863785
+          ]
+        ],
+        "keys": [
+          "path",
+          "points_m",
+          "triangles",
+          "material",
+          "normals",
+          "uvs"
+        ]
+      },
+      "plateau_blocker_exterior": {
+        "triangles": 18,
+        "boundsRuntimeM": [
+          [
+            -0.05000000074505806,
+            -0.009999999776482582,
+            -2.2204459996194763e-18
+          ],
+          [
+            0.05000000074505806,
+            0.019999999552965164,
+            0.008000000379979616
+          ]
+        ],
+        "keys": [
+          "path",
+          "points_m",
+          "triangles",
+          "material",
+          "normals",
+          "uvs"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,219 @@
+{
+  "passed": false,
+  "checks": [
+    {
+      "name": "fixed44Schedule",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "releaseAuthorization",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "boundConsoleHelper",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "boundRunIdentity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scheduleReleaseHash",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "boundReleasedPathParity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "rawCompletion",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "exactCleanup",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "appBinary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "onlyExactArmReviewFlags",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "oneBoundNonblockingConsoleLaunch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "retainedAppStreams",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "boundSourceReference",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "routineReference",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "volatileMuteArguments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "all44RawHashesAndFixedStartDeadlines",
+      "passed": false,
+      "detail": [
+        {
+          "offset": 1,
+          "passed": true,
+          "latenessSeconds": 0.0005415420018834993
+        },
+        {
+          "offset": 2,
+          "passed": true,
+          "latenessSeconds": 0.0011933339992538095
+        },
+        {
+          "offset": 3,
+          "passed": true,
+          "latenessSeconds": 0.004303416993934661
+        },
+        {
+          "offset": 4,
+          "passed": true,
+          "latenessSeconds": 0.0006987499946262687
+        },
+        {
+          "offset": 5,
+          "passed": true,
+          "latenessSeconds": 0.0010324169998057187
+        },
+        {
+          "offset": 6,
+          "passed": true,
+          "latenessSeconds": 0.0002660839963937178
+        },
+        {
+          "offset": 7,
+          "passed": true,
+          "latenessSeconds": 0.003498499994748272
+        },
+        {
+          "offset": 8,
+          "passed": true,
+          "latenessSeconds": 0.004137333991820924
+        },
+        {
+          "offset": 9,
+          "passed": true,
+          "latenessSeconds": 0.002408749991445802
+        },
+        {
+          "offset": 10,
+          "passed": true,
+          "latenessSeconds": 0.0005384999967645854
+        },
+        {
+          "offset": 11,
+          "passed": true,
+          "latenessSeconds": 0.0009414999949513003
+        },
+        {
+          "offset": 12,
+          "passed": true,
+          "latenessSeconds": 0.002103374994476326
+        },
+        {
+          "offset": 13,
+          "passed": true,
+          "latenessSeconds": 0.001273000001674518
+        },
+        {
+          "offset": 14,
+          "passed": true,
+          "latenessSeconds": 0.0007960420043673366
+        },
+        {
+          "offset": 15,
+          "passed": true,
+          "latenessSeconds": 0.0032628339977236465
+        },
+        {
+          "offset": 16,
+          "passed": true,
+          "latenessSeconds": 0.0041482499946141616
+        },
+        {
+          "offset": 17,
+          "passed": true,
+          "latenessSeconds": 0.0020296669972594827
+        },
+        {
+          "offset": 18,
+          "passed": true,
+          "latenessSeconds": 0.001851084001827985
+        },
+        {
+          "offset": 90,
+          "passed": true,
+          "latenessSeconds": 0.0012196669995319098
+        },
+        {
+          "offset": 190,
+          "passed": true,
+          "latenessSeconds": 0.00416495899844449
+        }
+      ]
+    },
+    {
+      "name": "reconstructedHostClockGate",
+      "passed": true,
+      "detail": {
+        "spreadSeconds": 0.0008101463317871094,
+        "thresholdSeconds": 0.1
+      }
+    },
+    {
+      "name": "oneProductionRoute",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "noMeasurementAXOrInput",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "noRecordedCommandFailureBeforeCleanup",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "noFailureRecord",
+      "passed": false,
+      "detail": null
+    }
+  ],
+  "scope": "Offline schedule, hashes, provenance and cleanup only",
+  "visualJudgment": "NOT_PERFORMED",
+  "CPUBracketsAvailable": false,
+  "actualAppPhaseBoundariesMeasured": false,
+  "originalRecordsRewritten": false
+}

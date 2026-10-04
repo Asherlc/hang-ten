@@ -1,0 +1,35 @@
+{
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+  "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+  "semanticNodes": [
+    "body_oak_mesh_001",
+    "edge_front_15mm_incut_mesh_001",
+    "edge_front_15mm_flat_mesh_001",
+    "edge_reverse_10mm_incut_mesh_001",
+    "edge_reverse_10mm_flat_mesh_001",
+    "edge_reverse_06mm_flat_mesh_001",
+    "edge_reverse_06mm_incut_mesh_001",
+    "edge_front_20mm_wood_flat_mesh_001",
+    "edge_front_20mm_granite_mesh_001"
+  ],
+  "beforeSourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+  "beforeModelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+  "beforeDescriptorSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
+  "images": {
+    "before-front.png": "d843a240e4309137b6a242f4b87d80522d4aef6a75e2d9f53b8fda6582e30da6",
+    "after-front.png": "8fa8c335199dcef4b042dfc9fca93fba2a5d0d3aa8e0eb7457ed1a45332cd699",
+    "comparison-front.png": "ac68fb7687e4603f3d26329afcd93bb325d780b711f85d06db1c40ca9e1e8a7b",
+    "before-side.png": "7f85801df08e422788464c10a90cdd3b2636ba57c2e7681455fdf4708da53342",
+    "after-side.png": "f22cb797ee5f1e0ea417b7888bbd48052f6f5d2f06b8a8974d08663fae1318d6",
+    "comparison-side.png": "598735bbdb7c0d35f2ea4d3dfd954efb8fd536044477f8cbc672d2c3ebce5db8",
+    "before-top.png": "a0e2cabfc94029976a455dcd126713dc9a9a6060d02f38bf24072646d745a296",
+    "after-top.png": "6f4ad6c139ca87c9ce004bb7dc70bba8b76f025f74dba42dc42e50b6b084c4bf",
+    "comparison-top.png": "19ce15b856a5ff74cfa779f34810eda13f8b456c6b59c2c410d2c78e22e1f423",
+    "before-oblique.png": "9eb0120bc2abc549b31e385fc7df44d292e514cb1a125e0d4e349b3c0b4be3f7",
+    "after-oblique.png": "cc900a4a5fdfaa6edb93a39fc3daea5f68608bca9f6a9f9b24fb1407f9bd3929",
+    "comparison-oblique.png": "2f6dd7f4bf80cf60fd87af54ac69f3c357abf6eab7ba53944143657e8f122199"
+  },
+  "method": "Whole exact semantic USDZ export at unchanged 0.15 mm, compared with exact prior committed USDZ. Technical CPU normals; no materials/cords. No pixel inference or source-photo processing.",
+  "visualGate": "pending"
+}

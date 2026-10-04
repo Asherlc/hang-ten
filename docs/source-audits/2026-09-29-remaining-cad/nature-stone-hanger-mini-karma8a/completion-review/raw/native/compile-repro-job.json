@@ -1,0 +1,1 @@
+{"name": "placid-badger-karma8a-compile-repro", "command": ["python3", "Tools/HangboardCAD/run_freecad.py", ".context/placid-badger/karma8a-review11/refinement-2026-10-02/compile-repro.py"], "environment": {"HANGTEN_CAD_PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311"}, "timeoutSeconds": 600}

@@ -1,0 +1,33 @@
+{
+  "package": "captain-fingerfood-unlevel",
+  "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+  "modelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+  "sidecarSHA256": "d689a72a606c7e429ff3050da9f4daa3d57ba02c55f9a100c56d71f019ddde18",
+  "validatorSHA256": "309cffb89d3955298aefab71bc1e57098fbc7beb14596aef1b8064cf83b77171",
+  "method": "continuous-distance certificate on exact rounded runtime cache, including world support endpoints",
+  "fullPathSelfAndInterstrandTubeGate": "passed",
+  "entries": [
+    {
+      "presentationID": "primary",
+      "equipmentObjectID": null,
+      "poses": {
+        "edge20-front": {
+          "left-lead": 0.00201437126936783,
+          "right-lead": 0.002014340570958621
+        },
+        "edge25-inverted": {
+          "left-lead": 0.0020142000174178634,
+          "right-lead": 0.002014126798366042
+        },
+        "jug-reverse": {
+          "left-lead": 0.002031398182193898,
+          "right-lead": 0.002031055112737147
+        },
+        "pocket-right-end": {
+          "left-lead": 0.002014075454976152,
+          "right-lead": 0.002014075454976147
+        }
+      }
+    }
+  ]
+}

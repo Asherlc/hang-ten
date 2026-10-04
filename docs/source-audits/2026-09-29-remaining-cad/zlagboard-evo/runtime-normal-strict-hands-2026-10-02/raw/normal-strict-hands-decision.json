@@ -1,0 +1,21 @@
+{
+  "recordedEpoch": 1790987014.507274,
+  "status": "BEFORE_LAUNCH",
+  "sequence": [
+    "off",
+    "on only if OFF validly passes all12 board-color captures and evidence gates"
+  ],
+  "stopRules": [
+    "OFF visual failure or invalid evidence: stop.",
+    "After one conditional ON reversal: stop regardless of result.",
+    "No third run, retry, frontend/UI actions or fallback."
+  ],
+  "binarySHA256": "eef5a676aac05b09fbff374204347109caabd9842a1da7e8c6a64e7953914d15",
+  "protocol": "Unchanged normal launch/openurl, production auto-start, natural7s/180s and nextHang,12 captures +0.25/+1/+3/+5 and complete CPU tail; no AX/touch",
+  "OFFGate": "Zero single/pair constructor/make counts from recorder opening through finaltail and no hand lifecycle/camera records. Preserve full pre-workout scene history and actual frame trajectory.",
+  "history": "Train predecessor count differences retained and qualified separately; compare known attachment/lifetime records, not inferred overlap.",
+  "frontendQualification": "Owned failed frontend PID40262 cleaned by root; unknown DeviceHub89674 untouched. Earlier zero-frontend claims were unreliable due truncated Darwin ps comm. This task does not query/control frontend or claim headless isolation.",
+  "helperSHA256": "65057a3556e19fb191a189efaa27f8c700d813e1cbc2ed20425fcc990d0f6b72",
+  "sourceBuildInstallChanges": false,
+  "noNewExternalResources": true
+}

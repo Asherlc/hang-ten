@@ -1,0 +1,20 @@
+{
+  "status": "PROSPECTIVE_V9_DARK_BACKING_ONLY_NO_RUNTIME",
+  "pythonASTPass": true,
+  "captureByteIdenticalToV8": true,
+  "eventSchemaByteIdenticalToV8": true,
+  "sameBinarySHA256": "d6d6eccdd693a54094056197cc1e47f62f0e661c6354cf8028bf6499e90af575",
+  "templateRuntimeAuthorized": false,
+  "semanticEnvironmentDelta": {
+    "HANGTEN_REVIEW_HAND_IMAGE_DARK_BACKGROUND": "1"
+  },
+  "scope": "Existing v8 readiness/current PNG/neutral resource/frame/camera/color/cleanup/retained artifact checks unchanged; dark composition only.",
+  "files": {
+    "capture.py": "3351ba3cc9e05f360779f766e17f9bbf62dd4a102cfdf6e2711f79ce663ee6e4",
+    "event-schema.json": "67f947eeed4bb423d6d6d10a08eb31dce2c8811dac67e50b557a27f83cf47e88",
+    "protocol.md": "5f23dcd7740a24f6bcceab86c07110f7a4e8c3c18f033b67d92552a047e198d4",
+    "prototype_schema.py": "fb4fdff0b10618af2ea14be72d9ff4a0c7c9d3a6f2987bb9481e937532990bed",
+    "release-template.json": "0aeb5267ba9181f32d853c2be5a8e029a9846bfff53e2dca7acdefb044dce14d",
+    "v8-to-v9-adapter.patch": "52de2a6ba7b5058d148aa829cc7f9c2a9ec85570ce053f2aa9d071e297766ff7"
+  }
+}

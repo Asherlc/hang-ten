@@ -1,0 +1,26 @@
+# ROOT #11 current app visual audit
+
+The initial 11 supplied whole frames show distinct wood and granite materials, visible coverage of all three contact highlights, cord seating around the exterior end channels, genuine touch-orbit side views, and a complete board/cord in landscape. The three-frame addendum below confirms one physical granite pick and same-scene wood/granite restoration. **Current app user acceptance is pending. Real-workout behavior is not claimed.** Source geometry was already accepted; this audit evaluates the current app rendering and supplied interaction evidence.
+
+Every inspected receipt matches installed binary SHA-256 `7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca` and [installed provenance](installed-app-provenance.json) SHA-256 `0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f`. The provenance identifies commit `f9554600c1e5d94d027346ca5d6ca7343d71a7e7`, board `nature.stone-hanger-mini-karma8a`, and native model hash `8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de`. All 11 receipts report `cameraSettled=true`.
+
+| Check | Whole-frame observation |
+| --- | --- |
+| Materials | [Wood selection](app-captures/11-live-hold-wood-edge-15.png) and [pinch selection](app-captures/11-live-hold-pinch-60.png) retain a distinct dark granular granite rail beside tan wood. [Unselected Train](app-captures/11-live-unselected-train.png) shows both inactive materials without red highlighting. The later same-scene restoration sequence is reviewed below. |
+| Wood coverage | [Wood selection](app-captures/11-live-hold-wood-edge-15.png) covers the broad rounded run-in, curved returns, and lower shelf, while leaving the granite rail and exterior frame inactive. |
+| Granite coverage | [Granite selection](app-captures/11-live-hold-granite-edge-15.png), [front](app-captures/11-live-front.png), and [normal lens](app-captures/11-live-normal-lens.png) show the rail highlighted and the recessed wood panel restored to tan. |
+| Pinch opposition | [Pinch selection](app-captures/11-live-hold-pinch-60.png), [top oblique](app-captures/11-live-top-oblique.png), and [touch orbit](app-captures/11-live-horizontal-orbit-1.png) show opposing upper/lower highlighted bands with the central wood and granite inactive. The entire underside is not exposed. |
+| Cord seating | [Oblique side](app-captures/11-live-horizontal-orbit-2.png) and [end-on side](app-captures/11-live-horizontal-orbit-3.png) expose the cord wrapping around the end and seated at its channel guides. Both lead legs and upper join are present; no apparent visible penetration, missing segment, or detached route appears. Screenshots do not recertify hidden clearance. |
+| Real touch orbit | [Orbit 1](app-captures/11-live-horizontal-orbit-1.png), [2](app-captures/11-live-horizontal-orbit-2.png), and [3](app-captures/11-live-horizontal-orbit-3.png) progress to a genuine end-on view and keep pinch selection visible. The recorded azimuths progress approximately -0.54, -1.08, -1.62 radians. No intermediate animation or reset claim is made. |
+| Selected UI | The three cards identify `15 mm wood edge`, `15 mm granite edge`, and `60 mm pinch block`, with matching Edge/Pinch kinds, 15/60 mm displayed values, and capacity 1. Titles/fields are readable; the board title wraps cleanly. Hold-map rows partly behind the floating tab bar at these scroll positions are not an interaction pass. |
+| Landscape | [Landscape](app-captures/11-live-landscape.png) fits the whole board, both cord legs, and upper join inside the map with margins. The long title fits on one line. The selected card lies below this viewport, so its complete landscape layout is not assessed. |
+
+The [JSON audit](11-visual-audit.json) contains all 14 inspected frames and exact scope limits. Inspection used `view_image` at original detail on complete frames, without cropping or pixel measurement. Only these scratch audit files were written; no production/canonical edits or app, Simulator, build, or external-resource operations were performed by this agent.
+
+## Supplied interaction addendum
+
+[Physical granite pick](app-captures/11-granite-physical-mesh-pick.png) shows the correct highlighted rail and `15 mm granite edge` card. The matching receipt records `actualPhysicalMeshPick=true`, `tapRevision=1` and `pickedContact=granite-edge-15`, following a before state with `tapRevision=0`. This supports one front-view physical contact pick beyond DEBUG preselection.
+
+[Wood selected, granite restored](app-captures/11-granite-restored-wood-selected-same-scene.png) shows dark granular granite beside the highlighted rounded wood bearing region. [Granite selected, wood restored](app-captures/11-wood-restored-granite-selected-same-scene.png) shows the wood restored to tan and only granite red. Receipts retain the same launch timestamp, `sameScene=true`, and `tapRevision=1`, while renderer revisions progress 2 → 3 → 4 with matching selected IDs. This supports material restoration in the retained scene; authored contact poses may change with selection.
+
+All three additional whole-frame screenshot hashes match their receipts and the same installed binary/provenance above; all are settled. Wood/pinch physical picks, pinch restoration, complete deselection and real-workout phases remain unaudited.

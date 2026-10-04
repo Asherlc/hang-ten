@@ -1,18 +1,19 @@
 {
+  "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
   "modelBounds": {
-    "max": [
-      0.052499998,
-      0.052499998,
-      0.0175
-    ],
     "min": [
       -0.052499998,
       -0.052499998,
       -0.0175
+    ],
+    "max": [
+      0.052499998,
+      0.052499998,
+      0.0175
     ]
   },
-  "modelSHA256": "d3490eba07e371d1d0d042cd858199455c92680be15e412dfbd021cf30d140cc",
   "nodes": [
     {
       "nodeID": "body_oak_mesh_001",
@@ -59,158 +60,157 @@
       "contactID": "edge-reverse-10mm-incut"
     }
   ],
-  "schemaVersion": 1,
   "contacts": {
     "edge-front-15mm-flat": {
-      "center": [
-        0.5,
-        0.66739639
+      "nodeIDs": [
+        "edge_front_15mm_flat_mesh_001"
       ],
       "facePlaneAABB": {
-        "max": [
-          0.907619077,
-          0.735745158
-        ],
         "min": [
           0.092380923,
           0.599047622
+        ],
+        "max": [
+          0.907619077,
+          0.735238111
         ]
       },
-      "nodeIDs": [
-        "edge_front_15mm_flat_mesh_001"
+      "center": [
+        0.5,
+        0.667142866
       ]
     },
     "edge-front-15mm-incut": {
-      "center": [
-        0.5,
-        0.793095241
+      "nodeIDs": [
+        "edge_front_15mm_incut_mesh_001"
       ],
       "facePlaneAABB": {
+        "min": [
+          0.092380923,
+          0.728571438
+        ],
         "max": [
           0.907619077,
           0.858095244
-        ],
-        "min": [
-          0.092380923,
-          0.728095239
         ]
       },
-      "nodeIDs": [
-        "edge_front_15mm_incut_mesh_001"
+      "center": [
+        0.5,
+        0.793333341
       ]
     },
     "edge-front-20mm-granite": {
-      "center": [
-        0.5,
-        0.190476174
+      "nodeIDs": [
+        "edge_front_20mm_granite_mesh_001"
       ],
       "facePlaneAABB": {
-        "max": [
-          0.880952384,
-          0.25238094
-        ],
         "min": [
           0.119047616,
           0.128571409
+        ],
+        "max": [
+          0.880952384,
+          0.25238094
         ]
       },
-      "nodeIDs": [
-        "edge_front_20mm_granite_mesh_001"
+      "center": [
+        0.5,
+        0.190476174
       ]
     },
     "edge-front-20mm-wood-flat": {
-      "center": [
-        0.5,
-        0.373571426
+      "nodeIDs": [
+        "edge_front_20mm_wood_flat_mesh_001"
       ],
       "facePlaneAABB": {
+        "min": [
+          0.092380923,
+          0.285905236
+        ],
         "max": [
           0.907619077,
           0.463809522
-        ],
-        "min": [
-          0.092380923,
-          0.283333331
         ]
       },
-      "nodeIDs": [
-        "edge_front_20mm_wood_flat_mesh_001"
+      "center": [
+        0.5,
+        0.374857379
       ]
     },
     "edge-reverse-06mm-flat": {
-      "center": [
-        0.5,
-        0.306182134
+      "nodeIDs": [
+        "edge_reverse_06mm_flat_mesh_001"
       ],
       "facePlaneAABB": {
+        "min": [
+          0.102857113,
+          0.249047603
+        ],
         "max": [
           0.897142887,
           0.36380952
-        ],
-        "min": [
-          0.102857113,
-          0.248554747
         ]
       },
-      "nodeIDs": [
-        "edge_reverse_06mm_flat_mesh_001"
+      "center": [
+        0.5,
+        0.306428561
       ]
     },
     "edge-reverse-06mm-incut": {
-      "center": [
-        0.5,
-        0.196904749
+      "nodeIDs": [
+        "edge_reverse_06mm_incut_mesh_001"
       ],
       "facePlaneAABB": {
-        "max": [
-          0.897142887,
-          0.252857138
-        ],
         "min": [
           0.102857113,
           0.140952359
+        ],
+        "max": [
+          0.897142887,
+          0.25238094
         ]
       },
-      "nodeIDs": [
-        "edge_reverse_06mm_incut_mesh_001"
+      "center": [
+        0.5,
+        0.19666665
       ]
     },
     "edge-reverse-10mm-flat": {
-      "center": [
-        0.5,
-        0.671207145
+      "nodeIDs": [
+        "edge_reverse_10mm_flat_mesh_001"
       ],
       "facePlaneAABB": {
-        "max": [
-          0.907619077,
-          0.735747624
-        ],
         "min": [
           0.092380923,
           0.606666666
+        ],
+        "max": [
+          0.907619077,
+          0.735238111
         ]
       },
-      "nodeIDs": [
-        "edge_reverse_10mm_flat_mesh_001"
+      "center": [
+        0.5,
+        0.670952388
       ]
     },
     "edge-reverse-10mm-incut": {
-      "center": [
-        0.5,
-        0.789285724
+      "nodeIDs": [
+        "edge_reverse_10mm_incut_mesh_001"
       ],
       "facePlaneAABB": {
+        "min": [
+          0.092380923,
+          0.728571438
+        ],
         "max": [
           0.907619077,
           0.850476209
-        ],
-        "min": [
-          0.092380923,
-          0.728095239
         ]
       },
-      "nodeIDs": [
-        "edge_reverse_10mm_incut_mesh_001"
+      "center": [
+        0.5,
+        0.789523823
       ]
     }
   }

@@ -1,0 +1,19 @@
+{
+  "simulatorUUID": "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B",
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "bootstatus",
+    "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B",
+    "-b"
+  ],
+  "timeoutSeconds": 5,
+  "ownedProcessGroup": 51118,
+  "wrapperExitCode": 1,
+  "diagnosticIncomplete": true,
+  "cleanupException": "PermissionError EPERM when signaling process group during final diagnostic; subsequent ps and killpg(0) independently verify group absent",
+  "ownedProcessGroupAbsent": true,
+  "ownedProcessGroupAbsenceVerifiedAfterFailure": true
+}

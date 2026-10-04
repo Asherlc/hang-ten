@@ -1,0 +1,30 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+    "--user-cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-10mm-tmp/placid-badger-FreeCAD-user.cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-compile-material-partition.py"
+  ],
+  "startedUTC": "2026-10-02T19:02:29.683870+00:00",
+  "timeoutSeconds": 180,
+  "ownedTemporaryDirectory": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-10mm-tmp",
+  "ownedExtraDirectories": [
+    ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-10mm-staging"
+  ],
+  "status": "pass",
+  "ownedProcessGroup": 25181,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "ownedExtraDirectoriesAbsent": [
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-10mm-staging",
+      "absent": true
+    }
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 4.54124970799603,
+  "logSHA256": "ee4c292d723cb90d23f63350319dadbfb1084e93d3b0547e7f5bc4d0d76e2577"
+}

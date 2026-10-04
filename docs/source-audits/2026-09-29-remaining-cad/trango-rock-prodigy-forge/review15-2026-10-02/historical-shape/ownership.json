@@ -1,0 +1,8 @@
+{
+  "owner": "placid-badger",
+  "agent": "/root/plateau_final_shape_gate",
+  "task": "Forge15 read-only independent existing shape gate",
+  "writeScope": ".context/placid-badger/forge-review15/independent-shape",
+  "externalResources": [],
+  "createdUTC": "2026-10-03T01:01:47.035464+00:00"
+}

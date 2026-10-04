@@ -1,0 +1,218 @@
+{
+  "status": "VALID_PERSPECTIVE_VISUAL_FAILURE_NO_REVERSAL",
+  "binarySHA256": "70707e27453ae150763a302152c04e028564dbe97b41bffbcc91c98642f95c94",
+  "traceRecords": 165,
+  "traceSHA256": "6c03631449b2da54eb05ebc50549164a4433cda97ad30f1df6ab815d18ab9820",
+  "visual": {
+    "all12DirectWholeViewed": true,
+    "initialHang": [
+      "red",
+      "red",
+      "red",
+      "red"
+    ],
+    "rest": [
+      "red",
+      "red",
+      "red",
+      "blue"
+    ],
+    "nextHang": [
+      "blue",
+      "blue",
+      "blue",
+      "blue"
+    ],
+    "boardCorrect5Incorrect7": true,
+    "handsVisibleAll12": true,
+    "handAppearance": "Paired palms/four red fingertips/inward thumbs; perspective foreshortening differs, both whole and no obvious clipping. Exact joint angles not established."
+  },
+  "proofs": {
+    "structural-correspondence.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/structural-correspondence.json",
+      "sha256": "e350f93e42dc5f030abfc55a082fab815a1e7155acef9e5d89bdcc171d497a8c",
+      "checks": {
+        "completeContiguous": true,
+        "captures12": true,
+        "allCPUBrackets": true,
+        "sameScene": true,
+        "naturalFirstHang": true,
+        "naturalRest": true,
+        "freshSession": true,
+        "boundaryAppActive": true,
+        "boundaryWindowActive": true,
+        "boundaryLandscape": true,
+        "lateBoundaryCensus": true,
+        "noAXOrTouch": true
+      }
+    },
+    "normal-host-frame-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/normal-host-frame-validation.json",
+      "sha256": "f39d6c7bcc8541275944b64d6143c4b822a9d16462c28425d04b377dc3a3c5fe",
+      "checks": {
+        "workoutSceneFromCountdown": true,
+        "hostObserved": true,
+        "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+        "sameHost": true,
+        "sameActualScene": true,
+        "rootCameraActiveSameScene": true,
+        "hostVisible": true,
+        "sampledFramesOnMonotoneOwnEndpointPath": true,
+        "allPostFirstCaptureCensusesFinal": true
+      }
+    },
+    "train-constructor-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/train-constructor-validation.json",
+      "sha256": "9ec44c36f07bf7060263199c1cd025f30616d2868f11cfe4b06cf29c3fe9dbec",
+      "checks": {
+        "completeContiguous": true,
+        "openingBeforeConstructors": true,
+        "uniqueConstructorTokens": true,
+        "exactlyOneWorkoutConstructor": true,
+        "exactlyOneWorkoutMake": true,
+        "allSceneRecordsHaveConstructor": true,
+        "markerGateMatches": true,
+        "realHandsNotSuppressed": true,
+        "observedPredecessorConstruction": true
+      }
+    },
+    "structural-dependency-ownership.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/structural-dependency-ownership.json",
+      "sha256": "e5dba5558ffb1cd656862983c69b23a950928fd7ac6b290907b1129e87e20ca9",
+      "checks": {
+        "completeStream": true,
+        "exactEnvironmentKeys": true,
+        "exactCommonValues": true,
+        "releaseModeMatches": true,
+        "exactRunID": true,
+        "canonicalModelSHA": true,
+        "exactTwoConstructorsAndMakes": true,
+        "oneBeforeAfterTrainOnly": true,
+        "actionFlagCorrect": true,
+        "retentionModeCorrect": true,
+        "allHostsCurrentValid": true,
+        "tagMatchesPredecessor": true,
+        "oneStableOwnerPerHost": true,
+        "exactInitialReadiness": true,
+        "beforeOwnershipObservedOrOrdinaryNaturalLoss": true,
+        "disappearBeforeFirstHang": true,
+        "postEveryTrialKeepsPredecessorRecord": true,
+        "bothRecordsFromFirstHang": true,
+        "workoutAliveAttachedUnchanged": true,
+        "weakCensusRecordAtEveryPostPoint": true,
+        "weakIdentityForEveryLivingEntity": true,
+        "predecessorDisappearedThroughout": true,
+        "zeroExplicitDetachesEntireStream": true,
+        "zeroIntentionalRetentionEntireStream": true,
+        "noUnexpectedOrdinaryOwnershipTransfer": true,
+        "deadEntitiesHaveNoInventedOwnership": true,
+        "throughTail": true
+      }
+    },
+    "structural-dependency-navigation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/structural-dependency-navigation.json",
+      "sha256": "3301c60cf91ebac0a553248d73d1680ab72c80d10b01766d54839dd8670d11de",
+      "checks": {
+        "readinessPassedWithinBound": true,
+        "readinessEvidenceInCompleteTrace": true,
+        "readinessBeforeOpenURL": true,
+        "initialTrainConstructorAndMakeBeforeOpenURL": true,
+        "exactlyInitialFalseThenTrue": true,
+        "initialBoardMapBeforeOpenURL": true,
+        "navigationTrueAfterOpenURLBeforeFirstHang": true,
+        "requestedBranchMatchesAction": true,
+        "expectedBoardPlanPresentation": true,
+        "navFlagsCorrect": true,
+        "sameReadyPredecessorOwnershipValid": true,
+        "distinctWorkoutExactlyOne": true
+      }
+    },
+    "real-hand-lifetime-camera-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/real-hand-lifetime-camera-validation.json",
+      "sha256": "76fdd3df679e50b17237ddc6ab171a199e04a428313257f83928f25bc3eaf068",
+      "checks": {
+        "completeStream": true,
+        "handSuppressionAbsent": true,
+        "perspectiveExperimentEnabled": true,
+        "instrumentationVersion": true,
+        "exactCountsMatchEventsAtEveryRecord": true,
+        "actualCreatedAndMadePath": true,
+        "allMakeRecordsHaveEarlierActualConstructor": true,
+        "oneConfigurationPerCreatedCamera": true,
+        "allFitsHaveEarlierSameCameraConfiguration": true,
+        "everyActuallyMadePathHasFit": true,
+        "actualCameraComponentsPerspective": true,
+        "actualClipsUnchanged": true,
+        "finiteVerticalPerspectiveFOV": true,
+        "fitGeometryInsideClips": true,
+        "noUnknownLifecycleOrCameraEvent": true,
+        "completeTailAfterAllCaptures": true
+      }
+    },
+    "weak-hand-census-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/weak-hand-census-validation.json",
+      "sha256": "7d24d54dbf4f48fc49bca2287bd60065e0a683dfde6340fea9c88edeae3a54f8",
+      "checks": {
+        "completeContiguous": true,
+        "censusGateEnabled": true,
+        "realHandsEnabled": true,
+        "perspectiveFlagEnabled": true,
+        "actualConstructorsObserved": true,
+        "allConstructedCamerasConfigured": true,
+        "allSchemaIdentityTombstoneAssociationsValid": true,
+        "all12HaveExistingCensusBrackets": true
+      }
+    }
+  },
+  "comparison": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-projection-comparison.json",
+    "sha256": "468471e7d084eb8952f925743f68879188efa0227660c17dca1e2dd6bc1b7c49",
+    "checks": {
+      "sameObservedHandConstructorMakePath": true,
+      "sameRecordedHandCameraTransforms": true,
+      "sameCensusBinary": true,
+      "onlyPerspectiveGateAndRunIDEnvironmentDifference": true,
+      "sameNormalFrameEndpoints": true,
+      "sameResolvedWorkoutInputs": true,
+      "sameRootCameraTransformSets": true,
+      "sameConstructorAndMakeCounts": true
+    },
+    "boardEventOrderEqual": true,
+    "handViewEventOrderEqual": true
+  },
+  "actualHandCounts": {
+    "single.constructor-entry": 0,
+    "single.make-entry": 0,
+    "pair.constructor-entry": 2,
+    "pair.make-entry": 2
+  },
+  "actualCameraConfiguration": "Perspective component only for every actual configured/fitted pair camera, vertical finite FOV and unchanged clips, valid fitted geometry; no single-hand path created.",
+  "lifetimes": [
+    {
+      "token": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+      "constructorSequence": 14,
+      "firstObservedBothDeadSequence": 21
+    },
+    {
+      "token": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+      "constructorSequence": 31,
+      "firstObservedBothDeadSequence": null
+    }
+  ],
+  "lifetimeSummaryPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-lifetime-summary.json",
+  "lifetimeSummarySHA256": "46792c30fb58275cf677b57bf99e71e7d7c0496a25134f3413cc87508de3d637",
+  "parity27Passed": true,
+  "orthographic137FrozenFilesExact": true,
+  "appPID3869TerminatedAndAbsent": true,
+  "interpretation": "Changing the actual paired-hand cameras to perspective in the same binary did not resolve the reproduced board-color delay. Both O and P show early Rest red and nextHang blue with correct bracketed CPU state. No reversal is eligible or performed.",
+  "limitations": [
+    "One P run after one O, no statistical or production-fix claim.",
+    "Same transforms/endpoints/path checks do not mean identical timing or projected hand size.",
+    "Weak hand state is sampled only at existing board checkpoints; no continuous or GPU lifetime claim.",
+    "Earlier-life branch explanation is not explicitly logged.",
+    "No inference for unobserved middle-rest frames or frontend isolation."
+  ],
+  "productionFix": false,
+  "humanAcceptance": false,
+  "sourceRuntimeDDHandbackToRoot": true
+}

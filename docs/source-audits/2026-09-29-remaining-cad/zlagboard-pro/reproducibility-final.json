@@ -1,0 +1,31 @@
+{
+  "assetMatches": true,
+  "bytes": 912805,
+  "committedAssetSHA256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+  "descriptorBindsCommittedAsset": true,
+  "descriptorMatches": true,
+  "package": "zlagboard-pro",
+  "presentations": [
+    {
+      "assetMatches": true,
+      "bytes": 912805,
+      "committedAssetSHA256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+      "descriptorBindsCommittedAsset": true,
+      "descriptorMatches": true,
+      "presentationID": "primary",
+      "rebuiltAssetSHA256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+      "committedDescriptorSHA256": "5e3ea9a135173ec6730b0d5e145cc098a8b2e6a54f1cf50bc9df982248711b82",
+      "rebuiltDescriptorSHA256": "5e3ea9a135173ec6730b0d5e145cc098a8b2e6a54f1cf50bc9df982248711b82",
+      "descriptorBytesMatch": true
+    }
+  ],
+  "rebuiltAssetSHA256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+  "checkedAt": "2026-09-30T02:15:51.456832+00:00",
+  "sourceSHA256Before": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+  "sourceSHA256After": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+  "sourceUnchanged": true,
+  "verifier": "Tools/HangboardCAD/verify_reproducible.py",
+  "freecad": "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+  "sourceMutationAllowed": false,
+  "method": "Fresh FreeCAD process, source-native build, byte-exact USDZ comparison and complete descriptor equality."
+}

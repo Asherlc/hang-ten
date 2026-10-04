@@ -1,0 +1,37 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/diagnose-cavity-tmp/hangten-freecad-01mpiqvr/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/diagnose_cavity_binding.py", line 24, in <module>
+    try:contact=bind_cutter(d,body,cid,cutter)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/cad-wall-boards/author_wall.py", line 105, in bind_cutter
+    return bind(d,body,cid,lambda f:face_overlap(f,cutter.Shape)>.97*f.Area and f.Area>1e-5)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/cad-wall-boards/author_wall.py", line 99, in bind
+    if not names:raise RuntimeError('no faces for '+cid)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: no faces for pocket-13-left
+
+BIND pocket-4-left bodyValid True solids 1
+BIND edge-5-left bodyValid True solids 1
+BIND edge-6-left bodyValid True solids 1
+BIND edge-7-left bodyValid True solids 1
+BIND pocket-8-left bodyValid True solids 1
+BIND pocket-9-left bodyValid True solids 1
+BIND pocket-10-left bodyValid True solids 1
+BIND edge-11-left bodyValid True solids 1
+BIND pocket-12-left bodyValid True solids 1
+BIND pocket-13-left bodyValid True solids 1
+
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								

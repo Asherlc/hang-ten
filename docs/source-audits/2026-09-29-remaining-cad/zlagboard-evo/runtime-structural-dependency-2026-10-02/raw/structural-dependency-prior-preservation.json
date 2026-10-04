@@ -1,0 +1,17 @@
+{
+  "manifests": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-postboot-frozen-manifest.json",
+      "sha256": "150381ebd2963b2852744c7e62ea3ec2138cd198f65652bec8b44563bb737b29",
+      "files": 202,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-reference-frozen-manifest.json",
+      "sha256": "299f3e396c1dd57ed8666e823685a4d80c2af85f461acb1d30bb2121d512228b",
+      "files": 123,
+      "allExact": true
+    }
+  ],
+  "allExact": true
+}

@@ -1,0 +1,423 @@
+{
+  "owner": "placid-badger",
+  "allCopiesByteIdentical": true,
+  "files": [
+    {
+      "original": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/runtime-validation.json",
+      "retained": "cord-feedback/rejected-summary/runtime-validation.json",
+      "sha256": "d60d45beebdde499a55708e1cdce8befb0f60a58eaf645de0e38700da09be76d"
+    },
+    {
+      "original": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/human-acceptance.json",
+      "retained": "cord-feedback/rejected-summary/human-acceptance.json",
+      "sha256": "d3e1ed777a696ebab61d4a746c9249f6c881901e2e1ade44f9b398989a21f774"
+    },
+    {
+      "original": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/review.md",
+      "retained": "cord-feedback/rejected-summary/review.md",
+      "sha256": "c4242d201bfa0d84eaf275dc4fd0d1e62cf8a36c3f0b78c28a0c04270a0e12b4"
+    },
+    {
+      "original": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/index.html",
+      "retained": "cord-feedback/rejected-summary/index.html",
+      "sha256": "987548dd975764781614a1a56f72a757b6541385eb611e15f67a35f04cb580ee"
+    },
+    {
+      "original": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/verification-authorization.json",
+      "retained": "cord-feedback/rejected-summary/verification-authorization.json",
+      "sha256": "2700e5c07c27ec06879b776107745bba10024fdefdaa44bf0317f89723f5ba3c"
+    },
+    {
+      "original": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/artifact-sha256.json",
+      "retained": "cord-feedback/rejected-summary/artifact-sha256.json",
+      "sha256": "474a06135fc537837004ed1bfb9b573ecc621db61c7b90e659bea124ba5029eb"
+    },
+    {
+      "original": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/review14-2026-10-02/throwaway-script-provenance.json",
+      "retained": "cord-feedback/rejected-summary/throwaway-script-provenance.json",
+      "sha256": "c6ca5f1b7053e045b8fae3fda7148f655eb0eb62e216c7abd1b54e429212f908"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/apply-output-for-review.json",
+      "retained": "cord-feedback/final-native/apply-output-for-review.json",
+      "sha256": "98a83eaafe3187adf91c03b53a9c515a3d931af31f39d58c9bfcb027fa41ea21"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/cleanup-receipt.json",
+      "retained": "cord-feedback/final-native/cleanup-receipt.json",
+      "sha256": "7c2b6f9173aa6956c43ffd6984afb682c4cc41ce5cead4a55f17d6b8f0dfc471"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/commands.json",
+      "retained": "cord-feedback/final-native/commands.json",
+      "sha256": "19a26a118fc62dd4ec999630ec7b02677207d0b4917f12c9c3cac7ef94ac4587"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/conditional-native-diagnostics.json",
+      "retained": "cord-feedback/final-native/conditional-native-diagnostics.json",
+      "sha256": "0b8e8fa5c02cbf8cff134b343151e57889195934ed4bd8dda2e48b3887191db2"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/conditional-native-diagnostics.log",
+      "retained": "cord-feedback/final-native/conditional-native-diagnostics.log",
+      "sha256": "94b5a865239123505a1bd94b370b74f28e26f65a3045bb7dbf48ef1379df80ce"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-authoring-input.json",
+      "retained": "cord-feedback/final-native/final-authoring-input.json",
+      "sha256": "a507a805dbeb79792e31dc8408a6e69691cc270e7d73a93ee7aa1f9984724b7b"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-authoring-proof.json",
+      "retained": "cord-feedback/final-native/final-authoring-proof.json",
+      "sha256": "3b58c45c0931926acc1007e7cda6c7505b1ff76c0b6f59a67e82424af89b592c"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-handoff.json",
+      "retained": "cord-feedback/final-native/final-handoff.json",
+      "sha256": "37820d4aaaf63b52b4ea5cecc67e29d07efb74e3c15de1708035a772b938644f"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-native-apply.json",
+      "retained": "cord-feedback/final-native/final-native-apply.json",
+      "sha256": "0b929594a2c6d224f31da70028f2f1c37c01b9d15a995283de0e5a3747ccbf8b"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-native-apply.log",
+      "retained": "cord-feedback/final-native/final-native-apply.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-native-check.json",
+      "retained": "cord-feedback/final-native/final-native-check.json",
+      "sha256": "0b929594a2c6d224f31da70028f2f1c37c01b9d15a995283de0e5a3747ccbf8b"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-native-check.log",
+      "retained": "cord-feedback/final-native/final-native-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/generated-board.json",
+      "retained": "cord-feedback/final-native/generated-board.json",
+      "sha256": "6b7e0262027dc8024b2869ce757595a8c3ba5399ab88376faceafaec4b28d743"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/generated-manifest.log",
+      "retained": "cord-feedback/final-native/generated-manifest.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/owned-bytecode-cache-cleanup.json",
+      "retained": "cord-feedback/final-native/owned-bytecode-cache-cleanup.json",
+      "sha256": "e3124fe535802f3f75608f804e2ec934f4b1fdaf312fafd553bf525ab5117338"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/owned-bytecode-cache-ownership.json",
+      "retained": "cord-feedback/final-native/owned-bytecode-cache-ownership.json",
+      "sha256": "f469622886491c7f08d91a54b7d3d9f4f50883a2218f94d5b2c558bc650fdf77"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/ownership.json",
+      "retained": "cord-feedback/final-native/ownership.json",
+      "sha256": "1b3661fdc948318c158f6bbcd2d1c59139d1b33bb2ad8725284849195ae0f20a"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/phase.json",
+      "retained": "cord-feedback/final-native/phase.json",
+      "sha256": "01f9eea35888680ffbc609b123e36c82f7e34cffca67748ce561a3109ff8e112"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-native-solid.json",
+      "retained": "cord-feedback/final-native/placid-badger-native-solid.json",
+      "sha256": "9b86911411ac2b8a6f7cfc093ea5be98655086d3cecf639ee60e224d2b2e9f15"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/provisional-final-display-geometry-equivalence.json",
+      "retained": "cord-feedback/final-native/provisional-final-display-geometry-equivalence.json",
+      "sha256": "3fe76febbe8a830ae75796ac212d330db44d822b507206556d2444ea5bea866f"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/retained-tool-hashes.json",
+      "retained": "cord-feedback/final-native/retained-tool-hashes.json",
+      "sha256": "e433a02eada65085f3f44ad1f33a809afb58c343ff4636e1f01e1378d0eb2334"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/source-and-graph-proof.json",
+      "retained": "cord-feedback/final-native/source-and-graph-proof.json",
+      "sha256": "52e0df2ccef1f4749b397a5c05b9da99bf8e5e9a9a8e4d5de397c2b5bca032ee"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/tight-wrap-length-estimate.json",
+      "retained": "cord-feedback/final-native/tight-wrap-length-estimate.json",
+      "sha256": "f070df27973b5bcb6fa655dbb1d60ed0672661162668975c6b9931564ee877fb"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/cleanup-verification.json",
+      "retained": "corrected-views/cleanup-verification.json",
+      "sha256": "cd64f1d4e9b7e9226f308267ffb5c0ee997a8db173572425ec21070f19cafc8e"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/final-shape-verdict.json",
+      "retained": "corrected-views/final-shape-verdict.json",
+      "sha256": "8072fcf3438005135f57c4dd3050d56c1286631e667a39118880381fe2574f5d"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/final-shape-verdict.md",
+      "retained": "corrected-views/final-shape-verdict.md",
+      "sha256": "85a31e6c9b7b3f1666c01151e32798997ef0f170d471577ed9d93ea1fe18c921"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/ownership.json",
+      "retained": "corrected-views/ownership.json",
+      "sha256": "8e28ad0eab924ef110c025d840e0d8e0e9b9bf1a1d878cf9ddb10325cc4dbd5f"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/render-inputs.json",
+      "retained": "corrected-views/render-inputs.json",
+      "sha256": "ed04ad07b6032723b5f4d7662e1d9d8cf3bfa31fd649ffdcbb30b93953d07cc5"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/render-lifecycle.json",
+      "retained": "corrected-views/render-lifecycle.json",
+      "sha256": "095b115fc2679b4540fbe0deba294ce79e0b3c9bfa385d43695c78b055b72176"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/render-provenance.json",
+      "retained": "corrected-views/render-provenance.json",
+      "sha256": "29b61a72485af0d5694d4f567d9ed0eee9e36a9e65a0474f350358fc4a3e40af"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-inverted-front-prior-current.png",
+      "retained": "corrected-views/three-edge-inverted-front-prior-current.png",
+      "sha256": "11215903d5e3ab0e2093a6c9cb2cefd2462d9209c69f73a7645b5cd93ea4971a"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-inverted-reverse-oblique-prior-current.png",
+      "retained": "corrected-views/three-edge-inverted-reverse-oblique-prior-current.png",
+      "sha256": "7ed00d49647a4a783aa04ffe3133c785d7526440f4e8843ab0ab0cf172af6d76"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-inverted-side-prior-current.png",
+      "retained": "corrected-views/three-edge-inverted-side-prior-current.png",
+      "sha256": "2c36c95c946801ed63e503c72754d515108f121d7273d29f9f55fe4fb47c18ef"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-inverted-top-prior-current.png",
+      "retained": "corrected-views/three-edge-inverted-top-prior-current.png",
+      "sha256": "47f4101cb16bd1ee773ebd1fb77d79dd2876469b3faf58d77d00332baff3ff2c"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-current-inline.png",
+      "retained": "corrected-views/three-edge-upright-current-inline.png",
+      "sha256": "434698306c42b0c4509d9873ae98f51e87bc6abbcd0e4d91761744211b90f8e5"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-front-prior-current.png",
+      "retained": "corrected-views/three-edge-upright-front-prior-current.png",
+      "sha256": "78dc82dd2ac3c8fac10b51c32e6fede7d33c2dd8a1af3012fd54d563dd543233"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-rejected-current.png",
+      "retained": "corrected-views/three-edge-upright-rejected-current.png",
+      "sha256": "6decca5b6ad4e4e2449c83a0153bd2c4846bf8063aa5b2ee6a25f366a702d001"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-reverse-oblique-prior-current.png",
+      "retained": "corrected-views/three-edge-upright-reverse-oblique-prior-current.png",
+      "sha256": "d1c82e382a809b6faa085fb8b62ea8f66e4e09fb440421bc1a4d271ed93e34a3"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-side-prior-current.png",
+      "retained": "corrected-views/three-edge-upright-side-prior-current.png",
+      "sha256": "60e4540922471753d76fd1f55b12af7d9f4f6727afe15b3e2e6f24853a01a1b5"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-top-prior-current.png",
+      "retained": "corrected-views/three-edge-upright-top-prior-current.png",
+      "sha256": "5fb7607b4e586c5c0778342e1cb2548428dda4a0c58e2c28112ef06972592cdb"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-inverted-front-prior-current.png",
+      "retained": "corrected-views/two-edge-inverted-front-prior-current.png",
+      "sha256": "0270e9d8eb02e39b4232d59e3aed0cb37b8983141b19ccaacf5214d37a48135e"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-inverted-reverse-oblique-prior-current.png",
+      "retained": "corrected-views/two-edge-inverted-reverse-oblique-prior-current.png",
+      "sha256": "9be5e94cb89e9cda2d19deafb5e0160647ae7cdd9a781946ac6816c42d585162"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-inverted-side-prior-current.png",
+      "retained": "corrected-views/two-edge-inverted-side-prior-current.png",
+      "sha256": "80507571cd55f9456db61e897041d25ec829b3c328a32ba2c14de2f288c10434"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-inverted-top-prior-current.png",
+      "retained": "corrected-views/two-edge-inverted-top-prior-current.png",
+      "sha256": "3e8d9a86cb910c96636f89b41cf1ef00ca16e4d5895788466a85eed3e60358e7"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-current-inline.png",
+      "retained": "corrected-views/two-edge-upright-current-inline.png",
+      "sha256": "2eadaee78638a6a5135060fb0fc5dbb249c3f1dda40c21d65a1e4bd2c8184fd8"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-front-prior-current.png",
+      "retained": "corrected-views/two-edge-upright-front-prior-current.png",
+      "sha256": "272189ffe827b6074a0ba88b65f0774893cc87f2fe72adc2692cf8d4500b0479"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-rejected-current.png",
+      "retained": "corrected-views/two-edge-upright-rejected-current.png",
+      "sha256": "f7c44ac9767e7cefcd1cd444f259227f56e2e4a34945e8618182ed55b2aeff98"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-reverse-oblique-prior-current.png",
+      "retained": "corrected-views/two-edge-upright-reverse-oblique-prior-current.png",
+      "sha256": "58e89aec9c3ae4fe03bf69ccf684f23326a291577a0c306a3d788bbdbc5d0556"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-side-prior-current.png",
+      "retained": "corrected-views/two-edge-upright-side-prior-current.png",
+      "sha256": "5553aa95694339dda3d77197ba9896bc9a59fafb66b58c46aec6543395004122"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-top-prior-current.png",
+      "retained": "corrected-views/two-edge-upright-top-prior-current.png",
+      "sha256": "11c01b6e7268e3747ba46e29f16b789a7e91fbfda5585d24eb021a9116240a07"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/android-staging.log",
+      "retained": "cord-feedback/package-validation/android-staging.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/build-time-git-binary-diff.log",
+      "retained": "cord-feedback/package-validation/build-time-git-binary-diff.log",
+      "sha256": "a03ca7fdf8152bb313c101c0675b0ee629113123ee7e6298473b1a07ee645ed3"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/build-time-git-head.log",
+      "retained": "cord-feedback/package-validation/build-time-git-head.log",
+      "sha256": "4e0f1904b0273bb38d24d06dccdd7e2a94ff423d34d8844634befe694dc23218"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/build-time-git-status.log",
+      "retained": "cord-feedback/package-validation/build-time-git-status.log",
+      "sha256": "528be8fb33b266b4e98e260f8f5aeb30a1a78779266cbef7d71eb70508e819da"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/cleanup-receipt.json",
+      "retained": "cord-feedback/package-validation/cleanup-receipt.json",
+      "sha256": "75d3b19d1d955c1d7c0572ced1486d6ebbbbd5d5a4d271d3d7d8bc304b1f9efc"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/commands.json",
+      "retained": "cord-feedback/package-validation/commands.json",
+      "sha256": "ff883d8371053c8df3994bdb1456c755ffd766f2c0228e9e19b76f7bc03f2299"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/delivery-validation.json",
+      "retained": "cord-feedback/package-validation/delivery-validation.json",
+      "sha256": "ce8e48696389632f1fd98ae1ed35a0d7ab4058886304bcde33cc6da6793cdc55"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/delivery-validation.log",
+      "retained": "cord-feedback/package-validation/delivery-validation.log",
+      "sha256": "ce8e48696389632f1fd98ae1ed35a0d7ab4058886304bcde33cc6da6793cdc55"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/focused-python-tests.log",
+      "retained": "cord-feedback/package-validation/focused-python-tests.log",
+      "sha256": "51121d098b94e3f1b7295638fd66af31f843ebe1c8e05d4b6416f261e1488f14"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/generated-board.json",
+      "retained": "cord-feedback/package-validation/generated-board.json",
+      "sha256": "6b7e0262027dc8024b2869ce757595a8c3ba5399ab88376faceafaec4b28d743"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/generic-ios-build.log",
+      "retained": "cord-feedback/package-validation/generic-ios-build.log",
+      "sha256": "475a250c51ca27b912772a252bd31b9341ae5e6df367919a8372d96eaee6e531"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/git-head.log",
+      "retained": "cord-feedback/package-validation/git-head.log",
+      "sha256": "4e0f1904b0273bb38d24d06dccdd7e2a94ff423d34d8844634befe694dc23218"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/ownership.json",
+      "retained": "cord-feedback/package-validation/ownership.json",
+      "sha256": "3abdefb2f74014d67640d6c40c6f1bef480c40f07ec3dd6d9c619f6548543ef6"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/package-validation.log",
+      "retained": "cord-feedback/package-validation/package-validation.log",
+      "sha256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/python-junit.xml",
+      "retained": "cord-feedback/package-validation/python-junit.xml",
+      "sha256": "4c23c2c78c3e6ebeb602c7a72e61c7b62d1eb28f8a2bef84101ffbac312b7f98"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/reserved-path-hash-proof.json",
+      "retained": "cord-feedback/package-validation/reserved-path-hash-proof.json",
+      "sha256": "9ce3080167262e6fb08d647f139cf5a0482da42223ab9fd2a805e228ad47a9ee"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/runtime-validation.json",
+      "retained": "cord-feedback/package-validation/runtime-validation.json",
+      "sha256": "de23aa8472207a13632942c051437faa37722c7d187cacfd542bc81d4f732041"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/staging-parity.json",
+      "retained": "cord-feedback/package-validation/staging-parity.json",
+      "sha256": "91fe280078a59598a70bf523df3d2f2d0506460be9c4dc38e180fde8f1cb3057"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/xcode-staging.log",
+      "retained": "cord-feedback/package-validation/xcode-staging.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "Hangboards/tension-flash-board/suspension.json",
+      "retained": "cord-feedback/final-native/certified-suspension.json",
+      "sha256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/opus-advisor/archive-receipt.json",
+      "retained": "cord-feedback/opus/archive-receipt.json",
+      "sha256": "541028eb673553ee6ea2da88c61467fbe53974cbb5ee3535ea35092ac965294e"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/opus-advisor/cleanup-receipt.json",
+      "retained": "cord-feedback/opus/cleanup-receipt.json",
+      "sha256": "4cbbf8a2b293fd9d794211280498401c663668e0aac49b39fa4b2f097770f2eb"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-artifact-index.json",
+      "retained": "cord-feedback/final-native/final-artifact-index.json",
+      "sha256": "6dd58565f95f6820361722abade602748ab0b958a86ad8dcf2901a87a1ae9c93"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/final-lifecycle-receipt.json",
+      "retained": "cord-feedback/final-native/final-lifecycle-receipt.json",
+      "sha256": "be25985c07b64e23b138f71fbd7e469c66adbf5b96ac00654c425f629ffdac2d"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/command-argv-supplement.json",
+      "retained": "cord-feedback/final-native/command-argv-supplement.json",
+      "sha256": "b4fdfcffb4bd68730a843d75ba8aacb297a295db7c6d37c2867cac94e73fef30"
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/producer-index-ownership.json",
+      "retained": "cord-feedback/final-native/producer-index-ownership.json",
+      "sha256": "56c6a78763114cca4c458d413e1963172b9a2902b27eb1dff3f237e5900f401e"
+    }
+  ],
+  "hiddenThreadingObserved": false,
+  "currentAppFrames": 0
+}

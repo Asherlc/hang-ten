@@ -1,0 +1,23 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "spawn",
+    "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "log",
+    "show",
+    "--last",
+    "3m",
+    "--style",
+    "compact",
+    "--predicate",
+    "process == \"com.apple.datamigrator\" OR process == \"com.apple.migrationpluginwrapper\" OR process == \"contactsd\" OR process == \"locationd\""
+  ],
+  "boundSeconds": 25.0,
+  "timedOut": false,
+  "interruptedBySignal": null,
+  "exitStatus": 0,
+  "elapsedSeconds": 3.270560167002259
+}

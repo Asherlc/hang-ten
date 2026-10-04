@@ -1,0 +1,48 @@
+[
+  {
+    "owner": "placid-badger",
+    "name": "export-collision-solid",
+    "command": [
+      "python3",
+      "Tools/HangboardCAD/run_freecad.py",
+      "Tools/HangboardCAD/export_rope_collision_solid.py"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 0.6108028329908848
+  },
+  {
+    "owner": "placid-badger",
+    "name": "fresh-reproduction",
+    "command": [
+      "python3",
+      "Tools/HangboardCAD/verify_reproducible.py",
+      "--package",
+      "frictitious-nug",
+      "--freecad",
+      "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+      "--extra-python-path",
+      ".context/placid-badger/pxr311",
+      "--keep-rebuild",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-pinch-review/fresh-wraparound-rebuild"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 54.72748845804017
+  },
+  {
+    "owner": "placid-badger",
+    "name": "fresh-native-check",
+    "command": [
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-review/native-cord/logged_fresh_solve.py",
+      "--package",
+      "frictitious-nug",
+      "--solid",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-pinch-review/native-cord/solid-primary.json",
+      "--check",
+      "--report",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-pinch-review/native-cord/fresh-native-check-report.json"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 22.222996458993293
+  }
+]

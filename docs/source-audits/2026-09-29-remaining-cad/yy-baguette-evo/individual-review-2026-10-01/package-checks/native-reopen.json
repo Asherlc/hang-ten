@@ -1,0 +1,26 @@
+{
+  "sourceSHA256Before": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+  "reopenRecompute": true,
+  "oneValidSolid": true,
+  "contactNodeCount": 20,
+  "allContactShapesValid": true,
+  "sketchCount": 30,
+  "allSketchesFullyConstrained": true,
+  "materialMetadataAbsent": true,
+  "edit": {
+    "parameter": "Parameters.TopSixDepth",
+    "before": 6.0,
+    "after": 6.15,
+    "volumeBefore": 745437.6023551619,
+    "volumeAfter": 745021.8023583676,
+    "changedContactNodes": [
+      "Region_hold_edge_06mm_left_mesh_001",
+      "Region_hold_edge_06mm_right_mesh_001"
+    ]
+  },
+  "editChangesBody": true,
+  "editChangesContacts": true,
+  "restoredVolumeDelta": 2.3283064365386963e-10,
+  "sourceSHA256After": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+  "sourceBytesUnchanged": true
+}

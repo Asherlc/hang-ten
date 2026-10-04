@@ -1,0 +1,41 @@
+{
+  "workspaceOwner": "placid-badger",
+  "verifiedUTC": "2026-10-03T02:12:44.778044+00:00",
+  "allEightOwnedProcessGroupsAbsent": true,
+  "allExactTemporaryPathsAbsent": true,
+  "receipts": [
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v1-command.json",
+      "sha256": "be70bf3ecc1ba3a7937a9ad9a59c4a1ddeefb42f775421efd8d3de1ec2315188"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v2-command.json",
+      "sha256": "888a0f7768c13736cc452ebda34d0b076017799a602c01517bcb0842dfe76c7e"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v3-setback-command.json",
+      "sha256": "86803688128e712a8dc00e600267bb96d0a08ef5fefd7b3d6510ead117635555"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v4-stable-command.json",
+      "sha256": "a1e81858adad3fbeaed0fc9b10bb3aeb8c60642077efe13c5af74567636f5e1b"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-final-export-render-command.json",
+      "sha256": "836105849caba5f1d4c0315d2a31c83b3f8347fee05b68e1b0d25246aea1fb7e"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-native-whole-render-command.json",
+      "sha256": "845cd902b926242a1f8a6fcf2134c6cffbe29c30ea44f0dc38909a8141447278"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-setback-whole-render-command.json",
+      "sha256": "9a6154c93d202bc4fe6803123546d961d114d2d87fb819739cbcebae72931b42"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/placid-badger-forge15-stable-fresh-check-command.json",
+      "sha256": "91b2efcae6918e2c84f659f66ea3bc92170e5241c2ff65d8372a001f79362536"
+    }
+  ],
+  "unknownSharedResourcesModified": false
+}

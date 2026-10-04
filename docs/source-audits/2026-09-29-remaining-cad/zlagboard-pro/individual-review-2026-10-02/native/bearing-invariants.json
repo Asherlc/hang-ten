@@ -1,0 +1,424 @@
+{
+  "canonicalSourceSHA256": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+  "canonicalBytesUnchanged": true,
+  "checks": [
+    {
+      "contactID": "edge-30-left",
+      "nativeNormalBefore": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "sloper-edge-30-left",
+      "nativeNormalBefore": [
+        0.0,
+        -0.20791169081775943,
+        0.9781476007338057
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        -0.20791169081775943,
+        0.9781476007338057
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "sloper-edge-25-left",
+      "nativeNormalBefore": [
+        0.0,
+        -0.2079116908177593,
+        0.9781476007338057
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        -0.2079116908177593,
+        0.9781476007338057
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-35-center",
+      "nativeNormalBefore": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "sloper-edge-25-right",
+      "nativeNormalBefore": [
+        0.0,
+        -0.2079116908177593,
+        0.9781476007338057
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        -0.2079116908177593,
+        0.9781476007338057
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "sloper-edge-30-right",
+      "nativeNormalBefore": [
+        0.0,
+        -0.20791169081775943,
+        0.9781476007338057
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        -0.20791169081775943,
+        0.9781476007338057
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-30-right",
+      "nativeNormalBefore": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-20-left",
+      "nativeNormalBefore": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "sloper-edge-25-lower-left",
+      "nativeNormalBefore": [
+        0.0,
+        -0.20791169081775943,
+        0.9781476007338057
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        -0.20791169081775943,
+        0.9781476007338057
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-30-inner-left",
+      "nativeNormalBefore": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "sloper-edge-30-center",
+      "nativeNormalBefore": [
+        0.0,
+        -0.20791169081775943,
+        0.9781476007338057
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        -0.20791169081775943,
+        0.9781476007338057
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-30-inner-right",
+      "nativeNormalBefore": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "sloper-edge-25-lower-right",
+      "nativeNormalBefore": [
+        0.0,
+        -0.20791169081775943,
+        0.9781476007338057
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        -0.20791169081775943,
+        0.9781476007338057
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-20-right",
+      "nativeNormalBefore": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-incut-15-left",
+      "nativeNormalBefore": [
+        -0.0,
+        0.12186934340514764,
+        0.9925461516413221
+      ],
+      "nativeNormalAfter": [
+        -0.0,
+        0.12186934340514764,
+        0.9925461516413221
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-15-left",
+      "nativeNormalBefore": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-incut-30-left",
+      "nativeNormalBefore": [
+        -0.0,
+        0.12186934340514757,
+        0.9925461516413221
+      ],
+      "nativeNormalAfter": [
+        -0.0,
+        0.12186934340514757,
+        0.9925461516413221
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-incut-10-center",
+      "nativeNormalBefore": [
+        -0.0,
+        0.12186934340514768,
+        0.992546151641322
+      ],
+      "nativeNormalAfter": [
+        -0.0,
+        0.12186934340514768,
+        0.992546151641322
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-incut-30-right",
+      "nativeNormalBefore": [
+        -0.0,
+        0.12186934340514757,
+        0.9925461516413221
+      ],
+      "nativeNormalAfter": [
+        -0.0,
+        0.12186934340514757,
+        0.9925461516413221
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-15-right",
+      "nativeNormalBefore": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "edge-incut-15-right",
+      "nativeNormalBefore": [
+        -0.0,
+        0.12186934340514764,
+        0.9925461516413221
+      ],
+      "nativeNormalAfter": [
+        -0.0,
+        0.12186934340514764,
+        0.9925461516413221
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Pocket depth and normal preserved."
+    },
+    {
+      "contactID": "top-sloper-32-left",
+      "nativeNormalBefore": [
+        0.0,
+        -0.529919264233205,
+        0.8480480961564261
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        -0.529919264233205,
+        0.8480480961564261
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.5897577926996931,
+      "note": "Top face BRep bounds may overestimate fillet depth; published pocket depths checked separately."
+    },
+    {
+      "contactID": "top-sloper-20-left",
+      "nativeNormalBefore": [
+        0.0,
+        -0.34202014332566877,
+        0.9396926207859084
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        -0.34202014332566877,
+        0.9396926207859084
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.02606042997702218,
+      "note": "Top face BRep bounds may overestimate fillet depth; published pocket depths checked separately."
+    },
+    {
+      "contactID": "top-sloper-jug-center",
+      "nativeNormalBefore": [
+        0.0,
+        -0.17364817766693022,
+        0.9848077530122081
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        -0.17364817766693022,
+        0.9848077530122081
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.0,
+      "note": "Top face BRep bounds may overestimate fillet depth; published pocket depths checked separately."
+    },
+    {
+      "contactID": "top-sloper-20-right",
+      "nativeNormalBefore": [
+        0.0,
+        -0.34202014332566877,
+        0.9396926207859084
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        -0.34202014332566877,
+        0.9396926207859084
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.02606042997702218,
+      "note": "Top face BRep bounds may overestimate fillet depth; published pocket depths checked separately."
+    },
+    {
+      "contactID": "top-sloper-32-right",
+      "nativeNormalBefore": [
+        0.0,
+        -0.529919264233205,
+        0.8480480961564261
+      ],
+      "nativeNormalAfter": [
+        0.0,
+        -0.529919264233205,
+        0.8480480961564261
+      ],
+      "maxNormalComponentDifference": 0.0,
+      "depthExtentDifferenceMM": 0.5897577926996931,
+      "note": "Top face BRep bounds may overestimate fillet depth; published pocket depths checked separately."
+    }
+  ],
+  "candidateSHA256": "0a03a478d96ad7690cabd91c13cd3e4978434c964bc13442e4407e5a9e27994b",
+  "scope": "Scratch only; no promotion/export/review queue change."
+}

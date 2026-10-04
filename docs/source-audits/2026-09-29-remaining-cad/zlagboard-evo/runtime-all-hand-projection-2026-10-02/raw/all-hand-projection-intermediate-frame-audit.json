@@ -1,0 +1,41 @@
+{
+  "observations": [
+    {
+      "arm": "o1",
+      "intermediateFrameObservations": [
+        {
+          "frame": [
+            236.005765914917,
+            149.6357383728027,
+            401.988468170166,
+            68.66474469502768
+          ],
+          "event": "sample",
+          "sequence": 20,
+          "epoch": 1790983525.425887,
+          "secondsFromFirstActiveMutation": 0.1713252067565918,
+          "secondsBeforeFirstCapture": 0.11145687103271484
+        }
+      ]
+    },
+    {
+      "arm": "p1",
+      "intermediateFrameObservations": [
+        {
+          "frame": [
+            255.59673976898193,
+            180.4588705698649,
+            362.80652046203613,
+            62.13442007700601
+          ],
+          "event": "sample",
+          "sequence": 20,
+          "epoch": 1790983771.5496058,
+          "secondsFromFirstActiveMutation": 0.2677779197692871,
+          "secondsBeforeFirstCapture": 0.022597074508666992
+        }
+      ]
+    }
+  ],
+  "interpretation": "Different sparse samples of initial resize; endpoints equal. Original exact-set assertion remains failed. No evidence-based relaxation applied by worker."
+}

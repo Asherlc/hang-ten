@@ -1,0 +1,223 @@
+{
+  "owner": "placid-badger",
+  "reviewDate": "2026-10-02",
+  "status": "pass",
+  "scope": "Independent source-backed physical-shape and exported contact-extent review of the exact candidate; no human acceptance or app appearance claim.",
+  "candidate": {
+    "native": {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/owl-climb-poker.FCStd",
+      "sha256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553"
+    },
+    "model": {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/compile-1/assets/primary.usdz",
+      "sha256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675"
+    },
+    "descriptor": {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/compile-1/assets/primary.model.json",
+      "sha256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+    }
+  },
+  "prior": {
+    "nativeSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+    "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+    "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac"
+  },
+  "approvedSourceProvenance": "source-provenance.json",
+  "resolvedFinding": {
+    "id": "POKER-A-RELIEF-EXTENT",
+    "source": "OP-PHOTO-0 / owl-climb-poker-face-a.jpg",
+    "observation": "In the whole actual exported Face A view, both broad relief side transitions now continue beside the mono/duo row. The earlier broad uninterrupted lower strip is reduced accordingly. This matches the qualitative relationship in the whole approved manufacturer Face A photograph.",
+    "judgment": "Resolved for a source-backed display approximation; exact terminal coordinates are not manufacturer measurements."
+  },
+  "visualFindings": [
+    {
+      "id": "AB-ENTRY",
+      "status": "pass",
+      "finding": "Face A and whole A/B oblique views show a continuous soft entry into the revised broad surfaces. Face B retains two large deep sloper forms. No newly introduced sharp geometric ridge, reversal, or wavy silhouette is visible. Minor triangulated shading does not establish a physical ripple. Analytic tangent/continuity evidence supports this visual finding."
+    },
+    {
+      "id": "POCKET-INVENTORY-ORDER",
+      "status": "pass",
+      "finding": "Each of the four complete faces retains two upper outer slots, two mono pockets, two duo pockets, and one lower central slot: 28 pockets. At both ends the viewed order repeats mono then duo, matching the approved photos. No pocket is visibly displaced or merged into the revised relief."
+    },
+    {
+      "id": "CD-PRESERVATION",
+      "status": "pass",
+      "finding": "Prior/current whole C and D views and C/D obliques preserve the shallow C reliefs and substantial rounded D recesses. No new C/D junction change is visible. Actual-export regression records the same 2.7528456839127657 degree seam on both sides, 14 C rays and 8 D rays."
+    },
+    {
+      "id": "CONTACT-EXTENT",
+      "status": "pass",
+      "finding": "Exact descriptor-owned whole-USDZ overlays on A, B and A/B oblique show each changed B contact covering its own continuous broad relief, including the newly extended Face A portion. Left and right regions remain separate; color does not spill onto the outer/central pockets or unrelated body faces. These are diagnostic ownership views, not app selection/highlight validation."
+    },
+    {
+      "id": "WHOLE-BOARD-PREVIEW",
+      "status": "pass",
+      "finding": "Inspected whole prior/current front, end-side and top comparisons. Beam envelope and end silhouette are preserved; the change is localized to paired A/B reliefs. The end-side view cannot reveal internal profile shape because the full beam end occludes it, so it is supplemented by whole A/B obliques."
+    }
+  ],
+  "supportingEvidenceReviewed": {
+    "native": "One valid solid at 660 x 100 x 100 mm; 187 fully constrained sketches; 32 unaffected native contact surfaces have zero unmatched common area; meaningful 4% depth edit/restore reported. These are reviewed reports, not independently rerun native operations in this gate.",
+    "export": "Root independently reopened actual USDZ and reconstructed descriptor exactly: 35 unbound mesh nodes, 34 contacts, 91612 triangles, envelope within float tolerance, 32 unaffected contact mesh areas/bounds preserved. Candidate bytes independently SHA-256 verified by this reviewer.",
+    "manifest": "Only surfaceFinish=wood changes in the full board manifest; contact facts and four positions/rotations preserve. Visible maker-photo grain supports wood without a species claim."
+  },
+  "estimatesAndLimits": [
+    "Endpoint (-50,-20), first tangent pole (-50,-12), curve sections, radii and cavity depths are operator-authored display estimates. No photo pixel measurements were used.",
+    "Poker manifest has no per-contact depth fields. Native/export depth numbers are display-geometry guards preserving reference values, not manufacturer-published grip-depth facts.",
+    "Approved predominantly face-on photos establish qualitative form and row relationships, not exact manufacturing sections or edge radii.",
+    "No cord is documented or introduced. Mounting hardware is intentionally omitted; this does not imply that the physical product lacks it.",
+    "CPU/native/export views do not establish runtime wood appearance, app picking/highlighting, workout appearance, or human acceptance.",
+    "Second clean export reproducibility is a separate pending author validation at time of this review. This pass binds only to the exact inspected hashes."
+  ],
+  "blockers": [],
+  "viewedRenderFiles": [
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/native-face-a.png",
+      "sha256": "93666db8951e7dcb9d10fd0afc54144e7a0dc8ae5c6e470eb710401730a53ece"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/native-face-b.png",
+      "sha256": "d68fe9f217a6da723d4cb99fdabeaacab6d5ea1762dea330ae336d57e24139a7"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/native-face-c.png",
+      "sha256": "4ded3467403eba77051d105926aa03702ebf3e7ae75aa0bdfb71d977b98c7358"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/native-face-d.png",
+      "sha256": "b0cd9e9a1a10741cc0bf422372de7a7cd52212ddb68dfa6438b71c81d531e88b"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/prior-face-a.png",
+      "sha256": "c84ee92f5907a1f556a6a310f0dd6b99b70fff6743ad2ca23c49795d93f887db"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/prior-face-b.png",
+      "sha256": "d19cf126d836806c66da00b7deb8519a1458ec7f7db680ac7c4591c751aa8622"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/prior-face-c.png",
+      "sha256": "a46278fc6e685a1f10f81edcca08b57ff573f14714f1e043127b9304e9c7e34f"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/prior-face-d.png",
+      "sha256": "a74431576ee8c66611eec95a4b6dcc6180f51bdd523a5c3b1138f9865c12eb64"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/candidate-face-a.png",
+      "sha256": "bee3126da3c8317fc1b53b79405d8febbdcd089972913e7e74ce9f20fac7ee8b"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/candidate-face-b.png",
+      "sha256": "609a9181e7739eb6b5f6dce3c0ea059d84ea375db5006f7d171121461301d5bd"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/candidate-face-c.png",
+      "sha256": "a46278fc6e685a1f10f81edcca08b57ff573f14714f1e043127b9304e9c7e34f"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/candidate-face-d.png",
+      "sha256": "a74431576ee8c66611eec95a4b6dcc6180f51bdd523a5c3b1138f9865c12eb64"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-review-2026-10-02/native-face-a.png",
+      "sha256": "1bf65b8633130f36a8a0993ba22a48acd74c4bf2e6eeab649e3bb0dbeae49a45"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-review-2026-10-02/native-face-b.png",
+      "sha256": "5bf3e72c204c8bd49ff5d61fc3cb487c7c0c2c720ead616df0ecd374664edbba"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-review-2026-10-02/native-face-c.png",
+      "sha256": "1bee00d5d1544db3043edef06e840cbf527f3f7fa175b116e68b24b0c73c46fe"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-review-2026-10-02/native-face-d.png",
+      "sha256": "8bf9c71d9c0ade125b70c2f06ee84f4c1a7240862827e7604b2356c51ded21bf"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/comparison-front.png",
+      "sha256": "48d103dd44dc013d9aa0694af9fd24a3c859e81c160e124b6380a12e69ddaeac"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/comparison-side.png",
+      "sha256": "e530eb25e1c8d7fcd6e7c57cfb5010827976abd80c61877ba618a1b5a5c9c434"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/comparison-top.png",
+      "sha256": "5d7687580f62fe0550c4d793bb24089a6244e92d14467da44b6d59b427b54bd2"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/prior-ab-oblique.png",
+      "sha256": "2c6dab0b288c9aa4703228f1dc7996177bc4106391a9a9000ab540b9190c1646"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/candidate-ab-oblique.png",
+      "sha256": "af8885e010cc36bc14f81e78cf3e7baf8dd9bcf9337bf4a1852c4af06b9c416b"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/prior-cd-oblique.png",
+      "sha256": "2a71a0130e6274041fa0253bd66fea3baa5eaaf3267c72f5cad2838eb9920804"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/candidate-cd-oblique.png",
+      "sha256": "2a71a0130e6274041fa0253bd66fea3baa5eaaf3267c72f5cad2838eb9920804"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/contact-extents-a.png",
+      "sha256": "37a6d30033130b43299da14dc900a707b30afdf37f0a2a1d4f885cf8d537657d"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/contact-extents-b.png",
+      "sha256": "e11992c1f07255311c642df2f6c32b627d00187a61af99e6b1e1b5c46219ed38"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/contact-extents-ab-oblique.png",
+      "sha256": "f2551e92217f442bd8422bfc39fc414916b22259033807b23e146d9a40d42970"
+    }
+  ],
+  "supportFiles": [
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/render-provenance.json",
+      "sha256": "c8e2f44a7789b4297c500dccddf59ed1a20a1375a9e72745aa04ab1861e066f3"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/contact-extents.json",
+      "sha256": "65ef9dacfc62f961915612bf4d0a66de828578577f2a1d26966374cbf85c3ec4"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/selected-curve.json",
+      "sha256": "0c93910466efb159b66e6eac20f4c153f84189607b910645df12f359780bac4e"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/native-validation.json",
+      "sha256": "b6d1e98313bec1673387227994eda20f4f340048bdaa085c3f11152e60d229bd"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/metadata-feature-preservation.json",
+      "sha256": "ef166fd04dc187b1f6ef68adf27d4904cac6084d6eeb1f78756fc8a89115818b"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/compile-1-report.json",
+      "sha256": "e8fa8ed83095f36807c3735abacbd420d0fa3e221c6bc4c1219468d5f7e1d91b"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/cd-first-regression.json",
+      "sha256": "b0d9cebfaf39bef81fd3da0b7574967dae3990b0b72d929eaf1cf4484aa816f1"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/native-correction-2026-10-02/geometry-authoring-notes.md",
+      "sha256": "03f8c5c8e79289a01151464e529cef851c215d3933d9768f69122cffd0badcbf"
+    },
+    {
+      "path": ".context/placid-badger/poker-review12/root/independent-export-validation.json",
+      "sha256": "820c2319dde902375d131c008b55fb58573e487a770bebc56f3475ec2384e9c1"
+    }
+  ],
+  "resourceLifecycle": {
+    "externalResourcesStarted": [],
+    "cleanupRequired": false,
+    "canonicalFilesModified": false,
+    "photoProcessingPerformed": false
+  }
+}

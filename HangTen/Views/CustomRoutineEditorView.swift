@@ -9,6 +9,7 @@ struct CustomRoutineEditorView: View {
     @State private var selectedMode: EditorTargetMode
     @State private var selectedBoardID: String
     @State private var persistenceError: String?
+    @State private var hasAttemptedSave = false
     @State private var editMode = EditMode.inactive
 
     init(
@@ -45,39 +46,60 @@ struct CustomRoutineEditorView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                routineSection
-                stepsSection
-            }
-            .environment(\.editMode, $editMode)
-            .scrollContentBackground(.hidden)
-            .background(Color.hangBackground)
-            .onChange(of: draft.steps.count) { _, count in
-                if count < 2 { editMode = .inactive }
-            }
-            .navigationTitle(isExistingRoutine ? "Edit routine" : "Create routine")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
+            ScrollViewReader { scrollProxy in
+                List {
+                    if !validationIssues.isEmpty {
+                        Section("Check routine") {
+                            Text(validationIssues.joined(separator: "\n"))
+                                .foregroundStyle(.red)
+                                .accessibilityIdentifier("customRoutine.validationErrors")
+                        }
+                        .id("customRoutine.validation")
                     }
+                    routineSection
+                    stepsSection
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save", action: save)
+                .environment(\.editMode, $editMode)
+                .scrollContentBackground(.hidden)
+                .background(Color.hangBackground)
+                .onChange(of: draft.steps.count) { _, count in
+                    if count < 2 { editMode = .inactive }
+                }
+                .navigationTitle(isExistingRoutine ? "Edit routine" : "Create routine")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            dismiss()
+                        }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            save()
+                            if !validationIssues.isEmpty {
+                                withAnimation {
+                                    scrollProxy.scrollTo("customRoutine.validation", anchor: .top)
+                                }
+                            }
+                        }
                         .buttonStyle(.borderedProminent)
                         .tint(.hangGreenDark)
                         .accessibilityIdentifier("customRoutine.save")
+                    }
                 }
-            }
-            .alert("Couldn’t save routine", isPresented: persistenceAlertBinding) {
-                Button("OK", role: .cancel) {
-                    persistenceError = nil
+                .alert("Couldn’t save routine", isPresented: persistenceAlertBinding) {
+                    Button("OK", role: .cancel) {
+                        persistenceError = nil
+                    }
+                } message: {
+                    Text(persistenceError ?? "An unknown persistence error occurred.")
                 }
-            } message: {
-                Text(persistenceError ?? "An unknown persistence error occurred.")
             }
         }
+    }
+
+    private var validationIssues: [String] {
+        hasAttemptedSave ? Self.localValidationIssues(for: draft.definition()) : []
     }
 
     private var routineSection: some View {
@@ -214,12 +236,10 @@ struct CustomRoutineEditorView: View {
     }
 
     private func save() {
+        hasAttemptedSave = true
         let definition = draft.definition()
         let issues = Self.localValidationIssues(for: definition)
-        guard issues.isEmpty else {
-            persistenceError = issues.joined(separator: "\n")
-            return
-        }
+        guard issues.isEmpty else { return }
 
         do {
             try onSave(definition)
@@ -401,6 +421,7 @@ private struct CustomRoutineStepEditor: View {
                 BoardMapView(
                     board: board,
                     highlightedHoldIDs: selectedHoldIDs,
+                    selectedPresentationID: CustomRoutineBoardPreview.presentationID(for: step, on: board),
                     activeHoldID: activeHoldID,
                     onHoldTap: toggleHold
                 )
@@ -577,33 +598,7 @@ private struct CustomRoutineStepEditor: View {
 
     private func toggleHold(_ hold: PhysicalContact) {
         activeHoldID = hold.id
-        var holdIDs = selectedHoldIDs
-        if !holdIDs.insert(hold.id).inserted {
-            holdIDs.remove(hold.id)
-        }
-        guard !holdIDs.isEmpty else {
-            step.targets = []
-            return
-        }
-        let selectedContacts = board.contacts.filter { holdIDs.contains($0.id) }
-        guard let contact = selectedContacts.first else {
-            step.targets = []
-            return
-        }
-        let selection: ContactSelectionPolicy = step.handUse == .double
-            ? .bilateralPair
-            : .single
-        step.targets = [
-            ContactRequirement(
-                contactID: step.handUse == .single ? contact.id : nil,
-                kind: contact.kind,
-                shape: contact.shape,
-                depth: contact.depth,
-                fingerCapacity: contact.fingerCapacity,
-                handCapacity: contact.handCapacity,
-                selection: selection
-            )
-        ]
+        CustomRoutineBoardPreview.toggle(hold, in: &step, on: board)
     }
 }
 

@@ -1,0 +1,59 @@
+{
+  "reviewedAt": "2026-09-30T17:05:28.913594+00:00",
+  "reviewer": "cad_wall_boards",
+  "status": "Acceptance design review; implementation and final native result pending",
+  "scope": "Bounded geometric tightening of certified native routes; not a full rope equilibrium solver. No shared edits or heavy jobs.",
+  "requiredInvariants": [
+    "Actual source-backed mouth centers and outward front axes remain fixed; source/model bytes and physical/display dimensions remain unchanged.",
+    "World support remains fixed. Body-space support must be recomputed from the actual rounded pose translation and rotation after every height update.",
+    "No cached hand-authored route as the solver input. Generate a native certified seed reproducibly, then tighten only for explicitly opted-in packages.",
+    "Absent opt-in, delegate through the exact prior solver path so all unrelated cached bytes remain unchanged."
+  ],
+  "frontEntryAndAperture": {
+    "preferred": "Keep the exact terminal mouth fixed. Require positive dot(previousPoint-mouth, outwardAxis) for the final segment, exceeding only a documented numerical tolerance. Certify the full final swept tube against the native aperture/solid, not only its endpoints.",
+    "freePreviousVertex": "The predecessor can move in 3D or disappear if the next direct predecessor-to-mouth chord remains front-entering and certifies. It must not remain a required station along the mouth axis.",
+    "rejectedAlternative": "A fixed radius-long axial witness imposes another unsupported bearing. It is not justified by radius or by the source-backed direction alone.",
+    "ifWitnessNeeded": "Derive admissible approach from the actual native opening, allow angular freedom within the clear aperture, and distinguish numerical tolerances from fixed geometric constraints.",
+    "negativeTests": [
+      "Wrong-side approach that is solid-clear through the back bore still fails.",
+      "Oblique front-entry segment through a clear aperture succeeds without an artificial axial knee.",
+      "A front-entering chord grazing the mouth rim fails full swept-tube clearance."
+    ]
+  },
+  "cheapDeterministicAlgorithm": [
+    "Begin from a certified native seed; order strand IDs and vertices deterministically.",
+    "At fixed height, minimize sum of visible polyline lengths. First try certified vertex removal; otherwise try projection onto the neighbor chord and bounded backtracking/component proposals. Prune duplicate/zero-length nodes before validation.",
+    "Free collar vertices use the same proposals as other free-space vertices. Do not retain the global support-plane collar as a pin.",
+    "Each proposed move checks complete affected segments against the full native solid and the entire set of paths against the unchanged self/interstrand gate. Other leads are obstacles, not independent afterthoughts.",
+    "Accept only a measurable objective decrease at fixed height. Use bounded deterministic passes and step sizes; do not claim global optimality.",
+    "After tightening, bracket and re-settle body height under the fixed world support to the longest-route/rest-length ratio of one. Recompute the transformed support, re-tighten, and recertify; height movement invalidates prior support-segment certificates.",
+    "Only publish after length/height convergence and a final gate on the exact rounded runtime cache; reject exhausted/uncertified candidates rather than publishing the old seed as a successful tightening."
+  ],
+  "supportedBendAcceptance": {
+    "necessaryCondition": "A substantial interior turn must either be within the declared numerical clearance band of a genuine wood/tube contact or resist every tested feasible local shortening. Physical terminal points are the only fixed endpoint exception.",
+    "cheapCounterexampleProbe": "For a free-space corner with positive obstacle margin, cut a small equal length from both incident segments and certify the joining chord plus whole-path tube gate. A meaningful shortening that passes is evidence of an unsupported bend and prevents a convergence claim.",
+    "numericalMeaning": "Use a named positional/length tolerance finer than visible cord radius; keep the existing 10 micrometre solid tolerance unchanged. Do not use the entire rope radius as a quality/convergence tolerance.",
+    "limitedClaim": "Failure to find a local shortening is bounded local geometric stationarity, not proof of global shortest path or force/friction equilibrium."
+  },
+  "couplingAndSettlingTests": [
+    "A individually solid-clear shortcut crossing another cord is rejected.",
+    "A thin obstacle between endpoints is detected by complete-segment certification.",
+    "A height change that makes a previously clear support segment clip a lip is rejected or re-solved.",
+    "Paths that certify before 9-decimal rounding but fail after rounding are not published.",
+    "Nonfinite/duplicate nodes, invalid front entry, excessive route length, or nonconvergence fail explicitly.",
+    "Unchanged no-opt-in behavior has exact route/height equality; repeated opted-in solve produces byte-identical routes.",
+    "An open-cavity synthetic seed containing the former artificial collar knee relaxes to a shorter front-entering path with no new unsupported knee."
+  ],
+  "lengthSemantics": {
+    "preserve": "Existing maximum route/rest-length settle rule can remain for this bounded geometric correction. Record each final ratio and actual displayed length.",
+    "limitation": "The current upper DUAL lead omits about 52.86 mm relative to its 400 mm declared rest length. Tightening cannot establish equilibrium of two equally long taut independent ropes with that slack omitted. Do not silently change lengths, invent a hidden connection or claim both leads taut.",
+    "qualityComparison": "Compare before/after path length at the same pose height to substantiate tightening; comparing final total length alone after height re-settle can hide improvements."
+  },
+  "finalNativeAcceptance": [
+    "All four opted-in DUAL poses reproduce from current code with unchanged source/model and source-backed front entry.",
+    "Every complete rounded path passes unchanged continuous native-solid and self/interstrand tube certification.",
+    "The vertical lower lead no longer contains the measured unsupported collar knee or another feasible free-space shortening above tolerance.",
+    "All unrelated packages including Baguette retain exact sidecar/routes/height hashes.",
+    "Current front/side/top and native app views show the resulting changed geometry; visuals are not a substitute for the geometric gates."
+  ]
+}

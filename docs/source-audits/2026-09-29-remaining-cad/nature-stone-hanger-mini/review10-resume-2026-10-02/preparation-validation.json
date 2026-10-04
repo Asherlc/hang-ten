@@ -1,0 +1,46 @@
+{
+  "owner": "placid-badger",
+  "verifiedUTC": "2026-10-03T03:17:00.703879+00:00",
+  "baselineCommit": "5eae12bb9c0493c7b29f982d92ab855ac7f5696c",
+  "canonicalFiles": {
+    "count": 4,
+    "sha256": {
+      "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+      "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+      "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+      "Hangboards/nature-stone-hanger-mini/suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+    },
+    "unchanged": true
+  },
+  "otherPackageFiles": {
+    "count": 202,
+    "unchanged": true
+  },
+  "reservedPaths": {
+    "count": 7,
+    "sha256": {
+      "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+      "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+      "HangTen/Views/RootView.swift": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+      "HangTenTests/BoardModelRealityTests.swift": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+      "HangTenTests/BoardModelTests.swift": "89d5778a9b85181315bf281921f493ec771c6c8ddd92ef1106ec643fd6ec1fd7",
+      "HangTen/Views/GripHandModelView.swift": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "HangTen/Views/TrainView.swift": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99"
+    },
+    "unchanged": true,
+    "contentsRead": false
+  },
+  "immutableCompletionPacket": {
+    "count": 222,
+    "unchanged": true
+  },
+  "manifestSHA256": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f",
+  "wholeViewsDirectlyInspected": true,
+  "rootsExternalResources": [],
+  "workerCleanupIndependentlyVerified": true,
+  "currentAppFrames": 0,
+  "newTestsExecuted": 0,
+  "reasonForNoNewTests": "Documentation and faithful read-only previews of unchanged assets; existing geometry/export/cord checks retained.",
+  "currentAcceptance": "pending; no human answer inferred",
+  "priorApprovalPreserved": true
+}

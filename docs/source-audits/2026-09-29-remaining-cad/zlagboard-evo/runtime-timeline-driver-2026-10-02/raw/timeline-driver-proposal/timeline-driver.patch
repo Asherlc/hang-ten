@@ -1,0 +1,168 @@
+--- a/HangTen/Views/RootView.swift
++++ b/HangTen/Views/RootView.swift
+@@ -3780,33 +3780,21 @@
+ @MainActor
+ private struct StandaloneBoardHighlightProbe: View {
+     private enum Selection: String { case active, preview, clear }
++    private struct SemanticSelection: Equatable {
++        let ids: Set<String>
++        let mode: BoardHighlightMode
++        let positionID: String?
++    }
+     @State private var selection: Selection = .clear
++    @State private var scriptEpoch: TimeInterval?
++    private var driver: String { env["HANGTEN_REVIEW_STANDALONE_DRIVER"] ?? "A" }
+     private let env = ProcessInfo.processInfo.environment
+     private var viewport: CGSize {
+         CGSize(width: Double(env["HANGTEN_REVIEW_STANDALONE_WIDTH"] ?? "210") ?? 210,
+                height: Double(env["HANGTEN_REVIEW_STANDALONE_HEIGHT"] ?? "36") ?? 36)
+     }
+     var body: some View {
+-        VStack(spacing: 24) {
+-            Text("Standalone board: \(selection.rawValue)")
+-                .accessibilityIdentifier("standalone.state")
+-            if let board = BoardCatalog.all.first(where: { $0.id == "zlagboard.evo" }) {
+-                BoardModelSurface(board: board, presentation: board.defaultPresentation,
+-                    positionID: board.position(presentationID: board.defaultPresentation.id,
+-                                               containingContactID: "edge-20-left")?.id,
+-                    highlightedContactIDs: selection == .clear ? [] : ["edge-20-left", "edge-20-right"],
+-                    highlightMode: selection == .preview ? .preview : .active,
+-                    onContactTap: nil, isDisplayOnly: false)
+-                    .frame(width: viewport.width, height: viewport.height)
+-            } else {
+-                Text("Missing Evo catalog entry")
+-            }
+-            HStack {
+-                control("Active", .active)
+-                control("Preview", .preview)
+-                control("Clear", .clear)
+-            }
+-        }
++        driverContent
+         .frame(maxWidth: .infinity, maxHeight: .infinity)
+         .background(Color.hangBackground)
+         .task { await runScript() }
+@@ -3819,8 +3807,69 @@
+                                                          viewport: viewport)
+         }
+     }
++    @ViewBuilder
++    private var driverContent: some View {
++        if driver == "A" {
++            fixedContent(phase: selection)
++        } else {
++            TimelineView(.periodic(from: .now, by: 0.25)) { _ in
++                // Production also reads monotonic uptime rather than context.date.
++                let phase = driver == "C" ? derivedPhase(at: ProcessInfo.processInfo.systemUptime) : selection
++                fixedContent(phase: phase)
++            }
++        }
++    }
++
++    private func derivedPhase(at uptime: TimeInterval) -> Selection {
++        guard let scriptEpoch else { return .clear }
++        let elapsed = uptime - scriptEpoch
++        if elapsed < 8 { return .clear }
++        if elapsed < 16 { return .active }
++        if elapsed < 24 { return .preview }
++        if elapsed < 32 { return .active }
++        return .preview
++    }
++
++    private func fixedContent(phase: Selection) -> some View {
++        VStack(spacing: 24) {
++            Text("Standalone board: \(phase.rawValue)")
++                .accessibilityIdentifier("standalone.state")
++            if let board = BoardCatalog.all.first(where: { $0.id == "zlagboard.evo" }) {
++                let semantic = SemanticSelection(
++                    ids: phase == .clear ? [] : ["edge-20-left", "edge-20-right"],
++                    mode: phase == .preview ? .preview : .active,
++                    positionID: board.position(presentationID: board.defaultPresentation.id,
++                                               containingContactID: "edge-20-left")?.id)
++                BoardModelSurface(board: board, presentation: board.defaultPresentation,
++                    positionID: semantic.positionID,
++                    highlightedContactIDs: semantic.ids,
++                    highlightMode: semantic.mode,
++                    onContactTap: nil, isDisplayOnly: false)
++                    .frame(width: viewport.width, height: viewport.height)
++                    .onChange(of: semantic, initial: true) { _, observed in
++                        BoardHighlightDiagnostic.shared.harnessObservedSelection(
++                            state: observed.ids.isEmpty ? "clear" : (observed.mode == .preview ? "preview" : "active"),
++                            ids: observed.ids, mode: observed.mode, positionID: observed.positionID,
++                            viewport: viewport)
++                    }
++            } else {
++                Text("Missing Evo catalog entry")
++            }
++            HStack {
++                control("Active", .active)
++                control("Preview", .preview)
++                control("Clear", .clear)
++            }
++        }
++    }
++
+     private func runScript() async {
+         let recorder = BoardHighlightDiagnostic.shared
++        guard ["A", "B", "C"].contains(driver),
++              env["HANGTEN_REVIEW_SCENE_UPDATE_COUNTER"] != "1" else {
++            recorder.harnessEvent("standalone-driver-invalid", state: driver, viewport: viewport)
++            return
++        }
+         let readyDeadline = ProcessInfo.processInfo.systemUptime + 20
+         do {
+             while !recorder.standaloneIsReady {
+@@ -3840,22 +3889,24 @@
+             }
+             // Future epoch lets host schedule screenshots before the first state window.
+             let baseUptime = ProcessInfo.processInfo.systemUptime + 2
++            scriptEpoch = baseUptime // Established once, before the measurement window.
+             recorder.standaloneSchedule(baseUptime: baseUptime, viewport: viewport)
+             defer { recorder.finishStandaloneObservation() }
+             let phases: [Selection] = [.clear, .active, .preview, .active, .preview]
+             for (index, phase) in phases.enumerated() {
+                 let start = baseUptime + Double(index * 8)
+                 try await sleepUntil(start)
+-                recorder.harnessEvent("standalone-request-\(index)", state: phase.rawValue,
++                recorder.harnessEvent("standalone-intended-\(index)", state: phase.rawValue,
+                                       viewport: viewport)
+-                if selection != phase { selection = phase }
++                // C's task observes only: no state writes after epoch establishment.
++                if driver != "C", selection != phase { selection = phase }
+                 // Predetermined sparse snapshots, no 1 Hz sampler in standalone mode.
+                 for offset in [0.15, 0.85, 1.75, 2.85, 3.75, 6.85, 7.75] {
+                     try await sleepUntil(start + offset)
+                     recorder.standaloneSnapshot("standalone-snapshot-\(index)-\(offset)")
+                 }
+             }
+-            recorder.harnessEvent("standalone-script-complete", state: selection.rawValue,
++            recorder.harnessEvent("standalone-script-complete", state: "preview",
+                                   viewport: viewport)
+         } catch {
+             recorder.harnessEvent("standalone-script-cancelled", state: selection.rawValue,
+--- a/HangTen/Models/BoardModelRealityTypes.swift
++++ b/HangTen/Models/BoardModelRealityTypes.swift
+@@ -1500,6 +1500,7 @@
+             }
+         }
+         emit(["event": "standalone-schedule", "baseUptime": baseUptime,
++              "driver": ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_DRIVER"] ?? "A",
+               "baseEpoch": Date().timeIntervalSince1970 + baseUptime - ProcessInfo.processInfo.systemUptime,
+               "phases": ["clear", "active", "preview", "active", "preview"],
+               "phaseSeconds": 8, "captureOffsets": [0.25, 1.0, 3.0, 7.0],
+@@ -1518,6 +1519,15 @@
+         standaloneSubscription?.cancel()
+         standaloneSubscription = nil
+         standaloneCounter = nil
++    }
++
++    func harnessObservedSelection(state: String, ids: Set<String>, mode: BoardHighlightMode,
++                                  positionID: String?, viewport: CGSize) {
++        guard enabled else { return }
++        emit(["event": "standalone-observed-selection", "state": state,
++              "ids": ids.sorted(), "mode": String(describing: mode),
++              "positionID": positionID ?? "nil",
++              "viewportPoints": [Double(viewport.width), Double(viewport.height)]])
+     }
+ 
+     func harnessEvent(_ event: String, state: String, viewport: CGSize) {

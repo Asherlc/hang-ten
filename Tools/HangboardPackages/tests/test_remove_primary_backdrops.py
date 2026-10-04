@@ -35,32 +35,7 @@ def test_enclosed_background_seeds_have_live_raster_inputs() -> None:
 
 
 @pytest.mark.parametrize(
-    ("package", "hole", "preserved"),
-    [
-        ("yy-travelboard", (190, 625), (768, 512)),
-        ("yy-travelboard", (1348, 625), (768, 512)),
-    ],
-)
-def test_known_enclosed_background_fixtures_clear_only_the_named_through_holes(
-    package: str, hole: tuple[int, int], preserved: tuple[int, int]
-) -> None:
-    """Regression fixtures for the white through-holes rembg leaves opaque."""
-    module = _load_script()
-    path = HANGBOARDS_ROOT / package / "assets" / "primary.png"
-    with Image.open(path) as source_image:
-        source = source_image.convert("RGBA")
-    opaque_mask = Image.new("L", source.size, color=255)
-
-    corrected = module._clear_known_enclosed_backgrounds(
-        source, opaque_mask, package
-    )
-
-    assert corrected.getpixel(hole) == 0
-    assert corrected.getpixel(preserved) == 255
-
-
-@pytest.mark.parametrize(
-    "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii", "soill-training-tiles", "yy-penta-evo", "trango-rock-prodigy-pivot", "yy-verticalboard-first", "yy-verticalboard-light", "yy-verticalboard-one", "yy-verticalboard-evo", "tension-honestone", "tension-grindstone-original")
+    "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii", "soill-training-tiles", "yy-penta-evo", "trango-rock-prodigy-pivot", "yy-travelboard", "yy-verticalboard-first", "yy-verticalboard-light", "yy-verticalboard-one", "yy-verticalboard-evo", "tension-honestone", "tension-grindstone-original")
 )
 def test_model_only_packages_exclude_raster_backdrop_inputs(package: str) -> None:
     """Require migrated model packages to ship descriptors and USDZ without raster backdrop inputs."""

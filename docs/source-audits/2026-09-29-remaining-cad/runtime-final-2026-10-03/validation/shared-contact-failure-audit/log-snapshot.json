@@ -1,0 +1,7 @@
+{
+  "observedUTC": "2026-10-03T18:26:15.396208+00:00",
+  "path": ".context/placid-badger/runtime-final-2026-10-03/commands/full-green.log",
+  "sha256AtRead": "c735ad87da545cca548d5ac08a29b5520d7a439610468dc31b516de132725fa3",
+  "logMayStillBeGrowing": true,
+  "retainedExcerpt": "failure-lines.txt"
+}

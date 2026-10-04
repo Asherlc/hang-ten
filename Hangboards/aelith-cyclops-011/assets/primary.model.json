@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+  "modelBounds": {
+    "min": [
+      -0.021818301,
+      -0.027844667,
+      -0.0175
+    ],
+    "max": [
+      0.021818843,
+      0.026047928,
+      0.0125
+    ]
+  },
+  "nodes": [
+    {
+      "nodeID": "cyclops_body",
+      "role": "body"
+    },
+    {
+      "nodeID": "cyclops_mono",
+      "role": "contact",
+      "contactID": "mono-20"
+    }
+  ],
+  "contacts": {
+    "mono-20": {
+      "nodeIDs": [
+        "cyclops_mono"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.099224318,
+          0.089836693
+        ],
+        "max": [
+          0.90074465,
+          0.898778182
+        ]
+      },
+      "center": [
+        0.499984484,
+        0.494307438
+      ]
+    }
+  }
+}

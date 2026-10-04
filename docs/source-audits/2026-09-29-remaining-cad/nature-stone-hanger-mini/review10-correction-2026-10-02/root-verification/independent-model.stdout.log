@@ -1,0 +1,27 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "sourceOnly": true,
+  "sidecarOrRuntimeNotValidatedHere": true,
+  "identities": {
+    "nature-stone-hanger-mini.FCStd": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4",
+    "assets/primary.usdz": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754",
+    "assets/primary.model.json": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+  },
+  "triangleCount": 28842,
+  "triangleMultisetExactPrior": true,
+  "duplicateTriangles": 0,
+  "unboundMeshes": 5,
+  "factualContactsUnchanged": true,
+  "pinchOriginalPhysicalTriangleUnionExact": true,
+  "oldJugWallReturnedToBody": true,
+  "stoneAndWoodContactsExact": true,
+  "jugOnFrontUpright": true,
+  "removedWrongQuarterTurn": true,
+  "publishedDepthMM": [
+    15,
+    15,
+    60
+  ],
+  "nativeDepthProof": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/native-author/shared-native-author-proof.json"
+}

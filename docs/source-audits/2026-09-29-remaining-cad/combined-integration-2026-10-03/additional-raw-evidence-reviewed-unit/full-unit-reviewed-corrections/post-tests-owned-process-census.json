@@ -1,0 +1,31 @@
+{
+  "epoch": 1791071620.111617,
+  "allUnitCasesCompletedWithZeroFailures": true,
+  "ownedCommandDescendants": [
+    {
+      "pid": 6770,
+      "parentPID": 91912,
+      "elapsed": "05:57",
+      "command": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl diagnose -l -b --timeout=600 --log-option=--last --log-option=6m --output=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult/Staging/1_Test/Diagnostics/simctl_diagnostics --no-archive --udid=055BDCE2-3263-470D-89DF-04B967EF7790"
+    },
+    {
+      "pid": 91911,
+      "parentPID": 91896,
+      "elapsed": "10:31",
+      "command": "rtk proxy xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination platform=iOS Simulator,id=055BDCE2-3263-470D-89DF-04B967EF7790 -derivedDataPath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/DerivedData-placid-badger-cad-second-half -resultBundlePath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1 -only-testing:HangTenTests test-without-building"
+    },
+    {
+      "pid": 91912,
+      "parentPID": 91911,
+      "elapsed": "10:31",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination platform=iOS Simulator,id=055BDCE2-3263-470D-89DF-04B967EF7790 -derivedDataPath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/DerivedData-placid-badger-cad-second-half -resultBundlePath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1 -only-testing:HangTenTests test-without-building"
+    },
+    {
+      "pid": 91925,
+      "parentPID": 91912,
+      "elapsed": "10:28",
+      "command": "/Applications/Xcode.app/Contents/SharedFrameworks/DVTInstrumentsFoundation.framework/Resources/DTServiceHub"
+    }
+  ],
+  "scope": "Read-only exact command descendants; no other process ownership/action inferred"
+}

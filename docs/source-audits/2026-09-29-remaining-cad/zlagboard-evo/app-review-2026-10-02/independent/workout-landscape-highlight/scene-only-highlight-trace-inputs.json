@@ -1,0 +1,21 @@
+{
+  "atUTC": "2026-10-02T06:08:37.236196+00:00",
+  "instrumentationScope": "Only BoardModelRealityScene.highlight; no SwiftUI trace/body changes.",
+  "stages": [
+    "before",
+    "cached-noop",
+    "after"
+  ],
+  "fields": [
+    "uptime",
+    "scene identity",
+    "model SHA",
+    "requested mode/IDs",
+    "prior cached mode/IDs",
+    "actual material RGBA",
+    "entity scene attachment"
+  ],
+  "patchSHA256": "b16885953c42fb1384d6929d60947977818bb8d7199ec0334f783bb3416cf844",
+  "temporary": true,
+  "candidateTwoStillUnverified": "Actual normal reverse failure persists; all6 installed Mach-O files match current build, including debug dylib."
+}

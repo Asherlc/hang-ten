@@ -1,0 +1,103 @@
+{
+  "boardID": "yy.travelboard",
+  "owner": "placid-badger-cad-second-half",
+  "status": "passed",
+  "humanAcceptance": "pending explicit user reply",
+  "pathConvention": "All evidence paths are relative to this aggregate directory unless stated otherwise.",
+  "sourcePackage": {
+    "Hangboards/yy-travelboard/yy-travelboard.FCStd": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+    "Hangboards/yy-travelboard/assets/primary.usdz": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+    "Hangboards/yy-travelboard/assets/primary.model.json": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+    "Hangboards/yy-travelboard/suspension.json": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4"
+  },
+  "device": {
+    "uuid": "218DD2D3-AD28-4F6A-AF3F-C893CB3FDF88",
+    "model": "iPhone 17 Pro",
+    "os": "iOS 26.5"
+  },
+  "build": {
+    "status": "passed",
+    "rawLog": "build.log"
+  },
+  "tests": {
+    "status": "passed",
+    "passed": 1,
+    "failed": 0,
+    "selection": [
+      "HangTenTests/SuspendedBoardPresentationTests/testNativeCADRoutesKeepTheWorldSupportAndExactBodyPose"
+    ],
+    "rawLog": "tests.log",
+    "summary": "test-results-summary.json"
+  },
+  "captures": {
+    "status": "passed",
+    "contacts": 6,
+    "poses": 2,
+    "coverage": "capture-coverage.json",
+    "successfulRawReport": "captures-retry/validation.json",
+    "originalPartialRawReport": "captures/validation.json",
+    "originalFailure": "captures/failure.txt",
+    "failureExplanation": "Initial immediate AXe query returned no translation object. Original raw failure preserved; subsequent screenshot showed the app. Separate retry after launch settling completed coverage.",
+    "failureScreenshot": "first-axe-failure/after-failure.png",
+    "sheets": [
+      "review-montages/selections-1.png",
+      "review-montages/selections-2.png",
+      "review-montages/orbits-1.png",
+      "app-review-front-rear-tray.png"
+    ]
+  },
+  "physicalProbes": {
+    "status": "passed",
+    "rawReport": "physical-probes/validation.json",
+    "checks": {
+      "actualOrbit": true,
+      "physicalContactResetCanonical": true,
+      "physicalContactResetChanged": true,
+      "leftCordSelectionUnchanged": true,
+      "leftCordContactFramesUnchanged": true,
+      "rightCordSelectionUnchanged": true,
+      "rightCordContactFramesUnchanged": true,
+      "noCordAccessibilityElement": true,
+      "physicalEdge15Selected": true,
+      "physicalLeftMonoSelected": true,
+      "physicalRightMonoSelected": true
+    },
+    "limit": "No public clear-selection/reset control exists. Actual scene-contact tap restores canonical pose. Cord taps preserve selection and contact frames, with no cord AX element."
+  },
+  "workout": {
+    "status": "passed",
+    "planID": "coach.horst-seven-fifty-three",
+    "interpretation": "Existing unchanged routine used only for runtime board integration validation, not a TravelBoard manufacturer prescription. Its 14\u201320 mm edge resolves to the available 15 mm edge.",
+    "rawReport": "workout-settled/validation.json",
+    "active": "workout-settled/active-settled.png",
+    "rest": "workout-settled/following-rest-settled.png",
+    "visualReview": "Worker and root inspected settled frames: correct 15 mm red active highlight, blue next-hold rest preview, complete wood board and short cords."
+  },
+  "parity": {
+    "status": "passed",
+    "sixSourceStagedInstalledComparisons": "captures/package-parity.json",
+    "builtInstalledBinary": "captures/binary-parity.json",
+    "generatedManifest": "generated-board-at-build.json"
+  },
+  "mainVisualReview": {
+    "status": "passed",
+    "attribution": "Root agent reviewed six contact selections, both pose orbits and active/rest workout images; this is technical visual review, not human acceptance. Root retains separate hash-bound main-visual-review.json in the documentation packet."
+  },
+  "limits": [
+    "Display presentation validation does not establish manufacturing or ergonomic accuracy.",
+    "Original asset is raster; no original 3D side/top baseline exists. Native comparison evidence is retained separately.",
+    "Original AXe failure and retry reports remain unchanged."
+  ],
+  "cleanup": {
+    "status": "passed",
+    "ownership": "ownership.json",
+    "verification": "cleanup-verification.json",
+    "observed": {
+      "uuid": "218DD2D3-AD28-4F6A-AF3F-C893CB3FDF88",
+      "simulatorDeleted": true,
+      "derivedDataDeleted": true,
+      "resultBundleDeleted": true,
+      "testResultBundleDeleted": true
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/3266E786-B62F-4F37-9C79-56DB4B828A7F/Documents/HighlightDiagnostic-placid-badger-cad-second-half-root-workout-2-direct/events-E592AD8C-0C2C-4005-A5EE-405F4E2DF54C.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-2-landscape/events-E592AD8C-0C2C-4005-A5EE-405F4E2DF54C.jsonl",
+      "sha256": "dd831c2937a6d8519b8d1a855c475b7871e8c6ba29e971ea719b2911f227d7a1"
+    }
+  ],
+  "records": 143,
+  "completeContiguous": true,
+  "copiedEpoch": 1790978979.71681,
+  "includesSamplerEnd": true
+}

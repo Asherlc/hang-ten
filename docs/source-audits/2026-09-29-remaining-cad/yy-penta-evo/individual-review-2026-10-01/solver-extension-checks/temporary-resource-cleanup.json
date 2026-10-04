@@ -1,0 +1,7 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "exactPath": "/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-455",
+  "source": "pytest temporary directory emitted by this run",
+  "note": "Default pytest temporary directory used inadvertently; future runs use owned --basetemp. Only exact emitted directory removed.",
+  "verifiedAbsent": true
+}

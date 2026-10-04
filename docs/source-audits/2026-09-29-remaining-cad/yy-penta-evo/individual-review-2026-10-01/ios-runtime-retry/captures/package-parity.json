@@ -1,0 +1,44 @@
+[
+  {
+    "stage": "staged",
+    "relativePath": "Hangboards/yy-penta-evo/board.json",
+    "sha256": "58c9e678d0949d0b5728febb850b9d911f79f18a7c7a990779ce6f3d91471e63",
+    "expectedSHA256": "58c9e678d0949d0b5728febb850b9d911f79f18a7c7a990779ce6f3d91471e63",
+    "bytesEqual": true
+  },
+  {
+    "stage": "staged",
+    "relativePath": "Hangboards/yy-penta-evo/assets/primary.model.json",
+    "sha256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+    "expectedSHA256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+    "bytesEqual": true
+  },
+  {
+    "stage": "staged",
+    "relativePath": "OnDemandResources/com.hangten.training.hang-ten-model-yy-penta-evo-6c68fa07041cd8b8102f833dd1e92117.assetpack/Hangboards/yy-penta-evo/assets/primary.usdz",
+    "sha256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+    "expectedSHA256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "Hangboards/yy-penta-evo/board.json",
+    "sha256": "58c9e678d0949d0b5728febb850b9d911f79f18a7c7a990779ce6f3d91471e63",
+    "expectedSHA256": "58c9e678d0949d0b5728febb850b9d911f79f18a7c7a990779ce6f3d91471e63",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "Hangboards/yy-penta-evo/assets/primary.model.json",
+    "sha256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+    "expectedSHA256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "OnDemandResources/com.hangten.training.hang-ten-model-yy-penta-evo-6c68fa07041cd8b8102f833dd1e92117.assetpack/Hangboards/yy-penta-evo/assets/primary.usdz",
+    "sha256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+    "expectedSHA256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+    "bytesEqual": true
+  }
+]

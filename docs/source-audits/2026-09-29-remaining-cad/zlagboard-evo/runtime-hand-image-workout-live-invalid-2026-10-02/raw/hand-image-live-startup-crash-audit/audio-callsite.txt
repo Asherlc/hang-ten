@@ -1,0 +1,19 @@
+438: 
+439: private final class SystemCountdownAudioBufferPlayback: CountdownAudioBufferPlayback {
+440:     private let engine = AVAudioEngine()
+441:     private let playerNode = AVAudioPlayerNode()
+442:     private var connectedFormat: AVAudioFormat?
+443: 
+444:     init() {
+445:         engine.attach(playerNode)
+446:     }
+447: 
+448:     func prepare(format: AVAudioFormat) {
+449:         if connectedFormat == nil {
+450:             engine.connect(playerNode, to: engine.mainMixerNode, format: format)
+451:             connectedFormat = format
+452:         }
+453:         engine.prepare()
+454:     }
+455: 
+456:     func start() throws {

@@ -1,0 +1,5 @@
+{
+  "error": "SyntaxError: extra quote at protocol startup string boundary",
+  "file": "workout-sync-delivery-counter.py",
+  "correction": "Removed duplicated closing quote only; no runtime executed"
+}

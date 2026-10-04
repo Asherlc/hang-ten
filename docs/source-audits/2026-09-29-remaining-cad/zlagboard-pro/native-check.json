@@ -1,0 +1,46 @@
+{
+  "slug": "zlagboard-pro",
+  "sourceSHA256": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+  "validSolidCount": 1,
+  "fullyConstrainedSketchCount": 113,
+  "contactCount": 28,
+  "publishedDepthsMm": {
+    "edge-30-left": 30.000000200000002,
+    "sloper-edge-30-left": 30.000000200000002,
+    "sloper-edge-25-left": 25.000000200000006,
+    "edge-35-center": 35.0000002,
+    "sloper-edge-25-right": 25.000000200000006,
+    "sloper-edge-30-right": 30.000000200000002,
+    "edge-30-right": 30.000000200000002,
+    "edge-20-left": 20.000000200000006,
+    "sloper-edge-25-lower-left": 25.000000200000006,
+    "edge-30-inner-left": 30.000000200000002,
+    "sloper-edge-30-center": 30.000000200000002,
+    "edge-30-inner-right": 30.000000200000002,
+    "sloper-edge-25-lower-right": 25.000000200000006,
+    "edge-20-right": 20.000000200000006,
+    "edge-incut-15-left": 15.000000200000006,
+    "edge-15-left": 15.000000200000006,
+    "edge-incut-30-left": 30.000000200000002,
+    "edge-incut-10-center": 10.000000200000006,
+    "edge-incut-30-right": 30.000000200000002,
+    "edge-15-right": 15.000000200000006,
+    "edge-incut-15-right": 15.000000200000006
+  },
+  "nativeEdit": {
+    "parameter": "Depth_edge_15_left",
+    "before": 15.0,
+    "after": 17.0,
+    "changedContacts": [
+      "edge-15-left"
+    ],
+    "bodyVolumeChanged": true,
+    "restored": true
+  },
+  "allContactsOnBody": true,
+  "noRearContactFaces": true,
+  "noContactSurfaceOverlap": true,
+  "potentialOverlapPairsChecked": 2,
+  "allObjectsRecomputed": true,
+  "savedSourceUnchanged": true
+}

@@ -1,0 +1,63 @@
+{
+  "status": "passed",
+  "owner": "placid-badger",
+  "baselineCommit": "b3b5fe2b588c74bcb3ddd2d7b43478308f5a5ffb",
+  "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+  "modelSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+  "descriptorSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+  "sidecarSHA256": "8a3fdf291c1ef34588425a4a7a73524fab33abdbb5a561456d571ecdd86642fc",
+  "generatedManifestSHA256": "a92ab8953bc5e793a3eb9c04f46f97d954ceea17665d8bb6554d0935b4a69773",
+  "pythonTests": {
+    "owner": "placid-badger",
+    "command": [
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "-m",
+      "pytest",
+      "Tools/HangboardCAD/tests",
+      "Tools/HangboardModels/tests",
+      "Tools/HangboardPackages/tests",
+      "-q",
+      "--basetemp",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-pinch-review/placid-badger-pytest-tmp"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 116.46971570898313,
+    "summary": "647 passed, 10 skipped in 116.03s (0:01:56)"
+  },
+  "iosTests": {
+    "passed": 1264,
+    "failed": 0,
+    "skipped": 3,
+    "total": 1267
+  },
+  "nativeReproduction": "native-cord/fresh-reproduction.log",
+  "actualMeshCoverage": "independent-geometry-validation/final-coverage-verification.json",
+  "nativeSolidEquivalence": "native-authoring/seamed-native-proof.json",
+  "cord": {
+    "routesCertified": 24,
+    "poseCount": 6,
+    "routesAndRadiiUnchanged": true,
+    "sidecarChange": "modelSHA256 only"
+  },
+  "delivery": {
+    "bundledPackages": 64,
+    "modelPackages": 58,
+    "ODRModelAssets": 60,
+    "canonicalAppleAndroidParity": true
+  },
+  "app": {
+    "selectedContactViews": 6,
+    "actualPinchAndJugScreensInspected": true,
+    "physicalOrbitVerified": false
+  },
+  "humanReview": {
+    "answer": "looks good, cord is too long tho",
+    "acceptedScope": "Upper and lower pinch rims continuing onto front and rear faces as shown.",
+    "remainingRequest": "Shorten displayed cord; The NUG review #4 stays active."
+  },
+  "resourceLifecycle": "The same owned simulator was reused for shorter-cord review and then deleted; see ../cord-shortening-review/integration/resource-cleanup.json.",
+  "beforeSnapshotCreationRecord": {
+    "scope": "expectedAfterSourceSHA256 in the immutable before snapshot records the first metadata-only candidate at creation time; final actual source/model are pinned in this verification and render-provenance.json.",
+    "snapshot": "before/snapshot-provenance.json"
+  }
+}

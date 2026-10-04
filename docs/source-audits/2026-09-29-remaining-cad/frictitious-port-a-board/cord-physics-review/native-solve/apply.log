@@ -1,0 +1,8 @@
+{"pose": "front-upright", "event": "start", "elapsedSeconds": 0.1380321669857949}
+{"pose": "front-upright", "event": "certified", "elapsedSeconds": 164.77804150001612}
+{"pose": "front-inverted", "event": "start", "elapsedSeconds": 164.77841620799154}
+{"pose": "front-inverted", "event": "certified", "elapsedSeconds": 244.2495334999985}
+{"pose": "reverse-upright", "event": "start", "elapsedSeconds": 244.25000125000952}
+{"pose": "reverse-upright", "event": "certified", "elapsedSeconds": 375.4378670830047}
+{"pose": "reverse-inverted", "event": "start", "elapsedSeconds": 375.4382850420079}
+{"pose": "reverse-inverted", "event": "certified", "elapsedSeconds": 472.0381524580298}

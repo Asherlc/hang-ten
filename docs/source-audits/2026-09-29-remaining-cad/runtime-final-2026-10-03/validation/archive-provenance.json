@@ -1,0 +1,281 @@
+{
+  "owner": "placid-badger",
+  "archivedUTC": "2026-10-03T19:41:32.594771+00:00",
+  "sourceRoot": ".context/placid-badger/runtime-final-2026-10-03",
+  "copiesAreByteIdentical": true,
+  "records": [
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/hardware-final-summary.json",
+      "archivedPath": "hardware-final-summary.json",
+      "sha256": "2e368bbfa6941e88a81fae0f10251179db0adf9402e69625b0a51a905c75ba5e",
+      "bytes": 1195
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/hardware-final-summary-export.json",
+      "archivedPath": "hardware-final-summary-export.json",
+      "sha256": "c6abee985603f3e73d7f3aba13dbe59df80c8c4fec026e66cfefeb00c4a80196",
+      "bytes": 293
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/focused-final-summary.json",
+      "archivedPath": "focused-final-summary.json",
+      "sha256": "1d9a2dcc66e8771319cf295399fe1d0fc4648dae9093427c43ef1e3fc31a629a",
+      "bytes": 1794
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/focused-final-summary-export.json",
+      "archivedPath": "focused-final-summary-export.json",
+      "sha256": "e578245f8fb5e1610460e9d8f9f3d1c08f843121dbbc94d6ca264457738b53d5",
+      "bytes": 292
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/focused-red-summary.json",
+      "archivedPath": "focused-red-summary.json",
+      "sha256": "2d4839ea921223307ab8625094228d67f4886d5bcc087a54b37fb093fbf8ade6",
+      "bytes": 2710
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/full-attempt-summary.json",
+      "archivedPath": "full-attempt-summary.json",
+      "sha256": "6bc231d780221cad5e2dd7ca6ed6c96f26f235a9215f9b2406c45694cf9f81c7",
+      "bytes": 58862
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/scene-fix-inputs.json",
+      "archivedPath": "scene-fix-inputs.json",
+      "sha256": "bd2ad9128997dfc8bc0f3030bb252c8d3029d92d9f537acf27a222c7a7bf5e53",
+      "bytes": 4285
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/final-inputs.json",
+      "archivedPath": "final-inputs.json",
+      "sha256": "b7aa439223a84c4e8d098650e20f7c2b2d96cffa0b7abad8d4b87bd7d8d99a77",
+      "bytes": 4783
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/installed-app-provenance.json",
+      "archivedPath": "installed-app-provenance.json",
+      "sha256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+      "bytes": 19582
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/corrected-build.json",
+      "archivedPath": "commands/corrected-build.json",
+      "sha256": "aa573ed3e67f535b55f0586dc9da8a712135d5d68aee849befde95896db13ab1",
+      "bytes": 573
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/corrected-build.log",
+      "archivedPath": "commands/corrected-build.log",
+      "sha256": "cd57f19d497c9a0fefa00a9e0df502bc104b911f2a8a57342e00a486d0de6775",
+      "bytes": 243479
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/focused-red.json",
+      "archivedPath": "commands/focused-red.json",
+      "sha256": "aaaf83e3a48118586580cc5baac94f0250223ca1455e2838b0a9a36bfb659ee0",
+      "bytes": 1006
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/focused-red.log",
+      "archivedPath": "commands/focused-red.log",
+      "sha256": "66eac94325b6ddd25d7f62a1218b8ccd91a55f0ca83a5a1d474446f61ebefac7",
+      "bytes": 5336
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/full-green.json",
+      "archivedPath": "commands/full-green.json",
+      "sha256": "31dce91123967961c8416d8f95727b9916264ddb8a2cfd7025b207d319a8cd1e",
+      "bytes": 2652
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/full-green.log",
+      "archivedPath": "commands/full-green.log",
+      "sha256": "464a8f9881a5493b7a00831027ee6e425829c5cf48a96e0f4ed97d6448fc43c2",
+      "bytes": 358414
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/terminate-timed-out-test-host.json",
+      "archivedPath": "commands/terminate-timed-out-test-host.json",
+      "sha256": "29fcac40a63001b1129f1188f0e5505963b4b339a77ccce74aef674a95933d3b",
+      "bytes": 413
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/terminate-timed-out-test-host.log",
+      "archivedPath": "commands/terminate-timed-out-test-host.log",
+      "sha256": "4083a0e9f5a293b0691768c60d0f454021e2822f2900bad791b5ca880a131099",
+      "bytes": 337
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/scene-corrected-build.json",
+      "archivedPath": "commands/scene-corrected-build.json",
+      "sha256": "e45f5ed77d7f2f7d754024a21dbe43035c1ce720d2e7b3baa5f9c800017d7f85",
+      "bytes": 668
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/scene-corrected-build.log",
+      "archivedPath": "commands/scene-corrected-build.log",
+      "sha256": "ebd4a68b2ac35d679bf997eef6cc663c7c33444fc28308aa3b224d6d9da620e4",
+      "bytes": 287149
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/focused-final.json",
+      "archivedPath": "commands/focused-final.json",
+      "sha256": "5591cc225101dfdd8a6971f772c2ff032a360f37731f4982f29666a7f7ebf8e5",
+      "bytes": 2579
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/focused-final.log",
+      "archivedPath": "commands/focused-final.log",
+      "sha256": "1db75f3da37acf8c3f2796e721bda27e674073d3cb958f213f096c66077883a7",
+      "bytes": 330112
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/hardware-corrected-build.json",
+      "archivedPath": "commands/hardware-corrected-build.json",
+      "sha256": "43189047b4674c412268f2579b83bf1c845cfebc2a9469b9ac30593f36f8250f",
+      "bytes": 672
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/hardware-corrected-build.log",
+      "archivedPath": "commands/hardware-corrected-build.log",
+      "sha256": "c608cc5bb69f87efc4241b624990397f080f4804b85f3346830a24c5a6ba7eab",
+      "bytes": 207662
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/hardware-corrected-package-validation.json",
+      "archivedPath": "commands/hardware-corrected-package-validation.json",
+      "sha256": "0d604ad45ececbb7f0dd9f2aac60546449c37be57183a02c70b84d64cf28055f",
+      "bytes": 414
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/hardware-corrected-package-validation.log",
+      "archivedPath": "commands/hardware-corrected-package-validation.log",
+      "sha256": "fd9f687f2b16f4247c8f349babfd71b7cb2eb163f03d40cf9f3140a136635eda",
+      "bytes": 5835
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/hardware-final.json",
+      "archivedPath": "commands/hardware-final.json",
+      "sha256": "41f62419d42f69980af7f7eead86b01d38abf009a0595445505e2fbf0cc50316",
+      "bytes": 2580
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/commands/hardware-final.log",
+      "archivedPath": "commands/hardware-final.log",
+      "sha256": "be19ed5945793c4b4fbcb91660c19a617425684bbd9cca9946151177c9d56159",
+      "bytes": 329671
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/scene-failure-audit/cad-hinge-numeric-evidence.json",
+      "archivedPath": "scene-failure-audit/cad-hinge-numeric-evidence.json",
+      "sha256": "bebc543aca3d1910c9e7a9c273eefc7557bdffd7755a40bb37784332fe6a8d22",
+      "bytes": 3739
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/scene-failure-audit/forge-authored-normal-winding.json",
+      "archivedPath": "scene-failure-audit/forge-authored-normal-winding.json",
+      "sha256": "9853e73d2ce17b22f79fd1b803dd01b738a21e200b40e1e63fea61e5e719e5a1",
+      "bytes": 7475
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/scene-failure-audit/report.md",
+      "archivedPath": "scene-failure-audit/report.md",
+      "sha256": "209d3b7060654403bde1ca772dfa76bdc7f1e59f86324fecc590fb518dabfc93",
+      "bytes": 4640
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/BoardModelRealityTests-source-excerpt.txt",
+      "archivedPath": "shared-contact-failure-audit/BoardModelRealityTests-source-excerpt.txt",
+      "sha256": "26ae8f539a6929b48aebdceca8382b97a48e1015b6265323e2095a3b569f45c9",
+      "bytes": 9549
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/BoardModelRealityTypes-source-excerpt.txt",
+      "archivedPath": "shared-contact-failure-audit/BoardModelRealityTypes-source-excerpt.txt",
+      "sha256": "1a6349d7491ab5726c13ec0170a28115ee67b5943e48c8073a3bf7518a43b84c",
+      "bytes": 17965
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/LiveRopeController-source-excerpt.txt",
+      "archivedPath": "shared-contact-failure-audit/LiveRopeController-source-excerpt.txt",
+      "sha256": "7a34e5ba0c9bc7fd28eb89242b38846366402c695b5426c752d028a570d78bf8",
+      "bytes": 7173
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/RopeDynamicsSolver-source-excerpt.txt",
+      "archivedPath": "shared-contact-failure-audit/RopeDynamicsSolver-source-excerpt.txt",
+      "sha256": "6aeb52f4ab8a1eab76b9110e73c1156311af4efbcbedd1e048691d89a6bde866",
+      "bytes": 1271
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/artifact-sha256.json",
+      "archivedPath": "shared-contact-failure-audit/artifact-sha256.json",
+      "sha256": "424f079bf260e717a284e1f69331ef02789f5fa5ee98db0d870e7dc94ae3b136",
+      "bytes": 1114
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/audit.md",
+      "archivedPath": "shared-contact-failure-audit/audit.md",
+      "sha256": "66a2e6d6edfddad0ed59a3481f2f4e6d64820d11073926c0a3e429abe60b94e1",
+      "bytes": 8521
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/failure-lines.txt",
+      "archivedPath": "shared-contact-failure-audit/failure-lines.txt",
+      "sha256": "0058c0df98837234647093927c0ccee963717ab578956d43d770f02c53ae0666",
+      "bytes": 3324
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/final-code-review.json",
+      "archivedPath": "shared-contact-failure-audit/final-code-review.json",
+      "sha256": "4cfe415fe4adfb361917146c407dab0ec06edc9653fd93c2afcfd58d5bbda63d",
+      "bytes": 6295
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/final-code-review.md",
+      "archivedPath": "shared-contact-failure-audit/final-code-review.md",
+      "sha256": "be1908d12c3a44e8fba4a54c6af72a86bead162311f18f7c5b96f6d3b7b3e1cb",
+      "bytes": 2624
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/input-sha256.json",
+      "archivedPath": "shared-contact-failure-audit/input-sha256.json",
+      "sha256": "dca1b7af6dc81a105c265faca94e008db38d05f166d2e6dae83f1f9539dcb568",
+      "bytes": 1461
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/log-snapshot.json",
+      "archivedPath": "shared-contact-failure-audit/log-snapshot.json",
+      "sha256": "d46cf7489da48ecdf8f879b6dfa7e18be45f989c6e3c7fef7c26b4e27a08dd5a",
+      "bytes": 301
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/metolius-contact-metadata.json",
+      "archivedPath": "shared-contact-failure-audit/metolius-contact-metadata.json",
+      "sha256": "f49e429e3291fe19bff069926ff7f79f26bae2001916117e4ad7fcf7406555b5",
+      "bytes": 17287
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/nature-stone-hanger-mini-metadata.json",
+      "archivedPath": "shared-contact-failure-audit/nature-stone-hanger-mini-metadata.json",
+      "sha256": "88cd2283c22e941e7abe437f95e21b4ff86b61fc9eb195b8cf94a3c76a281efd",
+      "bytes": 3053
+    },
+    {
+      "source": ".context/placid-badger/runtime-final-2026-10-03/shared-contact-failure-audit/ownership.json",
+      "archivedPath": "shared-contact-failure-audit/ownership.json",
+      "sha256": "625c016ba4eb5a04d6d0146dbfb3ed7c08cf559ba1b593cbf1c9bc2f9074ccd0",
+      "bytes": 242
+    }
+  ],
+  "excluded": [
+    "xcresult bundles",
+    "DerivedData",
+    "model or source binaries",
+    "mutable app-captures"
+  ],
+  "newExternalResources": [],
+  "buildOrSimulatorRunByArchiver": false,
+  "sourceRecordsNotModified": true
+}

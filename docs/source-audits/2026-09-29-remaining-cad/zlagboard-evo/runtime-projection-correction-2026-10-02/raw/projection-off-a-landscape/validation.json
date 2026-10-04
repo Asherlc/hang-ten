@@ -1,0 +1,393 @@
+{
+  "results": {
+    "planID": "research.max-hangs",
+    "mode": "landscape",
+    "activeStateCaptured": true,
+    "followingRestCaptured": true,
+    "nextActiveTimedSeriesCaptured": true,
+    "routine": "Existing bundled routine unchanged; Rest skipped via visible UI only after settled preview capture",
+    "visualHighlightReview": "Timed next-active images require visible Hang timer and red bilateral surfaces; AX may describe a later state. Inspect all screenshots before claiming red/blue/red."
+  },
+  "events": [
+    {
+      "capture": "active-settled",
+      "startEpoch": 1790971530.531244,
+      "endEpoch": 1790971530.998445
+    },
+    {
+      "capture": "following-rest",
+      "startEpoch": 1790971535.560103,
+      "endEpoch": 1790971536.047848
+    },
+    {
+      "capture": "following-rest-settled",
+      "startEpoch": 1790971539.454915,
+      "endEpoch": 1790971539.926919
+    },
+    {
+      "uiAction": "Skip step 2 after settled rest capture",
+      "epoch": 1790971540.8788
+    },
+    {
+      "capture": "next-active-timed-0",
+      "startEpoch": 1790971541.888879,
+      "endEpoch": 1790971542.389229
+    },
+    {
+      "capture": "next-active-timed-1",
+      "startEpoch": 1790971544.3970509,
+      "endEpoch": 1790971544.901431
+    },
+    {
+      "capture": "next-active-timed-2",
+      "startEpoch": 1790971546.911875,
+      "endEpoch": 1790971547.418666
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "launch",
+        "--terminate-running-process",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691",
+        "com.hangten.training"
+      ],
+      "startEpoch": 1790971520.7424939,
+      "endEpoch": 1790971521.0743418,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "openurl",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691",
+        "hangten://plan/research.max-hangs/workout"
+      ],
+      "startEpoch": 1790971521.074799,
+      "endEpoch": 1790971524.1937249,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971524.19403,
+      "endEpoch": 1790971526.015415,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971526.272969,
+      "endEpoch": 1790971526.644066,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971526.904447,
+      "endEpoch": 1790971527.282507,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971527.533953,
+      "endEpoch": 1790971527.9007208,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971528.1543622,
+      "endEpoch": 1790971528.571241,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971528.82354,
+      "endEpoch": 1790971529.2202408,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971529.4811451,
+      "endEpoch": 1790971529.876862,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971530.1278238,
+      "endEpoch": 1790971530.530538,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/projection-off-a-landscape/active-settled.png"
+      ],
+      "startEpoch": 1790971530.5316658,
+      "endEpoch": 1790971530.997801,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971531.248828,
+      "endEpoch": 1790971531.640485,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971531.901403,
+      "endEpoch": 1790971532.2972841,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971532.554504,
+      "endEpoch": 1790971532.956712,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971533.2093499,
+      "endEpoch": 1790971533.600011,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971533.8613162,
+      "endEpoch": 1790971534.2505019,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971534.511456,
+      "endEpoch": 1790971534.918281,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971535.179039,
+      "endEpoch": 1790971535.559425,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/projection-off-a-landscape/following-rest.png"
+      ],
+      "startEpoch": 1790971535.560491,
+      "endEpoch": 1790971536.047282,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971539.0580869,
+      "endEpoch": 1790971539.45421,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/projection-off-a-landscape/following-rest-settled.png"
+      ],
+      "startEpoch": 1790971539.455358,
+      "endEpoch": 1790971539.9263349,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "tap",
+        "--id",
+        "workout.skipStep",
+        "--tap-style",
+        "physical",
+        "--udid",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691"
+      ],
+      "startEpoch": 1790971539.92699,
+      "endEpoch": 1790971540.878408,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/projection-off-a-landscape/next-active-timed-0.png"
+      ],
+      "startEpoch": 1790971541.889171,
+      "endEpoch": 1790971542.38867,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/projection-off-a-landscape/next-active-timed-1.png"
+      ],
+      "startEpoch": 1790971544.3974972,
+      "endEpoch": 1790971544.900857,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "BDCA0D77-94C2-4A97-900B-443F75C64691",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/projection-off-a-landscape/next-active-timed-2.png"
+      ],
+      "startEpoch": 1790971546.9124448,
+      "endEpoch": 1790971547.4182148,
+      "exitStatus": 0
+    }
+  ]
+}

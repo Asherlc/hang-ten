@@ -1,0 +1,16 @@
+{
+  "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+  "note": "Strict float-equal native crest height selects only horizontal triangles. Earlier1e-7m-tolerance diagnostic also counted two adjacent nearly-flat blend triangles; retained separately.",
+  "jugCrests": [
+    {
+      "nodeID": "contact_top_jug_left",
+      "exactHorizontalCrestTriangles": 2,
+      "exactHorizontalCrestAreaMM2": 1014.9257742355644
+    },
+    {
+      "nodeID": "contact_top_jug_right",
+      "exactHorizontalCrestTriangles": 2,
+      "exactHorizontalCrestAreaMM2": 1014.9257742355644
+    }
+  ]
+}

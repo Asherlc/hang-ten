@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "Hangboards/zlagboard-pro/assets/primary.usdz": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+    ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/export-review/original-d0e4.usdz": "c8b740284160de55c5f846c9d11742b5a29a31c0a67c9bb5f43ce1d4873bbd30",
+    ".context/placid-badger-cad-second-half/zlagboard-pro/compiler-final/before-export/primary.usdz": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+    "Hangboards/zlagboard-pro/assets/primary.model.json": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f"
+  },
+  "source": "Actual USDZ triangles through existing preview.py; original LFS hash matches d0e4 pointer. No asset export or modification.",
+  "images": {
+    "comparison-front-side-top.png": "816e158f1df4fb51d89335d306caf4d763e1c7794bb2b9a5e2393d8f28bca20c",
+    "comparison-front.png": "8e917da162651e6fbd533f13c90a06d40698a13c2f25fd6a84f78a4c9976439a",
+    "comparison-side.png": "ee19e125612cf850608858e5d9743d5a32dd8870b590c529b8b4bc727d29a2d8",
+    "comparison-top.png": "703b95f69632b5117a8ca0ba79ab3540966509a6582a0ddae51340448ded2444",
+    "native-front.png": "e66c2afb667e1ee24ef093c59dfbd795e64dcfcc11a4a03be242f8074240cef1",
+    "native-side.png": "c56806e3be3a5f468c68f1c6593db44eefa7ad7194e0965b5ea4a635e83b50cc",
+    "native-top.png": "420eb74f3e24d1bc05567ca18abfac773405d56b099b24fa53dad7ba7eacb08c",
+    "original-front.png": "5b8ff51e6f75072e72212517323b2ebfb23da879d6d2f2283d95818c782cef35",
+    "original-side.png": "18cde9b7cdda0a98292bcd4fe6c553d4a2e2604cb45260229fc78b2037c46fc7",
+    "original-top.png": "5a6dbcb3b27b8bf8952e35feb7f1886d4476455bdf0d372ac30ea1b50042156b",
+    "prior-front.png": "baa105744b8bfeae007eb5b57468a8d769b2f96f9293b4768439454939c97514",
+    "prior-side.png": "8b2e9d74d253a21cba3dfd90eee0c862c88642a6422ef22e22ec8452533a945e",
+    "prior-top.png": "60b5212701b43673626b5b55bab35800e9a81b758d309616d648eca75ba961c6"
+  },
+  "limits": [
+    "Whole mesh views with uniform letterboxing, no image crop or measurement.",
+    "Neutral triangle shading is diagnostic; final material/highlight appearance requires fresh app views.",
+    "Original estimated display geometry and native estimated display geometry do not establish manufacturing accuracy."
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "files": [
+    {
+      "restorationBackupPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/HangTen/Models/BoardModelRealityTypes.swift",
+      "retainedExistingPath": "../zlagboard-evo/runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "37f32c3c9e45b85da06978aca49cb0f1066f092d3b62a1ac114e1dd3a90cf361",
+      "bytes": 119305
+    },
+    {
+      "restorationBackupPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/HangTen/Views/BoardModelView.swift",
+      "retainedExistingPath": "../zlagboard-evo/runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-applied/source/HangTen/Views/BoardModelView.swift",
+      "sha256": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+      "bytes": 25768
+    },
+    {
+      "restorationBackupPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/HangTen/Views/GripHandModelView.swift",
+      "retainedExistingPath": "../zlagboard-evo/runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-applied/source/HangTen/Views/GripHandModelView.swift",
+      "sha256": "66f77336b6bc1533e467c6165d7c35d330b1a817afddf8229f3b2bb7090fb542",
+      "bytes": 69779
+    },
+    {
+      "restorationBackupPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/HangTen/Views/RootView.swift",
+      "retainedExistingPath": "../zlagboard-evo/runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-applied/source/HangTen/Views/RootView.swift",
+      "sha256": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+      "bytes": 157139
+    },
+    {
+      "restorationBackupPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/HangTen/Views/TrainView.swift",
+      "retainedExistingPath": "../zlagboard-evo/runtime-hand-image-neutral-2026-10-02/raw/hand-image-neutral-applied/source/HangTen/Views/TrainView.swift",
+      "sha256": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba",
+      "bytes": 27742
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "recordPath": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/app-review/validation.json",
+  "recordSHA256": "a2ea722f6951d4fa8c6dd2943ba1603f743c08dd893cd2d6a94174b69622ba2c",
+  "sourceAndAllAssetHashesMatchCurrentBaseline": true,
+  "capturedChecks": [
+    {
+      "contactID": "edge-18",
+      "selection": "DEBUG initial hold",
+      "image": "default.png",
+      "accessibility": "default-accessibility.json",
+      "imageSHA256": "80225ca14bbc837437e097369ecae30e549f3def3e7d3b83d7da327ccf70fdc5",
+      "accessibilitySHA256": "4799e3cb2f81f7c30493e8d563ea3df0af76e98f021c8d162a8a3ebafdc7ebb6"
+    },
+    {
+      "contactID": "edge-18",
+      "presentationID": "depth-10mm",
+      "effectiveDepthMM": 10,
+      "selection": "presentation selector tap",
+      "image": "configuration-10mm.png",
+      "accessibility": "configuration-10mm-accessibility.json",
+      "imageSHA256": "b2bd8f41ea749f8a08ef38fb9f0220a8af11c0c93761c3a5d1a81bd10beb0d51",
+      "accessibilitySHA256": "8c7542728af3d34eb23219d0c0ea96d9d9b7a9b622a238a0a22cbb3efb385def"
+    },
+    {
+      "contactID": "edge-18",
+      "presentationID": "depth-15mm",
+      "effectiveDepthMM": 15,
+      "selection": "presentation selector tap",
+      "image": "configuration-15mm.png",
+      "accessibility": "configuration-15mm-accessibility.json",
+      "imageSHA256": "bb85cebaf0e61eac62ac8adadf628934d1c9390bc852c6b590226fef8c7f66c0",
+      "accessibilitySHA256": "793d5f352c18b89797f0f0cba15eafaeee883802c43fc19dbb63c64a75563e6f"
+    },
+    {
+      "contactID": "edge-18",
+      "presentationID": "depth-18mm",
+      "effectiveDepthMM": 18,
+      "selection": "presentation selector tap",
+      "image": "configuration-18mm.png",
+      "accessibility": "configuration-18mm-accessibility.json",
+      "imageSHA256": "a30c94a00b151a768a7404f844a123e9185150c739a1861be61669823ae2355c",
+      "accessibilitySHA256": "3839eb36a899b1a198af50475b60595530679cfb2956299fcf40d7cd169b4566"
+    }
+  ],
+  "historicalFrameCount": 4,
+  "builtBinaryProvenanceRecorded": false,
+  "currentAppFinishVerified": false,
+  "currentFramesCapturedByThisPreflight": 0,
+  "currentIOSCasesExecuted": 0,
+  "limit": "Matching retained source/package hashes do not establish the installed/built binary or verify a future finish/cord candidate."
+}

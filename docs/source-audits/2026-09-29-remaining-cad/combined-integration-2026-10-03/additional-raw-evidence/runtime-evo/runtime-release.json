@@ -1,0 +1,56 @@
+{
+  "runtimeAuthorized": true,
+  "exclusiveRuntimeOwnership": true,
+  "owner": "placid-badger-cad-second-half",
+  "mode": "evo",
+  "boardID": "zlagboard.evo",
+  "boardName": "Zlagboard.Evo",
+  "planID": "research.max-hangs",
+  "simulatorUUID": "055BDCE2-3263-470D-89DF-04B967EF7790",
+  "controllerPID": 37186,
+  "ownershipPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/ownership.json",
+  "ownershipSHA256": "55aecb94f331dfdc701f4a50f05a53bb4b1a7b4d435741fca81160010e9a268a",
+  "proofDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-ci",
+  "successfulCommandProofs": {
+    "build": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-ci/build.exit.json",
+      "sha256": "b75c842cbe61921627d9b23c70b1f5150346f28338e665c412a6c5bc401a255c"
+    },
+    "install": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-ci/install.exit.json",
+      "sha256": "51558705e3b1c79c44ba55dd29b3887667070ffb6e88b61c751ec923565222db"
+    },
+    "container": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-ci/container.exit.json",
+      "sha256": "f704ee50d6110506db7947548964456801368c1b83503fcd038d25dae794b24e"
+    }
+  },
+  "sourceCommit": "0972d85585f763ebca8b37c483539f8a53d518e1",
+  "sourceReferencePath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-ci/source-reference.json",
+  "sourceReferenceSHA256": "c1fe5e7df7eeec53a809293d0021df633851b995b741afb1a327450710c6d88e",
+  "parityPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-ci/parity.json",
+  "paritySHA256": "074fe93f578e92b157a9dda591c734ee4dc4ced9e68ea2ba226c7fcc7e525702",
+  "parityCheckCount": 206,
+  "canonicalPreservationPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/postmerge-canonical-preservation.json",
+  "canonicalPreservationSHA256": "6cd16210b6356c123447aeb7d8920d8042cf7889038cd615d0b53538a65264d3",
+  "binaryRelativePath": "HangTen.debug.dylib",
+  "binarySHA256": "3b37324c7a5eacd05801bd14be9822ffcea26e842d73e4d5440222537ffd52b0",
+  "installedApp": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/055BDCE2-3263-470D-89DF-04B967EF7790/data/Containers/Bundle/Application/82EA6834-8BF7-43CA-8E8A-5F32766B10BF/HangTen.app",
+  "helperSHA256": "e04ae6d955e183ae1b76f2dca82fc12d841c39edebd5b7255dd304d246691764",
+  "scheduleSHA256": "f7575614479464f5776fb8f938957e28270aeb99fa95ba6d43721c94658f97b7",
+  "planLibrarySHA256": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1",
+  "routineReferencePath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-routine-reference.json",
+  "routineReferenceSHA256": "23e2b3e2298ced6f6727ffd8131ebdf898d1e7eb79389df25561801083bb0fb3",
+  "runID": "placid-badger-cad-second-half-combined-evo",
+  "outputDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo",
+  "appArguments": [
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "launchReviewFlags": {
+    "HANGTEN_REVIEW_BOARD_ID": "zlagboard.evo",
+    "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+    "HANGTEN_REVIEW_LANDSCAPE": "1"
+  },
+  "miniSetupAuthorized": false
+}

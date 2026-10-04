@@ -1,0 +1,7 @@
+{
+  "manifest": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-frozen-manifest.json",
+  "manifestSHA256": "40289e84d639238547faa8283ee227b1bb173dab15f106d75ec1c6c7a918e70e",
+  "filesChecked": 239,
+  "allExact": true,
+  "mismatches": []
+}

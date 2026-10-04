@@ -1,0 +1,23 @@
+# Standalone state-driver discriminator — scratch only
+
+The completed standalone A/B/B/A (SceneEvents subscription comparison) is frozen separately. This proposal changes only reserved RootView and Models diagnostic code and has NOT been applied, built or run. Production paths and all accepted CAD bytes stay untouched.
+
+One new DEBUG environment value HANGTEN_REVIEW_STANDALONE_DRIVER selects exactly one launch-stable arm:
+
+- A: current task-driven @State selection, no TimelineView.
+- B: same task-driven selection and fixed content inside TimelineView(.periodic(from:.now,by:0.25)).
+- C: fixed content inside that TimelineView; each timeline closure derives its semantic phase from ProcessInfo.systemUptime minus a once-established readiness epoch. It deliberately ignores context.date, matching the existing production pattern. The timing task emits intended boundaries and sparse observations only; it never writes selection during C measurement.
+
+The fixed content is shared. Contact IDs, mode mapping, position, BoardModelSurface, nil contact callback, isDisplayOnly=false, measured210x36 viewport, caption, controls, camera and materials are identical. All arms assign the readiness epoch once2s before measurement. Both counter and the1Hz sampler are OFF. No remount/key change, body logging, per-tick state assignment, ticking label, transform nudge, gesture or AX polling. Unused manual controls remain; do not operate them. Root body isolation and source lifecycle checks from the preceding experiment remain.
+
+Three distinct clocks/evidence types are retained: (1) intended boundary is schedule.baseEpoch + phaseIndex*8, plus the observation task's actual event time; (2) sparse onChange of the Equatable semantic tuple (IDs, mode, position) records the tuple supplied to BoardModelSurface; (3) existing highlight-before/highlight-after records CPU material mutation and entity identity. A Timeline closure's exact execution time is not logged in body. onChange can execute before or after RealityView update, so its event ordering is observed, not assumed. Actual rendered state comes only from whole screenshots with start/end timestamps.
+
+A/B task phase writes occur once per change. C uses monotonic elapsed thresholds0/8/16/24/32: clear,active,preview,active,preview. Timeline scheduling can naturally delay a change by a fraction of its250ms interval; record rather than tune it. The content label changes only at semantic phase boundaries. No diagnostic state write occurs in C after epoch initialization. The outer script .task stays outside TimelineView and therefore should run once; runtime validity still requires one schedule/make/scene/view, stable viewport, foreground visible window and no repeated script.
+
+Proposed runtime sequence after root review: one same-binary A/B/C launch each with the existing20 scheduled screenshots (+0.25,+1,+3,+7 per8s phase) and sparse CPU brackets. All inherited review variables stripped; use only the existing standalone allowlist plus DRIVER=A/B/C. SceneEvents counter must be absent; the source guard rejects it. No other test flag changes. Root checks A before interpretation of B/C. Repeat only an actually discriminating pair if separately authorized; no open-ended loop.
+
+Retain every request/observed tuple/mutation event and compare event time to intended boundary. For each screenshot choose actual bracketing records. Early C captures may legitimately straddle a scheduled transition: retain those as latency evidence rather than discarding them or calling the actual-state mismatch a pipeline failure. Final +7s captures must show the requested state for a phase pass. Do not mistake callback deduplication for absent execution or use CPU color as the visible verdict. The screenshot instrument itself remains a possible observation effect held identical across arms.
+
+Expected interpretation: A and B pass while C fails narrows the boundary to state derived during TimelineView evaluation versus an observed state write. A passes but B/C fail implicates the periodic ancestor/update context more broadly. All pass means this isolated timeline setup is insufficient and a different removed factor remains. A fails invalidates prior-control equivalence and requires review, not tuning. No outcome alone authorizes a production fix.
+
+Preparation checks: patch applicability passed against the frozen current source; actual source hashes unchanged. No Swift compile was run for this scratch proposal. Existing task capture/validation scripts must receive the DRIVER flag and preserve intended/observed/mutation separation before an authorized run. They must not reuse their old A/B argument as the counter flag for this experiment.

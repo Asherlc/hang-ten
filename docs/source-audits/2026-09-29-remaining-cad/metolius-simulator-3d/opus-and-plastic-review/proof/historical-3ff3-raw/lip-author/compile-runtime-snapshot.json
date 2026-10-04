@@ -1,0 +1,23 @@
+{
+  "atUTC": "2026-10-01T17:32:09.640197+00:00",
+  "jobs": [
+    {
+      "name": "compile",
+      "startedUTC": "2026-10-01T17:30:00.922471+00:00",
+      "timeoutSeconds": 900,
+      "processes": "  PID  PPID  PGID ELAPSED  %CPU COMM\n74486 74461 74486   02:09   0.0 /opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python\n74487 74486 74486   02:09 125.8 /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd\n"
+    },
+    {
+      "name": "compile-check",
+      "startedUTC": "2026-10-01T17:30:00.922411+00:00",
+      "timeoutSeconds": 900,
+      "processes": "  PID  PPID  PGID ELAPSED  %CPU COMM\n74485 74459 74485   02:09   0.0 /opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python\n74488 74485 74485   02:09 116.0 /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd\n"
+    },
+    {
+      "name": "reproduce",
+      "startedUTC": "2026-10-01T17:30:00.922306+00:00",
+      "timeoutSeconds": 900,
+      "processes": "  PID  PPID  PGID ELAPSED  %CPU COMM\n74484 74460 74484   02:09   0.0 /opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python\n74489 74484 74484   02:09 128.5 /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd\n"
+    }
+  ]
+}

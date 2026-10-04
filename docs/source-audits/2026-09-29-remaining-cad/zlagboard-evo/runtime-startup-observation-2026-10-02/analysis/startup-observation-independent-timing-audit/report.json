@@ -1,0 +1,183 @@
+{
+  "status": "READ_ONLY_STARTUP_TIMING_AUDIT_COMPLETE_NO_DELAY_REPRODUCED",
+  "traceSHA256": "a937350209818fcaaa027e6937f1be510f26d276bdeb49f58fa49bff59331c05",
+  "recordCount": 82,
+  "binarySHA256FromRetainedGate": "09310b53114826e1e9c39a499846b2e57a6b464e576aa7bf879b56709d267854",
+  "checks": {
+    "completeContiguous": true,
+    "finiteMonotonic": true,
+    "exactlyOneRequest": true,
+    "exactlyOneContextAppearance": true,
+    "allRecordedAssociationsValid": true,
+    "noAmbiguity": true,
+    "noDeferredRequestOrCancelledTask": true,
+    "taskAttemptMatchesRequest": true,
+    "activeAnchorEqualsPlannedArmPlus3": true,
+    "allSurfaceIdentityLinksExact": true,
+    "retainedValidatorCompleteObservationPassed": true,
+    "allRawFilesBytePreserved": true
+  },
+  "startupAttemptID": "2A14961A-9D2E-4E02-B7F5-BA2FFAB9D398",
+  "timingSeconds": {
+    "appearanceToRequest": 0.008106041655992158,
+    "synchronousPrepareMarkerSpan": 0.1262294166663196,
+    "startCountdownMarkerSpan": 0.025475666669080965,
+    "armAfterToTaskEntry": 0.09745637499145232,
+    "taskEntryMinusPlannedArm": 0.023115791656891815,
+    "taskResumeMinusPlannedArm": 0.02948008333623875,
+    "taskEntryToResume": 0.006364291679346934,
+    "appearanceToSessionMutationAfter": 0.2679213333321968,
+    "sessionMutationMarkerSpan": 0.0036249583354219794,
+    "afterMutationUntilActiveAnchor": 2.9667241249990184,
+    "appearanceToActiveAnchor": 3.234645458331215,
+    "firstSelectedActiveAfterMinusActiveAnchor": 0.11008158333424944,
+    "firstPreviewAfterMinusExpectedFirstRestAnchor": 0.24763416666246485,
+    "handConstructorMinusActiveAnchor": 0.8460831249976764,
+    "handMakeMinusActiveAnchor": 0.8661217499902705,
+    "handFitMinusActiveAnchor": 0.9252707499981625,
+    "handConstructorFromAppearance": 4.0807285833288915,
+    "handMakeFromAppearance": 4.100767208321486,
+    "handConstructorAfterFirstSelectedHighlight": 0.7360015416634269,
+    "handMakeAfterFirstSelectedHighlight": 0.756040166656021
+  },
+  "cancellation": {
+    "sequence": 23,
+    "taskPresent": false,
+    "pendingPresent": false,
+    "meaning": "Existing optional cancel invocation had no target; not an observed actual task cancellation."
+  },
+  "surfaces": [
+    {
+      "loadAttempt": "68E4DF1A-AEBF-4065-BF7D-297D44C46B4C",
+      "sceneLifecycleToken": "7EFF6E4C-5A7E-47D1-9AA7-09DD57BB4786",
+      "trainMarked": true,
+      "sequences": {
+        "call": 3,
+        "constructor": 4,
+        "return": 5,
+        "ready": 6,
+        "make": 10
+      },
+      "seconds": {
+        "callToConstructor": 0.23675945833383594,
+        "constructorToReturn": 0.49996437499066815,
+        "callToReturn": 0.7367238333245041,
+        "returnToReady": 0.00020304167992435396,
+        "readyToMake": 0.2521114583214512,
+        "callToMake": 0.9890383333258796,
+        "appearanceToMake": -0.343397750009899
+      },
+      "allIdentityLinksExact": true
+    },
+    {
+      "loadAttempt": "F2E4C22A-61AE-4AA0-AE66-98E290000472",
+      "sceneLifecycleToken": "CC5E430E-5C61-49D3-9392-F9549E571121",
+      "trainMarked": false,
+      "sequences": {
+        "call": 24,
+        "constructor": 31,
+        "return": 32,
+        "ready": 33,
+        "make": 37
+      },
+      "seconds": {
+        "callToConstructor": 0.12927487499837298,
+        "constructorToReturn": 0.09313233333523385,
+        "callToReturn": 0.22240720833360683,
+        "returnToReady": 0.00021124999329913408,
+        "readyToMake": 0.07766183333296794,
+        "callToMake": 0.3002802916598739,
+        "appearanceToMake": 0.460871874995064
+      },
+      "allIdentityLinksExact": true
+    }
+  ],
+  "sampledCountdown": [
+    {
+      "sequence": 15,
+      "uptime": 85131.13383479168,
+      "state": "flag=true;routineStartedIsNil=true;suppressed=true;countdown=0"
+    },
+    {
+      "sequence": 30,
+      "uptime": 85131.41302420833,
+      "state": "flag=true;routineStartedIsNil=false;suppressed=false;countdown=3"
+    },
+    {
+      "sequence": 38,
+      "uptime": 85132.42154908334,
+      "state": "flag=true;routineStartedIsNil=false;suppressed=false;countdown=2"
+    },
+    {
+      "sequence": 40,
+      "uptime": 85133.420402,
+      "state": "flag=true;routineStartedIsNil=false;suppressed=false;countdown=1"
+    },
+    {
+      "sequence": 45,
+      "uptime": 85134.48293154167,
+      "state": "flag=true;routineStartedIsNil=false;suppressed=false;countdown=0"
+    }
+  ],
+  "hands": {
+    "constructorCount": 1,
+    "makeCount": 1,
+    "kind": "pair",
+    "lifetimeToken": "8DD61CE3-2782-4D4C-8E94-A4EE6226C683",
+    "appearSequence": 47,
+    "constructorSequence": 48,
+    "makeSequence": 50,
+    "fitSequence": 51,
+    "zeroCountsBeforeConstructor": true,
+    "orthographicConfigured": true
+  },
+  "window": {
+    "recordedAppearanceEpoch": 1791002056.58352,
+    "fixedDeadlineEpoch": 1791002086.58352,
+    "actualEndEpoch": 1791002086.5948448,
+    "overshootSeconds": 0.011324882507324219,
+    "lastTraceSecondsFromAppearance": 29.22997575000045,
+    "recordsAfterDeadline": 0
+  },
+  "conclusion": "The previously observed roughly20-second delayed startup did not reproduce in this single instrumented attempt. Request/audio/arm/session and both Surface constructor/ready/make chains are explicitly connected and prompt. This does not show instrumentation repaired the issue or establish a cause of earlier delays.",
+  "limits": [
+    "Marker allocation/file I/O and existing diagnostics can alter scheduling; no same-startup counterfactual exists.",
+    "Task entry already occurred23ms after its planned anchor; preserved max(0, planned-now) sleep then had no remaining positive planned duration. No cause of scheduling latency is identified.",
+    "All intervals are marker-to-marker, not exclusive API CPU time.",
+    "No deferred branch or actual cancellation was exercised; parent linkage/cancellation branch effectiveness is not validated by this run.",
+    "No visual review performed by this audit. Initial screenshot alone does not establish full color workflow or nextHang after180-secondRest; CPU values and lifecycle events do not prove displayed pixels.",
+    "Helper reached30-second deadline; final sparse record precedes it, so final unsampled interval is right-censored.",
+    "No validator rerun, source/runtime edits, device commands or next-experiment recommendation.",
+    "First paired-hand constructor/make occur4.0807/4.1008s after appearance, about0.7360/0.7560s after the first selected highlight. This trace does not establish hand readiness at a hypothetical active+0.25s capture, nor actual hand visibility at any capture."
+  ],
+  "rawInputHashes": {
+    "002-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "events-D4476BEE-B669-4358-B806-F6210B54E5EF.jsonl": "a937350209818fcaaa027e6937f1be510f26d276bdeb49f58fa49bff59331c05",
+    "trace-copy.json": "32ab8b7c624bed3a81b8a0e50aa7c58c1fc0fc2c44cf967d032370efc9e02219",
+    "003-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "004-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "000-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "marker-first-observations.json": "80393a3a98af004ec0688288303d3752ddffe918b4348dd5f11ba9f6015cfb20",
+    "appearance-anchor.json": "6f4842becb621d3fe546a65d96715c677c6eee0e386ea1fe200e193ab1cc69a7",
+    "observation-end.json": "b16151d5a52929baa50e1e656ff3b715477864a3b62c0c45649fb0d9e8a0532e",
+    "001-stdout.txt": "b99433b23a26a8dd4ad9ed5e91b3e098cebfbbdda53fd07f3a90932a8b625067",
+    "commands.json": "7ea2d7cbf4758d591cccb91ae3e83bde6eed50c733b3381b815af7f20d449551",
+    "train-startup-readiness.json": "c928f679047a895ce63d75d8bfa32c52a07f0fe24217c3a02e6e3e62adf5c3cf",
+    "launch-initial.png": "159ce67de800b7d621fce93c34a248096aff7eb7dd06cf452ea3e5cab01aa4e7",
+    "002-stdout.txt": "c26d4ad790abb720b32af810cd3960fa407c04924d097485386dec6b351f255c",
+    "003-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "launch-initial-capture.json": "823f4f72f5908926781e9aa61de237464c970ad7ecc4eb5adf56200beaa88471",
+    "startup-observation-validation.json": "6e12bdb1b9ac0690233ce379ea0ecf48212b60f74e0973e136ae6c30b7764b4b",
+    "runtime-release.json": "7d3344ead5d408ec26a56b7be333593b38b6c99bf0fca9f9d9b6b002fcf3e9ba",
+    "protocol.json": "df79fa984917ba9e0d20f280e622cd823deaa0948e71b4d8f149dacb023dae7d",
+    "launch-review-environment.json": "f6c5051b03113040cef11ec496b0b1dfb21ff602f94d8bae85df424977ed4934",
+    "check-observation.stdout": "577af4bfeaaf132b7614a3ee56d0d294a880fb203a42ed8307812b4221523755",
+    "check-observation.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "workout-openurl-timing.json": "590522f300dedc44bc36b6d33f58bf0a131b80d2ccdd8769e9c3e109c34ffcf2",
+    "000-stdout.txt": "e9a0b7b0f55882d79f82898d311658c54c16e742a65133ce2af172cdd917da72",
+    "004-stderr.txt": "7eef53b39c24adefd880e596de28d2e619d57245e13f4dc5a572bf0212ef48e7",
+    "installed-binary-gate.json": "7d5751807175ae1f145fbffeae554e9e8f62dbdcecfbf623dc6b6f70e65cc5a5",
+    "check-observation-command.json": "fc17105e7180491207deb890e1ff73126954e6a80a400b0c7c064e539c055199",
+    "001-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

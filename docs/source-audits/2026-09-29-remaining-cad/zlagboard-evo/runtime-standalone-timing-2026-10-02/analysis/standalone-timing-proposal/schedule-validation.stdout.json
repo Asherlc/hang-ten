@@ -1,0 +1,268 @@
+{
+  "staticArithmeticPassed": true,
+  "runtimeOrCPUBracketClaim": false,
+  "arms": {
+    "short": {
+      "durations": [
+        8,
+        7,
+        8,
+        7,
+        8
+      ],
+      "starts": [
+        0,
+        8,
+        15,
+        23,
+        30
+      ],
+      "total": 38,
+      "tail": 40,
+      "captures": [
+        {
+          "phase": 0,
+          "offset": 0.25,
+          "time": 0.25
+        },
+        {
+          "phase": 0,
+          "offset": 1.0,
+          "time": 1.0
+        },
+        {
+          "phase": 0,
+          "offset": 3.0,
+          "time": 3.0
+        },
+        {
+          "phase": 0,
+          "offset": 5.0,
+          "time": 5.0
+        },
+        {
+          "phase": 1,
+          "offset": 0.25,
+          "time": 8.25
+        },
+        {
+          "phase": 1,
+          "offset": 1.0,
+          "time": 9.0
+        },
+        {
+          "phase": 1,
+          "offset": 3.0,
+          "time": 11.0
+        },
+        {
+          "phase": 1,
+          "offset": 5.0,
+          "time": 13.0
+        },
+        {
+          "phase": 2,
+          "offset": 0.25,
+          "time": 15.25
+        },
+        {
+          "phase": 2,
+          "offset": 1.0,
+          "time": 16.0
+        },
+        {
+          "phase": 2,
+          "offset": 3.0,
+          "time": 18.0
+        },
+        {
+          "phase": 2,
+          "offset": 5.0,
+          "time": 20.0
+        },
+        {
+          "phase": 3,
+          "offset": 0.25,
+          "time": 23.25
+        },
+        {
+          "phase": 3,
+          "offset": 1.0,
+          "time": 24.0
+        },
+        {
+          "phase": 3,
+          "offset": 3.0,
+          "time": 26.0
+        },
+        {
+          "phase": 3,
+          "offset": 5.0,
+          "time": 28.0
+        },
+        {
+          "phase": 4,
+          "offset": 0.25,
+          "time": 30.25
+        },
+        {
+          "phase": 4,
+          "offset": 1.0,
+          "time": 31.0
+        },
+        {
+          "phase": 4,
+          "offset": 3.0,
+          "time": 33.0
+        },
+        {
+          "phase": 4,
+          "offset": 5.0,
+          "time": 35.0
+        }
+      ],
+      "snapshotOffsets": [
+        0.15,
+        0.85,
+        1.75,
+        2.85,
+        3.75,
+        4.85,
+        5.85,
+        6.75
+      ],
+      "snapshotCount": 41
+    },
+    "long": {
+      "durations": [
+        8,
+        7,
+        180,
+        7,
+        8
+      ],
+      "starts": [
+        0,
+        8,
+        15,
+        195,
+        202
+      ],
+      "total": 210,
+      "tail": 212,
+      "captures": [
+        {
+          "phase": 0,
+          "offset": 0.25,
+          "time": 0.25
+        },
+        {
+          "phase": 0,
+          "offset": 1.0,
+          "time": 1.0
+        },
+        {
+          "phase": 0,
+          "offset": 3.0,
+          "time": 3.0
+        },
+        {
+          "phase": 0,
+          "offset": 5.0,
+          "time": 5.0
+        },
+        {
+          "phase": 1,
+          "offset": 0.25,
+          "time": 8.25
+        },
+        {
+          "phase": 1,
+          "offset": 1.0,
+          "time": 9.0
+        },
+        {
+          "phase": 1,
+          "offset": 3.0,
+          "time": 11.0
+        },
+        {
+          "phase": 1,
+          "offset": 5.0,
+          "time": 13.0
+        },
+        {
+          "phase": 2,
+          "offset": 0.25,
+          "time": 15.25
+        },
+        {
+          "phase": 2,
+          "offset": 1.0,
+          "time": 16.0
+        },
+        {
+          "phase": 2,
+          "offset": 3.0,
+          "time": 18.0
+        },
+        {
+          "phase": 2,
+          "offset": 5.0,
+          "time": 20.0
+        },
+        {
+          "phase": 3,
+          "offset": 0.25,
+          "time": 195.25
+        },
+        {
+          "phase": 3,
+          "offset": 1.0,
+          "time": 196.0
+        },
+        {
+          "phase": 3,
+          "offset": 3.0,
+          "time": 198.0
+        },
+        {
+          "phase": 3,
+          "offset": 5.0,
+          "time": 200.0
+        },
+        {
+          "phase": 4,
+          "offset": 0.25,
+          "time": 202.25
+        },
+        {
+          "phase": 4,
+          "offset": 1.0,
+          "time": 203.0
+        },
+        {
+          "phase": 4,
+          "offset": 3.0,
+          "time": 205.0
+        },
+        {
+          "phase": 4,
+          "offset": 5.0,
+          "time": 207.0
+        }
+      ],
+      "snapshotOffsets": [
+        0.15,
+        0.85,
+        1.75,
+        2.85,
+        3.75,
+        4.85,
+        5.85,
+        6.75
+      ],
+      "snapshotCount": 41
+    }
+  }
+}

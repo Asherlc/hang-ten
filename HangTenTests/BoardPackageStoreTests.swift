@@ -503,7 +503,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 "nonpositive-cord-values", "nonpositive-rest-length",
                 "missing-attachment-node", "hold-attachment-node",
                 "attachment-point-outside-bounds", "shorter-than-endpoint-distance",
-                "raster-sibling", "second-model", "baked-cord-role", "baked-anchor-role",
+                "raster-sibling", "model-with-wrong-pose-position", "baked-cord-role", "baked-anchor-role",
                 "model-inversion", "two-branch-unknown-member", "two-branch-wrong-discriminator",
                 "two-branch-missing-passage", "two-branch-extra-passage", "two-branch-duplicate-passage-id",
                 "two-branch-unknown-passage-node", "two-branch-hold-passage-node",
@@ -896,18 +896,19 @@ final class BoardPackageStoreTests: XCTestCase {
             XCTAssertEqual(position.presentationID, "primary")
         }
 
-        // The approved ODR model uses the tested two-branch suspension.
+        // Four native through-bores retain the inferred barrel wraps and four free leads.
         let presentation = try XCTUnwrap(board.presentations.first)
         guard case .model(let media) = presentation.media,
-              case .twoBranchCord(let suspension) = media.suspension else {
+              case .cadRoutedCord(let suspension) = media.suspension else {
             XCTFail("Expected model media"); return
         }
         XCTAssertNil(media.orientation)
         XCTAssertEqual(
             media.descriptor.modelSHA256,
-            "555191023ddc584c1a01dadba7bfe21ed5a81db570943a0697958df416cfdbac"
+            "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b"
         )
-        XCTAssertEqual(suspension.branches.count, 2)
+        XCTAssertEqual(suspension.strands.filter { $0.kind == "lead" }.count, 4)
+        XCTAssertEqual(suspension.strands.filter { $0.kind == "segment" }.count, 2)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), Set(expectedHoldIDsByPosition.keys))
     }
 
@@ -1406,6 +1407,105 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: missing.bundle))
     }
 
+    func testSharedContactMembershipBuildsBothContactInventories() throws {
+        let bundle = try v3TwoBodyFixtureBundle()
+        let url = bundle.bundleURL.appendingPathComponent("Hangboards/fixture-model/assets/primary.model.json")
+        try mutateJSONObject(at: url) { descriptor in
+            var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
+            nodes[1]["additionalContactIDs"] = ["right-edge"]
+            descriptor["nodes"] = nodes
+            var contacts = try XCTUnwrap(descriptor["contacts"] as? [String: [String: Any]])
+            contacts["right-edge"]?["nodeIDs"] = ["left-edge-node", "right-edge-node"]
+            contacts["right-edge"]?["facePlaneAABB"] = ["min": [0.1, 0.2], "max": [0.9, 0.6]]
+            contacts["right-edge"]?["center"] = [0.5, 0.4]
+            descriptor["contacts"] = contacts
+        }
+        let board = try XCTUnwrap(try BoardPackageStore(bundle: bundle).board(id: "fixture.board"))
+        guard case .model(let media) = board.defaultPresentation.media else { return XCTFail("model") }
+        XCTAssertEqual(media.descriptor.contacts["left-edge"]?.nodeIDs, ["left-edge-node"])
+        XCTAssertEqual(media.descriptor.contacts["right-edge"]?.nodeIDs, ["left-edge-node", "right-edge-node"])
+        XCTAssertEqual(media.descriptor.nodes.first { $0.nodeID == "left-edge-node" }?.contactID, "left-edge")
+        XCTAssertEqual(board.contacts.count, 2)
+    }
+
+    func testSharedContactMembershipRejectsMalformedOrUnboundDeclarations() throws {
+        let cases: [(String, Any, Int)] = [
+            ("empty", [], 1), ("null", NSNull(), 1), ("scalar", "right-edge", 1),
+            ("number", [1], 1), ("empty identifier", [""], 1),
+            ("duplicate", ["right-edge", "right-edge"], 1),
+            ("primary repeated", ["left-edge"], 1),
+            ("unsorted", ["right-edge", "another-edge"], 1),
+            ("unknown contact", ["missing"], 1),
+            ("body", ["right-edge"], 0), ("attachment", ["right-edge"], 2),
+        ]
+        for (name, value, index) in cases {
+            let bundle = try v3TwoBodyFixtureBundle()
+            try mutateJSONObject(at: bundle.bundleURL.appendingPathComponent("Hangboards/fixture-model/assets/primary.model.json")) { descriptor in
+                var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
+                if name == "attachment" { nodes[index]["role"] = "attachment" }
+                nodes[index]["additionalContactIDs"] = value
+                descriptor["nodes"] = nodes
+            }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: bundle), name)
+        }
+        // A valid extra membership must also appear in the derived contact node list.
+        let bundle = try v3TwoBodyFixtureBundle()
+        try mutateJSONObject(at: bundle.bundleURL.appendingPathComponent("Hangboards/fixture-model/assets/primary.model.json")) { descriptor in
+            var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
+            nodes[1]["additionalContactIDs"] = ["right-edge"]
+            descriptor["nodes"] = nodes
+        }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: bundle))
+    }
+
+    func testSharedContactMembershipRequiresSortedKnownSecondaryContacts() throws {
+        for additional in [["middle-edge", "right-edge"], ["right-edge", "middle-edge"]] {
+            let bundle = try v3TwoBodyFixtureBundle()
+            let package = bundle.bundleURL.appendingPathComponent("Hangboards/fixture-model")
+            try mutateJSONObject(at: package.appendingPathComponent("board.json")) { board in
+                var contacts = try XCTUnwrap(board["contacts"] as? [[String: Any]])
+                var middle = contacts[0]
+                middle["id"] = "middle-edge"
+                middle["name"] = "Shared middle grip"
+                contacts.append(middle)
+                board["contacts"] = contacts
+            }
+            try mutateJSONObject(at: package.appendingPathComponent("assets/primary.model.json")) { descriptor in
+                var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
+                nodes[1]["additionalContactIDs"] = additional
+                descriptor["nodes"] = nodes
+                var contacts = try XCTUnwrap(descriptor["contacts"] as? [String: [String: Any]])
+                contacts["middle-edge"] = contacts["left-edge"]
+                contacts["right-edge"]?["nodeIDs"] = ["left-edge-node", "right-edge-node"]
+                contacts["right-edge"]?["facePlaneAABB"] = ["min": [0.1, 0.2], "max": [0.9, 0.6]]
+                contacts["right-edge"]?["center"] = [0.5, 0.4]
+                descriptor["contacts"] = contacts
+            }
+            if additional == additional.sorted() {
+                XCTAssertNoThrow(try BoardPackageStore(bundle: bundle))
+            } else {
+                XCTAssertThrowsError(try BoardPackageStore(bundle: bundle))
+            }
+        }
+    }
+
+    func testSharedContactMembershipRejectsOutlineEvenWhenEmpty() throws {
+        let outlines: [Any] = [[], NSNull(), [[0.1, 0.2], [0.9, 0.2], [0.5, 0.6]]]
+        for outline in outlines {
+            let bundle = try v3TwoBodyFixtureBundle()
+            try mutateJSONObject(at: bundle.bundleURL.appendingPathComponent("Hangboards/fixture-model/assets/primary.model.json")) { descriptor in
+                var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
+                nodes[1]["additionalContactIDs"] = ["right-edge"]
+                descriptor["nodes"] = nodes
+                var contacts = try XCTUnwrap(descriptor["contacts"] as? [String: [String: Any]])
+                contacts["right-edge"]?["nodeIDs"] = ["left-edge-node", "right-edge-node"]
+                contacts["right-edge"]?["outline"] = outline
+                descriptor["contacts"] = contacts
+            }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: bundle))
+        }
+    }
+
     func testStoreRejectsDescriptorContactInventoryDrift() throws {
         let missingHold = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
             try self.mutateJSONObject(
@@ -1450,6 +1550,19 @@ final class BoardPackageStoreTests: XCTestCase {
             defer { fixture.remove() }
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name)
         }
+    }
+
+    func testModelFinishOmissionKeepsNeutralDefault() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let board = try XCTUnwrap(try BoardPackageStore(bundle: fixture.bundle).board(id: "fixture.board"))
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("model fixture required")
+        }
+        XCTAssertEqual(media.display.surfaceFinish, .neutral)
+        XCTAssertTrue(media.display.woodNodeIDs.isEmpty)
+        XCTAssertTrue(media.display.plasticNodeIDs.isEmpty)
+        XCTAssertTrue(media.display.graniteNodeIDs.isEmpty)
     }
 
     func testModelBoardFinishDecodesWithoutPerMeshSelections() throws {
@@ -1637,6 +1750,31 @@ final class BoardPackageStoreTests: XCTestCase {
         }
         defer { fixture.remove() }
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testModelFinishOverridesRejectAttachmentsAndMalformedArrays() throws {
+        for field in ["woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"] {
+            for value: Any in [["Attachment"], NSNull(), "Body", [1]] {
+                let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+                    try self.mutateJSONObject(at: packageURL.appendingPathComponent("assets/primary.model.json")) { descriptor in
+                        var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
+                        nodes.append(["nodeID": "Attachment", "role": "attachment"])
+                        descriptor["nodes"] = nodes.sorted { ($0["nodeID"] as! String) < ($1["nodeID"] as! String) }
+                    }
+                    try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                        var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                        var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+                        var display = try XCTUnwrap(media["display"] as? [String: Any])
+                        display[field] = value
+                        media["display"] = display
+                        presentations[0]["media"] = media
+                        board["presentations"] = presentations
+                    }
+                }
+                defer { fixture.remove() }
+                XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), "\(field)=\(value)")
+            }
+        }
     }
 
     func testStoreRejectsInvalidModelCamera() throws {

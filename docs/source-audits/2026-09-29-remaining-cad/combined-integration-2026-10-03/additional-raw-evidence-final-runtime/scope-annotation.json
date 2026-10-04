@@ -1,0 +1,155 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "packetPhase": "Completed runtime arms prepared for durable preservation; remaining runtime/test/cleanup groups are excluded until complete.",
+  "scope": "No source/test, index/ref, app/simulator/helper execution, resource, acceptance, final-readiness or global cleanup action/claim.",
+  "includedGroups": [
+    "runtime-evo-reviewed-setup",
+    "runtime-pro-passive-route",
+    "runtime-pro-reviewed-setup",
+    "runtime-mini-passive-route",
+    "runtime-mini-automatic-source-tasks",
+    "posttests-runtime-install"
+  ],
+  "rawRunRecords": [
+    {
+      "group": "runtime-evo-reviewed-setup",
+      "rawCompletion": {
+        "captureCompleted": true,
+        "plannedCaptures": 58,
+        "actualCaptures": 58,
+        "errors": [],
+        "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+        "CPUBracketsAvailable": false,
+        "phaseTimingsKnown": false,
+        "noRetries": true
+      },
+      "rawCompletionRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/completion.json",
+      "releaseRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/runtime-release.json",
+      "recordedHelperSHA256": "eb3b2c0ab71392fa83cf00a33fd904a954bbaa395596250a4a363e05ee44d3aa",
+      "exactFrozenHelperPaths": [
+        "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/prep/runtime/capture.py"
+      ],
+      "recordedScheduleSHA256": "3fb0910895d90e616d9cb54811beb4943f28a9280449382cfb55e5d42e6a10e0",
+      "retainedScheduleMatchesRelease": true,
+      "publishedSourceBindingRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/published-source-binding.json"
+    },
+    {
+      "group": "runtime-pro-passive-route",
+      "rawCompletion": {
+        "captureCompleted": true,
+        "plannedCaptures": 58,
+        "actualCaptures": 58,
+        "errors": [],
+        "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+        "CPUBracketsAvailable": false,
+        "phaseTimingsKnown": false,
+        "noRetries": true
+      },
+      "rawCompletionRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/completion.json",
+      "releaseRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-pro-passive-route/runtime-release.json",
+      "recordedHelperSHA256": "9b5d490bfb16db82b1f02858d222294402d5e19d73cf31fcbf186a290147d4cb",
+      "exactFrozenHelperPaths": [
+        "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/prep/runtime/capture-passive-route.py"
+      ],
+      "recordedScheduleSHA256": "dd2bc031af8536239615d8350649df11f62ac57ca6517c2ace13b233443d0f4c",
+      "retainedScheduleMatchesRelease": true,
+      "publishedSourceBindingRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/published-source-binding.json"
+    },
+    {
+      "group": "runtime-pro-reviewed-setup",
+      "rawCompletion": {
+        "captureCompleted": false,
+        "plannedCaptures": 58,
+        "actualCaptures": 0,
+        "errors": [],
+        "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+        "CPUBracketsAvailable": false,
+        "phaseTimingsKnown": false,
+        "noRetries": true
+      },
+      "rawCompletionRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-pro-reviewed-setup/completion.json",
+      "releaseRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-pro-reviewed-setup/runtime-release.json",
+      "recordedHelperSHA256": "eb3b2c0ab71392fa83cf00a33fd904a954bbaa395596250a4a363e05ee44d3aa",
+      "exactFrozenHelperPaths": [
+        "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/prep/runtime/capture.py"
+      ],
+      "recordedScheduleSHA256": "3fb0910895d90e616d9cb54811beb4943f28a9280449382cfb55e5d42e6a10e0",
+      "retainedScheduleMatchesRelease": true,
+      "publishedSourceBindingRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/published-source-binding.json"
+    },
+    {
+      "group": "runtime-mini-passive-route",
+      "rawCompletion": {
+        "captureCompleted": false,
+        "plannedCaptures": 58,
+        "actualCaptures": 0,
+        "errors": [],
+        "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+        "CPUBracketsAvailable": false,
+        "phaseTimingsKnown": false,
+        "noRetries": true
+      },
+      "rawCompletionRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-pro-reviewed-setup/completion.json",
+      "releaseRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-mini-passive-route/runtime-release.json",
+      "recordedHelperSHA256": "9b5d490bfb16db82b1f02858d222294402d5e19d73cf31fcbf186a290147d4cb",
+      "exactFrozenHelperPaths": [
+        "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/prep/runtime/capture-passive-route.py"
+      ],
+      "recordedScheduleSHA256": "dd2bc031af8536239615d8350649df11f62ac57ca6517c2ace13b233443d0f4c",
+      "retainedScheduleMatchesRelease": true,
+      "publishedSourceBindingRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/published-source-binding.json"
+    },
+    {
+      "group": "runtime-mini-automatic-source-tasks",
+      "rawCompletion": {
+        "captureCompleted": false,
+        "plannedCaptures": 58,
+        "actualCaptures": 0,
+        "errors": [],
+        "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+        "CPUBracketsAvailable": false,
+        "phaseTimingsKnown": false,
+        "noRetries": true
+      },
+      "rawCompletionRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-pro-reviewed-setup/completion.json",
+      "releaseRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-mini-automatic-source-tasks/runtime-release.json",
+      "recordedHelperSHA256": "59acad5fdee7210e85a7847bd623faeb1b0a55370acad7760ad1474e8832a79b",
+      "exactFrozenHelperPaths": [
+        "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/prep/runtime/capture-auto-route.py"
+      ],
+      "recordedScheduleSHA256": "47d1ae7420536830e9c63920ec64f5ea2c4e2747cd74c8566541b4e5eb03f546",
+      "retainedScheduleMatchesRelease": true,
+      "publishedSourceBindingRetainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-reviewed-setup/published-source-binding.json"
+    }
+  ],
+  "reviewEvidencePolicy": "Original erroneous Evo partial/full review reports and additive hand-visibility/transcript corrections are preserved as separate exact files. Raw completion PENDING_WHOLE_IMAGE_REVIEW is not rewritten by this packet. Pro review is retained with its sampled-frame-only limitations.",
+  "reviewReportPaths": [
+    "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-whole-image-review-initial23.json",
+    "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-whole-image-review-initial23-corrected.json",
+    "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-whole-image-review-all58.json",
+    "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-evo-whole-image-review-hand-visibility-correction.json",
+    "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/runtime-pro-passive-route-whole-image-review-all58.json"
+  ],
+  "appByteCorrespondence": {
+    "rawRecord": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-runtime/test-only-app-byte-correspondence.json",
+    "unchangedRawFields": {
+      "allBuiltAppInventoryAndBytesEqual": false,
+      "changed": [
+        "HangTen"
+      ],
+      "checks": 205,
+      "scope": "Signed app/plan/generated packages/model asset parity inventory before and after test-only audit change; test bundle may differ."
+    },
+    "limit": "This preserved record states signed HangTen app bytes differ across the test-only change; it does not establish blanket app byte equality. Separate copied install/parity/published-source binding records retain their exact original scope."
+  },
+  "helperScope": "Current frozen helper versions, prepared release helpers, schedules, and historical helper versions are copied without execution. Recorded executed arms identify their exact copied helper and schedule hashes separately.",
+  "observationLimits": "Simulator screenshot samples and raw helper records only. No CPU preparation brackets, GPU submission/present proof, exact phase timing, continuous inter-frame visibility, physical-device claim, or additional human acceptance is established by preservation.",
+  "explicitlyExcluded": [
+    "runtime-mini-automatic-source-tasks-fresh (active)",
+    "mutable ios lifecycle registry",
+    "pending final test group",
+    "pending final cleanup group",
+    "DerivedData/apps",
+    "all unrelated .context paths"
+  ]
+}

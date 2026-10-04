@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "orientation-diagnosis",
+  "script": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/inspect_orientation.py",
+  "timeoutSeconds": 120,
+  "startedUTC": "2026-10-01T16:55:02.569460+00:00",
+  "ownedProcessGroup": 19594,
+  "elapsedSeconds": 2.243742749968078,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

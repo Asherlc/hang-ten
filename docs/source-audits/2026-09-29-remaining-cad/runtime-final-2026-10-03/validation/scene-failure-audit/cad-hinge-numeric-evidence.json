@@ -1,0 +1,152 @@
+[
+  {
+    "boardID": "nature.stone-hanger",
+    "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+    "positionID": "edge-front-15mm-incut",
+    "currentHingePointsInModel": [
+      [
+        -0.05040302127599716,
+        -0.051482249051332474,
+        0.0
+      ],
+      [
+        -0.04975000023841858,
+        -0.002400000113993883,
+        -0.0
+      ],
+      [
+        0.050402987748384476,
+        -0.051482245326042175,
+        -3.350000099544559e-07
+      ],
+      [
+        0.04975000023841858,
+        -0.002400000113993883,
+        -0.0
+      ]
+    ],
+    "currentWorldPivot": [
+      8.381903171539307e-09,
+      0.006224344484508038,
+      -8.375000248861397e-08
+    ],
+    "currentWorldAxis": [
+      -0.8979645371437073,
+      -0.4400677978992462,
+      0.0
+    ],
+    "hardcodedTestPivotInModel": [
+      0,
+      -0.0024,
+      0
+    ],
+    "reproducedOldPivotDisplacementAt20Degrees": 0.007653388194739819,
+    "leadTerminalsOnlyMeanInModel": [
+      0.0,
+      -0.0024,
+      0.0
+    ],
+    "testPivotOffsetFromCurrentTerminalsMean": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "hypotheticalHorizontalTerminalHingeMaximumCachedBodyStationDisplacement": 0.017046086189289027,
+    "nativeContractRecommendation": "camera-only orbit preserves canonical body and full cached cord transforms; no hinge axis can preserve distributed non-collinear wrapped route stations"
+  },
+  {
+    "boardID": "tension.flash-board",
+    "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+    "positionID": "three-edge-upright",
+    "currentHingePointsInModel": [
+      [
+        0.026883777230978012,
+        0.03284299373626709,
+        -0.001866961014457047
+      ],
+      [
+        0.017000000923871994,
+        0.04800000041723251,
+        0.001339394017122686
+      ],
+      [
+        0.04013412073254585,
+        0.03308830037713051,
+        0.07789827883243561
+      ],
+      [
+        0.03099999949336052,
+        0.04800000041723251,
+        0.07466060668230057
+      ],
+      [
+        0.45986586809158325,
+        0.03308830037713051,
+        0.07789827883243561
+      ],
+      [
+        0.4690000116825104,
+        0.04800000041723251,
+        0.07466060668230057
+      ],
+      [
+        0.4731162190437317,
+        0.03284299373626709,
+        -0.001866961014457047
+      ],
+      [
+        0.4830000102519989,
+        0.04800000041723251,
+        0.001339394017122686
+      ],
+      [
+        0.017000000923871994,
+        0.04800000041723251,
+        0.07466060668230057
+      ],
+      [
+        0.03099999949336052,
+        0.04800000041723251,
+        0.001339394017122686
+      ],
+      [
+        0.4830000102519989,
+        0.04800000041723251,
+        0.07466060668230057
+      ],
+      [
+        0.4690000116825104,
+        0.04800000041723251,
+        0.001339394017122686
+      ]
+    ],
+    "currentWorldPivot": [
+      0.25,
+      -0.06438347697257996,
+      0.03799477592110634
+    ],
+    "currentWorldAxis": [
+      0.9878469705581665,
+      0.0,
+      -0.15542948246002197
+    ],
+    "hardcodedTestPivotInModel": [
+      0.25,
+      0.047999999,
+      0.038669699
+    ],
+    "reproducedOldPivotDisplacementAt20Degrees": 0.0017553216312080622,
+    "leadTerminalsOnlyMeanInModel": [
+      0.25,
+      0.048,
+      0.038
+    ],
+    "testPivotOffsetFromCurrentTerminalsMean": [
+      0.0,
+      -9.999999994736442e-10,
+      0.0006696990000000028
+    ],
+    "hypotheticalHorizontalTerminalHingeMaximumCachedBodyStationDisplacement": 0.01481254327982113,
+    "nativeContractRecommendation": "camera-only orbit preserves canonical body and full cached cord transforms; no hinge axis can preserve distributed non-collinear wrapped route stations"
+  }
+]

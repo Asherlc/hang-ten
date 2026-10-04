@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "name": "uv-normal-b722-diagnosis",
+  "timeoutSeconds": 120,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/diagnose_uv_normal_b722.py"
+  ],
+  "ownedProcessGroup": 3967,
+  "exitCode": 0,
+  "elapsedSeconds": 2.2320635829819366,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

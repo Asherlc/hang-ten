@@ -1,0 +1,83 @@
+{
+  "status": "pass",
+  "scope": "Author-owned completed native stage only; no export jobs started",
+  "resources": [
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-correction/author-probe-ownership.json",
+      "processGroup": 65415,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-correction/author-probe-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-correction/author-probe-v2-ownership.json",
+      "processGroup": 66105,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-correction/author-probe-v2-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-correction/author-probe-v3-ownership.json",
+      "processGroup": 70191,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-correction/author-probe-v3-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-correction/author-probe-v4-ownership.json",
+      "processGroup": 71799,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-correction/author-probe-v4-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-correction/author-probe-v5-ownership.json",
+      "processGroup": 83388,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-correction/author-probe-v5-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-correction/bounds-diagnosis-ownership.json",
+      "processGroup": 82274,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-correction/bounds-diagnosis-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-correction/final-native-sections-ownership.json",
+      "processGroup": 91415,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-correction/final-native-sections-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-correction/native-contacts-ownership.json",
+      "processGroup": 81583,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-correction/native-contacts-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-correction/native-contacts-v2-ownership.json",
+      "processGroup": 85378,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-correction/native-contacts-v2-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-correction/native-contacts-v3-ownership.json",
+      "processGroup": 90021,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-correction/native-contacts-v3-tmp",
+      "tempAbsent": true
+    },
+    {
+      "record": ".context/placid-badger/metolius-simulator-3d-functional-correction/normal-comparison-ownership.json",
+      "processGroup": 98490,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-functional-correction/normal-comparison-tmp",
+      "tempAbsent": true
+    }
+  ]
+}

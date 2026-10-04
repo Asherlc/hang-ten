@@ -1,0 +1,407 @@
+{
+  "createdAt": "2026-10-01T04:24:30.216306+00:00",
+  "package": "metolius-contact",
+  "reviewNumber": 7,
+  "status": "prepared for human review",
+  "humanAcceptance": "pending",
+  "blockingFindings": [],
+  "reviewLimitations": [
+    "Published envelope: 32.5 \u00d7 11 \u00d7 2.625 in, represented as 826 \u00d7 279 \u00d7 67 mm. The manufacturer diagram specifies 22 pocket depths, four central edge depths, a 53 mm flat sloper and 63 mm round slopers.",
+    "Aperture sizes and centres, relief curves, corner radii, central roof angle and unmeasured transitions are operator-selected display estimates. Lip and relief shapes differ visibly from the prior mesh; see complete comparisons below.",
+    "All 33 existing contact IDs and hand-capacity metadata are retained. Separate historical capacity work was not silently incorporated.",
+    "Neutral appearance is intentional: manufacturer swirl textures, colors, material bindings and mounting hardware are omitted.",
+    "Historical app captures identify the left/right pinch selection in the UI, but no clearly visible selected pinch surface appears on the front model in these views. They do not establish highlight extent or all-contact visual coverage.",
+    "A fresh iOS build and four full-frame app captures verify a selected left pocket, center edge and left pinch, including one real drag with selection preserved. All 33 contact IDs are available through accessibility. This is representative visual coverage, not an all-contact visual sweep. No geometry, package, appearance or source code changed; retained CAD compilation and reproducibility proof remain applicable. Human acceptance remains pending."
+  ],
+  "actualPackageSHA256": {
+    "source": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+    "model": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+    "descriptor": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7"
+  },
+  "expectedPackageSHA256": {
+    "source": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+    "model": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+    "descriptor": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7"
+  },
+  "hashClosure": {
+    "appValidation": true,
+    "packageVerification": true,
+    "reproducibilityReport": true,
+    "manufacturerSourceFiles": true
+  },
+  "comparisonProvenance": "Existing source-audit.md associates retained front/side/top comparisons with package-verification hashes and immutable prior commit d0e4e95191e4a76822815bb4eeef3a32caa6fea0. This packet verifies unchanged input bytes and records image hashes. No fresh render or recovery of unavailable original image-generation command metadata is claimed.",
+  "appProvenance": {
+    "kind": "retained historical captures",
+    "validation": "../app-review/validation.json",
+    "newAppRun": false,
+    "device": "iPhone 17 Pro",
+    "runtime": "iOS 26.5",
+    "selectedContactIDs": [
+      "pinch-left",
+      "pinch-right"
+    ]
+  },
+  "freshAppReview": {
+    "status": "captured and visually inspected; awaiting human review",
+    "proof": "fresh-app/validation.json",
+    "installedPackageProof": "fresh-app/proof/installed-package-validation.json",
+    "buildProof": "fresh-app/proof/ios-build-command.json",
+    "cleanupProof": "fresh-app/proof/verified-cleanup.json",
+    "separateFromHistoricalCaptures": true,
+    "selectedContactIDs": [
+      "pocket-4-left",
+      "edge-17-center",
+      "pinch-left"
+    ],
+    "captureCount": 4,
+    "actualDragOrbit": true,
+    "selectionPreserved": true,
+    "sourceSHA256": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+    "modelSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+    "descriptorSHA256": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7",
+    "builtBinarySHA256": "a367b7c76fb3b3f2f32f39db3e007c216878a40a477508fa1f0db5e491af91b2",
+    "visualFindings": {
+      "pocketHighlightVisible": true,
+      "centerEdgeHighlightVisible": true,
+      "pinchHighlightVisibleAfterOrbit": true,
+      "pinchHighlightNotVisibleAtFrontalCamera": true,
+      "freshFullFramesAndOverviewViewed": true
+    },
+    "retainedRawSHA256": {
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/center-edge-accessibility.json": "822e40cf17de0a6b415a04f7cd3c7bd1ad37e6d1985dbee1349440520afcd142",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/center-edge.png": "2de0235e56645ce0af52660a1cc86a0ff981fd3b653a55b59af735c9bd745cf9",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/pinch-left-accessibility.json": "a46339484e6db0df58079f1d9d543a6fcbdb12e0d84791e0c04e743c89b7f976",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/pinch-left-orbit-accessibility.json": "e40f7b5578e396b2d2a62cedc2332f1e9a9cba7dbbf71e1cac7ee7a7cd2bbae7",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/pinch-left-orbit.png": "3b7f162dfb00714326a5ff48951f6804b4789d438c40e462ccbb1116e7f48ce3",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/pinch-left.png": "7d3daa74e4d5ebd6943a1454726e3e93f8884d9c1d8ae4f02b04f46a96479947",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/pocket-left-accessibility.json": "88b93385e9d49961b45261e4f8152ffe3b05ed19eac9fbb0a3dfc097d61cb421",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/pocket-left.png": "75ac97d28329b37e50cabff29168355857eef0877a1ecf0a6d4d4aafb17723f2",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/validation.json": "93b17f09a881636fd9db66fcb4f7176630714130f3ab8ee4ee862a963c831126",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/proof/ios-build.log": "df04dc5190303d49e79b1d4a18e73e2a78fed136749f1dc8c772f56769b6c690",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/proof/ios-build-command.json": "88e7be707d2892e0ea59f492d87b2249b619e13ce8974a0dab1909bc6e6eb4e9",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/proof/installed-app-provenance.json": "222b743199dae4023c7ae4f3df929ce08be0961e14735497038fb07fddb49fb7",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/proof/installed-package-validation.json": "586702091b925e2d33989184a7ebc52405870a53da050f1139304c06e70af7ac",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/proof/ios-session.zsh": "c0b63a749e4dee75ef2d4948b7eaa8143fa44a778d7c40e7d929e48a487db956",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/proof/build_ios.py": "5171cbb9896aeb84d5e33b604e06a9ce0bfc94a844c870ba027c2c83c6000bad",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/proof/install_app.py": "0ec418427b4daeb244adc136b454701732b96e342edb55f9cafd609c408e192a",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/proof/capture_review.py": "67e1467943aa0b7825fd7bdc88a54b75deeb94820bbd3b3aaf25a6edd67d5d32",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/proof/generated-board.json": "189e42b66f563818aa94538260cdb60aabb3536e8915842379d8097132800b90",
+      "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/proof/verified-cleanup.json": "375025d6866d0039a469fa2bff750c5d4b56b89ae5d7569368f749f7e3fd2f4b"
+    }
+  },
+  "composition": "Complete image rectangles; uniform aspect-ratio fit and letterbox only. No crop, tracing, source registration, pixel geometry measurement, recoloring or content edits.",
+  "placements": [
+    {
+      "output": "reference-cad-overview.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-01.jpg",
+      "inputSHA256": "b9cf153d82f0072ae2e4b0064821dee1d666ff1d8b34ba21fed1fcfd6944c055",
+      "originalSize": [
+        2130,
+        2130
+      ],
+      "placedSize": [
+        778,
+        778
+      ],
+      "uniformScale": 0.3652582159624413,
+      "box": [
+        30,
+        120,
+        855,
+        840
+      ],
+      "crop": false
+    },
+    {
+      "output": "reference-cad-overview.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-02.jpg",
+      "inputSHA256": "6c824af42552a9ed12f7e336dac47d9a2c61441b6f90515d196f3484ad0a1202",
+      "originalSize": [
+        2130,
+        2130
+      ],
+      "placedSize": [
+        778,
+        778
+      ],
+      "uniformScale": 0.3652582159624413,
+      "box": [
+        915,
+        120,
+        855,
+        840
+      ],
+      "crop": false
+    },
+    {
+      "output": "reference-cad-overview.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/review/cad-front.png",
+      "inputSHA256": "1b3e3c13fe4b4d1bfc9acc790e6dd5dbec38aaa8041d32e8126bd8e518465afb",
+      "originalSize": [
+        1100,
+        650
+      ],
+      "placedSize": [
+        724,
+        428
+      ],
+      "uniformScale": 0.6584615384615384,
+      "box": [
+        30,
+        990,
+        855,
+        490
+      ],
+      "crop": false
+    },
+    {
+      "output": "reference-cad-overview.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/review/cad-side.png",
+      "inputSHA256": "3695d74fb3f27a7ee8abf6c6498e373336be1922036b77e6e8cf8e9095c1751f",
+      "originalSize": [
+        1100,
+        650
+      ],
+      "placedSize": [
+        724,
+        428
+      ],
+      "uniformScale": 0.6584615384615384,
+      "box": [
+        915,
+        990,
+        855,
+        490
+      ],
+      "crop": false
+    },
+    {
+      "output": "reference-cad-overview.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/review/cad-top.png",
+      "inputSHA256": "4eff3037eaac1c235d1e9500ee29569b2dc3e529cfcfcc703be046e333c5a7f1",
+      "originalSize": [
+        1100,
+        650
+      ],
+      "placedSize": [
+        724,
+        428
+      ],
+      "uniformScale": 0.6584615384615384,
+      "box": [
+        30,
+        1510,
+        1740,
+        490
+      ],
+      "crop": false
+    },
+    {
+      "output": "app-selection-overview.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/app-review/default.png",
+      "inputSHA256": "7aa3e7af395901324dee896344020417167385782ed4a5da910933ddb171b2b8",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        613,
+        1333
+      ],
+      "uniformScale": 0.5083905415713196,
+      "box": [
+        25,
+        115,
+        645,
+        1395
+      ],
+      "crop": false
+    },
+    {
+      "output": "app-selection-overview.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/app-review/contact-selection.png",
+      "inputSHA256": "2ebdcc234029ef48f4fb1da66a6482cead892d30ebb4ec5cf9a01c4852fa0a80",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        613,
+        1333
+      ],
+      "uniformScale": 0.5083905415713196,
+      "box": [
+        690,
+        115,
+        645,
+        1395
+      ],
+      "crop": false
+    },
+    {
+      "output": "fresh-app-selection-overview.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/pocket-left.png",
+      "inputSHA256": "75ac97d28329b37e50cabff29168355857eef0877a1ecf0a6d4d4aafb17723f2",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        605,
+        1315
+      ],
+      "position": [
+        28,
+        177
+      ],
+      "uniformScale": 0.5016583747927031,
+      "crop": false
+    },
+    {
+      "output": "fresh-app-selection-overview.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/center-edge.png",
+      "inputSHA256": "2de0235e56645ce0af52660a1cc86a0ff981fd3b653a55b59af735c9bd745cf9",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        605,
+        1315
+      ],
+      "position": [
+        663,
+        177
+      ],
+      "uniformScale": 0.5016583747927031,
+      "crop": false
+    },
+    {
+      "output": "fresh-app-selection-overview.png",
+      "input": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/pinch-left-orbit.png",
+      "inputSHA256": "3b7f162dfb00714326a5ff48951f6804b4789d438c40e462ccbb1116e7f48ce3",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        605,
+        1315
+      ],
+      "position": [
+        1298,
+        177
+      ],
+      "uniformScale": 0.5016583747927031,
+      "crop": false
+    }
+  ],
+  "inputSHA256": {
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources.json": "380115b026a9a041751125143b7f1445014738716357cf650b3bb1dcbd24af9d",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/metadata-preservation.json": "0938ef73bae44bacd348ba10186999f34d126f769097afec944a409905f1171b",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/authored-design.json": "41fc4e70a73400f3047134ad9190174086ef0874987a69899be0b927afe46236",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/reproducibility-final.json": "220e22744a94b75e24aba45fc32327ad9a5b388ea180f278274fb9678958888b",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/package-verification.json": "85c335f033456d7ca1eb10863a2789f7a9989b8f513ba21d3b410b7923094642",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/source-audit.md": "499b18254a4fd23d59ef01fc0a7191f7b76df2c009a31b743a9c3c58dd27d1b0",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/metadata-diff.json": "2430ec4a24196d4a142bdb69f144bb0fcde8b93591b835c9b62e38d5de2461d7",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/native-check.json": "e0c4bbc87cd051806a4b8d16b240786f53f0f37c4e66749f1459b76b8315cbee",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/compile.json": "e627870c9a6c8fe631d45599f4dc43f5c0d408467c4e2f401b9a62cdcc56b882",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/app-review/index.html": "2aef413f985997183a7d1d87c65069431ed3ca518fa9808b20983047fc55ae56",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/app-review/contact-selection.png": "2ebdcc234029ef48f4fb1da66a6482cead892d30ebb4ec5cf9a01c4852fa0a80",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/app-review/default-accessibility.json": "a8d0bcd7fa66b1604bcc301e4dde2bfc83d1b62eb3b594b714c22e26a31d4668",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/app-review/contact-selection-accessibility.json": "71af9ef01f1dcd6cba5903c8dee1de4f4a11149e6089b26e6bd4f507d3c29d6a",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/app-review/index.md": "3d3a2ab710ec0ec515ba3bc3722ada289f9099ff2a904be7b146dcae03eeef35",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/app-review/validation.json": "092be603326279a3320111cb175dd57b4c2ef8556c0d266810f3c83e87e62b20",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/app-review/default.png": "7aa3e7af395901324dee896344020417167385782ed4a5da910933ddb171b2b8",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/review/comparison-side.png": "55d20d89a0640b2261f4bf61d0778743bd6eb579f01e011c028d9e2999d73b3a",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/review/cad-side.png": "3695d74fb3f27a7ee8abf6c6498e373336be1922036b77e6e8cf8e9095c1751f",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/review/previous-top.png": "12ad36426d736be6a73bdc82f920be9531550d0b80432fb6e378c8d681d0a44b",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/review/comparison-top.png": "7424bdbf94c3ba957f252b4a7d21df27b203c63c89709f7d42e3180f9a92ff2b",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/review/previous-front.png": "38e9a254dbaf238cc1e5d79f6a42dcd4a0676cf0ef8fec319c1189090bfd3a4c",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/review/comparison-front.png": "1fffc22ecf2e1617e112245883fcf2fd3cb9ba573f3ccdfd1bc5e082dd073e82",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/review/previous-side.png": "b56878b402b48a63d00aa7491a035bfd26760b4c33950fbca4b1c04715b5363a",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/review/cad-front.png": "1b3e3c13fe4b4d1bfc9acc790e6dd5dbec38aaa8041d32e8126bd8e518465afb",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/review/cad-top.png": "4eff3037eaac1c235d1e9500ee29569b2dc3e529cfcfcc703be046e333c5a7f1",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-page.html": "042c7ff4df1a18634567594cecb82f4e62273a617a3a7145316d34fe85b55983",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-02.jpg": "6c824af42552a9ed12f7e336dac47d9a2c61441b6f90515d196f3484ad0a1202",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-01.jpg": "b9cf153d82f0072ae2e4b0064821dee1d666ff1d8b34ba21fed1fcfd6944c055",
+    "Hangboards/metolius-contact/metolius-contact.FCStd": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+    "Hangboards/metolius-contact/assets/primary.usdz": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+    "Hangboards/metolius-contact/assets/primary.model.json": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7"
+  },
+  "outputSHA256": {
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/reference-cad-overview.png": "837d50e7436a97656b18c37bb1f09382e48d640c4eaea0fd80126bf49c8090fe",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/app-selection-overview.png": "b63b639caf96c8fd93fd479852726bf0d5acf8fd924867ec0d529e38ee8b8fa7",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/index.md": "ab82bac2c85d876542a2bbcc0035b7b20b4760f185e5dd5c0fe3ecc3cba3bb16",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/index.html": "076d58152e64bf7262509cd32944f34efbb3857532b9eeb7b5546f0a267e52e8",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app-selection-overview.png": "47a40c827e1825469878a9d0c087e9fb3ef84130a61335bd09a1c26a98cedf81"
+  },
+  "sources": [
+    {
+      "slug": "metolius-contact",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-01.jpg",
+      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Contact-Hangboard-black-white.jpg?v=1759459002",
+      "publisher": "Metolius",
+      "sha256": "b9cf153d82f0072ae2e4b0064821dee1d666ff1d8b34ba21fed1fcfd6944c055",
+      "bytes": 275273,
+      "support": "Manufacturer product gallery",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer"
+    },
+    {
+      "slug": "metolius-contact",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-02.jpg",
+      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/con-num-dep_341f2901-a11e-4256-a4c3-0531110c730e.jpg?v=1762201170",
+      "publisher": "Metolius",
+      "sha256": "6c824af42552a9ed12f7e336dac47d9a2c61441b6f90515d196f3484ad0a1202",
+      "bytes": 128201,
+      "support": "Manufacturer product gallery",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer"
+    },
+    {
+      "slug": "metolius-contact",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-page.html",
+      "url": "https://www.metoliusclimbing.com/products/contact-training-board",
+      "publisher": "Metolius",
+      "sha256": "042c7ff4df1a18634567594cecb82f4e62273a617a3a7145316d34fe85b55983",
+      "bytes": 217261,
+      "support": "Manufacturer product identity and published overall dimensions",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer supplementary fact source"
+    }
+  ],
+  "originalEvidenceUnchanged": true,
+  "packageChanged": false,
+  "newResources": true,
+  "visualInspection": {
+    "overviewImagesViewed": true,
+    "completeImageRectangles": true,
+    "titlesReadable": true,
+    "historicalAppLabelVisible": true,
+    "freshAppSectionReserved": false,
+    "freshAppFullFramesAndOverviewViewed": true
+  },
+  "relativeLinkCheck": {
+    "passed": true,
+    "count": 17
+  },
+  "workerCreatedExternalResources": false,
+  "externalResourceCleanup": {
+    "simulator": "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD",
+    "cleanupStatus": 0,
+    "derivedDataRemoved": true,
+    "owner": "placid-badger",
+    "simulatorName": "Hang Ten Paseo placid-badger Metolius Contact Review",
+    "simulatorDeletionVerified": true,
+    "verificationCommand": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "list",
+      "devices",
+      "--json"
+    ]
+  }
+}

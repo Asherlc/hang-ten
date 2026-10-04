@@ -1,0 +1,11 @@
+{
+  "owner": "placid-badger",
+  "agentArchivedBeforeDeletion": true,
+  "exactProviderPlanPath": "/Users/asherlc/.claude/plans/you-are-an-opus-prancy-lemur.md",
+  "expectedSHA256": "c28d58836fd473b4cd2ac853875106f5dbdb03dc8d537f75bdc8d23d593e156d",
+  "actualBeforeDeletionSHA256": "c28d58836fd473b4cd2ac853875106f5dbdb03dc8d537f75bdc8d23d593e156d",
+  "existedBeforeCleanup": true,
+  "absenceVerified": true,
+  "sharedPlansDirectoryPreserved": true,
+  "unknownResourcesTouched": false
+}

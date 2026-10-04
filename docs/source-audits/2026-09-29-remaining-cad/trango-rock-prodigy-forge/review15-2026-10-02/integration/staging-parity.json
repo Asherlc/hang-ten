@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "xcode": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-xcode-stage/Build/HangTen.app/Hangboards/trango-rock-prodigy-forge",
+    "generatedBoardSHA256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a",
+    "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+    "sourceAndSidecarAbsent": true
+  },
+  "android": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-android-stage/Hangboards/trango-rock-prodigy-forge",
+    "generatedBoardSHA256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a",
+    "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+    "sourceAndSidecarAbsent": true
+  },
+  "xcodeODRAsset": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-xcode-stage/Derived/HangTenModelODR/trango-rock-prodigy-forge/Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+  "androidInlineAsset": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-android-stage/Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+  "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61"
+}

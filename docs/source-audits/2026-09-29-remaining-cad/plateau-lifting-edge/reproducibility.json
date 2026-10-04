@@ -1,0 +1,46 @@
+{
+  "verification": "Fresh pinned FreeCAD process compiled each presentation from current native source; runtime output compared against checked-in package assets.",
+  "sourceSHA256Before": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+  "sourceSHA256After": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+  "sourceUnchanged": true,
+  "command": "Tools/HangboardCAD/verify_reproducible.py --package plateau-lifting-edge --freecad /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd --extra-python-path .context/placid-badger/pxr311 --keep-rebuild .context/placid-badger/cad-raster-boards/reproducibility",
+  "verifierSHA256": "5dba947d12ad284d286e7c87682d7d09010ae41c4b66e8f96755574b6033690a",
+  "result": {
+    "assetMatches": true,
+    "bytes": 102818,
+    "committedAssetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+    "descriptorBindsCommittedAsset": true,
+    "descriptorMatches": true,
+    "package": "plateau-lifting-edge",
+    "presentations": [
+      {
+        "assetMatches": true,
+        "bytes": 33622,
+        "committedAssetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+        "descriptorBindsCommittedAsset": true,
+        "descriptorMatches": true,
+        "presentationID": "depth-18mm",
+        "rebuiltAssetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
+      },
+      {
+        "assetMatches": true,
+        "bytes": 34594,
+        "committedAssetSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+        "descriptorBindsCommittedAsset": true,
+        "descriptorMatches": true,
+        "presentationID": "depth-15mm",
+        "rebuiltAssetSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53"
+      },
+      {
+        "assetMatches": true,
+        "bytes": 34602,
+        "committedAssetSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+        "descriptorBindsCommittedAsset": true,
+        "descriptorMatches": true,
+        "presentationID": "depth-10mm",
+        "rebuiltAssetSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41"
+      }
+    ],
+    "rebuiltAssetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
+  }
+}

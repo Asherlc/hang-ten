@@ -1,0 +1,8 @@
+{
+  "name": "placid-badger-karma8a-android-staging",
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma8a-review11/refinement-2026-10-02/root/check_android_staging.py"
+  ],
+  "timeoutSeconds": 600
+}

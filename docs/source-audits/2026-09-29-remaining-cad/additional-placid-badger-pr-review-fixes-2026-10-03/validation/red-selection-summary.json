@@ -1,0 +1,64 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "7774F2CB-D5DF-45EA-A5ED-FFACBEAED21B",
+        "deviceName" : "Hang Ten Paseo placid-badger Review PRReviewFixes20261003",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "HangTen · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1791084681.471,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791084670.183,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertTrue failed - Tapping the selected 10 mm configuration must remove it.",
+      "targetName" : "HangTenTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "CustomRoutineDraftTests/testConfiguredDepthToggleUsesResolvedPositionWithinSharedPresentation()",
+      "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenTests/CustomRoutineDraftTests/testConfiguredDepthToggleUsesResolvedPositionWithinSharedPresentation",
+      "testName" : "testConfiguredDepthToggleUsesResolvedPositionWithinSharedPresentation()"
+    },
+    {
+      "failureText" : "XCTAssertNil failed: \"depth-18\" - Work without a prescribed contact must not choose a configured board presentation.",
+      "targetName" : "HangTenTests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "WorkoutTimelineTests/testSelfSelectedWorkDoesNotRequestAConfiguredPresentation()",
+      "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenTests/WorkoutTimelineTests/testSelfSelectedWorkDoesNotRequestAConfiguredPresentation",
+      "testName" : "testSelfSelectedWorkDoesNotRequestAConfiguredPresentation()"
+    }
+  ],
+  "title" : "Test - HangTen",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "2 runs of 1 test failed with XCTAssertNil failed: \"depth-18\" - Work without a prescribed contact must not choose a configured board presentation."
+    }
+  ],
+  "totalTestCount" : 2
+}

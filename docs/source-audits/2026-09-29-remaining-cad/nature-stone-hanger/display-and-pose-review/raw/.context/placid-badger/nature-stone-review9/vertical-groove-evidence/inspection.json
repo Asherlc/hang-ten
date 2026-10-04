@@ -1,0 +1,381 @@
+{
+  "status": "pass-read-only-source-distinction",
+  "owner": "placid-badger",
+  "reviewNumber": 9,
+  "recordedAtUTC": "2026-10-01T22:43:08.788571+00:00",
+  "userFact": "there is 1 vertical groove on either side that the cord nestles into",
+  "answeredTopology": "Enters side holes; notches guide it",
+  "sourceInterpretation": {
+    "verticalSeatsPerSide": 1,
+    "verticalOrientation": "Longitudinal along the narrow side-face height; near its thickness centerline.",
+    "verticalSpan": "Qualitative top-to-bottom side-face seat, shown in whole side photo and technical drawing; no numeric span measured.",
+    "cordEntryPlacement": "Along upper part of the vertical seat, into the middle transverse-level side opening; no absolute height measured.",
+    "transverseNotchesPerSide": 3,
+    "preserveTransverseNotches": true,
+    "hiddenConnection": "Unspecified beyond visible side-hole entry."
+  },
+  "wholeImageInterpretations": {
+    "Stone_Hanger_Granite_3.jpg": {
+      "wholeImageViewed": true,
+      "revision": "Approved exact Granite gallery side photo",
+      "interpretation": [
+        "One narrow vertical/longitudinal centerline recess runs along the visible narrow side face from top to bottom.",
+        "The cord occupies the upper portion of this seat and enters the existing opening at the middle of three transverse adjustment-notch levels.",
+        "Three transverse grooves coexist and cross the vertical seat.",
+        "The far side face is occluded; one-per-each-side count is the exact user fact, corroborated by symmetric gallery/drawing context."
+      ],
+      "numericGeometryDerivedFromPixels": false
+    },
+    "StonehangerTechDrawing_Draft1.jpg": {
+      "wholeImageViewed": true,
+      "revision": "Approved drawing naming front granite contact and reverse6/10mm contacts",
+      "interpretation": [
+        "The complete side view draws a full-height narrow centerline seat plus three transverse adjustment notches.",
+        "The side and isometric views draw cord following the upper part of the vertical seat toward a central/middle entry.",
+        "Front and reverse views support the same8-contact revision and symmetric side adjustment construction."
+      ],
+      "numericGeometryDerivedFromPixels": false
+    },
+    "Stone_Hanger_Granite_4.jpg": {
+      "wholeImageViewed": true,
+      "revision": "Approved Granite close-up, viewed in full as supplied by maker",
+      "interpretation": [
+        "The visible side shows the transverse grooves crossing its centerline and cord ending in the middle entry.",
+        "The naturally supplied close-up corroborates oak/granite/contact revision and preserves the transverse cuts; no additional crop was made."
+      ],
+      "numericGeometryDerivedFromPixels": false
+    },
+    "Stone_Hanger_Granite_1.jpg": {
+      "wholeImageViewed": true,
+      "revision": "Approved whole Granite front photo",
+      "interpretation": [
+        "Shows the front oak/granite revision and lateral adjustment mouths on both sides.",
+        "The side-face vertical seat is not exposed well enough in this frontal view to count it independently."
+      ],
+      "numericGeometryDerivedFromPixels": false
+    },
+    "walkthrough-storyboard-4.jpg": {
+      "wholeImageViewed": true,
+      "interpretation": [
+        "Whole provider sheet shows hands changing cord placement/board orientation; multiple wood/product variants appear.",
+        "Corroborates adjustment mechanism only, without exact-revision quantitative seat dimensions or hidden topology."
+      ],
+      "secondsApprox": [
+        36,
+        44
+      ]
+    },
+    "walkthrough-storyboard-5.jpg": {
+      "wholeImageViewed": true,
+      "interpretation": [
+        "Whole provider sheet shows side cord and board orientation adjustments and multiple variants.",
+        "Secondary mechanism corroboration; no per-hold universal groove mapping or quantitative geometry inferred."
+      ],
+      "secondsApprox": [
+        45,
+        53
+      ]
+    }
+  },
+  "primarySourceRegisterSHA256": "d5460e01110dbe8da61593cbfa9c67470085a6f64a0c044df8924a55c6c6dbab",
+  "approvedPrimarySourceSet": {
+    "state": "approved",
+    "reviewer": "user",
+    "date": "2026-09-29",
+    "quote": "those are fine, feel free to use more searches for individual boards as needed",
+    "scope": "Exact retained visual set and further individual manufacturer source research."
+  },
+  "sources": [
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/evidence/nature-stone-hanger.html",
+      "retainedPath": "raw/primary/nature-stone-hanger.html",
+      "sha256": "9724da3a1145da00c4d0e11afc268eb6f638d5ef5daf62e3e40bef7e7dde66ea",
+      "bytes": 575904,
+      "sourceURL": "https://natureclimbing.com/products/stone-hanger-1",
+      "publisher": "Nature Climbing",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/evidence/nature-stone-hanger-granite-variant.html",
+      "retainedPath": "raw/primary/nature-stone-hanger-granite-variant.html",
+      "sha256": "2154d6b87ae40bc5f4ad93b73122f2a732f777f6985fbd8ee79eedf22d93ef0a",
+      "bytes": 575996,
+      "sourceURL": "https://natureclimbing.com/products/stone-hanger-1?variant=47783638597970",
+      "publisher": "Nature Climbing",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/evidence/Stone_Hanger_Granite_1.jpg",
+      "retainedPath": "raw/primary/Stone_Hanger_Granite_1.jpg",
+      "sha256": "8e8df7719638e42d4018a43254b3dac0bf3bfb5ac0d6ba149e9c92f634254f40",
+      "bytes": 340996,
+      "sourceURL": "https://natureclimbing.com/cdn/shop/files/Stone_Hanger_Granite_1.jpg?v=1760101291",
+      "publisher": "Nature Climbing",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/evidence/Stone_Hanger_Granite_3.jpg",
+      "retainedPath": "raw/primary/Stone_Hanger_Granite_3.jpg",
+      "sha256": "905103e785b884af1a56abc203010cac92ade82d9e3a9e97d67d3427de4c9bc2",
+      "bytes": 185000,
+      "sourceURL": "https://natureclimbing.com/cdn/shop/files/Stone_Hanger_Granite_3.jpg?v=1760101291",
+      "publisher": "Nature Climbing",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/evidence/Stone_Hanger_Granite_4.jpg",
+      "retainedPath": "raw/primary/Stone_Hanger_Granite_4.jpg",
+      "sha256": "56d7f7312d42222f66bd01cfd7e77a5c9f711dd55dea3cfc885ce5094f322576",
+      "bytes": 1093675,
+      "sourceURL": "https://natureclimbing.com/cdn/shop/files/Stone_Hanger_Granite_4.jpg?v=1760859575",
+      "publisher": "Nature Climbing",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/evidence/StonehangerTechDrawing_Draft1.jpg",
+      "retainedPath": "raw/primary/StonehangerTechDrawing_Draft1.jpg",
+      "sha256": "57287e539da523b0366c3cf5a0d1c0b551a0ee65f2fddae202c9c4614bc1d7ee",
+      "bytes": 78855,
+      "sourceURL": "https://natureclimbing.com/cdn/shop/files/StonehangerTechDrawing_Draft1.jpg?v=1760860112",
+      "publisher": "Nature Climbing",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/source-register.json",
+      "retainedPath": "raw/primary/source-register.json",
+      "sha256": "d5460e01110dbe8da61593cbfa9c67470085a6f64a0c044df8924a55c6c6dbab",
+      "bytes": 6226
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/1GNCxUO9ibs-oembed.json",
+      "retainedPath": "raw/maker-video/1GNCxUO9ibs-oembed.json",
+      "sha256": "0df80bb4da275efe5a5dfaa3a4915b2dd11f5963bd853e03ce94bcfcf40c056a",
+      "bytes": 826
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/Ohzbif5YZtU-auto-captions.json",
+      "retainedPath": "raw/maker-video/Ohzbif5YZtU-auto-captions.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/Ohzbif5YZtU-oembed.json",
+      "retainedPath": "raw/maker-video/Ohzbif5YZtU-oembed.json",
+      "sha256": "9823a334bda63032017bd7d444f8c71ccd9509d225449e49415cacfb6b9c2026",
+      "bytes": 816
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/Ohzbif5YZtU-player.json",
+      "retainedPath": "raw/maker-video/Ohzbif5YZtU-player.json",
+      "sha256": "d61799cb13ca8dfc3839c289256ae622fe1a8e70332f845a731503e53c8404f1",
+      "bytes": 78024
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/Ohzbif5YZtU-watch.html",
+      "retainedPath": "raw/maker-video/Ohzbif5YZtU-watch.html",
+      "sha256": "2cdde9cce198a2b753105ad86c3a69ec63bfa2f818ce4051750f298e206ab676",
+      "bytes": 1163568
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/retrieval-and-inspection.json",
+      "retainedPath": "raw/maker-video/retrieval-and-inspection.json",
+      "sha256": "ca957873c52dbfabbaabba481027dc32f0d2f7e61d824b350d3bc54df3288475",
+      "bytes": 3655
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/source-register.json",
+      "retainedPath": "raw/maker-video/source-register.json",
+      "sha256": "a62f709f38d0c4ffc4901b3af8a0b3f0e957ca9d24a72e436d11bc2bce41c83a",
+      "bytes": 500
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/stKU0lqaV0E-oembed.json",
+      "retainedPath": "raw/maker-video/stKU0lqaV0E-oembed.json",
+      "sha256": "153a01c8536bfcabb255035564f3fa128e3bdf8d3cc8214ee56154fd61ecd5fa",
+      "bytes": 844
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/stone-hanger-intro.html",
+      "retainedPath": "raw/maker-video/stone-hanger-intro.html",
+      "sha256": "1e4d0b7fa3c596ff9b9f24daf7a2f6cecdade25c4240335bbf54da12871a2451",
+      "bytes": 312174
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/storyboard-register.json",
+      "retainedPath": "raw/maker-video/storyboard-register.json",
+      "sha256": "aa7dd09dc6e20e9f9e64d6388b5457f10ffe1c49f0075f90b801aceb4826c0f4",
+      "bytes": 7655
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/walkthrough-storyboard-0.jpg",
+      "retainedPath": "raw/maker-video/walkthrough-storyboard-0.jpg",
+      "sha256": "616c7a1c31e071ab69d5c9f4e4b29e3e994d076568051a1481127a81ad469582",
+      "bytes": 44996,
+      "sourceURL": "https://i.ytimg.com/sb/Ohzbif5YZtU/storyboard3_L3/M0.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCO_Pwc8G&sigh=rs$AOn4CLD_DOroeKN4QUnEVyWgGtT1UI48Dg",
+      "publisher": "Nature Climbing",
+      "secondsApprox": [
+        0,
+        8
+      ]
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/walkthrough-storyboard-1.jpg",
+      "retainedPath": "raw/maker-video/walkthrough-storyboard-1.jpg",
+      "sha256": "ae370bf06bcf3690c4ac672217710377b992fa61d3b85ad66f63416ca7582418",
+      "bytes": 40949,
+      "sourceURL": "https://i.ytimg.com/sb/Ohzbif5YZtU/storyboard3_L3/M1.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCO_Pwc8G&sigh=rs$AOn4CLD_DOroeKN4QUnEVyWgGtT1UI48Dg",
+      "publisher": "Nature Climbing",
+      "secondsApprox": [
+        9,
+        17
+      ]
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/walkthrough-storyboard-2.jpg",
+      "retainedPath": "raw/maker-video/walkthrough-storyboard-2.jpg",
+      "sha256": "d7b871534947bf10c422d3af17fb82d39a3fd27c7a51159d0e8ad32cf7543589",
+      "bytes": 41761,
+      "sourceURL": "https://i.ytimg.com/sb/Ohzbif5YZtU/storyboard3_L3/M2.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCO_Pwc8G&sigh=rs$AOn4CLD_DOroeKN4QUnEVyWgGtT1UI48Dg",
+      "publisher": "Nature Climbing",
+      "secondsApprox": [
+        18,
+        26
+      ]
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/walkthrough-storyboard-3.jpg",
+      "retainedPath": "raw/maker-video/walkthrough-storyboard-3.jpg",
+      "sha256": "cebc5945781e45a7f74887f347c2a47bef938a32013bc9bde074a0de78124776",
+      "bytes": 43618,
+      "sourceURL": "https://i.ytimg.com/sb/Ohzbif5YZtU/storyboard3_L3/M3.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCO_Pwc8G&sigh=rs$AOn4CLD_DOroeKN4QUnEVyWgGtT1UI48Dg",
+      "publisher": "Nature Climbing",
+      "secondsApprox": [
+        27,
+        35
+      ]
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/walkthrough-storyboard-4.jpg",
+      "retainedPath": "raw/maker-video/walkthrough-storyboard-4.jpg",
+      "sha256": "2a7edfcf7ca49fa368f44840fd12f34207d3a3a47e0833c339108698c896fb6a",
+      "bytes": 42538,
+      "sourceURL": "https://i.ytimg.com/sb/Ohzbif5YZtU/storyboard3_L3/M4.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCO_Pwc8G&sigh=rs$AOn4CLD_DOroeKN4QUnEVyWgGtT1UI48Dg",
+      "publisher": "Nature Climbing",
+      "secondsApprox": [
+        36,
+        44
+      ]
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/walkthrough-storyboard-5.jpg",
+      "retainedPath": "raw/maker-video/walkthrough-storyboard-5.jpg",
+      "sha256": "33a7205e1e17bee887c254772b52929f78bdb0a244b4dfcb90b1f185fe066446",
+      "bytes": 42553,
+      "sourceURL": "https://i.ytimg.com/sb/Ohzbif5YZtU/storyboard3_L3/M5.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCO_Pwc8G&sigh=rs$AOn4CLD_DOroeKN4QUnEVyWgGtT1UI48Dg",
+      "publisher": "Nature Climbing",
+      "secondsApprox": [
+        45,
+        53
+      ]
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/walkthrough-storyboard-6.jpg",
+      "retainedPath": "raw/maker-video/walkthrough-storyboard-6.jpg",
+      "sha256": "561d59aa45879c41f02de2e4139adcc168c0eea2a6f8608c7c858b063f56022e",
+      "bytes": 49289,
+      "sourceURL": "https://i.ytimg.com/sb/Ohzbif5YZtU/storyboard3_L3/M6.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCO_Pwc8G&sigh=rs$AOn4CLD_DOroeKN4QUnEVyWgGtT1UI48Dg",
+      "publisher": "Nature Climbing",
+      "secondsApprox": [
+        54,
+        62
+      ]
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/walkthrough-storyboard-7.jpg",
+      "retainedPath": "raw/maker-video/walkthrough-storyboard-7.jpg",
+      "sha256": "a6c93964ef05cd708ff43b98119eabd15ca90528394ead03c6a0bcb6ad133873",
+      "bytes": 38808,
+      "sourceURL": "https://i.ytimg.com/sb/Ohzbif5YZtU/storyboard3_L3/M7.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCO_Pwc8G&sigh=rs$AOn4CLD_DOroeKN4QUnEVyWgGtT1UI48Dg",
+      "publisher": "Nature Climbing",
+      "secondsApprox": [
+        63,
+        71
+      ]
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/walkthrough-storyboard-8.jpg",
+      "retainedPath": "raw/maker-video/walkthrough-storyboard-8.jpg",
+      "sha256": "906f625fd37802a3a2c9ff95b0576aa3bb343e4d58154ffb28fc588ce8b044f9",
+      "bytes": 40848,
+      "sourceURL": "https://i.ytimg.com/sb/Ohzbif5YZtU/storyboard3_L3/M8.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCO_Pwc8G&sigh=rs$AOn4CLD_DOroeKN4QUnEVyWgGtT1UI48Dg",
+      "publisher": "Nature Climbing",
+      "secondsApprox": [
+        72,
+        80
+      ]
+    },
+    {
+      "sourcePath": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources/walkthrough-storyboard-9.jpg",
+      "retainedPath": "raw/maker-video/walkthrough-storyboard-9.jpg",
+      "sha256": "9703fb105e4864b0feab1aa4786789f20c7c5236c68fc7d254e7525b37959a8b",
+      "bytes": 41662,
+      "sourceURL": "https://i.ytimg.com/sb/Ohzbif5YZtU/storyboard3_L3/M9.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCO_Pwc8G&sigh=rs$AOn4CLD_DOroeKN4QUnEVyWgGtT1UI48Dg",
+      "publisher": "Nature Climbing",
+      "secondsApprox": [
+        81,
+        89
+      ]
+    }
+  ],
+  "sourceFactsVsEstimates": {
+    "sourced": [
+      "One vertical seat per side is exact user correction, visually corroborated on visible side by approved primary photo and drawing.",
+      "Three transverse adjustment notches per side remain source supported.",
+      "Cord lies in the upper vertical seat and enters a side opening at the middle notch level.",
+      "Approved revision has oak body, granite insert and eight contact identities."
+    ],
+    "displayEstimates": [
+      "Vertical seat width, depth, radius and analytic cross-section.",
+      "Numeric seat endpoint offsets, corner blending and precise entry height.",
+      "Cord radius/length, support offsets, pose angles and all loaded display poses."
+    ],
+    "notInferred": [
+      "No numeric geometry from image coordinates.",
+      "No hidden side-to-side or top-to-bottom internal connection.",
+      "No universal maker grip-to-notch mapping.",
+      "No continuum/global equilibrium or load safety."
+    ]
+  },
+  "makerVideoLimits": {
+    "videoURL": "https://www.youtube.com/watch?v=Ohzbif5YZtU",
+    "publisher": "Nature Climbing",
+    "fullPlayableVideoObtained": false,
+    "fullSheetsRetained": 10,
+    "sheetsIndependentlyViewedThisReview": [
+      4,
+      5
+    ],
+    "otherSheets": "Retained exact with prior retrieval record, not newly claimed independently inspected here.",
+    "automaticCaptionBytes": 0,
+    "multipleVariants": true
+  },
+  "priorPacketDisposition": {
+    "status": "superseded-feature-fidelity-before-global-application",
+    "priorPackage": {
+      "sourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+      "modelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+      "descriptorSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
+      "sidecarSHA256": "7c24835c38c36ad16805c605970e939f02fa40007ee12b219a4d9da1860746fb"
+    },
+    "packet": ".context/placid-badger/nature-stone-review9/pre-vertical-groove-installed-packet",
+    "inventorySHA256": "3845bea0a7756714fca83efb6d9d7ccdcca06f3fa737ff78858d3dd5bc65772b",
+    "oldChecks": "Technical passes remain valid only for old identities. Missing vertical seat requires corrected geometry and fresh native/export/cord/runtime gates; no pass is carried forward.",
+    "humanAcceptance": "pending"
+  },
+  "blockingUnknowns": [
+    "Final corrected source/model/descriptor/sidecar hashes and fresh proofs are not ready."
+  ],
+  "canonicalOrGlobalMutation": false,
+  "geometryAuthoringOrImageMeasurement": false,
+  "newResources": false
+}

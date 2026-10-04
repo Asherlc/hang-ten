@@ -1,0 +1,40 @@
+{
+  "status": "pass",
+  "humanAcceptance": false,
+  "canonicalPromotionPerformed": false,
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+  "modelBytes": 2142945,
+  "triangles": 86039,
+  "twoNormalExportsByteIdentical": true,
+  "checkMatchesExports": true,
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "sourceUnchanged": true,
+  "rawPlasticManifestAndNormalFlagsPreserved": true,
+  "tessellationDeflectionMM": 0.28,
+  "jobs": {
+    "compile": {
+      "report": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile.json",
+      "reportSHA256": "372403a75f2579e20747eb4862430f79f104b16233e538a3e71db7f8f5d66ca5",
+      "ownership": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile-ownership.json",
+      "elapsedSeconds": 531.4135709999828
+    },
+    "compile-check": {
+      "report": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile-check.json",
+      "reportSHA256": "20c208c3b66178f29a3595ea4de948895dda261ae383c283210d7b14deb54a63",
+      "ownership": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile-check-ownership.json",
+      "elapsedSeconds": 529.7314134169719
+    },
+    "reproduce": {
+      "report": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproduce.json",
+      "reportSHA256": "195faef2e30fff76f36eaf4d3d12dfa2f3bb0ab7f91c9e2e2dc7f0f54bfe2bfd",
+      "ownership": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproduce-ownership.json",
+      "elapsedSeconds": 531.8454551670002
+    }
+  },
+  "limits": [
+    "Actual-app visual/selection and human approval are separate pending gates.",
+    "Overall thickness is an explicit display estimate; no blanket G1 claim across every roof join."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/placid-badger-mesh-counts-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/placid-badger-mesh-counts-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/placid-badger-mesh-counts-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 92114,
+      "pgid": 92114,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+        "--user-cfg",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/placid-badger-mesh-counts-config/user.cfg",
+        "--system-cfg",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/placid-badger-mesh-counts-config/system.cfg",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/mesh-counts-bootstrap.py"
+      ]
+    }
+  ]
+}

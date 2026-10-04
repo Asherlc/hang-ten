@@ -1,0 +1,215 @@
+{
+  "reviewedAt": "2026-09-30T16:59:06.605877+00:00",
+  "reviewer": "cad_wall_boards",
+  "scope": "Independent read-only physical interpretation; static measurements and local diagnostic chord only. No heavy solve, package/source edits, servers or simulators.",
+  "conclusion": "The rim is a real bearing, but the 11.2 mm lateral bow is an artifact of the selected independent section/collar approximation, not a demonstrated physically necessary lateral bearing. Some separation from the other lead is necessary; this particular detour is not established as necessary.",
+  "sourceEvidence": {
+    "manufacturer": "Captain Fingerfood",
+    "retainedTitleURL": "https://cdn.shopify.com/s/files/1/0602/4547/5542/files/DualTitelbild.jpg?v=1739704755",
+    "retainedSecondViewURL": "https://captainfingerfood.rocks/cdn/shop/files/DualP1.jpg?v=1739704755",
+    "supported": "Front-cavity entry into two distinct floor openings. Images were inspected directly.",
+    "notSupported": "No retained loaded vertical-pose image establishes the lateral bow, a fixed exterior collar bearing, equal loaded lead lengths or a hidden connection."
+  },
+  "geometry": {
+    "supportBodyMM": [
+      318.89114590608136,
+      0.0,
+      -116.06686954777749
+    ],
+    "anchorWorldMM": [
+      0.0,
+      185.0,
+      0.0
+    ],
+    "meshBoundsMM": [
+      [
+        -60.0,
+        -35.0,
+        -15.000000000000009
+      ],
+      [
+        60.0,
+        35.0,
+        15.000000000000016
+      ]
+    ],
+    "leads": {
+      "left-lead": {
+        "lengthMM": 399.9999975340621,
+        "unrepresentedSlackFrom400MM": 2.4659378823344014e-06,
+        "firstRimPointBodyMM": [
+          59.365896,
+          -10.206633,
+          16.481527999999997
+        ],
+        "lastRimPointBodyMM": [
+          56.906690000000005,
+          -10.081738999999999,
+          17.085037
+        ],
+        "collarBodyMM": [
+          -26.0,
+          1.0,
+          17.2
+        ],
+        "mouthWorldMM": [
+          -1.0,
+          -177.0787720083768,
+          -13.590985853088926
+        ],
+        "rimWorldMM": [
+          10.206633,
+          -104.20818263177163,
+          35.791900342472786
+        ],
+        "collarTurnDegrees": 90.07874907927578,
+        "probes": [
+          "first rim",
+          "last rim",
+          "collar",
+          "rim-to-collar midpoint"
+        ],
+        "probeSolidDistancesMM": [
+          2.0677945094584698,
+          2.0850370000000016,
+          21.882073347302093,
+          15.548587740973689
+        ],
+        "nearestSolidPointsMM": [
+          [
+            58.41419021047799,
+            -10.206633000000004,
+            14.645763793045067
+          ],
+          [
+            56.906690000000005,
+            -10.081738999999956,
+            15.0
+          ],
+          [
+            -23.49963764217651,
+            -19.132891547323446,
+            9.0
+          ],
+          [
+            13.80246891965014,
+            -18.80158323094667,
+            11.170480925597515
+          ]
+        ],
+        "maxWorldLateralDisplacementFromMouthMM": 11.217132000000001
+      },
+      "right-lead": {
+        "lengthMM": 347.13989212389714,
+        "unrepresentedSlackFrom400MM": 52.86010787610286,
+        "firstRimPointBodyMM": [
+          59.403325,
+          0.885953,
+          16.610860000000002
+        ],
+        "lastRimPointBodyMM": [
+          54.0,
+          0.904401,
+          17.2
+        ],
+        "collarBodyMM": [
+          26.0,
+          1.0,
+          17.2
+        ],
+        "mouthWorldMM": [
+          -1.0,
+          -128.21475496254436,
+          4.1940594981211525
+        ],
+        "rimWorldMM": [
+          -0.885953,
+          -104.21724502006691,
+          35.9262341408386
+        ],
+        "collarTurnDegrees": 90.0,
+        "probes": [
+          "first rim",
+          "last rim",
+          "collar",
+          "rim-to-collar midpoint"
+        ],
+        "probeSolidDistancesMM": [
+          2.1999978941879568,
+          2.2000000000000006,
+          21.865271413895446,
+          11.009319604741595
+        ],
+        "nearestSolidPointsMM": [
+          [
+            58.41419021047799,
+            0.8859530000000018,
+            14.645763793045063
+          ],
+          [
+            54.0,
+            0.9044010000000026,
+            15.0
+          ],
+          [
+            23.4803199607509,
+            -19.112217841479413,
+            9.0
+          ],
+          [
+            48.46626163690545,
+            0.9522005000000007,
+            10.162420014322343
+          ]
+        ],
+        "maxWorldLateralDisplacementFromMouthMM": 1.0
+      }
+    },
+    "sidecarSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+    "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a"
+  },
+  "decisiveLocalCounterexample": {
+    "diagnosticOnly": true,
+    "notGeneratedOrPublishedRoute": true,
+    "operation": "Replace a 1 mm portion on each side of the unsupported exterior-collar knee by its chord; all remaining points including support and mouth unchanged.",
+    "shorteningMM": 0.5867586407718934,
+    "newChordCertifiedSolidClearanceMM": 20.822223635810797,
+    "wholePathTubeGate": "passed",
+    "frontEntry": "Unchanged axis-aligned final 21.2 mm to the actual front mouth",
+    "meaning": "Published route is not even locally length-minimal when its artificial exterior collar constraint is removed. This diagnostic does not settle height or provide a replacement cache."
+  },
+  "solverCause": [
+    "The first certified orientation is selected after 12 rejected candidates; left-lead -20 degrees is not selected by a length or force-balance objective.",
+    "native_mouth_collar pins a point at the entire solid front support plane plus radius and clearance. That conservative exit is treated as a required turning waypoint even when far from any wood.",
+    "The lower lead crosses the rim at body y about -10.2 mm, whereas the mouth lies at y=+1 mm. Its imposed section holds that sideward route.",
+    "The collar creates an unsupported 90.079-degree turn 21.882 mm from wood. A 1 mm corner cut shortens the path by 0.586759 mm with 20.822 mm certified solid clearance, unchanged mouth/front entry and a passing full-path tube check."
+  ],
+  "recommendation": {
+    "preferred": "Use the existing certified routes as deterministic initial guesses for a bounded coupled 3D path-shortening/relaxation step. Treat the exterior collar as an initialization aid, not a mandatory free-space bearing.",
+    "constraints": [
+      "Keep the actual native mouth centers and source-backed front entry. Enforce valid entry direction/local bore clearance at the terminal instead of forcing a bend at the global front support plane.",
+      "Keep the same fixed world support, pose rotation, native solid, radius and declared rest lengths; permit generated hanging height to re-settle.",
+      "Constrain complete segments against the full native solid and every other cord; preserve intentional common support joining and no other contacts.",
+      "Use a deterministic iteration budget and fail closed. Retain exact rounded-cache solid, self/interstrand tube, length, reproduction and app-visual gates.",
+      "Generated routes only; do not hand-draw the desired straight line or relax collision tolerances."
+    ],
+    "whyFeasible": "The existing route provides a collision-free initialization, and the local chord probe proves a strictly shorter nearby feasible path exists without changing any sourced endpoint. A complete corrected solve has not been run.",
+    "narrowerAlternative": "Refine section rotations and choose among passing candidates by a declared path-length/deviation objective, but label this as a visual approximation: it does not remove the unsupported exterior-collar knee and is not the preferred physical correction."
+  },
+  "physicalLimitation": {
+    "rightLeadUnusedDeclaredLengthMM": 52.86010787610286,
+    "meaning": "The current settle step makes the longest lead taut; the other visible route is about 347.14 mm despite its 400 mm rest length. The display therefore already omits about 52.86 mm of slack and cannot be claimed as a complete equilibrium of two equal inextensible cords. Preserve dimensions and report this limitation rather than inventing a hidden continuous connection or changing lengths to force a tidy result."
+  },
+  "reviewedFileSHA256": {
+    "Hangboards/captain-fingerfood-dual/suspension.json": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+    "Hangboards/captain-fingerfood-dual/captain-fingerfood-dual.FCStd": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+    "Hangboards/captain-fingerfood-dual/assets/primary.usdz": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+    "Tools/HangboardCAD/native_cord_routes.py": "40d23e454d8790fd4769a7e6713a831e810a1ae3756c786776203b915cc6ffd1",
+    "Tools/HangboardPackages/src/hangboard_packages/cord_paths.py": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/evidence/captain-fingerfood-dual-title.jpg": "f57fb751f63c5258e8cb85a9d0f0ad27f6b9cb5eede94b5e1caccc496ec9468e",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/evidence/DualP1.jpg": "b67f397ceefa3054f7d6ac038a8459fe8389753713ebb97274acc1a17a6de5c8",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/front-mouth-review/left-pocket-vertical-front-detail.png": "7793e85736f0a5ea173dc70957771f9ee5aab1ad96561f88f58c8abd9594bb6c",
+    ".context/placid-badger/dual-vertical-review/physical-measurements.json": "e59d8e3c759f37b4039fd4e9dc286b93db0fcab9ff36e66217f4ca25d456915e",
+    ".context/placid-badger/dual-vertical-review/local-shortening-probe.json": "fcb2baa438e2a6ae7bf61b03918617f9bd3b5bdb1220a7001532ebdac400d654"
+  }
+}

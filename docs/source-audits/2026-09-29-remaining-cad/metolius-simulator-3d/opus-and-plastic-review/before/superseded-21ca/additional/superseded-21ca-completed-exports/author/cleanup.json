@@ -1,0 +1,89 @@
+{
+  "status": "all author-owned native jobs exited; temporary staging removed",
+  "jobs": [
+    {
+      "record": "grasp-sections-v2-ownership.json",
+      "processGroup": 53555,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "native-contacts-ownership.json",
+      "processGroup": 34154,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "normal-comparison-v2-ownership.json",
+      "processGroup": 38439,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "reproduce-ownership.json",
+      "processGroup": 38669,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "final-native-mesh-ownership.json",
+      "processGroup": 43427,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "inspect-envelope-ownership.json",
+      "processGroup": 37347,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "author-probe-debug-ownership.json",
+      "processGroup": 25553,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "normal-comparison-ownership.json",
+      "processGroup": 38224,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "author-probe-v2-ownership.json",
+      "processGroup": 29362,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "author-probe-ownership.json",
+      "processGroup": 24120,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "compile-check-ownership.json",
+      "processGroup": 38658,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "native-contacts-v2-ownership.json",
+      "processGroup": 37163,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "compile-ownership.json",
+      "processGroup": 38450,
+      "groupAbsent": true,
+      "tempRemoved": true
+    },
+    {
+      "record": "grasp-sections-ownership.json",
+      "processGroup": 49929,
+      "groupAbsent": true,
+      "tempRemoved": true
+    }
+  ]
+}

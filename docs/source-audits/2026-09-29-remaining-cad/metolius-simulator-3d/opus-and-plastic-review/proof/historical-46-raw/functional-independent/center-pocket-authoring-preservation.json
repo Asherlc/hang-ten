@@ -1,0 +1,35 @@
+{
+  "status": "pass",
+  "originalSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+  "sourceSHA256": "46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264",
+  "centerPocket15SectionAuthoring": [
+    {
+      "name": "Pocket_pocket_15_center_S0",
+      "maximumNumericAttributeDifference": 1.7763568394002505e-15,
+      "nonNumericDifferences": []
+    },
+    {
+      "name": "Pocket_pocket_15_center_S1",
+      "maximumNumericAttributeDifference": 1.7763568394002505e-15,
+      "nonNumericDifferences": []
+    },
+    {
+      "name": "Pocket_pocket_15_center_S2",
+      "maximumNumericAttributeDifference": 4.440892098500626e-16,
+      "nonNumericDifferences": []
+    },
+    {
+      "name": "Pocket_pocket_15_center_S3",
+      "maximumNumericAttributeDifference": 8.881784197001252e-16,
+      "nonNumericDifferences": []
+    },
+    {
+      "name": "Pocket_pocket_15_center_S4",
+      "maximumNumericAttributeDifference": 8.881784197001252e-16,
+      "nonNumericDifferences": []
+    }
+  ],
+  "serializationLimit": "Native save/recompute introduces signedzero and1ULP numeric changes; raw byte-exact failure retained separately. All5 sketch geometry/placement/constraints/expressions have identical structure and numeric differences below1e-10. No exact-byte claim.",
+  "depthProof": "native-check.json independently establishes final50mm physicaldepth and contact finalbody membership.",
+  "fullWidthDomeComparison": "Complete review/comparison-front.png physically viewed againstoriginal9449; rounded full-width center dome remains visible. No pixel measurement or manufacturingaccuracy claim."
+}

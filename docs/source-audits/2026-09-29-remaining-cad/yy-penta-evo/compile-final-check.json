@@ -1,0 +1,46 @@
+{
+  "assetBytes": 1575004,
+  "board": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "duo",
+    "edge-10",
+    "edge-15",
+    "edge-20",
+    "edge-25",
+    "mono",
+    "tray"
+  ],
+  "measuredRegionDepthsMM": {
+    "duo": 30.0,
+    "edge-10": 10.0,
+    "edge-15": 15.0,
+    "edge-20": 20.0,
+    "edge-25": 25.0,
+    "mono": 30.0,
+    "tray": 30.0
+  },
+  "modelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+  "nodes": [
+    "central_ring_001",
+    "penta_body_001",
+    "unit_duo_001",
+    "unit_edge_10_001",
+    "unit_edge_15_001",
+    "unit_edge_20_001",
+    "unit_edge_25_001",
+    "unit_mono_001",
+    "unit_tray_001",
+    "upper_band_exterior_001"
+  ],
+  "package": "yy-penta-evo",
+  "presentationID": "front-pair",
+  "published": false,
+  "schemaVersion": 2,
+  "source": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+  "sourceUnchanged": true,
+  "staging": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Hangboards/yy-penta-evo/assets/.hangten-build-ilx4zlmg",
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 72050
+}

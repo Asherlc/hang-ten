@@ -1,0 +1,6 @@
+{
+  "command": "check-hand-projection-comparison.py all-hand-projection-p1-landscape",
+  "exitStatus": 1,
+  "exception": "AssertionError: boardFrames false; counts, rootTransforms, boardCameraTransforms, handCameraTransforms, handCameraDepths, creationOrder true.",
+  "action": "Stopped before P2; no source/protocol changes."
+}

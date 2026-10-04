@@ -1,0 +1,21 @@
+# Owl Climb Poker native geometry
+
+Native 660 × 100 × 100 mm beam with four distinct faces, 28 pocket cavities and six broad sloper forms. All 34 contact identities are retained.
+
+The final solid is Cut33. Deliberately authored Sketcher profiles and native loft/cut operations preserve the maker pocket inventory and unequal front/back grip depths. Six operator-selected lip/floor stations use depth-fraction/inset pairs (0,0), (0.04,0.8), (0.12,1.8), (0.70,2.5), (0.92,4), (1,6) millimeters, supported by the retained Git section and reviewed primary photographs. Broad sloper sections are native analytic curves, rather than a guessed scalar depth. The published 100 mm dimension for the face-C shallow half-round features denotes diameter, not grip depth: the unsupported depth value is omitted with the authorized metadata correction in metadata-correction.json. No cord is present.
+
+Exact source bytes, URLs, approval and support mappings are retained in source-register.json. Native Sketcher/Part/PartDesign features are editable and use the documented X-right, Z-up, front-negative-Y millimeter frame. Approved mesh sections come from Git d0e4e95191e4a76822815bb4eeef3a32caa6fea0; no pixels were traced. No materials, textures or mounting hardware are present.
+
+The embedded manifest replaces the physically removed board.json. Native reopen/recompute and meaningful edit/restore validation passes; final compile and cord reports are retained separately. Front/side/top comparisons in geometry-review.html are the geometry review artifact and do not claim human final app approval.
+
+Final front/side/top comparisons were reviewed individually after the final six-station source compiled. Envelope, pocket order and broad sloper locations are preserved. Analytic transitions and end-face finishing remain display approximations, with visible shading differences from the prior faceted mesh. Final native export is 87,518 triangles / 1,958,488 bytes; all 34 true native contact regions and native edit/restore checks pass.
+
+Independent exported-mesh review identified an incorrect C/D junction in the first CAD publication: the two authored profiles had both continued past the measured shared endpoint (native Y=42 mm, Z=−48 mm), intersecting at an 88.24° ridge. The corrected native profiles terminate at the measured shared point with opposing horizontal endpoint tangents (one continuous bearing surface). Additional measured stations retain the small terminal rounding. Cutter closures run outside the solid; they no longer alter this contact surface. `cd-native-junction-correction.json` retains the deliberately selected stations and native endpoint tangents. Final exported USDZ verification passes: all14 C rays and8 D rays resolve to the correct contact, depth checks pass, and both C/D seams measure2.752845684 degrees (<5).
+
+## October 2 individual review
+
+The original migration records above are historical. The [current #12 review](review12-2026-10-02/review.md) supersedes their source/model/descriptor identities for the paired broad-relief entry correction and manufacturer-supported wood finish metadata. Only six B-profile sketches changed substantively. All 28 pockets, four C/D contact surfaces, 34 identities and four positions/rotations preserve. No cord or grip-depth facts were added.
+
+The earlier 87,518-triangle / 1,958,488-byte prose described an intermediate migration export. The hash-bound final migration reports record 90,286 triangles / 2,014,725 bytes; this revision contains 91,612 triangles / 2,044,005 bytes. Whole prior/current [front](review12-2026-10-02/native/comparison-front.png), [side](review12-2026-10-02/native/comparison-side.png), [top](review12-2026-10-02/native/comparison-top.png), all four faces and a native B section are retained. Exact profile/depth/radius values remain display estimates.
+
+Two clean exports reproduce exactly, native/export/metadata checks and independent physical-shape/contact-extent review pass, and Python/package/staging/compile checks pass. Current app wood, picking, highlighting and workout appearance remain unverified; zero current frames or iOS cases were produced. Human acceptance is pending. Throwaway scripts remain under `.context` with their hashes in the current review packet.

@@ -1,0 +1,160 @@
+[1/10] validating metolius-simulator-3d.FCStd
+[2/10] reopening and recomputing the source document
+[3/10] extracting bound components and semantic regions
+[4/10] tessellating with pinned quality
+[5/10] partitioning the surface and preserving normals and materials
+      body_board_001: 24844 triangles, role=body
+      contact_pocket_4_left: 468 triangles, role=contact
+      contact_edge_5_left: 549 triangles, role=contact
+      contact_edge_6_left: 414 triangles, role=contact
+      contact_edge_7_left: 449 triangles, role=contact
+      contact_pocket_8_left: 413 triangles, role=contact
+      contact_pocket_9_left: 528 triangles, role=contact
+      contact_pocket_10_left: 540 triangles, role=contact
+      contact_edge_11_left: 430 triangles, role=contact
+      contact_pocket_12_left: 409 triangles, role=contact
+      contact_pocket_13_left: 452 triangles, role=contact
+      contact_pocket_15_center: 856 triangles, role=contact
+      contact_pocket_16_center: 463 triangles, role=contact
+      contact_pocket_17_center: 694 triangles, role=contact
+      contact_pocket_18_center: 416 triangles, role=contact
+      contact_pocket_13_right: 448 triangles, role=contact
+      contact_pocket_12_right: 435 triangles, role=contact
+      contact_edge_11_right: 436 triangles, role=contact
+      contact_pocket_10_right: 536 triangles, role=contact
+      contact_pocket_9_right: 537 triangles, role=contact
+      contact_pocket_8_right: 410 triangles, role=contact
+      contact_edge_7_right: 457 triangles, role=contact
+      contact_edge_6_right: 418 triangles, role=contact
+      contact_edge_5_right: 560 triangles, role=contact
+      contact_pocket_4_right: 473 triangles, role=contact
+      contact_jug_14_center: 2988 triangles, role=contact
+      contact_round_sloper_3_center: 3924 triangles, role=contact
+      contact_flat_sloper_2_left: 6856 triangles, role=contact
+      contact_jug_1_left: 8954 triangles, role=contact
+      contact_flat_sloper_2_right: 6862 triangles, role=contact
+      contact_jug_1_right: 8955 triangles, role=contact
+[6/10] writing the USDZ directly
+[7/10] reopening the exported asset
+[8/10] deriving the descriptor from the exported bytes
+[9/10] validating the staged package
+[10/10] publishing the asset and descriptor set
+{
+  "asset": ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/assets/primary.usdz",
+  "assetBytes": 1908779,
+  "assetSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "board": ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/metolius-simulator-3d.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "edge-11-left",
+    "edge-11-right",
+    "edge-5-left",
+    "edge-5-right",
+    "edge-6-left",
+    "edge-6-right",
+    "edge-7-left",
+    "edge-7-right",
+    "flat-sloper-2-left",
+    "flat-sloper-2-right",
+    "jug-1-left",
+    "jug-1-right",
+    "jug-14-center",
+    "pocket-10-left",
+    "pocket-10-right",
+    "pocket-12-left",
+    "pocket-12-right",
+    "pocket-13-left",
+    "pocket-13-right",
+    "pocket-15-center",
+    "pocket-16-center",
+    "pocket-17-center",
+    "pocket-18-center",
+    "pocket-4-left",
+    "pocket-4-right",
+    "pocket-8-left",
+    "pocket-8-right",
+    "pocket-9-left",
+    "pocket-9-right",
+    "round-sloper-3-center"
+  ],
+  "descriptor": ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "edge-11-left": 14.0,
+    "edge-11-right": 14.0,
+    "edge-5-left": 25.0,
+    "edge-5-right": 25.0,
+    "edge-6-left": 19.0,
+    "edge-6-right": 19.0,
+    "edge-7-left": 36.0,
+    "edge-7-right": 36.0,
+    "flat-sloper-2-left": 55.0,
+    "flat-sloper-2-right": 55.0,
+    "jug-1-left": 93.999,
+    "jug-1-right": 93.999,
+    "jug-14-center": 93.999,
+    "pocket-10-left": 17.0,
+    "pocket-10-right": 17.0,
+    "pocket-12-left": 30.0,
+    "pocket-12-right": 30.0,
+    "pocket-13-left": 14.0,
+    "pocket-13-right": 14.0,
+    "pocket-15-center": 50.0,
+    "pocket-16-center": 37.0,
+    "pocket-17-center": 28.0,
+    "pocket-18-center": 32.0,
+    "pocket-4-left": 30.0,
+    "pocket-4-right": 30.0,
+    "pocket-8-left": 15.0,
+    "pocket-8-right": 15.0,
+    "pocket-9-left": 34.999,
+    "pocket-9-right": 35.0,
+    "round-sloper-3-center": 65.0
+  },
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "nodes": [
+    "body_board_001",
+    "contact_edge_11_left",
+    "contact_edge_11_right",
+    "contact_edge_5_left",
+    "contact_edge_5_right",
+    "contact_edge_6_left",
+    "contact_edge_6_right",
+    "contact_edge_7_left",
+    "contact_edge_7_right",
+    "contact_flat_sloper_2_left",
+    "contact_flat_sloper_2_right",
+    "contact_jug_14_center",
+    "contact_jug_1_left",
+    "contact_jug_1_right",
+    "contact_pocket_10_left",
+    "contact_pocket_10_right",
+    "contact_pocket_12_left",
+    "contact_pocket_12_right",
+    "contact_pocket_13_left",
+    "contact_pocket_13_right",
+    "contact_pocket_15_center",
+    "contact_pocket_16_center",
+    "contact_pocket_17_center",
+    "contact_pocket_18_center",
+    "contact_pocket_4_left",
+    "contact_pocket_4_right",
+    "contact_pocket_8_left",
+    "contact_pocket_8_right",
+    "contact_pocket_9_left",
+    "contact_pocket_9_right",
+    "contact_round_sloper_3_center"
+  ],
+  "package": "metolius-simulator-3d",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/metolius-simulator-3d.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.28,
+  "triangles": 75174
+}
+
+								
+								
+								

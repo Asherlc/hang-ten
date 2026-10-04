@@ -1,0 +1,339 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "fixed44Schedule",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "releaseAuthorization",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "boundConsoleHelper",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "boundRunIdentity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scheduleReleaseHash",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "boundReleasedPathParity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "rawCompletion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exactCleanup",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "appBinary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "onlyExactArmReviewFlags",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "oneBoundNonblockingConsoleLaunch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "retainedAppStreams",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "boundSourceReference",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "routineReference",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "volatileMuteArguments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "all44RawHashesAndFixedStartDeadlines",
+      "passed": true,
+      "detail": [
+        {
+          "offset": 1,
+          "passed": true,
+          "latenessSeconds": 0.00014858299982734025
+        },
+        {
+          "offset": 2,
+          "passed": true,
+          "latenessSeconds": 0.009563457992044277
+        },
+        {
+          "offset": 3,
+          "passed": true,
+          "latenessSeconds": 0.008841582995955832
+        },
+        {
+          "offset": 4,
+          "passed": true,
+          "latenessSeconds": 0.0039710830023977906
+        },
+        {
+          "offset": 5,
+          "passed": true,
+          "latenessSeconds": 0.0011397499911254272
+        },
+        {
+          "offset": 6,
+          "passed": true,
+          "latenessSeconds": 0.008449707995168865
+        },
+        {
+          "offset": 7,
+          "passed": true,
+          "latenessSeconds": 0.0005565829924307764
+        },
+        {
+          "offset": 8,
+          "passed": true,
+          "latenessSeconds": 0.006676999997580424
+        },
+        {
+          "offset": 9,
+          "passed": true,
+          "latenessSeconds": 0.0009453749953536317
+        },
+        {
+          "offset": 10,
+          "passed": true,
+          "latenessSeconds": 0.004366915993159637
+        },
+        {
+          "offset": 11,
+          "passed": true,
+          "latenessSeconds": 0.009784957990632392
+        },
+        {
+          "offset": 12,
+          "passed": true,
+          "latenessSeconds": 0.0003346659941598773
+        },
+        {
+          "offset": 13,
+          "passed": true,
+          "latenessSeconds": 0.005636457994114608
+        },
+        {
+          "offset": 14,
+          "passed": true,
+          "latenessSeconds": 0.0030145829950924963
+        },
+        {
+          "offset": 15,
+          "passed": true,
+          "latenessSeconds": 0.0011327909887768328
+        },
+        {
+          "offset": 16,
+          "passed": true,
+          "latenessSeconds": 0.001625666001928039
+        },
+        {
+          "offset": 17,
+          "passed": true,
+          "latenessSeconds": 0.00950166599068325
+        },
+        {
+          "offset": 18,
+          "passed": true,
+          "latenessSeconds": 0.0006819159898441285
+        },
+        {
+          "offset": 90,
+          "passed": true,
+          "latenessSeconds": 0.0074972079892177135
+        },
+        {
+          "offset": 190,
+          "passed": true,
+          "latenessSeconds": 0.0007869999972172081
+        },
+        {
+          "offset": 191,
+          "passed": true,
+          "latenessSeconds": 0.00042870799370575696
+        },
+        {
+          "offset": 192,
+          "passed": true,
+          "latenessSeconds": 0.005236707991571166
+        },
+        {
+          "offset": 193,
+          "passed": true,
+          "latenessSeconds": 0.0021554999984800816
+        },
+        {
+          "offset": 194,
+          "passed": true,
+          "latenessSeconds": 0.0020374159939819947
+        },
+        {
+          "offset": 195,
+          "passed": true,
+          "latenessSeconds": 0.010059416003059596
+        },
+        {
+          "offset": 196,
+          "passed": true,
+          "latenessSeconds": 0.0009123329946305603
+        },
+        {
+          "offset": 197,
+          "passed": true,
+          "latenessSeconds": 0.006412582995835692
+        },
+        {
+          "offset": 198,
+          "passed": true,
+          "latenessSeconds": 0.011715374988853
+        },
+        {
+          "offset": 199,
+          "passed": true,
+          "latenessSeconds": 0.0009224999957950786
+        },
+        {
+          "offset": 200,
+          "passed": true,
+          "latenessSeconds": 0.010242040996672586
+        },
+        {
+          "offset": 201,
+          "passed": true,
+          "latenessSeconds": 0.0026011250010924414
+        },
+        {
+          "offset": 202,
+          "passed": true,
+          "latenessSeconds": 0.0005867909931112081
+        },
+        {
+          "offset": 203,
+          "passed": true,
+          "latenessSeconds": 0.0018156659934902564
+        },
+        {
+          "offset": 204,
+          "passed": true,
+          "latenessSeconds": 0.0027035829989472404
+        },
+        {
+          "offset": 205,
+          "passed": true,
+          "latenessSeconds": 0.00949029099137988
+        },
+        {
+          "offset": 206,
+          "passed": true,
+          "latenessSeconds": 0.007989958001417108
+        },
+        {
+          "offset": 207,
+          "passed": true,
+          "latenessSeconds": 0.00026333300047554076
+        },
+        {
+          "offset": 208,
+          "passed": true,
+          "latenessSeconds": 0.004167124992818572
+        },
+        {
+          "offset": 209,
+          "passed": true,
+          "latenessSeconds": 0.009328957996331155
+        },
+        {
+          "offset": 210,
+          "passed": true,
+          "latenessSeconds": 0.00270845799241215
+        },
+        {
+          "offset": 211,
+          "passed": true,
+          "latenessSeconds": 0.0057459160016151145
+        },
+        {
+          "offset": 212,
+          "passed": true,
+          "latenessSeconds": 0.005294082991895266
+        },
+        {
+          "offset": 213,
+          "passed": true,
+          "latenessSeconds": 0.01141704099427443
+        },
+        {
+          "offset": 214,
+          "passed": true,
+          "latenessSeconds": 0.0005417909997049719
+        }
+      ]
+    },
+    {
+      "name": "reconstructedHostClockGate",
+      "passed": true,
+      "detail": {
+        "spreadSeconds": 0.0006451606750488281,
+        "thresholdSeconds": 0.1
+      }
+    },
+    {
+      "name": "oneProductionRoute",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "noMeasurementAXOrInput",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "noRecordedCommandFailureBeforeCleanup",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "noFailureRecord",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "scope": "Offline schedule, hashes, provenance and cleanup only",
+  "visualJudgment": "NOT_PERFORMED",
+  "CPUBracketsAvailable": false,
+  "actualAppPhaseBoundariesMeasured": false,
+  "originalRecordsRewritten": false
+}

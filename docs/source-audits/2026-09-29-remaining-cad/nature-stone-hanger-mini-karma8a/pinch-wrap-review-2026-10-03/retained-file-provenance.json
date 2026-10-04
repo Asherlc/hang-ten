@@ -1,0 +1,1062 @@
+{
+  "owner": "placid-badger",
+  "files": [
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/handoff.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/handoff.json",
+      "sha256": "2cd98e8f5c0a4f5f72d1cf0bf685b154fcefa887859732408394ca18279fcf48"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/artifact-inventory.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/artifact-inventory.json",
+      "sha256": "8c6977389e2c8b03de2870804333d767d5a287f9016c21397e8d6e8b79140bb4"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/recommendation.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/recommendation.json",
+      "sha256": "b6f7fa08cf80fc39c181292d83990a7d12f373710440ed766010dc7061bef51a"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/authoring-notes.md",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/authoring-notes.md",
+      "sha256": "6d2f40321d73f8f2c10fa9a9aa2cd916ef5fdcb592bd11020871e2ea44bf17b0"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-author-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/native-author-proof.json",
+      "sha256": "a31979f0cdb31da935d256b250a97a9f99ba4ece1714f8ef83344eeb8b5efc08"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-reopen-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/native-reopen-proof.json",
+      "sha256": "187c2b6667e220c53febfa14033f21e4be27ab2d498079b2e31d423a83a4c0a5"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/native-orientation-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/native-orientation-proof.json",
+      "sha256": "045a9e8aeb3b81e5b83c31055939f6f5823f5590ff93e795c1ca84ebeede984b"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/original-shapes-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/original-shapes-proof.json",
+      "sha256": "495f5b79e4afa1595e95c263ffaa004d474ce2da4fcaf45cbddad2324207dc70"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/physical-span-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/physical-span-proof.json",
+      "sha256": "6d236976e11cf344f2629fceb489ccbcccb10ab2af40f1b1ae94c1027a08ef44"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/archive-preservation.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/archive-preservation.json",
+      "sha256": "02f85e2d9b30e1d52346f5826eb7d42167ccb7aeba52fafb0c52e276aac0de75"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/collider-proof.json",
+      "sha256": "95fb1f3d787694f7f67628a54fcb79e735682a1509dfeeb67a25201a6b6b1a12"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/deterministic-export.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/deterministic-export.json",
+      "sha256": "4cf8680d29976b7316bc0feefcc187a16e1619b699347d5c8d5b46ec295f8d6e"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/reimport-proof.json",
+      "sha256": "95cfd414d0b35a1c5e2aeb976a5f964640d818da65d9ce5bdd2f83f5c9cab719"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/preview-provenance.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/preview-provenance.json",
+      "sha256": "5bc19cf0e704bba82aab003466c5bb199d0757cf3300681ac277799d9bd2c3ea"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/final-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/final-cleanup.json",
+      "sha256": "0d5fdd93d604d4dfe8adc1974e106f1c0de60ff385e492cb07414681b5a1f99e"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3-report.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/compile3-report.json",
+      "sha256": "64d276ec9334d722a2d8c70e871a63243416a65a313ff18f840867e542da66bf"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4-report.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/compile4-report.json",
+      "sha256": "98c97916f57de9d30a48336bd459e168883a480b106b3e3ff80bda5fd5c295c3"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author1-ownership.json",
+      "sha256": "a8b73ea244616e418714ed58ced91e76476ee1d3eb48637b2e8168fbc31a5d14"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author2-ownership.json",
+      "sha256": "e2b2f1264359f6a41e3f32ed2dbc739575b15f4340c02e2e2790eb4bc03be995"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author3-ownership.json",
+      "sha256": "c20c60bd6fcd5c8fc01534f77697a301fdc219afd9cdae427a32d2421aecaf06"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/collider-ownership.json",
+      "sha256": "6da7e0951dfd8372a5f6eb85654a9595134a4220009c3bdb8653c9eed304f206"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/collider2-ownership.json",
+      "sha256": "518ca89d6c1d38151d58a9bfd1a84e0fa697bdabfb2c1a3a2bc8d9f5298a527a"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile1-ownership.json",
+      "sha256": "32313064e5b076379ec4dc17840368e5a3ce26f3b372133e455651da81551bb3"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile2-ownership.json",
+      "sha256": "4c3ed8605defda145fc6a9be6c3fe24b6952ac95b81322c4768ab806248c5515"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile3-ownership.json",
+      "sha256": "5bc2ffddffa8c57083517fb2c8ae735beba2570f583b55221a5e05a4403ebb53"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile4-ownership.json",
+      "sha256": "7263c80eefd8ac16225efce904ff7b724c157e5a02b509dc8f148d02d6ca2871"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/inspect-ownership.json",
+      "sha256": "da313598bcf669be5077a2fd7b9702e9a754eb0a524c2e87b74c721345ae194f"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativecheck1-ownership.json",
+      "sha256": "fb22c97291f9a9f5c55b4452279b980db25f95a6c91bfe774ebf2d82c9d4dfce"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativecheck2-ownership.json",
+      "sha256": "b52c5ff3acc68d273d4e6397f0195e4d5e8aa433d3fa2bfb0fe241fddc02f05d"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativepreview-ownership.json",
+      "sha256": "dc87e3e6825572e43dbe154f15cd9c48f30b4f08f4b1992270e1bd15dd11f1a2"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativerender-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativerender-ownership.json",
+      "sha256": "d11b3150fc978a175e271e1ea46c0253af09dcb71f1d202b32ef7e55355415be"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/orientation-ownership.json",
+      "sha256": "8412911fd63511982654f9c052b8fc6bfed1d51f1cddabf33d7e37c3236c58e2"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/orientation2-ownership.json",
+      "sha256": "e1b0d83160d7ac80ca73554d35525da187f722891e3d5df8b0c0daaf1f7c5115"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/originalshapes-ownership.json",
+      "sha256": "20ac8ba36c2f915f4b81fc3ad70f2d5a1afa81e4417e0699c2a739253a489da7"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/originalshapes2-ownership.json",
+      "sha256": "66f824dc9cf2dbfa930be32b7446fc0995de5dbb7bfdac8e61ceab00eb8e6be5"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/priorcollider-ownership.json",
+      "sha256": "cddd899f4d7b1fed23b6ca6fe3fe82e5e853ad56e9cf77c6940d79750daf827e"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/reimport-ownership.json",
+      "sha256": "6053f8092956c0642501a3534baf4920201f4edc43580629f6a12a0d07f8133e"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/render-ownership.json",
+      "sha256": "9b228dd55521e4eb262b0e27a11ac87f3e3c935aac7a6dc4ccfa0085f2ea90db"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author1-cleanup.json",
+      "sha256": "cd73b0e0876aa77bc11fc40c5e5e0d8700f48d7a1a735e1338f09eeafb184499"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author2-cleanup.json",
+      "sha256": "37727651221b5674c6fb540228eb6bd0ccfe45430b01e6c847ca6c608714d3db"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author3-cleanup.json",
+      "sha256": "49d465e9a903d3b944059746193f2c099a81d10d4a976a896316882a9a918322"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/collider-cleanup.json",
+      "sha256": "51b2a915bc5028bd3057bde34e99b2b5d562d94e19dc31d7812c9d2f525137cb"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/collider2-cleanup.json",
+      "sha256": "29b6dd1625beee3643ec2ac31376b1aa299ef484d88ea050d92ad82cb833cf2b"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile1-cleanup.json",
+      "sha256": "c76eea2b12e69206a835e26b0ad9688bc2339a8b69b3469a01b01f203003a97d"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile2-cleanup.json",
+      "sha256": "71f9c41dcc23ebe4efcb5bb5e677ef4934bf2516c23f8dc9ca3e918b815eeef4"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile3-cleanup.json",
+      "sha256": "8679883688d9c7757b5c6b59fba496f53505c762221a2f8755a10b2e94a4f547"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile4-cleanup.json",
+      "sha256": "58039a27da96088f3f2a616dc31630e6d1215d7dc7ff4d57158d5128a39f3c80"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/inspect-cleanup.json",
+      "sha256": "add51e944c5d5c0d5ec04679ed38f908446d690683a1765271d3e8c9fd348667"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativecheck1-cleanup.json",
+      "sha256": "3234e69a3474f4cd180b3bc55342d637c34f719620eca352615b0a8f3b0bf326"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativecheck2-cleanup.json",
+      "sha256": "550c95967bfc8ae119a0eee94bfe45dbc66cb5756a0030a87493e17c32b31e97"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativepreview-cleanup.json",
+      "sha256": "cc2e213cf6dc6e0b493c15689991502c3d399c333981fe4e998265b90c799eb4"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativerender-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativerender-cleanup.json",
+      "sha256": "769fa6dea4af35daaeedd765031480f489446999012bb2dbd7d1227d8b44cf94"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/orientation-cleanup.json",
+      "sha256": "1c926a851db016e16f60bca5e1d0527c1427cc13a9cf9d175f205276c0388cce"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/orientation2-cleanup.json",
+      "sha256": "11f72163b7d60a9452a9c79904c0b3f6e77d4ec2ae9beb671360419fe0d110c4"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/originalshapes-cleanup.json",
+      "sha256": "e21f542135ce108fe7ae5fd46cfcc1ca5b426918fbbc585b65a55a922da82ffd"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/originalshapes2-cleanup.json",
+      "sha256": "903ed17e20d87f021478ee594589fca466954fd1bc4ac357a95a600489bea2fc"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/priorcollider-cleanup.json",
+      "sha256": "ccaa2d259864852744f9280fa890f292d5e7cad526aff56ea2d308ab701cae7b"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/reimport-cleanup.json",
+      "sha256": "914281486c8c38ede3c0d394ea5aef7293b13f9997b5894b2c1dc73604d2244e"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/render-cleanup.json",
+      "sha256": "a31dea2ef289e1508bf09612c5a586b91d41ee315c792038bc0c7e823b298133"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author1-command.json",
+      "sha256": "0188f55737fc61371ed776681fecd63a77e15cee1442644f5d0bf46122d5e120"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author2-command.json",
+      "sha256": "2d0369538b425baa8016cbb9d860368d8471a096406bab65ccc54638b3472194"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author3-command.json",
+      "sha256": "4bf37a16a6c079d86c4bc27deb16884cffbc086846ecc52e539953bb583245a0"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/collider-command.json",
+      "sha256": "ed15212afe5ad5f3f1d22177f53cf55735af08be7fdf7dbd696afc3c37decf61"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/collider2-command.json",
+      "sha256": "5dcd2fc87687130396075a5492bdd14ace32ca431a1381c4b4ebe5e0221e5a7f"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile1-command.json",
+      "sha256": "88adf64f8b770918539c1b2e9eec491788f2bae8431b814a461098d50324a4ac"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile2-command.json",
+      "sha256": "2f8a810b6d716166528c5c988f37cbf9010f27cabff60f49efed5426119120d0"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile3-command.json",
+      "sha256": "64219d273872d8fa866fba6dc474d0416d6de126b90166708b4d8da833744f1b"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile4-command.json",
+      "sha256": "a065fe9a522e7852be89c9baf68e13a0932c467ac254cec555792318c75566f5"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/inspect-command.json",
+      "sha256": "07cff95880cf1e410f4f3ad24415202e2038d828a6f20c13c64310de8fb3bf36"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativecheck1-command.json",
+      "sha256": "74317a816cd623c9337cc421a2f1033656fc13de80ff3398f47bac2e34193e40"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativecheck2-command.json",
+      "sha256": "ab238255b56d5dcb24d8688ebb2745c540108a7202fbd058acedaa71ed0cc7d9"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativepreview-command.json",
+      "sha256": "17d26a709359b3691d868d3ed87be49c72f1c98f63e241eeb73fc83592b61627"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativerender-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativerender-command.json",
+      "sha256": "c35dc89fc16bac24bc1fcc2144bdf3a6fba263a461cb13f623b198198e0ab0b2"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/orientation-command.json",
+      "sha256": "69945575d20cc186d0f1a750c07bd4604e7edce272697d8383097b498fbd73d5"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/orientation2-command.json",
+      "sha256": "41fa18bdc0ef8e5b972ac633a0d86a0496c43f9ae660769eb6419b754506adf2"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/originalshapes-command.json",
+      "sha256": "e186c0266f41a5f55305529b57c440b7a6567d6e8ed12986959d879b6824aeca"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/originalshapes2-command.json",
+      "sha256": "577fb413185fc9e1a1272b5f93b3fcef46d4a9b623f674b1d2430f04df8dfa29"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/priorcollider-command.json",
+      "sha256": "88e3da989b5ab3e0a18cafb3c07263f9d7ca354268de8727479f4d60774eaeb8"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/reimport-command.json",
+      "sha256": "dd5fd165516dce3a1bd8ce6eaa2ca73c3ee70c3ce416ee8f143411e396dfd91d"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/render-command.json",
+      "sha256": "361fb117a1e7cf1a1e4fe3c0dc5189f8b99f8e319d38bb966d72a8e3871236e0"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author1.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author3.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/collider.stdout.log",
+      "sha256": "a142b7fb60d7b3d6c5afe02738d890d75ee27b379be14fcbc00537d58fbb48c9"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/collider2.stdout.log",
+      "sha256": "a142b7fb60d7b3d6c5afe02738d890d75ee27b379be14fcbc00537d58fbb48c9"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile1.stdout.log",
+      "sha256": "96892c395b4e13d6b12db01cd6dec32474404220c189cb2c203314fed513bc73"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile2.stdout.log",
+      "sha256": "96892c395b4e13d6b12db01cd6dec32474404220c189cb2c203314fed513bc73"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile3.stdout.log",
+      "sha256": "45b7c5466a4198a7c862114b726804844e7edf71763fe9fb1806257666373405"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile4.stdout.log",
+      "sha256": "b0d3ea7e8d4cf32569bdd6fb6a436dda3fe61cc554916ffc51e8a763405b19bc"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/inspect.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativecheck1.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativecheck2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativepreview.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativerender.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativerender.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/orientation.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/orientation2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/originalshapes.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/originalshapes2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/priorcollider.stdout.log",
+      "sha256": "1327060a088bd1a9c7b917274c23b61070e65aba6cf6367cade0c67632dff577"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/reimport.stdout.log",
+      "sha256": "0c2f8b25a6f839908bb79ca58bf743c40a56f60d5e997d2a8c5ee71bbafb9ec6"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/render.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author1.stderr.log",
+      "sha256": "1fecbcce25821238d49eab1ec1b5d3f4734a6e40a3e7c8a7ee608a841b0db303"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author3.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/collider.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/collider2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile1.stderr.log",
+      "sha256": "3dad61be75ab2a07bab9a759fcb4eb6d2120f3e6ccd058ca0152edb20315f502"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile2.stderr.log",
+      "sha256": "3dad61be75ab2a07bab9a759fcb4eb6d2120f3e6ccd058ca0152edb20315f502"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile3.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/compile4.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/inspect.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativecheck1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativecheck2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativepreview.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativerender.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/nativerender.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/orientation.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/orientation2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/originalshapes.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/originalshapes2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/priorcollider.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/reimport.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/render.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1-failed.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/raw/author1-failed.py",
+      "sha256": "23c35ac646794bbe039efc5e14b3053b427a3a6680ec415ccc8d72c50ab5bea7"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-back.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-granite-edge-15-back.png",
+      "sha256": "2bde3ed16bd5f8e5692e76e12ecc533d3be50705478ce6e9f9918035df802612"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-front-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-granite-edge-15-front-oblique.png",
+      "sha256": "2830febc673c25a6b5cd740ecc33f874baae0329004990b7b37ce29ff9600dbd"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-granite-edge-15-front.png",
+      "sha256": "c1ab2bc0548386b2cfb3c379c2fa5685d1b22f978116895832af32c5639aa6c8"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-reverse-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-granite-edge-15-reverse-oblique.png",
+      "sha256": "69a65ee4d326f09f0b6d8fd49cfa9cc48d47fbcd71679453808ed7471ab2ad0e"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-side.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-granite-edge-15-side.png",
+      "sha256": "80707f92ed68b68016339ae972396d09bceb50c582a67c79127c2ff0936dedfa"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-granite-edge-15-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-granite-edge-15-top.png",
+      "sha256": "fe50daf37e65818171e65e9ec7b9907d175bb7b8668abf42c187ac228e106f63"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-back.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-neutral-back.png",
+      "sha256": "90d7ac9e7808f72a331205f40d8be2f1f7955f44b8477f5698d65dc8c932ed95"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-front-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-neutral-front-oblique.png",
+      "sha256": "38657a9d85de13d067f4531e00e24b2bd4d7a7d5549cdbd7bdd86dbef7c5630b"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-neutral-front.png",
+      "sha256": "d88b763473deb4a4a9922beee8a6a2a9dbf8448d10ee0c5d8cdc5c2b6ef1a855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-reverse-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-neutral-reverse-oblique.png",
+      "sha256": "ad076481de6fc21285ef0ad694fd0aa8b274a4c4c160fb2baf61e0e1f6feca68"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-side.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-neutral-side.png",
+      "sha256": "aae8c366c7545f010382708d558098f409be3c9beecc22083ef9602113ebaf4f"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-neutral-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-neutral-top.png",
+      "sha256": "daf3a34ada5a7ea8d9b3401407f8c2cac8d2ca1862c0035668c96993066d0f10"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-back.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-pinch-60-back.png",
+      "sha256": "d22edaa15398bf24e260762df79b0ded14069f9cc41631cbf57a36f77bcb3d7b"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-front-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-pinch-60-front-oblique.png",
+      "sha256": "0305ac68fcb7953380c65a85cb235e5cbb0ccbf135061b8659f157ead680054f"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-pinch-60-front.png",
+      "sha256": "be194120328ebcb6fedbffed362a24dda56163381924c62d75a4604d97f4eff9"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-reverse-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-pinch-60-reverse-oblique.png",
+      "sha256": "6daaaf20a25a86bc48be0746c22d7df656b65548f0249d906f1707175b3ced7b"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-side.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-pinch-60-side.png",
+      "sha256": "823f79efe0e3c0c44e7815a5c5a357319914dd6b5dd476a6f497283843986e23"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-pinch-60-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-pinch-60-top.png",
+      "sha256": "a52ee172a2b195c85ddf59ed594b2a0651050738815d7240defb43f9aa5094bb"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-back.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-wood-edge-15-back.png",
+      "sha256": "152127170a10b05a07ef131328cd0ff9bf888ed214a30c6d09254f4813c6c43c"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-front-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-wood-edge-15-front-oblique.png",
+      "sha256": "d750ec1af38300bb00839f8333f6da87bda5873610d997f2803092584aaa0744"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-wood-edge-15-front.png",
+      "sha256": "34038f1525c02090d37d49a09144a429cd76c8f553fb5ac6883cad27300e172b"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-reverse-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-wood-edge-15-reverse-oblique.png",
+      "sha256": "290f70d11a5cbb399dbdf418dba1ed8c784122811c95bdb8f3b8ee404b58df22"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-side.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-wood-edge-15-side.png",
+      "sha256": "8b2bb5d859df95f6e6a963326f54464c1ef9cac8cfc68c5fdadffe785d2e4e47"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/comparison-wood-edge-15-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/native/views/comparison-wood-edge-15-top.png",
+      "sha256": "08e3a7daa867f1fba2721c4907b8cdec36382a80c8dd95c586da07bd1043757f"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/baseline.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/baseline.json",
+      "sha256": "5e647810dfbb4346a7a6c843c29d2cb6fd4f88fac05efb4df84eba7ef9ed7d5f"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/promotion.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/promotion.json",
+      "sha256": "7124b2c804981fa8a2b4586f084cca8bcee9ab0641d00cc2904959e73c075af1"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/independent-candidate-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/independent-candidate-verification.json",
+      "sha256": "fba90d66d851541c280642b50a768446696b2388a66a9492411e21ed38b4295c"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/generated-board-final.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/generated-board-final.json",
+      "sha256": "024c2c5df652271ae699487abfc963c33761a18e0c3dbd5d43aff0ac3cfe16a4"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/native-route-check.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/native-route-check.json",
+      "sha256": "a3cf54d6086dc32afe81844e4a3402c28d2fbe8bc7c6340db9f83fe51c743b56"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-catalog.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/final-catalog.json",
+      "sha256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/catalog-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/catalog-command.json",
+      "sha256": "6b1ee130e45d66d6daf2e68ba8e054849879a2583eeb96dafe3de97fbc9d8031"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/delivery-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/delivery-verification.json",
+      "sha256": "9ef123ca610145b5623824784160aad6cf7e83d493a1efa6b814b8576a4c8bf3"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/staging-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/staging-ownership.json",
+      "sha256": "d6a60bdc4ab8cb468523f2b82d08eb543cf53189eed2fe939ec558319f06943b"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/staging-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/staging-verification.json",
+      "sha256": "e4d1c7d3229c7f5a0308df00359260753a750d845760d01e2d50506c7b758c3e"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/staging-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/staging-cleanup.json",
+      "sha256": "784de23310aea4a634cd4bc5d911b1fe4d4b5ddccfc8499b3da4fd54cd7a6501"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/pytest-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/pytest-command.json",
+      "sha256": "70f208db5bf09e32cfb2d9e930b03d5c79e0f26c98b576153e9b10096c1f38b3"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-tests.xml",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/final-tests.xml",
+      "sha256": "9954c03736952ddea80b54274e5320a30bba6712509fdb5eb47006ecb9315f5f"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-test-summary.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/final-test-summary.json",
+      "sha256": "16d166d1cf3fd773cbded19b8edcf8ec20bdc18a55efe1b57bac8a5782ac4319"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/preview-provenance.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/preview-provenance.json",
+      "sha256": "8c3239da59efd28fc8972273bb1aa0eed7a17de2865b6a2280b32678f5b2b0b8"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/resource-cleanup-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/resource-cleanup-verification.json",
+      "sha256": "a70f5430c229156ef612d168e370808fec8ae646b0e2b8dfe4b6135ff79c0feb"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/preservation-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/preservation-verification.json",
+      "sha256": "84c3c7dfefe55cc30a1d7aae40f8792ce4caabb4520044861879521bf556be1b"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior-finger-probes.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/prior-finger-probes.json",
+      "sha256": "6c9bc66b47cf4f40920b0f7806487e7e001d84d7268f53a50d2c93ffecb10e11"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/corrected-finger-probes.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/corrected-finger-probes.json",
+      "sha256": "bf005900342402c19aa0129eeb699170ffbd853fac4ff61f45658f6614e1d222"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/feedback.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/feedback.json",
+      "sha256": "756bd4a002b7f0d1321fd612b17a0f5ef22b200d58ea3d6d06e6341fcd17b9af"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/corrected-pad-probes-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/corrected-pad-probes-ownership.json",
+      "sha256": "61610211cf2fb065a20deec21551c777113d020361f7e7c5205b31f43c8b1b52"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-package-checks-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/final-package-checks-ownership.json",
+      "sha256": "f6e203bdadf3f2cdb3816166c1825ae5a8ea6f334559102f583403260eba9d46"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-render-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/final-render-ownership.json",
+      "sha256": "cf7c7916601e21af8e278fa8bb0f18effb6d6da35099c66714020f1988105aaa"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/independent-candidate-check-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/independent-candidate-check-ownership.json",
+      "sha256": "d83e0f00c20faf0101fc64951c1eef8c1627ce23a6289fec9e6fe2bcc9c751c7"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/native-route-check-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/native-route-check-ownership.json",
+      "sha256": "08ea286656eb5c5fa6e84d1bf813a703841970dd88b8497382960c825af199eb"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior-pad-probes-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/prior-pad-probes-ownership.json",
+      "sha256": "b0515b9caf701d2407638640197656353d9a448cb58535a62bf4c6cc5f67dd93"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/staging-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/staging-ownership.json",
+      "sha256": "d6a60bdc4ab8cb468523f2b82d08eb543cf53189eed2fe939ec558319f06943b"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/corrected-pad-probes-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/corrected-pad-probes-cleanup.json",
+      "sha256": "5f48f8a95343c36ac32fde1d018c389960bf59c0aa0eb4ea2dca76b0e41d13ee"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-package-checks-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/final-package-checks-cleanup.json",
+      "sha256": "e85ef45ff2ee34d0d033aeda0496850f5b8589ed00da04433c2529bb77a979fe"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-render-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/final-render-cleanup.json",
+      "sha256": "023da0cea39993b6028c4f7a1c5a4e1e2e0eaec4f05900c0bec6b936549e3e83"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/independent-candidate-check-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/independent-candidate-check-cleanup.json",
+      "sha256": "e2fd1eb84210a6da75268e65c223dbdc1926faba74ffc021e74d2308212008de"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/native-route-check-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/native-route-check-cleanup.json",
+      "sha256": "35a1092fafea7406605ac539cc41f2f46884f370b9890139f5b67f8591c662ea"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior-pad-probes-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/prior-pad-probes-cleanup.json",
+      "sha256": "2adde8f996e08a1d2f4cade0ee261692bbf7521b5772ab0125ef5b8dce6f3acd"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/staging-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/staging-cleanup.json",
+      "sha256": "784de23310aea4a634cd4bc5d911b1fe4d4b5ddccfc8499b3da4fd54cd7a6501"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/catalog-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/catalog-command.json",
+      "sha256": "6b1ee130e45d66d6daf2e68ba8e054849879a2583eeb96dafe3de97fbc9d8031"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/corrected-pad-probes-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/corrected-pad-probes-command.json",
+      "sha256": "da07d4956346b36aeb497f515133f1227449089c7e6c87b658763e629ec6ddc9"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-package-checks-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/final-package-checks-command.json",
+      "sha256": "54e9c40bd9432a90dc2430cfdac93ea2756ca12b7eea2525caaedfa8cf12402c"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-render-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/final-render-command.json",
+      "sha256": "e0afcd99cdc0066a02356bc7f5068f1292bd88b720ef0144ea5def2e3cac92d2"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/independent-candidate-check-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/independent-candidate-check-command.json",
+      "sha256": "19e8e3cb067ea4798aa319a99a071c5619e17a622e00b81733495a54d680b442"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/native-route-check-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/native-route-check-command.json",
+      "sha256": "25232c4fbfaedaa7126ac46a854939c87d7454f75475ce07bd7fa9bd1290551a"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior-pad-probes-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/prior-pad-probes-command.json",
+      "sha256": "0d2428133fc35e0e134d4fb92577ebaec18b73ff4629d973402a35e771155405"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/pytest-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/pytest-command.json",
+      "sha256": "70f208db5bf09e32cfb2d9e930b03d5c79e0f26c98b576153e9b10096c1f38b3"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/corrected-pad-probes.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/corrected-pad-probes.stdout.log",
+      "sha256": "dd9c3f85fef28a27bc9f5339807cfc72d2c3052f340c8cd64360af8de7518a90"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-package-checks.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/final-package-checks.stdout.log",
+      "sha256": "7ef7846673472314093efb39ed50911d5893a3fe31c3837a17b15f001cb801d8"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-render.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/final-render.stdout.log",
+      "sha256": "5da7b38b8724d6443877fab5b033ba901599b14b415b4da4116b577b22d1a1a1"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/independent-candidate-check.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/independent-candidate-check.stdout.log",
+      "sha256": "5de5c374fd55279822f9123a5bf07e1c7ec386fdc5be00a8040396a9724363d7"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/native-route-check.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/native-route-check.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior-pad-probes.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/prior-pad-probes.stdout.log",
+      "sha256": "67ac75218cac1f2ebcad42b8af47bb8f5203c24de94600de229abca8026ccc04"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/corrected-pad-probes.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/corrected-pad-probes.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-package-checks.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/final-package-checks.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-render.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/final-render.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/independent-candidate-check.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/independent-candidate-check.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/native-route-check.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/native-route-check.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior-pad-probes.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/root-verification/raw/prior-pad-probes.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/karma-granite-loaded.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-granite-loaded.png",
+      "sha256": "4a750ce71de3cf060c7782a7e7d32e80760786d6423d80077bd8f64f112bf37c"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/karma-pinch-wrap-back.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-back.png",
+      "sha256": "8574ceaab4ec3fe85056173bcaf8e2cfa09f11aa5a97296873f57ee5fac266e9"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/karma-pinch-wrap-front-back.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-front-back.png",
+      "sha256": "b29dda4e02f2a28125e052e78d94eece9cc531062601ba467d5cc02d8ecad4da"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/karma-pinch-wrap-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-front.png",
+      "sha256": "108da7944607234af17528ae330b548916a8470cbb0fad8646f7a9e96e9fac71"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/karma-pinch-wrap-loaded-back.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-loaded-back.png",
+      "sha256": "2299578946a81644caba19036a1610b6413ac008c41ee893d604186492b69ca7"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/karma-pinch-wrap-loaded-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-loaded-front.png",
+      "sha256": "0a2b459d2b5450b266ffeb1ad236e8f20c5cccd4e41db6805ae3fdeae1da090a"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/karma-wood-loaded.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-wood-loaded.png",
+      "sha256": "17289e62ffc6870819336fa58c21fb4f9efc87f31cb215c1588b6ed7eac74e21"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior-current-pinch-front-side-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/prior-current-pinch-front-side-top.png",
+      "sha256": "dd31f4d5c193f65cddef240db78d157e8677063143d26b094879018dcb1346e3"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior-delivery-checksums.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/prior-delivery-checksums.txt",
+      "sha256": "4267990f05613cd2baf67f1d4604bf107ea081960c45c45a7c1faf0f81567fd1"
+    },
+    {
+      "source": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/current-delivery-checksums.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/current-delivery-checksums.txt",
+      "sha256": "fb4b7c7fcfa2fd1041ed1f97faad0f001c09866935834568d74af87ae573d845"
+    }
+  ],
+  "nativeAssets": "Canonical package only; no duplicate FCStd/USDZ committed in audit.",
+  "collider": "Fresh prior/current exact native collider identity checked in owned scratch; source-bound equality proof and current cache check retained."
+}

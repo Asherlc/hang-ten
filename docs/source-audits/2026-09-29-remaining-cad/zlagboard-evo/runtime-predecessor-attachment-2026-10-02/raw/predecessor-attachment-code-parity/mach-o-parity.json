@@ -1,0 +1,50 @@
+{
+  "builtApp": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app",
+  "installedApp": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/ED08A239-96A5-461C-8C1E-28E5FA3D1219/HangTen.app",
+  "builtMachO": {
+    "__preview.dylib": {
+      "sha256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1",
+      "bytes": 49568
+    },
+    "HangTen": {
+      "sha256": "5f87b0429f614d824bd5884b2fe917ba4c72ef2acc5a145c3ce32528138128e5",
+      "bytes": 89648
+    },
+    "HangTen.debug.dylib": {
+      "sha256": "ed1309f520d49a80db45346b8789a2aa10d0ffe58455afe56fd93fa978c49512",
+      "bytes": 52638752
+    },
+    "Frameworks/Sentry.framework/Sentry": {
+      "sha256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7",
+      "bytes": 49568
+    },
+    "Frameworks/AmplitudeCore.framework/AmplitudeCore": {
+      "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+      "bytes": 1687328
+    }
+  },
+  "installedMachO": {
+    "__preview.dylib": {
+      "sha256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1",
+      "bytes": 49568
+    },
+    "HangTen": {
+      "sha256": "5f87b0429f614d824bd5884b2fe917ba4c72ef2acc5a145c3ce32528138128e5",
+      "bytes": 89648
+    },
+    "HangTen.debug.dylib": {
+      "sha256": "ed1309f520d49a80db45346b8789a2aa10d0ffe58455afe56fd93fa978c49512",
+      "bytes": 52638752
+    },
+    "Frameworks/Sentry.framework/Sentry": {
+      "sha256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7",
+      "bytes": 49568
+    },
+    "Frameworks/AmplitudeCore.framework/AmplitudeCore": {
+      "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+      "bytes": 1687328
+    }
+  },
+  "allCodeEqual": true,
+  "different": []
+}

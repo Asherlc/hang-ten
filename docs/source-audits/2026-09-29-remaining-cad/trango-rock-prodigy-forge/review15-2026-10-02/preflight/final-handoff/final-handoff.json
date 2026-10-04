@@ -1,0 +1,136 @@
+{
+  "owner": "placid-badger",
+  "status": "pass: independent native, deterministic export, fresh unbound reimport/exact descriptor and native-normal witness gates; root owns promotion",
+  "package": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-final-package/Hangboards/trango-rock-prodigy-forge",
+  "packageFiles": {
+    "trango-rock-prodigy-forge.FCStd": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-final-package/Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd",
+      "sha256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e"
+    },
+    "assets/primary.usdz": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-final-package/Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+      "sha256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61"
+    },
+    "assets/primary.model.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-final-package/Hangboards/trango-rock-prodigy-forge/assets/primary.model.json",
+      "sha256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
+    }
+  },
+  "generatedBoard": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-final-handoff/generated-board.json",
+    "sha256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a"
+  },
+  "sourceAuthorHandoff": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/stable-bindings/native-shape-handoff.json",
+    "sha256": "c70616117e46a7540bb94ad0648e416b04930f37cfa4b41d20e347ea7fa11e50"
+  },
+  "sourceAuthorFreshCheck": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/stable-bindings/fresh-native-check.json",
+    "sha256": "0144f0c3e81a2a69d41fcfc60891396a1222c3875748dc5caf923751310799ec"
+  },
+  "finishMetadataProof": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/stable-bindings/finish-metadata-proof.json",
+    "sha256": "18b9e4a6de0cc99f7416da84fd0c16a49a5f101a71e6af948f758fd7addf7b6f"
+  },
+  "sourceAuthorReport": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/stable-bindings/author-report.json",
+    "sha256": "7ef37944ba21c5d48645c270e854197878fc72d822b5f932e006585058508a3e"
+  },
+  "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+  "reports": {
+    "metadata-proof.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/metadata-proof.json",
+      "sha256": "73e3fe8361e94954f9fe9fb958c4b00a157d2497ed70d74b024413437290b55b"
+    },
+    "native-check.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-check.json",
+      "sha256": "2429d2682b4459bb7ae7ee618cea3452ae5c6b01bf9dcd427755656ecaf3896c"
+    },
+    "compile-1.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/compile-1.json",
+      "sha256": "c8d03c07a333244d868ec3af4adb17d4488435372f2c15071ba53f8c2bb75a9e"
+    },
+    "compile-2.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/compile-2.json",
+      "sha256": "73d21e7c06c3878e3aa6368516429c9d4cbd0f56e6f20d80928cbd1a2e09bd15"
+    },
+    "deterministic-export.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/deterministic-export.json",
+      "sha256": "aadcb33caa9ff1eb241901fd46f7629a7aa3d38463aac16ec6fdbe51dc0d5ee2"
+    },
+    "reimport-check.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/reimport-check.json",
+      "sha256": "17b9090b0da67705efca42336f20c09dfddd6c8a990cd66e86aa8d2c710f3a93"
+    },
+    "native-normal-check.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-normal-check.json",
+      "sha256": "46a4ccceb2d7c4c3424f3e2beb14859a8eb54b52fdff13ae409fa836217c373d"
+    },
+    "commands.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/commands.json",
+      "sha256": "a0da8f00574a50836379969bb3951ac4a3bc857f55a3079e4a9dcfd5f92ee7b6"
+    },
+    "retained-tool-hashes.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/retained-tool-hashes.json",
+      "sha256": "9cbd7de601d12ebad46307ab45b91141bcc8cbb66e55be315536f377cdff21ba"
+    },
+    "cleanup-receipt.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/cleanup-receipt.json",
+      "sha256": "57fe4873bc21ae5595ff403d74a4bf2ab921c6aee4576aaaffc0f8523dbd9dd8"
+    }
+  },
+  "finalNormalDisposition": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-final-handoff/final-normal-disposition.json",
+    "sha256": "7dc6bfa50310e57d0d99e7e15c74431afe2cbf0bf9a559b15260935a07389c21"
+  },
+  "strictFlaggedNativeNormalDiagnostic": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/flagged-native-normal-diagnostic.json",
+    "sha256": "4e2fda16c258d4099ae955bdc8aef874a585f1244edc19c6dfdc2479c60ad662"
+  },
+  "scopePreservation": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-final-handoff/scope-preservation.json",
+    "sha256": "2f7832afa6d4e55cce0595054f3d8df9b935dd479c2f4db4964a4a1f898cda9e"
+  },
+  "finalLifecycle": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-final-handoff/final-lifecycle-receipt.json",
+    "sha256": "96c4407a1f1331d1c26f8052b546e6a861a753dee17f3635bac1e7e6c507ca9f"
+  },
+  "canonicalBaselineActual3": {
+    "assets/primary.model.json": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef",
+    "assets/primary.usdz": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+    "trango-rock-prodigy-forge.FCStd": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a"
+  },
+  "otherPackageFilesUnchanged": 203,
+  "reservedPathHashesExact": 7,
+  "all20ContactFactsAndFiniteSurfacesPreserved": true,
+  "contactCount": 20,
+  "nativeSolidCount": 2,
+  "nodeCount": 21,
+  "triangleCount": 20748,
+  "materialCount": 0,
+  "shaderCount": 0,
+  "boundMeshCount": 0,
+  "selector": "plastic",
+  "finishProvenance": "root-authorized generic molded/textured appearance inference, not polymer chemistry or exact maker color",
+  "displayEstimatesRemainEstimates": true,
+  "canonicalMutation": false,
+  "runtimeVerified": false,
+  "currentAppFrames": 0,
+  "simulatorStarted": false,
+  "appBuildOrTestsRunInThisLane": false,
+  "productionSourceOrSharedEdits": false,
+  "retainedPriorFailures": [
+    {
+      "job": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743",
+      "classification": "completed composite membership/preservation checker failure; high recursive-cut cost; no cancellation signal; superseded by finite actual face-pair method at same whole-contact1e-4mm2 tolerance"
+    },
+    {
+      "job": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220",
+      "classification": "completed genuine fresh native sloper30 contact preservation failure; main6821.1770017157505mm2 lost; fixed by new stable source4f970, strong tolerance unchanged"
+    },
+    {
+      "job": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610",
+      "classification": "raw aggregate run exit1 retained after inverse-rounded-point normal failure; all passed gates reused; independent exact native facet/full-point/UV witness resolves28 flags at original tolerances"
+    }
+  ]
+}

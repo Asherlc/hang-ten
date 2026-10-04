@@ -1,0 +1,6 @@
+{
+  "error": "cord terminal or support is inside the rope-offset native solid",
+  "cause": "CAD-derived bearing stations lie exactly on grown section boundary; one is inside by 1.8849505289963985e-17 m from floating arithmetic",
+  "correction": "Add 1 nm to native upward bearing offset for stable exterior inclusion; retain original .2 mm clearance and every strict certification gate",
+  "scope": "scratch only"
+}

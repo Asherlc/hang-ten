@@ -1,0 +1,9 @@
+[
+  {
+    "path": "/display",
+    "before": "MISSING",
+    "after": {
+      "surfaceFinish": "wood"
+    }
+  }
+]

@@ -1,0 +1,299 @@
+diff --git a/HangTen/Views/GripHandModelView.swift b/HangTen/Views/GripHandModelView.swift
+index 618abb795..b24c39f98 100644
+--- a/HangTen/Views/GripHandModelView.swift
++++ b/HangTen/Views/GripHandModelView.swift
+@@ -110,10 +110,31 @@ struct GripHandModelView: View {
+     }
+ 
+     var body: some View {
++        #if DEBUG
++        if BoardHighlightDiagnostic.suppressesAllHandHosts {
++            Color.clear
++                .frame(maxWidth: .infinity, maxHeight: .infinity)
++                .allowsHitTesting(false)
++                .accessibilityHidden(true)
++        } else {
++            handContent
++        }
++        #else
++        handContent
++        #endif
++    }
++
++    private var handContent: some View {
+         let _ = cameraRevision
+-        GeometryReader { proxy in
++        return GeometryReader { proxy in
+             let size = proxy.size
+             RealityView { content in
++                #if DEBUG
++                if BoardHighlightDiagnostic.isEnabled {
++                    BoardHighlightDiagnostic.shared.handLifecycle(kind: "single",
++                        event: "make-entry", root: scene.root)
++                }
++                #endif
+                 content.camera = .virtual
+                 content.add(scene.root)
+                 syncScene(in: size)
+@@ -374,6 +395,32 @@ final class GripHandRealitySurface {
+     }
+ }
+ 
++#if DEBUG
++/// Diagnostic framing adaptation from the unchanged authored 3D vertices.
++/// The result is fixed until the existing pose/viewport/reset path runs again.
++@MainActor
++private func gripHandDiagnosticFieldOfView(points: [SIMD4<Float>],
++                                           cameraTransform: simd_float4x4,
++                                           aspect: Float) -> Float? {
++    guard !points.isEmpty, aspect.isFinite, aspect > 0 else { return nil }
++    let inverse = simd_inverse(cameraTransform)
++    var tangent: Float = 0
++    for point in points {
++        let projected = inverse * point
++        let depth = -projected.z
++        guard projected.x.isFinite, projected.y.isFinite, depth.isFinite,
++              depth > 0.1, depth < 100 else { return nil }
++        tangent = max(tangent, abs(projected.y) / depth,
++                      abs(projected.x) / (aspect * depth))
++    }
++    tangent *= 1.08
++    let degrees = 2 * atan(tangent) * 180 / Float.pi
++    guard tangent.isFinite, tangent > 0, degrees.isFinite,
++          degrees > 0, degrees < 180 else { return nil }
++    return degrees
++}
++#endif
++
+ @MainActor
+ final class GripHandRealityScene {
+     let root = Entity()
+@@ -395,13 +442,40 @@ final class GripHandRealityScene {
+     private var orbitElevation: Float = 0
+     private var orbitZoom: Float = 1
+     init(assetResult: Result<GripHandAsset, Error> = GripHandAsset.bundled) {
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handLifecycle(kind: "single",
++                event: "constructor-entry", root: root)
++        }
++        #endif
+         root.addChild(hand)
++        #if DEBUG
++        if BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            // Explicit diagnostic placeholder; the first valid reset fits the vertices.
++            camera.components.set(PerspectiveCameraComponent(near: 0.1, far: 100,
++                fieldOfViewInDegrees: 60, fieldOfViewOrientation: .vertical))
++        } else {
++            var orthographicCamera = OrthographicCameraComponent()
++            orthographicCamera.near = 0.1
++            orthographicCamera.far = 100
++            orthographicCamera.scale = 3.2
++            orthographicCamera.scaleDirection = .vertical
++            camera.components.set(orthographicCamera)
++        }
++        #else
+         var orthographicCamera = OrthographicCameraComponent()
+         orthographicCamera.near = 0.1
+         orthographicCamera.far = 100
+         orthographicCamera.scale = 3.2
+         orthographicCamera.scaleDirection = .vertical
+         camera.components.set(orthographicCamera)
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handCamera(kind: "single",
++                event: "configured", camera: camera)
++        }
++        #endif
+         root.addChild(camera)
+ 
+         root.addChild(keyLight)
+@@ -473,10 +547,36 @@ final class GripHandRealityScene {
+         guard aspect.isFinite, aspect > 0 else { return }
+         let orthographicScale = max(halfHeight, halfWidth / aspect) * 1.08
+         guard orthographicScale.isFinite, orthographicScale > 0 else { return }
++        #if DEBUG
++        if BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            guard let degrees = gripHandDiagnosticFieldOfView(points: points,
++                    cameraTransform: transform, aspect: aspect),
++                  var component = camera.components[PerspectiveCameraComponent.self] else {
++                BoardHighlightDiagnostic.shared.handCamera(kind: "single",
++                    event: "fit-rejected", camera: camera, points: points)
++                return
++            }
++            camera.transform = Transform(matrix: transform)
++            component.fieldOfViewInDegrees = degrees
++            camera.components.set(component)
++        } else {
++            camera.transform = Transform(matrix: transform)
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = orthographicScale
++            camera.components.set(component)
++        }
++        #else
+         camera.transform = Transform(matrix: transform)
+         var component = camera.components[OrthographicCameraComponent.self]!
+         component.scale = orthographicScale
+         camera.components.set(component)
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handCamera(kind: "single",
++                event: "reset-fitted", camera: camera, points: points)
++        }
++        #endif
+ 
+         canonicalCenter = center
+         canonicalOffset = offset
+@@ -510,9 +610,17 @@ final class GripHandRealityScene {
+               let transform = Self.cameraTransform(position: canonicalCenter + rotatedOffset,
+                                                    target: canonicalCenter) else { return }
+         camera.transform = Transform(matrix: transform)
++        #if DEBUG
++        if !BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = canonicalOrthographicScale / nextZoom
++            camera.components.set(component)
++        }
++        #else
+         var component = camera.components[OrthographicCameraComponent.self]!
+         component.scale = canonicalOrthographicScale / nextZoom
+         camera.components.set(component)
++        #endif
+         orbitAzimuth = nextAzimuth
+         orbitElevation = nextElevation
+         orbitZoom = nextZoom
+@@ -579,17 +687,44 @@ final class GripHandRealityPairScene {
+     private var orbitZoom: Float = 1
+ 
+     init(assetResult: Result<GripHandAsset, Error> = GripHandAsset.bundled) {
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handLifecycle(kind: "pair",
++                event: "constructor-entry", root: root)
++        }
++        #endif
+         root.addChild(leftHand)
+         root.addChild(rightHand)
+         leftHand.position.x = -slotOffset
+         rightHand.position.x = slotOffset
+         leftHand.scale.x = -1
++        #if DEBUG
++        if BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            // Explicit diagnostic placeholder; the first valid reset fits the vertices.
++            camera.components.set(PerspectiveCameraComponent(near: 0.1, far: 100,
++                fieldOfViewInDegrees: 60, fieldOfViewOrientation: .vertical))
++        } else {
++            var orthographicCamera = OrthographicCameraComponent()
++            orthographicCamera.near = 0.1
++            orthographicCamera.far = 100
++            orthographicCamera.scale = 3.2
++            orthographicCamera.scaleDirection = .vertical
++            camera.components.set(orthographicCamera)
++        }
++        #else
+         var orthographicCamera = OrthographicCameraComponent()
+         orthographicCamera.near = 0.1
+         orthographicCamera.far = 100
+         orthographicCamera.scale = 3.2
+         orthographicCamera.scaleDirection = .vertical
+         camera.components.set(orthographicCamera)
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handCamera(kind: "pair",
++                event: "configured", camera: camera)
++        }
++        #endif
+         root.addChild(camera)
+         root.addChild(keyLight)
+         root.addChild(fillLight)
+@@ -665,10 +800,36 @@ final class GripHandRealityPairScene {
+         guard aspect.isFinite, aspect > 0 else { return }
+         let scale = max(halfHeight, halfWidth / aspect) * 1.08
+         guard scale.isFinite, scale > 0 else { return }
++        #if DEBUG
++        if BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            guard let degrees = gripHandDiagnosticFieldOfView(points: points,
++                    cameraTransform: transform, aspect: aspect),
++                  var component = camera.components[PerspectiveCameraComponent.self] else {
++                BoardHighlightDiagnostic.shared.handCamera(kind: "pair",
++                    event: "fit-rejected", camera: camera, points: points)
++                return
++            }
++            camera.transform = Transform(matrix: transform)
++            component.fieldOfViewInDegrees = degrees
++            camera.components.set(component)
++        } else {
++            camera.transform = Transform(matrix: transform)
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = scale
++            camera.components.set(component)
++        }
++        #else
+         camera.transform = Transform(matrix: transform)
+         var component = camera.components[OrthographicCameraComponent.self]!
+         component.scale = scale
+         camera.components.set(component)
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handCamera(kind: "pair",
++                event: "reset-fitted", camera: camera, points: points)
++        }
++        #endif
+         canonicalCenter = center
+         canonicalOffset = offset
+         canonicalOrthographicScale = scale
+@@ -695,9 +856,17 @@ final class GripHandRealityPairScene {
+         guard let transform = Self.cameraTransform(position: canonicalCenter + rotatedOffset,
+                                                    target: canonicalCenter) else { return }
+         camera.transform = Transform(matrix: transform)
++        #if DEBUG
++        if !BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = canonicalOrthographicScale / nextZoom
++            camera.components.set(component)
++        }
++        #else
+         var component = camera.components[OrthographicCameraComponent.self]!
+         component.scale = canonicalOrthographicScale / nextZoom
+         camera.components.set(component)
++        #endif
+         orbitAzimuth = nextAzimuth
+         orbitElevation = nextElevation
+         orbitZoom = nextZoom
+@@ -768,10 +937,31 @@ struct GripHandPairModelView: View {
+     }
+ 
+     var body: some View {
++        #if DEBUG
++        if BoardHighlightDiagnostic.suppressesAllHandHosts {
++            Color.clear
++                .frame(maxWidth: .infinity, maxHeight: .infinity)
++                .allowsHitTesting(false)
++                .accessibilityHidden(true)
++        } else {
++            handContent
++        }
++        #else
++        handContent
++        #endif
++    }
++
++    private var handContent: some View {
+         let _ = cameraRevision
+-        GeometryReader { proxy in
++        return GeometryReader { proxy in
+             let size = proxy.size
+             RealityView { content in
++                #if DEBUG
++                if BoardHighlightDiagnostic.isEnabled {
++                    BoardHighlightDiagnostic.shared.handLifecycle(kind: "pair",
++                        event: "make-entry", root: scene.root)
++                }
++                #endif
+                 content.camera = .virtual
+                 content.add(scene.root)
+                 syncScene(in: size)

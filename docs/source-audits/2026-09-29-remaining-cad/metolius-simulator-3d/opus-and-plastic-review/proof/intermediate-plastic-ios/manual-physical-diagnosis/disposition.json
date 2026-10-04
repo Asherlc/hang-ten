@@ -1,0 +1,21 @@
+{
+  "owner": "placid-badger",
+  "status": "diagnostic only",
+  "cause": "AXe automatic/simulator tap returned success but selected contact stayed jug-1-left. Explicit physical down/up selected flat-sloper-2-left.",
+  "manualCommand": [
+    "rtk",
+    "proxy",
+    "/opt/homebrew/bin/axe",
+    "tap",
+    "--id",
+    "boardDetail.holdLegend.flat-sloper-2-left",
+    "--tap-style",
+    "physical",
+    "--post-delay",
+    "1",
+    "--udid",
+    "72312582-DB46-44A7-9C61-D8C0E9F75876"
+  ],
+  "selectionConfirmed": "boardDetail.selectedHold.flat-sloper-2-left",
+  "limit": "This attempt needed a manual physical tap not present in capture commands; retain as diagnosis only and rerun with physical style in script."
+}

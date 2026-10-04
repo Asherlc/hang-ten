@@ -1,0 +1,17 @@
+{
+  "scope": "SCRATCH ONLY, prospective DEBUG diagnostic; not applied, not compiled, not authorized for execution",
+  "files": [
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "beforeSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "proposedSHA256": "aeeddc661f6b88d1f29bdb58639ba0cc735a3437357d155ce86f291d28146ea5"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "beforeSHA256": "008de5d3854b809fb452b9455d3d1d018da8649d48ece7d1d8a7b14120372eb5",
+      "proposedSHA256": "6f9fcd3da0677d79c411cf4cf053ae06a88b60f58f2b37522924f91570c3be25"
+    }
+  ],
+  "patchSHA256": "90032b935acc1d4b16b1f9f5371f4c715cc34814f805904cd25aa64d12a49598",
+  "gitApplyCheckExit": 0
+}

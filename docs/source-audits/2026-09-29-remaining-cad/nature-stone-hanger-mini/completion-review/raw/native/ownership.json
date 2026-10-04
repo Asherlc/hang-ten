@@ -1,0 +1,12 @@
+{
+  "owner": "placid-badger",
+  "scope": ".context/placid-badger/nature-stone-mini-review10/completion",
+  "createdUTC": "2026-10-02T03:11:38.048322+00:00",
+  "baseline": {
+    "nature-stone-hanger-mini.FCStd": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+    "assets/primary.usdz": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+    "assets/primary.model.json": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
+    "suspension.json": "3ededde32246c2b90cbf89dbb28ec26f362f387ae60f5f3f22dff2c76f115325"
+  },
+  "externalResources": []
+}

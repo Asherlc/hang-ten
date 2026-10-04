@@ -1,0 +1,187 @@
+{
+  "date": "2026-09-30",
+  "byteExactCopies": [
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-aperture-knee-red.log",
+      "retainedPath": "diagnostics/tightening-aperture-knee-red.log",
+      "sha256": "dace9ca27a7326a76eee62a11feadbfd6ef5e90e1ae438ab7758fe2b04c23ca7",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-dense-red.log",
+      "retainedPath": "diagnostics/tightening-dense-red.log",
+      "sha256": "ae6dd02e05df9d87f3d09a7d3e19ae6c70e413253baa426e50b509bcd3215e61",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-integration-red.log",
+      "retainedPath": "diagnostics/tightening-integration-red.log",
+      "sha256": "1afc944dd95e3f797421ab274c3fa6ed62b99e90498108365de85950b43d4e56",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-margin-red.log",
+      "retainedPath": "diagnostics/tightening-margin-red.log",
+      "sha256": "a9712d9fc72b8b4dbfa82657760668f70003d274b6ab9667d9d8d933fa03a617",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-null-red.log",
+      "retainedPath": "diagnostics/tightening-null-red.log",
+      "sha256": "6af4f080da1c3d281a03e8fdbeacb6bb6100ff516e2f492df8339bffad6ba006",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-practical-threshold-red.log",
+      "retainedPath": "diagnostics/tightening-practical-threshold-red.log",
+      "sha256": "14e04718c988ce5f6a1d7d660cf4ba0a26f13d3a02c38096c591983e0486d521",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-red.log",
+      "retainedPath": "diagnostics/tightening-red.log",
+      "sha256": "2c20e4a5536be4c4e6cdce04300d34e274bd626b09bfbb58fe2a19a429ba9e15",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-small-step-red.log",
+      "retainedPath": "diagnostics/tightening-small-step-red.log",
+      "sha256": "f6e86c26679b4429ab7b36254d0ef986822fefb16f6140e2a15eb9acf86f9c00",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-subchain-red.log",
+      "retainedPath": "diagnostics/tightening-subchain-red.log",
+      "sha256": "541cc821cc16db1aa9a8c562879151b71f85e36c9ea8fb95bbe87d6404bc16f4",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-tangent-red.log",
+      "retainedPath": "diagnostics/tightening-tangent-red.log",
+      "sha256": "008a9ee084596f3d6defd7827410ccf5100ddfd2e020812556c683a906359857",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-unaffected-pair-red.log",
+      "retainedPath": "diagnostics/tightening-unaffected-pair-red.log",
+      "sha256": "f7c4a24887896ad905681c32fe0f154c45834e288eec9e0364debff0f863f103",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-unchanged-segment-red.log",
+      "retainedPath": "diagnostics/tightening-unchanged-segment-red.log",
+      "sha256": "39fc6e587b4678a82d2a324b8f5bbaf4d4f0495ba9479e02a892c9571c79ec24",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-implementation-handoff.md",
+      "retainedPath": "diagnostics/tightening-implementation-handoff.md",
+      "sha256": "d87963552277adfa74e2a6544cc398ce10f21157b1e60f73e31ff93efe0da9ea",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-acceptance-review.json",
+      "retainedPath": "diagnostics/tightening-acceptance-review.json",
+      "sha256": "e60467848b9455c9d2832ce0fe470615edfdd4fa141979765414a0dab1c45aea",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-implementation-review.json",
+      "retainedPath": "diagnostics/tightening-implementation-review.json",
+      "sha256": "489c40f96a67f0f68510dbd047fbdb8ce8c3f5b7002ff960380fc4bec1931320",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/corner-insertion-code-review.json",
+      "retainedPath": "diagnostics/corner-insertion-code-review.json",
+      "sha256": "ec59c1872949a4f148cb719fb4aeecadac8882c3b5e8c34962baa675fba5307a",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/subchain-code-review.json",
+      "retainedPath": "diagnostics/subchain-code-review.json",
+      "sha256": "3f643e77d20be63a1b424d0816f9305d26209bdec981b0bc3567d71395672b9f",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/independent-physical-review.json",
+      "retainedPath": "diagnostics/independent-physical-review.json",
+      "sha256": "7e777d36d5ab77192e9ebcd04abd1c261b6b3f2a9f7223aa5d3d4c42cf2188e4",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/native-probe-independent-corner-cuts.json",
+      "retainedPath": "diagnostics/native-probe-independent-corner-cuts.json",
+      "sha256": "64de37404e9721a34081b92a07c6a0a9f539ae3c361d4fa67c0eefa13c6de09d",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/probe-2-independent-quality.json",
+      "retainedPath": "diagnostics/probe-2-independent-quality.json",
+      "sha256": "180f6d2acd58afcd4ec76731457076cfa57f9b156d80729102aef25028070850",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/independent-rim-subchain-probe.json",
+      "retainedPath": "diagnostics/independent-rim-subchain-probe.json",
+      "sha256": "a90ca00312c4f84c3d4cf5b1377d3992df3072abe8d93a30cc16a710138e14ac",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/probe-3-independent-quality.json",
+      "retainedPath": "diagnostics/probe-3-independent-quality.json",
+      "sha256": "1eed55df754d7780ee0a9d6aef4baca289d49aca1bc2d9635f9b169163c0c0a8",
+      "role": "Current diagnostic geometry, confirmed exactly by fresh native generation"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/schema-selector-independent-tests.log",
+      "retainedPath": "diagnostics/schema-selector-independent-tests.log",
+      "sha256": "660a20dceb470df13ea83412308c9ae7d56770a9700decb637f117fadfc30c21",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/subchain-independent-tests.log",
+      "retainedPath": "diagnostics/subchain-independent-tests.log",
+      "sha256": "95ec43405f633d0cf71ad116531bf781dde664762a9fff411274f4350374d928",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/initial-python-missing-dependency.json",
+      "retainedPath": "diagnostics/initial-python-missing-dependency.json",
+      "sha256": "2704dd00a48392adecb2e6882a4ec3d3884d3a04a24f2a5ad72ad4d6fb0527cd",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/initial-python-missing-dependency.log",
+      "retainedPath": "diagnostics/initial-python-missing-dependency.log",
+      "sha256": "9e809b1863e51aa9374351e595f1e5edd48e59d260d6b6845180903f312f2bae",
+      "role": "Historical development/diagnostic record; current production certification is separate"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/tightening-probe-3/native-tightening-metrics.json",
+      "retainedPath": "diagnostics/native-tightening-metrics.json",
+      "sha256": "b8825494ae43167d6a7a626c6ee708dbcaf200383bcedbc9c337b5c39b645ef4",
+      "role": "Current diagnostic geometry, confirmed exactly by fresh native generation"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/baguette-unchanged-check-partial-terminated.json",
+      "retainedPath": "diagnostics/baguette-unchanged-check-partial-terminated.json",
+      "sha256": "3028d6ee105273f18ffa011d898f14e21898d3a1bc697d41f1f6db23ec64096f",
+      "role": "Optional compatibility check terminated before all-five completion; no complete parity claim"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/baguette-unchanged-check.log",
+      "retainedPath": "diagnostics/baguette-unchanged-check.log",
+      "sha256": "9e7baab5346198fe3b2fd818f7200331a246a3ff9645cbbc2cfe3a243007524b",
+      "role": "Optional compatibility check terminated before all-five completion; no complete parity claim"
+    },
+    {
+      "sourcePath": ".context/placid-badger/dual-vertical-review/worker-final-ownership-and-hashes.json",
+      "retainedPath": "diagnostics/worker-final-ownership-and-hashes.json",
+      "sha256": "57944f0bab31913bfa237480d25b7066cd0792493448de57415ff26df7c96022",
+      "role": "Owned worker cleanup and final immutable hashes"
+    }
+  ],
+  "currentSourceVerification": "verification.json",
+  "limits": "Failed stages and earlier code hashes are historical, never authoring inputs; current claims use fresh native apply/check and final independent review."
+}

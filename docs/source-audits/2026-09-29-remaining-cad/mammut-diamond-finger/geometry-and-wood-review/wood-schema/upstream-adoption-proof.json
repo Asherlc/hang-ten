@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "6126228e8c44c5832982acc09e10ce47809f50c0",
+  "exactDeclarations": {
+    "enum BoardSurfaceFinish:": true,
+    "struct BoardModelDisplay:": true,
+    "struct BoardPackageModelDisplayDocument:": true,
+    "_load_model_display": true
+  },
+  "currentFileHashes": {
+    "HangTen/Models/TrainingModels.swift": "2e680154c8f9389324440dcf853f2f3ca106c17d3905dac9fb6f51c05676646d",
+    "HangTen/Models/BoardPackageStore.swift": "298b6d5d6268e013432085e09c3103d35fad799566a77984db28341db0756fb4",
+    "Tools/HangboardPackages/src/hangboard_packages/board_catalog.py": "54af5c45627f76128e7629c601822d37903c57f4260ee81fdc668bf922140172",
+    "HangTenTests/BoardPackageStoreTests.swift": "fc1e5542383ae521cd5bfeeca0b2ca5131212948a4568b13daa1df20da8bfc26",
+    "Tools/HangboardPackages/tests/test_model_first_packages.py": "5784e35ecc4116a925bf6971e8b8c09dea093cb6f7c8ea4dbf6ed9cab9b76d10",
+    "Tools/HangboardPackages/tests/test_board_package_staging.py": "94fc0cc37523d012112ef55108d35b02d872bd758cd9b936845179374a1e9056"
+  },
+  "scope": "Existing finish contract only; shared contact membership, native cadRoutedCord and other current metadata remain intact. No catalog-wide opt-in assertion imported."
+}

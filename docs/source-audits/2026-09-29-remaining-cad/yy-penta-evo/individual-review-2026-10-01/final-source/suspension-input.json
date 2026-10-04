@@ -1,0 +1,711 @@
+{
+  "schemaVersion": 2,
+  "entries": [
+    {
+      "presentationID": "front-pair",
+      "modelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+      "suspension": {
+        "type": "cadRoutedCord",
+        "bodyNodeID": "penta_body_001",
+        "strands": [
+          {
+            "id": "upper-band-loop",
+            "kind": "loop",
+            "restLength": 0.6,
+            "radius": 0.002,
+            "material": "matteCord",
+            "provenance": "Approved whole maker images show an exterior loop through the central opening. The selected grip is rotated below the center; each pose uses actual native upper-band bearing stations. Pose angles, 0.6 m displayed loop length and 2 mm radius are display estimates. No hidden bore or connection is inferred."
+          }
+        ],
+        "anchor": {
+          "offsetFromBoardBounds": [
+            -0.15,
+            0.21,
+            0
+          ],
+          "visibility": "invisible",
+          "provenance": "authored-display-estimate: independent fixed overhead display anchor with canonical pose-owned spacing. All unit dimensions except sourced contact depths, wood color, rounding, camera and placement are display estimates."
+        },
+        "canonicalPoses": {
+          "duo": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                -0.3252804860140796,
+                -0.10569003670618689,
+                -0.9396926207859084
+              ]
+            },
+            "rotation": [
+              0.0,
+              0.0,
+              0.5877852522924731,
+              0.8090169943749475
+            ],
+            "translation": [
+              -0.15,
+              0,
+              0
+            ]
+          },
+          "edge-15": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                0.3252804860140796,
+                -0.10569003670618679,
+                -0.9396926207859084
+              ]
+            },
+            "rotation": [
+              0.0,
+              0.0,
+              0.5877852522924732,
+              -0.8090169943749473
+            ],
+            "translation": [
+              -0.15,
+              0,
+              0
+            ]
+          },
+          "edge-20": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                0.2198463103929542,
+                0.26200263022938497,
+                -0.9396926207859084
+              ]
+            },
+            "rotation": [
+              0.0,
+              0.0,
+              0.9396926207859084,
+              -0.3420201433256687
+            ],
+            "translation": [
+              -0.15,
+              0,
+              0
+            ]
+          },
+          "mono": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                -0.3420201433256687,
+                -7.594372760115069e-17,
+                -0.9396926207859084
+              ]
+            },
+            "rotation": [
+              0.0,
+              0.0,
+              0.7071067811865475,
+              0.7071067811865476
+            ],
+            "translation": [
+              -0.15,
+              0,
+              0
+            ]
+          },
+          "primary": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                -0.21984631039295427,
+                0.2620026302293849,
+                -0.9396926207859086
+              ]
+            },
+            "rotation": [
+              0.0,
+              0.0,
+              0.9396926207859084,
+              0.3420201433256689
+            ],
+            "translation": [
+              -0.15,
+              0,
+              0
+            ]
+          },
+          "reverse": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                0.3252804860140797,
+                -0.10569003670618689,
+                0.9396926207859084
+              ]
+            },
+            "rotation": [
+              -0.5877852522924731,
+              0.8090169943749475,
+              3.599146639029983e-17,
+              4.953800363085458e-17
+            ],
+            "translation": [
+              -0.15,
+              0,
+              0
+            ]
+          },
+          "tray": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                0.0,
+                -0.3420201433256687,
+                -0.9396926207859084
+              ]
+            },
+            "rotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "translation": [
+              -0.15,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "ropeSolver": {
+        "method": "nativeRoutes",
+        "clearance": 0.0002,
+        "supportDirection": 1,
+        "terminalsByStrandID": {
+          "upper-band-loop": {
+            "planeNormal": [
+              -0.3379081615702148,
+              -0.9411790872858564,
+              0
+            ],
+            "points": [
+              [
+                0.044366425415887235,
+                -0.05459808753704667,
+                0.01
+              ],
+              [
+                0.044366425415887235,
+                -0.05459808753704667,
+                -0.01
+              ]
+            ]
+          }
+        },
+        "terminalsByPoseID": {
+          "duo": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -0.30901699437494745,
+                0.9510565162951536,
+                0
+              ],
+              "points": [
+                [
+                  0.06398002773395543,
+                  0.02041472522548572,
+                  0.01
+                ],
+                [
+                  0.06398002773395543,
+                  0.02041472522548572,
+                  -0.01
+                ]
+              ]
+            }
+          },
+          "edge-15": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -0.3090169943749472,
+                -0.9510565162951536,
+                0
+              ],
+              "points": [
+                [
+                  -0.06398002773395543,
+                  0.020414725225485694,
+                  0.01
+                ],
+                [
+                  -0.06398002773395543,
+                  0.020414725225485694,
+                  -0.01
+                ]
+              ]
+            }
+          },
+          "edge-20": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -0.33790816157021447,
+                0.9411790872858565,
+                0
+              ],
+              "points": [
+                [
+                  -0.044366425415887215,
+                  -0.054598087537046675,
+                  0.01
+                ],
+                [
+                  -0.044366425415887215,
+                  -0.054598087537046675,
+                  -0.01
+                ]
+              ]
+            }
+          },
+          "mono": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -2.220446049250313e-16,
+                1.0,
+                0
+              ],
+              "points": [
+                [
+                  0.0612892016493796,
+                  0.0007071057147969823,
+                  0.01
+                ],
+                [
+                  0.0612892016493796,
+                  0.0007071057147969823,
+                  -0.01
+                ]
+              ]
+            }
+          },
+          "primary": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -0.3379081615702148,
+                -0.9411790872858564,
+                0
+              ],
+              "points": [
+                [
+                  0.044366425415887235,
+                  -0.05459808753704667,
+                  0.01
+                ],
+                [
+                  0.044366425415887235,
+                  -0.05459808753704667,
+                  -0.01
+                ]
+              ]
+            }
+          },
+          "reverse": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -0.30901699437494745,
+                -0.9510565162951536,
+                0
+              ],
+              "points": [
+                [
+                  -0.06398002773395543,
+                  0.020414725225485715,
+                  0.01
+                ],
+                [
+                  -0.06398002773395543,
+                  0.020414725225485715,
+                  -0.01
+                ]
+              ]
+            }
+          },
+          "tray": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -1.0,
+                0.0,
+                0
+              ],
+              "points": [
+                [
+                  1.601622772315298e-19,
+                  0.06374555153342572,
+                  0.01
+                ],
+                [
+                  1.601622772315298e-19,
+                  0.06374555153342572,
+                  -0.01
+                ]
+              ]
+            }
+          }
+        },
+        "pathSearch": "aStar"
+      },
+      "equipmentObjectID": "left-penta"
+    },
+    {
+      "presentationID": "front-pair",
+      "modelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+      "suspension": {
+        "type": "cadRoutedCord",
+        "bodyNodeID": "penta_body_001",
+        "strands": [
+          {
+            "id": "upper-band-loop",
+            "kind": "loop",
+            "restLength": 0.6,
+            "radius": 0.002,
+            "material": "matteCord",
+            "provenance": "Approved whole maker images show an exterior loop through the central opening. The selected grip is rotated below the center; each pose uses actual native upper-band bearing stations. Pose angles, 0.6 m displayed loop length and 2 mm radius are display estimates. No hidden bore or connection is inferred."
+          }
+        ],
+        "anchor": {
+          "offsetFromBoardBounds": [
+            0.15,
+            0.21,
+            0
+          ],
+          "visibility": "invisible",
+          "provenance": "authored-display-estimate: independent fixed overhead display anchor with canonical pose-owned spacing. All unit dimensions except sourced contact depths, wood color, rounding, camera and placement are display estimates."
+        },
+        "canonicalPoses": {
+          "duo": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                -0.3252804860140796,
+                -0.10569003670618689,
+                -0.9396926207859084
+              ]
+            },
+            "rotation": [
+              0.0,
+              0.0,
+              0.5877852522924731,
+              0.8090169943749475
+            ],
+            "translation": [
+              0.15,
+              0,
+              0
+            ]
+          },
+          "edge-15": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                0.3252804860140796,
+                -0.10569003670618679,
+                -0.9396926207859084
+              ]
+            },
+            "rotation": [
+              0.0,
+              0.0,
+              0.5877852522924732,
+              -0.8090169943749473
+            ],
+            "translation": [
+              0.15,
+              0,
+              0
+            ]
+          },
+          "edge-20": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                0.2198463103929542,
+                0.26200263022938497,
+                -0.9396926207859084
+              ]
+            },
+            "rotation": [
+              0.0,
+              0.0,
+              0.9396926207859084,
+              -0.3420201433256687
+            ],
+            "translation": [
+              0.15,
+              0,
+              0
+            ]
+          },
+          "mono": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                -0.3420201433256687,
+                -7.594372760115069e-17,
+                -0.9396926207859084
+              ]
+            },
+            "rotation": [
+              0.0,
+              0.0,
+              0.7071067811865475,
+              0.7071067811865476
+            ],
+            "translation": [
+              0.15,
+              0,
+              0
+            ]
+          },
+          "primary": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                -0.21984631039295427,
+                0.2620026302293849,
+                -0.9396926207859086
+              ]
+            },
+            "rotation": [
+              0.0,
+              0.0,
+              0.9396926207859084,
+              0.3420201433256689
+            ],
+            "translation": [
+              0.15,
+              0,
+              0
+            ]
+          },
+          "reverse": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                0.3252804860140797,
+                -0.10569003670618689,
+                0.9396926207859084
+              ]
+            },
+            "rotation": [
+              -0.5877852522924731,
+              0.8090169943749475,
+              3.599146639029983e-17,
+              4.953800363085458e-17
+            ],
+            "translation": [
+              0.15,
+              0,
+              0
+            ]
+          },
+          "tray": {
+            "camera": {
+              "fitPadding": 0.1,
+              "viewDirection": [
+                0.0,
+                -0.3420201433256687,
+                -0.9396926207859084
+              ]
+            },
+            "rotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "translation": [
+              0.15,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "ropeSolver": {
+        "method": "nativeRoutes",
+        "clearance": 0.0002,
+        "supportDirection": 1,
+        "terminalsByStrandID": {
+          "upper-band-loop": {
+            "planeNormal": [
+              -0.3379081615702148,
+              -0.9411790872858564,
+              0
+            ],
+            "points": [
+              [
+                0.044366425415887235,
+                -0.05459808753704667,
+                0.01
+              ],
+              [
+                0.044366425415887235,
+                -0.05459808753704667,
+                -0.01
+              ]
+            ]
+          }
+        },
+        "terminalsByPoseID": {
+          "duo": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -0.30901699437494745,
+                0.9510565162951536,
+                0
+              ],
+              "points": [
+                [
+                  0.06398002773395543,
+                  0.02041472522548572,
+                  0.01
+                ],
+                [
+                  0.06398002773395543,
+                  0.02041472522548572,
+                  -0.01
+                ]
+              ]
+            }
+          },
+          "edge-15": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -0.3090169943749472,
+                -0.9510565162951536,
+                0
+              ],
+              "points": [
+                [
+                  -0.06398002773395543,
+                  0.020414725225485694,
+                  0.01
+                ],
+                [
+                  -0.06398002773395543,
+                  0.020414725225485694,
+                  -0.01
+                ]
+              ]
+            }
+          },
+          "edge-20": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -0.33790816157021447,
+                0.9411790872858565,
+                0
+              ],
+              "points": [
+                [
+                  -0.044366425415887215,
+                  -0.054598087537046675,
+                  0.01
+                ],
+                [
+                  -0.044366425415887215,
+                  -0.054598087537046675,
+                  -0.01
+                ]
+              ]
+            }
+          },
+          "mono": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -2.220446049250313e-16,
+                1.0,
+                0
+              ],
+              "points": [
+                [
+                  0.0612892016493796,
+                  0.0007071057147969823,
+                  0.01
+                ],
+                [
+                  0.0612892016493796,
+                  0.0007071057147969823,
+                  -0.01
+                ]
+              ]
+            }
+          },
+          "primary": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -0.3379081615702148,
+                -0.9411790872858564,
+                0
+              ],
+              "points": [
+                [
+                  0.044366425415887235,
+                  -0.05459808753704667,
+                  0.01
+                ],
+                [
+                  0.044366425415887235,
+                  -0.05459808753704667,
+                  -0.01
+                ]
+              ]
+            }
+          },
+          "reverse": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -0.30901699437494745,
+                -0.9510565162951536,
+                0
+              ],
+              "points": [
+                [
+                  -0.06398002773395543,
+                  0.020414725225485715,
+                  0.01
+                ],
+                [
+                  -0.06398002773395543,
+                  0.020414725225485715,
+                  -0.01
+                ]
+              ]
+            }
+          },
+          "tray": {
+            "upper-band-loop": {
+              "planeNormal": [
+                -1.0,
+                0.0,
+                0
+              ],
+              "points": [
+                [
+                  1.601622772315298e-19,
+                  0.06374555153342572,
+                  0.01
+                ],
+                [
+                  1.601622772315298e-19,
+                  0.06374555153342572,
+                  -0.01
+                ]
+              ]
+            }
+          }
+        },
+        "pathSearch": "aStar"
+      },
+      "equipmentObjectID": "right-penta"
+    }
+  ]
+}

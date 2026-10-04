@@ -1,0 +1,136 @@
+{
+  "owner": "placid-badger",
+  "verifiedUTC": "2026-10-02T16:02:21.137025+00:00",
+  "status": "pass",
+  "canonicalSHA256": {
+    "Hangboards/owl-climb-poker/owl-climb-poker.FCStd": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+    "Hangboards/owl-climb-poker/assets/primary.usdz": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+    "Hangboards/owl-climb-poker/assets/primary.model.json": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+  },
+  "generatedManifestSHA256": "899a998c12fc245f1e2120c666694f38cf2f0d0120ef8fcfdab1cee7df31e2d1",
+  "otherPackageFilesUnchanged": 203,
+  "onlyReviewQueueBoardChanged": 12,
+  "priorPokerQueueAndLockRecordsPreserved": true,
+  "allOtherQueueBoardsAndModelPackageRecordsPreserved": true,
+  "historicalTestAndAppCountsPreserved": true,
+  "sharedRendererFilesUnchanged": true,
+  "approvedWholeSourcePhotosUnchanged": 4,
+  "lockedFiles": 135,
+  "onlyChangedLockedFiles": [
+    "Hangboards/owl-climb-poker/assets/primary.model.json",
+    "Hangboards/owl-climb-poker/owl-climb-poker.FCStd"
+  ],
+  "descriptorPinsCurrentUSDZ": true,
+  "noCanonicalBoardJSONOrSuspensionAdded": true,
+  "processGroups": [
+    {
+      "pgid": 3293,
+      "name": "placid-badger-compile-1",
+      "members": []
+    },
+    {
+      "pgid": 8451,
+      "name": "placid-badger-validate-native",
+      "members": []
+    },
+    {
+      "pgid": 10623,
+      "name": "placid-badger-compile-2",
+      "members": []
+    },
+    {
+      "pgid": 25900,
+      "name": "placid-badger-poker12-independent-export",
+      "members": []
+    },
+    {
+      "pgid": 34571,
+      "name": "placid-badger-poker12-model-tools-pytest",
+      "members": []
+    },
+    {
+      "pgid": 34617,
+      "name": "placid-badger-poker12-manifest-package-pytest",
+      "members": []
+    },
+    {
+      "pgid": 34897,
+      "name": "placid-badger-poker12-canonical-cli",
+      "members": []
+    },
+    {
+      "pgid": 34903,
+      "name": "placid-badger-poker12-android-staging",
+      "members": []
+    },
+    {
+      "pgid": 34926,
+      "name": "placid-badger-poker12-ios-build",
+      "members": []
+    },
+    {
+      "pgid": 98803,
+      "name": "placid-badger-author",
+      "members": []
+    }
+  ],
+  "transientResources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/placid-badger-tmp-author",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/placid-badger-tmp-compile-1",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/placid-badger-tmp-compile-2",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/placid-badger-tmp-validate-native",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-android-stage",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-android-staging-TMP",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-canonical-cli-TMP",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-DD",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-ios-build-TMP",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-manifest-package-pytest-TMP",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/package-validation-2026-10-02/placid-badger-poker12-model-tools-pytest-TMP",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/root/placid-badger-poker12-independent-export-tmp",
+      "absent": true
+    }
+  ],
+  "ownedDiagnosticProcessesRemaining": [],
+  "allOwnedResourcesDeleted": true,
+  "parallelWorkspaceInspectedOrMerged": false,
+  "simulatorsStarted": 0,
+  "serversStarted": 0,
+  "currentAppFrames": 0,
+  "iOSUnitCasesExecuted": 0,
+  "appWorkflowPassed": false,
+  "humanAcceptance": "pending"
+}

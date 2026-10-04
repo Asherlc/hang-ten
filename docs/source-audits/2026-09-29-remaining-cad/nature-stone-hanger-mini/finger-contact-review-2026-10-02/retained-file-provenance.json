@@ -1,0 +1,1032 @@
+{
+  "owner": "placid-badger",
+  "files": [
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/handoff.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/handoff.json",
+      "sha256": "2bd5f15947f07de8d7b6023de19ce02e8a5a68d8c7d2ca45b5fe006c2c8e33aa"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/artifact-inventory.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/artifact-inventory.json",
+      "sha256": "207da6b55ed98d691ad9bd5861bcf6e239e4305a48184e69cc1a75b4ad07d48c"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/recommendation.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/recommendation.json",
+      "sha256": "56b860abc974264deeb55d6e63c64c1e09969a4153e6856a6e0d547e65c3e001"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/authoring-notes.md",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/authoring-notes.md",
+      "sha256": "f8422d31794798d3de542502ebcf09274f90387abdb3ad4d4ebcd601c06faa23"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-author-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/native-author-proof.json",
+      "sha256": "60054fcdd195fd54840a68a70c128399e15549e23674d730bff832fca46254fa"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/native-reopen-proof.json",
+      "sha256": "26ce6df1fb7bc9154f0d9a5167e23e41acbfaefe5447764b6a4ecd693bffeb7c"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-orientation-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/native-orientation-proof.json",
+      "sha256": "85f2b59cb9b1b62f318469f263fff74785281f826955302bf3569549c4a3587b"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/archive-preservation.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/archive-preservation.json",
+      "sha256": "2173ba46987ebc3e18dd26c8a1618791ffa2ad4ab2fbebd2cdab0903d9877671"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/collider-proof.json",
+      "sha256": "5abe2005ef68add8c7b7419f97d89b87a3f3b8a0b44e41b788b3171eecec6370"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3-report.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/compile3-report.json",
+      "sha256": "7eeab66d15976f3fb575ef6d881d2a67cf6347599c275017d3089da2cd4bc1f3"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile4-report.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/compile4-report.json",
+      "sha256": "463359a804b14841c54f6b939f9676cc8df38f07a1c1e90a15c37f06b3ba79c2"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/deterministic-export.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/deterministic-export.json",
+      "sha256": "43d220e86be14feaaa11d16f994dd06368cb9f76d659cbb3d8a42b40c9e36e40"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/reimport-proof.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/reimport-proof.json",
+      "sha256": "dc305c9099eb9496ef474156fdcdb7b0361b97ffd345f8ff0d846013d2e94ac0"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/preview-provenance.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/preview-provenance.json",
+      "sha256": "892edd44fa9da981885d2fb8a53958cc4fb49ab9679da44f3f644bbcbab0b7df"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/final-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/final-cleanup.json",
+      "sha256": "57fc83408da5b1cad0ab70405d7134e50945167067b5ed66c45ac54b25dd15bb"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author-ownership.json",
+      "sha256": "d29b9881918c2cbf9ff53d85b34f1aa34a507ff4f8cadf143bdc72f137a86e76"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author2-ownership.json",
+      "sha256": "25f04330fd2fcabf334bffd7a3b772c626c86b6430c7f0800fc508c474f10b9c"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author3-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author3-ownership.json",
+      "sha256": "f9518980c2fd816baab0c5660fc8b13014fc99005a692ecdecc3f80186e9e771"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author4-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author4-ownership.json",
+      "sha256": "4cac0a297b03af4744f64fe97d09944bc965382caac88baf19adb38222f19f7e"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/collider-ownership.json",
+      "sha256": "a8df55d6d20b398cebcfddace612269a49e88973e24f642e2ebdf2bd030cdac2"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/collider2-ownership.json",
+      "sha256": "906f996c76fc0cd323a7f9f08abf53f9b2c04f09d90bc282cb8ab127311138b3"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile1-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile1-ownership.json",
+      "sha256": "78282c8bf373764f4f4e703c2166fd4b61bf4d614ef37f62755fd1eb96e1c9cc"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile2-ownership.json",
+      "sha256": "dea8aee859692fa31805513243c8c9c7852dbb857ea4827089666f2fad6b5b79"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile3-ownership.json",
+      "sha256": "8852e864d4b3b26498e7e8dc0695f1706730bdfd629c772bc767a225482e0fcc"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile4-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile4-ownership.json",
+      "sha256": "f0a147caf54756a35a601f9dd7fa940d58bfa24faa3982beefc43d4359cee5ea"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/fresh-groove-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/fresh-groove-ownership.json",
+      "sha256": "1d531b3a01576b740c57e31beaee14aac92f8d60b50acaf447a6bfaea6bdaa1a"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/inspect-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/inspect-ownership.json",
+      "sha256": "6b7e68bfa7a184d5fe7a21d97c111f981a8935551bfd967ea6e529ef6264669c"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/mesh-counts-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/mesh-counts-ownership.json",
+      "sha256": "fec044a4d269f69d4a68b37ad59150e34c85503db9d4a95e3767eeff083a3248"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/native-reopen-ownership.json",
+      "sha256": "e4de6cd275eb40e755380d5f174eeb607de703391ba0480e0146f013e494bb5e"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/native-reopen2-ownership.json",
+      "sha256": "809675d6bc1b47a08a529c3ce380fc0900c660973a2d3cc80b9c0c82a36d3750"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/orientation-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/orientation-ownership.json",
+      "sha256": "6fd0e10b993a17e267048ae0be06d4716d36f00354e8d736ddeab5f25d7f2d58"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/parameters-ownership.json",
+      "sha256": "12d8dc2359e8364809f7c3f840a8de5c5717ad09337535b02ee2cb2800f3b9de"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters2-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/parameters2-ownership.json",
+      "sha256": "d887d58a24e1f72ed42e0373ef018df5d62666f60b35e7e76db3dcdb10cd82c5"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/previews-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/previews-ownership.json",
+      "sha256": "747129897f84fda07bcc0bf00ddb714b9b5234f8745b96f737d916d8f3255c53"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/reimport-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/reimport-ownership.json",
+      "sha256": "bb105133142b50ae1a9e373a5fd67c708bb769b321dbda614a3485ff8e762725"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/shell-diagnosis-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/shell-diagnosis-ownership.json",
+      "sha256": "f58be8874f0fdf028d92a08c796dbb6e90d0fb3c2757c1e062be673274f00850"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author-cleanup.json",
+      "sha256": "9a1581be9b6efac9b0e7d0a053cc022b349d7f4ecf6b7a03fd31066d863973cf"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author2-cleanup.json",
+      "sha256": "0d3d1c78ff982b6a2fafc1b205c32005ad8ae852478f5aa2f28f083f97b94d4f"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author3-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author3-cleanup.json",
+      "sha256": "e9875c338918f9ed50df85d6ef6ec12dd97ab1f121ea30d09caa1bf7a1940a41"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author4-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author4-cleanup.json",
+      "sha256": "ef1cb55a369bfbc318e17f5949eca6da887d4b64b818a8ec046be36ecfcdc875"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/collider-cleanup.json",
+      "sha256": "3f6084f532fa249a8fec8f73fb2825544a96926f54381fd4b72f63477bf2a192"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/collider2-cleanup.json",
+      "sha256": "efe10d9fb39c275229d75ce1e64d8517297df6fc18d0405e7d10034083db1b0a"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile1-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile1-cleanup.json",
+      "sha256": "821b021729b9406e945b6fba1c431d00084ac4161b010815c35a86222c8e61c3"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile2-cleanup.json",
+      "sha256": "3c02ea1fdf8db3c72bde6871e05995899317d143e3f7ce010d7aa9147614f105"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile3-cleanup.json",
+      "sha256": "038856998f92dabeeebe5a28e3dde81bcd30318b77c4c0bb7cbc8fe30ea3133b"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile4-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile4-cleanup.json",
+      "sha256": "1ca57c9305485fdff961d27d1deeaf8d47672f98b3771dad602598bd02c101de"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/fresh-groove-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/fresh-groove-cleanup.json",
+      "sha256": "3d7f53445b1f0306168ad28a68e7b816acb0630c6ddf65d629c2c2110ed4c463"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/inspect-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/inspect-cleanup.json",
+      "sha256": "ca2c7c6452098ba51e7e5305d134f0f8598c9b3a36f5061eccb7378f1f770721"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/mesh-counts-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/mesh-counts-cleanup.json",
+      "sha256": "608f7734bdcf528e023363ef9ad73d143f78db1b791d1b167ed227887b8e0edf"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/native-reopen-cleanup.json",
+      "sha256": "38d4c4ac7ac6359b8cd74767aa4e2982cfea96b044ae675f7050904cd1003df7"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/native-reopen2-cleanup.json",
+      "sha256": "562b4b942cd5c35c0a8169955768364ef03d594b22d9b205cae5e85cd1a716bd"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/orientation-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/orientation-cleanup.json",
+      "sha256": "b9bb917abca50e9af68822ac4e0f20ac41ac5ca603f5055138e6669f7b80e27a"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/parameters-cleanup.json",
+      "sha256": "05a4cb5ca926e3ea027e23b01c000ae0d5c13c6b1aaccfbef102bf5f5e6f28f9"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters2-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/parameters2-cleanup.json",
+      "sha256": "4657eac92eb8b6e4ecb84ff547f2558466f7de5e79b63b722d0802a4af9b1705"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/previews-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/previews-cleanup.json",
+      "sha256": "81136d638911f33fc909babaf5ae54047b94a594d0b02b43ebf333e7679a0c0a"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/reimport-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/reimport-cleanup.json",
+      "sha256": "c31ffa820af8342b7aad410d4c055acfcc790510fa876b4959cb59e1c57e0276"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/shell-diagnosis-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/shell-diagnosis-cleanup.json",
+      "sha256": "125302f43633304db76867ead153635798d4073262462fa88fbdeedc94198a97"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author-command.json",
+      "sha256": "4bf93011d54ff9419bfd8a7ea678811ac7e72f229cbddac1efd8f7630385d3ae"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author2-command.json",
+      "sha256": "c4eece989e63d00c3a8c775343d26bb0376d2a6a75a54de828da19fad090475a"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author3-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author3-command.json",
+      "sha256": "4bb968d603ef468ac530698bb0135ff120115021d4e47d24f336020c49f51406"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author4-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author4-command.json",
+      "sha256": "60314e2b05fe7ddec582d963e5b90c46afb01af1fe779698844cb5087532133a"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/collider-command.json",
+      "sha256": "d9f90153a383b35a8b3584c4f86dc4411d0e2fe80ef28b8e486c6f71d5459c2a"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/collider2-command.json",
+      "sha256": "025c23719b46d409dfa4a321bd0111ef01b0932d017bc886a589d4e5cbad045d"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile1-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile1-command.json",
+      "sha256": "4b21a1846175984168af42ce2ea3f58e03cbc8cadc1b34dc0369b3336a375e0c"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile2-command.json",
+      "sha256": "8d71c7db6f753aeef4ce620386149582c20fed7a80e05e37a0c3d2a98b91ef6e"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile3-command.json",
+      "sha256": "015d7f7e3e2a1bd46a578f1e8f40a420d7105513bfdcc5e17cf21efdfd3fea2f"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile4-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile4-command.json",
+      "sha256": "66d58b9f7b8645dfa1c0324f1432a84bf4559671b2c3b20d5ad49c8c870e07f4"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/fresh-groove-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/fresh-groove-command.json",
+      "sha256": "8a95bda6774d51788ae573313149b8ca7dcf077ac6a88b51399185ba09bb5fd0"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/inspect-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/inspect-command.json",
+      "sha256": "90ec5b4d2f26ef2900e5356ad573933ff7a8e7a53aad27406256d8102b55676e"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/mesh-counts-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/mesh-counts-command.json",
+      "sha256": "f05a1b136988e9f3216c9aed09894dafb9103ed274713e708b2438c1e05674bd"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/native-reopen-command.json",
+      "sha256": "aa0e5041e08faf6cf12339ef12f1d8fc7bd1744187b4740e62c23efc509d7007"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/native-reopen2-command.json",
+      "sha256": "c96b7bc3240e83fa6bdb87f1fcc24a279ab5a287e44dbef0f93f2af271408765"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/orientation-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/orientation-command.json",
+      "sha256": "bcf75575dba8e720d2f540e09b3201bef0e2cf1ada128e56c7e4287b31bb2870"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/parameters-command.json",
+      "sha256": "44a9f2f029885c7ace1e5048973cfa0a5aeeb9609879ce978172b41466c933ee"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters2-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/parameters2-command.json",
+      "sha256": "856e406496c6fe705f275c6df047f7d4b21251a93817d7d7509362a0fe105a64"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/previews-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/previews-command.json",
+      "sha256": "48893f30834e70a74d2b1be57f51f0baa1db249444de7f499af6352d853c3945"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/reimport-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/reimport-command.json",
+      "sha256": "020ce8e69f736791f58dfc21113be54ef73c86cb9436b4109ca4b966f59f3b96"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/shell-diagnosis-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/shell-diagnosis-command.json",
+      "sha256": "faa14efb502906351f94a235d02281f4f9a72e9bfbd9e5f16cea6d9b2d730a45"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author2.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author3.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author3.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author4.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author4.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/collider.stdout.log",
+      "sha256": "a886a783cf4d40703ce5d15266b5497211900ffdc670abf7923f265670e5a371"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider2.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/collider2.stdout.log",
+      "sha256": "a886a783cf4d40703ce5d15266b5497211900ffdc670abf7923f265670e5a371"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile1.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile1.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile2.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile3.stdout.log",
+      "sha256": "e4b6aadfb9e8494d180f22781f09d767308651cc0d21ddf59e784ae5770c4cf3"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile4.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile4.stdout.log",
+      "sha256": "7810dccc164e730c9579fdd785b78ade3f45b99b4469fa1dd86adcc7547c7587"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/fresh-groove.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/fresh-groove.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/inspect.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/inspect.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/mesh-counts.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/mesh-counts.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/native-reopen.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen2.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/native-reopen2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/orientation.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/orientation.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/parameters.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters2.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/parameters2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/previews.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/previews.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/reimport.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/reimport.stdout.log",
+      "sha256": "c9cd8425d52377c369c62a6b2db1cbd0cb240153746c2236feea83b1a4917bb9"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/shell-diagnosis.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/shell-diagnosis.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author2.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author3.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author3.stderr.log",
+      "sha256": "d0749af2c719f7cecdb695d3f025be3a299a3417f0707d4a98f6c1d4f4f4a867"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/author4.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/author4.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/collider.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/collider2.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/collider2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile1.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile2.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile3.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile4.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/compile4.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/fresh-groove.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/fresh-groove.stderr.log",
+      "sha256": "2f7cf8d53667cc370e7ab3125b0fbfb854cc0a78cef8c770456ad04f298b85f2"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/inspect.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/inspect.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/mesh-counts.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/mesh-counts.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/native-reopen.stderr.log",
+      "sha256": "3c069348341c5e7b5595cccb011cfd0e866ba1cd31395838dd61ccd7becb5775"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/native-reopen2.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/native-reopen2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/orientation.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/orientation.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/parameters.stderr.log",
+      "sha256": "78570286f99991f253edee0b46f7e2fc32901d231c9349a96489e8541fcf035d"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/parameters2.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/parameters2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/previews.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/previews.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/reimport.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/reimport.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/shell-diagnosis.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/raw/shell-diagnosis.stderr.log",
+      "sha256": "bc9abbbf1ee132115538a8e7fe9d52846a26a1d68731a6335fe8a188f80b7ff2"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-neutral-back.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-neutral-back.png",
+      "sha256": "1411d5cfdf6fe48a766c5e6de684341882a6d3f157fdbfc8f1c1703b23539811"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-neutral-front-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-neutral-front-oblique.png",
+      "sha256": "1db0695750154e0765a097e6b1383c12512d738a20c62ce340ee29ce91de2eed"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-neutral-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-neutral-front.png",
+      "sha256": "251e7bc923de9964605ef7d54ea2aae58287156e9e01b16027aff267b562d4f6"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-neutral-reverse-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-neutral-reverse-oblique.png",
+      "sha256": "3e77e0d2d0671f7fccccd499b8731a9198238a71b268db9f7fc9fece83f1e4cf"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-neutral-side.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-neutral-side.png",
+      "sha256": "bdd5d2d1bc148bcd6bf1cfd329b31f3506482d5ba28d919be05f02ab0d898c32"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-neutral-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-neutral-top.png",
+      "sha256": "d416864572a8e7ed1a7f77bd4584cab05daa5b131c971f7cf2172eec8a919e7f"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pinch-60-back.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-pinch-60-back.png",
+      "sha256": "c8b66e8b5144ddacedb6f95639416de5dddb9abbc3b90e649116b406f8b5d385"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pinch-60-front-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-pinch-60-front-oblique.png",
+      "sha256": "6ed0ce91f9fa2177b6aa19cdc0dc8e62feb6127979d74f1dffb9311750333c68"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pinch-60-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-pinch-60-front.png",
+      "sha256": "3627b56c3dca61c05afe7f6ae6fe6f4db516effce19c8dc3128595929dfed661"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pinch-60-reverse-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-pinch-60-reverse-oblique.png",
+      "sha256": "2b175c2831ccfc7653ca08a2b68531ba16676fd34726f149ef9ae44e482d1a01"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pinch-60-side.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-pinch-60-side.png",
+      "sha256": "fe9824c0eeaf1bd7f28787d370b3f5dc827effac5789606c5faec0c9e1d5f33a"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pinch-60-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-pinch-60-top.png",
+      "sha256": "a7933fe57cf90063674a05034881964867473d5c0a5c24ee6b74b14619033ea1"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pull-up-jug-back.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-pull-up-jug-back.png",
+      "sha256": "8df3377b725adfc73d483fa0a6c8ee5ecd5f5b7ac93c8a5d15019cf68b16f558"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pull-up-jug-front-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-pull-up-jug-front-oblique.png",
+      "sha256": "dc2076743092bf72fa8ad1d266783c76627214eec3b1be43b8931ca096417c96"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pull-up-jug-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-pull-up-jug-front.png",
+      "sha256": "4230ad5c252398e12aa393bcd42ade2f391d4e3e762fd16934b3335f071ccf76"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pull-up-jug-reverse-oblique.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-pull-up-jug-reverse-oblique.png",
+      "sha256": "48c937cc6c550ba40073acb44304db3559bbe408cb9d2f569045971e5b531194"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pull-up-jug-side.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-pull-up-jug-side.png",
+      "sha256": "290d1a67649b257e66f6600d5c0f10cbc6c549313796b6b2fae7f6491ab5eff5"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/comparison-pull-up-jug-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/native/views/comparison-pull-up-jug-top.png",
+      "sha256": "edbe8c5e733e385ec819ef1f33e051da38d406a65a8fb13b07777b0b2119fcaf"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/baseline.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/baseline.json",
+      "sha256": "e0ea29db1ce0eaf2dc98b638cc27bfe365bc1a3471ebd5d8ea1cd479e67c04c4"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/promotion.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/promotion.json",
+      "sha256": "ab711b1cd28cc8c5e19694ecd0567b44a3f353f4b58598f842be66535ce9fc08"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/independent-candidate-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/independent-candidate-verification.json",
+      "sha256": "22341f579fcbacaf1086d8b6f19c74afbbd6f013fc6b6e69cadcd097a3f2730c"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/generated-board-final.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/generated-board-final.json",
+      "sha256": "b57d6330eae5bc8f07c399c6a0547987f0658cf8b5db2ca02da3a1bd2f4a419d"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/native-route-check.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/native-route-check.json",
+      "sha256": "a3e26f4080919124c2b7c7cd13f4038d01a9ebba365871eb297f59bf49162c7a"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-catalog.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/final-catalog.json",
+      "sha256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/catalog-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/catalog-command.json",
+      "sha256": "6b1ee130e45d66d6daf2e68ba8e054849879a2583eeb96dafe3de97fbc9d8031"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/delivery-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/delivery-verification.json",
+      "sha256": "e448f29ed5ce7473c22c21f95a146d89e6575a35f176ecd45413d6f8e6a119c5"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/staging-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/staging-ownership.json",
+      "sha256": "6ddeefd3b7fb95b5fa7952bf070831fb108c12d8d7e8cf45f7a81b2f902e30e1"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/staging-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/staging-verification.json",
+      "sha256": "9e3f4ab28893ae39ac652237b44e6a74ac6a2b173353cd4c71b20ed66db0bfac"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/staging-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/staging-cleanup.json",
+      "sha256": "ad3a3f8fe37fa99d79d241e9f52110573116d54a90b96fe0644c083cc3f4fa1d"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/pytest-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/pytest-command.json",
+      "sha256": "fc52adac3be66270aa6c8449e28a7b7dff70086a21e328be1a9cbf9f572d39c9"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-tests.xml",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/final-tests.xml",
+      "sha256": "cff9f36ef569224d4607e855729061e5a67938fd5ad4021d86ee7f99e3ddf1bf"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-test-summary.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/final-test-summary.json",
+      "sha256": "16d166d1cf3fd773cbded19b8edcf8ec20bdc18a55efe1b57bac8a5782ac4319"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/preview-provenance.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/preview-provenance.json",
+      "sha256": "d05f8321756e72a402b2c439be10dd3e8500f4c3464e96ee29aaaa3113b4b547"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/resource-cleanup-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/resource-cleanup-verification.json",
+      "sha256": "90b753941f2f888214e209f034914e189eb83eaee8dc98e3d55c6ffacf4bbfe6"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/preservation-verification.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/preservation-verification.json",
+      "sha256": "611f6c46dd5956470d34ee74a9fce594b1ea62229ba06bfac7a0b6d4951f35cb"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/prior-finger-probes.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/prior-finger-probes.json",
+      "sha256": "d9b2905e1d8aa1494207df2f57fd29a7b51dc4950b01be09adf690bdce4efac4"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/corrected-finger-probes.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/corrected-finger-probes.json",
+      "sha256": "3290947d86e9bef80a5fd17dd220d66286d1876eba6aa54af50a457429c47e5c"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/feedback.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/feedback.json",
+      "sha256": "5dd28b25167e1750c5291b8b720de96059a92742bc922180574b3b2ea8612d1d"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/corrected-finger-probes-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/corrected-finger-probes-ownership.json",
+      "sha256": "003003f3318f6d478f73c5b3b93868523518c69fce3c9a1f37cdae25acc1cd1b"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-checks-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/final-checks-ownership.json",
+      "sha256": "faa42d0fc5a4498cb3ffa180a3db4ff8c77a787e2489f537aaf768c8242ccfca"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-render-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/final-render-ownership.json",
+      "sha256": "bc7ef0abb9a653cd0089856e7566f331bb49eb5afc1b60e45755f9eaf6b1b7a2"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/native-route-check-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/native-route-check-ownership.json",
+      "sha256": "77e5de9ad39249da8649b72796f055226bb35ec73347bb981240480bc7595bf2"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/prior-finger-probes-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/prior-finger-probes-ownership.json",
+      "sha256": "fc8bdfda80dd009ed2be9497a7c7bdf0c4792a9d56e9298bc404fb73eba31538"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/promote-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/promote-ownership.json",
+      "sha256": "007b75d95237ce3cd8417a469871e910517190ae522b1930beb1d6a562747953"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/staging-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/staging-ownership.json",
+      "sha256": "6ddeefd3b7fb95b5fa7952bf070831fb108c12d8d7e8cf45f7a81b2f902e30e1"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/verify-candidate-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/verify-candidate-ownership.json",
+      "sha256": "77ac23714eb47fa0e4a964aecd24746e021f6a39c599f253059c9faef43b5b8f"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/corrected-finger-probes-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/corrected-finger-probes-cleanup.json",
+      "sha256": "e14e8cdc09fed217e9e39931ab66835ee5cca75d8ade69d4ca40a157fe9d220f"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-checks-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/final-checks-cleanup.json",
+      "sha256": "797495f3852fe65da426d66c4c469698d7edfa0a10af8e68759c74bba88991d1"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-render-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/final-render-cleanup.json",
+      "sha256": "c79a91e6078167c1e5cefdbe3dd7ad750126e3c5b1383bbc080df9a4e513e154"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/native-route-check-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/native-route-check-cleanup.json",
+      "sha256": "0e28347419597b5594a2d9b8e9ecf41a21264848fecb171696cc316838dccc61"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/prior-finger-probes-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/prior-finger-probes-cleanup.json",
+      "sha256": "f3449cc9db603537feea1cd223b0995eb9d423b25316dc681d5e2d96a651b76a"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/promote-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/promote-cleanup.json",
+      "sha256": "5883cd692d1d716136a00fa2cb016355e576a76510d4f00e16b90b3cf2b89656"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/staging-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/staging-cleanup.json",
+      "sha256": "ad3a3f8fe37fa99d79d241e9f52110573116d54a90b96fe0644c083cc3f4fa1d"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/verify-candidate-cleanup.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/verify-candidate-cleanup.json",
+      "sha256": "6c81ceadb27218e65f16c245dca41d60e03d0a9be4d65319347c5bf64590cf35"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/catalog-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/catalog-command.json",
+      "sha256": "6b1ee130e45d66d6daf2e68ba8e054849879a2583eeb96dafe3de97fbc9d8031"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/corrected-finger-probes-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/corrected-finger-probes-command.json",
+      "sha256": "372c9d2c80417ca16b5d06ae991edc0021a86e30d2e55da14bba872317b65179"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-checks-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/final-checks-command.json",
+      "sha256": "b70ecc279a7beb42285ff471f807171845909704f6f09ea43c01bd3579b3463c"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-render-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/final-render-command.json",
+      "sha256": "9ee10452e92862376bb7c22e7bbe9a820545ea35f8c72ec43053651d11d201c6"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/native-route-check-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/native-route-check-command.json",
+      "sha256": "54ff09928de7eeb69b9442fd07182887ad80b8201038158b0e978f8712e0f287"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/prior-finger-probes-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/prior-finger-probes-command.json",
+      "sha256": "f43306390029f7a8bd126f26e422870828d6635e067930038063b40b2d7a0cd8"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/promote-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/promote-command.json",
+      "sha256": "65475b70a8f9147832ebf4e67dd93f7834503c839f26e3cefef49f59d779cba8"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/pytest-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/pytest-command.json",
+      "sha256": "fc52adac3be66270aa6c8449e28a7b7dff70086a21e328be1a9cbf9f572d39c9"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/verify-candidate-command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/verify-candidate-command.json",
+      "sha256": "8e1ad6bbd2621538e18e42733d097803efff502553636179ccd3eef4d1d29bab"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/corrected-finger-probes.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/corrected-finger-probes.stdout.log",
+      "sha256": "2c18760bcba89d48f266f96667cb3cccc972d1e412979688bf9bcf3fce4892c6"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-checks.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/final-checks.stdout.log",
+      "sha256": "6919a76bfe8d6535d0285f34bcd86cf73dc2e1d3ae617262d57dab0b3d322fa8"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-render.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/final-render.stdout.log",
+      "sha256": "9018f76d60053404fdcb40d7d4dfa40328d85043d0ae9e31fa0ce033f0de7dd9"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/native-route-check.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/native-route-check.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/prior-finger-probes.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/prior-finger-probes.stdout.log",
+      "sha256": "27a1275bc91705c3a7c03f3f40ea4a67913df480830e02a946a1ee0fefdce03c"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/promote.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/promote.stdout.log",
+      "sha256": "5a5a5701e6b53f95df83b546f8361717852d60c8b26a3228df356cbe85dd04ba"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/verify-candidate.stdout.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/verify-candidate.stdout.log",
+      "sha256": "276ffc4b00175d10d02f72d106f22fbbaf6fb4f2a74179dc078f364b433ded3f"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/corrected-finger-probes.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/corrected-finger-probes.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-checks.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/final-checks.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/final-render.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/final-render.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/native-route-check.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/native-route-check.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/prior-finger-probes.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/prior-finger-probes.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/promote.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/promote.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/verify-candidate.stderr.log",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/root-verification/raw/verify-candidate.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/mini-finger-contact-granite-loaded.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-granite-loaded.png",
+      "sha256": "251cfc66215c7de7d5c95a0416f4128cdcd409c85071639b93e1b6a95b3e49df"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/mini-finger-contact-jug-loaded-back.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-back.png",
+      "sha256": "dff6650db90723201e7ad883ec61277c1a38b17f8868d062aa8962896947e4c1"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/mini-finger-contact-jug-loaded-front.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-front.png",
+      "sha256": "73be0efb5953455b6ddfd0ba9236b3afc4471f031c2846d4d833e403b854fc51"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/mini-finger-contact-pinch-loaded.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-pinch-loaded.png",
+      "sha256": "819635957620d826e7da6227cb8a8c2e4c9a3e8c1a0f26f9563812e2f042d9d5"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/mini-finger-contact-wood-loaded.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-wood-loaded.png",
+      "sha256": "a81cce6c395030c1e231ddea1758110d0670d74a64219488bb65313e1a077fc9"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/prior-current-jug-front-side-top.png",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/prior-current-jug-front-side-top.png",
+      "sha256": "a1cd9c5844d2ed5fdb23e3cb8a83e1c0fe11f876f24e83bb3294efad7a70cdfa"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/prior-delivery-checksums.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/prior-delivery-checksums.txt",
+      "sha256": "0fbef266b074158c46cca88817965c972406e3835414505b669c465fc1d18f8b"
+    },
+    {
+      "source": ".context/placid-badger/mini-finger-contact-2026-10-02/root/current-delivery-checksums.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/finger-contact-review-2026-10-02/current-delivery-checksums.txt",
+      "sha256": "4267990f05613cd2baf67f1d4604bf107ea081960c45c45a7c1faf0f81567fd1"
+    }
+  ],
+  "nativeAssets": "Canonical package only; no duplicate source or USDZ committed here.",
+  "collider": "Source-bound export retained in owned scratch. Native collider proof shows exact geometry/features equality to prior; CLI rerun verifies current source binding."
+}

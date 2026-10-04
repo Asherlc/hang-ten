@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "baselineCommit": "ac077ec832d99471bbbebb4199ca810308c32140",
+  "canonicalChanges": {
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+    "Hangboards/nature-stone-hanger-mini/suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+  },
+  "otherPackageFilesVerifiedUnchanged": 202,
+  "sharedCodeChanged": false,
+  "parallelWorkspaceReadOrMerged": false
+}

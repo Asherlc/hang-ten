@@ -1,0 +1,17 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "xcresulttool",
+    "get",
+    "build-results",
+    "--path",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/build-placid-badger-cad-second-half.xcresult"
+  ],
+  "boundSeconds": 30.0,
+  "timedOut": false,
+  "interruptedBySignal": null,
+  "exitStatus": 0,
+  "elapsedSeconds": 0.0830815410008654
+}

@@ -1,0 +1,170 @@
+{
+  "status": "pass",
+  "scope": "Native authoring, strict independent native checks, Opus native review, pinned compiler check, byte reproducibility, complete exported technical previews and independent technical export checks pass; actual app/Opus exported appearance and human acceptance remain pending",
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "sourcePath": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/metolius-simulator-3d.FCStd",
+  "nativeValidity": {
+    "validSingleSolid": true,
+    "finalBody": "BodySolid",
+    "fullyConstrainedSketchCount": 159,
+    "reopenedRecomputed": true,
+    "rootCarrierStrictBOP": "pass",
+    "freshIndependentEditRestore": "pass",
+    "reopenedRecomputedAndEditRestored": true
+  },
+  "manifest": {
+    "rawExact": true,
+    "surfaceFinish": "plastic",
+    "normalFlagsPreserved": true
+  },
+  "contactCount": 30,
+  "publishedDepthFactCount": 27,
+  "measuredEnvelopeXYZMM": [
+    711.0000002,
+    94.00075012973058,
+    222.00000010067734
+  ],
+  "envelopeInterpretation": "711 x 222 mm published face dimensions; approximately 94 mm thickness is a display estimate, measured 94.0007501297 mm.",
+  "nativeRootRepresentation": "Exact source-surface isocurves at authored X stations, with separate native loft roof faces at Y -80. No refit or tolerance expansion.",
+  "centerContactExtent": "X +/-47, Y -94 to -0.001, Z >=182.8; final-shell carrier identity plus locally clipped normal.z >0.08 selects upper cap/roll and excludes lower vertical return and cavity faces.",
+  "evidence": {
+    "author-disposition.md": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-disposition.md",
+      "sha256": "f60298520c0dd513c9eedd587b3b1ca601042e429f629df1dca8cf5ae5635ead"
+    },
+    "authored-design.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/authored-design.json",
+      "sha256": "0b0f96ef2d7aaeb14254b92673927b27af60cb400012259f695c5e02b4f54a0a"
+    },
+    "source-freeze.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/source-freeze.json",
+      "sha256": "603b29dfe346cc329cd9ed5fab373f7a4d0cfb3ef7b6307dd3f8df98e39f9eef"
+    },
+    "repaired-root-final-check.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/repaired-root-final-check.json",
+      "sha256": "f1f89ac520d51982eec091b60883342e1dd3f95a3b1fcffa815e0b8447b28a3a"
+    },
+    "nose-seam-check.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/nose-seam-check.json",
+      "sha256": "5648d728d77dbc3d829453eacf6abb694c3ff6d8b4ee13cc2d9faa52b88318c6"
+    },
+    "source-audit.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/source-audit.json",
+      "sha256": "2b58ee14e26bcc5c76b72d3c1559b655e2bf8583460017cc1fabe88db823db4b"
+    },
+    "native-preview-provenance.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/native-preview-provenance.json",
+      "sha256": "bae94192212a62f7a9f1a898d4b4f4bb443c7ef0d9a8865de0b555e18a3b2d8f"
+    },
+    "grasp-review/provenance.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/grasp-review/provenance.json",
+      "sha256": "a71d653e905928666e6a2785e8da5ea0c9173508630f43ee3f7df94b3f3c130a"
+    },
+    "grasp-review/native-sections.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/grasp-review/native-sections.json",
+      "sha256": "4f88ca366288597f47d498c748552e4eb48fbc22389e61f2999960a3c5c29534"
+    },
+    "independent-validation/native-review-3ff3.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-review-3ff3.json",
+      "sha256": "66a0fa39e932cd03fefc35fe2137630815d01a0976479cc5285fec40c22b388c"
+    },
+    "final-normal-comparison.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-normal-comparison.json",
+      "sha256": "64b2394c3640d5b1caa230ce260031f34bfa902c3171dc03557c9171bf853ea9"
+    },
+    "native-stage-cleanup.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/native-stage-cleanup.json",
+      "sha256": "a0881da159c7d2a20b0a63e524be125e72afe7955ae2f0326431fb8475b68a3f"
+    },
+    "independent-validation/native-check-3ff3.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-check-3ff3.json",
+      "sha256": "094f051ddf77a64f4960c40fd86c99bdc719fcbd69753a08d3c84ad6acd59394"
+    },
+    "independent-validation/functional-sections-3ff3.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/functional-sections-3ff3.json",
+      "sha256": "3071cf33a5fec611b69f3533d34116c45dfb1144539cab746d660965a11c5bcc"
+    },
+    "independent-validation/local-contact-joins-3ff3.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins-3ff3.json",
+      "sha256": "a46cc5e397af5714eb08b5a2df24812df28deb36257ecc7b8b4221b454c9f817"
+    },
+    "opus-native-review": {
+      "path": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-local-native-review.md",
+      "sha256": "bc872bab8a59edc1ce108206539dab651aa2686a815677df210a3a745509da1b"
+    },
+    "compile.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile.json",
+      "sha256": "372403a75f2579e20747eb4862430f79f104b16233e538a3e71db7f8f5d66ca5"
+    },
+    "compile-check.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile-check.json",
+      "sha256": "20c208c3b66178f29a3595ea4de948895dda261ae383c283210d7b14deb54a63"
+    },
+    "reproduce.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproduce.json",
+      "sha256": "195faef2e30fff76f36eaf4d3d12dfa2f3bb0ab7f91c9e2e2dc7f0f54bfe2bfd"
+    },
+    "reproducibility.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproducibility.json",
+      "sha256": "a5eb794179150b324ee87cffe7c1f6f738edd118f9ae7f1732c7fbf16316d08e"
+    },
+    "package-verification.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/package-verification.json",
+      "sha256": "fee9402d868ca559cc9d099621e67311df0642a819877659fd5a28071cf8eaf9"
+    },
+    "export-grasp-provenance.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-provenance.json",
+      "sha256": "8f935f866d4b0d4116c4c14dbfbb3dcde5cd8c88dd47ad53eff7cba78f19b6ba"
+    },
+    "cleanup.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/cleanup.json",
+      "sha256": "5816b6d97a451181e703f3f8527043c82783f4974c79e6afaf23c8fce4a95b19"
+    },
+    "independent-validation/final-independent-export-review-3ff3.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/final-independent-export-review-3ff3.json",
+      "sha256": "d8cfd5544aa3a37514d312ae2a0cb39516d11d87e04a07884174426ddf89a359"
+    },
+    "independent-validation/final-independent-export-review-3ff3.md": {
+      "path": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/final-independent-export-review-3ff3.md",
+      "sha256": "bc8ff76296c492e9eca71dd65c214c6cbce592a50d5c04b897f8b65b488c2c94"
+    }
+  },
+  "remainingGates": {
+    "independentNative": "pass",
+    "nativeOpusVisualReview": "pass",
+    "pinnedCompilerCheck": "pass",
+    "twoExportReproducibility": "pass",
+    "actualAppAppearanceAndSelection": "pending",
+    "humanAcceptance": "pending",
+    "exportedTechnicalViews": "pass",
+    "independentExportedMesh": "pass within documented technical scope",
+    "exportedAppOpusWatchItems": "pending"
+  },
+  "limits": [
+    "Residual nose normal join approximately 2.056 degrees; positional continuity passes. No blanket G1 claim.",
+    "Thickness is an explicit approximately 94 mm display estimate; measured value 94.0007501297 mm.",
+    "CPU triangle-face preview shading does not establish actual app finish.",
+    "Exported semantic mesh union is not exactly welded watertight (2,973 boundary edges, 62 nonmanifold edges).",
+    "1,087 tiny triangles totaling 6.893 mm\u00b2 have opposing corner normals. Thin center/outer seam marks require actual-app/Opus visual disposition.",
+    "Native/export distance checks are finite vertex/triangle-center samples, not a continuous Hausdorff proof."
+  ],
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+  "export": {
+    "modelBytes": 2142945,
+    "triangleCount": 86039,
+    "nodeCount": 31,
+    "contactCount": 30,
+    "materialCount": 0,
+    "shaderCount": 0,
+    "tessellationDeflectionMM": 0.28,
+    "sourceUnchanged": true,
+    "twoNormalExportsByteIdentical": true,
+    "checkMatchesExports": true,
+    "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+    "exactWeldedExportWatertight": false,
+    "pairedExportEdgeWindingConsistent": true,
+    "universalCornerNormalAlignment": false,
+    "sampledNativeExportDistanceMaximumMM": 0.26572285518685407
+  }
+}

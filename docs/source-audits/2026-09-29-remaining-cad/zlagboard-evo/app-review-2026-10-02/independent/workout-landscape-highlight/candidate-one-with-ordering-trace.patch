@@ -1,0 +1,119 @@
+diff --git a/HangTen/Views/BoardModelView.swift b/HangTen/Views/BoardModelView.swift
+index 13e528a96..205e8d786 100644
+--- a/HangTen/Views/BoardModelView.swift
++++ b/HangTen/Views/BoardModelView.swift
+@@ -43,6 +43,11 @@ struct BoardModelSurface: View {
+     var body: some View {
+         Group {
+             if case .ready(let model) = result {
++                #if DEBUG
++                let _ = traceBoardHighlight(stage: "surface-body", model: model,
++                                            boardName: board.name, ids: highlightedContactIDs,
++                                            mode: highlightMode, size: nil)
++                #endif
+                 let realityView = BoardModelRealityView(
+                     model: model,
+                     boardName: board.name,
+@@ -146,6 +151,12 @@ struct BoardModelUnavailableView: View {
+ }
+ 
+ struct BoardModelRealityView: View {
++    private struct SceneSelection: Equatable {
++        let contactIDs: Set<String>
++        let mode: BoardHighlightMode
++        let positionID: String?
++    }
++
+     let model: BoardModelRealityScene
+     let boardName: String
+     let accessibilityValue: String?
+@@ -175,6 +186,8 @@ struct BoardModelRealityView: View {
+         let _ = cameraRevision
+         GeometryReader { proxy in
+             let size = proxy.size
++            let selection = SceneSelection(contactIDs: highlightedContactIDs,
++                                           mode: highlightMode, positionID: positionID)
+             RealityView { content in
+                 content.add(model.root)
+                 content.add(model.camera)
+@@ -190,6 +203,22 @@ struct BoardModelRealityView: View {
+             // A different scene needs a fresh RealityView make closure so its
+             // root and camera replace the prior scene's entities.
+             .id(ObjectIdentifier(model))
++            // A workout can change mode without changing contacts or layout.
++            // Synchronize that selection explicitly on the retained scene;
++            // RealityView's update closure alone can leave its materials stale.
++            .onChange(of: selection) { previous, current in
++                #if DEBUG
++                traceBoardHighlight(stage: "selection-onChange-before(previous=\(previous.mode),captured=\(highlightMode))",
++                                    model: model, boardName: boardName, ids: current.contactIDs,
++                                    mode: current.mode, size: size)
++                #endif
++                applySync(size: size)
++                #if DEBUG
++                traceBoardHighlight(stage: "selection-onChange-after(previous=\(previous.mode),captured=\(highlightMode))",
++                                    model: model, boardName: boardName, ids: current.contactIDs,
++                                    mode: current.mode, size: size)
++                #endif
++            }
+         }
+         // A display-only card is one element (its host Button owns the tap). An
+         // interactive board exposes its contact elements instead, so the
+@@ -211,6 +240,11 @@ struct BoardModelRealityView: View {
+         model.frame(in: size)
+         let didSelect = model.select(positionID: positionID)
+         model.highlight(highlightedContactIDs, mode: highlightMode)
++        #if DEBUG
++        traceBoardHighlight(stage: "applySync-after-highlight", model: model,
++                            boardName: boardName, ids: highlightedContactIDs,
++                            mode: highlightMode, size: size)
++        #endif
+         // RealityView synchronizes after SwiftUI evaluates the accessibility
+         // overlay. Reproject once when framing or a board pose actually changes.
+         // The unchanged follow-up update must not schedule another invalidation.
+@@ -294,6 +328,27 @@ struct BoardModelRealityView: View {
+     }
+ }
+ 
++#if DEBUG
++@MainActor
++private func traceBoardHighlight(stage: String, model: BoardModelRealityScene,
++                                 boardName: String, ids: Set<String>,
++                                 mode: BoardHighlightMode, size: CGSize?) {
++    guard ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HIGHLIGHT_TRACE"] == "1" else { return }
++    let colors = ids.sorted().map { id in
++        let values = (model.contactEntities[id] ?? []).map { entity in
++            guard let material = entity.model?.materials.first as? PhysicallyBasedMaterial else {
++                return "baseline"
++            }
++            var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
++            material.baseColor.tint.getRed(&r, green: &g, blue: &b, alpha: &a)
++            return "\(r),\(g),\(b),\(a)"
++        }
++        return "\(id)=\(values)"
++    }
++    print("[BoardHighlightTrace] t=\(ProcessInfo.processInfo.systemUptime) stage=\(stage) board=\(boardName) scene=\(ObjectIdentifier(model)) mode=\(mode) ids=\(ids.sorted()) size=\(String(describing: size)) colors=\(colors)")
++}
++#endif
++
+ private struct BoardModelAccessibilityContainer: ViewModifier {
+     let label: String?
+     let value: String?
+diff --git a/HangTen/Views/RootView.swift b/HangTen/Views/RootView.swift
+index d848c8daf..61f6d3504 100644
+--- a/HangTen/Views/RootView.swift
++++ b/HangTen/Views/RootView.swift
+@@ -1958,6 +1958,13 @@ struct WorkoutView: View {
+ 				let previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
+ 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
+ 				let highlightMode = boardCue.mode
++				#if DEBUG
++				let _ = {
++					if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HIGHLIGHT_TRACE"] == "1" {
++						print("[BoardHighlightTrace] t=\(monotonicTime) stage=workout-cue landscape=\(geometry.size.width > geometry.size.height) step=\(step.id) resting=\(isResting) mode=\(highlightMode) ids=\(highlightedHoldIDs.sorted())")
++					}
++				}()
++				#endif
+ 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
+ 				let activeHold = resolvedHighlightedStep.flatMap { WorkoutHighlightResolver.contacts(for: $0, on: board).first }
+ 				let holdCue = WorkoutHoldCuePolicy.resolve(step: resolvedHighlightedStep, hold: activeHold, on: board)

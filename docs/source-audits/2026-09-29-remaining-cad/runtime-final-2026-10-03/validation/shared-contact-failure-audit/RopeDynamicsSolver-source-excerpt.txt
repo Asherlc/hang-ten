@@ -1,0 +1,19 @@
+220:         let arrived=abs(simd_dot(state.orientation.vector,targetOrientation.vector))>1-1e-12
+221:         let settled=arrived && time>=0.5 && metrics.maximumSpeed<0.001 && metrics.boardDisplacement<0.0001
+222:         return RopeFrameSnapshot(boardHeight:state.boardHeight,orientation:state.orientation,
+223:             ropes:state.ropes.map{RopeChainSnapshot(id:$0.id,radius:$0.radius,positions:$0.positions)},settled:settled,metrics:metrics)
+224:     }
+225: 
+226:     mutating func settled(targetOrientation:simd_quatd,maxDuration:Double) throws -> RopeFrameSnapshot {
+227:         guard maxDuration.isFinite,maxDuration>0 else{throw RopePhysicsError.invalid("Invalid settling duration")}
+228:         let requestedSteps=ceil(maxDuration*240)
+229:         guard requestedSteps.isFinite,let steps=Int(exactly:requestedSteps) else {
+230:             throw RopePhysicsError.invalid("Invalid settling step count")
+231:         }
+232:         for _ in 0..<steps {
+233:             try Task.checkCancellation()
+234:             let frame=try step(dt:1.0/240,targetOrientation:targetOrientation)
+235:             if frame.settled {return frame}
+236:         }
+237:         throw RopePhysicsError.invalid("Rope did not converge within \(maxDuration) seconds")
+238:     }

@@ -1,0 +1,12 @@
+[
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-postboot-protocol/check-trial.py",
+    "sha256": "c1bad3a1395ceff7dc91b52ae0f246c0d4eb2c6193b6d20c917fba4698092ba4",
+    "change": "Output directory action identity only; all gates unchanged."
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-postboot-protocol/check-navigation.py",
+    "sha256": "de6aaad8610aefccd608852099cf9a84ba745d7bddf3f7c8a8d2e30b562625f4",
+    "change": "Output directory action identity only; all gates unchanged."
+  }
+]

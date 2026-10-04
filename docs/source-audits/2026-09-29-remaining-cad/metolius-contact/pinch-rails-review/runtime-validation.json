@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "owner": "placid-badger",
+  "date": "2026-09-30",
+  "boardID": "metolius.contact",
+  "reviewNumber": 7,
+  "revision": "forward-projecting pinch rails",
+  "revisionBaseCommit": "5cfd5b6386b283b2eb8daefc054a42823fdf852b",
+  "userFeedback": "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch",
+  "status": "technical checks retained; shown pinch rails and highlights accepted",
+  "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+  "modelSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+  "descriptorSHA256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+  "native": {
+    "finalBody": "BodyWithPinchRails",
+    "validSingleSolid": true,
+    "fullyConstrainedSketches": 140,
+    "all33ContactFactsAndEmbeddedManifestUnchanged": true,
+    "nonPinchContactConstructionsUnchanged": 31,
+    "publishedDepthChecksPassed": 29,
+    "envelopeMM": {
+      "width": 826,
+      "height": 279,
+      "thickness": 67
+    },
+    "railDimensionEditRestore": "67 -> 65 -> 67 changes only the two pinch regions, restores all contacts and leaves saved bytes unchanged.",
+    "independentCavityEditRestore": "Depth_edge_16_center: 15 -> 17 -> 15 changes the final body and only that contact, then restores all contacts.",
+    "railProjectionMeasuredFromAuthoredCADMM": [
+      23.53857421875,
+      38.4524201104627
+    ],
+    "railProjectionIsDisplayEstimate": true,
+    "opposingSurfaceWitnesses": 10,
+    "exactLeftRightMirror": true,
+    "deterministicModelBytesAcrossTwoCompilerRuns": true,
+    "reports": [
+      "native/native-check.json",
+      "native/rail-access-check.json",
+      "native/compile-check.json",
+      "native/compile.json",
+      "native/determinism-check.json",
+      "independent/final-independent-review.json"
+    ]
+  },
+  "export": {
+    "nodes": 34,
+    "contacts": 33,
+    "triangles": 36299,
+    "materialsShadersBindings": 0,
+    "proof": "independent/export-check.json",
+    "exportedRailWitnesses": "independent/export-section-check.json"
+  },
+  "app": {
+    "validation": "app/validation.json",
+    "captureCount": 6,
+    "selectedContactIDs": [
+      "pocket-4-left",
+      "edge-17-center",
+      "pinch-left",
+      "pinch-right"
+    ],
+    "actualDragOrbits": 2,
+    "selectionPreserved": true,
+    "all33ContactIDsAvailable": true,
+    "completeFramesVisuallyInspected": true,
+    "leftAndRightPinchHighlightsVisible": true,
+    "railProjectionVisibleFromOrbits": true,
+    "surfaceFinish": "neutral (unchanged)",
+    "build": "proof/ios-build-command.json",
+    "installedBinary": "proof/installed-app-provenance.json"
+  },
+  "tests": {
+    "iOS": {
+      "passed": 1278,
+      "skipped": 3,
+      "failed": 0,
+      "summary": "proof/ios-summary.json",
+      "log": "proof/ios-tests.log"
+    },
+    "python": {
+      "passed": 706,
+      "skipped": 10,
+      "failed": 0,
+      "report": "proof/python-test-report.json",
+      "log": "proof/python-tests.log"
+    }
+  },
+  "delivery": {
+    "catalogPackages": 64,
+    "modelPackages": 58,
+    "ODRModelAssets": 60,
+    "nativeCADPackages": 57,
+    "lockedFiles": 135,
+    "otherPackageFilesByteIdentical": 203,
+    "manifestSHA256": "b29f9f55f97072e8e709db56b72ae01fc391e6f927af0f6b9a50a59a30b4ded9",
+    "installedAppleProof": "proof/installed-package-validation.json",
+    "canonicalAndroidParity": "proof/delivery-parity.json",
+    "androidLimit": "Canonical asset staging only; no Android app runtime in this checkout."
+  },
+  "cleanup": {
+    "simulator": "48059B24-A469-4B02-A47A-A303FB8D978E",
+    "cleanupStatus": 0,
+    "derivedDataRemoved": true,
+    "xcresultRemoved": true,
+    "owner": "placid-badger",
+    "simulatorName": "Hang Ten Paseo placid-badger Metolius Contact Pinch Rails Review",
+    "simulatorDeletionVerified": true,
+    "verificationCommand": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "list",
+      "devices",
+      "--json"
+    ]
+  },
+  "humanGeometryAcceptance": "reviewed; projecting pinch rails and highlights accepted",
+  "limits": [
+    "Rail projection, width, profile poles, section scale and rounding are display estimates.",
+    "Geometric surface witnesses do not certify manufacturer dimensions or hand clearance.",
+    "App captures cover representative contacts and two real drags, not an all-contact visual sweep."
+  ],
+  "humanReview": {
+    "record": "../human-review.json",
+    "date": "2026-10-01",
+    "answer": "Y",
+    "acceptedScope": "Displayed forward-projecting Contact pinch rails and their highlights in the prior-versus-revised front/side/top and actual-app images.",
+    "revisionCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890"
+  }
+}

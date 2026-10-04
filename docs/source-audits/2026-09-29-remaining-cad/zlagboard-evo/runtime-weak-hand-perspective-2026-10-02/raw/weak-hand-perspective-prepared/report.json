@@ -1,0 +1,77 @@
+{
+  "status": "SCRATCH_ONLY_UNEXECUTED",
+  "armPrepared": "P_ONLY",
+  "sourceBuildChange": false,
+  "binarySHA256": "70707e27453ae150763a302152c04e028564dbe97b41bffbcc91c98642f95c94",
+  "inputRuntimeReleasePath": "evo/weak-hand-census-runtime-release.json (immutable pre-run binary declaration only; active results not inspected)",
+  "OCompletedAuditRequired": true,
+  "newRunAuthorized": false,
+  "checks": {
+    "allASTPassed": true,
+    "readinessLoopByteExact": true,
+    "captureLoopByteExact": true,
+    "CPUCheckerByteExact": true,
+    "frameCheckerByteExact": true,
+    "constructorCheckerByteExact": true,
+    "fullCurrentBinaryBound": true,
+    "OAuditRequiredBeforeLaunch": true,
+    "noRetentionOrDetachAdded": true,
+    "rootGateExactPathAndSHA": true,
+    "rootGateActualSevenProofsAndFindingsFreezeValidated": true,
+    "captureUnchangedBeyondGate": true
+  },
+  "helpers": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/weak-hand-projection-prep/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/weak-hand-projection-prep/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/weak-hand-projection-prep/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/weak-hand-projection-prep/check-navigation.py",
+      "sha256": "9f0d221a8eed313738c8665ce6d8589bd5de949eef9badc8c723c904583d6fa6",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/weak-hand-projection-prep/check-ownership.py",
+      "sha256": "ba7f9043f0a86973859a1286a977c0924dbfdd5dd17b7af560e234462aec2f26",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/weak-hand-projection-prep/check-real-hands.py",
+      "sha256": "52e9e9b2449c2f4b345266758feed228acabb482642940e66a944017a88b31fd",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/weak-hand-projection-prep/check-weak-hand-census.py",
+      "sha256": "3e585bc1cacd6c06db393457f45a4393f4caa8c9bf49ddc297a0aaa36fa0f8e2",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/weak-hand-projection-prep/compare-O-P.py",
+      "sha256": "08b1fe415b0531599b99a412747da6218dbacf0671ebbbfabb2ddd078da053b1",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/weak-hand-projection-prep/workout-weak-hand-perspective.py",
+      "sha256": "4247d647de1de58b79d1a26ce1ee05c7903bddc5ca88e79fa936b636b9dfefc9",
+      "ASTPassed": true
+    }
+  ],
+  "prospectiveDiffSHA256": "31d91922b157646f0df64d1e0dddf96d60059b182a684098efaec2ba88af8970",
+  "protocolSHA256": "c24992fa4e28e9dd7c7e96bdb00b9e2a026fb4d859b75d08636fb0bef57383d1",
+  "priorHelpersPreservedUnder": "before/",
+  "reversalPrepared": false,
+  "rootGatePath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-root-gate.json",
+  "rootGateSHA256": "1ab681076b5b7ea4ad654f44e6805fe5464fa0da5fd3edc8836b230f796c2ea5",
+  "priorDraftPreservedSuffix": ".before-root-gate-binding"
+}

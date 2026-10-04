@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "curve-refit-probe",
+  "script": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/probe_curve_refit.py",
+  "timeoutSeconds": 180,
+  "startedUTC": "2026-10-01T16:57:07.470798+00:00",
+  "ownedProcessGroup": 24265,
+  "elapsedSeconds": 8.732036416011397,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

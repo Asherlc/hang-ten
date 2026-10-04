@@ -1,0 +1,64 @@
+{
+  "createdUTC": "2026-10-03T18:15:56.392437+00:00",
+  "reviewer": "/root/baguette_review_prep",
+  "mode": "read-only next-step judgment; no implementation or runtime action",
+  "recommendation": "One bounded same-binary comparison adding the existing simulator presentation policy to both actual hand RealityView hosts is the smaller next candidate. If it fails despite actual hand-layer configuration receipts, stop that candidate and return to an explicitly settled BoardFrame snapshot contract. Neither is a demonstrated production fix.",
+  "evidence": {
+    "boardCoverage": "The completed evo-action full-cycle visual review failed. Separate short startup receipt run proves Train and workout matching layers were set asynchronous=true at 220,410,360-wide viewports; do not retroactively claim receipts existed for earlier full44 run.",
+    "handCoverage": "GripHandModelView RealityView at116 and GripHandPairModelView at810 have no presentation helper. Both retain live virtual-camera scene, gestures and unavailable overlay.",
+    "historicalLimit": "Earlier normal strict-hands-OFF failed too. Thus hand presence is not established as a necessary cause, and a policy experiment cannot support a generic cross-host or GPU root-cause claim."
+  },
+  "handCandidate": {
+    "pros": [
+      "Reuses existing public CAMetalLayer property policy and bounded matching helper rather than introducing another renderer or image conversion.",
+      "Leaves model entities, shading, orthographic hand camera, semantic updates, gestures, accessibility and Main animated board camera unchanged.",
+      "Tests the currently uncovered single/pair host layer policy, with observable matching receipts."
+    ],
+    "implementationBoundary": [
+      "Make the existing helper accessible within the module without copying its matching algorithm; current declaration is file-private.",
+      "Attach a non-hit-testing simulator-only background at each actual single/pair RealityView viewport, before surrounding layout changes. Preserve current board policy unchanged in both arms.",
+      "Use one DEBUG launch flag disabling only added hand coverage for the control. Each arm needs a fresh process because helper policy has no restoration on removal."
+    ],
+    "risks": [
+      "Exact-window-frame search is a geometric association, not a formal layer owner API. Equal overlapping layers can be ambiguous; do not broaden the search or accept arbitrary matches.",
+      "Both hosts may be constructed during startup or alternate layouts. Pair-only coverage cannot stand for the single-hand path.",
+      "Helper restarts its bounded search on viewport changes; require receipt for the settled hand viewport and distinguish it from board receipts.",
+      "A short receipt observation proves configuration only at observed instants; it does not prove continued policy throughout a whole natural cycle."
+    ],
+    "validationPriorities": [
+      "Full natural Evo cycle with predefined unchanged capture deadlines and whole-image phase/contact/hand judgments, not CPU-only tests.",
+      "Require actual distinct hand-layer receipts, retain unmatched/exhausted results and blank/late cues.",
+      "Only a complete valid action pass warrants same-binary reversal and then Pro and portrait/single-hand coverage.",
+      "Preserve gesture/orbit/reset and read-only interaction behavior; no board assets, routine, audio or navigation edits."
+    ]
+  },
+  "boardFrameAlternative": {
+    "pros": [
+      "Already contains revision rejection, one in-flight frame, semantic cache and alternate-color prefetch.",
+      "Completed image publication makes render-completion evidence explicit; previous lit appearance probe showed readable wood/cavities."
+    ],
+    "blockersBeforeUse": [
+      "Current drain frames/selects, sets requested orbit, then highlight changes selection-aware orbit and may start a0.28s camera animation. It immediately renders with deltaTime0. Cache keys remain requested orbit even if actual captured camera is intermediate or selection-adjusted.",
+      "No current settled target gate; changing only deltaTime does not establish correct camera/geometry final state. Main geometric tilt and live rope asynchronous mutations must also be accounted for before claiming serialization.",
+      "Preserve Main contact-aware automatic orientation before applying user orbit; a naive orbit-after-highlight fix could override it.",
+      "General workout routing includes live rope boards. Snapshot path has no SceneEvents.Update subscription. Do not quietly freeze them or broaden the rollout beyond evidence."
+    ],
+    "requiredNarrowContract": [
+      "Define scene-local nonanimated settlement of selection camera/body, then camera/orbit snapshot identity before GPU submission. Do not toggle global Reduce Motion.",
+      "No old semantic image substitutes for a new contact/mode/position; retain unavailable/pending and cancellation semantics.",
+      "Keep live interactive picker route unchanged; revalidate lighting, alpha, camera fit, gestures, rapid semantic changes, scene replacement and full natural Evo/Pro cycles."
+    ],
+    "scopeAssessment": "Repairing this contract is materially larger than reusing the existing hand-layer helper. Existing cache unit tests do not prove camera-settled or actual workout rendering behavior."
+  },
+  "sourceSHA256": {
+    "HangTen/Views/BoardModelView.swift": "d95c1b6c060ee889321edcb6539225e6cff97a5ab8be2d08318079a65ed742df",
+    "HangTen/Views/GripHandModelView.swift": "4927d32b64ce78a987d13bd5f89b37cc572ec670f72833451dad245079cbe42c",
+    "HangTen/Models/BoardModelRealityTypes.swift": "10e4fe7d6d945cc0ad22623113e51c4bccc280a949c7408c3fbeaf9a25861747"
+  },
+  "evidenceSHA256": {
+    "evo-action-whole-visual-review.json": "1d9e2a97a86821af2479a8d9b7b16e6b0e13ad4e823c1cd50636ae0f82fedabd",
+    "layer-receipts-startup-observation/app.stderr": "f924343c90d7d145dc71a36aed5bd3bfa2d572116051a3c6de6082cde80f4be8",
+    "layer-receipts-startup-observation/completion.json": "66348a8eab1ffbf7f0988ab4367c2f67a2bbf107c4d9c7ae13cfb86733a5a887"
+  },
+  "noChanges": "No source, raw evidence, runtime, index or commit changes."
+}

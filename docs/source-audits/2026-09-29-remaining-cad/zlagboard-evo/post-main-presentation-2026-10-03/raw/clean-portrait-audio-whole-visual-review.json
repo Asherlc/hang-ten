@@ -1,0 +1,584 @@
+{
+  "status": "PASS_SCOPED_PORTRAIT_FIRST_START_VISUAL_SMOKE",
+  "reviewer": "baguette_review_prep",
+  "scope": "Every25 scheduled whole screenshots plus Train individually opened; no image processing/cropping/measurement.",
+  "images": [
+    {
+      "offsetSeconds": 1,
+      "path": "clean-portrait-audio/elapsed-001s.png",
+      "sha256": "5444226b3452769c4c4a2ef252bf4d29c0ab04806bd3eb007338ef8d0d79cb41",
+      "orientation": "portrait",
+      "visiblePhase": "Preparing",
+      "visibleTimer": "00:10",
+      "boardContactColor": "loading/not visible",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": false,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 2,
+      "path": "clean-portrait-audio/elapsed-002s.png",
+      "sha256": "c5dcaf134e21c1dc18c9674fd7a0fb1f606120b9a4a4780b53166b532da03d0d",
+      "orientation": "portrait",
+      "visiblePhase": "Ready",
+      "visibleTimer": "00:03",
+      "boardContactColor": "blue",
+      "hands": "hidden during initial countdown",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 3,
+      "path": "clean-portrait-audio/elapsed-003s.png",
+      "sha256": "b257eb94e4a61e1f7a0de5c7b410f42eee1f15a9f1dd0907fdb409b513045d5c",
+      "orientation": "portrait",
+      "visiblePhase": "Ready",
+      "visibleTimer": "00:02",
+      "boardContactColor": "blue",
+      "hands": "hidden during initial countdown",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 4,
+      "path": "clean-portrait-audio/elapsed-004s.png",
+      "sha256": "b75929065755377a80ff3af5dcb33c39466b3aa196b9d09ed3aad6ce76851d54",
+      "orientation": "portrait",
+      "visiblePhase": "Ready",
+      "visibleTimer": "00:01",
+      "boardContactColor": "blue",
+      "hands": "hidden during initial countdown",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 5,
+      "path": "clean-portrait-audio/elapsed-005s.png",
+      "sha256": "deb97ad7a251cc9c5ff47b236a45c4d6ae307a77d7d8855f1bd7d3bc8d123623",
+      "orientation": "portrait",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:10",
+      "boardContactColor": "red",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 6,
+      "path": "clean-portrait-audio/elapsed-006s.png",
+      "sha256": "b394ca86a9fae06f34b427a346d2155b1fa4a3d269cbf3ea3fec869f9f3fbb0e",
+      "orientation": "portrait",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:09",
+      "boardContactColor": "red",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 7,
+      "path": "clean-portrait-audio/elapsed-007s.png",
+      "sha256": "5869acd369d7883b9cb7e585604df76f89a239302944e8f58e7e4fe15cef11c6",
+      "orientation": "portrait",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:08",
+      "boardContactColor": "red",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 8,
+      "path": "clean-portrait-audio/elapsed-008s.png",
+      "sha256": "c54ac3a809e0e7c351358251f7c636d201fbab7718530e99beb0f558940c0801",
+      "orientation": "portrait",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:07",
+      "boardContactColor": "red",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 9,
+      "path": "clean-portrait-audio/elapsed-009s.png",
+      "sha256": "63a61f499619a7d1ed66e1c431b911c690f41c30f36a917c73b01cc02f3788fa",
+      "orientation": "portrait",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:06",
+      "boardContactColor": "red",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 10,
+      "path": "clean-portrait-audio/elapsed-010s.png",
+      "sha256": "bc1562edb2c988e47863815601d7b452e20bbc33e99c102ce855c0719b168bb0",
+      "orientation": "portrait",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:05",
+      "boardContactColor": "red",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 11,
+      "path": "clean-portrait-audio/elapsed-011s.png",
+      "sha256": "65eba41994e9d5ec2f275c281a8ba7a57cafed32c2e91ce99b5e1860553600f8",
+      "orientation": "portrait",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:04",
+      "boardContactColor": "red",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 12,
+      "path": "clean-portrait-audio/elapsed-012s.png",
+      "sha256": "1812c717d79dc8142672470288a2ed6cb43143994a34833b01082ce6b6aafbb0",
+      "orientation": "portrait",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:03",
+      "boardContactColor": "red",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 13,
+      "path": "clean-portrait-audio/elapsed-013s.png",
+      "sha256": "af7608f08c58dbd0517d21e51121c53f286bef61b5b29fcf2d19b6f9e284112e",
+      "orientation": "portrait",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:02",
+      "boardContactColor": "red",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 14,
+      "path": "clean-portrait-audio/elapsed-014s.png",
+      "sha256": "becbbaa9f0469bf70285be0793c97a270b71c722c9429b639f336d0833dd5ebe",
+      "orientation": "portrait",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:01",
+      "boardContactColor": "red",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons and grip labels fit without overlap; lower instruction card continues below viewport",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 15,
+      "path": "clean-portrait-audio/elapsed-015s.png",
+      "sha256": "c2853dc895879285db0452f08737f5642919563f249bacabadc0f6015b499b30",
+      "orientation": "portrait",
+      "visiblePhase": "Rest",
+      "visibleTimer": "03:00",
+      "boardContactColor": "blue",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons, grip labels and Recovery180s card fit without overlap",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 16,
+      "path": "clean-portrait-audio/elapsed-016s.png",
+      "sha256": "29f973c4944197b02b01c312231b3b7b9d737ef3f071322ab29d67239f457deb",
+      "orientation": "portrait",
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:59",
+      "boardContactColor": "blue",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons, grip labels and Recovery180s card fit without overlap",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 17,
+      "path": "clean-portrait-audio/elapsed-017s.png",
+      "sha256": "1144f88a6480c8366adec7a111a0ec1b69d929c5c4dc2d06c0cace848d2766f8",
+      "orientation": "portrait",
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:58",
+      "boardContactColor": "blue",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons, grip labels and Recovery180s card fit without overlap",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 18,
+      "path": "clean-portrait-audio/elapsed-018s.png",
+      "sha256": "8620fdec1f975c617042e2165a149176afab8fbcb49ef9d04f0f9f083546b312",
+      "orientation": "portrait",
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:57",
+      "boardContactColor": "blue",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons, grip labels and Recovery180s card fit without overlap",
+      "statusAreaBlackCapsuleVisible": true,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 19,
+      "path": "clean-portrait-audio/elapsed-019s.png",
+      "sha256": "666d170c11b088ae82d4e157ecff67981df1f4c449aeb625a496ba6ad5334911",
+      "orientation": "portrait",
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:56",
+      "boardContactColor": "blue",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons, grip labels and Recovery180s card fit without overlap",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 20,
+      "path": "clean-portrait-audio/elapsed-020s.png",
+      "sha256": "e7a5d1fe3cdbbbab1e5e6f141be4d9fcf88fdab3243f26acc79356fdf041e9cd",
+      "orientation": "portrait",
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:55",
+      "boardContactColor": "blue",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons, grip labels and Recovery180s card fit without overlap",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 21,
+      "path": "clean-portrait-audio/elapsed-021s.png",
+      "sha256": "e1dfedadd2a624033399e4392ee58284874feef33152926d7d31f3da8f3a9d5f",
+      "orientation": "portrait",
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:54",
+      "boardContactColor": "blue",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons, grip labels and Recovery180s card fit without overlap",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 22,
+      "path": "clean-portrait-audio/elapsed-022s.png",
+      "sha256": "313ba06cfdb93edddbc8124c4f9317247722d4e3d740b6448da7f6f202fbf69f",
+      "orientation": "portrait",
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:53",
+      "boardContactColor": "blue",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons, grip labels and Recovery180s card fit without overlap",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 23,
+      "path": "clean-portrait-audio/elapsed-023s.png",
+      "sha256": "6c0ca1786a0dc2488f521e08591bb58dcc449ba1bc7aaeef23cabff7f935a669",
+      "orientation": "portrait",
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:52",
+      "boardContactColor": "blue",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons, grip labels and Recovery180s card fit without overlap",
+      "statusAreaBlackCapsuleVisible": true,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 24,
+      "path": "clean-portrait-audio/elapsed-024s.png",
+      "sha256": "75fa9c5cf4d945b529b23feb60ceab5aca57fe2b2b75ffac3d2036808e21be3d",
+      "orientation": "portrait",
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:51",
+      "boardContactColor": "blue",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons, grip labels and Recovery180s card fit without overlap",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    },
+    {
+      "offsetSeconds": 25,
+      "path": "clean-portrait-audio/elapsed-025s.png",
+      "sha256": "84ccbb94b2219bd21d188c50657629775ae8f04b59442cd65e8be5baba8fbe79",
+      "orientation": "portrait",
+      "visiblePhase": "Rest",
+      "visibleTimer": "02:50",
+      "boardContactColor": "blue",
+      "hands": "both visible",
+      "woodAndCavitiesLegible": true,
+      "wrongActiveOrRestContactColor": false,
+      "missingGeometryDuringActiveOrRest": false,
+      "textFit": "Visible headings, timer, buttons, grip labels and Recovery180s card fit without overlap",
+      "statusAreaBlackCapsuleVisible": false,
+      "wholeImageIndividuallyViewed": true
+    }
+  ],
+  "train": {
+    "path": "clean-portrait-audio/train-setup.png",
+    "sha256": "0b481fbba30c75dbd1f4d56f604d5e02b7dc26daa33586bb9cf3db60d73f9a85",
+    "observation": "Portrait Train, Evo wooden body/cavities and headings/buttons fully legible; no selected contacts.",
+    "wholeImageIndividuallyViewed": true
+  },
+  "captureManifest": {
+    "path": "clean-portrait-audio/captures.json",
+    "sha256": "227c735a4ff2b38d29c556d1f1b90fc59e6befc842d7cd5e12006536926863ea",
+    "all25PNGHashesMatch": true
+  },
+  "provenance": {
+    "completion.json": {
+      "path": "clean-portrait-audio/completion.json",
+      "sha256": "4feed710702ef757e812a79fd11059174c649db04e8f28026f290a2dd0d315eb",
+      "value": {
+        "captureCompleted": true,
+        "plannedCaptures": 25,
+        "actualCaptures": 25,
+        "errors": [],
+        "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+        "CPUBracketsAvailable": false,
+        "phaseTimingsKnown": false,
+        "noRetries": true
+      }
+    },
+    "cleanup.json": {
+      "path": "clean-portrait-audio/cleanup.json",
+      "sha256": "1c24a58b672ffa16fb7b78c5e2edf234c564df11b582efc6d58a5b3f3357028b",
+      "value": {
+        "scope": "Exact app and own awake direct child only; persistent Simulator/DD remain controller-owned",
+        "appPIDAbsent": true,
+        "awakeChildReaped": true,
+        "awakeExitStatus": -15,
+        "awakePIDAbsent": true,
+        "passed": true
+      }
+    },
+    "source-reference.json": {
+      "path": "clean-portrait-audio/source-reference.json",
+      "sha256": "7f77c0b2161c28e55f026b0e8fd72eda63a3f8e030a6b5554b63958255a6dbb6",
+      "value": {
+        "approvedByRoot": true,
+        "baselineOnly": false,
+        "commit": "a314f39c03121465b493da6f45e49fa7c928b1cc",
+        "files": [
+          {
+            "path": "HangTen/Views/BoardModelView.swift",
+            "sha256": "9ffdb0e7c38254b10da4dec42bc3116be9f32cb8f8efeaad4588633a0464014f"
+          },
+          {
+            "path": "HangTen/Models/BoardModelRealityTypes.swift",
+            "sha256": "10e4fe7d6d945cc0ad22623113e51c4bccc280a949c7408c3fbeaf9a25861747"
+          },
+          {
+            "path": "HangTen/Views/WorkoutView.swift",
+            "sha256": "668f7b0d7433d81de39ebaccc5b6c6ab92732df58d6ae6232e16a28a7ab082bf"
+          },
+          {
+            "path": "HangTen/Views/RootView.swift",
+            "sha256": "6d4439ffa97e0a93c25fc2b253710c2711186bbbc1515f830d33dd11a36a8b89"
+          },
+          {
+            "path": "HangTen/Views/BoardMapView.swift",
+            "sha256": "4a023bf0e3ce4115fcb69862b2373bf7bedfebece9b4f856298c18f57874602a"
+          },
+          {
+            "path": "HangTen/Views/GripHandModelView.swift",
+            "sha256": "4e5f858f149e57f350344a6ef009adfff7a40d73c73ab1a3f8912cdf4777d2fc"
+          },
+          {
+            "path": "HangTen/Views/TrainView.swift",
+            "sha256": "b8720ac7c42252f22dceecb8a58f96a1de297068bbb7a3972bddac8c7072fccf"
+          },
+          {
+            "path": "HangTen/Resources/PlanLibrary.json",
+            "sha256": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1"
+          },
+          {
+            "path": "HangTen/Models/WorkoutTimeline.swift",
+            "sha256": "d5e570e784a48019552ab6c792208d490377682f01e40e75c900a76832e449a3"
+          },
+          {
+            "path": "HangTen/Models/WorkoutActivityRecording.swift",
+            "sha256": "85b99c73ee4fb02cd4e3746cf38c8cfdb3549641a0c8112ffa37ee4b25b1e0ac"
+          },
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/WorkoutTimelineTests.swift",
+            "sha256": "1c18ff421376441e4f740ff730416332375b05f05892fba0f76f81ec4cf4c6e5"
+          },
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/BoardModelRealityTests.swift",
+            "sha256": "9a8d150975a18b0d6b69f1ebd13998414c9332be57f3e16d1124eaebc806e9af"
+          }
+        ],
+        "uncommittedCandidate": true
+      }
+    },
+    "installed-binary-gate.json": {
+      "path": "clean-portrait-audio/installed-binary-gate.json",
+      "sha256": "d5ac82fc57739f5052a931c12f45c711a0dd4c9ff9b5e2779f835baa4ff1c9e3",
+      "value": {
+        "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/E0AC7F37-369F-414E-B407-353435A0BE03/data/Containers/Bundle/Application/DA2A0914-1008-4CCB-860F-96A21696E781/HangTen.app/HangTen.debug.dylib",
+        "sha256": "97f7f90cc61f594cb75c4fe17e68dade07ffa90173cad7d3b3b986944fd69453"
+      }
+    },
+    "launch-app-arguments.json": {
+      "path": "clean-portrait-audio/launch-app-arguments.json",
+      "sha256": "10c4e990307400e20f1594a2bfc85b7aad72aac3355ff8a2c043da5c43215248",
+      "value": [
+        "-workoutAudioCuesEnabled",
+        "YES"
+      ]
+    },
+    "launch-review-environment.json": {
+      "path": "clean-portrait-audio/launch-review-environment.json",
+      "sha256": "6d30bbd13fd48b06b37b2173bd7f22dfbf85fc734308d316897330ccd603c110",
+      "value": {
+        "HANGTEN_REVIEW_BOARD_ID": "zlagboard.evo",
+        "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs"
+      }
+    },
+    "schedule.json": {
+      "path": "clean-portrait-audio/schedule.json",
+      "sha256": "817aca11b118ecef01319208d3c8f42aa44145289eee03574d431cac0896a1e3",
+      "value": {
+        "anchor": "End of normal openurl, not application phase start",
+        "offsetSeconds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25
+        ],
+        "maximumStartLatenessSeconds": 0.25,
+        "hardBoundSeconds": 60,
+        "noRetries": true,
+        "scope": "Portrait audio-enabled first-start smoke; no captured spoken output or long-Rest claim"
+      }
+    }
+  },
+  "summary": [
+    "001 displays Preparing3Dviews and Cancel preparation, loading model placeholder and both hands; its phase badge still reads Hang. It is classified as preparation from the explicit message/control, not an active timed frame.",
+    "002\u2013004 Ready03/02/01 show blue board and intentionally hidden hands.",
+    "005\u2013014 first Hang10 through1 show red bilateral lower outer contacts, whole wood board and both hands.",
+    "015\u2013025 early Rest03:00 through02:50 show blue bilateral previews, whole board and both hands.",
+    "Portrait orientation is visually confirmed in all26 whole images.",
+    "Visible text fits without overlap. The long instruction card extends below the viewport during preparation/countdown/Hang; unseen lower text and scroll behavior were not validated.",
+    "Black capsule appears in system status area at018 and023 without obscuring workout content; no cause is inferred."
+  ],
+  "limits": [
+    "AudioYES launch argument and unmuted speaker icon are visible/configured; no recorded or heard spoken output proof.",
+    "No long-Rest completion, following Hang, CPU-bracket, exact phase-mutation timing, continuous-rendering, hardware or GPU-cause claim.",
+    "Raw PENDING_WHOLE_IMAGE_REVIEW status and all raw PNG/log bytes remain unchanged.",
+    "CleanupPASS comes from retained exact app/awake cleanup record; reviewer performed no resource operation.",
+    "No human acceptance or blanket PR-readiness claim."
+  ]
+}

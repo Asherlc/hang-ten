@@ -1,0 +1,12 @@
+{
+  "status": "pass",
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "bodyTessellationSHA256": "7b302b692526a61fe0a6a88711a2d0f05fe1f55daecb4c32e551c0bc8e671c2b",
+  "provenanceSHA256": "bae94192212a62f7a9f1a898d4b4f4bb443c7ef0d9a8865de0b555e18a3b2d8f",
+  "vertices": 41610,
+  "triangles": 83216,
+  "watertight": true,
+  "windingConsistent": true,
+  "signedVolumeMM3": 5727098.448516711,
+  "scope": "Source-bound complete BodySolid .28mm tessellation; does not assert semantic USDZ mesh union watertightness."
+}

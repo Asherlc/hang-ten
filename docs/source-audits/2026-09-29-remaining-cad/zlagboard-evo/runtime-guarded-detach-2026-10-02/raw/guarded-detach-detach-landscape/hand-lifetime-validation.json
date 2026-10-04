@@ -1,0 +1,8337 @@
+{
+  "checks": {
+    "completeOpeningStream": true,
+    "instrumentationVersion": true,
+    "suppressionFlagCorrect": true,
+    "allFourCountsOnEveryRecord": true,
+    "openingCountsZero": true,
+    "countsMonotonic": true,
+    "finalMarkerAfterLastCapture": true,
+    "noRecorderErrorOrCap": true,
+    "strictOFFZeroAllFourLifetimeCounts": true
+  },
+  "off": true,
+  "finalCounts": {
+    "pair.constructor-entry": 0,
+    "pair.make-entry": 0,
+    "single.constructor-entry": 0,
+    "single.make-entry": 0
+  },
+  "lifecycleEvents": [],
+  "finalMarker": {
+    "applicationCensus": {
+      "applicationState": 0,
+      "standaloneGate": false,
+      "windowScenes": [
+        {
+          "activationState": 0,
+          "interfaceOrientation": 3,
+          "sceneID": "ObjectIdentifier(0x0000000104d2ee00)",
+          "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+          "windows": [
+            {
+              "alpha": 1,
+              "bounds": [
+                874,
+                402
+              ],
+              "hidden": false,
+              "key": true,
+              "rendererNamedViewClasses": {
+                "RealityKit.ARRenderView": 1,
+                "RealityKit.ARView": 1,
+                "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>": 1
+              },
+              "rendererPlacements": [
+                {
+                  "alpha": 1,
+                  "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+                  "frameInWindow": [
+                    332,
+                    240,
+                    210,
+                    36
+                  ],
+                  "hidden": false,
+                  "viewID": "ObjectIdentifier(0x0000000113ab7900)"
+                },
+                {
+                  "alpha": 1,
+                  "class": "RealityKit.ARView",
+                  "frameInWindow": [
+                    332,
+                    240,
+                    210,
+                    36
+                  ],
+                  "hidden": false,
+                  "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+                  "viewID": "ObjectIdentifier(0x0000000104343b80)"
+                },
+                {
+                  "alpha": 1,
+                  "class": "RealityKit.ARRenderView",
+                  "frameInWindow": [
+                    332,
+                    240,
+                    210,
+                    36
+                  ],
+                  "hidden": false,
+                  "viewID": "ObjectIdentifier(0x0000000104d18380)"
+                }
+              ],
+              "windowID": "ObjectIdentifier(0x0000000104338800)"
+            }
+          ]
+        }
+      ]
+    },
+    "boardDetachTrial": {
+      "detachRequested": true,
+      "hosts": [
+        {
+          "attachmentObserved": true,
+          "cameraActualSceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "cameraParentID": "ObjectIdentifier(0x000000014b3743c0)",
+          "currentOwner": true,
+          "detached": false,
+          "disappeared": false,
+          "invalid": "nil",
+          "modelRetainedForTrial": true,
+          "ownerToken": "7C53B50C-DE93-4C0D-AFDC-FC7F7BB77891",
+          "reattachedAfterDetach": false,
+          "recordedActualSceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "recordedParentID": "ObjectIdentifier(0x000000014b3743c0)",
+          "rootActualSceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "rootParentID": "ObjectIdentifier(0x000000014b3743c0)",
+          "sceneLifecycleToken": "286EC9BF-4436-46E8-BCE9-CF1D1E992A48",
+          "trainMarked": false,
+          "viewToken": "CFCBDE45-757D-432A-98E4-4472E7F5569C"
+        },
+        {
+          "attachmentObserved": true,
+          "cameraActualSceneID": "nil",
+          "cameraParentID": "nil",
+          "currentOwner": true,
+          "detached": true,
+          "disappeared": true,
+          "invalid": "nil",
+          "modelRetainedForTrial": true,
+          "ownerToken": "C7197761-F60C-476A-8511-86B999FD69F3",
+          "reattachedAfterDetach": false,
+          "recordedActualSceneID": "ObjectIdentifier(0x0000000105c77000)",
+          "recordedParentID": "ObjectIdentifier(0x000000014a662140)",
+          "rootActualSceneID": "nil",
+          "rootParentID": "nil",
+          "sceneLifecycleToken": "9FEEAD7A-E809-4E3C-A5C8-D7F3065E62FF",
+          "trainMarked": true,
+          "viewToken": "D0C541D6-9301-4E7B-8CCD-D9E8F09B023B"
+        }
+      ]
+    },
+    "boardLifetimeCensus": [
+      {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014a774c60)",
+          "isActive": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b3743c0)",
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)"
+        },
+        "constructedIDs": {
+          "cameraID": "ObjectIdentifier(0x000000014a774c60)",
+          "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+          "rootID": "ObjectIdentifier(0x000000014a775220)",
+          "wrapperID": "ObjectIdentifier(0x000000014a771c00)"
+        },
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014a775220)",
+          "isActive": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b3743c0)",
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)"
+        },
+        "sceneLifecycleToken": "286EC9BF-4436-46E8-BCE9-CF1D1E992A48",
+        "wrapperAlive": true
+      },
+      {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x0000000113a4e100)",
+          "isActive": false,
+          "parentEntityID": "nil",
+          "realitySceneID": "nil"
+        },
+        "constructedIDs": {
+          "cameraID": "ObjectIdentifier(0x0000000113a4e100)",
+          "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+          "rootID": "ObjectIdentifier(0x0000000104dd24c0)",
+          "wrapperID": "ObjectIdentifier(0x0000000106106a00)"
+        },
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x0000000104dd24c0)",
+          "isActive": false,
+          "parentEntityID": "nil",
+          "realitySceneID": "nil"
+        },
+        "sceneLifecycleToken": "9FEEAD7A-E809-4E3C-A5C8-D7F3065E62FF",
+        "wrapperAlive": true
+      }
+    ],
+    "boardRenderMembership": {
+      "cameraActive": true,
+      "cameraEntityID": "ObjectIdentifier(0x000000014a774c60)",
+      "cameraRealitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ],
+      "far": 1000,
+      "near": 0.0010000000474974513,
+      "orthographic": false,
+      "perspective": true,
+      "rootActive": true,
+      "rootEntityID": "ObjectIdentifier(0x000000014a775220)",
+      "rootRealitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+      "verticalFOVDegrees": 30
+    },
+    "cachedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "cachedMode": "active",
+    "cameraID": "ObjectIdentifier(0x000000014a774c60)",
+    "cameraTransform": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0.9438583850860596,
+      -0.33035042881965637,
+      0,
+      0,
+      0.33035042881965637,
+      0.9438583850860596,
+      0,
+      0,
+      0.10610384494066238,
+      0.3241538405418396,
+      1
+    ],
+    "complete": true,
+    "epoch": 1790990432.325355,
+    "event": "highlight-before",
+    "handLifecycleCounts": {
+      "pair.constructor-entry": 0,
+      "pair.make-entry": 0,
+      "single.constructor-entry": 0,
+      "single.make-entry": 0
+    },
+    "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "priorCachedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "priorCachedMode": "active",
+    "requestedMode": "preview",
+    "resolvedSurfaceInputs": {
+      "boardID": "zlagboard.evo",
+      "ids": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "isDisplayOnly": false,
+      "mode": "active",
+      "positionID": "primary",
+      "presentationID": "primary"
+    },
+    "rootAttached": true,
+    "rootEnabled": true,
+    "rootID": "ObjectIdentifier(0x000000014a775220)",
+    "rootTransform": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "sceneID": "ObjectIdentifier(0x000000014a771c00)",
+    "sceneLifecycleToken": "286EC9BF-4436-46E8-BCE9-CF1D1E992A48",
+    "selectedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "sequence": 150,
+    "surfaces": [
+      {
+        "ancestors": [
+          "ObjectIdentifier(0x0000000148708100)",
+          "ObjectIdentifier(0x00000001487081a0)",
+          "ObjectIdentifier(0x000000014a79f6c0)",
+          "ObjectIdentifier(0x000000014a775220)",
+          "ObjectIdentifier(0x000000014b3743c0)"
+        ],
+        "attached": true,
+        "contactID": "edge-20-left",
+        "enabled": true,
+        "entityID": "ObjectIdentifier(0x0000000148708100)",
+        "materialType": "PhysicallyBasedMaterial",
+        "name": "contact_edge_20_left",
+        "resolvedRGBAValid": true,
+        "rgba": [
+          0.9850000739097595,
+          0.2749999761581421,
+          0.10499999672174454,
+          0.6000000238418579
+        ],
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "underRegisteredRoot": true
+      },
+      {
+        "ancestors": [
+          "ObjectIdentifier(0x0000000148708300)",
+          "ObjectIdentifier(0x00000001487081a0)",
+          "ObjectIdentifier(0x000000014a79f6c0)",
+          "ObjectIdentifier(0x000000014a775220)",
+          "ObjectIdentifier(0x000000014b3743c0)"
+        ],
+        "attached": true,
+        "contactID": "edge-20-right",
+        "enabled": true,
+        "entityID": "ObjectIdentifier(0x0000000148708300)",
+        "materialType": "PhysicallyBasedMaterial",
+        "name": "contact_edge_20_right",
+        "resolvedRGBAValid": true,
+        "rgba": [
+          0.9850000739097595,
+          0.2749999761581421,
+          0.10499999672174454,
+          0.6000000238418579
+        ],
+        "transform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "underRegisteredRoot": true
+      }
+    ],
+    "uptime": 73506.84298895833,
+    "viewportPoints": [
+      210,
+      36
+    ]
+  },
+  "boardFrameHistory": [
+    {
+      "sequence": 5,
+      "epoch": 1790990235.575984,
+      "event": "highlight-before",
+      "boardHosts": [],
+      "viewportPoints": null,
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 6,
+      "epoch": 1790990235.577389,
+      "event": "highlight-after",
+      "boardHosts": [],
+      "viewportPoints": null,
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 7,
+      "epoch": 1790990235.579793,
+      "event": "view-make",
+      "boardHosts": [],
+      "viewportPoints": [
+        264,
+        45.25714285714286
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 14,
+      "epoch": 1790990235.77157,
+      "event": "highlight-before",
+      "boardHosts": [],
+      "viewportPoints": null,
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 15,
+      "epoch": 1790990235.772925,
+      "event": "highlight-after",
+      "boardHosts": [],
+      "viewportPoints": null,
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 16,
+      "epoch": 1790990235.774195,
+      "event": "view-make",
+      "boardHosts": [],
+      "viewportPoints": [
+        410,
+        70.28571428571429
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 17,
+      "epoch": 1790990236.855245,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        410,
+        70.28571428571429
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 18,
+      "epoch": 1790990237.922874,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        410,
+        70.28571428571429
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 19,
+      "epoch": 1790990238.170219,
+      "event": "highlight-before",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        410,
+        70.28571428571429
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 20,
+      "epoch": 1790990238.180533,
+      "event": "highlight-after",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            232,
+            182.33333333333331,
+            410,
+            70
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        410,
+        70.28571428571429
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 23,
+      "epoch": 1790990238.9333282,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 24,
+      "epoch": 1790990240.0066261,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 25,
+      "epoch": 1790990241.068686,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 26,
+      "epoch": 1790990242.107873,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 27,
+      "epoch": 1790990243.157973,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 28,
+      "epoch": 1790990244.191234,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 29,
+      "epoch": 1790990245.194933,
+      "event": "highlight-before",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 30,
+      "epoch": 1790990245.201663,
+      "event": "highlight-after",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 33,
+      "epoch": 1790990245.210249,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 34,
+      "epoch": 1790990246.261246,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 35,
+      "epoch": 1790990247.276482,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 36,
+      "epoch": 1790990248.3424659,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 37,
+      "epoch": 1790990249.394146,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 38,
+      "epoch": 1790990250.458098,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 39,
+      "epoch": 1790990251.964036,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 40,
+      "epoch": 1790990252.972497,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 41,
+      "epoch": 1790990253.978569,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 42,
+      "epoch": 1790990254.984077,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 43,
+      "epoch": 1790990255.989297,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 44,
+      "epoch": 1790990256.992636,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 45,
+      "epoch": 1790990257.997082,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 46,
+      "epoch": 1790990259.005906,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 47,
+      "epoch": 1790990261.013249,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 48,
+      "epoch": 1790990262.015819,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 49,
+      "epoch": 1790990263.0176911,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 50,
+      "epoch": 1790990264.026268,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 51,
+      "epoch": 1790990265.030047,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 52,
+      "epoch": 1790990266.03179,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 53,
+      "epoch": 1790990267.037082,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 54,
+      "epoch": 1790990268.043031,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 55,
+      "epoch": 1790990269.0464292,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 56,
+      "epoch": 1790990271.050219,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 57,
+      "epoch": 1790990272.058539,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 58,
+      "epoch": 1790990273.065062,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 59,
+      "epoch": 1790990274.066866,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 60,
+      "epoch": 1790990275.070519,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 61,
+      "epoch": 1790990276.080241,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 62,
+      "epoch": 1790990278.0890012,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 63,
+      "epoch": 1790990279.092286,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 64,
+      "epoch": 1790990280.094522,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 65,
+      "epoch": 1790990281.0987191,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 66,
+      "epoch": 1790990282.107315,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 67,
+      "epoch": 1790990283.112123,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 68,
+      "epoch": 1790990284.114543,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 69,
+      "epoch": 1790990285.121043,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 70,
+      "epoch": 1790990286.1226668,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 71,
+      "epoch": 1790990287.178594,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 72,
+      "epoch": 1790990289.077104,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 73,
+      "epoch": 1790990290.0831861,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 74,
+      "epoch": 1790990291.091192,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 75,
+      "epoch": 1790990292.096847,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 76,
+      "epoch": 1790990293.105678,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 77,
+      "epoch": 1790990294.109566,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 78,
+      "epoch": 1790990295.114229,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 79,
+      "epoch": 1790990296.119098,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 80,
+      "epoch": 1790990297.125463,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 81,
+      "epoch": 1790990298.128128,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 82,
+      "epoch": 1790990299.154254,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 83,
+      "epoch": 1790990300.1790981,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 84,
+      "epoch": 1790990301.208101,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 85,
+      "epoch": 1790990302.262364,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 86,
+      "epoch": 1790990303.276319,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 87,
+      "epoch": 1790990304.300159,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 88,
+      "epoch": 1790990305.35538,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 89,
+      "epoch": 1790990306.393573,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 90,
+      "epoch": 1790990307.4574552,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 91,
+      "epoch": 1790990309.243331,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 92,
+      "epoch": 1790990310.254579,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 93,
+      "epoch": 1790990312.259739,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 94,
+      "epoch": 1790990313.2660918,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 95,
+      "epoch": 1790990314.33152,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 96,
+      "epoch": 1790990315.3938441,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 97,
+      "epoch": 1790990317.044808,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 98,
+      "epoch": 1790990318.05133,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 99,
+      "epoch": 1790990319.054112,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 100,
+      "epoch": 1790990320.060989,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 101,
+      "epoch": 1790990321.0719109,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 102,
+      "epoch": 1790990322.080172,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 103,
+      "epoch": 1790990323.082448,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 104,
+      "epoch": 1790990325.087764,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 105,
+      "epoch": 1790990327.059186,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 106,
+      "epoch": 1790990328.067091,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 107,
+      "epoch": 1790990329.0712671,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 108,
+      "epoch": 1790990330.074295,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 109,
+      "epoch": 1790990331.0807528,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 110,
+      "epoch": 1790990332.088408,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 111,
+      "epoch": 1790990334.096486,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 112,
+      "epoch": 1790990336.1023002,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 113,
+      "epoch": 1790990337.108047,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 114,
+      "epoch": 1790990338.140108,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 115,
+      "epoch": 1790990339.1587682,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 116,
+      "epoch": 1790990340.173861,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 117,
+      "epoch": 1790990341.205234,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 118,
+      "epoch": 1790990342.207334,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 119,
+      "epoch": 1790990343.274928,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 120,
+      "epoch": 1790990344.279455,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 121,
+      "epoch": 1790990345.322876,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 122,
+      "epoch": 1790990346.3908448,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 123,
+      "epoch": 1790990347.457471,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 124,
+      "epoch": 1790990348.4628959,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 125,
+      "epoch": 1790990349.4740682,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 126,
+      "epoch": 1790990350.5375319,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 127,
+      "epoch": 1790990351.5541549,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 128,
+      "epoch": 1790990352.575901,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 129,
+      "epoch": 1790990353.616298,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 130,
+      "epoch": 1790990354.633574,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 131,
+      "epoch": 1790990355.683512,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 132,
+      "epoch": 1790990356.723294,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 133,
+      "epoch": 1790990357.730187,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 134,
+      "epoch": 1790990358.772493,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 135,
+      "epoch": 1790990359.830481,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 136,
+      "epoch": 1790990360.852878,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 137,
+      "epoch": 1790990361.908279,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 138,
+      "epoch": 1790990362.9764972,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 139,
+      "epoch": 1790990364.0431352,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 140,
+      "epoch": 1790990365.0578542,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 141,
+      "epoch": 1790990366.104154,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 142,
+      "epoch": 1790990367.10853,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 143,
+      "epoch": 1790990368.142381,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 144,
+      "epoch": 1790990369.204787,
+      "event": "sample",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 146,
+      "epoch": 1790990425.243979,
+      "event": "highlight-before",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 147,
+      "epoch": 1790990425.2582521,
+      "event": "highlight-after",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 150,
+      "epoch": 1790990432.325355,
+      "event": "highlight-before",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    },
+    {
+      "sequence": 151,
+      "epoch": 1790990432.331777,
+      "event": "highlight-after",
+      "boardHosts": [
+        {
+          "alpha": 1,
+          "class": "RealityKit.ARView",
+          "frameInWindow": [
+            332,
+            240,
+            210,
+            36
+          ],
+          "hidden": false,
+          "realitySceneID": "ObjectIdentifier(0x000000014b2d6200)",
+          "viewID": "ObjectIdentifier(0x0000000104343b80)"
+        }
+      ],
+      "viewportPoints": [
+        210,
+        36
+      ],
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ]
+    }
+  ],
+  "limitations": [
+    "Counters cover the two app hand scene constructors and two RealityView make entries through retained final marker; not all framework GPU activity or future lifetime.",
+    "No compensating layout applied; actual frame history retained."
+  ]
+}

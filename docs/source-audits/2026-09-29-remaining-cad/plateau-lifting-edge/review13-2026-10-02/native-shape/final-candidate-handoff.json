@@ -1,0 +1,535 @@
+{
+  "owner": "placid-badger",
+  "package": "plateau-lifting-edge",
+  "packageDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final/Hangboards/plateau-lifting-edge",
+  "files": {
+    "assets/depth-10mm.model.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final/Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json",
+      "sha256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+      "bytes": 988
+    },
+    "assets/depth-10mm.usdz": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final/Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz",
+      "sha256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+      "bytes": 35467
+    },
+    "assets/depth-15mm.model.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final/Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json",
+      "sha256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+      "bytes": 988
+    },
+    "assets/depth-15mm.usdz": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final/Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz",
+      "sha256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+      "bytes": 35467
+    },
+    "assets/primary.model.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final/Hangboards/plateau-lifting-edge/assets/primary.model.json",
+      "sha256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+      "bytes": 904
+    },
+    "assets/primary.usdz": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final/Hangboards/plateau-lifting-edge/assets/primary.usdz",
+      "sha256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "bytes": 34044
+    },
+    "plateau-lifting-edge.FCStd": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final/Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+      "sha256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "bytes": 122324
+    },
+    "suspension.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final/Hangboards/plateau-lifting-edge/suspension.json",
+      "sha256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
+      "bytes": 10649
+    }
+  },
+  "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+  "sidecarSHA256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
+  "solverChecks": {
+    "18": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-18-check-report.json",
+      "sha256": "b4fba74782bc8cd593842dedd0e0d164f624076fb4ab79ade8f183e62fb125e6",
+      "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "poses": {
+        "depth-18mm": {
+          "height": 0.072342332,
+          "routes": {
+            "curl-loop": [
+              [
+                -0.052956415,
+                -0.041224587,
+                0.012
+              ],
+              [
+                -0.053138513,
+                -0.040624289,
+                0.012
+              ],
+              [
+                -0.0532,
+                -0.04,
+                0.012
+              ],
+              [
+                -0.0532,
+                -0.037,
+                0.012
+              ],
+              [
+                -0.053138513,
+                -0.036375711,
+                0.012
+              ],
+              [
+                -0.052956415,
+                -0.035775413,
+                0.012
+              ],
+              [
+                -0.052660703,
+                -0.035222175,
+                0.012
+              ],
+              [
+                -0.052262742,
+                -0.034737258,
+                0.012
+              ],
+              [
+                -0.051777825,
+                -0.034339297,
+                0.012
+              ],
+              [
+                -0.051224587,
+                -0.034043585,
+                0.012
+              ],
+              [
+                -0.050624289,
+                -0.033861487,
+                0.012
+              ],
+              [
+                -0.05,
+                -0.0338,
+                0.012
+              ],
+              [
+                -0.0468,
+                -0.033799999,
+                0.012
+              ],
+              [
+                0.0,
+                -0.033799999,
+                0.012
+              ],
+              [
+                0.0468,
+                -0.033799999,
+                0.012
+              ],
+              [
+                0.05,
+                -0.0338,
+                0.012
+              ],
+              [
+                0.050624289,
+                -0.033861487,
+                0.012
+              ],
+              [
+                0.051224587,
+                -0.034043585,
+                0.012
+              ],
+              [
+                0.051777825,
+                -0.034339297,
+                0.012
+              ],
+              [
+                0.052262742,
+                -0.034737258,
+                0.012
+              ],
+              [
+                0.052660703,
+                -0.035222175,
+                0.012
+              ],
+              [
+                0.052956415,
+                -0.035775413,
+                0.012
+              ],
+              [
+                0.053138513,
+                -0.036375711,
+                0.012
+              ],
+              [
+                0.0532,
+                -0.037,
+                0.012
+              ],
+              [
+                0.0532,
+                -0.04,
+                0.012
+              ],
+              [
+                0.053138513,
+                -0.040624289,
+                0.012
+              ],
+              [
+                0.052956415,
+                -0.041224587,
+                0.012
+              ]
+            ]
+          },
+          "lengthRatios": {
+            "curl-loop": 1.0000000117479309
+          },
+          "minimumClearance": {
+            "curl-loop": 0.002999005444883157
+          }
+        }
+      }
+    },
+    "15": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-15-check-report.json",
+      "sha256": "7bec9501a3495e83e6ce5ddcb86e59f280f33492c5f7bc5d34dab513f36d3f72",
+      "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+      "poses": {
+        "depth-15mm": {
+          "height": 0.072342332,
+          "routes": {
+            "curl-loop": [
+              [
+                -0.052956415,
+                -0.041224587,
+                0.012
+              ],
+              [
+                -0.053138513,
+                -0.040624289,
+                0.012
+              ],
+              [
+                -0.0532,
+                -0.04,
+                0.012
+              ],
+              [
+                -0.0532,
+                -0.037,
+                0.012
+              ],
+              [
+                -0.053138513,
+                -0.036375711,
+                0.012
+              ],
+              [
+                -0.052956415,
+                -0.035775413,
+                0.012
+              ],
+              [
+                -0.052660703,
+                -0.035222175,
+                0.012
+              ],
+              [
+                -0.052262742,
+                -0.034737258,
+                0.012
+              ],
+              [
+                -0.051777825,
+                -0.034339297,
+                0.012
+              ],
+              [
+                -0.051224587,
+                -0.034043585,
+                0.012
+              ],
+              [
+                -0.050624289,
+                -0.033861487,
+                0.012
+              ],
+              [
+                -0.05,
+                -0.0338,
+                0.012
+              ],
+              [
+                -0.0468,
+                -0.033799999,
+                0.012
+              ],
+              [
+                0.0,
+                -0.033799999,
+                0.012
+              ],
+              [
+                0.0468,
+                -0.033799999,
+                0.012
+              ],
+              [
+                0.05,
+                -0.0338,
+                0.012
+              ],
+              [
+                0.050624289,
+                -0.033861487,
+                0.012
+              ],
+              [
+                0.051224587,
+                -0.034043585,
+                0.012
+              ],
+              [
+                0.051777825,
+                -0.034339297,
+                0.012
+              ],
+              [
+                0.052262742,
+                -0.034737258,
+                0.012
+              ],
+              [
+                0.052660703,
+                -0.035222175,
+                0.012
+              ],
+              [
+                0.052956415,
+                -0.035775413,
+                0.012
+              ],
+              [
+                0.053138513,
+                -0.036375711,
+                0.012
+              ],
+              [
+                0.0532,
+                -0.037,
+                0.012
+              ],
+              [
+                0.0532,
+                -0.04,
+                0.012
+              ],
+              [
+                0.053138513,
+                -0.040624289,
+                0.012
+              ],
+              [
+                0.052956415,
+                -0.041224587,
+                0.012
+              ]
+            ]
+          },
+          "lengthRatios": {
+            "curl-loop": 1.0000000117479309
+          },
+          "minimumClearance": {
+            "curl-loop": 0.002999005444883157
+          }
+        }
+      }
+    },
+    "10": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-10-check-report.json",
+      "sha256": "45d9ba1848940a448ee74853b4e6c58ca388a73d2afc6de6d125f7d0676a9355",
+      "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+      "poses": {
+        "depth-10mm": {
+          "height": 0.072342332,
+          "routes": {
+            "curl-loop": [
+              [
+                -0.052956415,
+                -0.041224587,
+                0.012
+              ],
+              [
+                -0.053138513,
+                -0.040624289,
+                0.012
+              ],
+              [
+                -0.0532,
+                -0.04,
+                0.012
+              ],
+              [
+                -0.0532,
+                -0.037,
+                0.012
+              ],
+              [
+                -0.053138513,
+                -0.036375711,
+                0.012
+              ],
+              [
+                -0.052956415,
+                -0.035775413,
+                0.012
+              ],
+              [
+                -0.052660703,
+                -0.035222175,
+                0.012
+              ],
+              [
+                -0.052262742,
+                -0.034737258,
+                0.012
+              ],
+              [
+                -0.051777825,
+                -0.034339297,
+                0.012
+              ],
+              [
+                -0.051224587,
+                -0.034043585,
+                0.012
+              ],
+              [
+                -0.050624289,
+                -0.033861487,
+                0.012
+              ],
+              [
+                -0.05,
+                -0.0338,
+                0.012
+              ],
+              [
+                -0.0468,
+                -0.033799999,
+                0.012
+              ],
+              [
+                0.0,
+                -0.033799999,
+                0.012
+              ],
+              [
+                0.0468,
+                -0.033799999,
+                0.012
+              ],
+              [
+                0.05,
+                -0.0338,
+                0.012
+              ],
+              [
+                0.050624289,
+                -0.033861487,
+                0.012
+              ],
+              [
+                0.051224587,
+                -0.034043585,
+                0.012
+              ],
+              [
+                0.051777825,
+                -0.034339297,
+                0.012
+              ],
+              [
+                0.052262742,
+                -0.034737258,
+                0.012
+              ],
+              [
+                0.052660703,
+                -0.035222175,
+                0.012
+              ],
+              [
+                0.052956415,
+                -0.035775413,
+                0.012
+              ],
+              [
+                0.053138513,
+                -0.036375711,
+                0.012
+              ],
+              [
+                0.0532,
+                -0.037,
+                0.012
+              ],
+              [
+                0.0532,
+                -0.04,
+                0.012
+              ],
+              [
+                0.053138513,
+                -0.040624289,
+                0.012
+              ],
+              [
+                0.052956415,
+                -0.041224587,
+                0.012
+              ]
+            ]
+          },
+          "lengthRatios": {
+            "curl-loop": 1.0000000117479309
+          },
+          "minimumClearance": {
+            "curl-loop": 0.002999005444883157
+          }
+        }
+      }
+    }
+  },
+  "fixtures": {
+    "18": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-collider-18.json",
+      "sha256": "71fac7bddd024cff0f61f29148fa6d4d4d623952b43d8e6b4f64a316550bcb4e"
+    },
+    "15": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-collider-15.json",
+      "sha256": "b989c6d88c2aa9aa9e75fabf892596e606d4a19ff753fefe934d79877124db63"
+    },
+    "10": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-collider-10.json",
+      "sha256": "3928fe230ee404db88e9a302f2eb7a7c34a8fd7f5be576de2f30f2f002051d39"
+    }
+  },
+  "currentAppFrames": 0,
+  "humanAcceptance": "pending"
+}

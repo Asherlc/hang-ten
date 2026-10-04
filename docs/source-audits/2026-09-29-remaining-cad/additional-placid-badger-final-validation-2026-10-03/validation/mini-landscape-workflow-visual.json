@@ -1,0 +1,34 @@
+{
+  "owner": "placid-badger",
+  "builtSourceHead": "bad7500123243937db712f5b0139ab273e373836",
+  "integratedEvidenceHead": "6d9a7de223d0736279b5e780b67b8017c277feef",
+  "productionTreesIdentical": true,
+  "sourcePlanID": "research.abrahangs",
+  "naturalWorkStep": 17,
+  "naturalRestStep": 18,
+  "priorRestRedFailureFixedInCapturedFrames": true,
+  "frames": [
+    {
+      "image": "10-workout-landscape-retry3-work-highlight.png",
+      "imageSHA256": "a7112fb1ff3e97b8918912dcad03bfa89e7c5a288bbb1536da4caeb4a5a8e556",
+      "expectedBoardHighlight": "red",
+      "wholeFrameInspected": true,
+      "observedExpectedColor": true
+    },
+    {
+      "image": "10-workout-landscape-retry3-rest-live.png",
+      "imageSHA256": "91845a16d4ae9d3e298da60618749e9454b57a583560aefa64856de1db75ffab",
+      "expectedBoardHighlight": "blue",
+      "wholeFrameInspected": true,
+      "observedExpectedColor": true
+    },
+    {
+      "image": "10-workout-landscape-retry3-rest-preview.png",
+      "imageSHA256": "359fe9703c1fe5da0e37b46b69b052235b53a36e56b769717940e0bf310a6d36",
+      "expectedBoardHighlight": "blue",
+      "wholeFrameInspected": true,
+      "observedExpectedColor": true
+    }
+  ],
+  "limits": "Whole captured Simulator frames only; small board thumbnail; no continuous or hardware GPU timing claim."
+}

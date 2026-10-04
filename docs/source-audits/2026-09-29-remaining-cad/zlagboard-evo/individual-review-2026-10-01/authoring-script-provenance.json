@@ -1,0 +1,19 @@
+{
+  "purpose": "Throwaway workspace authoring/inspection scripts are retained under .context, not part of the native source runtime. FCStd stands alone.",
+  "scripts": {
+    ".context/placid-badger-cad-second-half/zlagboard-evo/metadata/apply_wood.py": "60ef275afc4ec8680d6ea94fb654de5ed7693e2e129159b9692baf83a3d63cad",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/author-rounded.py": "316c5daba678a8c90287f5658c657f7198c0dc705deae6f8486f3dec8f6e7856",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/fillet-trials.py": "5f9a3ea4794e650a7ea2a3e01ba9170814b63f4cbabfac447e3edd1cddef41c5",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/measure-first-failed.py": "2916540c7f9bc41394b3e4c51bc1d1dbb7f14396d7f904bd915a4e0ccdbddd69",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/measure.py": "d255ae64fe8075bdb01eeedc94b2faa749f4acbbda2c5ee95a46538aeb1b798b",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/render-camera.py": "b59f3dd072302c84bab78339701f59d190634c416e367d2a4d15f96ac9952a14",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/render-native.py": "18f5db7fd18efa71d033994d4abd78a0968b82e1fd4a93b1e85a2c9975b140cf",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/render-rounded.py": "867aa0f00fd1fa948e6b4c518d0e40b53d0433e8664b6036b5e4fcd701822226",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/sequential-trials.py": "7397064e5df1c290f29e3895b9809ba8ef9c226c26f47c4a10ca4fae546c17a2",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/tessellate-readonly.py": "cc1823833917b8ee398099c14e8a4437bb5ece2bd916819042210cc295078c8f",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/top-edges.py": "a9c1944e079a5e67ace1d4ae86370b7d9f86c1aaca3c3df92b168b751b9a4d41",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/verify-candidate.py": "55f5d5eeccacd075637dd4b4b77487a6f1cfaec4152937dd970d8146ce7b026e",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/verify-first-failed.py": "e820d6122ed21f5229485fca0c5b0445c8b44847c7c285612dd3e938a92ddd83"
+  },
+  "rawLogLimit": "Native runner stdout was returned in the tool transcript; structured native result/failure JSON files are preserved byte-for-byte in shape-audit. Final compiler stdout/stderr are captured separately as raw logs."
+}

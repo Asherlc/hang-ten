@@ -1,0 +1,60 @@
+{
+  "owner": "placid-badger",
+  "inputs": [
+    {
+      "label": "plastic-before",
+      "path": ".context/placid-badger/metolius-simulator-3d-opus-corrections/plastic-before/metolius-simulator-3d.FCStd",
+      "sha256": "3c516ec27da90e124fd8397470cbba0f127d5929a1fa49c62c4c611992570777"
+    },
+    {
+      "label": "plastic-before",
+      "path": ".context/placid-badger/metolius-simulator-3d-opus-corrections/plastic-before/assets/primary.usdz",
+      "sha256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628"
+    },
+    {
+      "label": "plastic-before",
+      "path": ".context/placid-badger/metolius-simulator-3d-opus-corrections/plastic-before/assets/primary.model.json",
+      "sha256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d"
+    },
+    {
+      "label": "original-9449",
+      "path": ".context/placid-badger/metolius-simulator-3d-opus-corrections/original-9449/metolius-simulator-3d.FCStd",
+      "sha256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222"
+    },
+    {
+      "label": "original-9449",
+      "path": ".context/placid-badger/metolius-simulator-3d-opus-corrections/original-9449/assets/primary.usdz",
+      "sha256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16"
+    },
+    {
+      "label": "original-9449",
+      "path": ".context/placid-badger/metolius-simulator-3d-opus-corrections/original-9449/assets/primary.model.json",
+      "sha256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e"
+    },
+    {
+      "label": "rejected-8fa",
+      "path": ".context/placid-badger/metolius-simulator-3d-opus-corrections/rejected-8fa/metolius-simulator-3d.FCStd",
+      "sha256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7"
+    },
+    {
+      "label": "rejected-8fa",
+      "path": ".context/placid-badger/metolius-simulator-3d-opus-corrections/rejected-8fa/assets/primary.usdz",
+      "sha256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628"
+    },
+    {
+      "label": "rejected-8fa",
+      "path": ".context/placid-badger/metolius-simulator-3d-opus-corrections/rejected-8fa/assets/primary.model.json",
+      "sha256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d"
+    }
+  ],
+  "manufacturerSources": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-01.jpg",
+      "sha256": "5ac1677d6280dc90242cb1dcef47691647fd3f5a9adc3c465838e930075f58a9"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-03.jpg",
+      "sha256": "e9561ab3fb6d3a85014097dcbdb0bc3d9c4079f9cb0954bd87965d180329932a"
+    }
+  ]
+}

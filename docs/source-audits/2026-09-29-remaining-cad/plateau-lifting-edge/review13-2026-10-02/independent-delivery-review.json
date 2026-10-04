@@ -1,0 +1,438 @@
+{
+  "owner": "placid-badger",
+  "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+  "reviewNumber": 13,
+  "package": "plateau-lifting-edge",
+  "checkedUTC": "2026-10-02T19:35:38.926099+00:00",
+  "baselineCommit": "8b1bbd0858ca3e81bc7c43ad842a80ff9ca2138b",
+  "HEADAtAudit": "8b1bbd0858ca3e81bc7c43ad842a80ff9ca2138b",
+  "status": "pass-with-publication-fixes",
+  "checksPassed": 31,
+  "checksTotal": 33,
+  "scope": "Independent read-only final delivery record/artifact/provenance/link/cleanup audit. No additional tests, builds, native compile or authoritative shape judgment.",
+  "checks": [
+    {
+      "check": "Frozen canonical eight hashes",
+      "passed": true,
+      "evidence": {
+        "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+        "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+        "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+        "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+        "Hangboards/plateau-lifting-edge/assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+        "Hangboards/plateau-lifting-edge/assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+        "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+        "Hangboards/plateau-lifting-edge/suspension.json": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+      }
+    },
+    {
+      "check": "Frozen generated manifest identity",
+      "passed": true,
+      "evidence": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4"
+    },
+    {
+      "check": "198 other package hashes preserved",
+      "passed": true,
+      "evidence": {
+        "count": 198,
+        "mismatches": []
+      }
+    },
+    {
+      "check": "Five reserved shared paths preserved",
+      "passed": true,
+      "evidence": {
+        "HangTen/Models/BoardModelRealityTypes.swift": true,
+        "HangTen/Views/BoardModelView.swift": true,
+        "HangTen/Views/RootView.swift": true,
+        "HangTenTests/BoardModelRealityTests.swift": true,
+        "HangTenTests/BoardModelTests.swift": true
+      }
+    },
+    {
+      "check": "Only eight Plateau canonical paths changed",
+      "passed": true,
+      "evidence": [
+        "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json",
+        "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz",
+        "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json",
+        "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz",
+        "Hangboards/plateau-lifting-edge/assets/primary.model.json",
+        "Hangboards/plateau-lifting-edge/assets/primary.usdz",
+        "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+        "Hangboards/plateau-lifting-edge/suspension.json"
+      ]
+    },
+    {
+      "check": "Shared compiler and solver unchanged",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "Six retained primary evidence files preserved",
+      "passed": true,
+      "evidence": {
+        "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/product-page-current.html": true,
+        "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/front.png": true,
+        "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/oblique.png": true,
+        "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/blocker-15.png": true,
+        "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/blocker-10.png": true,
+        "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/oak-blocker-in-use.jpg": true
+      }
+    },
+    {
+      "check": "Queue only13 changed and historical Plateau exact",
+      "passed": true,
+      "evidence": [
+        13
+      ]
+    },
+    {
+      "check": "Earlier10/11/12 acceptance records exact",
+      "passed": true,
+      "evidence": [
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "check": "Lock only Plateau changed and historical record exact",
+      "passed": true,
+      "evidence": [
+        "plateau-lifting-edge"
+      ]
+    },
+    {
+      "check": "Lock histories append one Plateau revision only",
+      "passed": true,
+      "evidence": {
+        "appendEach": 1
+      }
+    },
+    {
+      "check": "Batch historical counts exact and scoped revision appended",
+      "passed": true,
+      "evidence": {
+        "unchangedHistoricalFields": 24
+      }
+    },
+    {
+      "check": "delivery-validation historical records exact",
+      "passed": true,
+      "evidence": "only new scoped Plateau key plus allowed checksum"
+    },
+    {
+      "check": "installed-delivery-validation historical records exact",
+      "passed": true,
+      "evidence": "only new scoped Plateau key plus allowed checksum"
+    },
+    {
+      "check": "135 locks exact and five Plateau pins changed",
+      "passed": true,
+      "evidence": {
+        "changed": [
+          "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json",
+          "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json",
+          "Hangboards/plateau-lifting-edge/assets/primary.model.json",
+          "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+          "Hangboards/plateau-lifting-edge/suspension.json"
+        ],
+        "unchanged": 130
+      }
+    },
+    {
+      "check": "Checksum global identity and retained prior bytes",
+      "passed": true,
+      "evidence": {
+        "current": "44758ac3a2b242182833edb770b0b715c0be703b958f513061830c0e606127d7",
+        "prior": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23"
+      }
+    },
+    {
+      "check": "Historical native authoring only appended",
+      "passed": true,
+      "evidence": true
+    },
+    {
+      "check": "Three exact sidecar/model/descriptor pairs and roles",
+      "passed": true,
+      "evidence": {
+        "pairs": {
+          "depth-18mm": {
+            "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+            "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
+          },
+          "depth-15mm": {
+            "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+            "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"
+          },
+          "depth-10mm": {
+            "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+            "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"
+          }
+        },
+        "mismatches": []
+      }
+    },
+    {
+      "check": "Factual contact and18/15/10 position data preserved",
+      "passed": true,
+      "evidence": {
+        "contact": "edge-18",
+        "effectiveDepthMM": [
+          18,
+          15,
+          10
+        ],
+        "comparisonExcludesAuthorizedChanges": [
+          "display selectors",
+          "presentation media.suspension native-derived seated-route/radius/support metadata"
+        ],
+        "allOtherManifestFieldsExact": true
+      }
+    },
+    {
+      "check": "228 audited retained artifact hashes and byte sizes",
+      "passed": true,
+      "evidence": {
+        "count": 228,
+        "snapshotSHA256": "f13fecf742b9d06e2b1e1f690a823cb263a0bbd73307e1bc8f4d24d01adf5079",
+        "mismatches": []
+      }
+    },
+    {
+      "check": "217 raw-to-retained mappings exact",
+      "passed": true,
+      "evidence": {
+        "count": 217,
+        "mismatches": []
+      }
+    },
+    {
+      "check": "29 exact ignored-script hashes",
+      "passed": false,
+      "evidence": {
+        "count": 29,
+        "mismatches": [
+          ".context/placid-badger/plateau-review13/root/finalize_packet.py"
+        ]
+      },
+      "classification": "publication-bookkeeping-fix",
+      "technicalPackageBlocker": false
+    },
+    {
+      "check": "Packet local document links resolve",
+      "passed": false,
+      "evidence": {
+        "checked": 109,
+        "missing": [
+          {
+            "document": "independent-shape/shape-verdict.md",
+            "target": "review.html"
+          },
+          {
+            "document": "preflight/preflight.md",
+            "target": "hashes.sha256"
+          }
+        ],
+        "pendingOwnReportRetention": []
+      },
+      "classification": "publication-bookkeeping-fix",
+      "technicalPackageBlocker": false
+    },
+    {
+      "check": "191 raw JUnit cases15/171/5 pass with no failures/errors/skips",
+      "passed": true,
+      "evidence": [
+        {
+          "scope": "model-tools-pytest",
+          "cases": 15,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "rawSHA256": "1e869d496bf4d78f6630117b72b5a4563d601dd0f0179a08e76a079425a6d617",
+          "matchesRaw": true
+        },
+        {
+          "scope": "manifest-package-pytest",
+          "cases": 171,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "rawSHA256": "709b52d9aa669d889c94250d3ea6e5a6de86e75d083909eb4db15eb6b07fa1ff",
+          "matchesRaw": true
+        },
+        {
+          "scope": "native-routes-pytest",
+          "cases": 5,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "rawSHA256": "197477111bae0e2c6134ab6b28a35b95f716736ea7e9b2e57ad0f5e135335377",
+          "matchesRaw": true
+        }
+      ]
+    },
+    {
+      "check": "One generic successful build exact raw provenance",
+      "passed": true,
+      "evidence": {
+        "logSHA256": "bbef5cc0b8aba9de0736319772af641953ae64cae759fd9decdf81adab4209ec",
+        "commit": "8b1bbd0858ca3e81bc7c43ad842a80ff9ca2138b",
+        "dirtyDiffSHA256": "daa47e94f2e4ef52e20ca0cbb6f1b1e9475d8e1c1af2f4a3bd8319eca269bb9f",
+        "actualBuiltBinarySHA256MeasuredBeforeCleanup": "df835a5cc51ef664913fca7f91a4c6b91a5ad14b8d05f921404c1c342e137fc7"
+      }
+    },
+    {
+      "check": "Raw canonical CLI64 packages no drafts",
+      "passed": true,
+      "evidence": {
+        "packages": 64,
+        "drafts": 0
+      }
+    },
+    {
+      "check": "Three actual Android/iOS staging identities exact",
+      "passed": true,
+      "evidence": [
+        {
+          "id": "depth-18mm",
+          "matchesCanonical": true,
+          "matchesAndroid": true,
+          "ODROnly": true
+        },
+        {
+          "id": "depth-15mm",
+          "matchesCanonical": true,
+          "matchesAndroid": true,
+          "ODROnly": true
+        },
+        {
+          "id": "depth-10mm",
+          "matchesCanonical": true,
+          "matchesAndroid": true,
+          "ODROnly": true
+        }
+      ]
+    },
+    {
+      "check": "Zero current iOS cases/frames/guest operations",
+      "passed": true,
+      "evidence": {
+        "iOSCases": 0,
+        "frames": 0,
+        "guestOperations": 0,
+        "currentAppearanceVerified": false
+      }
+    },
+    {
+      "check": "Human acceptance still pending",
+      "passed": true,
+      "evidence": "Pending #13 human shape review; current app wood, neutral components, cord, picking, highlights and workout appearance unverified"
+    },
+    {
+      "check": "12 recorded groups and20 known transient dirs absent",
+      "passed": true,
+      "evidence": {
+        "recordedGroups": 12,
+        "knownPaths": 20,
+        "groupsRemaining": [],
+        "pathsRemaining": []
+      }
+    },
+    {
+      "check": "Native historical PID evidence gap disclosed",
+      "passed": true,
+      "evidence": {
+        "nativeLimits": [
+          "Numeric child PID and process-group history were not retained. Do not interpret tool session IDs as OS PIDs.",
+          "Initial direct Python render/solve jobs completed through exec/write_stdin without a shell cleanup trap; final native/solver/render jobs used the described traps.",
+          "No blanket claim is made about unknown global host files; only exact workspace-owned paths/processes were inspected or deleted."
+        ],
+        "cleanupLimits": "Native-author historical numeric PID/PGID receipts were not retained, and early direct sessions lack retained trap receipts. No historical records are invented. Known native TMP/cache/config deletion and exact-script process absence are checked freshly; all material and host/build groups retain exact records."
+      }
+    },
+    {
+      "check": "No throwaway Python committed/staged",
+      "passed": true,
+      "evidence": {
+        "changedTrackedPaths": 15,
+        "pythonPaths": []
+      }
+    },
+    {
+      "check": "Delivery verifier scope58 models135 files",
+      "passed": true,
+      "evidence": {
+        "models": 58,
+        "files": 135
+      }
+    }
+  ],
+  "canonicalSHA256": {
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+    "Hangboards/plateau-lifting-edge/assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+    "Hangboards/plateau-lifting-edge/assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+    "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+    "Hangboards/plateau-lifting-edge/suspension.json": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+  },
+  "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4",
+  "deliveryManifestSHA256": "44758ac3a2b242182833edb770b0b715c0be703b958f513061830c0e606127d7",
+  "auditedArtifactIndex": {
+    "snapshotPath": ".context/placid-badger/plateau-review13/root/independent-delivery-audited-artifact-index.json",
+    "sha256": "f13fecf742b9d06e2b1e1f690a823cb263a0bbd73307e1bc8f4d24d01adf5079",
+    "indexedArtifacts": 228,
+    "laterBookkeepingRefreshExpected": true,
+    "note": "Root retains exact audited snapshot/verdict and omitted raw build patch, then refreshes final script provenance/index. The later index is not claimed as this audited228-artifact snapshot."
+  },
+  "measuredResults": {
+    "hostCasesPassed": 191,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "canonicalPackages": 64,
+    "genericIOSBuilds": 1,
+    "iOSUnitCases": 0,
+    "currentAppFrames": 0,
+    "SimulatorGuestOperations": 0,
+    "HTTPResources": 0
+  },
+  "humanAcceptance": "pending",
+  "currentAppearanceVerified": false,
+  "authoritativePhysicalShapeReview": "Independent Astra gate retained separately. This report is transport/record review and does not infer human acceptance.",
+  "retentionLimitsAtAudit": [
+    "Raw build dirty-diff patch omitted by retention whitelist; exact original remains at .context/placid-badger/plateau-review13/package-validation-2026-10-02/ios-build/build-dirty-diff.patch with SHA256 daa47e94f2e4ef52e20ca0cbb6f1b1e9475d8e1c1af2f4a3bd8319eca269bb9f. Root will retain it before final publication.",
+    "Actual built ODR copies match all three pinned canonical USDZs; duplicate packet models are unnecessary.",
+    "Executable SHA measured before exact Derived Data deletion; executable not retained.",
+    "Historical app images provide no current built-binary or appearance proof.",
+    "Native-author historical numeric PID/PGID and early direct-session trap receipts were not retained. Known owned directory and exact-script process absence are recorded; no historical group proof is invented."
+  ],
+  "auditExternalResourcesStarted": 0,
+  "auditTestsBuildsNativeCompiles": 0,
+  "canonicalSharedDocsMutations": false,
+  "remainingAction": "Root retains verdict/index snapshot/raw build patch and refreshes final bookkeeping provenance/index.",
+  "checksPendingPublicationFixes": 2,
+  "failedTechnicalChecks": 0,
+  "publicationFixesRequired": [
+    {
+      "action": "Retain exact original build dirty-diff patch",
+      "sourcePath": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/ios-build/build-dirty-diff.patch",
+      "sha256": "daa47e94f2e4ef52e20ca0cbb6f1b1e9475d8e1c1af2f4a3bd8319eca269bb9f"
+    },
+    {
+      "action": "Resolve retained supporting-document links",
+      "targets": [
+        "independent-shape/review.html",
+        "preflight/hashes.sha256"
+      ]
+    },
+    {
+      "action": "Refresh final helper-script provenance and artifact index after retaining verdict/index snapshot",
+      "expectedChangedScript": ".context/placid-badger/plateau-review13/root/finalize_packet.py"
+    }
+  ]
+}

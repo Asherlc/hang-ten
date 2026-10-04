@@ -1,0 +1,583 @@
+{
+  "status": "pass",
+  "blockingFindings": [],
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+  "nativeSourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "nativeReportSHA256": "fb0763cad6099e54d2a9cf2bb673131a446d1a64463f38a877652012b17edbf5",
+  "localNativeReportSHA256": "78ff992914ce765f4ed7dedbbbbb78eaf816646fe34d18e5699cd3d6638f1c33",
+  "rootMembership": [
+    {
+      "xMM": -47.1,
+      "yMM": -35,
+      "expected": "round",
+      "nativeZErrorMM": 0.00938784324469566,
+      "euclideanDistanceMM": 0.00823196615874621,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -47.1,
+      "yMM": -50,
+      "expected": "round",
+      "nativeZErrorMM": 0.03190728475982496,
+      "euclideanDistanceMM": 0.016450187993764766,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -47.1,
+      "yMM": -80,
+      "expected": "round",
+      "nativeZErrorMM": 0.009064990358410796,
+      "euclideanDistanceMM": 0.0042252896327167,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -46.9,
+      "yMM": -35,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0011687427951301288,
+      "euclideanDistanceMM": 0.0009854895253339816,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -46.9,
+      "yMM": -50,
+      "expected": "jug",
+      "nativeZErrorMM": 0.015037141261188935,
+      "euclideanDistanceMM": 0.007673883435137704,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -46.9,
+      "yMM": -80,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0046728663937187775,
+      "euclideanDistanceMM": 0.0020369726253204124,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -46,
+      "yMM": -35,
+      "expected": "jug",
+      "nativeZErrorMM": 0.00877634609454958,
+      "euclideanDistanceMM": 0.007220570298814777,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -46,
+      "yMM": -50,
+      "expected": "jug",
+      "nativeZErrorMM": 0.09736967799489094,
+      "euclideanDistanceMM": 0.04530826075692171,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -46,
+      "yMM": -80,
+      "expected": "jug",
+      "nativeZErrorMM": 0.012904274825530138,
+      "euclideanDistanceMM": 0.005028350368804523,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -45.6,
+      "yMM": -35,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0005141021688359615,
+      "euclideanDistanceMM": 0.00036778453619895943,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -45.6,
+      "yMM": -50,
+      "expected": "jug",
+      "nativeZErrorMM": 0.02729782299729777,
+      "euclideanDistanceMM": 0.012702279682213066,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": -45.6,
+      "yMM": -80,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0088565151850446,
+      "euclideanDistanceMM": 0.003451078189130433,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 45.6,
+      "yMM": -35,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0005141021688359615,
+      "euclideanDistanceMM": 0.0003677845361786268,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 45.6,
+      "yMM": -50,
+      "expected": "jug",
+      "nativeZErrorMM": 0.033342004956978144,
+      "euclideanDistanceMM": 0.015438281764135768,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 45.6,
+      "yMM": -80,
+      "expected": "jug",
+      "nativeZErrorMM": 0.008856515185073022,
+      "euclideanDistanceMM": 0.003451078189130433,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 46,
+      "yMM": -35,
+      "expected": "jug",
+      "nativeZErrorMM": 0.00877634609454958,
+      "euclideanDistanceMM": 0.007220570298814124,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 46,
+      "yMM": -50,
+      "expected": "jug",
+      "nativeZErrorMM": 0.09816098386272643,
+      "euclideanDistanceMM": 0.04545128372072159,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 46,
+      "yMM": -80,
+      "expected": "jug",
+      "nativeZErrorMM": 0.01290427482555856,
+      "euclideanDistanceMM": 0.005028350368793449,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 46.9,
+      "yMM": -35,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0011687427951869722,
+      "euclideanDistanceMM": 0.0009854895253339816,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 46.9,
+      "yMM": -50,
+      "expected": "jug",
+      "nativeZErrorMM": 0.015037141261188935,
+      "euclideanDistanceMM": 0.007673883435137704,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 46.9,
+      "yMM": -80,
+      "expected": "jug",
+      "nativeZErrorMM": 0.0046728663937187775,
+      "euclideanDistanceMM": 0.0020369726253328018,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 47.1,
+      "yMM": -35,
+      "expected": "round",
+      "nativeZErrorMM": 0.012634187421355136,
+      "euclideanDistanceMM": 0.011304649062070567,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 47.1,
+      "yMM": -50,
+      "expected": "round",
+      "nativeZErrorMM": 0.03190728475982496,
+      "euclideanDistanceMM": 0.01645018799376465,
+      "unexpectedOtherContactIntersection": null
+    },
+    {
+      "xMM": 47.1,
+      "yMM": -80,
+      "expected": "round",
+      "nativeZErrorMM": 0.009064990358382374,
+      "euclideanDistanceMM": 0.004225289632709733,
+      "unexpectedOtherContactIntersection": null
+    }
+  ],
+  "jugForwardRoll": [
+    {
+      "xMM": 0,
+      "yMM": -90,
+      "nativeZErrorMM": 0.09979527309363334,
+      "euclideanDistanceMM": 0.03696566439958283
+    },
+    {
+      "xMM": 0,
+      "yMM": -92,
+      "nativeZErrorMM": 0.00025743135691413954,
+      "euclideanDistanceMM": 8.349188074639058e-05
+    },
+    {
+      "xMM": 0,
+      "yMM": -93,
+      "nativeZErrorMM": 0.02635505978523156,
+      "euclideanDistanceMM": 0.00854765143954333
+    },
+    {
+      "xMM": 0,
+      "yMM": -93.5,
+      "nativeZErrorMM": 0.020602967346604828,
+      "euclideanDistanceMM": 0.005773936799728787
+    },
+    {
+      "xMM": 0,
+      "yMM": -93.9,
+      "nativeZErrorMM": 0.0038859494567304864,
+      "euclideanDistanceMM": 0.0006144589193643223
+    },
+    {
+      "xMM": 30,
+      "yMM": -90,
+      "nativeZErrorMM": 0.38815420767326714,
+      "euclideanDistanceMM": 0.18784582783202883
+    },
+    {
+      "xMM": 30,
+      "yMM": -92,
+      "nativeZErrorMM": 0.06574769945345338,
+      "euclideanDistanceMM": 0.02694526084909612
+    },
+    {
+      "xMM": 30,
+      "yMM": -93,
+      "nativeZErrorMM": 0.12300868887945171,
+      "euclideanDistanceMM": 0.04332094520815234
+    },
+    {
+      "xMM": 30,
+      "yMM": -93.5,
+      "nativeZErrorMM": 0.07287678132516362,
+      "euclideanDistanceMM": 0.02279020724382451
+    },
+    {
+      "xMM": 30,
+      "yMM": -93.9,
+      "nativeZErrorMM": 0.06908684933861764,
+      "euclideanDistanceMM": 0.013260693474214623
+    },
+    {
+      "xMM": 46,
+      "yMM": -90,
+      "nativeZErrorMM": 0.012751212167614767,
+      "euclideanDistanceMM": 0.009137378765696078
+    },
+    {
+      "xMM": 46,
+      "yMM": -92,
+      "nativeZErrorMM": 0.01288146629084963,
+      "euclideanDistanceMM": 0.009184981070843819
+    },
+    {
+      "xMM": 46,
+      "yMM": -93,
+      "nativeZErrorMM": 0.018066851749182433,
+      "euclideanDistanceMM": 0.011258017806620679
+    },
+    {
+      "xMM": 46,
+      "yMM": -93.5,
+      "nativeZErrorMM": 0.009882436487885116,
+      "euclideanDistanceMM": 0.005268628710097299
+    },
+    {
+      "xMM": 46,
+      "yMM": -93.9,
+      "nativeZErrorMM": 0.0059733296544379755,
+      "euclideanDistanceMM": 0.0017081126054346283
+    }
+  ],
+  "slopers": [
+    {
+      "id": "flat-sloper-2-left",
+      "xMM": -210,
+      "meshYBoundsMM": [
+        -93.99999678134922,
+        -39.00000080466274
+      ],
+      "samples": [
+        {
+          "yMM": -92.9,
+          "nativeToContactMeshZErrorMM": 0.0009335714584040034,
+          "nativeToContactMeshEuclideanDistanceMM": 0.0006727759649531398,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -83.0,
+          "nativeToContactMeshZErrorMM": 0.03627042805649694,
+          "nativeToContactMeshEuclideanDistanceMM": 0.03541164263857483,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -72.0,
+          "nativeToContactMeshZErrorMM": 0.01532587542709507,
+          "nativeToContactMeshEuclideanDistanceMM": 0.01496300024089064,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -61.0,
+          "nativeToContactMeshZErrorMM": 8.026918862924504e-08,
+          "nativeToContactMeshEuclideanDistanceMM": 7.839335018087288e-08,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -50.0,
+          "nativeToContactMeshZErrorMM": 2.155626731337179e-06,
+          "nativeToContactMeshEuclideanDistanceMM": 2.1052511455188938e-06,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -40.1,
+          "nativeToContactMeshZErrorMM": 4.023448525458662e-06,
+          "nativeToContactMeshEuclideanDistanceMM": 3.929423168792407e-06,
+          "bodyRoofToContactMeshZGapMM": 6.616003219050981e-06
+        }
+      ]
+    },
+    {
+      "id": "flat-sloper-2-right",
+      "xMM": 210,
+      "meshYBoundsMM": [
+        -93.99999678134922,
+        -39.00000080466274
+      ],
+      "samples": [
+        {
+          "yMM": -92.9,
+          "nativeToContactMeshZErrorMM": 0.0009335714584040034,
+          "nativeToContactMeshEuclideanDistanceMM": 0.0006727759649628927,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -83.0,
+          "nativeToContactMeshZErrorMM": 0.03627042805646852,
+          "nativeToContactMeshEuclideanDistanceMM": 0.03541164263857483,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -72.0,
+          "nativeToContactMeshZErrorMM": 0.015325875427066649,
+          "nativeToContactMeshEuclideanDistanceMM": 0.01496300024089064,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -61.0,
+          "nativeToContactMeshZErrorMM": 8.026918862924504e-08,
+          "nativeToContactMeshEuclideanDistanceMM": 7.839335018087288e-08,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -50.0,
+          "nativeToContactMeshZErrorMM": 2.1556267597588885e-06,
+          "nativeToContactMeshEuclideanDistanceMM": 2.1052511455188938e-06,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -40.1,
+          "nativeToContactMeshZErrorMM": 4.0234485823020805e-06,
+          "nativeToContactMeshEuclideanDistanceMM": 3.929423168792407e-06,
+          "bodyRoofToContactMeshZGapMM": 6.616003304316109e-06
+        }
+      ]
+    },
+    {
+      "id": "round-sloper-3-center",
+      "xMM": -95,
+      "meshYBoundsMM": [
+        -93.99999678134922,
+        -28.999999165535012
+      ],
+      "samples": [
+        {
+          "yMM": -92.7,
+          "nativeToContactMeshZErrorMM": 0.0016957884978978655,
+          "nativeToContactMeshEuclideanDistanceMM": 0.0010843412608417785,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -81.0,
+          "nativeToContactMeshZErrorMM": 0.005438799542787365,
+          "nativeToContactMeshEuclideanDistanceMM": 0.0051882066373528865,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -68.0,
+          "nativeToContactMeshZErrorMM": 0.004886652115743573,
+          "nativeToContactMeshEuclideanDistanceMM": 0.004798464582813074,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -55.0,
+          "nativeToContactMeshZErrorMM": 0.012667283379357741,
+          "nativeToContactMeshEuclideanDistanceMM": 0.012515868374113746,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -42.0,
+          "nativeToContactMeshZErrorMM": 0.010862590807334982,
+          "nativeToContactMeshEuclideanDistanceMM": 0.010778437653691292,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -30.300000000000004,
+          "nativeToContactMeshZErrorMM": 0.008887293470735358,
+          "nativeToContactMeshEuclideanDistanceMM": 0.00882920768027195,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        }
+      ]
+    },
+    {
+      "id": "round-sloper-3-center",
+      "xMM": 95,
+      "meshYBoundsMM": [
+        -93.99999678134922,
+        -28.999999165535012
+      ],
+      "samples": [
+        {
+          "yMM": -92.7,
+          "nativeToContactMeshZErrorMM": 0.0016957884978978655,
+          "nativeToContactMeshEuclideanDistanceMM": 0.0010843412608417785,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -81.0,
+          "nativeToContactMeshZErrorMM": 0.005438799542787365,
+          "nativeToContactMeshEuclideanDistanceMM": 0.0051882066373799985,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -68.0,
+          "nativeToContactMeshZErrorMM": 0.004886652115800416,
+          "nativeToContactMeshEuclideanDistanceMM": 0.0047984645828409835,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -55.0,
+          "nativeToContactMeshZErrorMM": 0.012667283379357741,
+          "nativeToContactMeshEuclideanDistanceMM": 0.012515868374088423,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -42.0,
+          "nativeToContactMeshZErrorMM": 0.010862590807278139,
+          "nativeToContactMeshEuclideanDistanceMM": 0.01077843765366309,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -30.300000000000004,
+          "nativeToContactMeshZErrorMM": 0.008887293470735358,
+          "nativeToContactMeshEuclideanDistanceMM": 0.008829207680243714,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        }
+      ]
+    }
+  ],
+  "centerJug": [
+    {
+      "xMM": 0,
+      "crestYMM": -66,
+      "crestZMM": 221.96037190168317,
+      "rearRoofZMM": 187.99792462334264,
+      "frontRoofZMM": 183.76305291416222,
+      "contactSamples": [
+        {
+          "yMM": -35,
+          "nativeToContactMeshZErrorMM": 0.012923131711687574,
+          "nativeToContactMeshEuclideanDistanceMM": 0.009679665551293971,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -50,
+          "nativeToContactMeshZErrorMM": 0.02331502369906957,
+          "nativeToContactMeshEuclideanDistanceMM": 0.01604648643155318,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -66,
+          "nativeToContactMeshZErrorMM": 0.003753987367758782,
+          "nativeToContactMeshEuclideanDistanceMM": 0.003744838408748982,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -80,
+          "nativeToContactMeshZErrorMM": 9.384908111087498e-06,
+          "nativeToContactMeshEuclideanDistanceMM": 6.133797368522344e-06,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        }
+      ]
+    },
+    {
+      "xMM": 30,
+      "crestYMM": -66,
+      "crestZMM": 213.9470715224777,
+      "rearRoofZMM": 187.95617098007028,
+      "frontRoofZMM": 183.64680975052318,
+      "contactSamples": [
+        {
+          "yMM": -35,
+          "nativeToContactMeshZErrorMM": 0.02426805371470664,
+          "nativeToContactMeshEuclideanDistanceMM": 0.02009987064531962,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -50,
+          "nativeToContactMeshZErrorMM": 0.052558219658919825,
+          "nativeToContactMeshEuclideanDistanceMM": 0.039129470578272256,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -66,
+          "nativeToContactMeshZErrorMM": 0.07424405498321107,
+          "nativeToContactMeshEuclideanDistanceMM": 0.06124996734158459,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -80,
+          "nativeToContactMeshZErrorMM": 0.006298127230252248,
+          "nativeToContactMeshEuclideanDistanceMM": 0.004512519667108834,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        }
+      ]
+    },
+    {
+      "xMM": -30,
+      "crestYMM": -66,
+      "crestZMM": 213.9470715224777,
+      "rearRoofZMM": 187.95617078641314,
+      "frontRoofZMM": 183.6856129188221,
+      "contactSamples": [
+        {
+          "yMM": -35,
+          "nativeToContactMeshZErrorMM": 0.011820382049677391,
+          "nativeToContactMeshEuclideanDistanceMM": 0.00942288500891486,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -50,
+          "nativeToContactMeshZErrorMM": 0.05255821965886298,
+          "nativeToContactMeshEuclideanDistanceMM": 0.039129470578234064,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -66,
+          "nativeToContactMeshZErrorMM": 0.07424405498315423,
+          "nativeToContactMeshEuclideanDistanceMM": 0.061249967341547085,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        },
+        {
+          "yMM": -80,
+          "nativeToContactMeshZErrorMM": 0.009275944997284569,
+          "nativeToContactMeshEuclideanDistanceMM": 0.006616968347974209,
+          "bodyRoofToContactMeshZGapMM": 0.0
+        }
+      ]
+    }
+  ],
+  "limits": "Finite actualtriangle native-frame probes; operator display-intent position/return thresholds are not maker or ergonomic facts. Whole-image Opus and user acceptance remain separate."
+}

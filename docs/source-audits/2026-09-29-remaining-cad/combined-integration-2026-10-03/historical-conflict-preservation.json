@@ -1,0 +1,97 @@
+[
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/captain-fingerfood-dual-manifest-before.json",
+    "selectedSide": "own",
+    "selectedSHA256": "9a5bef6df0825325a74c1791a1ee2fa7f33aaac16fa5cca914950195d55ecaaa"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/nature-stone-hanger-manifest-before.json",
+    "selectedSide": "own",
+    "selectedSHA256": "7bc69cd04ddaaadc6f36d3a35af7168e2768ed2a67bb807b192653f076d23d10"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/owl-climb-poker-manifest-before.json",
+    "selectedSide": "own",
+    "selectedSHA256": "241ad1a52cff02dad1c0141e73a94c9a7a6664a7654c97978c32382475878051"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/rename-conflict-before-manifest.json",
+    "selectedSide": "own",
+    "selectedSHA256": "683a19c047fe30ea7e3d3abb284367828bbcdd6340e467bcca64d8d7b774132a"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/trango-rock-prodigy-forge-manifest-before.json",
+    "selectedSide": "own",
+    "selectedSHA256": "8ea4c951e289bcf522e65b607ad27d5913b03078276ce9837c8842f7b4cb562b"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/retired-delivery-lock/test_model_delivery_lock.py",
+    "selectedSide": "own",
+    "selectedSHA256": "eae8e80ffeac3c35518634d129bba6ed7c1872a333ca9f26d7e38ac8c5d0d9aa"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/retired-delivery-lock/verify-model-delivery.py",
+    "selectedSide": "own",
+    "selectedSHA256": "66365b80c7f225db81bde60ef21853ad97c2bf33ff5c78a2e2f1e5853c7d15cb"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/retired-delivery-lock/verify_reproducible.py",
+    "selectedSide": "own",
+    "selectedSHA256": "5dba947d12ad284d286e7c87682d7d09010ae41c4b66e8f96755574b6033690a"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/raw/frozen-code/Tools/HangboardCAD/verify_reproducible.py",
+    "selectedSide": "parent",
+    "selectedSHA256": "5dba947d12ad284d286e7c87682d7d09010ae41c4b66e8f96755574b6033690a"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/runtime-final-2026-10-03/metadata/initial-audit/snapshots/captain-fingerfood-dual/current-embedded.json",
+    "selectedSide": "parent",
+    "selectedSHA256": "da3d26c7bdcd2ef3e02059a7946195748422e1789c680e9d681c2444f6704088"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/runtime-final-2026-10-03/metadata/initial-audit/snapshots/mammut-diamond-finger/baseline.json",
+    "selectedSide": "parent",
+    "selectedSHA256": "2ed1a693febce9a5e4884e95c539c54ae0b2f7f4fb7bc8e587e266db836dbc37"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/runtime-final-2026-10-03/metadata/initial-audit/snapshots/owl-climb-poker/baseline.json",
+    "selectedSide": "parent",
+    "selectedSHA256": "34f596fbcff945ac85a7d924d32b1016affe651163e13462846f12c9bfd7f08e"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/runtime-final-2026-10-03/metadata/initial-audit/snapshots/tension-flash-board/baseline.json",
+    "selectedSide": "parent",
+    "selectedSHA256": "ee9bc5e5b07206036f052db9bbe089cbae50f6ea268ca8504c01176ff66ef06b"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/runtime-final-2026-10-03/metadata/initial-audit/snapshots/trango-rock-prodigy-forge/baseline.json",
+    "selectedSide": "parent",
+    "selectedSHA256": "8ea4c951e289bcf522e65b607ad27d5913b03078276ce9837c8842f7b4cb562b"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/second-half-canonical-integration-2026-10-03/raw/integration-pristine-405a-parent-9b0a/docs__model-delivery-lock.json.base",
+    "selectedSide": "own",
+    "selectedSHA256": "3d78ba9da8df11cd3a5bc3bd8539099c8d2f7952e0e271e4bbf1c1ee2b4c85a1"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02/preflight/current-embedded-board.json",
+    "selectedSide": "parent",
+    "selectedSHA256": "8ea4c951e289bcf522e65b607ad27d5913b03078276ce9837c8842f7b4cb562b"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review15-2026-10-02/prior-records/0-model-delivery-lock.json",
+    "selectedSide": "parent",
+    "selectedSHA256": "6cb5cd319d85b6850451c13722a72f5aa6af42626e74053a89481ca49c7c04e7"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/initial/package-checks/published-generated-board.json",
+    "selectedSide": "own",
+    "selectedSHA256": "b083be4185475e8c11936fc1625ed625a71ea2c148fea9b5b1f4006baa61120d"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/promotion/manifest-before.json",
+    "selectedSide": "own",
+    "selectedSHA256": "ee8f779269fe40604f56fb4068066ab3f18e7c5cd217d5e9ca2e8178a77907aa"
+  }
+]

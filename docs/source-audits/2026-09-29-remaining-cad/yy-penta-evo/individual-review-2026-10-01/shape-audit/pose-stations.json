@@ -1,0 +1,676 @@
+{
+  "sourceSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+  "radiusMM": 2.0,
+  "clearanceMM": 0.2,
+  "construction": "For each display pose, intersect native mid-depth solid with ray along inverse-rotated world up. Select first inner band surface. Choose same native XZ surface at Y=-10,+10 mm inside flat central depth region; offset each along the exact outward native normal (incident-normal bisector at a corner), numerically choosing the smallest offset with full-solid distance radius+clearance (2.2 mm). No hand-authored route; stations constrained to actual offset bearing surface.",
+  "limits": "Station locations and poses are native-derived display adaptations, not manufacturer numeric measurements. Full route solve, continuity, tension and clearance still require validation.",
+  "poses": [
+    {
+      "slot": "edge-25",
+      "contactIDs": [
+        "edge-25-left",
+        "edge-25-right"
+      ],
+      "rotationZDegrees": 140,
+      "rearFlipY": false,
+      "rotation": [
+        0.0,
+        0.0,
+        0.9396926207859084,
+        0.3420201433256689
+      ],
+      "camera": {
+        "viewDirection": [
+          -0.21984631039295427,
+          0.2620026302293849,
+          -0.9396926207859086
+        ],
+        "fitPadding": 0.1
+      },
+      "intendedWorldCameraViewDirection": [
+        0.0,
+        -0.3420201433256687,
+        -0.9396926207859084
+      ],
+      "upperBandDirectionModel": [
+        0.6427876096865396,
+        -0.766044443118978,
+        0.0
+      ],
+      "innerIntersectionDistanceMM": 72.24317900549798,
+      "terminalsByStrandID": {
+        "upper-band-loop": {
+          "points": [
+            [
+              0.044366425415887235,
+              -0.05459808753704667,
+              0.01
+            ],
+            [
+              0.044366425415887235,
+              -0.05459808753704667,
+              -0.01
+            ]
+          ],
+          "planeNormal": [
+            -0.3379081615702148,
+            -0.9411790872858564,
+            0
+          ]
+        }
+      },
+      "stationChecks": [
+        {
+          "surfaceNativeMM": [
+            46.437020349100834,
+            -10.0,
+            -55.34148583041132
+          ],
+          "outwardNormalNative": [
+            -0.9411790872858564,
+            0.0,
+            0.3379081615702148
+          ],
+          "terminalNativeMM": [
+            44.366425415887235,
+            -10.0,
+            -54.598087537046666
+          ],
+          "solidDistanceMM": 2.2000010000059795,
+          "insideSolid": false
+        },
+        {
+          "surfaceNativeMM": [
+            46.437020349100834,
+            10.0,
+            -55.34148583041132
+          ],
+          "outwardNormalNative": [
+            -0.9411790872858564,
+            0.0,
+            0.3379081615702148
+          ],
+          "terminalNativeMM": [
+            44.366425415887235,
+            10.0,
+            -54.598087537046666
+          ],
+          "solidDistanceMM": 2.2000010000059795,
+          "insideSolid": false
+        }
+      ],
+      "planeSelection": "Section contains measured native inner-band outward normal and depth axis; coordinator strict full-route solve passes. Radial plane rejected for insufficient actual-solid clearance."
+    },
+    {
+      "slot": "edge-20",
+      "contactIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "rotationZDegrees": -140,
+      "rearFlipY": false,
+      "rotation": [
+        0.0,
+        0.0,
+        0.9396926207859084,
+        -0.3420201433256687
+      ],
+      "camera": {
+        "viewDirection": [
+          0.2198463103929542,
+          0.26200263022938497,
+          -0.9396926207859084
+        ],
+        "fitPadding": 0.1
+      },
+      "intendedWorldCameraViewDirection": [
+        0.0,
+        -0.3420201433256687,
+        -0.9396926207859084
+      ],
+      "upperBandDirectionModel": [
+        -0.6427876096865394,
+        -0.7660444431189781,
+        0.0
+      ],
+      "innerIntersectionDistanceMM": 72.24317900549796,
+      "terminalsByStrandID": {
+        "upper-band-loop": {
+          "points": [
+            [
+              -0.044366425415887215,
+              -0.054598087537046675,
+              0.01
+            ],
+            [
+              -0.044366425415887215,
+              -0.054598087537046675,
+              -0.01
+            ]
+          ],
+          "planeNormal": [
+            -0.33790816157021447,
+            0.9411790872858565,
+            0
+          ]
+        }
+      },
+      "stationChecks": [
+        {
+          "surfaceNativeMM": [
+            -46.43702034910081,
+            -10.0,
+            -55.34148583041133
+          ],
+          "outwardNormalNative": [
+            0.9411790872858565,
+            0.0,
+            0.33790816157021447
+          ],
+          "terminalNativeMM": [
+            -44.366425415887214,
+            -10.0,
+            -54.59808753704667
+          ],
+          "solidDistanceMM": 2.2000010000059795,
+          "insideSolid": false
+        },
+        {
+          "surfaceNativeMM": [
+            -46.43702034910081,
+            10.0,
+            -55.34148583041133
+          ],
+          "outwardNormalNative": [
+            0.9411790872858565,
+            0.0,
+            0.33790816157021447
+          ],
+          "terminalNativeMM": [
+            -44.366425415887214,
+            10.0,
+            -54.59808753704667
+          ],
+          "solidDistanceMM": 2.2000010000059795,
+          "insideSolid": false
+        }
+      ],
+      "planeSelection": "Section contains measured native inner-band outward normal and depth axis; coordinator strict full-route solve passes. Radial plane rejected for insufficient actual-solid clearance."
+    },
+    {
+      "slot": "edge-15",
+      "contactIDs": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "rotationZDegrees": -72,
+      "rearFlipY": false,
+      "rotation": [
+        0.0,
+        0.0,
+        0.5877852522924732,
+        -0.8090169943749473
+      ],
+      "camera": {
+        "viewDirection": [
+          0.3252804860140796,
+          -0.10569003670618679,
+          -0.9396926207859084
+        ],
+        "fitPadding": 0.1
+      },
+      "intendedWorldCameraViewDirection": [
+        0.0,
+        -0.3420201433256687,
+        -0.9396926207859084
+      ],
+      "upperBandDirectionModel": [
+        -0.9510565162951536,
+        0.3090169943749472,
+        0.0
+      ],
+      "innerIntersectionDistanceMM": 69.3282307388181,
+      "terminalsByStrandID": {
+        "upper-band-loop": {
+          "points": [
+            [
+              -0.06398002773395543,
+              0.020414725225485694,
+              0.01
+            ],
+            [
+              -0.06398002773395543,
+              0.020414725225485694,
+              -0.01
+            ]
+          ],
+          "planeNormal": [
+            -0.3090169943749472,
+            -0.9510565162951536,
+            0
+          ]
+        }
+      },
+      "stationChecks": [
+        {
+          "surfaceNativeMM": [
+            -65.93506560736694,
+            -10.0,
+            21.423601488242394
+          ],
+          "outwardNormalNative": [
+            0.888653174887735,
+            0.0,
+            -0.45857991098820367
+          ],
+          "terminalNativeMM": [
+            -63.98002773395543,
+            -10.0,
+            20.414725225485693
+          ],
+          "solidDistanceMM": 2.200001000005981,
+          "insideSolid": false
+        },
+        {
+          "surfaceNativeMM": [
+            -65.93506560736694,
+            10.0,
+            21.423601488242394
+          ],
+          "outwardNormalNative": [
+            0.888653174887735,
+            0.0,
+            -0.45857991098820367
+          ],
+          "terminalNativeMM": [
+            -63.98002773395543,
+            10.0,
+            20.414725225485693
+          ],
+          "solidDistanceMM": 2.200001000005981,
+          "insideSolid": false
+        }
+      ]
+    },
+    {
+      "slot": "edge-10",
+      "contactIDs": [
+        "edge-10-left",
+        "edge-10-right"
+      ],
+      "rotationZDegrees": 72,
+      "rearFlipY": true,
+      "rotation": [
+        -0.5877852522924731,
+        0.8090169943749475,
+        3.599146639029983e-17,
+        4.953800363085458e-17
+      ],
+      "camera": {
+        "viewDirection": [
+          0.3252804860140797,
+          -0.10569003670618689,
+          0.9396926207859084
+        ],
+        "fitPadding": 0.1
+      },
+      "intendedWorldCameraViewDirection": [
+        0.0,
+        -0.3420201433256687,
+        -0.9396926207859084
+      ],
+      "upperBandDirectionModel": [
+        -0.9510565162951536,
+        0.30901699437494745,
+        1.1647083184890923e-16
+      ],
+      "innerIntersectionDistanceMM": 69.32823073881812,
+      "terminalsByStrandID": {
+        "upper-band-loop": {
+          "points": [
+            [
+              -0.06398002773395543,
+              0.020414725225485715,
+              0.01
+            ],
+            [
+              -0.06398002773395543,
+              0.020414725225485715,
+              -0.01
+            ]
+          ],
+          "planeNormal": [
+            -0.30901699437494745,
+            -0.9510565162951536,
+            0
+          ]
+        }
+      },
+      "stationChecks": [
+        {
+          "surfaceNativeMM": [
+            -65.93506560736694,
+            -10.0,
+            21.42360148824242
+          ],
+          "outwardNormalNative": [
+            0.8886531748877343,
+            0.0,
+            -0.458579910988205
+          ],
+          "terminalNativeMM": [
+            -63.98002773395544,
+            -10.0,
+            20.414725225485714
+          ],
+          "solidDistanceMM": 2.2000010000059715,
+          "insideSolid": false
+        },
+        {
+          "surfaceNativeMM": [
+            -65.93506560736694,
+            10.0,
+            21.42360148824242
+          ],
+          "outwardNormalNative": [
+            0.8886531748877343,
+            0.0,
+            -0.458579910988205
+          ],
+          "terminalNativeMM": [
+            -63.98002773395544,
+            10.0,
+            20.414725225485714
+          ],
+          "solidDistanceMM": 2.2000010000059715,
+          "insideSolid": false
+        }
+      ]
+    },
+    {
+      "slot": "mono",
+      "contactIDs": [
+        "mono-left",
+        "mono-right"
+      ],
+      "rotationZDegrees": 90,
+      "rearFlipY": false,
+      "rotation": [
+        0.0,
+        0.0,
+        0.7071067811865475,
+        0.7071067811865476
+      ],
+      "camera": {
+        "viewDirection": [
+          -0.3420201433256687,
+          -7.594372760115069e-17,
+          -0.9396926207859084
+        ],
+        "fitPadding": 0.1
+      },
+      "intendedWorldCameraViewDirection": [
+        0.0,
+        -0.3420201433256687,
+        -0.9396926207859084
+      ],
+      "upperBandDirectionModel": [
+        1.0,
+        2.220446049250313e-16,
+        0.0
+      ],
+      "innerIntersectionDistanceMM": 63.37246973297536,
+      "terminalsByStrandID": {
+        "upper-band-loop": {
+          "points": [
+            [
+              0.0612892016493796,
+              0.0007071057147969823,
+              0.01
+            ],
+            [
+              0.0612892016493796,
+              0.0007071057147969823,
+              -0.01
+            ]
+          ],
+          "planeNormal": [
+            -2.220446049250313e-16,
+            1.0,
+            0
+          ]
+        }
+      },
+      "stationChecks": [
+        {
+          "surfaceNativeMM": [
+            63.37246973297536,
+            -10.0,
+            1.4071515004982018e-14
+          ],
+          "outwardNormalNative": [
+            -0.9469396075684077,
+            0.0,
+            0.32141154244704756
+          ],
+          "terminalNativeMM": [
+            61.2892016493796,
+            -10.0,
+            0.7071057147969824
+          ],
+          "solidDistanceMM": 2.200001000005974,
+          "insideSolid": false
+        },
+        {
+          "surfaceNativeMM": [
+            63.37246973297536,
+            10.0,
+            1.4071515004982018e-14
+          ],
+          "outwardNormalNative": [
+            -0.9469396075684077,
+            0.0,
+            0.32141154244704756
+          ],
+          "terminalNativeMM": [
+            61.2892016493796,
+            10.0,
+            0.7071057147969824
+          ],
+          "solidDistanceMM": 2.200001000005974,
+          "insideSolid": false
+        }
+      ]
+    },
+    {
+      "slot": "duo",
+      "contactIDs": [
+        "duo-left",
+        "duo-right"
+      ],
+      "rotationZDegrees": 72,
+      "rearFlipY": false,
+      "rotation": [
+        0.0,
+        0.0,
+        0.5877852522924731,
+        0.8090169943749475
+      ],
+      "camera": {
+        "viewDirection": [
+          -0.3252804860140796,
+          -0.10569003670618689,
+          -0.9396926207859084
+        ],
+        "fitPadding": 0.1
+      },
+      "intendedWorldCameraViewDirection": [
+        0.0,
+        -0.3420201433256687,
+        -0.9396926207859084
+      ],
+      "upperBandDirectionModel": [
+        0.9510565162951536,
+        0.30901699437494745,
+        0.0
+      ],
+      "innerIntersectionDistanceMM": 69.32823073881812,
+      "terminalsByStrandID": {
+        "upper-band-loop": {
+          "points": [
+            [
+              0.06398002773395543,
+              0.02041472522548572,
+              0.01
+            ],
+            [
+              0.06398002773395543,
+              0.02041472522548572,
+              -0.01
+            ]
+          ],
+          "planeNormal": [
+            -0.30901699437494745,
+            0.9510565162951536,
+            0
+          ]
+        }
+      },
+      "stationChecks": [
+        {
+          "surfaceNativeMM": [
+            65.93506560736694,
+            -10.0,
+            21.42360148824242
+          ],
+          "outwardNormalNative": [
+            -0.8886531748877349,
+            0.0,
+            -0.4585799109882039
+          ],
+          "terminalNativeMM": [
+            63.98002773395543,
+            -10.0,
+            20.414725225485718
+          ],
+          "solidDistanceMM": 2.2000010000059826,
+          "insideSolid": false
+        },
+        {
+          "surfaceNativeMM": [
+            65.93506560736694,
+            10.0,
+            21.42360148824242
+          ],
+          "outwardNormalNative": [
+            -0.8886531748877349,
+            0.0,
+            -0.4585799109882039
+          ],
+          "terminalNativeMM": [
+            63.98002773395543,
+            10.0,
+            20.414725225485718
+          ],
+          "solidDistanceMM": 2.2000010000059826,
+          "insideSolid": false
+        }
+      ]
+    },
+    {
+      "slot": "tray",
+      "contactIDs": [
+        "tray-left",
+        "tray-right"
+      ],
+      "rotationZDegrees": 0,
+      "rearFlipY": false,
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "camera": {
+        "viewDirection": [
+          0.0,
+          -0.3420201433256687,
+          -0.9396926207859084
+        ],
+        "fitPadding": 0.1
+      },
+      "intendedWorldCameraViewDirection": [
+        0.0,
+        -0.3420201433256687,
+        -0.9396926207859084
+      ],
+      "upperBandDirectionModel": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "innerIntersectionDistanceMM": 66.0,
+      "terminalsByStrandID": {
+        "upper-band-loop": {
+          "points": [
+            [
+              1.601622772315298e-19,
+              0.06374555153342572,
+              0.01
+            ],
+            [
+              1.601622772315298e-19,
+              0.06374555153342572,
+              -0.01
+            ]
+          ],
+          "planeNormal": [
+            -1.0,
+            0.0,
+            0
+          ]
+        }
+      },
+      "stationChecks": [
+        {
+          "surfaceNativeMM": [
+            0.0,
+            -10.0,
+            66.0
+          ],
+          "outwardNormalNative": [
+            7.10427759188934e-17,
+            0.0,
+            -1.0
+          ],
+          "terminalNativeMM": [
+            1.601622772315298e-16,
+            -10.0,
+            63.74555153342571
+          ],
+          "solidDistanceMM": 2.200001000004635,
+          "insideSolid": false
+        },
+        {
+          "surfaceNativeMM": [
+            0.0,
+            10.0,
+            66.0
+          ],
+          "outwardNormalNative": [
+            7.10427759188934e-17,
+            0.0,
+            -1.0
+          ],
+          "terminalNativeMM": [
+            1.601622772315298e-16,
+            10.0,
+            63.74555153342571
+          ],
+          "solidDistanceMM": 2.200001000004635,
+          "insideSolid": false
+        }
+      ]
+    }
+  ]
+}

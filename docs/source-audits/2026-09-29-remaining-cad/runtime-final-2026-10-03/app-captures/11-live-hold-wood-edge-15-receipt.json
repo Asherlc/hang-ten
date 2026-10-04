@@ -1,0 +1,29 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 11,
+    "boardID": "nature.stone-hanger-mini-karma8a",
+    "package": "nature-stone-hanger-mini-karma8a",
+    "contactID": "wood-edge-15",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "nature.stone-hanger-mini-karma8a",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "wood-edge-15",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791055292.622387
+  },
+  "image": "11-live-hold-wood-edge-15.png",
+  "imageSHA256": "e9c4cb1079248e224b85ef839fecba93e77ce501e48f419b9435ef122e084721",
+  "accessibilitySHA256": "aa92abfeba0597a097f20fe5447fb8bdaebc4799ac5ecc9bd53e905de175e3c7",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=wood-edge-15;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "rawFailureCapture": false
+}

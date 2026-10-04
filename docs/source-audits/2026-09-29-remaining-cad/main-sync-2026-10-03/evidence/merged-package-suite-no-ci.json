@@ -1,0 +1,16 @@
+{
+  "command": [
+    ".context/placid-badger-cad-second-half/yy-baguette/venv/bin/python",
+    "-m",
+    "pytest",
+    "Tools/HangboardPackages/tests",
+    "-q",
+    "--ignore=Tools/HangboardPackages/tests/test_ci_xctest_contract.py",
+    "--basetemp",
+    ".context/placid-badger-cad-second-half/main-sync-2026-10-03/pytest-placid-badger-cad-second-half-no-ci"
+  ],
+  "exitCode": 1,
+  "duration": 50.28285217285156,
+  "excludedModuleReason": "existing interpreter lacks PyYAML; separate retained collection failure",
+  "nativeExportsRun": false
+}

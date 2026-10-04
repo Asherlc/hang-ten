@@ -1,0 +1,10 @@
+{
+  "sequence": [
+    "ONE normal Train-present strict handsOFF observation"
+  ],
+  "stop": "After this one complete run stop, including if failure no longer reproduces. No repeated run or detach/camera/visibility change.",
+  "census": "Launch-gated weak wrapper/root/camera references sampled only in existing recorder events after deduplication. Distinguish dead wrapper, live entities and actual attachment. No additional observers/counters.",
+  "frontend": "No frontend action or headless claim; unknown DeviceHub untouched.",
+  "naturalTimings": "Unchanged7s/180s;12whole captures actualmutation+.25/1/3/5 plus tail.",
+  "helperSHA256": "181e5daaba65f611c1ddffdede1843e75f8acc4e22f0ee2765f6d6626f8a919c"
+}

@@ -1,0 +1,11 @@
+{
+ "owner": "placid-badger-cad-second-half",
+ "status": "waiting_for_root_go_after_source_promotion",
+ "package": "zlagboard-evo",
+ "sequence": ["compile --check", "compile publish", "one verify_reproducible rebuild", "actual USD and narrow platform staging checks"],
+ "freecad": "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+ "extraPythonPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311",
+ "reports": "Distinct compiler-final reports; no historical report rewritten",
+ "logging": "Direct FreeCAD stdout/stderr bytes retained; failures preserved; do not use run_freecad.py filtering or stderr truncation",
+ "resourcePolicy": "Temporary directories under exact owned compiler-final path; signal/exit cleanup installed before child creation, exact PID immediately registered, no simulator/HTTP resources"
+}

@@ -1,0 +1,71 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "blockingFindings": [],
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+  "scope": "Root inspected 19 complete native and exact-export images. Technical geometry disposition; actual app appearance and human acceptance are separate.",
+  "changesVerified": [
+    "Repeated full-width lower-face bands removed with a smooth monotonic taper through retained native depth anchors",
+    "Protected upper grip region unchanged, with a forward center-jug crest and rear return",
+    "Flat and round sloper roofs and 55/65 mm contact bands reach the front",
+    "Dome face shelf remains removed, flat front edge remains rounded, and X47 contact boundary remains intact"
+  ],
+  "factsPreserved": {
+    "contacts": 30,
+    "depthChecks": 27,
+    "faceMM": [
+      711,
+      222
+    ]
+  },
+  "allImagesInspectedWhole": true,
+  "pixelDerivedGeometry": false,
+  "strictToleranceChange": false,
+  "normalOracleDisposition": "Original legacy comparison remains review-required. Independent supplemental pass uses the exact unique native face owner for its one disputed corner; no compiler, source or tolerance change.",
+  "rearDisposition": "Perspective CPU mark is visible. All 583 native rear triangles correspond exactly after float32 encoding and all rear normals and winding face the wall. Actual app appearance remains a required check.",
+  "actualAppWatchItems": [
+    "Remaining single upper roll transition",
+    "Outer saddle and flat sloper front edge",
+    "Center jug cap and upper pocket lip",
+    "Rear flat face and center hump",
+    "Contact highlights and mint restoration"
+  ],
+  "limits": [
+    "Lower taper, rear return, forward anchoring, rounding, thickness and blends are display adaptations.",
+    "Native solid is closed. Semantic export has 2974 boundary edges and 62 nonmanifold edges, with localized opposing-normal slivers of 6.849906 mm2; exact welded closure and universal corner-normal alignment are not claimed.",
+    "Finite mesh coverage passes 0.28 mm and published facts pass 0.001 mm; neither is manufacturer certification.",
+    "Mint is the app palette; USDZ is unbound."
+  ],
+  "humanAcceptance": "pending revised #8",
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/review/comparison-front.png": "e62be15b6622f7b5b24b85247b2d4ad9a5b91d501ac956f6b0b3220f44c9726f",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/review/comparison-side.png": "ba4f5bd879d55cf823c512a786ca30f2a48c825479ea46932587045a36cadae2",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/review/comparison-top.png": "26d457d9f4c7cfbad45d2b8a3b0470b08c4a9bb99a154297a7c7ca256345cff0",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/review/comparison-oblique.png": "87030c1652cb3b8db79de96aa002a963e79661c494ffb64568b177b90caf76ce",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/review/comparison-raking.png": "b89ddf25dd09f48820e296ddfb7f29535e435d1915940f11018f2b061f4c3ec7",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/export-review/comparison-front.png": "ac0afbcc0475aa83620a1050387a1bcc0f94a7bafb4df4bc984be49b0bd7986a",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/export-review/comparison-side.png": "10fe7ee455425c17c412e3fbf335cde239d513a89d8a3b70719455a5a64550e2",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/export-review/comparison-top.png": "faf9f7417b79b55e5aac2ce8a7774853d96a4e8b26fd3a286ccadce9434fce72",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/export-review/comparison-oblique.png": "6849f4285fb4101f5a3b04b52f8747a6111ee5f747d88617b4746a2ff0abbe4c",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/export-review/comparison-raking.png": "46e56b0cb8d9f1ff5e0f550c6694ab17c18fe20a0fc369defa3ea07ef80aa876",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/native-profile-sections.png": "3f74de14a3bf79dffc2d2f3c02cc18c84cfb487f139c2176f9fc8b763898d304",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/grasp-review/high-front.png": "f62f2e7408d475dfdb12a9722c3575f36933fbeb6a0ac184ce024f65e8a99b64",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/grasp-review/rear-center.png": "17736b0c09b88552b5f03b71191194f8cb2e25d77ef2f0d1f12f1a6dce05b8dc",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/grasp-review/rear-oblique.png": "0545bc3b832b91c1201987f9bb6a7bed20f4163ee6131a973cb2415b186221c5",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/grasp-review/native-grasp-sections.png": "15896ff4336f5bba024727b917c3e284dfb7d1f7632d2b96e20611842ccb3e4f",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/export-grasp-review/candidate-high-front.png": "6f8964d0ea33068fbcfb7d89d846477b693c0970d1cafd0a31ac02ee203ea404",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/export-grasp-review/candidate-rear-center.png": "b554f9e1f4805d63b44ef4a00f0d8a376d05157db713e0ef6b595f84e6f84b8b",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/export-grasp-review/candidate-rear-oblique.png": "cc092425f158b0f45815c875e7edfbfbfa7db0739272fb64cd53ab295ec5f37f",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/export-grasp-review/candidate-grasp-sections.png": "27ee5a9167b2aa6def35e9c699c9737a5ea643d1dbdf771187c656bb15550240",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/author-report.json": "0c9d356f6d79fd5fa302ea41a8c4485b4d1c76bd57a0e7cc7aa7114a8d013684",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/reproducibility.json": "ca87458ceee878b5979a54d743e5298356f38bd70f3de1755fbddec80744d648",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/final-independent-native-review-b722-labels-v2.json": "32320800a41820fa8446f2f8eead57ba5bf56bc49b41bde748cf77594b5bb468",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/final-independent-export-review-b722.json": "8d936cf31a7cb3cc2d1dfdaa9b705b1a56020022735637ddd771e8921127e978",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/actual-owner-normal-supplement-b722.json": "a216a909ef9705ff6db7bc286866e7efe2d3663612188aa6297b4ea3e7254e13",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/export-rear-correspondence-b722-v2.json": "e6e3caf3a81dc0c3177a9b31d335d6227839e45fd92655c921ee9d551b051abe",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-fairing-native-review.md": "f3cb8e0d82da04954920a2dedd6387fa598da3f893eca75755a17bd61edc25b4",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-fairing-native-activity.json": "a6a4b6031c7087d80883295c1188f48fe2621ea3a6f6b742112db85f268baf34"
+  }
+}

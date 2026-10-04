@@ -1,0 +1,41 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 13,
+    "boardID": "plateau.lifting-edge",
+    "package": "plateau-lifting-edge",
+    "contactID": "edge-18",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "plateau.lifting-edge",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "edge-18",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791055857.0648892
+  },
+  "image": "13-live-top-oblique.png",
+  "imageSHA256": "828d645ffa4733403c14970c0ad11fa694691e4d75c35b567fef5b682d140619",
+  "accessibilitySHA256": "acb1a2baefacc1f29d9441864122c4272c68d0c262713282333d2aefced477f7",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=6;rootActive=true;cameraActive=true;sameScene=true;azimuth=-0.54071856;elevation=0.325;cameraPitch=0.072447635;cameraSettled=true;selection=edge-18;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "actualPhysicalOrbit": true,
+  "projectedBefore": {
+    "boardModel.contact.edge-18": [
+      0.5,
+      0.1936127744510977
+    ]
+  },
+  "projectedAfter": {
+    "boardModel.contact.edge-18": [
+      0.46207584830339316,
+      0.20958083832335328
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-author3-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-author3-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-author3-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 17773,
+      "pgid": 17773,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+        "--user-cfg",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-author3-config/user.cfg",
+        "--system-cfg",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-author3-config/system.cfg",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3-bootstrap.py"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "status": "pass",
+  "owner": "placid-badger",
+  "advisorAgentID": "918cc0e7-961d-4672-9f95-b4f2918098b7",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+  "blockingFindings": [],
+  "firstResponseSHA256": "e8f76f3f115d62060a8bca10d03cf1fdf4984ee5a0ebc7a656db94c9c19c46e5",
+  "finalResponseSHA256": "22d92cbc160261f2e670ce7d0dcff6302cedfdc2b42fec81a8c2b53c9850ea9d",
+  "verdict": "Ready for human review; waviness resolved in actual app; no source/app-supported blocker.",
+  "humanAcceptance": false,
+  "wholeAppFramesInspectedByAdvisor": 16,
+  "remainingLimits": [
+    "Small jagged edges on selected top-contact highlights",
+    "Inherited outer-jug faceting and absent pocket mouth bevels",
+    "Estimated side profile, thickness, front rolls, forward anchors and rear return",
+    "Mint is the app palette; semantic internal mesh is not exactly welded"
+  ],
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-final-activity.json": "46a8cb64c903b5083169c868d1761c0d20635f50dad93bbf40e8dbe2d3497f49",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-final-review.md": "22d92cbc160261f2e670ce7d0dcff6302cedfdc2b42fec81a8c2b53c9850ea9d",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-fairing-app-prompt.md": "8a70dd0d3aec9617740f8184a2157cefc16b6ab575dda50b3ce3ba2b8bc5df70",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-fairing-app-send.json": "473a4d35a1b52566fbcddbe8b950767c216657bffd799bbe48b5daf198340ee7",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-cleanup.json": "a53e5fab52924e3c63bfc65225856298a2074e8d10077c13eb30f7515106048c",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/app-visual-review.json": "abf581210237f5706e7d4490ba39e7f37316ffa0b89fc1fc18ce2aba3aa83123"
+  }
+}

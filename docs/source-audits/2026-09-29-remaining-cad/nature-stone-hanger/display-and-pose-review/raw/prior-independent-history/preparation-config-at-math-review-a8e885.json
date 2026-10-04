@@ -1,0 +1,997 @@
+{
+  "owner": "placid-badger",
+  "reviewNumber": 9,
+  "finalReady": false,
+  "holdReason": "Final finite-radius notch seating, exact side-hole entry and admissible support reaction remain unresolved. The 30 degree / 50 mm one-lead radial-vector fit is rejected history: the actual-feature check fails with nodal residual 0.210515949. Fresh all-eight app sweep and final cleanup remain pending; 32c9 remains a blocked intermediate.",
+  "identity": {
+    "originalSourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+    "sourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+    "modelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+    "descriptorSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
+    "sidecarSHA256": null
+  },
+  "before": {
+    "source": ".context/placid-badger/nature-stone-review9/before/nature-stone-hanger.FCStd",
+    "sidecar": ".context/placid-badger/nature-stone-review9/before/suspension.json",
+    "historicalAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/app-review/validation.json",
+    "historicalAppLimits": "Retained historical source0844 images and AX. No fresh old installed-binary comparison or full eight-contact sweep is claimed."
+  },
+  "intermediateStages": [
+    {
+      "stage": "short two-pose cord",
+      "sidecarSHA256": "9520befe472f49778c32fd1747e25114fab5d9b8030b13f13359baf3dc874658",
+      "status": "historical-intermediate",
+      "sidecar": ".context/placid-badger/nature-stone-review9/pose-review/short-two-pose-intermediate.json"
+    },
+    {
+      "stage": "first eight-pose cord",
+      "sidecarSHA256": "32c9cd6a1b5ef45796615392efb4382f1d557e2622f7d2aec21a4ec1153c15d3",
+      "status": "intermediate-awaiting-source-supported-notch-seating",
+      "rawGroup": ".context/placid-badger/nature-stone-review9/pose-review",
+      "freezeManifest": ".context/placid-badger/nature-stone-review9/pose-review/intermediate-32c9-freeze.json"
+    },
+    {
+      "stage": "actual-app32c9 material and notch-visibility lane",
+      "status": "cleaned-intermediate-not-routing-acceptance",
+      "sourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+      "sidecarSHA256": "32c9cd6a1b5ef45796615392efb4382f1d557e2622f7d2aec21a4ec1153c15d3",
+      "binarySHA256": "ab4d51144aa8cf95b7ca0e5a4da04a459b15a2fa7611049579006e7be724c825",
+      "wholePNGCount": 13,
+      "distinctContacts": 5,
+      "actualDrags": 5,
+      "testsRun": false,
+      "rawGroup": ".context/placid-badger/nature-stone-review9/ios/intermediate-32c9-notch-visibility",
+      "rootVisualRecord": ".context/placid-badger/nature-stone-review9/root-intermediate-visual-review.json"
+    }
+  ],
+  "native": {
+    "orientation": ".context/placid-badger/nature-stone-review9/pose-review/native-contact-orientation.json",
+    "posePlan": ".context/placid-badger/nature-stone-review9/pose-review/per-contact-pose-plan.json",
+    "unchangedComparisonSheet": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/comparison-sheet.png",
+    "evidenceSourceSHA256": "09c0ae303e3fa1c91b2944da853d9c24e7d85a9e1acff11612f9a59fbf0d49a0",
+    "evidenceLimit": "Native contact/groove evidence is retained from09c metadata stage and carried through exact unchanged native geometry members. No new shape generation."
+  },
+  "app": {
+    "installedProvenance": ".context/placid-badger/nature-stone-review9/ios/installed-app-provenance.json",
+    "validation": ".context/placid-badger/nature-stone-review9/ios/final-captures/validation.json",
+    "checksPointer": "/checks",
+    "contactIDField": null
+  },
+  "reports": [
+    {
+      "role": "finish",
+      "path": ".context/placid-badger/nature-stone-review9/finish-preservation.json",
+      "sha256": null,
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass"
+        },
+        {
+          "pointer": "/geometryChanged",
+          "equals": false
+        },
+        {
+          "pointer": "/surfaceFinish",
+          "equals": "wood"
+        },
+        {
+          "pointer": "/graniteNodeIDs",
+          "equals": [
+            "edge_front_20mm_granite_mesh_001"
+          ]
+        }
+      ],
+      "identity": {
+        "/sourceSHA256Before": "originalSourceSHA256",
+        "/modelSHA256": "modelSHA256",
+        "/descriptorSHA256": "descriptorSHA256"
+      },
+      "linkedHashes": false
+    },
+    {
+      "role": "positions",
+      "path": ".context/placid-badger/nature-stone-review9/position-preservation.json",
+      "sha256": null,
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass"
+        },
+        {
+          "pointer": "/geometryChanged",
+          "equals": false
+        },
+        {
+          "pointer": "/positions",
+          "length": 8
+        }
+      ],
+      "identity": {
+        "/sourceSHA256After": "sourceSHA256",
+        "/modelSHA256": "modelSHA256",
+        "/descriptorSHA256": "descriptorSHA256"
+      },
+      "linkedHashes": false
+    },
+    {
+      "role": "source-equivalence",
+      "path": ".context/placid-badger/nature-stone-review9/pose-review/source-geometry-equivalence.json",
+      "sha256": null,
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass"
+        },
+        {
+          "pointer": "/allGeometryMembersByteIdentical",
+          "equals": true
+        },
+        {
+          "pointer": "/collisionVerticesAndTrianglesUnchanged",
+          "equals": true
+        }
+      ],
+      "identity": {
+        "/originalSourceSHA256": "originalSourceSHA256",
+        "/currentSourceSHA256": "sourceSHA256"
+      },
+      "linkedHashes": true
+    },
+    {
+      "role": "pose-author",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "pose-check",
+      "path": null,
+      "sha256": null,
+      "assertions": [
+        {
+          "pointer": "/method",
+          "equals": "nativeRoutes"
+        },
+        {
+          "pointer": "/poses",
+          "length": 8
+        }
+      ],
+      "identity": {
+        "/sourceSHA256": "sourceSHA256",
+        "/modelSHA256": "modelSHA256"
+      },
+      "linkedHashes": false
+    },
+    {
+      "role": "route-certificates",
+      "path": null,
+      "sha256": null,
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "pass"
+        },
+        {
+          "pointer": "/poseCount",
+          "equals": 8
+        },
+        {
+          "pointer": "/routeCount",
+          "equals": 16
+        },
+        {
+          "pointer": "/tolerancesUnchanged",
+          "equals": true
+        }
+      ],
+      "identity": {
+        "/sourceSHA256": "sourceSHA256",
+        "/sidecarSHA256": "sidecarSHA256",
+        "/modelSHA256": "modelSHA256",
+        "/descriptorSHA256": "descriptorSHA256"
+      },
+      "linkedHashes": true
+    },
+    {
+      "role": "pose-cleanup",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "installed-app",
+      "path": ".context/placid-badger/nature-stone-review9/ios/installed-app-provenance.json",
+      "sha256": null,
+      "assertions": [
+        {
+          "pointer": "/binaryBytesMatch",
+          "equals": true
+        },
+        {
+          "pointer": "/generatedManifestBytesMatchSource",
+          "equals": true
+        },
+        {
+          "pointer": "/contactIDs",
+          "length": 8
+        }
+      ],
+      "identity": {
+        "/nativeSourceSHA256": "sourceSHA256",
+        "/sidecarSHA256": "sidecarSHA256"
+      },
+      "linkedHashes": false
+    },
+    {
+      "role": "captures",
+      "path": ".context/placid-badger/nature-stone-review9/ios/final-captures/validation.json",
+      "sha256": null,
+      "assertions": [],
+      "identity": {
+        "/sourceSHA256": "sourceSHA256",
+        "/sidecarSHA256": "sidecarSHA256",
+        "/modelSHA256": "modelSHA256",
+        "/descriptorSHA256": "descriptorSHA256"
+      },
+      "linkedHashes": true
+    },
+    {
+      "role": "app-visual",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "python-tests",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "package-validation",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "staging-parity",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "ios-tests",
+      "path": ".context/placid-badger/nature-stone-review9/ios/ios-summary.json",
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "ios-cleanup",
+      "path": ".context/placid-badger/nature-stone-review9/ios/ios-cleanup.json",
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": false
+    },
+    {
+      "role": "notch-seating",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": true
+    },
+    {
+      "role": "side-hole-entry",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": true
+    },
+    {
+      "role": "support-reaction",
+      "path": null,
+      "sha256": null,
+      "assertions": [],
+      "identity": {},
+      "linkedHashes": true
+    }
+  ],
+  "humanQuestion": "Does this look right now?",
+  "humanFeedback": [
+    "the stone hanger needs granite texture where appropriate",
+    "also cord is way too long",
+    "and its missing the notches",
+    "and the highlighted hold is in an impossible to weight position",
+    "the cord goes inside the side notches"
+  ],
+  "summary": null,
+  "reviewScope": "Shown whole app views of finish, side-notch cord seating and all eight contact display poses, with representative real orbits and same-instance finish restoration. Existing complete native front/side/top body comparison remains applicable because body geometry is unchanged.",
+  "approvalLimit": "Human review applies to the displayed rendering, estimated cord and pose presentation. It does not certify hidden construction, a supplied cord length, load safety, factory grain or texture, global physical equilibrium, or exact mechanical weightability.",
+  "limits": [
+    "Existing generic runtime wood/granite shaders depict materials; they do not duplicate manufacturer grain or stone texture. The unchanged USDZ remains unbound with no baked textures or materials.",
+    "120 mm per-lead rest length is an initial operator display estimate. The earlier centered 25 mm support offset and later 30 degree / 50 mm one-lead probe are intermediate; final poses, support offsets and settled heights remain unresolved. Cord radius, proposal margin and camera values are display estimates, with the unchanged full-radius numerical gates kept separate.",
+    "User answered: Enters side holes; notches guide it. Maker photos/technical drawing and whole provider storyboard sheets support exterior adjustment context. No concealed side-to-side connection, numeric rope dimension or universal grip-to-notch mapping is inferred; the walkthrough includes multiple variants.",
+    "Intermediate32c9 actual app inspection shows three grooves on each side and wood/granite restoration, but its cord remains outside the guides. All13wholePNG/AX/binary/ownership/cleanup records remain intermediate; final seated entry, all-eight sweep and routing acceptance are pending.",
+    "A native bearing-up witness and continuous route certificate support the selected display poses; they are not a certification of mechanical equilibrium, load capacity or real-use safety.",
+    "Historical gray app captures have limited installed-binary provenance. All fresh final views must bind to the final native source, sidecar, descriptor, model and installed binary.",
+    "Complete original maker storyboard JPG sheets and exact retrieval/source/URL records are retained; root inspected whole sheets4and5. Do not imply all sheets were visually reviewed or fabricate content from the empty automatic-caption retrieval.",
+    "The rejected nearby-triangle radial-vector fit had an approximately zero discrete nodal residual but included inadmissible material-normal directions. The independent supplement and stricter actual-feature failure are historical blockers, not final support proof. Barycentric contact forces preserve resultant and first moment; they do not establish continuum cable or global board equilibrium."
+  ],
+  "appPairs": [],
+  "rawFiles": [
+    {
+      "path": ".context/placid-badger/nature-stone-review9/before/nature-stone-hanger.FCStd",
+      "target": "raw/before/nature-stone-hanger.FCStd"
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/before/suspension.json",
+      "target": "raw/before/suspension.json"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd",
+      "target": "raw/package/nature-stone-hanger.FCStd"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/suspension.json",
+      "target": "raw/package/suspension.json"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/assets/primary.usdz",
+      "target": "raw/package/assets/primary.usdz"
+    },
+    {
+      "path": "Hangboards/nature-stone-hanger/assets/primary.model.json",
+      "target": "raw/package/assets/primary.model.json"
+    }
+  ],
+  "rawGroups": [
+    {
+      "path": ".context/placid-badger/nature-stone-review9",
+      "target": "raw/initial-review-and-short-two-pose",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".html",
+        ".fcstd",
+        ".usdz",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/before-finishes",
+      "target": "raw/before-finishes",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".html",
+        ".fcstd",
+        ".usdz",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/before-weightable-positions",
+      "target": "raw/before-weightable-positions",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".html",
+        ".fcstd",
+        ".usdz",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/cord-previews",
+      "target": "raw/short-two-pose-previews",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".html",
+        ".fcstd",
+        ".usdz",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pose-review",
+      "target": "raw/pose-review",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".html",
+        ".fcstd",
+        ".usdz",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pose-review/cord-previews",
+      "target": "raw/pose-previews",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".html",
+        ".fcstd",
+        ".usdz",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/pose-review/cord-previews/panels",
+      "target": "raw/pose-previews/panels",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".html",
+        ".fcstd",
+        ".usdz",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/ios",
+      "target": "raw/ios",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".html",
+        ".fcstd",
+        ".usdz",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/ios/final-captures",
+      "target": "raw/ios/final-captures",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".html",
+        ".fcstd",
+        ".usdz",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/app-review",
+      "target": "raw/historical-app",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".html",
+        ".fcstd",
+        ".usdz",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/evidence",
+      "target": "raw/manufacturer-evidence",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".html",
+        ".fcstd",
+        ".usdz",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger",
+      "target": "raw/original-native-audit",
+      "suffixes": [
+        ".json",
+        ".md",
+        ".html",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis",
+      "target": "raw/notch-routing-diagnosis",
+      "suffixes": [
+        ".json",
+        ".md",
+        ".log",
+        ".py",
+        ".txt",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".patch",
+        ".url"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/ios/intermediate-32c9-notch-visibility",
+      "target": "raw/intermediate-app32c9",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".html",
+        ".patch",
+        ".url",
+        ".fcstd",
+        ".usdz"
+      ],
+      "includeNames": [
+        "finish-ios-session",
+        "simulator-ready"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/ios/intermediate-32c9-notch-visibility/intermediate-32c9-notch-visibility-captures",
+      "target": "raw/intermediate-app32c9/captures",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".html",
+        ".patch",
+        ".url",
+        ".fcstd",
+        ".usdz"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/ios/intermediate-32c9-notch-visibility/first-attempt-captures",
+      "target": "raw/intermediate-app32c9/first-attempt-captures",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".html",
+        ".patch",
+        ".url",
+        ".fcstd",
+        ".usdz"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/ios/intermediate-32c9-notch-visibility/frozen-package",
+      "target": "raw/intermediate-app32c9/frozen-package",
+      "suffixes": [
+        ".json",
+        ".fcstd"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/ios/intermediate-32c9-notch-visibility/frozen-package/assets",
+      "target": "raw/intermediate-app32c9/frozen-package/assets",
+      "suffixes": [
+        ".json",
+        ".usdz"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources",
+      "target": "raw/additional-primary-records",
+      "suffixes": [
+        ".json",
+        ".html",
+        ".md",
+        ".txt",
+        ".log",
+        ".py",
+        ".url",
+        ".pdf"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/notch-routing-diagnosis/additional-primary-sources",
+      "target": "raw/complete-maker-storyboards",
+      "suffixes": [
+        ".jpg",
+        ".jpeg"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/notch-guide-implementation",
+      "target": "raw/historical-routing-attempts",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".zsh",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".html",
+        ".patch",
+        ".url",
+        ".fcstd",
+        ".usdz"
+      ]
+    },
+    {
+      "path": ".context/placid-badger/nature-stone-review9/review-preparation/independent-guide-feasibility",
+      "target": "raw/independent-guide-feasibility",
+      "suffixes": [
+        ".json",
+        ".md",
+        ".py"
+      ]
+    }
+  ],
+  "feedbackRecord": {
+    "path": ".context/placid-badger/nature-stone-review9/human-feedback.json",
+    "sha256": "247a052919759d78f238def5220b3b58b799b2cd6f117b7341118c59aa643684"
+  },
+  "routingClarification": {
+    "question": "Enters center side holes with notch guides, or wraps around block in notch groove?",
+    "status": "answered",
+    "answer": "Enters side holes; notches guide it",
+    "source": "Exact user answer retained in human-feedback.json",
+    "hiddenConnection": "Visible side-hole entry and exterior notch guidance are established; the concealed connection remains unspecified."
+  },
+  "blockedFinalSidecarSHA256": [
+    "9520befe472f49778c32fd1747e25114fab5d9b8030b13f13359baf3dc874658",
+    "32c9cd6a1b5ef45796615392efb4382f1d557e2622f7d2aec21a4ec1153c15d3"
+  ],
+  "historicalAttempts": [
+    {
+      "stage": "planeAxis feasibility probe",
+      "status": "failed-clearance-historical-attempt",
+      "path": ".context/placid-badger/nature-stone-review9/notch-guide-implementation/anchor-plane-failed-path.json",
+      "clearanceMM": 1.4639528350442619,
+      "cordRadiusMM": 1.5,
+      "limit": "Retain original failure without tolerance relaxation; this is not a final route or gate pass.",
+      "freeze": "deferred until author/root confirms the exact attempt files are stable"
+    },
+    {
+      "stage": "32c9 bypass negative validation",
+      "status": "expected-failure-reproduced-historical-attempt",
+      "path": ".context/placid-badger/nature-stone-review9/notch-guide-implementation/32c9-bypass-negative.json",
+      "limit": "Passing collision/length does not establish required notch seating.",
+      "freeze": "deferred until author/root confirms the exact attempt files are stable"
+    },
+    {
+      "stage": "one-lead offset-anchor clearance probe",
+      "status": "rejected-mechanics-diagnostic-history",
+      "path": ".context/placid-badger/nature-stone-review9/notch-guide-implementation/offset-anchor-probe.json",
+      "poseDegrees": 30,
+      "anchorOffsetEstimateMM": 50,
+      "routeLengthMM": 118.47605311218865,
+      "limit": "The unchanged full-radius clearance certificate passes for this fixed-height lead, but that does not override the failed admissible support-reaction check or establish 120 mm settled height, all poses or global equilibrium."
+    },
+    {
+      "stage": "nearby-triangle distributed radial-vector fit",
+      "status": "rejected-false-positive-support-history",
+      "path": ".context/placid-badger/nature-stone-review9/notch-guide-implementation/offset-anchor-probe-distributed-reaction-dense.json",
+      "independentSupplement": ".context/placid-badger/nature-stone-review9/review-preparation/independent-guide-feasibility/distributed-contact-supplement.json",
+      "limit": "Retain exact raw diagnostic-only status and approximately zero residual. It is not a mechanics pass: 26 of 33 radial vectors fall outside incident outward-facet cones; all feet being nearby is insufficient."
+    },
+    {
+      "stage": "actual closest-feature normal-cone check",
+      "status": "failed-support-reaction-historical-blocker",
+      "path": ".context/placid-badger/nature-stone-review9/notch-guide-implementation/offset-anchor-actual-feature-reactions.json",
+      "nodalResidual": 0.210515949,
+      "limit": "Retain raw status fail and unsupported-force error. Do not substitute the earlier radial-vector fit, relax normal/clearance gates or use this failure to claim all geometry or poses are impossible."
+    }
+  ],
+  "retainedEvidence": [
+    {
+      "label": "root intermediate visual inspection",
+      "path": ".context/placid-badger/nature-stone-review9/root-intermediate-visual-review.json",
+      "sha256": "dd1ddd2deab15b4ed21a37bfad98969ea8827e131ad8e87a118a4d597c8c5a6a",
+      "scope": "Root physically reviewed13wholeframes; material and groove visibility only. Cord seating remains blocked.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "intermediate-material-notch-and-pose-inspection-only"
+        },
+        {
+          "pointer": "/images",
+          "length": 13
+        },
+        {
+          "pointer": "/independentCleanup/simulatorAbsent",
+          "equals": true
+        },
+        {
+          "pointer": "/independentCleanup/builtAppAbsent",
+          "equals": true
+        },
+        {
+          "pointer": "/independentCleanup/installedAppAbsent",
+          "equals": true
+        }
+      ],
+      "linkedHashes": true
+    },
+    {
+      "label": "intermediate independent app inspection",
+      "path": ".context/placid-badger/nature-stone-review9/ios/intermediate-32c9-notch-visibility/intermediate-visual-review.json",
+      "sha256": "0e002233cd89736267d7084bee964b3ab9c66f6a110fc3f2f01d6dbc4a10f538",
+      "scope": "13wholeimages/five contacts/five drags; no final routing acceptance or XCTest lane.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "passed-intermediate-visibility-scope"
+        },
+        {
+          "pointer": "/humanAcceptance",
+          "equals": "pending"
+        },
+        {
+          "pointer": "/ownedResourceCleanup/status",
+          "equals": "passed"
+        },
+        {
+          "pointer": "/ownedResourceCleanup/testsWereNotRun",
+          "equals": true
+        }
+      ],
+      "linkedHashes": true
+    },
+    {
+      "label": "intermediate cleanup verification",
+      "path": ".context/placid-badger/nature-stone-review9/ios/intermediate-32c9-notch-visibility/resource-cleanup-verification.json",
+      "sha256": "5aef992bb1a1d338d1fba4f5ba0f2847ffa27fd778c50af938d79b60efe2e555",
+      "scope": "Exact intermediate owned resources removed; retain original verifier schema and stdout.",
+      "assertions": [],
+      "linkedHashes": false
+    },
+    {
+      "label": "intermediate installed app provenance",
+      "path": ".context/placid-badger/nature-stone-review9/ios/intermediate-32c9-notch-visibility/installed-app-provenance.json",
+      "sha256": "efe1e45210f580b8ce67df4333e20f4769a8e421f1e15559f9f74af5ad1a678c",
+      "scope": "Intermediate binaryab4d and source1b/sidecar32c9; never final installed identity.",
+      "assertions": [],
+      "linkedHashes": false
+    },
+    {
+      "label": "intermediate original EXIT cleanup",
+      "path": ".context/placid-badger/nature-stone-review9/ios/intermediate-32c9-notch-visibility/ios-cleanup.json",
+      "sha256": "e581eb9cc57c4b85dbd893ca3a8e8a31a590bf822d7073f96edf3a7de86294db",
+      "scope": "Original exact owned Simulator/DD/lifecycle cleanup record; distinct from fresh verification.",
+      "assertions": [],
+      "linkedHashes": false
+    },
+    {
+      "label": "intermediate capture validation",
+      "path": ".context/placid-badger/nature-stone-review9/ios/intermediate-32c9-notch-visibility/intermediate-32c9-notch-visibility-captures/validation.json",
+      "sha256": "f7b7868da8e88b2460d14060017f0d9523088bcb13a973cc4a409230d7373286",
+      "scope": "Intermediate13wholeframes and rawAX; final all-eight contact sweep remains pending.",
+      "assertions": [],
+      "linkedHashes": true
+    },
+    {
+      "label": "intermediate ownership",
+      "path": ".context/placid-badger/nature-stone-review9/ios/intermediate-32c9-notch-visibility/ownership.json",
+      "sha256": "d053465f501b2f6e0f62fbd88c815aee1fbe2611d81084a4416ce750aa94153b",
+      "scope": "Exact intermediate resource ownership record.",
+      "assertions": [],
+      "linkedHashes": false
+    },
+    {
+      "label": "earlier independent groove and force-sign inspection",
+      "path": ".context/placid-badger/nature-stone-review9/review-preparation/independent-guide-feasibility/inspection.json",
+      "sha256": "9c72f09f499dc7b822c1838288d78ae4ffe9c931f2a0b6da629c326fbf0d9594",
+      "scope": "Historical read-only mechanics snapshot before the rejected offset-anchor fit; no final route acceptance.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "read-only-analytical-review-complete-final-routing-still-pending"
+        }
+      ],
+      "linkedHashes": false
+    },
+    {
+      "label": "rejected offset-anchor clearance probe",
+      "path": ".context/placid-badger/nature-stone-review9/notch-guide-implementation/offset-anchor-probe.json",
+      "sha256": "ae610ee52e8cd20a6687bf408a1585997e45561b885bc2b3eb00e6e7de350686",
+      "scope": "One lead at estimated 30 degrees and 50 mm offset. Full-radius clearance passes, but admissible support reaction fails; no final pose or settled height.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "diagnostic-only"
+        },
+        {
+          "pointer": "/certificate/status",
+          "equals": "pass"
+        }
+      ],
+      "linkedHashes": false
+    },
+    {
+      "label": "rejected nearby-triangle radial-vector support fit",
+      "path": ".context/placid-badger/nature-stone-review9/notch-guide-implementation/offset-anchor-probe-distributed-reaction-dense.json",
+      "sha256": "cfe799b97ba0a03fe9cde06fc7c792659ee6a8b5f71cf8db3e1899d78eee08a1",
+      "scope": "Exact false-positive fit retained as rejected history; zero discrete residual does not validate material-normal admissibility.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "diagnostic-only"
+        },
+        {
+          "pointer": "/activeContacts",
+          "length": 33
+        }
+      ],
+      "linkedHashes": false
+    },
+    {
+      "label": "independent distributed-contact supplement",
+      "path": ".context/placid-badger/nature-stone-review9/review-preparation/independent-guide-feasibility/distributed-contact-supplement.json",
+      "sha256": "f6ae5993a1e64fe91735a5ddf3a81e5e2b8b7c172fad2c8ee9578181289e6cb6",
+      "scope": "Historical independent arithmetic and material-normal check; 26 of 33 contributions are inadmissible against the retained mesh. Its preparation-config hash refers to the earlier pre-update input, not the current deferred configuration.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "diagnostic-requires-admissible-material-normal-check"
+        },
+        {
+          "pointer": "/materialNormalCheck/notInIncidentConeCount",
+          "equals": 26
+        },
+        {
+          "pointer": "/packetFinalReady",
+          "equals": false
+        }
+      ],
+      "linkedHashes": false
+    },
+    {
+      "label": "failed actual closest-feature reaction check",
+      "path": ".context/placid-badger/nature-stone-review9/notch-guide-implementation/offset-anchor-actual-feature-reactions.json",
+      "sha256": "8b4706844174d9f7b86dbb3e4f123bbb5a256d83904a1042e8ae4d9b1745b4f7",
+      "scope": "Explicit actual material-normal cone blocker: unsupported force with nodal residual 0.210515949. Historical failure remains unwaived; final all-pose support proof is unset.",
+      "assertions": [
+        {
+          "pointer": "/status",
+          "equals": "fail"
+        },
+        {
+          "pointer": "/error",
+          "equals": "native reaction requires unsupported force: nodal residual 0.210515949"
+        }
+      ],
+      "linkedHashes": false
+    }
+  ],
+  "pendingPoseAndAnchor": {
+    "status": "unresolved-no-final-values",
+    "initialRestLengthEstimateMM": 120,
+    "historicalCenteredSupportOffsetEstimateMM": 25,
+    "rejectedOneLeadPoseDegrees": 30,
+    "rejectedOneLeadAnchorOffsetEstimateMM": 50,
+    "rejectedFixedHeightRouteLengthMM": 118.47605311218865,
+    "finalPoseAnglesDegrees": null,
+    "finalAnchorOffsetsMM": null,
+    "finalSettledHeightsMM": null,
+    "limit": "These historical estimates are not promoted final parameters. Keep all sixteen final finite-radius and admissible-reaction certificates pending."
+  }
+}

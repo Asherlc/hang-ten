@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/groove-removal/render_native.py", line 4, in <module>
+    import preview
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/preview.py", line 33, in <module>
+    from usdz_writer import read_usdz  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/usdz_writer.py", line 25, in <module>
+    from dataclasses import dataclass
+  File "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/dataclasses.py", line 5, in <module>
+    import inspect
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/groove-removal/inspect.py", line 1, in <module>
+    import FreeCAD as App,json
+ModuleNotFoundError: No module named 'FreeCAD'

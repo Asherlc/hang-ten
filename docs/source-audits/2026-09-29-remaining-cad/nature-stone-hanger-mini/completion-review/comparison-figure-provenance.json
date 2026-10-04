@@ -1,0 +1,9 @@
+{
+  "method": "Whole unchanged CAD comparison frames placed vertically on a white technical figure. No crop, source-photo processing or geometric inference.",
+  "inputImageSHA256": {
+    "comparison-front.png": "8d6d682b5ec63f1eb1d0729d8e727c4ab8bdab2314cb05b1755cfea7e5a0155d",
+    "comparison-side.png": "63ba5a4914d1742e58aaef839a2ff0d51400e5e38b12174ba78638b93b8e6ddc",
+    "comparison-top.png": "4dfee3dbccb61a07db6691852332cd2e6f6b22caf287ae0669d6d74de59cbda6"
+  },
+  "outputImageSHA256": "c9a32259f2267f16c82a300dadd969864c86a636545671434288376d89c67728"
+}

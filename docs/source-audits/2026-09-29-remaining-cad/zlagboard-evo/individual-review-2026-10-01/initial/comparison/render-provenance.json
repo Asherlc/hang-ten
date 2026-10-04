@@ -1,0 +1,25 @@
+{
+  "inputs": {
+    "Hangboards/zlagboard-evo/assets/primary.usdz": "92e0e754d888a5ab6976f22197b11f9f55353309ef6648a9307c45c404d4dabe",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/comparison/original-d0e4.usdz": "35cabe2a3aa0505b4cca5545b368cca02396a30f826e1186449f546ff2f40884",
+    "Hangboards/zlagboard-evo/assets/primary.model.json": "54a24c155967b3349be34fb3918e1c22be8acc8f7117772a15b347e251d99383"
+  },
+  "source": "Actual USDZ triangles through existing preview.py; original LFS hash matches d0e4 pointer. No asset export or modification.",
+  "images": {
+    "comparison-front-side-top.png": "b44a63b8c60b7cb9073240c3a8226ac2de901a94e0508841b7f6ebc9c4234bb2",
+    "comparison-front.png": "364ac582110ab70b8dbaa4a5ccef189540044fb67ca44eadc4470f04136df917",
+    "comparison-side.png": "95a62915767ef4f9a2cb8de5c017fb224acef7333905dbb1994d6c3b9019f5d9",
+    "comparison-top.png": "49388a1435d9f6bac86bd7fde49c35d802cff1fbb65c38640792ea4903dece4f",
+    "native-front.png": "85e9735221d295f11576370145f1a36e3f1f172e65401442a2b78291d2fe6136",
+    "native-side.png": "3847e5cac9af152de6ff457d1b9b0978260a7284ccefd35fd546472fa3936792",
+    "native-top.png": "ae3be7949519d9dc2147a01bb009b44e6d48b116454e68cabaddf964a3e88caf",
+    "original-front.png": "76f6942c3a95d4074bebcd897a0cda68d6400dbe53ab77404b5b15a9b25ce3d6",
+    "original-side.png": "c82d697b6b1800d4594c28f1e60c968c088e8e07ac87c35d49314f2babe598c9",
+    "original-top.png": "60110561675160bca19e2cb7837859ad06ab933219ba06b7cc5a62e502a090f7"
+  },
+  "limits": [
+    "Whole mesh views with uniform letterboxing, no image crop or measurement.",
+    "Neutral triangle shading is diagnostic; final material/highlight appearance requires fresh app views.",
+    "Original estimated display geometry and native estimated display geometry do not establish manufacturing accuracy."
+  ]
+}

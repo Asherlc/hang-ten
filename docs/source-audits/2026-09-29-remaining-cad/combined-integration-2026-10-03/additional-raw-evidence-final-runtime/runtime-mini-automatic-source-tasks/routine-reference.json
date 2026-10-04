@@ -1,0 +1,418 @@
+{
+  "planLibraryPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Resources/PlanLibrary.json",
+  "planLibrarySHA256": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1",
+  "authoredRecords": [
+    {
+      "id": "research.max-hangs.warm-up",
+      "steps": [
+        {
+          "accessory": "10s hang \u00b7 3m recovery \u00b7 half crimp \u00b7 3s in reserve",
+          "action": "hang",
+          "activeDuration": 10,
+          "duration": 190,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "id": "max-hangs-1",
+          "instruction": "Hang for 10 seconds on your chosen 8\u201320 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 10,
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed"
+            },
+            {
+              "duration": 180,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "title": "Max hang \u00b7 set 1"
+        }
+      ],
+      "title": "Max hang \u00b7 set 1"
+    },
+    {
+      "id": "research.max-hangs.main",
+      "steps": [
+        {
+          "accessory": "10s hang \u00b7 3m recovery \u00b7 half crimp \u00b7 3s in reserve",
+          "action": "hang",
+          "activeDuration": 10,
+          "duration": 190,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "id": "max-hangs-2",
+          "instruction": "Hang for 10 seconds on your chosen 8\u201320 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 10,
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed"
+            },
+            {
+              "duration": 180,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "title": "Max hang \u00b7 set 2"
+        },
+        {
+          "accessory": "10s hang \u00b7 3m recovery \u00b7 half crimp \u00b7 3s in reserve",
+          "action": "hang",
+          "activeDuration": 10,
+          "duration": 190,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "id": "max-hangs-3",
+          "instruction": "Hang for 10 seconds on your chosen 8\u201320 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 10,
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed"
+            },
+            {
+              "duration": 180,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "title": "Max hang \u00b7 set 3"
+        },
+        {
+          "accessory": "10s hang \u00b7 3m recovery \u00b7 half crimp \u00b7 3s in reserve",
+          "action": "hang",
+          "activeDuration": 10,
+          "duration": 190,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "id": "max-hangs-4",
+          "instruction": "Hang for 10 seconds on your chosen 8\u201320 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 10,
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed"
+            },
+            {
+              "duration": 180,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "title": "Max hang \u00b7 set 4"
+        },
+        {
+          "accessory": "10s hang \u00b7 half crimp \u00b7 3s in reserve",
+          "action": "hang",
+          "activeDuration": 10,
+          "duration": 10,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "id": "max-hangs-5",
+          "instruction": "Hang for 10 seconds on your chosen 8\u201320 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 10,
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "maxMM": 19,
+                          "minMM": 9
+                        },
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed"
+            }
+          ],
+          "title": "Max hang \u00b7 set 5"
+        }
+      ],
+      "title": "Max Hangs"
+    },
+    {
+      "blocks": [
+        {
+          "blockID": "research.max-hangs.warm-up"
+        },
+        {
+          "blockID": "research.max-hangs.main"
+        }
+      ],
+      "id": "research.max-hangs",
+      "metadata": {
+        "category": "research",
+        "level": "Advanced",
+        "notes": [
+          "Adapted from Eva L\u00f3pez's author-published MAW guidance: five sets of 10 seconds, a 3-second margin before failure, and 3-minute rests between sets.",
+          "Choose an 8\u201320 mm edge before starting. Five sets is a fixed session within the source's 3\u20135-set range; this is not the full 2012 study's periodized program.",
+          "Complete a progressive warm-up before this timed session; see the original study (doi:10.1080/19346182.2012.716061)."
+        ],
+        "provenance": "adapted",
+        "sourceLabel": "Eva L\u00f3pez \u00b7 MaxHangs (MAW)",
+        "sourceURL": "https://en-eva-lopez.blogspot.com/2018/05/fingerboard-training-guide-II-Maxhangs-SubHangs-and-Inthangs-methodology.html",
+        "subtitle": "Adapted session: five 10-second half-crimp hangs on a chosen 8\u201320 mm edge, leaving 3 seconds in reserve.",
+        "tags": [
+          "built-in",
+          "research"
+        ],
+        "title": "Max Hangs",
+        "workoutLabels": [
+          "max-effort"
+        ]
+      }
+    }
+  ],
+  "sourceFiles": {
+    "HangTen/HangTenApp.swift": "dd27b306a4c9f1f5abf5894433b54319ce21ffe7598046e7294ad39a67964792",
+    "HangTen/Models/AmplitudeAnalyticsTelemetry.swift": "49e774878c37eb647def76315c53241d0d7617efef4beb7afa1c2346b697c79a",
+    "HangTen/Models/AppStore.swift": "48ce4d87e27cef4ba06a8d4077523f550dee89abd64d167c8ea924601b0b6107",
+    "HangTen/Models/BoardModelRealityTypes.swift": "dfb079b42c054c29f9c9719721c96face6f573db8e7c66792cc755d22ca5bfc4",
+    "HangTen/Models/BoardPackageStore.swift": "4f404ef95aa28cd7eeeb7586df9266ccfff313706772093e0b53c8ad910235b3",
+    "HangTen/Models/BoardStorage.swift": "865f618cede9fdaf323704c2ade39464e498e87b8494a745a5cc1ded98e60f17",
+    "HangTen/Models/ClimbroProtocol.swift": "6b7b675aed8624b94937b4975e4fea24242feb82746e54e7f05d52318b10bd35",
+    "HangTen/Models/CountdownAudioScheduler.swift": "71ec106325e87c4112b6301289d1cec2c5b64ad24b5545040c6d63af671f6d3a",
+    "HangTen/Models/CustomRoutineDraft.swift": "603f749ce91ef6ca729d92213273368b52dca2b915c433dc4cf08e0d6330d0d4",
+    "HangTen/Models/CustomRoutineStore.swift": "119ab754ad1a79c091fbc5d3cc4e8ec1a0f23747b2067b7ee49ad16f4fe236af",
+    "HangTen/Models/DeepLinkManager.swift": "e56a93e0908cce433dbdbe2f49f3e75bfdda600f94118806020d51117a2fe030",
+    "HangTen/Models/EntralpiProtocol.swift": "8048a5adab5c0d9a2c3cacecd972985af5c707550242a0a29a9221cc949fef92",
+    "HangTen/Models/ForceSensorModels.swift": "2b0e29914c715ec8172e33a0313e8e9dd61490b6252ceab57f274f196f993a4c",
+    "HangTen/Models/FreeWorkoutDecimalText.swift": "d90262e3b7747c046394d913f740a95133983d557384e334705d20c528db42a0",
+    "HangTen/Models/FreeWorkoutDraft.swift": "45118dbb2adeaec2310f3cfa7eef2ec2f416e3acd7ae57f146b29cea1a72ad88",
+    "HangTen/Models/FreeWorkoutDraftMigration.swift": "214444a3e2917021d4317130f2ae650c61d36de89e523e37c9636de662c6b93c",
+    "HangTen/Models/FreeWorkoutFinish.swift": "2f437e816bcac6b049c8ceaee7a7e499bc7db313feb990f7a64dd7d1b4d7c9f4",
+    "HangTen/Models/FreeWorkoutGuidedHangCountdown.swift": "8c2929d07e09dae01674ab4fb5e04fb0472a4d85521b60490672db3221dd384e",
+    "HangTen/Models/FreeWorkoutLog.swift": "41606c075d2c1e1ed18f9764ed82f44640fe3b1ebe3596387713352261bdb362",
+    "HangTen/Models/FreeWorkoutLogStore.swift": "4d27a5a641c13e131a72eb569fa37c90d5f2adf0172dc4371afdafa3935e79ec",
+    "HangTen/Models/FreeWorkoutRestTimer.swift": "0c81fc236988d84332bb9e1b14c24aefca242ff4b0426063511a029542384636",
+    "HangTen/Models/HealthKitService.swift": "9e4291125b42c69148672cd009c267bf59d3a3fd34b1b9bdc4258084730c9a48",
+    "HangTen/Models/LiveRopeController.swift": "464db176a840c98d99afaaf182811df804d9aaa70a2d92f1aca0f2bcdebfbfbe",
+    "HangTen/Models/LiveRopeMesh.swift": "3718e8f990e45bce1c148af2cfb3222ecc9d2451a259989504b509e3bed83720",
+    "HangTen/Models/LocalWorkoutHistoryStore.swift": "b5dec38e7436a7e9fafe43104ef95df630449a14e3d5e2b6592be900a71a99c0",
+    "HangTen/Models/MotherboardBluetoothService.swift": "9d63f39d0bc0c2631ce296298eb6932d5d3aa844141a942bdceea6e079dbb402",
+    "HangTen/Models/MotherboardModels.swift": "c7161f52cda298a64caddfa154e317449bccdfedc3e6b372ecc746990ba0f6ec",
+    "HangTen/Models/MotherboardProtocol.swift": "badf81a9d16971423bf146af87c5118015762578d30cf53d59bf555ddf7e91be",
+    "HangTen/Models/MotherboardWorkoutPreparation.swift": "fc9697a38dfd2c02c523f3937338b4281ac5a1108dc820a803d6471d268f77d3",
+    "HangTen/Models/MotherboardWorkoutRecorder.swift": "a77ab9e790d448d6a3e6f861d077f8013ab138eb7bbc0eb2daf2bf706b06f7f5",
+    "HangTen/Models/PitchSixProtocol.swift": "bfad7c68ff3487653183fb4930e313a70abe73d4c3dc270fe2c72ac88acc4797",
+    "HangTen/Models/PlanFilters.swift": "7f8db3f3c62628f8c0caa3821437c3e67d20a3ed1e8dd6534b8e391b89e65814",
+    "HangTen/Models/PlanStorage.swift": "a108e9c9a58556b9b6319e679992b78b5df9b6169f1ab64a8dc05680ddd454d1",
+    "HangTen/Models/ProgressorProtocol.swift": "02519f58f202f519d950e046f6f2801606c17164c4be7c48605e3d1c58d8be96",
+    "HangTen/Models/PurchaseManager.swift": "bf99d58c390f1d9c668fd2c098731f12a29a76ca7446bc1118325250cda870d4",
+    "HangTen/Models/RopeBandedSystem.swift": "d72906a280256e3d760d4b99320b5f0531ca624ae615c4d435f9f2400c18d5aa",
+    "HangTen/Models/RopeContactSystem.swift": "c1e5b160bbe1b4e59c55982c198f9c14f5ae1294d534351975da7e5712b3d10e",
+    "HangTen/Models/RopeCordContacts.swift": "6c05954e1f2d953f0feeeaf05b4a0176aae8fa14ddfb21e67a4686c01bb601bd",
+    "HangTen/Models/RopeDynamicsSolver.swift": "dee89d0888131dbb78f2c87a058d395c3d2c43d9ee421c1cefe922ba73eccf56",
+    "HangTen/Models/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    "HangTen/Models/RopeSimulationMetrics.swift": "91abf3c099cc13a17854ae4af80313bb19518b8909bcfbf8f8431158962f2e59",
+    "HangTen/Models/RopeSimulationState.swift": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8",
+    "HangTen/Models/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    "HangTen/Models/RopeTriangleCollider.swift": "e7f16b650115842ae0eeac5d209c692992ff0c29fda7cb557184337654033b1d",
+    "HangTen/Models/SentryDiagnostics.swift": "895405fbe48ffab849f53e91f7e3d07f20d22624c86b4b2619898cbf5d3052b9",
+    "HangTen/Models/SentryUserReports.swift": "b5a5e97866259b0c43fa39f87bf41095ae403678510090179c80bd3157fccde7",
+    "HangTen/Models/SimulatedMotherboardTransport.swift": "c0e3296503c9976e70cec2da2c7b647e5746429367936a903025c583b329c108",
+    "HangTen/Models/SuspensionProfiles.swift": "f31abdc44591127fe10277b1d71c7d24247175578b9ed8d9e6fa23eff9a2a6e1",
+    "HangTen/Models/Telemetry.swift": "7370117a6140895192583c535551bcea79e7d55b2060e53089932788a74024b8",
+    "HangTen/Models/TrainingModels.swift": "e5bae9c4e770b016a1a8f7362fa1ca91dacb21acc8f8ed13ce069169f6e5cf11",
+    "HangTen/Models/WHC06Protocol.swift": "2bee3e4be3fdb69919f9ceeb122afa5173f9caafb50d929ca2444d7062d10682",
+    "HangTen/Models/WorkoutAccessStore.swift": "a770a563aaeeb3ef451a0bf5040257afda5de2dc26b3fd620b46fabf8c04554a",
+    "HangTen/Models/WorkoutActivityRecording.swift": "c1afd8eeaaf00714a4fbb35125e71cdc8c731d9ebfdd726f5ef0101255e5053e",
+    "HangTen/Models/WorkoutAudioCoach.swift": "0dc1b736e0b8c1207e310fc8b665b203762fd717cacf23794d635c9e7293effa",
+    "HangTen/Models/WorkoutHistory.swift": "ae6b0cb980165ac99bad4954126024673086a5cbc153f6038dfe9b821fa60bed",
+    "HangTen/Models/WorkoutHistoryService.swift": "23e6e19ea3e10dc4bced42508ceff5d0c1fb1e56da2bb7194420a7922cc15905",
+    "HangTen/Models/WorkoutSessionStore.swift": "ef6eda2d054800e5b68cdc408068f0c8ae7b6dfabf84bb58c29b317a399488f2",
+    "HangTen/Models/WorkoutStepNormalization.swift": "b38fab90dc4254a81ae94d24b31815459be832eb87f0748f8a28ef71835d5c5c",
+    "HangTen/Models/WorkoutStopwatch.swift": "794554b95d44db2c989d5afe37fab97fa5f9c35a1735eb02f361fd5c9b826d38",
+    "HangTen/Models/WorkoutTimeline.swift": "b63378ae30f2f0c4baa9e8420013d6ea459da401eeaaa1107aaf506063905b97",
+    "HangTen/Views/AppSettingsView.swift": "8c1c1f6178d56482ae6899dab50d12c95693ed55e0f205378f9a5ab43a66da68",
+    "HangTen/Views/BoardMapView.swift": "4a023bf0e3ce4115fcb69862b2373bf7bedfebece9b4f856298c18f57874602a",
+    "HangTen/Views/BoardModelView.swift": "7c6a9d3902870dcc30d2035ef89a4c0515b22587da1f9496997b049aeffcec65",
+    "HangTen/Views/CustomRoutineEditorView.swift": "0e7ba09de2c632ae3c0ce3780e4022a1ea3ba32fb70ade179aa7b093adebc626",
+    "HangTen/Views/DesignSystem.swift": "79ca45b3bb0123b0c28c8854420a60b9531d2dfb68f6dd9b43bf49e61b73b9a6",
+    "HangTen/Views/FreeWorkoutAddExerciseSheet.swift": "15b09274cf25538caf599349d776110c562f0d1620255223dc1f1c573a955b39",
+    "HangTen/Views/FreeWorkoutGuidedHangView.swift": "21552bc21b59b9eb3d6cfbf96229cbb9cf0ef8625bb47045a55bd88ba2f6e662",
+    "HangTen/Views/FreeWorkoutLogSessionView.swift": "33b1a7c245e7cf85ad760bf27af70bd611bee0eb87820c2c262dab3e49ddad07",
+    "HangTen/Views/FreeWorkoutLogSetSheet.swift": "9bebaa75808ae105ce6393e0a86a4cd5b5514a2947ad01a7561df2a87c8ca7ab",
+    "HangTen/Views/FreeWorkoutStartSheet.swift": "66ca02f4d07bfca90cb296a26a40460e5bcc2ab869521fdeca6fb103b824933c",
+    "HangTen/Views/GripDiagramView.swift": "8ebb0f74d756a66d00a24f833a2fb60e4d90ea100b9d84f8966d89ea10d40e4d",
+    "HangTen/Views/GripHandModelView.swift": "15517e548d52fd29f52289a0fdbc5654199fc723c41759bcaf1dc0c3206c55e1",
+    "HangTen/Views/MotherboardViews.swift": "a1d914b97f7c436d1c55f32252dcf74041895eeea24bae70d77d9f68f7e20280",
+    "HangTen/Views/MotherboardWorkoutPreparationView.swift": "be93b4d2dadd71e5e303d545b5a61e23ddd1d3f36e5610d0c889cd541e8d8b56",
+    "HangTen/Views/OrbitPanGestureDelegate.swift": "7375e7ac2adcaad597b3a35eee5dd07cf7585935b19f424e5bc002ae7a3cbf8e",
+    "HangTen/Views/PlanDetailView.swift": "eeffc24fb0391d13cc1baf2c16e8ac96b7ae1821980b0c9f4d92989f2186e4c9",
+    "HangTen/Views/PlansView.swift": "311ffcd2439dc8faa90a4d45ad06d4edc04aaeee4de2b5dbc8857c4462b4da03",
+    "HangTen/Views/ReportProblemView.swift": "a06380a20487194e6959b6be9218451aa21de36a6d1c07691adbdfd83a32e6b6",
+    "HangTen/Views/RootView.swift": "6d4439ffa97e0a93c25fc2b253710c2711186bbbc1515f830d33dd11a36a8b89",
+    "HangTen/Views/SuspendedBoardPresentation.swift": "0a0eecdbc4cdca2869828601a53299af461dacad9177bf7dec141647d171a61b",
+    "HangTen/Views/TrainView.swift": "b8720ac7c42252f22dceecb8a58f96a1de297068bbb7a3972bddac8c7072fccf",
+    "HangTen/Views/WorkoutAccessGate.swift": "2834dd18015f4db30421d95b7824241dad461a06c1398887b8a69274d1aa528c",
+    "HangTen/Views/WorkoutControls.swift": "132643f6f383f01550d5f746f626ba108a2558b898aed52b5e4f266469c621fd",
+    "HangTen/Views/WorkoutCueCard.swift": "ee269a0b28a550f327b537573fa643984109b9e40792b7f2a0dae890e0ae4bdc",
+    "HangTen/Views/WorkoutPresentationContent.swift": "28e805ae554a9a5e0857860fac809fb77809a4812655f4c78732b43e5bbc4a78",
+    "HangTen/Views/WorkoutSessionState.swift": "1cb5f7d33c84bd403e68ce06bcd5dc8580d8f63889984b09b9ceb2037ae2a28f",
+    "HangTen/Views/WorkoutStepPickerView.swift": "a23faa365fc68be40f19e847198e27b12ab48b766f21a609fc379bf029b2887a",
+    "HangTen/Views/WorkoutSummaryView.swift": "3016432909453bed8c726ed268942242e87ecadc6ab300e2516d2a9f9e174cd0",
+    "HangTen/Views/WorkoutTimerView.swift": "12f829b64d0f1c6c01786c4a3724c7751415cd9e051d32cb42ec5e34c256adcf",
+    "HangTen/Views/WorkoutView.swift": "4de76a2fbb3fcf8f5968706e67b63260dcb50be08611e6e7088177ac8cd474d8"
+  },
+  "cadence": {
+    "hangSeconds": 10,
+    "betweenSetRestSeconds": 180,
+    "initialCountdownSeconds": 3
+  },
+  "qualification": "Exact authored MaxHangs records. Mini uses current source two-hand tasks and the production two-board adaptation; no hand side, routine fields, or targets are changed."
+}

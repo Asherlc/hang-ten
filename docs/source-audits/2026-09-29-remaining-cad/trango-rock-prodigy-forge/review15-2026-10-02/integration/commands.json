@@ -1,0 +1,212 @@
+[
+  {
+    "phase": "git-head",
+    "argv": [
+      "rtk",
+      "proxy",
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "startedAt": "2026-10-03T02:16:12.604274+00:00",
+    "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/git-head.log",
+    "ownedProcessGroup": 59095,
+    "exitCode": 0,
+    "endedAt": "2026-10-03T02:16:12.746340+00:00",
+    "logSHA256": "bec55191e2be9100f3a5e05feab6adee3bf0ccffadcd03a2073475dce35d4222"
+  },
+  {
+    "phase": "package-validation",
+    "argv": [
+      "rtk",
+      "proxy",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "-m",
+      "hangboard_packages.cli",
+      "validate",
+      "--root",
+      "Hangboards",
+      "--final-inventory"
+    ],
+    "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "startedAt": "2026-10-03T02:16:12.747068+00:00",
+    "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/package-validation.log",
+    "ownedProcessGroup": 59099,
+    "exitCode": 0,
+    "endedAt": "2026-10-03T02:16:17.554562+00:00",
+    "logSHA256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc"
+  },
+  {
+    "phase": "delivery-validation",
+    "argv": [
+      "rtk",
+      "proxy",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/scripts/verify-model-delivery.py",
+      "--root",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "--report",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/delivery-validation.json"
+    ],
+    "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "startedAt": "2026-10-03T02:16:17.555315+00:00",
+    "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/delivery-validation.log",
+    "ownedProcessGroup": 59112,
+    "exitCode": 0,
+    "endedAt": "2026-10-03T02:16:21.701669+00:00",
+    "logSHA256": "80e4422216022d3ae9898cfe9d3ae19312f9001eabd76c1551326f14a8e92f1d"
+  },
+  {
+    "phase": "xcode-staging",
+    "argv": [
+      "rtk",
+      "proxy",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/scripts/stage-board-packages.py",
+      "--repository-root",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "--destination",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-xcode-stage/Build/HangTen.app/Hangboards",
+      "--target",
+      "xcode"
+    ],
+    "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "startedAt": "2026-10-03T02:16:21.702376+00:00",
+    "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/xcode-staging.log",
+    "ownedProcessGroup": 59120,
+    "exitCode": 0,
+    "endedAt": "2026-10-03T02:16:26.577095+00:00",
+    "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "phase": "android-staging",
+    "argv": [
+      "rtk",
+      "proxy",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/scripts/stage-board-packages.py",
+      "--repository-root",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "--destination",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-android-stage/Hangboards",
+      "--target",
+      "android"
+    ],
+    "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "startedAt": "2026-10-03T02:16:26.577460+00:00",
+    "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/android-staging.log",
+    "ownedProcessGroup": 59179,
+    "exitCode": 0,
+    "endedAt": "2026-10-03T02:16:31.389798+00:00",
+    "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "phase": "focused-python-tests",
+    "argv": [
+      "rtk",
+      "proxy",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "Tools/HangboardCAD/tests/test_board_manifest.py",
+      "Tools/HangboardCAD/tests/test_usdz_writer.py",
+      "Tools/HangboardPackages/tests/test_board_package_staging.py::test_staging_preserves_package_authored_surface_finishes_without_model_edits",
+      "--basetemp=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-tmp/pytest",
+      "-o",
+      "cache_dir=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-cache/pytest",
+      "--junitxml=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/python-junit.xml"
+    ],
+    "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "startedAt": "2026-10-03T02:16:31.392098+00:00",
+    "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/focused-python-tests.log",
+    "ownedProcessGroup": 59187,
+    "exitCode": 0,
+    "endedAt": "2026-10-03T02:16:33.599369+00:00",
+    "logSHA256": "4172b184b38cbc844aa9616afaf23f720c7e7dc5fdfe51711db946d0a815eb2c"
+  },
+  {
+    "phase": "build-time-git-head",
+    "argv": [
+      "rtk",
+      "proxy",
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "startedAt": "2026-10-03T02:16:33.600443+00:00",
+    "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/build-time-git-head.log",
+    "ownedProcessGroup": 59202,
+    "exitCode": 0,
+    "endedAt": "2026-10-03T02:16:33.738262+00:00",
+    "logSHA256": "bec55191e2be9100f3a5e05feab6adee3bf0ccffadcd03a2073475dce35d4222"
+  },
+  {
+    "phase": "build-time-git-status",
+    "argv": [
+      "rtk",
+      "proxy",
+      "git",
+      "status",
+      "--porcelain=v2",
+      "-z",
+      "--untracked-files=all"
+    ],
+    "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "startedAt": "2026-10-03T02:16:33.907556+00:00",
+    "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/build-time-git-status.log",
+    "ownedProcessGroup": 59220,
+    "exitCode": 0,
+    "endedAt": "2026-10-03T02:16:34.048651+00:00",
+    "logSHA256": "acd65e631890c7d3e393929e7e736f60b596225c739ec92e9f9e7b40e932b833"
+  },
+  {
+    "phase": "build-time-git-binary-diff",
+    "argv": [
+      "rtk",
+      "proxy",
+      "git",
+      "diff",
+      "--binary",
+      "--no-ext-diff",
+      "--no-textconv",
+      "HEAD",
+      "--"
+    ],
+    "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "startedAt": "2026-10-03T02:16:34.049286+00:00",
+    "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/build-time-git-binary-diff.log",
+    "ownedProcessGroup": 59224,
+    "exitCode": 0,
+    "endedAt": "2026-10-03T02:16:34.246144+00:00",
+    "logSHA256": "aeb8ee985392fca32edc71e9690139f5a3b0e7a0e3feaef83d99d3360d163668"
+  },
+  {
+    "phase": "generic-ios-build",
+    "argv": [
+      "rtk",
+      "proxy",
+      "xcodebuild",
+      "-project",
+      "HangTen.xcodeproj",
+      "-scheme",
+      "HangTen",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "generic/platform=iOS Simulator",
+      "-derivedDataPath",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-forge15-ios-DD",
+      "build-for-testing"
+    ],
+    "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+    "startedAt": "2026-10-03T02:16:34.246939+00:00",
+    "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/generic-ios-build.log",
+    "ownedProcessGroup": 59239,
+    "exitCode": 0,
+    "endedAt": "2026-10-03T02:17:32.307165+00:00",
+    "logSHA256": "d8419c5b0c69f1072d1ff9902492a3625fafd38c2fd15d90c6c416780aec899b"
+  }
+]

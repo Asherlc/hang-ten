@@ -1,0 +1,62 @@
+[
+  {
+    "originalRef": "4d010a76003a24c8f6d22f02e5b159eea1ee7d92",
+    "originalPath": "docs/source-audits/2026-09-29-remaining-cad/delivery-checksums.txt",
+    "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/parent/delivery-checksums.txt",
+    "sha256": "c2963fa7e5e8a39c7f1011c24ed5bac2b887d11ad48ab2f9f822ba66a0b593c8"
+  },
+  {
+    "originalRef": "4d010a76003a24c8f6d22f02e5b159eea1ee7d92",
+    "originalPath": "docs/source-audits/2026-09-29-remaining-cad/delivery-validation.json",
+    "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/parent/delivery-validation.json",
+    "sha256": "b23abe4ab8931d42370c72badba0255218aace611cbf5703efba2c843db2777b"
+  },
+  {
+    "originalRef": "4d010a76003a24c8f6d22f02e5b159eea1ee7d92",
+    "originalPath": "docs/source-audits/2026-09-29-remaining-cad/installed-delivery-validation.json",
+    "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/parent/installed-delivery-validation.json",
+    "sha256": "d21273afd4a19f79e55527dcadcb8c00646cc851f4928de9bff545dc818ee083"
+  },
+  {
+    "originalRef": "4d010a76003a24c8f6d22f02e5b159eea1ee7d92",
+    "originalPath": "docs/source-audits/2026-09-29-remaining-cad/batch-validation.json",
+    "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/parent/batch-validation.json",
+    "sha256": "ba2d59336566cfee2f27ec81c3280033b2b55f9e6d7a05a557d81c8011d47dd3"
+  },
+  {
+    "originalRef": "4d010a76003a24c8f6d22f02e5b159eea1ee7d92",
+    "originalPath": "docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+    "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/parent/review-queue.json",
+    "sha256": "519a6a6ffd0040059dd2e31cf53b26ceee99997a4cdb8059a8612c337bb59f67"
+  },
+  {
+    "originalRef": "1ead8834f744fcaba2ce4d53b07545841b2d6927",
+    "originalPath": "docs/source-audits/2026-09-29-remaining-cad/delivery-checksums.txt",
+    "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/second-half/delivery-checksums.txt",
+    "sha256": "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42"
+  },
+  {
+    "originalRef": "1ead8834f744fcaba2ce4d53b07545841b2d6927",
+    "originalPath": "docs/source-audits/2026-09-29-remaining-cad/delivery-validation.json",
+    "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/second-half/delivery-validation.json",
+    "sha256": "60ede16153821967ae5219954d41316f018bfa8bca7a2dac1697ed0b0835e457"
+  },
+  {
+    "originalRef": "1ead8834f744fcaba2ce4d53b07545841b2d6927",
+    "originalPath": "docs/source-audits/2026-09-29-remaining-cad/installed-delivery-validation.json",
+    "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/second-half/installed-delivery-validation.json",
+    "sha256": "fe6c089dcfe52939b27edad27f73675459e86e59d26d1b252cdf8402111a6bf8"
+  },
+  {
+    "originalRef": "1ead8834f744fcaba2ce4d53b07545841b2d6927",
+    "originalPath": "docs/source-audits/2026-09-29-remaining-cad/batch-validation.json",
+    "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/second-half/batch-validation.json",
+    "sha256": "8619093e12ee8b30324f875ece55487d1c35c826411c62b0ef7975e1da5730d9"
+  },
+  {
+    "originalRef": "1ead8834f744fcaba2ce4d53b07545841b2d6927",
+    "originalPath": "docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+    "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/inherited/second-half/review-queue.json",
+    "sha256": "0e4607850eb3d6b226457e732f87c992d4417dd6261d14b08f1196fc45688635"
+  }
+]

@@ -1,0 +1,87 @@
+{
+  "diagnosticPath": ".context/placid-badger/dual-vertical-review/diagnostic-pass-2.json",
+  "diagnosticSHA256": "40ecd9ec7affe6ef1ce4f9e30edd1b9ed77c3cf259a488154c303a8b6da9c5fd",
+  "currentRoutesArePublished": false,
+  "reportConverged": true,
+  "measurements": [
+    {
+      "strand": "left-lead",
+      "index": 1,
+      "pointMM": [
+        58.7483656830589,
+        -9.765589572072244,
+        16.749473081634292
+      ],
+      "turnDegrees": 16.332010735117958,
+      "pointWoodDistanceMM": 2.061360717211054
+    },
+    {
+      "strand": "left-lead",
+      "index": 2,
+      "pointMM": [
+        56.962561257153084,
+        -9.82176600830832,
+        17.083194219535077
+      ],
+      "turnDegrees": 15.940758659832609,
+      "pointWoodDistanceMM": 2.0831942195350774
+    },
+    {
+      "strand": "left-lead",
+      "index": 3,
+      "pointMM": [
+        -24.9412240421455,
+        0.28209374003524046,
+        13.168237144908677
+      ],
+      "turnDegrees": 83.70081298481732,
+      "pointWoodDistanceMM": 18.249488458605985,
+      "certifiedCornerCut": {
+        "trimPerSideMM": 1.0,
+        "gainMM": 0.5102213536852251,
+        "newChordClearanceMM": 17.003245882408343,
+        "wholeTubeGate": "passed"
+      }
+    },
+    {
+      "strand": "right-lead",
+      "index": 1,
+      "pointMM": [
+        59.363471170463924,
+        0.8860891412443636,
+        16.532536311894226
+      ],
+      "turnDegrees": 11.950572709709778,
+      "pointWoodDistanceMM": 2.1121185392990225
+    },
+    {
+      "strand": "right-lead",
+      "index": 2,
+      "pointMM": [
+        56.9951273309751,
+        0.8941755677675185,
+        17.166726639945274
+      ],
+      "turnDegrees": 18.304024909432496,
+      "pointWoodDistanceMM": 2.1667266399452783
+    },
+    {
+      "strand": "right-lead",
+      "index": 3,
+      "pointMM": [
+        27.255950385179997,
+        0.9957143082782454,
+        15.445060191896843
+      ],
+      "turnDegrees": 83.17142693445328,
+      "pointWoodDistanceMM": 20.51925759396844,
+      "certifiedCornerCut": {
+        "trimPerSideMM": 1.0,
+        "gainMM": 0.504072769433983,
+        "newChordClearanceMM": 19.174613755530235,
+        "wholeTubeGate": "passed"
+      }
+    }
+  ],
+  "conclusion": "Native local descent convergence does not eliminate significant certifiable unsupported corner cuts. Requires corner-cut insertion or more flexible path representation before physical-quality approval."
+}

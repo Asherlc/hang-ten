@@ -1,0 +1,8 @@
+{
+  "sourceSHA256": "0253224a9df668442a2f925d6b686fce57c4cffd94347954abb7b8b9df4c0cd9",
+  "patchSHA256": "49e59135c34270ed4171170bdacb1ba5a88642cef4cd9a5ffbc9c1489a825d5c",
+  "proposedSHA256": "24a647a6157cec20c15b986cfaafacfd660e190c42880d5facddea4bbc6d23e8",
+  "applyCheckExit": 0,
+  "sourceUnchanged": true,
+  "status": "Scratch-only unapplied; no typecheck/build/runtime"
+}

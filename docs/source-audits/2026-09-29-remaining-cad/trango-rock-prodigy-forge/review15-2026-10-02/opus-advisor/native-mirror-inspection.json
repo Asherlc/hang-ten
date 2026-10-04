@@ -1,0 +1,172 @@
+{
+  "owner": "placid-badger",
+  "scope": "Read-only serialized native mirror dependency inspection; no new native execution",
+  "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+  "nativeMirrors": [
+    {
+      "object": "LeftPocketedWing",
+      "nativeType": "Part::Mirroring",
+      "source": "RightWingWithIMRSeam",
+      "base": {
+        "valueX": "0.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      },
+      "normal": {
+        "valueX": "1.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      }
+    },
+    {
+      "object": "Contact_variable_edge_rail_left",
+      "nativeType": "Part::Mirroring",
+      "source": "Contact_variable_edge_rail_right",
+      "base": {
+        "valueX": "0.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      },
+      "normal": {
+        "valueX": "1.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      }
+    },
+    {
+      "object": "Contact_closed_crimp_left",
+      "nativeType": "Part::Mirroring",
+      "source": "Contact_closed_crimp_right",
+      "base": {
+        "valueX": "0.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      },
+      "normal": {
+        "valueX": "1.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      }
+    },
+    {
+      "object": "Contact_mr_deep_left",
+      "nativeType": "Part::Mirroring",
+      "source": "Contact_mr_deep_right",
+      "base": {
+        "valueX": "0.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      },
+      "normal": {
+        "valueX": "1.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      }
+    },
+    {
+      "object": "Contact_mr_shallow_left",
+      "nativeType": "Part::Mirroring",
+      "source": "Contact_mr_shallow_right",
+      "base": {
+        "valueX": "0.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      },
+      "normal": {
+        "valueX": "1.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      }
+    },
+    {
+      "object": "Contact_im_shallow_left",
+      "nativeType": "Part::Mirroring",
+      "source": "Contact_im_shallow_right",
+      "base": {
+        "valueX": "0.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      },
+      "normal": {
+        "valueX": "1.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      }
+    },
+    {
+      "object": "Contact_im_deep_left",
+      "nativeType": "Part::Mirroring",
+      "source": "Contact_im_deep_right",
+      "base": {
+        "valueX": "0.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      },
+      "normal": {
+        "valueX": "1.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      }
+    },
+    {
+      "object": "Contact_sloper_30_left",
+      "nativeType": "Part::Mirroring",
+      "source": "Contact_sloper_30_right",
+      "base": {
+        "valueX": "0.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      },
+      "normal": {
+        "valueX": "1.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      }
+    },
+    {
+      "object": "Contact_sloper_40_left",
+      "nativeType": "Part::Mirroring",
+      "source": "Contact_sloper_40_right",
+      "base": {
+        "valueX": "0.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      },
+      "normal": {
+        "valueX": "1.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      }
+    },
+    {
+      "object": "Contact_large_flat_edge_left",
+      "nativeType": "Part::Mirroring",
+      "source": "Contact_large_flat_edge_right",
+      "base": {
+        "valueX": "0.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      },
+      "normal": {
+        "valueX": "1.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      }
+    },
+    {
+      "object": "Contact_slopey_crimper_left",
+      "nativeType": "Part::Mirroring",
+      "source": "Contact_slopey_crimper_right",
+      "base": {
+        "valueX": "0.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      },
+      "normal": {
+        "valueX": "1.0000000000000000",
+        "valueY": "0.0000000000000000",
+        "valueZ": "0.0000000000000000"
+      }
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+Showing 3 of 84 activities (limited to 3)
+
+---
+
+**If B1/B2/A2 also pass, TimelineView is a worthwhile next discriminator.** A1 establishes that the existing board rendering path can display the complete scripted sequence correctly under isolation. It does not yet identify the failing workout difference, and the metadata-only workout preflight is not a same-binary visual control.
+
+I inspected the current harness and wrappers. No files were changed.
+
+**Preserve the existing script outside the timeline**
+
+In [StandaloneBoardHighlightProbe](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Views/RootView.swift:3781), keep ownership of `selection`, readiness checking, the script task, and absolute phase deadlines in the stable outer view. Place the conditional TimelineView around the content presentation only.
+
+Compare, in one binary:
+
+- **A:** existing standalone content.
+- **B:** identical content evaluated within the 0.25-second periodic TimelineView.
+- Order: **A/B/B/A**, with fresh launches and identical diagnostic settings.
+
+Keep SceneEvents counting and the 1 Hz sampler off for this comparison. Retain the same controls, five states, eight-second windows, and twenty screenshots.
+
+Do not derive selection from `context.date`, restart the script inside timeline content, introduce a tick-based identity, or copy selection into new state. Those changes would test different semantic delivery or lifetimes.
+
+**Prove timeline evaluation without changing the image**
+
+The workout’s [TimelineView closure](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Views/RootView.swift:1952) currently ignores its named `context` and reads the monotonic clock directly. Therefore, simply adding an unused TimelineView wrapper gives weak evidence about what actually reevaluated.
+
+For the diagnostic comparison:
+
+- Construct the content inside the timeline closure.
+- Consume `context.date` into a small, nonobservable in-memory diagnostic record: evaluation count, distinct context-date count, and latest date/uptime.
+- Read those aggregates only at the existing sparse snapshots.
+- Do not display a ticking label or write observable state to demonstrate activity.
+
+Separately count actual RealityView update-closure entries in memory, in both arms. **Increment before the diagnostic’s signature deduplication**, because [the existing recorder](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Models/BoardModelRealityTypes.swift:1614) suppresses unchanged `view-update` records.
+
+These counts answer different questions:
+
+| Observation | Meaning |
+|---|---|
+| Timeline dates advance; RealityView updates do not increase | Timeline evaluation occurred, but did not propagate additional updates to that host |
+| Both increase | The experiment exercised repeated host synchronization |
+| Timeline dates do not advance | The intended periodic condition was not established |
+
+Do not force downstream updates merely to make the counts increase. That would become a different experiment.
+
+This distinction matters because [applySync](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Views/BoardModelView.swift:269) reassigns the camera component and frames the scene whenever invoked, even when highlight caching skips the material write. Increased delivery could therefore change renderer-facing activity without changing semantic values. That is a hypothesis to measure, not a reason to alter those writes now.
+
+**Keep layout and interpretation strict**
+
+Retain the fixed 210 × 36 **actual board viewport**, not merely an outer frame. Verify unchanged viewport, camera transform, host identity, and actual scene throughout. Keep the periodic schedule’s origin stable for the run.
+
+Use the existing capture offsets and full-sequence criteria. Byte equality remains useful within this deliberately static presentation, alongside visual review.
+
+- A passes and B fails repeatedly: periodic containment/update activity is sufficient to reproduce failure in this isolated context.
+- Both pass: periodic containment alone is insufficient under the tested delivery pattern.
+- Both fail or results vary: no clean discriminator.
+- B adds no host updates and passes: this specifically leaves repeated host synchronization untested.
+
+None of these outcomes independently proves a RealityKit scheduling defect.
+
+**Sequence the remaining context differences**
+
+1. **TimelineView comparison first.**
+2. **Brief sampler comparison next if timeline passes.** The failing diagnostic workflow used the 1 Hz sampler; isolation explicitly bypasses it. Restore precisely that observer in an otherwise passing configuration, with a bounded lifetime. This tests diagnostic disturbance, not a production remedy.
+3. **BoardMapView before navigation.** Its [wrapper](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Views/BoardMapView.swift:601) adds presentation/position state, highlight-driven `onChange` work, aspect-ratio layout, and a highlight-ID animation transaction. Those are more direct differences than navigation. Record the resolved presentation, position, IDs, and mode reaching BoardModelSurface; preserve the actual viewport. If adding the whole wrapper reproduces failure, separate its contributions afterward.
+4. **The initial layout transition deserves priority over generic navigation.** Reintroducing the measured slot/viewport transition is a separate experiment after fixed-layout comparisons. Initial correctness coinciding with resizing remains relevant.
+5. **Navigation/tab containment later**, while continuing to exclude additional model hosts.
+
+If all isolated additions pass, obtain a fresh, complete same-binary workout sequence before expanding the search. The current preflight establishes size and environment correspondence only; it cannot supply the missing failing visual arm.
+
+No host rewrite is justified by A1’s success. The useful next result is a reproducible boundary between passing and failing contexts.
+[User] Important delivery distinction for proposed Timeline discriminator: merely wrapping existing @State-scripted selection in TimelineView may retain direct outer @State invalidation that production lacks. Workout derives highlight phase from Timeline.Context/date/monotonic elapsed inside its content; the passing standalone updates @State from a task. Please distinguish wrapper-only arm versus deriving same scripted phase from context time, with fixed epoch/viewport and no material writes/logging in body. Sparse onChange semantic logging and existing actual highlight mutation trace can record delivery without body logging (previous body logging masked failure). B1 with counter also passes all final phases, ~60Hz events; A1 observer absent passes all20 images. No implementation yet, runtime worker finishing B2/A2.
+**Agreed. Wrapper-only and timeline-derived delivery must be separate arms.** My previous proposal tested periodic containment while preserving the passing task-driven `@State` delivery. That would not reproduce the production dependency path. I also withdraw the proposed body-side diagnostic recording.
+
+The current production closure reads monotonic elapsed time inside TimelineView; it does not directly use `context.date`. That distinction should remain explicit.
+
+| Arm | Semantic phase source | Question |
+|---|---|---|
+| A | Existing task changes `@State` selection | Passing reference |
+| B | Same task-driven selection, wrapped in TimelineView | Does periodic containment affect otherwise passing delivery? |
+| C | Phase calculated inside TimelineView from elapsed time against a fixed epoch; no task-driven phase state | Does timeline-derived delivery reproduce failure? |
+
+For C, use the same predetermined boundaries and sequence: neutral → active → preview → active → preview, eight seconds each. Establish the epoch once after readiness. The capture task can retain its absolute deadlines and sparse snapshots, but must not update selection or any state that invalidates the board during measurement.
+
+**Match production before introducing another clock difference.** The closest C reads monotonic time inside timeline content and derives the phase from the fixed monotonic epoch. Deriving it from `context.date` is a distinct variant because scheduled context time and actual evaluation time can differ. Both are legitimate experiments; they should not be conflated.
+
+Keep the viewport, contacts, position, host identity, and synchronization path unchanged across arms. Do not feed time into identities, camera parameters, or material writes.
+
+**Observe semantic delivery outside body evaluation**
+
+Use a sparse `onChange` on the resolved semantic tuple—contacts, mode, and position—and the existing actual highlight-mutation trace. Record the intended boundary, observed semantic change, and actual mutation times separately. Callback ordering means `onChange` should not be treated as the timestamp of the material write.
+
+No body logging, ticking diagnostic label, or per-tick observable state. Do not force RealityView updates to make an instrumentation counter advance. If semantic delivery stalls, a separate bounded diagnostic can investigate timeline evaluation; avoid adding that observer to the primary comparison prematurely.
+
+The +0.25-second capture deserves special care in C: it is close to one scheduling interval. Interpret it against the actual mutation timestamp. A missed early checkpoint followed by correct later frames is delivery latency; correct CPU mutation followed by stale +1/+3/+7 images is a different failure.
+
+**Decision logic**
+
+- **A and B pass; C fails:** supports a distinction in semantic delivery or dependency propagation, rather than periodic containment alone.
+- **A passes; B fails:** periodic containment is already sufficient under the tested conditions.
+- **All pass:** neither isolated difference reproduces the workout failure; proceed to BoardMapView and layout context.
+- **Mixed repeats:** no stable discriminator.
+
+B1’s approximately 60 Hz SceneEvents delivery plus correct final phases shows that the observer is compatible with success in that run. A1 proves success without it. Neither result establishes presented-frame cadence or explains the failing workout.
+
+After B2/A2 finish, the highest-value new contrast is **task-driven versus timeline-derived semantics**, with wrapper-only retained as the control that separates delivery from containment.

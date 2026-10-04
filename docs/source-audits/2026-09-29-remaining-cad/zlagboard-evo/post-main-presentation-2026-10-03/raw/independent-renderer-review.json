@@ -1,0 +1,63 @@
+{
+  "kind": "bounded read-only source review",
+  "timeUTC": "2026-10-03T17:16:25.412842+00:00",
+  "HEAD": "a314f39c03121465b493da6f45e49fa7c928b1cc",
+  "sourceSHA256": {
+    "HangTen/Views/BoardModelView.swift": "4ba1f9f18ac980da4a168def3761e1bddff475702092d0d48d752b0c48c8cef4",
+    "HangTen/Models/BoardModelRealityTypes.swift": "10e4fe7d6d945cc0ad22623113e51c4bccc280a949c7408c3fbeaf9a25861747",
+    "HangTen/Views/WorkoutView.swift": "caa67bd053af93b60b92adc14e9ba6a3325ac0e91936d765f56d6232314a7029",
+    "HangTen/Views/BoardMapView.swift": "bb126b43ac1065fa048cc10ff90d275c1816bdbb3ea3beed3609b005521e0cec"
+  },
+  "sourceChanges": false,
+  "buildOrRuntimeActions": false,
+  "nativePackagesChanged": false,
+  "freshMainBaseline": "pending; no repair selected or validated by this report",
+  "findings": [
+    {
+      "id": "drawable-workaround-scope",
+      "source": "BoardModelView.swift:294-299,770-854; WorkoutView.swift:445-454,663-672",
+      "fact": "BoardSimulatorPresentation is simulator-only and installed only when onContactTap is nonnil. Workout BoardMaps omit onHoldTap, so the helper is absent there. It looks for exactly one geometrically matching CAMetalLayer and changes presentsWithTransaction=false, with a bounded ancestor/layer search and weak configured-layer retention.",
+      "limit": "This proves a source eligibility difference, not that drawable transaction policy causes the stale workout frames or that extending the helper will fix them."
+    },
+    {
+      "id": "virtual-camera",
+      "source": "BoardModelView.swift:233,256",
+      "fact": "Main explicitly uses virtual camera in make/update and reads cameraRevision inside the RealityView update.",
+      "limit": "Earlier explicit virtual-camera controls failed; do not infer that this alone repairs workout color updates."
+    },
+    {
+      "id": "live-semantic-animation",
+      "source": "BoardModelView.swift:278-289,340-367; BoardModelRealityTypes.swift:1098-1120,1575-1670",
+      "fact": "Selection task keyed by position/contact IDs (not highlight mode) drives bounded camera invalidation. Mode-only highlight updates materials and preserves manual orbit. New selection may animate camera for0.28s or schedule geometric cord tilt tasks.",
+      "limit": "This is intentional Main camera behavior. No source evidence warrants reviving previously failed onChange/extra writer/host/projection fixes. Whole-image runtime validation is still necessary."
+    },
+    {
+      "id": "experimental-frame-camera-contract",
+      "source": "BoardModelView.swift:667-687,699-713",
+      "fact": "Coordinator renders frame->select->requested orbit->highlight, then one zero-delta GPU update, and caches under the requested orbit. Main highlight can replace requested orbit with contact-aware target and begin animation. No settled-target gate or animation ownership exists in this coordinator.",
+      "risk": "The cached image may represent an intermediate/different camera than its cache key. Internal Main animation can mutate scene state outside the coordinator single-in-flight request gate. This is an integration risk in the disabled experiment, not demonstrated cause of live workout failure."
+    },
+    {
+      "id": "experimental-scoped-strengths",
+      "fact": "Current input revision rejects stale completion; one retained frame holds scene/renderer/texture through eager conversion; semantic cache rejects wrong contacts/mode/position; opposite-mode prefetch is finite. These protections do not settle Main animations.",
+      "limit": "Only four cache value tests cover cache semantics; no new GPU validation claim."
+    },
+    {
+      "id": "default-off",
+      "source": "WorkoutView.swift:553-560; BoardModelView.swift:54",
+      "fact": "Frame renderer remains DEBUG environment opt-in, release false, and interactive callbacks remain on live path."
+    }
+  ],
+  "conditionalNextBoundary": {
+    "beforeBaselineCompletes": "No new production repair recommendation; inspect the actual normal-route Main baseline first.",
+    "ifBaselinePasses": "Retain Main live renderer and validate normal Evo/Pro active/rest/active, wood/cavities/hands/framing and interaction; do not enable the old experimental backend merely because it exists.",
+    "ifSameBaselineFailureRecurs": "The smallest new source-specific candidate to review is eligibility of the existing Simulator drawable-presentation adapter for the actual workout board viewport. Require unique board-layer match; preserve hands, navigation, audio, models and Main live camera. This is a conditional bounded comparison, not permission to apply or a cause claim.",
+    "ifImageBackendIsPursuedInstead": "First define a deterministic contact-aware final camera/pose snapshot owned through GPU completion, preserve Main interactive animation separately, and bind cache keys to actual rendered camera. Do not silently suppress camera semantics, add redraw timers, or treat current cached prototype as already compatible."
+  },
+  "validationLimits": [
+    "No hardware available; simulator conclusions remain scoped to the validated OS/device/binary.",
+    "Historical host/projection/mutation experiments and raw failures remain unchanged; no inferred framework root cause.",
+    "Preserve all66 native packages and existing physics/CAD, materials, task cursors, multiple presentation and picker behavior.",
+    "No acceptance, successful repair, or production-readiness claim."
+  ]
+}

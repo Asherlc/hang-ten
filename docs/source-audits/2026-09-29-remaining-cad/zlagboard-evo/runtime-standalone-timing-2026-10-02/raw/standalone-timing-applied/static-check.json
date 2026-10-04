@@ -1,0 +1,15 @@
+{
+  "swiftParseExitStatus": 0,
+  "helpers": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-capture.py",
+      "sha256": "0b59bcbe6798a965f97e136b8d506200464fb7dded53a4487b9bcd064ed36af9",
+      "astParse": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-standalone-timing.py",
+      "sha256": "8119bdad608d10de1f5c6a0e145c2b40720fcc3a71b3f8b391043e5617a2db0c",
+      "astParse": true
+    }
+  ]
+}

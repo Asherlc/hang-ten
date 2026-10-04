@@ -1,0 +1,218 @@
+{
+  "status": "pass",
+  "scope": "Native authoring, strict independent native checks, root/Opus native visual review, deterministic pinned exports, exact full-node technical previews and independent export technical checks pass. Actual-app appearance and human acceptance remain separate.",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "nativeValidity": {
+    "validSingleSolid": true,
+    "finalBody": "BodySolid",
+    "finalBodyType": "Part::Fuse",
+    "fullyConstrainedSketchCount": 159,
+    "reopenedRecomputedAndEditRestored": true,
+    "all24CavityVoidIntersections": "pass",
+    "all30ContactsAnd27DepthFacts": "pass"
+  },
+  "rawManifestExact": true,
+  "surfaceFinish": "plastic",
+  "normalFlagsPreserved": true,
+  "contactCount": 30,
+  "publishedDepthFactCount": 27,
+  "measuredEnvelopeXYZMM": [
+    711.0000002,
+    94.00075012973058,
+    222.00000010067734
+  ],
+  "thicknessInterpretation": "Existing approximately 94 mm display estimate, measured 94.0007501297 mm; published face 711\u00d7222 mm unchanged.",
+  "protectedUpperGeometry": {
+    "zMinimumMM": 135,
+    "bidirectionalBooleanDifferenceVolumesMM3": [
+      0,
+      0
+    ]
+  },
+  "frontFairing": {
+    "anchors": "Existing native depths retained; exact trimmed original 147\u2192135 mm profile plus lower cubic spans with shared nonzero tangents",
+    "lowerSketchIndices": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "joins": "Zero native tangent-angle differences and endpoint gaps no larger than 3.18e\u221214 mm",
+    "authoringScope": "Display curvature estimates; no pixel measurements"
+  },
+  "evidence": {
+    "baseline-freeze.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/baseline-freeze.json",
+      "sha256": "022d0fc1983411b0c188651ef46ac5d3dc846274147ba744b319848921369077"
+    },
+    "source-freeze.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/source-freeze.json",
+      "sha256": "4e7427a2c38029e0e56ca8d35293fa29d9271eb12aca68ff7112810aed4206fa"
+    },
+    "author-disposition.md": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/author-disposition.md",
+      "sha256": "eb7f7259dbf80777b369dd986be31b6df8ef1f2c5ed90adb30fe2676b028413e"
+    },
+    "authored-design.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/authored-design.json",
+      "sha256": "9c7144b5ad3c5d09d1634b96f7dfe3c4d0d1bbfc70ba1eb985a5c42544ab1241"
+    },
+    "source-audit.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/source-audit.json",
+      "sha256": "78f606184de0661f8df58e87f19e985fe922bb417bc5dc3f239287192d88251b"
+    },
+    "author-native-check.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/author-native-check.json",
+      "sha256": "e2c077c96addb310a9ceedf1a1e5369a6dc711016d0b8f286f6184d4b09a0d93"
+    },
+    "bounds-diagnosis.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/bounds-diagnosis.json",
+      "sha256": "dee7cc48d8ae2f01f8a5a7f4aa55439448ed4887b2f6ef97e3ca4b7c01ecadce"
+    },
+    "native-preview-provenance.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/native-preview-provenance.json",
+      "sha256": "b9379df28b00fa544b1d9415d989680db05512c5d2aa441723b640051e1bb721"
+    },
+    "native-stage-cleanup.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/native-stage-cleanup.json",
+      "sha256": "47b6d76d507b0285df9d56fc2dc886c7d773a98c05195d369a99721d169a6da2"
+    },
+    "independent-validation/native-check-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/native-check-b722.json",
+      "sha256": "9e110dcf3cb32c16707dd0e6781d88c7fd7d6437a8dadbf386cc7d6037d57fca"
+    },
+    "independent-validation/front-fairing-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/front-fairing-b722.json",
+      "sha256": "773c81396cb4ce36e2f92c62b0e91f339dc6c117fb1ee8567d43df5f16f82688"
+    },
+    "independent-validation/cavity-voids-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/cavity-voids-b722.json",
+      "sha256": "f6f7548993e08b87a68914f39bdb9e70a2a86a19eba2529106080698c0515755"
+    },
+    "independent-validation/functional-sections-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/functional-sections-b722.json",
+      "sha256": "fb0763cad6099e54d2a9cf2bb673131a446d1a64463f38a877652012b17edbf5"
+    },
+    "independent-validation/local-contact-joins-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/local-contact-joins-b722.json",
+      "sha256": "78ff992914ce765f4ed7dedbbbbb78eaf816646fe34d18e5699cd3d6638f1c33"
+    },
+    "independent-validation/final-independent-native-review-b722-labels-v2.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/final-independent-native-review-b722-labels-v2.json",
+      "sha256": "32320800a41820fa8446f2f8eead57ba5bf56bc49b41bde748cf77594b5bb468"
+    },
+    "independent-validation/final-independent-native-review-b722-labels-v2.md": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/final-independent-native-review-b722-labels-v2.md",
+      "sha256": "1caf7c9169df33cf718bfdc3c3951b9078d64448ddf0ba7c570c20b51e5f46d7"
+    },
+    "grasp-review/provenance.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/grasp-review/provenance.json",
+      "sha256": "56655e4964b37da09206530aba19d8fecc8bcafd0efd41265e37fafaeb106713"
+    },
+    "grasp-review/native-sections.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/grasp-review/native-sections.json",
+      "sha256": "cc8b048f281b2c96c5db9264cedb6d76d7ba199d9ec87573fa1e4956122cbc15"
+    },
+    "superseded-uv-boundary/final-normal-comparison.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/final-normal-comparison.json",
+      "sha256": "2be544aefb3e9da417118cea2318f13af082075ef0dfc4afdd6ea21d876ce295"
+    },
+    "superseded-export-cleanup.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-export-cleanup.json",
+      "sha256": "82af481d215b5acceeffec8bc55889721e64859ce8c105fb7389c62454bba311"
+    },
+    "normal-comparison-disposition.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/normal-comparison-disposition.json",
+      "sha256": "0fb5fbc5ba14e96be1fff22e7e8251d7c60d13af336668a64bbca4e89e26a2cc"
+    },
+    "independent-validation/actual-owner-normal-supplement-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/actual-owner-normal-supplement-b722.json",
+      "sha256": "a216a909ef9705ff6db7bc286866e7efe2d3663612188aa6297b4ea3e7254e13"
+    },
+    "compile.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/compile.json",
+      "sha256": "4f1843e5628207c84ff8e95531467bb2e518f462a3c4277bac39fc83cf45e6f6"
+    },
+    "compile-check.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/compile-check.json",
+      "sha256": "efcfeaffa87e51b5b36fdc8871eec5e61793281dec34df682fad59676e164349"
+    },
+    "reproduce.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/reproduce.json",
+      "sha256": "612c3df26663c9e9a091e6bcf976b961e420a06cbf66e54bceffb4770916f2d1"
+    },
+    "reproducibility.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/reproducibility.json",
+      "sha256": "ca87458ceee878b5979a54d743e5298356f38bd70f3de1755fbddec80744d648"
+    },
+    "final-export-cleanup.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/final-export-cleanup.json",
+      "sha256": "de90784dde5cad6b0db3291932e2669c011f27482db2ab857e91ef7fe645c625"
+    },
+    "opus-fairing-native-review.md": {
+      "path": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-fairing-native-review.md",
+      "sha256": "f3cb8e0d82da04954920a2dedd6387fa598da3f893eca75755a17bd61edc25b4"
+    },
+    "package-verification.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/package-verification.json",
+      "sha256": "d9faa5336533616c75ce31d47bd166d38d32f46efc8254ca1d4454de7adfbf52"
+    },
+    "export-grasp-provenance.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/export-grasp-provenance.json",
+      "sha256": "5fd862e41e5fc0232a467b679f1b1ed695f9048f0e65beee9961141a2cf97a70"
+    },
+    "export-render-cleanup.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/export-render-cleanup.json",
+      "sha256": "7f7431d71ddc8d13f518e5fe8436257e4ab664db04621f1357864dddc31dcce9"
+    },
+    "independent-validation/final-independent-export-review-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/final-independent-export-review-b722.json",
+      "sha256": "8d936cf31a7cb3cc2d1dfdaa9b705b1a56020022735637ddd771e8921127e978"
+    },
+    "independent-validation/final-independent-export-review-b722.md": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/final-independent-export-review-b722.md",
+      "sha256": "83e72e5d8746cd8fe7d99e71f60d401596087e91bf78990aa44a6d58c34d8157"
+    },
+    "independent-validation/export-rear-plane-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/export-rear-plane-b722.json",
+      "sha256": "c0005c527a0d4bd2aae54c6235610208db4b39b3dd8efee758543e4e87add216"
+    },
+    "independent-validation/export-rear-correspondence-b722-v2.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/export-rear-correspondence-b722-v2.json",
+      "sha256": "e6e3caf3a81dc0c3177a9b31d335d6227839e45fd92655c921ee9d551b051abe"
+    }
+  },
+  "remainingGates": {
+    "independentNativeAggregate": "pass",
+    "rootOpusNativeVisual": "pass: root whole-frame review and fresh Opus native review",
+    "compilerExport": "pass: two byte-identical exports and staged check",
+    "actualApp": "pending",
+    "humanAcceptance": "pending",
+    "analyticNormalComparison": "pass via independent actual-owner supplement: 191 legacy agreements and one proven correct actual-owner normal; raw 7.161516 degree mismatch retained",
+    "independentActualExport": "technical pass; raw semantic topology and localized opposing-normal slivers retained for actual-app review",
+    "exactExportPreviews": "pass: physically inspected complete all-31-node comparisons and grasp/rear views"
+  },
+  "limits": [
+    "The soft upper band between Z 170 and 147 mm is intentionally retained to preserve the corrected grip geometry.",
+    "C1 statement applies to new lower profile spans, not every unchanged roof join.",
+    "Fresh source bounds are measured with triangulation/tolerance disabled; inflated post-preview tessellation-cache bounds retained raw and independently resolved.",
+    "CPU neutral previews do not establish actual plastic app appearance.",
+    "Semantic export is not claimed to be exactly welded watertight: independent report retains 2,974 boundary edges and 62 nonmanifold edges.",
+    "Independent exported-normal diagnostics retain 1,089 localized opposing-normal triangles totaling 6.849906 mm\u00b2; actual-app appearance remains the disposition gate.",
+    "All 583 rear facets match native writer-encoded triangles exactly and have wall-facing winding/corner normals; CPU rear-oblique dark mark is not missing rear geometry."
+  ],
+  "independentNativeAggregatePath": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/final-independent-native-review-b722-labels-v2.json",
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+  "export": {
+    "triangleCount": 75174,
+    "semanticNodeCount": 31,
+    "bytes": 1908779,
+    "tessellationDeflectionMM": 0.28,
+    "unbound": true,
+    "twoNormalExportsByteIdentical": true,
+    "independentStagedCheckMatches": true,
+    "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d"
+  }
+}

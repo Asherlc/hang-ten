@@ -1,0 +1,112 @@
+{
+  "recordedEpoch": 1790987402.824536,
+  "status": "VALID_DIAGNOSTIC_RUN_VISUAL_FAILURE",
+  "productionFixed": false,
+  "appWorkflowPassed": false,
+  "runDirectory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape",
+  "binarySHA256": "eef5a676aac05b09fbff374204347109caabd9842a1da7e8c6a64e7953914d15",
+  "sourceBuildInstallChanges": false,
+  "checks": {
+    "structural-correspondence.json": {
+      "completeContiguous": true,
+      "captures12": true,
+      "allCPUBrackets": true,
+      "sameScene": true,
+      "naturalFirstHang": true,
+      "naturalRest": true,
+      "freshSession": true,
+      "boundaryAppActive": true,
+      "boundaryWindowActive": true,
+      "boundaryLandscape": true,
+      "lateBoundaryCensus": true,
+      "noAXOrTouch": true
+    },
+    "hand-lifetime-validation.json": {
+      "completeOpeningStream": true,
+      "instrumentationVersion": true,
+      "suppressionFlagCorrect": true,
+      "allFourCountsOnEveryRecord": true,
+      "openingCountsZero": true,
+      "countsMonotonic": true,
+      "finalMarkerAfterLastCapture": true,
+      "noRecorderErrorOrCap": true,
+      "strictOFFZeroAllFourLifetimeCounts": true
+    },
+    "strict-absence-validation.json": {
+      "strictFlagEnabled": true,
+      "perspectiveFlagAbsent": true,
+      "openingStrictEnabled": true,
+      "allFourCountsZeroThroughout": true,
+      "noHandLifecycleEvents": true,
+      "noHandCameraEvents": true
+    },
+    "normal-host-frame-validation.json": {
+      "workoutSceneFromCountdown": true,
+      "hostObserved": true,
+      "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+      "sameHost": true,
+      "sameActualScene": true,
+      "rootCameraActiveSameScene": true,
+      "hostVisible": true,
+      "sampledFramesOnMonotoneOwnEndpointPath": true,
+      "allPostFirstCaptureCensusesFinal": true
+    }
+  },
+  "visualReview": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-off-landscape/visual-review.json",
+    "sha256": "3f753edb26bfa866f44cdd17c295f08f4eca0365c29b462c93411746eaf07bb2"
+  },
+  "traceRecords": 149,
+  "actualPhaseIntervalsSeconds": [
+    6.755125045776367,
+    180.83174204826355
+  ],
+  "allHandConstructorAndMakeCountsZero": true,
+  "postAttachmentBoardHostCensuses": 128,
+  "actualNormalFrameEndpoints": [
+    [
+      232,
+      182.33333333333331,
+      410,
+      70
+    ],
+    [
+      332,
+      240,
+      210,
+      36
+    ]
+  ],
+  "observedColors": {
+    "initialHang": [
+      "red",
+      "red",
+      "red",
+      "red"
+    ],
+    "rest": [
+      "red",
+      "red",
+      "red",
+      "red"
+    ],
+    "nextHang": [
+      "blue",
+      "blue",
+      "blue",
+      "red"
+    ]
+  },
+  "interpretation": "Actual hand-host construction is not necessary for this observed normal-route failure; suppressing all four hand constructor/make paths is insufficient to fix it. No production change is supported by this run.",
+  "predecessorHistory": "Full Train/pre-workout scene records retained in normal-host-frame-validation.json. One prior board scene lifecycle token observed (9ADE52CC-C5FB-435F-818B-37AD8788E66B). Counts differ from some historical runs; this is qualified separately and does not prove simultaneous host overlap or isolate navigation as the cause.",
+  "frontendQualification": "No frontend/UI actions in this task. Owned failed frontend PID40262 cleanup was confirmed by root; unknown DeviceHub89674 left alone. Earlier zero-frontend claims were unreliable due truncated Darwin ps comm; no headless or frontend-isolation claim.",
+  "censusLimit": "App/window/actual scene evidence is sparse at retained samples and semantic boundaries. The existing sampler ends at 120 seconds; late boundary census and complete CPU tail are retained, not continuous late census.",
+  "stopRule": "OFF validly failed visually; conditional ON reversal not launched. No additional run.",
+  "finalParity": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-final-parity.json",
+    "sha256": "2cdce7495c095ea0ccc85fefa3a6dc6530d856f1d26ea06c87f45464dec59fe2",
+    "allEqual": true,
+    "count": 26
+  },
+  "resourceHandoff": "Existing exact Simulator, DerivedData and controller90373 remain live for root. No new external resources. Source/runtime handed back after report freeze."
+}

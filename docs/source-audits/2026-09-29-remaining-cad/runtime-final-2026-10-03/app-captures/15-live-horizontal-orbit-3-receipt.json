@@ -1,0 +1,193 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 15,
+    "boardID": "trango.rock-prodigy-forge",
+    "package": "trango-rock-prodigy-forge",
+    "contactID": "im-deep-left",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "trango.rock-prodigy-forge",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "im-deep-left",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791056504.559832
+  },
+  "image": "15-live-horizontal-orbit-3.png",
+  "imageSHA256": "ee72aff39996863f343419de5e5fda30008f3cfb7fb1b2bf0e5612029408f5ac",
+  "accessibilitySHA256": "d7bf4b2ecf240002c175b486bae72fb70bcbf406e7527b0088963f66b0525f16",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=13;rootActive=true;cameraActive=true;sameScene=true;azimuth=-1.6221557;elevation=0.29284668;cameraPitch=0.29284668;cameraSettled=true;selection=im-deep-left;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "actualPhysicalOrbit": true,
+  "projectedBefore": {
+    "boardModel.contact.sloper-30-left": [
+      0.41716566866267457,
+      0.5602409638554219
+    ],
+    "boardModel.contact.sloper-40-left": [
+      0.4291417165668662,
+      0.45180722891566283
+    ],
+    "boardModel.contact.variable-edge-rail-left": [
+      0.45209580838323354,
+      0.5301204819277107
+    ],
+    "boardModel.contact.large-flat-edge-left": [
+      0.46806387225548896,
+      0.4036144578313251
+    ],
+    "boardModel.contact.slopey-crimper-left": [
+      0.46806387225548896,
+      0.4337349397590363
+    ],
+    "boardModel.contact.large-flat-edge-right": [
+      0.5249500998003992,
+      0.2891566265060242
+    ],
+    "boardModel.contact.slopey-crimper-right": [
+      0.5299401197604791,
+      0.3072289156626507
+    ],
+    "boardModel.contact.variable-edge-rail-right": [
+      0.5349301397205588,
+      0.3554216867469874
+    ],
+    "boardModel.contact.sloper-40-right": [
+      0.5369261477045908,
+      0.23493975903614467
+    ],
+    "boardModel.contact.sloper-30-right": [
+      0.5698602794411177,
+      0.24698795180722882
+    ],
+    "boardModel.contact.im-deep-left": [
+      0.437125748502994,
+      0.7650602409638554
+    ],
+    "boardModel.contact.closed-crimp-left": [
+      0.44510978043912175,
+      0.6445783132530116
+    ],
+    "boardModel.contact.im-shallow-left": [
+      0.4471057884231536,
+      0.7469879518072289
+    ],
+    "boardModel.contact.mr-deep-left": [
+      0.46906187624750495,
+      0.5843373493975902
+    ],
+    "boardModel.contact.mr-shallow-left": [
+      0.4710578842315369,
+      0.6686746987951809
+    ],
+    "boardModel.contact.mr-deep-right": [
+      0.5189620758483033,
+      0.46987951807228934
+    ],
+    "boardModel.contact.mr-shallow-right": [
+      0.5209580838323353,
+      0.554216867469879
+    ],
+    "boardModel.contact.im-shallow-right": [
+      0.5369261477045908,
+      0.5361445783132525
+    ],
+    "boardModel.contact.im-deep-right": [
+      0.5429141716566865,
+      0.518072289156626
+    ],
+    "boardModel.contact.closed-crimp-right": [
+      0.5449101796407185,
+      0.4277108433734934
+    ]
+  },
+  "projectedAfter": {
+    "boardModel.contact.sloper-40-right": [
+      0.4840319361277445,
+      0.2409638554216865
+    ],
+    "boardModel.contact.im-deep-right": [
+      0.4900199600798403,
+      0.45783132530120463
+    ],
+    "boardModel.contact.im-shallow-right": [
+      0.4920159680638722,
+      0.47590361445783114
+    ],
+    "boardModel.contact.sloper-40-left": [
+      0.4920159680638722,
+      0.5421686746987954
+    ],
+    "boardModel.contact.variable-edge-rail-right": [
+      0.4930139720558882,
+      0.3433734939759037
+    ],
+    "boardModel.contact.mr-deep-right": [
+      0.4930139720558882,
+      0.45180722891566283
+    ],
+    "boardModel.contact.sloper-30-right": [
+      0.4940119760479042,
+      0.21686746987951816
+    ],
+    "boardModel.contact.closed-crimp-right": [
+      0.4940119760479042,
+      0.3855421686746986
+    ],
+    "boardModel.contact.mr-shallow-right": [
+      0.4950099800399201,
+      0.518072289156626
+    ],
+    "boardModel.contact.large-flat-edge-right": [
+      0.4960079840319361,
+      0.3072289156626507
+    ],
+    "boardModel.contact.mr-deep-left": [
+      0.49700598802395207,
+      0.5963855421686749
+    ],
+    "boardModel.contact.slopey-crimper-right": [
+      0.498003992015968,
+      0.31325301204819256
+    ],
+    "boardModel.contact.variable-edge-rail-left": [
+      0.499001996007984,
+      0.5783132530120484
+    ],
+    "boardModel.contact.large-flat-edge-left": [
+      0.5,
+      0.4638554216867465
+    ],
+    "boardModel.contact.slopey-crimper-left": [
+      0.5029940119760479,
+      0.48795180722891585
+    ],
+    "boardModel.contact.im-deep-left": [
+      0.498003992015968,
+      0.77710843373494
+    ],
+    "boardModel.contact.mr-shallow-left": [
+      0.499001996007984,
+      0.6626506024096381
+    ],
+    "boardModel.contact.im-shallow-left": [
+      0.499001996007984,
+      0.7469879518072289
+    ],
+    "boardModel.contact.closed-crimp-left": [
+      0.5019960079840319,
+      0.6746987951807227
+    ],
+    "boardModel.contact.sloper-30-left": [
+      0.5069860279441117,
+      0.6506024096385544
+    ]
+  }
+}

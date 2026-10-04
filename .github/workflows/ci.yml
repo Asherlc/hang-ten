@@ -622,6 +622,7 @@ jobs:
           # complete: test_ci_xctest_contract.py audits every method exactly once.
           - shard: purchase-settings-workouts
             only_testing: >-
+              HangTenUITests/CustomRoutineEditorUITests
               HangTenUITests/WorkoutPaywallUITests/testThirdWorkoutLaunchShowsPaywallInsteadOfSession
               HangTenUITests/WorkoutPaywallUITests/testDismissingPaywallDoesNotStartWorkout
               HangTenUITests/WorkoutPaywallUITests/testVerifiedFakePurchaseContinuesIntoSession

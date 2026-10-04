@@ -1,0 +1,344 @@
+{
+  "slug": "trango-rock-prodigy-forge",
+  "boardID": "trango.rock-prodigy-forge",
+  "preMigrationBoardSHA256": "8ea4c951e289bcf522e65b607ad27d5913b03078276ce9837c8842f7b4cb562b",
+  "contactCount": 20,
+  "contacts": [
+    {
+      "contactID": "sloper-30-left",
+      "name": "Left 30-degree sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "sloper-30-right",
+      "name": "Right 30-degree sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "sloper-40-left",
+      "name": "Left 40-degree sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "sloper-40-right",
+      "name": "Right 40-degree sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "large-flat-edge-left",
+      "name": "Left large flat edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "category": "large"
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "large-flat-edge-right",
+      "name": "Right large flat edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "category": "large"
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "slopey-crimper-left",
+      "name": "Left slopey crimper",
+      "kind": "edge",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "slopey-crimper-right",
+      "name": "Right slopey crimper",
+      "kind": "edge",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "variable-edge-rail-left",
+      "name": "Left 7\u201320 mm variable-depth edge rail",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 7,
+          "maximum": 20
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "variable-edge-rail-right",
+      "name": "Right 7\u201320 mm variable-depth edge rail",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 7,
+          "maximum": 20
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "closed-crimp-left",
+      "name": "Left 7.5 mm closed crimp with thumb support",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 7.5,
+          "maximum": 7.5
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "fullCrimp"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "closed-crimp-right",
+      "name": "Right 7.5 mm closed crimp with thumb support",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 7.5,
+          "maximum": 7.5
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "fullCrimp"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "mr-deep-left",
+      "name": "Left 25 mm MR deep pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "mr-deep-right",
+      "name": "Right 25 mm MR deep pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "mr-shallow-left",
+      "name": "Left 15 mm MR shallow pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "mr-shallow-right",
+      "name": "Right 15 mm MR shallow pocket",
+      "kind": "pocket",
+      "publishedDepth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "im-deep-left",
+      "name": "Left IM deep pocket",
+      "kind": "pocket",
+      "publishedDepth": null,
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "im-deep-right",
+      "name": "Right IM deep pocket",
+      "kind": "pocket",
+      "publishedDepth": null,
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "im-shallow-left",
+      "name": "Left IM shallow pocket",
+      "kind": "pocket",
+      "publishedDepth": null,
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    },
+    {
+      "contactID": "im-shallow-right",
+      "name": "Right IM shallow pocket",
+      "kind": "pocket",
+      "publishedDepth": null,
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+        "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203"
+      ]
+    }
+  ],
+  "metadataPolicy": "Identity, revision, contact order, names, capacities, grip types, dimensions, aspect ratios and model camera retained verbatim. Existing unsupported facts are neither added nor expanded. No training content changes.",
+  "sourceLimitations": "Current Forge split unit revision. Manufacturer photo angles show tapered long wing, broad upper sloper with elevated block, distinct drafted pockets and narrow crimp ledges. Official depth guide and grip chart establish numeric depths and names; overall per-side dimensions are 5.25 x 12.75 in. Both left/right contact sets remain as currently modeled.",
+  "embeddedManifestRoundtripExact": true,
+  "generatedBoardJsonRemoved": true
+}

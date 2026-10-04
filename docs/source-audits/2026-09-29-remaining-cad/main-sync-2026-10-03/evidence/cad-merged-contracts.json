@@ -1,0 +1,16 @@
+{
+  "command": [
+    ".context/placid-badger-cad-second-half/yy-baguette/venv/bin/python",
+    "-m",
+    "pytest",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+    "Tools/HangboardCAD/tests/test_presentations.py",
+    "Tools/HangboardCAD/tests/test_native_pose_terminals.py",
+    "Tools/HangboardCAD/tests/test_rectangular_channel_section.py",
+    "Tools/HangboardCAD/tests/test_threaded_loop_solver.py",
+    "Tools/HangboardCAD/tests/test_contract.py",
+    "-q"
+  ],
+  "exitCode": 0,
+  "duration": 4.2911601066589355
+}

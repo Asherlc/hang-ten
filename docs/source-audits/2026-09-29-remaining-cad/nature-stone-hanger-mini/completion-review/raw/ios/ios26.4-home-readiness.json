@@ -1,0 +1,217 @@
+{
+  "simulatorUUID": "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B",
+  "runtime": "26.4",
+  "commands": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "perl",
+        "-e",
+        "alarm 25; exec @ARGV",
+        "xcrun",
+        "simctl",
+        "bootstatus",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B",
+        "-b"
+      ],
+      "exitCode": 142,
+      "output": "Monitoring boot status for Hang Ten Paseo placid-badger Review Mini Completion iOS264 (AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B).\n[2026-10-02 04:22:30 +0000] Status=2, isTerminal=NO, Elapsed=00:41.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:39 seconds\n\n[2026-10-02 04:22:31 +0000] Status=2, isTerminal=NO, Elapsed=00:42.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:40 seconds\n\n[2026-10-02 04:22:32 +0000] Status=2, isTerminal=NO, Elapsed=00:43.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:41 seconds\n\n[2026-10-02 04:22:33 +0000] Status=2, isTerminal=NO, Elapsed=00:44.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:42 seconds\n\n[2026-10-02 04:22:34 +0000] Status=2, isTerminal=NO, Elapsed=00:45.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:43 seconds\n\n[2026-10-02 04:22:35 +0000] Status=2, isTerminal=NO, Elapsed=00:46.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:44 seconds\n\n[2026-10-02 04:22:36 +0000] Status=2, isTerminal=NO, Elapsed=00:47.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:45 seconds\n\n[2026-10-02 04:22:37 +0000] Status=2, isTerminal=NO, Elapsed=00:48.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:46 seconds\n\n[2026-10-02 04:22:38 +0000] Status=2, isTerminal=NO, Elapsed=00:49.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:47 seconds\n\n[2026-10-02 04:22:39 +0000] Status=2, isTerminal=NO, Elapsed=00:50.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:48 seconds\n\n[2026-10-02 04:22:40 +0000] Status=2, isTerminal=NO, Elapsed=00:51.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:49 seconds\n\n[2026-10-02 04:22:41 +0000] Status=2, isTerminal=NO, Elapsed=00:52.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:50 seconds\n\n[2026-10-02 04:22:42 +0000] Status=2, isTerminal=NO, Elapsed=00:53.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:51 seconds\n\n[2026-10-02 04:22:43 +0000] Status=2, isTerminal=NO, Elapsed=00:54.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:52 seconds\n\n[2026-10-02 04:22:44 +0000] Status=2, isTerminal=NO, Elapsed=00:55.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:53 seconds\n\n[2026-10-02 04:22:45 +0000] Status=2, isTerminal=NO, Elapsed=00:56.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:54 seconds\n\n[2026-10-02 04:22:46 +0000] Status=2, isTerminal=NO, Elapsed=00:57.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:55 seconds\n\n[2026-10-02 04:22:47 +0000] Status=2, isTerminal=NO, Elapsed=00:58.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:56 seconds\n\n[2026-10-02 04:22:48 +0000] Status=2, isTerminal=NO, Elapsed=00:59.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:57 seconds\n\n[2026-10-02 04:22:49 +0000] Status=2, isTerminal=NO, Elapsed=01:00.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:58 seconds\n\n[2026-10-02 04:22:50 +0000] Status=2, isTerminal=NO, Elapsed=01:01.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:00:59 seconds\n\n[2026-10-02 04:22:51 +0000] Status=2, isTerminal=NO, Elapsed=01:02.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:01:00 seconds\n\n[2026-10-02 04:22:52 +0000] Status=2, isTerminal=NO, Elapsed=01:03.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:01:01 seconds\n\n[2026-10-02 04:22:53 +0000] Status=2, isTerminal=NO, Elapsed=01:04.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.addressbook.migrator (AddressBookLegacy.migrator)\n\t\tMigration Elapsed:01:02 seconds\n\n[rtk] perl: process terminated by signal 14\n"
+    },
+    {
+      "attempt": 0,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 1,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 2,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 3,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 4,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 5,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 6,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 7,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 8,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 9,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 10,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 11,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 12,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 13,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 14,
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B"
+      ],
+      "exitCode": 1,
+      "output": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    }
+  ]
+}

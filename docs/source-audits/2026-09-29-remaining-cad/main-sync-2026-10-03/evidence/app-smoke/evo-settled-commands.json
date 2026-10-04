@@ -1,0 +1,39 @@
+[
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "terminate",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "com.hangten.training"
+    ],
+    "startUTC": 1791042443.2319832,
+    "endUTC": 1791042443.4382021,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "launch",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "com.hangten.training"
+    ],
+    "startUTC": 1791042443.438504,
+    "endUTC": 1791042443.720854,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "io",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/main-sync-2026-10-03/app-smoke/zlagboard.evo-settled.png"
+    ],
+    "startUTC": 1791042458.729492,
+    "endUTC": 1791042459.195445,
+    "exitStatus": 0
+  }
+]

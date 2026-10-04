@@ -1,0 +1,446 @@
+{
+  "boundSeconds": 20,
+  "startEpoch": 1790996035.928003,
+  "endEpoch": 1790996039.801787,
+  "elapsedSeconds": 3.873795624997001,
+  "passed": true,
+  "evidence": {
+    "makeRecord": {
+      "applicationCensus": {
+        "applicationState": 0,
+        "standaloneGate": false,
+        "windowScenes": [
+          {
+            "activationState": 0,
+            "interfaceOrientation": 3,
+            "sceneID": "ObjectIdentifier(0x0000000104d86e00)",
+            "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+            "windows": [
+              {
+                "alpha": 1,
+                "bounds": [
+                  874,
+                  402
+                ],
+                "hidden": false,
+                "key": true,
+                "rendererNamedViewClasses": {},
+                "rendererPlacements": [],
+                "windowID": "ObjectIdentifier(0x0000000103f64800)"
+              }
+            ]
+          }
+        ]
+      },
+      "boardDetachTrial": {
+        "detachRequested": false,
+        "hosts": [
+          {
+            "attachmentObserved": true,
+            "cameraActualSceneID": "ObjectIdentifier(0x0000000105236600)",
+            "cameraAlive": true,
+            "cameraParentID": "ObjectIdentifier(0x0000000105fc6fe0)",
+            "currentOwner": true,
+            "detached": false,
+            "disappeared": false,
+            "invalid": "nil",
+            "modelAlive": true,
+            "modelRetainedForTrial": false,
+            "ownerToken": "64DEA2BC-84D8-4AE3-B8F9-003A819C5BF2",
+            "reattachedAfterDetach": false,
+            "recordedActualSceneID": "ObjectIdentifier(0x0000000105236600)",
+            "recordedParentID": "ObjectIdentifier(0x0000000105fc6fe0)",
+            "rootActualSceneID": "ObjectIdentifier(0x0000000105236600)",
+            "rootAlive": true,
+            "rootParentID": "ObjectIdentifier(0x0000000105fc6fe0)",
+            "sceneLifecycleToken": "45CA418E-EF00-4CD7-8FF6-61D9B05FA99C",
+            "trainMarked": true,
+            "viewToken": "6FA7510C-CF3D-4242-B5FF-1BC659FA8DF1"
+          }
+        ],
+        "retentionRequested": false
+      },
+      "boardLifetimeCensus": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x00000001143e7880)",
+            "isActive": true,
+            "parentEntityID": "ObjectIdentifier(0x0000000105fc6fe0)",
+            "realitySceneID": "ObjectIdentifier(0x0000000105236600)"
+          },
+          "constructedIDs": {
+            "cameraID": "ObjectIdentifier(0x00000001143e7880)",
+            "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+            "rootID": "ObjectIdentifier(0x00000001143e72e0)",
+            "wrapperID": "ObjectIdentifier(0x0000000105f1ad80)"
+          },
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x00000001143e72e0)",
+            "isActive": true,
+            "parentEntityID": "ObjectIdentifier(0x0000000105fc6fe0)",
+            "realitySceneID": "ObjectIdentifier(0x0000000105236600)"
+          },
+          "sceneLifecycleToken": "45CA418E-EF00-4CD7-8FF6-61D9B05FA99C",
+          "wrapperAlive": true
+        }
+      ],
+      "boardRenderMembership": {
+        "cameraActive": true,
+        "cameraEntityID": "ObjectIdentifier(0x00000001143e7880)",
+        "cameraRealitySceneID": "ObjectIdentifier(0x0000000105236600)",
+        "cameraTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9438583850860596,
+          -0.33035042881965637,
+          0,
+          0,
+          0.33035042881965637,
+          0.9438583850860596,
+          0,
+          0,
+          0.10610384494066238,
+          0.3241538405418396,
+          1
+        ],
+        "far": 1000,
+        "near": 0.0010000000474974513,
+        "orthographic": false,
+        "perspective": true,
+        "rootActive": true,
+        "rootEntityID": "ObjectIdentifier(0x00000001143e72e0)",
+        "rootRealitySceneID": "ObjectIdentifier(0x0000000105236600)",
+        "verticalFOVDegrees": 30
+      },
+      "cachedIDs": [],
+      "cachedMode": "active",
+      "cameraID": "ObjectIdentifier(0x00000001143e7880)",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ],
+      "complete": true,
+      "contentContainsRegisteredRoot": true,
+      "contentRootIDs": [
+        "ObjectIdentifier(0x00000001143e72e0)",
+        "ObjectIdentifier(0x00000001143e7880)"
+      ],
+      "epoch": 1790996039.78003,
+      "event": "view-make",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 0,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "handLifetimeCensus": [],
+      "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "requestedMode": "active",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "rootAttached": true,
+      "rootEnabled": true,
+      "rootID": "ObjectIdentifier(0x00000001143e72e0)",
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "sceneID": "ObjectIdentifier(0x0000000105f1ad80)",
+      "sceneLifecycleToken": "45CA418E-EF00-4CD7-8FF6-61D9B05FA99C",
+      "selectedIDs": [],
+      "sequence": 7,
+      "surfaces": [],
+      "uptime": 79114.312839,
+      "viewportPoints": [
+        674,
+        115.54285714285714
+      ],
+      "viewToken": "6FA7510C-CF3D-4242-B5FF-1BC659FA8DF1"
+    },
+    "attachmentRecord": {
+      "applicationCensus": {
+        "applicationState": 0,
+        "standaloneGate": false,
+        "windowScenes": [
+          {
+            "activationState": 0,
+            "interfaceOrientation": 3,
+            "sceneID": "ObjectIdentifier(0x0000000104d86e00)",
+            "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+            "windows": [
+              {
+                "alpha": 1,
+                "bounds": [
+                  874,
+                  402
+                ],
+                "hidden": false,
+                "key": true,
+                "rendererNamedViewClasses": {},
+                "rendererPlacements": [],
+                "windowID": "ObjectIdentifier(0x0000000103f64800)"
+              }
+            ]
+          }
+        ]
+      },
+      "boardDetachTrial": {
+        "detachRequested": false,
+        "hosts": [
+          {
+            "attachmentObserved": true,
+            "cameraActualSceneID": "ObjectIdentifier(0x0000000105236600)",
+            "cameraAlive": true,
+            "cameraParentID": "ObjectIdentifier(0x0000000105fc6fe0)",
+            "currentOwner": true,
+            "detached": false,
+            "disappeared": false,
+            "invalid": "nil",
+            "modelAlive": true,
+            "modelRetainedForTrial": false,
+            "ownerToken": "64DEA2BC-84D8-4AE3-B8F9-003A819C5BF2",
+            "reattachedAfterDetach": false,
+            "recordedActualSceneID": "ObjectIdentifier(0x0000000105236600)",
+            "recordedParentID": "ObjectIdentifier(0x0000000105fc6fe0)",
+            "rootActualSceneID": "ObjectIdentifier(0x0000000105236600)",
+            "rootAlive": true,
+            "rootParentID": "ObjectIdentifier(0x0000000105fc6fe0)",
+            "sceneLifecycleToken": "45CA418E-EF00-4CD7-8FF6-61D9B05FA99C",
+            "trainMarked": true,
+            "viewToken": "6FA7510C-CF3D-4242-B5FF-1BC659FA8DF1"
+          }
+        ],
+        "retentionRequested": false
+      },
+      "boardLifetimeCensus": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x00000001143e7880)",
+            "isActive": true,
+            "parentEntityID": "ObjectIdentifier(0x0000000105fc6fe0)",
+            "realitySceneID": "ObjectIdentifier(0x0000000105236600)"
+          },
+          "constructedIDs": {
+            "cameraID": "ObjectIdentifier(0x00000001143e7880)",
+            "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+            "rootID": "ObjectIdentifier(0x00000001143e72e0)",
+            "wrapperID": "ObjectIdentifier(0x0000000105f1ad80)"
+          },
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x00000001143e72e0)",
+            "isActive": true,
+            "parentEntityID": "ObjectIdentifier(0x0000000105fc6fe0)",
+            "realitySceneID": "ObjectIdentifier(0x0000000105236600)"
+          },
+          "sceneLifecycleToken": "45CA418E-EF00-4CD7-8FF6-61D9B05FA99C",
+          "wrapperAlive": true
+        }
+      ],
+      "boardRenderMembership": {
+        "cameraActive": true,
+        "cameraEntityID": "ObjectIdentifier(0x00000001143e7880)",
+        "cameraRealitySceneID": "ObjectIdentifier(0x0000000105236600)",
+        "cameraTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9438583850860596,
+          -0.33035042881965637,
+          0,
+          0,
+          0.33035042881965637,
+          0.9438583850860596,
+          0,
+          0,
+          0.10610384494066238,
+          0.3241538405418396,
+          1
+        ],
+        "far": 1000,
+        "near": 0.0010000000474974513,
+        "orthographic": false,
+        "perspective": true,
+        "rootActive": true,
+        "rootEntityID": "ObjectIdentifier(0x00000001143e72e0)",
+        "rootRealitySceneID": "ObjectIdentifier(0x0000000105236600)",
+        "verticalFOVDegrees": 30
+      },
+      "cachedIDs": [],
+      "cachedMode": "active",
+      "cameraID": "ObjectIdentifier(0x00000001143e7880)",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.9438583850860596,
+        -0.33035042881965637,
+        0,
+        0,
+        0.33035042881965637,
+        0.9438583850860596,
+        0,
+        0,
+        0.10610384494066238,
+        0.3241538405418396,
+        1
+      ],
+      "complete": true,
+      "contentContainsRegisteredRoot": true,
+      "contentRootIDs": [
+        "ObjectIdentifier(0x00000001143e72e0)",
+        "ObjectIdentifier(0x00000001143e7880)"
+      ],
+      "epoch": 1790996039.78003,
+      "event": "view-make",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 0,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "handLifetimeCensus": [],
+      "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "requestedMode": "active",
+      "resolvedSurfaceInputs": {
+        "boardID": "zlagboard.evo",
+        "ids": [],
+        "isDisplayOnly": false,
+        "mode": "active",
+        "positionID": "primary",
+        "presentationID": "primary"
+      },
+      "rootAttached": true,
+      "rootEnabled": true,
+      "rootID": "ObjectIdentifier(0x00000001143e72e0)",
+      "rootTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "sceneID": "ObjectIdentifier(0x0000000105f1ad80)",
+      "sceneLifecycleToken": "45CA418E-EF00-4CD7-8FF6-61D9B05FA99C",
+      "selectedIDs": [],
+      "sequence": 7,
+      "surfaces": [],
+      "uptime": 79114.312839,
+      "viewportPoints": [
+        674,
+        115.54285714285714
+      ],
+      "viewToken": "6FA7510C-CF3D-4242-B5FF-1BC659FA8DF1"
+    },
+    "trainToken": "45CA418E-EF00-4CD7-8FF6-61D9B05FA99C",
+    "host": {
+      "attachmentObserved": true,
+      "cameraActualSceneID": "ObjectIdentifier(0x0000000105236600)",
+      "cameraAlive": true,
+      "cameraParentID": "ObjectIdentifier(0x0000000105fc6fe0)",
+      "currentOwner": true,
+      "detached": false,
+      "disappeared": false,
+      "invalid": "nil",
+      "modelAlive": true,
+      "modelRetainedForTrial": false,
+      "ownerToken": "64DEA2BC-84D8-4AE3-B8F9-003A819C5BF2",
+      "reattachedAfterDetach": false,
+      "recordedActualSceneID": "ObjectIdentifier(0x0000000105236600)",
+      "recordedParentID": "ObjectIdentifier(0x0000000105fc6fe0)",
+      "rootActualSceneID": "ObjectIdentifier(0x0000000105236600)",
+      "rootAlive": true,
+      "rootParentID": "ObjectIdentifier(0x0000000105fc6fe0)",
+      "sceneLifecycleToken": "45CA418E-EF00-4CD7-8FF6-61D9B05FA99C",
+      "trainMarked": true,
+      "viewToken": "6FA7510C-CF3D-4242-B5FF-1BC659FA8DF1"
+    },
+    "weak": {
+      "camera": {
+        "alive": true,
+        "enabled": true,
+        "entityID": "ObjectIdentifier(0x00000001143e7880)",
+        "isActive": true,
+        "parentEntityID": "ObjectIdentifier(0x0000000105fc6fe0)",
+        "realitySceneID": "ObjectIdentifier(0x0000000105236600)"
+      },
+      "constructedIDs": {
+        "cameraID": "ObjectIdentifier(0x00000001143e7880)",
+        "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+        "rootID": "ObjectIdentifier(0x00000001143e72e0)",
+        "wrapperID": "ObjectIdentifier(0x0000000105f1ad80)"
+      },
+      "root": {
+        "alive": true,
+        "enabled": true,
+        "entityID": "ObjectIdentifier(0x00000001143e72e0)",
+        "isActive": true,
+        "parentEntityID": "ObjectIdentifier(0x0000000105fc6fe0)",
+        "realitySceneID": "ObjectIdentifier(0x0000000105236600)"
+      },
+      "sceneLifecycleToken": "45CA418E-EF00-4CD7-8FF6-61D9B05FA99C",
+      "wrapperAlive": true
+    },
+    "hostObservedEpoch": 1790996039.801784
+  },
+  "scope": "Existing Train-tagged make and actual root/camera attachment observation only; not frame-presentation or backing-view-deallocation proof. No fixed delay fallback."
+}

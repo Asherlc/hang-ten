@@ -1,0 +1,16 @@
+{
+  "status": "DRAFT_V2_SCHEMA_PENDING_NOT_RUN",
+  "pythonASTPass": true,
+  "schemaReady": false,
+  "originalV1CaptureSHA256": "4b5b39559177a7c804699fa85583bfbec580cd71c5ca7ba01fdb8d6ae5e461a3",
+  "v2CaptureSHA256": "6321b133c84412663edc3285238402c7232842d177acb74f560ad54b2c982391",
+  "changes": [
+    "Cleanup verification gates exit status; original failure retained separately.",
+    "Final actual-schema copied-trace/hash validation after raw retention; no prototype fields invented."
+  ],
+  "files": {
+    "capture.py": "6321b133c84412663edc3285238402c7232842d177acb74f560ad54b2c982391",
+    "protocol.md": "f1a747420a473b1641d48d982505870b9b352a2711cf57422237d3888133c828",
+    "prototype_schema.py": "bbce907623e3f9ab3aeadc03f1e1e2f5855506114028d704be5a51fd7e39066c"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "package": "frictitious-port-a-board",
+  "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "editedFeature": "FrontUpperDeepCavity",
+  "reopenRecompute": true,
+  "fullyConstrainedSketches": true,
+  "validBoundShapes": true,
+  "contactVerticesOnActualBodySurface": true,
+  "dimensionalEditChangesSolid": true,
+  "dimensionalEditChangesContacts": [
+    "edge_25"
+  ],
+  "bodyVolumeBeforeMM3": 572500.3034332917,
+  "bodyVolumeAfterMM3": 570722.1087622326,
+  "sourceBytesUnchanged": true,
+  "note": "Native source acceptance only. Suspension and app acceptance remain separate."
+}

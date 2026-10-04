@@ -1,0 +1,22 @@
+{
+  "prior": [
+    {
+      "manifest": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-strict-hands-frozen-manifest.json",
+      "sha256": "ca67389f9933f440a5c336e6d50eed77dc093a3a285e03d5202015cc9b258386",
+      "verifiedFiles": 72,
+      "allExact": true
+    },
+    {
+      "manifest": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-frozen-manifest.json",
+      "sha256": "f363b42163092ff56b6fb7d57dbb3a20fac30fc6684a930e36c9a90a4bbcd3e2",
+      "verifiedFiles": 136,
+      "allExact": true
+    },
+    {
+      "manifest": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-frozen-manifest.json",
+      "sha256": "2494677c1886dba9aac97d3c76b2e7290cfe4f1bff51e62757b35f2201aaf599",
+      "verifiedFiles": 283,
+      "allExact": true
+    }
+  ]
+}

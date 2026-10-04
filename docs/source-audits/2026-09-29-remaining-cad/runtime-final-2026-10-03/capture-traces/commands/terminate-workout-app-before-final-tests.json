@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "label": "terminate-workout-app-before-final-tests",
+  "command": [
+    "xcrun",
+    "simctl",
+    "terminate",
+    "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+    "com.hangten.training"
+  ],
+  "timeoutSeconds": 20.0,
+  "ownedProcessGroup": 72011,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 0.24427812499925494
+}

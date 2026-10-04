@@ -1,5 +1,44 @@
 import XCTest
 
+final class CustomRoutineEditorUITests: XCTestCase {
+    func testValidationRemainsVisibleWhileCorrectingRoutine() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = ["HANGTEN_REVIEW_PLANS": "1", "HANGTEN_REVIEW_PORTRAIT": "1"]
+        defer { app.terminate() }
+        app.launch()
+        let create = app.buttons["customRoutine.create"]
+        XCTAssertTrue(create.waitForExistence(timeout: 30))
+        create.tap()
+        let save = app.buttons["customRoutine.save"]
+        XCTAssertTrue(save.waitForExistence(timeout: 10))
+        save.tap()
+        if app.alerts.firstMatch.waitForExistence(timeout: 2) {
+            app.alerts.firstMatch.buttons["OK"].tap()
+        }
+        let issues = app.staticTexts["customRoutine.validationErrors"]
+        XCTAssertTrue(issues.waitForExistence(timeout: 5), "Invalid fields need feedback after any alert closes")
+        XCTAssertTrue(issues.label.contains("A routine name is required."))
+        XCTAssertTrue(issues.label.contains("Add at least one step."))
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "Routine validation persists in editor"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+
+        let name = app.textFields["customRoutine.name"]
+        XCTAssertTrue(name.isHittable)
+        name.tap()
+        name.typeText("My routine")
+        let updated = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label CONTAINS %@ AND NOT label CONTAINS %@",
+                                   "Add at least one step.", "A routine name is required."),
+            object: issues
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [updated], timeout: 5), .completed)
+        XCTAssertTrue(save.exists)
+    }
+}
+
 final class WorkoutPaywallUITests: XCTestCase {
     func testThirdWorkoutLaunchShowsPaywallInsteadOfSession() {
         let app = lockedPlanApp()

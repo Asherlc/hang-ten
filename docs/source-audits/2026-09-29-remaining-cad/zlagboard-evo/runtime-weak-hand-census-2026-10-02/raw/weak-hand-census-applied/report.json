@@ -1,0 +1,42 @@
+{
+  "status": "SCRATCH_ONLY_UNAPPLIED",
+  "patchSHA256": "1e861e0053311233d2a79670e1a3f48f6a54bf3555b0a1eaab3bd5dd62703aa5",
+  "scope": [
+    "HangTen/Models/BoardModelRealityTypes.swift",
+    "HangTen/Views/GripHandModelView.swift"
+  ],
+  "inputs": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a250e682072933af27187215451da6ee46981d44b9ef2946c3609d48baedcaa7",
+    "HangTen/Views/GripHandModelView.swift": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2"
+  },
+  "outputs": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "08aaaa6032cdf782f9d4659d3f0105655df282cc156f7c147597cd0f8aeeb0c9",
+    "HangTen/Views/GripHandModelView.swift": "3d8ffd568e1f99e33652eb77bfe4e0d2ce4c014889bfee3a166fe9601d7e136e"
+  },
+  "designSHA256": "b21c87fadd314a3e3910bcba0771874c02f8dc7af68268914a3695ffe574a2ad",
+  "staticCheckSHA256": "19de11530d9c85edecee0b0012665e0affc8ea41edb59348df8098a3e5d18bb9",
+  "checks": {
+    "textualApplyCheckPassed": true,
+    "scratchSwiftDebugSyntaxParsePassed": true,
+    "strictOffBodyGatesByteExact": true,
+    "updateClosureBodiesByteExact": true,
+    "fourCallbacksCaptureOnlyValueToken": true,
+    "twoSceneUUIDDeclarations": true,
+    "twoStableViewUUIDDeclarations": true,
+    "allFourExistingLifecycleCallsExplicitIdentity": true,
+    "allSixCameraCallsExplicitIdentity": true,
+    "noAddedTasksTimersSceneSubscriptionsOrDetach": true,
+    "censusAfterExistingDedup": true,
+    "signatureExpressionUnchanged": true,
+    "liveTrackedInputsUnchanged": true
+  },
+  "typechecked": false,
+  "built": false,
+  "runtimeRun": false,
+  "limitations": [
+    "Weak root/camera lifetime and attachment only; no actual presenting-UIKit-host mapping.",
+    "View appearance and last make are callbacks, not visibility/GPU evidence.",
+    "No cleanup or additional experiment selected."
+  ],
+  "retainedFailure": "static-check-first-failure.json; checker-only correction, patch unchanged"
+}

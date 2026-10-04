@@ -1,0 +1,103 @@
+{
+  "original-9449": {
+    "triangleCount": 34634,
+    "nodeCount": 31,
+    "boundsNativeMm": {
+      "min": [
+        -355.5000126361847,
+        -93.99999678134922,
+        -2.5000000421559588e-14
+      ],
+      "max": [
+        355.5000126361847,
+        4.455062430312599e-16,
+        222.00000286102295
+      ]
+    },
+    "materialCount": 0,
+    "shaderCount": 0,
+    "hashes": {
+      "metolius-simulator-3d.FCStd": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+      "assets/primary.usdz": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+      "assets/primary.model.json": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e"
+    }
+  },
+  "frozen-3ff3": {
+    "triangleCount": 86039,
+    "nodeCount": 31,
+    "boundsNativeMm": {
+      "min": [
+        -355.5000126361847,
+        -93.99999678134922,
+        -6.122750155472343e-15
+      ],
+      "max": [
+        355.5000126361847,
+        3.7543287820974895e-16,
+        221.99988365173337
+      ]
+    },
+    "materialCount": 0,
+    "shaderCount": 0,
+    "hashes": {
+      "metolius-simulator-3d.FCStd": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+      "assets/primary.usdz": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+      "assets/primary.model.json": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df"
+    }
+  },
+  "candidate": {
+    "triangleCount": 75174,
+    "nodeCount": 31,
+    "boundsNativeMm": {
+      "min": [
+        -355.5000126361847,
+        -93.99999678134922,
+        -6.3785243270410894e-15
+      ],
+      "max": [
+        355.5000126361847,
+        2.70316006737429e-16,
+        221.99988365173337
+      ]
+    },
+    "materialCount": 0,
+    "shaderCount": 0,
+    "hashes": {
+      "metolius-simulator-3d.FCStd": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "assets/primary.usdz": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+      "assets/primary.model.json": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb"
+    }
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top",
+    "oblique",
+    "raking"
+  ],
+  "renderer": "Shared preview.py Lambert triangle-face rendering at matching view and size; oblique applies fixed orthographic rotation.",
+  "status": "technical-render-complete",
+  "images": {
+    "export-review/candidate-front.png": "cc6c12b1f0cb6322db5833c6f9c93fc0f71518acd377a0933d98c8a7810b4b38",
+    "export-review/candidate-oblique.png": "ee8d71d3e5860213ad94d1295ca5ca73a05e04b2dffb8c6d0435de983af06b98",
+    "export-review/candidate-raking.png": "98f278bb159ea5b6943ba1da2eea990357fa8561322714b764d55f88a8d0b736",
+    "export-review/candidate-side.png": "cec68218b3ab474a45bda2e1ca2e511442cd5f9e3f713386e105e33b2542642a",
+    "export-review/candidate-top.png": "d211af704a2cc589a91c3d0e2d4459e2d3c4a6d4cd2bc316d7a7fea3136e1dc6",
+    "export-review/comparison-front.png": "ac0afbcc0475aa83620a1050387a1bcc0f94a7bafb4df4bc984be49b0bd7986a",
+    "export-review/comparison-oblique.png": "6849f4285fb4101f5a3b04b52f8747a6111ee5f747d88617b4746a2ff0abbe4c",
+    "export-review/comparison-raking.png": "46e56b0cb8d9f1ff5e0f550c6694ab17c18fe20a0fc369defa3ea07ef80aa876",
+    "export-review/comparison-side.png": "10fe7ee455425c17c412e3fbf335cde239d513a89d8a3b70719455a5a64550e2",
+    "export-review/comparison-top.png": "faf9f7417b79b55e5aac2ce8a7774853d96a4e8b26fd3a286ccadce9434fce72",
+    "export-review/frozen-3ff3-front.png": "1e952c3a45d8409d37f19d45cdfef846c5922c2694ca068e548524d731eef35a",
+    "export-review/frozen-3ff3-oblique.png": "070fa690b0c062a82457493b1806131c3a552c09fb0aea4653bca5b107d06afe",
+    "export-review/frozen-3ff3-raking.png": "767148c4e4cae73b6d178f65666249504ae2f6ede9993023853eae86d345b033",
+    "export-review/frozen-3ff3-side.png": "b9c5788f983fed856c4c2c018e761d2d9020a0b4079db1329b8bf29b03f92136",
+    "export-review/frozen-3ff3-top.png": "4ffe16c07c91d5ac7f0f1de10379fd669345d51e5e29db548fc3e854fbc121d2",
+    "export-review/original-9449-front.png": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+    "export-review/original-9449-oblique.png": "0195e673d789e0fd38e1b58f86e3ef7e8cbb5e908125187d47e293e3d739aeaf",
+    "export-review/original-9449-raking.png": "efe3cf3b36bdf265a10b5747938de73719c2ab27212e7e7d0ceafa363402f7ae",
+    "export-review/original-9449-side.png": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+    "export-review/original-9449-top.png": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860"
+  },
+  "scope": "Complete exact USDZ semantic shell, all 31 nodes; CPU technical views, actual app acceptance separate."
+}

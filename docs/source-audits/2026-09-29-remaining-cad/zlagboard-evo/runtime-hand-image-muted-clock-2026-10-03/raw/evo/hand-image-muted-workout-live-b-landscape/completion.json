@@ -1,0 +1,12 @@
+{
+  "captureProtocolCompleted": true,
+  "visualResult": "NOT_REVIEWED",
+  "commonValidators": "PENDING_SEPARATE_REVIEW",
+  "overallComparisonPassed": false,
+  "postflightErrors": [],
+  "limits": [
+    "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+    "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+    "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+  ]
+}

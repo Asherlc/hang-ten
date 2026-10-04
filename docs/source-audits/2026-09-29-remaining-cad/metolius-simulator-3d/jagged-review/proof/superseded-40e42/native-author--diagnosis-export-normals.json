@@ -1,0 +1,222 @@
+{
+  "normalDiagnosis": "The frozen USDZ supplies varying smooth analytic vertex normals. Shared CPU preview.py uses one triangle-face normal and ignores these, exaggerating facets. Native outline kinks and roof steps remain real and visible in app. No renderer change is proposed.",
+  "nodes": [
+    {
+      "node": "body_board_001",
+      "normalInterpolation": "vertex",
+      "triangles": 19065,
+      "trianglesWithVaryingVertexNormals": 18371,
+      "maxWithinTriangleNormalSpread": 0.473479009913667
+    },
+    {
+      "node": "contact_pocket_4_left",
+      "normalInterpolation": "vertex",
+      "triangles": 440,
+      "trianglesWithVaryingVertexNormals": 288,
+      "maxWithinTriangleNormalSpread": 0.09822643897010762
+    },
+    {
+      "node": "contact_pocket_4_right",
+      "normalInterpolation": "vertex",
+      "triangles": 447,
+      "trianglesWithVaryingVertexNormals": 294,
+      "maxWithinTriangleNormalSpread": 0.10376051405637217
+    },
+    {
+      "node": "contact_edge_5_left",
+      "normalInterpolation": "vertex",
+      "triangles": 548,
+      "trianglesWithVaryingVertexNormals": 380,
+      "maxWithinTriangleNormalSpread": 0.14811651335789786
+    },
+    {
+      "node": "contact_edge_5_right",
+      "normalInterpolation": "vertex",
+      "triangles": 545,
+      "trianglesWithVaryingVertexNormals": 377,
+      "maxWithinTriangleNormalSpread": 0.15582306021112965
+    },
+    {
+      "node": "contact_edge_6_left",
+      "normalInterpolation": "vertex",
+      "triangles": 434,
+      "trianglesWithVaryingVertexNormals": 278,
+      "maxWithinTriangleNormalSpread": 0.09997842422896949
+    },
+    {
+      "node": "contact_edge_6_right",
+      "normalInterpolation": "vertex",
+      "triangles": 444,
+      "trianglesWithVaryingVertexNormals": 288,
+      "maxWithinTriangleNormalSpread": 0.09561805689539854
+    },
+    {
+      "node": "contact_edge_7_left",
+      "normalInterpolation": "vertex",
+      "triangles": 472,
+      "trianglesWithVaryingVertexNormals": 313,
+      "maxWithinTriangleNormalSpread": 0.10204498339913196
+    },
+    {
+      "node": "contact_edge_7_right",
+      "normalInterpolation": "vertex",
+      "triangles": 475,
+      "trianglesWithVaryingVertexNormals": 316,
+      "maxWithinTriangleNormalSpread": 0.09782757485688759
+    },
+    {
+      "node": "contact_pocket_8_left",
+      "normalInterpolation": "vertex",
+      "triangles": 435,
+      "trianglesWithVaryingVertexNormals": 287,
+      "maxWithinTriangleNormalSpread": 0.09652230144559928
+    },
+    {
+      "node": "contact_pocket_8_right",
+      "normalInterpolation": "vertex",
+      "triangles": 454,
+      "trianglesWithVaryingVertexNormals": 306,
+      "maxWithinTriangleNormalSpread": 0.098935744971382
+    },
+    {
+      "node": "contact_pocket_9_left",
+      "normalInterpolation": "vertex",
+      "triangles": 584,
+      "trianglesWithVaryingVertexNormals": 433,
+      "maxWithinTriangleNormalSpread": 0.13605594538079055
+    },
+    {
+      "node": "contact_pocket_9_right",
+      "normalInterpolation": "vertex",
+      "triangles": 571,
+      "trianglesWithVaryingVertexNormals": 420,
+      "maxWithinTriangleNormalSpread": 0.16002689865063296
+    },
+    {
+      "node": "contact_pocket_10_left",
+      "normalInterpolation": "vertex",
+      "triangles": 462,
+      "trianglesWithVaryingVertexNormals": 309,
+      "maxWithinTriangleNormalSpread": 0.09485971943241878
+    },
+    {
+      "node": "contact_pocket_10_right",
+      "normalInterpolation": "vertex",
+      "triangles": 476,
+      "trianglesWithVaryingVertexNormals": 323,
+      "maxWithinTriangleNormalSpread": 0.09645505493518883
+    },
+    {
+      "node": "contact_edge_11_left",
+      "normalInterpolation": "vertex",
+      "triangles": 434,
+      "trianglesWithVaryingVertexNormals": 280,
+      "maxWithinTriangleNormalSpread": 0.09891382778187699
+    },
+    {
+      "node": "contact_edge_11_right",
+      "normalInterpolation": "vertex",
+      "triangles": 444,
+      "trianglesWithVaryingVertexNormals": 290,
+      "maxWithinTriangleNormalSpread": 0.0960894937863338
+    },
+    {
+      "node": "contact_pocket_12_left",
+      "normalInterpolation": "vertex",
+      "triangles": 458,
+      "trianglesWithVaryingVertexNormals": 312,
+      "maxWithinTriangleNormalSpread": 0.10462789167411232
+    },
+    {
+      "node": "contact_pocket_12_right",
+      "normalInterpolation": "vertex",
+      "triangles": 463,
+      "trianglesWithVaryingVertexNormals": 317,
+      "maxWithinTriangleNormalSpread": 0.09662681995093457
+    },
+    {
+      "node": "contact_pocket_13_left",
+      "normalInterpolation": "vertex",
+      "triangles": 585,
+      "trianglesWithVaryingVertexNormals": 442,
+      "maxWithinTriangleNormalSpread": 0.16427579628311237
+    },
+    {
+      "node": "contact_pocket_13_right",
+      "normalInterpolation": "vertex",
+      "triangles": 579,
+      "trianglesWithVaryingVertexNormals": 436,
+      "maxWithinTriangleNormalSpread": 0.15641304237996828
+    },
+    {
+      "node": "contact_pocket_15_center",
+      "normalInterpolation": "vertex",
+      "triangles": 620,
+      "trianglesWithVaryingVertexNormals": 416,
+      "maxWithinTriangleNormalSpread": 0.13477314577664398
+    },
+    {
+      "node": "contact_pocket_16_center",
+      "normalInterpolation": "vertex",
+      "triangles": 479,
+      "trianglesWithVaryingVertexNormals": 327,
+      "maxWithinTriangleNormalSpread": 0.0986994853126508
+    },
+    {
+      "node": "contact_pocket_17_center",
+      "normalInterpolation": "vertex",
+      "triangles": 610,
+      "trianglesWithVaryingVertexNormals": 464,
+      "maxWithinTriangleNormalSpread": 0.15565469164078294
+    },
+    {
+      "node": "contact_pocket_18_center",
+      "normalInterpolation": "vertex",
+      "triangles": 478,
+      "trianglesWithVaryingVertexNormals": 334,
+      "maxWithinTriangleNormalSpread": 0.09886617142029427
+    },
+    {
+      "node": "contact_jug_14_center",
+      "normalInterpolation": "vertex",
+      "triangles": 2346,
+      "trianglesWithVaryingVertexNormals": 2346,
+      "maxWithinTriangleNormalSpread": 0.5102795719901813
+    },
+    {
+      "node": "contact_round_sloper_3_center",
+      "normalInterpolation": "vertex",
+      "triangles": 140,
+      "trianglesWithVaryingVertexNormals": 140,
+      "maxWithinTriangleNormalSpread": 0.0836436891084662
+    },
+    {
+      "node": "contact_flat_sloper_2_left",
+      "normalInterpolation": "vertex",
+      "triangles": 2,
+      "trianglesWithVaryingVertexNormals": 0,
+      "maxWithinTriangleNormalSpread": 0.0
+    },
+    {
+      "node": "contact_jug_1_left",
+      "normalInterpolation": "vertex",
+      "triangles": 570,
+      "trianglesWithVaryingVertexNormals": 570,
+      "maxWithinTriangleNormalSpread": 0.3837373438580281
+    },
+    {
+      "node": "contact_flat_sloper_2_right",
+      "normalInterpolation": "vertex",
+      "triangles": 2,
+      "trianglesWithVaryingVertexNormals": 0,
+      "maxWithinTriangleNormalSpread": 0.0
+    },
+    {
+      "node": "contact_jug_1_right",
+      "normalInterpolation": "vertex",
+      "triangles": 572,
+      "trianglesWithVaryingVertexNormals": 572,
+      "maxWithinTriangleNormalSpread": 0.383814947291856
+    }
+  ]
+}

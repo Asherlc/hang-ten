@@ -1,0 +1,9 @@
+{
+  "owner": "placid-badger",
+  "runnerSourcePath": ".context/placid-badger/mini-review10-correction/native-author/run-owned.py",
+  "runnerSourceSHA256": "456ce0fade9799d766e437acfcd115307eed64eeebaf258ef484bf2e6c00c734",
+  "runnerCopiedTo": ".context/placid-badger/mini-review10-correction/root/run-owned.py",
+  "allNativeResourcesDeleted": true,
+  "agentArchived": true,
+  "archivedAt": "2026-10-03T03:49:01.206Z"
+}

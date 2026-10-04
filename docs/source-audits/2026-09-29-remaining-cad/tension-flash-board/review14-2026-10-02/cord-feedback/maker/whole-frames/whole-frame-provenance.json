@@ -1,0 +1,43 @@
+{
+  "apertureMode" : "encodedPixels",
+  "appliesPreferredTrackTransform" : true,
+  "automaticCropOrPixelInference" : false,
+  "durationSeconds" : 6.7569999999999997,
+  "frames" : [
+    {
+      "actualSeconds" : 0,
+      "height" : 1080,
+      "path" : "placid-badger-maker-whole-t0.png",
+      "requestedSeconds" : 0,
+      "wholeEncodedFrame" : true,
+      "width" : 1080
+    },
+    {
+      "actualSeconds" : 1.9602864583333333,
+      "height" : 1080,
+      "path" : "placid-badger-maker-whole-t2.png",
+      "requestedSeconds" : 2,
+      "wholeEncodedFrame" : true,
+      "width" : 1080
+    },
+    {
+      "actualSeconds" : 3.9623046875000001,
+      "height" : 1080,
+      "path" : "placid-badger-maker-whole-t4.png",
+      "requestedSeconds" : 4,
+      "wholeEncodedFrame" : true,
+      "width" : 1080
+    },
+    {
+      "actualSeconds" : 5.9643229166666663,
+      "height" : 1080,
+      "path" : "placid-badger-maker-whole-t6.png",
+      "requestedSeconds" : 6,
+      "wholeEncodedFrame" : true,
+      "width" : 1080
+    }
+  ],
+  "operatorSelectedTimestamps" : true,
+  "owner" : "placid-badger",
+  "source" : "\/Users\/asherlc\/.paseo\/worktrees\/0h78jp9r\/placid-badger\/.context\/placid-badger\/flash-board-review14\/cord-entry-followup\/manufacturer\/placid-badger-flash14-maker-overview.mp4"
+}

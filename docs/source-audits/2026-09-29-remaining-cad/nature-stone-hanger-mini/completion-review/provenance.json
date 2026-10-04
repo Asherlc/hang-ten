@@ -1,0 +1,31 @@
+{
+  "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+  "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+  "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+  "semanticNodes": [
+    "nature_body",
+    "nature_wood",
+    "nature_stone",
+    "nature_pinch",
+    "nature_jug"
+  ],
+  "beforeSourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+  "beforeModelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+  "beforeDescriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
+  "images": {
+    "before-front.png": "5feb7c4af3229dabd08de8e0d281a60e1d6b2f6454e4b2cf69f3d714d5496cba",
+    "after-front.png": "75f680ea180666a7695aff5ffae1684225b74e87655aff955c9ee37fd87910af",
+    "comparison-front.png": "8d6d682b5ec63f1eb1d0729d8e727c4ab8bdab2314cb05b1755cfea7e5a0155d",
+    "before-side.png": "f509630bde2fc2f8b1f49b07e038ea05e157f4396dba33950a1bbb3f4186fdf4",
+    "after-side.png": "f509630bde2fc2f8b1f49b07e038ea05e157f4396dba33950a1bbb3f4186fdf4",
+    "comparison-side.png": "63ba5a4914d1742e58aaef839a2ff0d51400e5e38b12174ba78638b93b8e6ddc",
+    "before-top.png": "c09814bb00c74bdf25febda70cf64aefafed8291184eef522be706920d02335d",
+    "after-top.png": "c09814bb00c74bdf25febda70cf64aefafed8291184eef522be706920d02335d",
+    "comparison-top.png": "4dfee3dbccb61a07db6691852332cd2e6f6b22caf287ae0669d6d74de59cbda6",
+    "before-oblique.png": "93ce752e021a335a87d9da28e630fe5caaa1d18780b9b86b7ab6383a0106fe43",
+    "after-oblique.png": "33618d01401ccb1102be050cba89e495102323253f62d0fc1fcfb590b3c1b96e",
+    "comparison-oblique.png": "7a1821d6257ed8ceccf87771adf02092b34a42a35cb0b85b2ea90e3b3cf03cc5"
+  },
+  "method": "Whole exact semantic USDZ export at unchanged 0.15 mm, compared with exact prior committed USDZ. Technical CPU normals; no materials/cords. No pixel inference or source-photo processing.",
+  "visualGate": "pending"
+}

@@ -1,0 +1,182 @@
+{
+  "owner": "placid-badger",
+  "date": "2026-09-30",
+  "simulator": "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS26.5",
+  "boardID": "metolius.contact",
+  "sourceSHA256": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+  "modelSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+  "descriptorSHA256": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7",
+  "builtBinarySHA256": "a367b7c76fb3b3f2f32f39db3e007c216878a40a477508fa1f0db5e491af91b2",
+  "packageChanged": false,
+  "surfaceFinish": "neutral (unchanged)",
+  "checks": [
+    {
+      "contactID": "pocket-4-left",
+      "image": "pocket-left.png",
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 33
+    },
+    {
+      "contactID": "edge-17-center",
+      "image": "center-edge.png",
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 33
+    },
+    {
+      "contactID": "pinch-left",
+      "image": "pinch-left.png",
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 33
+    },
+    {
+      "contactID": "pinch-left",
+      "image": "pinch-left-orbit.png",
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 33,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    }
+  ],
+  "commands": [
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-contact-app-review/captures/pocket-left.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-contact-app-review/captures/center-edge.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-contact-app-review/captures/pinch-left.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "107.48",
+      "--start-y",
+      "335.52",
+      "--end-x",
+      "327.92",
+      "--end-y",
+      "318.82",
+      "--duration",
+      "1.0",
+      "--udid",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "5A6E15E8-F65C-4A6D-B3E8-99313FD525DD",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-contact-app-review/captures/pinch-left-orbit.png"
+    ]
+  ],
+  "humanGeometryAcceptance": "pending human review#7",
+  "limits": "Fresh full-frame app captures and AX selection; representative contacts and one real drag, not an all-contact visual sweep or factory geometry certification."
+}

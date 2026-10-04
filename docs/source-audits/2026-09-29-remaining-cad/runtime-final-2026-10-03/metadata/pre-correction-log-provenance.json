@@ -1,0 +1,6 @@
+{
+  "sourceLog": ".context/placid-badger/runtime-final-2026-10-03/commands/focused-red.log",
+  "sourceSHA256": "66eac94325b6ddd25d7f62a1218b8ccd91a55f0ca83a5a1d474446f61ebefac7",
+  "retainedExcerpt": "pre-correction-library-failure.txt",
+  "meaning": "Observed failure before capacity restoration, not a post-correction test result"
+}

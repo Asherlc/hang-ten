@@ -1,0 +1,11 @@
+{
+  "originalDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-boundary-audit",
+  "originalFiles": {
+    "build.command.json": "7ad69312c88877b0875ad02c194e9d709c392eb005188e1d65e1516254807027",
+    "build.exit.json": "3411af234420fc8207ca6de549a12e45e88e63ef7055eb463f53b60036d3deec",
+    "build.stdout": "36989e485f3abcee6e5902203b7a67d74376e6d7f2213ef379f216587e6428b2",
+    "build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source-reference.json": "50327ed1b8eb201d12d53b6657dd5216244b6689d144960bc168aaf827ef096c"
+  },
+  "rawBytesUnchanged": true
+}

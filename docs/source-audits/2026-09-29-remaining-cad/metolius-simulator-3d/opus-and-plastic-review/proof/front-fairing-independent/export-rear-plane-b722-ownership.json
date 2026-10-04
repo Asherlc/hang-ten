@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "name": "export-rear-plane-b722",
+  "timeoutSeconds": 120,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_export_rear_plane.py",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/assets/primary.usdz",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/final-native-body-mesh.json",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/native-preview-provenance.json",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/export-rear-plane-b722.json"
+  ],
+  "ownedProcessGroup": 23561,
+  "exitCode": 0,
+  "elapsedSeconds": 0.5258326670154929,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

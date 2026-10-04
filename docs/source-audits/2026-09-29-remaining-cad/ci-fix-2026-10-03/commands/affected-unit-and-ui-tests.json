@@ -1,0 +1,33 @@
+{
+  "owner": "placid-badger",
+  "label": "affected-unit-and-ui-tests",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=774B34D7-CF16-4C65-99F1-D8F81A52008D",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "-parallel-testing-enabled",
+    "NO",
+    "-collect-test-diagnostics",
+    "never",
+    "-resultBundlePath",
+    ".context/placid-badger/ci-fix-2026-10-03/placid-badger-ci-targeted-tests.xcresult",
+    "-only-testing:HangTenTests/SuspendedBoardPresentationTests",
+    "-only-testing:HangTenUITests/OwlClimbPokerBoardMapInteractionUITests",
+    "test-without-building"
+  ],
+  "timeoutSeconds": 900.0,
+  "ownedProcessGroup": 32688,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 158.11027583299438
+}

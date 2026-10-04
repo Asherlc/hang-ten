@@ -1,0 +1,16 @@
+{
+  "reviewer": "placid-badger",
+  "allFourWholeImagesViewed": true,
+  "images": [
+    "plateau-landscape-hang.png",
+    "plateau-landscape-rest.png",
+    "mini-portrait-hang.png",
+    "mini-portrait-rest.png"
+  ],
+  "observations": [
+    "Plateau board is visible below the configuration selector in landscape Hang and Rest.",
+    "Mini board is visible in portrait Hang and Rest; portrait hand cues are below the captured viewport.",
+    "Selected board surfaces are red during Hang and blue during Rest."
+  ],
+  "scope": "Captured frames and two actual UI cases; no hardware or continuous GPU-timing claim."
+}

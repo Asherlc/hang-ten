@@ -1,0 +1,131 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "63244",
+      "-o",
+      "pid=,command="
+    ],
+    "startEpoch": 1791034371.406736,
+    "startMonotonic": 104067.645507916,
+    "limitSeconds": 20,
+    "pid": 76870,
+    "endEpoch": 1791034371.436329,
+    "endMonotonic": 104067.675102416,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A",
+      "com.hangten.training",
+      "app"
+    ],
+    "startEpoch": 1791034371.439405,
+    "startMonotonic": 104067.678177416,
+    "limitSeconds": 20,
+    "pid": 76873,
+    "endEpoch": 1791034371.64552,
+    "endMonotonic": 104067.884293375,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791034371.674743,
+    "startMonotonic": 104067.913516083,
+    "limitSeconds": 20,
+    "pid": 76905,
+    "endEpoch": 1791034371.982559,
+    "endMonotonic": 104068.221334083,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A"
+    ],
+    "startEpoch": 1791034374.98639,
+    "startMonotonic": 104071.225177416,
+    "limitSeconds": 20,
+    "pid": 76929,
+    "endEpoch": 1791034378.016405,
+    "endMonotonic": 104074.2552065,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "terminate",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791034378.0263581,
+    "startMonotonic": 104074.265159208,
+    "limitSeconds": 10,
+    "pid": 76935,
+    "endEpoch": 1791034378.54949,
+    "endMonotonic": 104074.788293375,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "76915",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791034378.550403,
+    "startMonotonic": 104074.789205125,
+    "limitSeconds": 3,
+    "pid": 76947,
+    "endEpoch": 1791034378.605082,
+    "endMonotonic": 104074.843885708,
+    "exitStatus": 1
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "76872",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791034378.607714,
+    "startMonotonic": 104074.846517375,
+    "limitSeconds": 3,
+    "pid": 76949,
+    "endEpoch": 1791034378.642056,
+    "endMonotonic": 104074.880859833,
+    "exitStatus": 1
+  }
+]

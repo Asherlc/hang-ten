@@ -1,0 +1,96 @@
+{
+  "package": "tension-flash-board",
+  "publisher": "Tension Climbing",
+  "status": "Source set approved; native CAD authored. See per-board geometry and validation artifacts for completion gates.",
+  "observations": "Four product views show the three-well and two-well faces, cylindrical body, shallow long ledges and four cord bores (two per end). Exterior return spans are visible. Existing seven contact IDs remain authoritative; photographs do not establish new training contacts. A graph of two bores plus exterior return at each end differs from a hidden U channel.",
+  "sources": [
+    {
+      "path": "evidence/tension-flash-product.html",
+      "publisher": "Tension Climbing",
+      "sourceURL": "https://tensionclimbing.com/products/flash-board-2",
+      "binaryURL": "https://tensionclimbing.com/products/flash-board-2",
+      "sha256": "f2e1c2474d7c29b069a6061b04524a2b7df61e33dedbbcb0cd8111b0b7bafca1",
+      "bytes": 386560,
+      "supports": "exact-revision manufacturer",
+      "retention": "git 8f2bfcffd^:docs/source-audits/2026-09-13-model-cord-snapshots/tension-flash-product.html",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "path": "evidence/tension-flash-training-blog.html",
+      "publisher": "Tension Climbing",
+      "sourceURL": "https://tensionclimbing.com/blogs/training-tools/hangboard-overview-the-flash-board",
+      "binaryURL": "https://tensionclimbing.com/blogs/training-tools/hangboard-overview-the-flash-board",
+      "sha256": "c9692ca8f898ae65449aa2340d82e9040ed77d643b618217bd7c287ac737ff28",
+      "bytes": 331037,
+      "supports": "exact-revision training article",
+      "retention": "git 8f2bfcffd^:docs/source-audits/2026-09-13-model-cord-snapshots/tension-flash-training-blog.html",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "path": "evidence/FlashBoard1.png",
+      "publisher": "Tension Climbing",
+      "sourceURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard1.png?v=1726542491",
+      "binaryURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard1.png?v=1726542491",
+      "sha256": "aa00ab77e04c685acc4dee0e0704d25fd3165810387649a4e924bf3f7bfff148",
+      "bytes": 1469015,
+      "supports": "Four product views show the three-well and two-well faces, cylindrical body, shallow long ledges and four cord bores (two per end). Exterior return spans are visible. Existing seven contact IDs remain authoritative; photographs do not establish new training contacts. A graph of two bores plus exterior return at each end differs from a hidden U channel.",
+      "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "path": "evidence/FlashBoard2.png",
+      "publisher": "Tension Climbing",
+      "sourceURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard2.png?v=1726542491",
+      "binaryURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard2.png?v=1726542491",
+      "sha256": "ae84f7d58def1c2f4e3b14c2e98ddf8e332b7f48e6c774312744b792d4ab97b4",
+      "bytes": 685328,
+      "supports": "Four product views show the three-well and two-well faces, cylindrical body, shallow long ledges and four cord bores (two per end). Exterior return spans are visible. Existing seven contact IDs remain authoritative; photographs do not establish new training contacts. A graph of two bores plus exterior return at each end differs from a hidden U channel.",
+      "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "path": "evidence/FlashBoard3.png",
+      "publisher": "Tension Climbing",
+      "sourceURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard3.png?v=1726542491",
+      "binaryURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard3.png?v=1726542491",
+      "sha256": "5753461d938adb19655556e8070f7361a0f9a1697752a861bacde4d240f0f63d",
+      "bytes": 2197828,
+      "supports": "Four product views show the three-well and two-well faces, cylindrical body, shallow long ledges and four cord bores (two per end). Exterior return spans are visible. Existing seven contact IDs remain authoritative; photographs do not establish new training contacts. A graph of two bores plus exterior return at each end differs from a hidden U channel.",
+      "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "path": "evidence/FlashBoard4.png",
+      "publisher": "Tension Climbing",
+      "sourceURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard4.png?v=1726542491",
+      "binaryURL": "https://tensionclimbing.com/cdn/shop/files/FlashBoard4.png?v=1726542491",
+      "sha256": "7c078225890ae6d6975bff865e706e8858e7a56c3edc8df572637241ca6df200",
+      "bytes": 2088678,
+      "supports": "Four product views show the three-well and two-well faces, cylindrical body, shallow long ledges and four cord bores (two per end). Exterior return spans are visible. Existing seven contact IDs remain authoritative; photographs do not establish new training contacts. A graph of two bores plus exterior return at each end differs from a hidden U channel.",
+      "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+      "approvalStatus": "approved by user 2026-09-29"
+    }
+  ],
+  "approval": {
+    "state": "approved",
+    "reviewer": "user",
+    "date": "2026-09-29",
+    "quote": "those are fine, feel free to use more searches for individual boards as needed",
+    "scope": "Exact retained visual set and further individual manufacturer source research."
+  },
+  "constraints": [
+    "Images are visual evidence only; no tracing, segmentation, alignment, masking, cropping, or pixel-derived geometry.",
+    "CAD remains a display approximation with native analytic feature history.",
+    "Cord connectivity must be supported before geometry or topology is changed."
+  ],
+  "currentCordDisposition": "Prior same-face stitches rejected by supplemental maker video. Visible crossed barrel wraps are a conditional inferred display adaptation under inherited authored bore estimates; hidden continuity and contact order unobserved.",
+  "supplementalCordEvidence": {
+    "publisher": "Tension Climbing",
+    "productURL": "https://tensionclimbing.com/products/flash-board-2",
+    "provenance": "review14-2026-10-02/cord-feedback/maker/source-provenance.json",
+    "retainedWholeVideo": "review14-2026-10-02/cord-feedback/maker/placid-badger-flash14-maker-overview.mp4",
+    "sha256": "c3805a162b8a11f9f4c0e29b39a5927145ee617e8e536a611ad9c16a30730190",
+    "authorization": "User authorized additional individual-board searches; source use is distinct from geometry/threading acceptance",
+    "supports": "Four free legs and circumferential wraps; not hidden continuity or exact internal bores"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "owner": "placid-badger",
+  "advisorAgentID": "918cc0e7-961d-4672-9f95-b4f2918098b7",
+  "exactOwnedAdvisorArchived": true,
+  "archivedAt": "2026-10-01T19:09:02.095Z",
+  "verifiedLifecycle": "closed",
+  "unrelatedAgentsChanged": false,
+  "fileSHA256": {
+    "opus-archive-raw.json": "491815ba96ac2fea6f33a9a817cf6f4092758435873b5e9a55654fd262c05aa5",
+    "opus-archived-status-raw.json": "7f924e5640eb0db46152277d10a2f08f6b6263bc852de79b5d7561b6b0dd5a9b"
+  }
+}

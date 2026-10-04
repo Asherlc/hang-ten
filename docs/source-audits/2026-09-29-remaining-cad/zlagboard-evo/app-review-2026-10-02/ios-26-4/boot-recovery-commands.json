@@ -1,0 +1,17 @@
+[
+  {
+    "name": "boot-first",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "bootstatus",
+      "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+      "-b"
+    ],
+    "timeoutSeconds": 180,
+    "exitStatus": 0,
+    "elapsedSeconds": 37.79612941600044
+  }
+]

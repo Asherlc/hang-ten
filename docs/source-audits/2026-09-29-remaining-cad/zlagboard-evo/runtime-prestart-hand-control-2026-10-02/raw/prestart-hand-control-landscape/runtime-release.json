@@ -1,0 +1,20 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "prestart-hand-control",
+  "helperSHA256": "bb309ac22e36e15c142078c78245a7f47a8e2667f84df45ae4593e9208321f50",
+  "constructorMarkerAuditReady": true,
+  "structuralNavEventAuditReady": true,
+  "rootSourceRuntimeRelease": true,
+  "previousEvidenceFrozen": true,
+  "postbootConfirmationPassed": true,
+  "retainedDetachIntervention": false,
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "binarySHA256": "f98a07f4383af14396d8442581a330f4d3523d0c9854436420b67bf14b681d97",
+  "codePackageParityPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-prelaunch-parity.json",
+  "codePackageParitySHA256": "d41c248d904a4c5f0810eec69a5584fb132ee6ff2b46e489ad7052463b543942",
+  "priorFrozenManifestPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-frozen-manifest.json",
+  "priorFrozenManifestSHA256": "b9be609012589691867212e46caed8808508bf0f359996b92d98a1bb1e6ef685",
+  "authorization": "Root approved exact capturebb309/checker327ccf for ONE flagOFFcontrol after newbuild/install/parity. Action requires separate root full evidence gate.",
+  "perspectiveFrozenManifestPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-frozen-manifest.json",
+  "perspectiveFrozenManifestSHA256": "c28f39a336000fb76156af64e5d5af9fef7c196ccb004b93af645abaa984a113"
+}

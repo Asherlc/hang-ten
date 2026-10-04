@@ -1,0 +1,74 @@
+[
+  {
+    "nodeID": "hold_rounded_left_mesh_001",
+    "faceIndex": 0,
+    "samples": 101,
+    "new180UpMin": 0.6819983600624979,
+    "new180UpMax": 0.6939740629158985,
+    "oldMinus90UpMin": 0.7200000000000004,
+    "oldMinus90UpMax": 0.7313537016191709
+  },
+  {
+    "nodeID": "hold_rounded_left_mesh_001",
+    "faceIndex": 1,
+    "samples": 101,
+    "new180UpMin": 0.6939740629158985,
+    "new180UpMax": 0.9165151389911679,
+    "oldMinus90UpMin": 0.4000000000000001,
+    "oldMinus90UpMax": 0.7200000000000004
+  },
+  {
+    "nodeID": "hold_rounded_left_mesh_001",
+    "faceIndex": 2,
+    "samples": 101,
+    "new180UpMin": 0.9165151389911679,
+    "new180UpMax": 1.0,
+    "oldMinus90UpMin": 2.4492935982947064e-16,
+    "oldMinus90UpMax": 0.4000000000000001
+  },
+  {
+    "nodeID": "hold_rounded_left_mesh_001",
+    "faceIndex": 3,
+    "samples": 101,
+    "new180UpMin": 0.4539904997395472,
+    "new180UpMax": 1.0,
+    "oldMinus90UpMin": -0.8910065241883676,
+    "oldMinus90UpMax": -0.0
+  },
+  {
+    "nodeID": "hold_rounded_right_mesh_001",
+    "faceIndex": 0,
+    "samples": 101,
+    "new180UpMin": 0.6819983600624999,
+    "new180UpMax": 0.6939740629158985,
+    "oldMinus90UpMin": 0.7200000000000004,
+    "oldMinus90UpMax": 0.7313537016191691
+  },
+  {
+    "nodeID": "hold_rounded_right_mesh_001",
+    "faceIndex": 1,
+    "samples": 101,
+    "new180UpMin": 0.6939740629158985,
+    "new180UpMax": 0.9165151389911679,
+    "oldMinus90UpMin": 0.4000000000000001,
+    "oldMinus90UpMax": 0.7200000000000004
+  },
+  {
+    "nodeID": "hold_rounded_right_mesh_001",
+    "faceIndex": 2,
+    "samples": 101,
+    "new180UpMin": 0.9165151389911679,
+    "new180UpMax": 1.0,
+    "oldMinus90UpMin": 2.4492935982947064e-16,
+    "oldMinus90UpMax": 0.4000000000000001
+  },
+  {
+    "nodeID": "hold_rounded_right_mesh_001",
+    "faceIndex": 3,
+    "samples": 101,
+    "new180UpMin": 0.45399049973954836,
+    "new180UpMax": 1.0,
+    "oldMinus90UpMin": -0.891006524188367,
+    "oldMinus90UpMax": -0.0
+  }
+]

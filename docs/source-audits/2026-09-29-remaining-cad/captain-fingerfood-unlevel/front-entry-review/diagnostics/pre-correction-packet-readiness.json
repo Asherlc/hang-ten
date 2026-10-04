@@ -1,0 +1,176 @@
+{
+  "package": "captain-fingerfood-unlevel",
+  "reviewNumber": 3,
+  "geometryAcceptance": "pending user review; source approval is not geometry acceptance",
+  "readOnly": true,
+  "currentPackageSHA256": {
+    "captain-fingerfood-unlevel.FCStd": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+    "assets/primary.usdz": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+    "assets/primary.model.json": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89",
+    "suspension.json": "d689a72a606c7e429ff3050da9f4daa3d57ba02c55f9a100c56d71f019ddde18"
+  },
+  "existingProofChecks": {
+    "descriptorBindsCurrentUSDZ": true,
+    "sidecarBindsCurrentUSDZ": true,
+    "freshCompileProofSource": true,
+    "freshCompileProofSourceAssetDescriptor": true,
+    "freshCompileReportHash": true,
+    "appProofSource": true,
+    "appProofModelDescriptor": true,
+    "clearanceProofSourceModelSidecar": true,
+    "allFourExactRetainedSources": true
+  },
+  "existingAppProofLimits": [
+    "Per-board app validation binds FCStd/USDZ/descriptor, but has no suspension hash, screenshot hashes, or built-binary hash. Current screenshot hashes are recorded here as retained artifacts, not reconstructed capture-time proof.",
+    "Existing continuous certificate binds the actual current sidecar but does not validate source threading. No new solve or tests were run.",
+    "Comparison sheet has an author visual-review record but no original image-hash-to-model binding; do not claim a fresh render."
+  ],
+  "retainedImagesSHA256": {
+    "comparison-sheet.png": "924563559976a188eadb1ba6cc741aa42d677a01e72f4c6aefb245410f357aa8",
+    "captain-fingerfood-unlevel-front.png": "c69f29408213d5414182a1e6f0d1aed9cd013fcb71a9d45d5f63798df5c6f019",
+    "captain-fingerfood-unlevel-side.png": "ed872133eaf1d473610a127633adc92996bae719f0ea7c1bf561fd57e61a6e8c",
+    "captain-fingerfood-unlevel-top.png": "7be45f79b0bafb65e34d2b21f6df77dd87c6d983b3cb3d608741a98c28936971",
+    "app-review/default.png": "06cd98cef3f5eec444de6f2e449e3cf07958860fbd7f2dfd6f681eb841154350",
+    "app-review/contact-selection.png": "a8913c6252f7efe3efffde7fa2d32e153298a68e826180e69557e82c0d002aff",
+    "evidence/captain-fingerfood-unlevel-title.jpg": "7eb711b6b28284a86835b7a460559f5ec80f9816bc691e2823982d98e1b0d813"
+  },
+  "retainedProofsSHA256": {
+    "app-review/validation.json": "08a5c662cbd4586118a58ba315e9527b08bb837a8914e2a7abd7b5b661aeef70",
+    "final-hash-closure.json": "aa955222503c3f4f883e93056b7093be5bfcd72eaadd85cc683c9ee6798dd2a3",
+    "compile-final-check.json": "1addec1829ba7aad3974aa6b70224d541845124562b4ca95feabb8d5a78c93ef",
+    "native-route-check.json": "6019a9ae5589ab1a689acdc224c67b1ec02d1c2f91e5b79df480618c177f8808",
+    "native-route-report.json": "6019a9ae5589ab1a689acdc224c67b1ec02d1c2f91e5b79df480618c177f8808",
+    "native-validation.json": "3de8f33e86b225275e2ae78c7ceb05f033befed5e4a6b3944c643f3362b7062b",
+    "continuous-cord-clearance.json": "afafcfd2d1d9db1c46aacb3783219527265ae11da4d195ffc429dd8b4a0492bd",
+    "geometry-visual-review.json": "2c0a3023d091641f1b33555222b515a7f6444ccd7fcf5d10bf618df114b177ac",
+    "source-register.json": "c56bf2375ab950d4dc0dae868a75d2d8a9d86343e1c6a7f3c099961bbb48aa5d"
+  },
+  "nativeCordEntryEvidence": {
+    "edge20-front": {
+      "left-lead": {
+        "penultimatePoint": [
+          -0.028936201,
+          0.00079711,
+          -0.014999734
+        ],
+        "mouth": [
+          -0.029,
+          0.0,
+          -0.0067
+        ],
+        "entrySide": "rear through bore"
+      },
+      "right-lead": {
+        "penultimatePoint": [
+          0.028936201,
+          0.00079711,
+          -0.014999807
+        ],
+        "mouth": [
+          0.029,
+          0.0,
+          -0.0067
+        ],
+        "entrySide": "rear through bore"
+      }
+    },
+    "edge25-inverted": {
+      "left-lead": {
+        "penultimatePoint": [
+          -0.028936201,
+          -0.00079711,
+          -0.01499983
+        ],
+        "mouth": [
+          -0.029,
+          0.0,
+          -0.0067
+        ],
+        "entrySide": "rear through bore"
+      },
+      "right-lead": {
+        "penultimatePoint": [
+          0.028936201,
+          -0.00079711,
+          -0.014999767
+        ],
+        "mouth": [
+          0.029,
+          0.0,
+          -0.0067
+        ],
+        "entrySide": "rear through bore"
+      }
+    },
+    "jug-reverse": {
+      "left-lead": {
+        "penultimatePoint": [
+          -0.027193369,
+          0.02241139,
+          0.016513946
+        ],
+        "mouth": [
+          -0.029,
+          0.0,
+          -0.0067
+        ],
+        "entrySide": "front cavity"
+      },
+      "right-lead": {
+        "penultimatePoint": [
+          0.027194713,
+          0.022394742,
+          0.016502393
+        ],
+        "mouth": [
+          0.029,
+          0.0,
+          -0.0067
+        ],
+        "entrySide": "front cavity"
+      }
+    },
+    "pocket-right-end": {
+      "left-lead": {
+        "penultimatePoint": [
+          -0.0298,
+          0.0,
+          -0.015
+        ],
+        "mouth": [
+          -0.029,
+          0.0,
+          -0.0067
+        ],
+        "entrySide": "rear through bore"
+      },
+      "right-lead": {
+        "penultimatePoint": [
+          0.0282,
+          0.0,
+          -0.015
+        ],
+        "mouth": [
+          0.029,
+          0.0,
+          -0.0067
+        ],
+        "entrySide": "rear through bore"
+      }
+    }
+  },
+  "blockingSourceMismatch": "Three poses approach the front terminals from rear runtime z\u2248-.015 toward front z=-.0067; current sidecar lacks mouthAxis. Maker title shows both leads visibly traversing the FRONT recess. This is the same entry-side issue corrected for DUAL. The default and vertical app captures show empty front holes with cords hidden behind the board.",
+  "recommendedArtifacts": {
+    "bodyBeforeAfter": "comparison-sheet.png",
+    "manufacturerVisual": "evidence/captain-fingerfood-unlevel-title.jpg",
+    "existingAppWithKnownIssue": "app-review/default.png",
+    "verticalAppWithKnownIssue": "app-review/contact-selection.png"
+  },
+  "description": "Captain Fingerfood UNLEVEL is a 12 \u00d7 7 \u00d7 3 cm portable wooden board with opposing curved 20/25 mm edges, a shared recess and two cord holes.",
+  "descriptionSupport": {
+    "makerURL": "https://en.captainfingerfood.rocks/products/unlevel-hangboard",
+    "retainedText": "Dimensions: 12x7x3cm Strip depth: 20/25mm",
+    "shapeEvidence": "Retained manufacturer title/P1/P2 photographs; exact SHA values verified against source-register."
+  },
+  "recommendedNextAction": "Root should address or explicitly present the known front-entry source mismatch before claiming #3 ready; preserve human geometry acceptance as pending. This agent changed no package, source code or durable docs."
+}

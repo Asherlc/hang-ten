@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "probe-shape-feedback",
+  "timeoutSeconds": 360,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/check_shape_feedback.py",
+    ".context/placid-badger/metolius-simulator-3d-opus-corrections/probe-source.FCStd",
+    ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/probe-shape-feedback.json"
+  ],
+  "ownedProcessGroup": 38874,
+  "exitCode": 0,
+  "elapsedSeconds": 46.00013783399481,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

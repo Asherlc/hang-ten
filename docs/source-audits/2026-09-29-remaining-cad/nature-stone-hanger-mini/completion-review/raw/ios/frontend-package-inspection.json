@@ -1,0 +1,23 @@
+{
+  "package": "/Users/asherlc/Library/Developer/Packages/17C529/XcodeSystemResources.pkg",
+  "commands": [
+    {
+      "command": [
+        "pkgutil",
+        "--check-signature",
+        "/Users/asherlc/Library/Developer/Packages/17C529/XcodeSystemResources.pkg"
+      ],
+      "timeoutSeconds": 30,
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "pkgutil",
+        "--payload-files",
+        "/Users/asherlc/Library/Developer/Packages/17C529/XcodeSystemResources.pkg"
+      ],
+      "timeoutSeconds": 30,
+      "exitCode": 0
+    }
+  ]
+}

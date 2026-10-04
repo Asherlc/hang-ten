@@ -1,0 +1,29 @@
+--- v8/prototype_schema.py
++++ v9/prototype_schema.py
+@@ -6,6 +6,7 @@
+ sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+ 
+ def validate_release(release):
++    assert release["role"]=="image" and release["darkBacking"] is True
+     assert EXPECTED_EVENT_SCHEMA_SHA256 is not None
+     assert release["eventSchemaSHA256"] == EXPECTED_EVENT_SCHEMA_SHA256
+     assert sha(release["eventSchemaPath"]) == EXPECTED_EVENT_SCHEMA_SHA256
+@@ -13,14 +14,16 @@
+ 
+ def extra_flags(role):
+     flags={"HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC":"1", "HANGTEN_REVIEW_HAND_LIFETIME_CENSUS":"1"}
+-    if role=="image": flags["HANGTEN_REVIEW_HAND_IMAGE"]="1"
++    if role=="image":
++        flags["HANGTEN_REVIEW_HAND_IMAGE"]="1"
++        flags["HANGTEN_REVIEW_HAND_IMAGE_DARK_BACKGROUND"]="1"
+     return flags
+ 
+ def validate_flags(flags, role):
+     expected={"HANGTEN_REVIEW_GRIP_MODEL":"1", "HANGTEN_REVIEW_GRIP_POSE":"halfCrimp",
+         "HANGTEN_REVIEW_GRIP_FINGERS":"index,middle,ring,pinky",
+         "HANGTEN_REVIEW_DIAGNOSTIC_RUN":flags["HANGTEN_REVIEW_DIAGNOSTIC_RUN"], **extra_flags(role)}
+-    assert flags==expected  # No audio/workout/suppression/projection/dark flags.
++    assert flags==expected  # Only explicit dark backing added; no audio/workout/suppression/projection flags.
+ 
+ def image_rows(rows): return [r for r in rows if r.get("event")=="hand-image"]
+ def key(r): return r["sessionID"],r["revision"]

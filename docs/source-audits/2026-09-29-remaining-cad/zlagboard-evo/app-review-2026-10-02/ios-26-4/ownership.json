@@ -1,0 +1,7 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "simulator": "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+  "preservedProducts": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/Products-placid-badger-cad-second-half",
+  "traps": "EXIT INT TERM installed before product copy and Simulator creation",
+  "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4"
+}

@@ -1,0 +1,176 @@
+{
+  "owner": "placid-badger",
+  "verifiedUTC": "2026-10-03T14:28:17.073132+00:00",
+  "allExactOwnedResourcesAbsent": true,
+  "receipts": [
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/corrected-pad-probes-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-package-checks-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/final-render-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/independent-candidate-check-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/native-route-check-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/prior-pad-probes-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/root/staging-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author1-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author2-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/author3-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/collider2-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile1-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile2-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile3-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/compile4-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/inspect-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck2-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativepreview-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativerender-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/orientation2-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/originalshapes2-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/priorcollider-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/reimport-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    },
+    {
+      "receipt": ".context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/render-cleanup.json",
+      "exactOwnedPathsAbsent": true,
+      "originalOwnedProcessGroupsAbsent": true,
+      "laterIdentifierReuse": []
+    }
+  ],
+  "sharedStandardUnknownResourcesUntouched": true
+}

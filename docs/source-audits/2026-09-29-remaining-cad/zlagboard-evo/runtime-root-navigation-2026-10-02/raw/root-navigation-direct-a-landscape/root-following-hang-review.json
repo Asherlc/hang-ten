@@ -1,0 +1,43 @@
+{
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-navigation-direct-a-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "6d76db2c1787d86276a9fc5b4f745686dc34874405740b315949f2c303af4b10",
+      "wholeImageViewed": true,
+      "observedColor": "blue",
+      "expectedColor": "red",
+      "timer": "00:07",
+      "PauseVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-navigation-direct-a-landscape/phase-2-active-plus-1.png",
+      "sha256": "364cd276f2559ce7a3ec9f42575e0b3c2e6435e799ea79ea4a93f47128217b98",
+      "wholeImageViewed": true,
+      "observedColor": "blue",
+      "expectedColor": "red",
+      "timer": "00:06",
+      "PauseVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-navigation-direct-a-landscape/phase-2-active-plus-3.png",
+      "sha256": "78b89ad7e33a263312861733f90a421ac8d4448c8ee335fc732218ca00570e92",
+      "wholeImageViewed": true,
+      "observedColor": "red",
+      "expectedColor": "red",
+      "timer": "00:04",
+      "PauseVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-navigation-direct-a-landscape/phase-2-active-plus-5.png",
+      "sha256": "8db8ba26ce302e577195d44342818aeec2bf0c364eda79c7a74d0ffd543fbd3a",
+      "wholeImageViewed": true,
+      "observedColor": "red",
+      "expectedColor": "red",
+      "timer": "00:02",
+      "PauseVisible": true
+    }
+  ],
+  "controlGatePassed": false,
+  "rootNavigationLaunched": false,
+  "interpretation": "Initialtwoimagesstale,late2correct; priorcleanrootcontrolnotstableacrossnewbinary/commonGroup; nouniqueNavcause"
+}

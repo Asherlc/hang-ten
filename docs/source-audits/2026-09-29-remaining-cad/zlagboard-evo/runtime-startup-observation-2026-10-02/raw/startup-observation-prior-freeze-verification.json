@@ -1,0 +1,28 @@
+{
+  "manifests": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-repeat-frozen-manifest.json",
+      "sha256": "a44d5f1bc0841bfbd7968257e2792045c7c90d449cb1a33d9e6055f4c7c038b3",
+      "count": 76,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-frozen-manifest.json",
+      "sha256": "2b7052ebde5e5bca2b6950675d749aafa6ae8f080805e33051c1314740567ab1",
+      "count": 44,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-frozen-manifest.json",
+      "sha256": "625345549e35d3231fdbb9f8222d7a46d6cc0b9b54f02e976e6ac61106e8b1eb",
+      "count": 152,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-frozen-manifest.json",
+      "sha256": "b9be609012589691867212e46caed8808508bf0f359996b92d98a1bb1e6ef685",
+      "count": 136,
+      "allExact": true
+    }
+  ]
+}

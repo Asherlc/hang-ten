@@ -1,0 +1,4 @@
+{
+  "epoch": 1790986754.9595242,
+  "error": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/frontend-boundary/devicehub-attempt-1/frontend-controller.py\", line 103, in <module>\n    assert len(actual)==1 and actual[0]['pid']==child.pid and actual[0]['ppid']==os.getpid() and MARKER in actual[0]['args'] and actual[0]['comm'] in {str(BIN),BIN.name},'Unexpected frontend identity; abort'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Unexpected frontend identity; abort\n"
+}

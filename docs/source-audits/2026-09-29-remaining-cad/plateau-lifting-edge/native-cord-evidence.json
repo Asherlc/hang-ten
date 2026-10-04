@@ -1,0 +1,89 @@
+{
+  "nativeSource": "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+  "nativeFrame": "mm; x right, y depth (front negative), z up",
+  "runtimeFrame": "metres; x=native x/1000, y=native z/1000, z=-native y/1000",
+  "solidFeature": {
+    "depth-18mm": "Depth18WoodAndBacking",
+    "depth-15mm": "Depth15BlockerAttached",
+    "depth-10mm": "Depth10BlockerAttached"
+  },
+  "attachmentNodeID": "plateau_body",
+  "evidencedGraph": "One open C-shaped curl across full width; loop enters exposed ends and has visible exterior return below body.",
+  "nativeFeatures": {
+    "curl": {
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "axisPoint": [
+        0,
+        -12,
+        -31
+      ],
+      "xExtent": [
+        -50,
+        50
+      ],
+      "innerRadiusMM": 6,
+      "outerRadiusMM": 9,
+      "openQuadrant": "positive native y and positive native z",
+      "dimensionStatus": "display estimates; topology observed"
+    }
+  },
+  "positions": [
+    {
+      "id": "depth-18mm",
+      "presentationID": "depth-18mm",
+      "contactIDs": [
+        "edge-18"
+      ],
+      "effectiveDepths": {
+        "edge-18": {
+          "range": {
+            "minimum": 18,
+            "maximum": 18
+          }
+        }
+      }
+    },
+    {
+      "id": "depth-15mm",
+      "presentationID": "depth-15mm",
+      "contactIDs": [
+        "edge-18"
+      ],
+      "effectiveDepths": {
+        "edge-18": {
+          "range": {
+            "minimum": 15,
+            "maximum": 15
+          }
+        }
+      }
+    },
+    {
+      "id": "depth-10mm",
+      "presentationID": "depth-10mm",
+      "contactIDs": [
+        "edge-18"
+      ],
+      "effectiveDepths": {
+        "edge-18": {
+          "range": {
+            "minimum": 10,
+            "maximum": 10
+          }
+        }
+      }
+    }
+  ],
+  "notes": "Identical upright suspension setup across three actual CAD configurations. All three share scoped plateau_body NodeID. Cord route through open curl must use native collision checks; C-mouth is not a closed pair of bores.",
+  "sourceRegister": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/sources.json",
+  "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+  "modelSHA256ByPresentation": {
+    "depth-10mm": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+    "depth-15mm": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+    "depth-18mm": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
+  }
+}

@@ -1,0 +1,1 @@
+Short observational layer-configuration run only. Existing callbacks emit sparse stderr receipts. No complete workout repair verdict; no matched causal control. Final diagnostic source frozen before build. Capture protocol unchanged except bounded 1–20-second screenshot schedule.

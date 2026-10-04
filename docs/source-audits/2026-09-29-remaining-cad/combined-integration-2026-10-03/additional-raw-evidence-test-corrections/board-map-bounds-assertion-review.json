@@ -1,0 +1,22 @@
+{
+  "reviewedAtUTC": "2026-10-03T23:27:44.600096+00:00",
+  "reviewedHead": "0d08d4ebb6e2d055ce158572f5079c881a90fb58",
+  "scope": "Read-only diagnosis of testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds. No tests/runtime/resources or source edits executed. Additive scratch evidence only.",
+  "failureClassification": "Stale lexical assertion; no missing outer bounds modifier found.",
+  "evidence": {
+    "sourcePath": "HangTen/Views/BoardMapView.swift",
+    "sourceSHA256": "4a023bf0e3ce4115fcb69862b2373bf7bedfebece9b4f856298c18f57874602a",
+    "testPath": "HangTenTests/BoardSourceBoundaryTests.swift",
+    "testSHA256": "491b19a4024f4816ab41877456cd3d653d4baf7de4d6289dd01bafa55e7f6e58",
+    "physicalHoldAndOuterFramePatternStillMatches": true,
+    "oldOuterFrameImmediatelyBeforeGeometryReaderClosurePatternMatches": false,
+    "productionFrameLine": 736,
+    "newReadinessPreferenceLine": 740,
+    "reportedFailureTestLine": 579
+  },
+  "cause": "Raster renderer preparation reporting adds a preference modifier after the existing ZStack .frame. The lexical test requires the next text after that frame to close GeometryReader and enter case .model, making a legitimate additional modifier fail. The unchanged first assertion already matches the PhysicalHoldVisual frame plus the ForEach/ZStack closures and the outer ZStack frame.",
+  "narrowCorrection": "Restrict inspection to the BoardMapView body raster branch (switch content.presentation.media; case .raster up to case .model). Retain the per-hold frame check and assert the outer ZStack closing-brace/frame structural prefix within that branch, without requiring .frame to be its last modifier. Prefer whitespace-tolerant matching; no generic unscoped source.contains(frame) or whole-file frame-count shortcut.",
+  "productionChangeNeeded": false,
+  "testWeakeningAvoidance": "Keep assertions that each PhysicalHoldVisual and the enclosing raster ZStack receive boardBounds.width/height. Permit independent later readiness modifiers, which do not alter those dimensions.",
+  "testExecutionQualification": "Root reported the full integrated suite result and this failure. This reviewer inspected source and evaluated literal patterns with Python only; no XCTest result is claimed."
+}

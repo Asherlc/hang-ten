@@ -93,12 +93,22 @@ struct BoardModelNodeDescriptor: Hashable, Codable {
 
     let nodeID: String
     let role: Role
+    /// Deterministic picking identity, even when the mesh has other memberships.
     let contactID: String?
+    let additionalContactIDs: [String]?
+
+    init(nodeID: String, role: Role, contactID: String?, additionalContactIDs: [String]? = nil) {
+        self.nodeID = nodeID
+        self.role = role
+        self.contactID = contactID
+        self.additionalContactIDs = additionalContactIDs
+    }
 
     enum CodingKeys: String, CodingKey {
         case nodeID
         case role
         case contactID = "contactSlotID"
+        case additionalContactIDs
     }
 }
 
@@ -258,10 +268,27 @@ struct BoardModelTwoBranchSuspension: Hashable {
     var internalLoopChannelPointsByBranchID: [String: [[Double]]]? = nil
 }
 
+struct BoardModelCADCordStrand: Hashable {
+    let id: String
+    let kind: String
+    let restLength: Double
+    let radius: Double
+    let material: String
+    let provenance: String
+}
+
+struct BoardModelCADRoutedCord: Hashable {
+    let bodyNodeID: String
+    let strands: [BoardModelCADCordStrand]
+    let anchor: BoardModelInvisibleAnchor
+    let canonicalPoses: [String: BoardModelCanonicalPose]
+}
+
 enum BoardModelSuspension: Hashable {
     case singleCord(BoardModelSingleCordSuspension)
     case pairedLeadCord(BoardModelPairedLeadCord)
     case twoBranchCord(BoardModelTwoBranchSuspension)
+    case cadRoutedCord(BoardModelCADRoutedCord)
 
     // Compatibility projections for the existing single-cord renderer. New
     // two-branch consumers must switch on the discriminator explicitly.
@@ -281,6 +308,10 @@ enum BoardModelSuspension: Hashable {
 
     var attachment: BoardModelAttachment {
         switch self {
+        case .cadRoutedCord(let suspension):
+            return BoardModelAttachment(nodeID: suspension.bodyNodeID,
+                pointInModel: suspension.canonicalPoses.values.first!.wrappedRoutes!.values.first!.first!,
+                provenance: "nativeCADSolve")
         case .singleCord(let suspension): return suspension.attachment
         case .pairedLeadCord(let suspension):
             guard let attachment = suspension.attachments.first else {
@@ -301,6 +332,7 @@ enum BoardModelSuspension: Hashable {
 
     var anchor: BoardModelInvisibleAnchor {
         switch self {
+        case .cadRoutedCord(let suspension): suspension.anchor
         case .singleCord(let suspension): suspension.anchor
         case .pairedLeadCord(let suspension): suspension.anchor
         case .twoBranchCord(let suspension): suspension.anchor
@@ -309,6 +341,10 @@ enum BoardModelSuspension: Hashable {
 
     var cord: BoardModelCord {
         switch self {
+        case .cadRoutedCord(let suspension):
+            let strand = suspension.strands[0]
+            return BoardModelCord(restLength: strand.restLength, radius: strand.radius,
+                                  material: strand.material, provenance: strand.provenance)
         case .singleCord(let suspension): return suspension.cord
         case .pairedLeadCord(let suspension): return suspension.cord
         case .twoBranchCord(let suspension):
@@ -326,6 +362,7 @@ enum BoardModelSuspension: Hashable {
 
     var canonicalPoses: [String: BoardModelCanonicalPose] {
         switch self {
+        case .cadRoutedCord(let suspension): suspension.canonicalPoses
         case .singleCord(let suspension): suspension.canonicalPoses
         case .pairedLeadCord(let suspension): suspension.canonicalPoses
         case .twoBranchCord(let suspension): suspension.canonicalPoses
@@ -1210,22 +1247,25 @@ struct BoardPosition: Identifiable, Codable, Hashable {
     /// Retained internally so model packages can distinguish omitted membership
     /// (which materializes) from an authored empty array (invalid).
     let contactIDsWereExplicitlyAuthored: Bool
+    let effectiveDepths: [String: HoldDepth]
 
-    init(id: String, presentationID: String, contactIDs: [String]) {
+    init(id: String, presentationID: String, contactIDs: [String], effectiveDepths: [String: HoldDepth] = [:]) {
         self.id = id
         self.presentationID = presentationID
         self.contactIDs = contactIDs
         self.contactIDsWereExplicitlyAuthored = true
+        self.effectiveDepths = effectiveDepths
     }
 
-    init(id: String, presentationID: String) {
+    init(id: String, presentationID: String, effectiveDepths: [String: HoldDepth] = [:]) {
         self.id = id
         self.presentationID = presentationID
         self.contactIDs = []
         self.contactIDsWereExplicitlyAuthored = false
+        self.effectiveDepths = effectiveDepths
     }
 
-    private enum CodingKeys: String, CodingKey { case id, presentationID, contactIDs }
+    private enum CodingKeys: String, CodingKey { case id, presentationID, contactIDs, effectiveDepths }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -1235,6 +1275,7 @@ struct BoardPosition: Identifiable, Codable, Hashable {
         contactIDs = contactIDsWereExplicitlyAuthored
             ? try container.decode([String].self, forKey: .contactIDs)
             : []
+        effectiveDepths = try container.decodeIfPresent([String: HoldDepth].self, forKey: .effectiveDepths) ?? [:]
     }
 
     func encode(to encoder: Encoder) throws {
@@ -1244,6 +1285,7 @@ struct BoardPosition: Identifiable, Codable, Hashable {
         if contactIDsWereExplicitlyAuthored {
             try container.encode(contactIDs, forKey: .contactIDs)
         }
+        if !effectiveDepths.isEmpty { try container.encode(effectiveDepths, forKey: .effectiveDepths) }
     }
 }
 
@@ -1382,6 +1424,19 @@ struct BoardRevision: Identifiable, Hashable {
         case .raster(let media): presentedIDs = Set(media.contactGeometry.keys)
         }
         return contacts.compactMap { presentedIDs.contains($0.id) ? $0.id : nil }
+    }
+
+    func contacts(inPosition positionID: String) -> [PhysicalContact] {
+        guard let position = position(id: positionID) else { return [] }
+        let identifiers = Set(contactIDs(inPosition: positionID))
+        return contacts.filter { identifiers.contains($0.id) }.map { contact in
+            guard let depth = position.effectiveDepths[contact.id] else { return contact }
+            return PhysicalContact(id: contact.id, equipmentObjectID: contact.equipmentObjectID,
+                                   name: contact.name, kind: contact.kind, shape: contact.shape,
+                                   fingerCapacity: contact.fingerCapacity, handCapacity: contact.handCapacity,
+                                   depth: depth, gripTypes: contact.gripTypes, side: contact.side,
+                                   pairedContactID: contact.pairedContactID)
+        }
     }
 
     func transitionKind(

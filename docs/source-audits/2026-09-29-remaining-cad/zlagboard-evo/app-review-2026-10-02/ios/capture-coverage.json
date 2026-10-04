@@ -1,0 +1,42 @@
+{
+  "contactCount": 21,
+  "fixedPresentations": 1,
+  "orbitCount": 5,
+  "selectionIDs": [
+    "edge-20-left",
+    "edge-20-right",
+    "edge-30-inner-left",
+    "edge-30-inner-right",
+    "edge-30-left",
+    "edge-30-right",
+    "edge-35-center",
+    "sloper-edge-25-left",
+    "sloper-edge-25-lower-left",
+    "sloper-edge-25-lower-right",
+    "sloper-edge-25-right",
+    "sloper-edge-30-center",
+    "sloper-edge-30-left",
+    "sloper-edge-30-right",
+    "top-jug-left",
+    "top-jug-right",
+    "top-sloper-20-left",
+    "top-sloper-20-right",
+    "top-sloper-32-left",
+    "top-sloper-32-right",
+    "top-sloper-jug-center"
+  ],
+  "successfulRawReport": "captures-after-reboot/validation.json",
+  "rawInitialFailure": "captures/failure.txt",
+  "allContactAXAvailableCount": 21,
+  "wholePhoneSheets": [
+    "review-montages/orbits-1.png",
+    "review-montages/orbits-2.png",
+    "review-montages/selections-1.png",
+    "review-montages/selections-2.png",
+    "review-montages/selections-3.png",
+    "review-montages/selections-4.png",
+    "review-montages/selections-5.png",
+    "review-montages/selections-6.png",
+    "review-montages/selections-7.png"
+  ]
+}

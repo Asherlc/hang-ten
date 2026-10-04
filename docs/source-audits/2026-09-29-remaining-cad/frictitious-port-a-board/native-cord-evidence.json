@@ -1,0 +1,121 @@
+{
+  "nativeSource": "Hangboards/frictitious-port-a-board/frictitious-port-a-board.FCStd",
+  "nativeFrame": "mm; x right, y depth (front negative), z up",
+  "runtimeFrame": "metres; x=native x/1000, y=native z/1000, z=-native y/1000",
+  "solidFeature": "RightBackEntryCut",
+  "attachmentNodeID": "pab_body",
+  "evidencedGraph": "Paired exterior leads at front/reverse entrances; interior connections unproven.",
+  "nativeFeatures": {
+    "mouthWells": [
+      {
+        "center": [
+          -50,
+          -24,
+          0
+        ],
+        "outwardAxis": [
+          0,
+          -1,
+          0
+        ],
+        "radiusMM": 5.5,
+        "depthMM": 4
+      },
+      {
+        "center": [
+          -50,
+          24,
+          0
+        ],
+        "outwardAxis": [
+          0,
+          1,
+          0
+        ],
+        "radiusMM": 5.5,
+        "depthMM": 4
+      },
+      {
+        "center": [
+          50,
+          -24,
+          0
+        ],
+        "outwardAxis": [
+          0,
+          -1,
+          0
+        ],
+        "radiusMM": 5.5,
+        "depthMM": 4
+      },
+      {
+        "center": [
+          50,
+          24,
+          0
+        ],
+        "outwardAxis": [
+          0,
+          1,
+          0
+        ],
+        "radiusMM": 5.5,
+        "depthMM": 4
+      }
+    ]
+  },
+  "positions": [
+    {
+      "id": "front-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-30",
+        "edge-25"
+      ]
+    },
+    {
+      "id": "front-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-20"
+      ]
+    },
+    {
+      "id": "reverse-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-12",
+        "edge-10"
+      ]
+    },
+    {
+      "id": "reverse-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-15",
+        "edge-8"
+      ]
+    },
+    {
+      "id": "outer-upper",
+      "presentationID": "primary",
+      "contactIDs": [
+        "jug-outer-rim"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-body"
+      ]
+    }
+  ],
+  "notes": "Front-upright uses lower30 and upper-cavity lower25; front-inverted upper20. Reverse-upright uses12/10 lower surfaces, inverted15/8 upper surfaces. Pinch-side retains native narrow side contact.",
+  "sourceRegister": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/sources.json",
+  "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "modelSHA256ByPresentation": {
+    "primary": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273"
+  }
+}

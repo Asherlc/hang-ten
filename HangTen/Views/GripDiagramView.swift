@@ -49,13 +49,15 @@ struct GripDiagramView: View {
                         posture: gripType,
                         fingerConfiguration: fingerConfiguration,
                         side: singleSide,
-                        showsPostureLabel: false
+                        showsPostureLabel: false,
+                        exposesAccessibility: false
                     )
                 } else {
                     GripHandPairCueCards(
                         posture: gripType,
                         fingerConfiguration: fingerConfiguration,
-                        showsPostureLabel: false
+                        showsPostureLabel: false,
+                        exposesAccessibility: false
                     )
                 }
             }
@@ -65,6 +67,15 @@ struct GripDiagramView: View {
         .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilitySummary)
+        .accessibilityIdentifier(accessibilityCueIdentifier)
+    }
+
+    private var accessibilityCueIdentifier: String {
+        let side = Self.singleSide(
+            handCapacity: hold.handCapacity,
+            resolvedSide: resolvedHandSide
+        )?.accessibilityIdentifier ?? "both"
+        return "workout.gripCue.\(side)"
     }
 
     /// Resolves which hand an illustration should render for a hold that only
@@ -138,6 +149,7 @@ struct GripHandCueCard: View {
     let side: GripCueSide
     var usesSharedPairPreview = false
     var showsPostureLabel = true
+    var exposesAccessibility = true
 
     var body: some View {
         VStack(spacing: 3) {
@@ -173,7 +185,8 @@ struct GripHandCueCard: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel(accessibilityLabel)
-        .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier)")
+        .accessibilityIdentifier(exposesAccessibility ? "workout.gripCue.\(side.accessibilityIdentifier)" : "")
+        .accessibilityHidden(!exposesAccessibility)
     }
 
     var fingerSummary: String {
@@ -193,6 +206,7 @@ struct GripHandPairCueCards: View {
     let posture: GripType?
     let fingerConfiguration: FingerConfiguration?
     var showsPostureLabel = true
+    var exposesAccessibility = true
 
     var body: some View {
         VStack(spacing: 6) {
@@ -214,7 +228,8 @@ struct GripHandPairCueCards: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Both hands, \(posture?.label ?? "Grip not specified"), \(fingerSummary)")
-        .accessibilityIdentifier("workout.gripCue.both")
+        .accessibilityIdentifier(exposesAccessibility ? "workout.gripCue.both" : "")
+        .accessibilityHidden(!exposesAccessibility)
     }
 
     private var fingerSummary: String {

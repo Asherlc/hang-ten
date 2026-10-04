@@ -1,0 +1,110 @@
+{
+  "owner": "placid-badger",
+  "removed": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-tmp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-xcode-stage",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-android-stage",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/jobs/placid-badger-forge15-final-validation-20261002T191612/placid-badger-forge15-ios-DD"
+  ],
+  "absenceVerified": true,
+  "stoppedExactOwnedProcessGroups": [],
+  "activeChildAbsent": true,
+  "everyRecordedGroupChecked": true,
+  "processGroupReceipts": [
+    {
+      "phase": "git-head",
+      "processGroup": 59095,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "package-validation",
+      "processGroup": 59099,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "delivery-validation",
+      "processGroup": 59112,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "xcode-staging",
+      "processGroup": 59120,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "android-staging",
+      "processGroup": 59179,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "focused-python-tests",
+      "processGroup": 59187,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "build-time-git-head",
+      "processGroup": 59202,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "build-time-git-status",
+      "processGroup": 59220,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "build-time-git-binary-diff",
+      "processGroup": 59224,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "generic-ios-build",
+      "processGroup": 59239,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    }
+  ],
+  "allExactOwnedProcessGroupsAbsent": true,
+  "externalResources": [],
+  "sharedDependenciesPreserved": true
+}

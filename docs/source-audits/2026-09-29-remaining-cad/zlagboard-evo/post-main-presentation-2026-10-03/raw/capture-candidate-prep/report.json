@@ -1,0 +1,20 @@
+{
+  "preparedOnly": true,
+  "runtimeAuthorized": false,
+  "sourceOrRuntimeMutations": false,
+  "syntax": "AST parse PASS; capture not executed",
+  "delta": "Release accepts Evo/Pro and control/action/reversal; source baselineOnly false; exact optional skip flag only control/reversal. All command/capture/cleanup logic otherwise preserved.",
+  "consoleAdded": false,
+  "scheduleBytesUnchanged": true,
+  "routineReferenceBytesUnchanged": true,
+  "currentPlanHashMatches": true,
+  "files": {
+    "README.md": "035cb47589b43edb45dc571fca2a16958af91eb17ffff496b48eb5b2128f8be1",
+    "capture.diff": "7a5b523bcd284d6ca3c5bb2e403d5344ad09ceba3ae3506d103da07ac0ec6bb7",
+    "capture.original.py": "094d27e0dcd20b042a41979390fa78d254dd511b84dd2133d72c8b223a70d7d8",
+    "capture.py": "e0a636c56eabc7aea3a695cb330bf9545bf404ab2f24de36c72505530701ec87",
+    "release-template.NOT-AUTHORIZED.json": "06e108fbcd764857801a87d02cf904e8fb01485fe9be361cd21c14d8a1170ac1",
+    "routine-reference.json": "ed3655bf12b217326324bb5f461cdaee0db28f018e0e593a995c49f5b084e601",
+    "schedule.json": "26b19c6c9273432d96bf9a34be0f5796e6d8af197b8ca017766ea8123d0f45b2"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "devicesAndConfigurations": [
+    {
+      "device": {
+        "architecture": "arm64",
+        "deviceId": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+        "deviceName": "Hang Ten Paseo placid-badger Review RuntimeFinal20261003",
+        "modelName": "iPhone 17 Pro",
+        "osBuildNumber": "23F77",
+        "osVersion": "26.5",
+        "platform": "iOS Simulator"
+      },
+      "expectedFailures": 0,
+      "failedTests": 1,
+      "passedTests": 454,
+      "skippedTests": 1,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription": "HangTen \u00b7 Built with macOS 27.0.1",
+  "expectedFailures": 0,
+  "failedTests": 1,
+  "finishTime": 1791053257.492,
+  "passedTests": 454,
+  "result": "Failed",
+  "runtimeWarnings": [],
+  "skippedTests": 1,
+  "startTime": 1791053188.27,
+  "statistics": [],
+  "testFailures": [
+    {
+      "failureText": "XCTAssertEqual failed: (\"[\"primary\"]\") is not equal to (\"[\"left-half\", \"right-half\"]\") - trango.rock-prodigy-forge",
+      "targetName": "HangTenTests",
+      "testIdentifier": 363,
+      "testIdentifierString": "WorkoutActivityRecordingTests/testRockProdigyReusableFramesResolveToDistinctPhysicalSides()",
+      "testIdentifierURL": "test://com.apple.xcode/HangTen/HangTenTests/WorkoutActivityRecordingTests/testRockProdigyReusableFramesResolveToDistinctPhysicalSides",
+      "testName": "testRockProdigyReusableFramesResolveToDistinctPhysicalSides()"
+    }
+  ],
+  "title": "Test - HangTen",
+  "topInsights": [
+    {
+      "category": "Longest Test Runs",
+      "impact": "67% of duration",
+      "text": "3 longest test runs with outlier durations exceeding 4.50s (three standard deviations)"
+    }
+  ],
+  "totalTestCount": 456
+}

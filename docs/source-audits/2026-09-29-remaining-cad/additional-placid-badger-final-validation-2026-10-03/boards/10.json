@@ -1,0 +1,66 @@
+{
+  "owner": "placid-badger",
+  "number": 10,
+  "boardID": "nature.stone-hanger-mini",
+  "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+  "presentations": {
+    "primary": {
+      "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+      "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360"
+    }
+  },
+  "sourcePlanID": "research.abrahangs",
+  "workStep": 17,
+  "naturalRestStep": 18,
+  "routineDurationsOrTasksChanged": false,
+  "technicalCapturedWorkflowPassed": true,
+  "automationResult": "Mini landscape physical-driver completion and portrait XCTest both passed.",
+  "frames": [
+    {
+      "image": "screenshots/10-landscape-hang.png",
+      "sourceArtifact": "app-captures/10-workout-landscape-retry3-work-highlight.png",
+      "sha256": "a7112fb1ff3e97b8918912dcad03bfa89e7c5a288bbb1536da4caeb4a5a8e556",
+      "orientation": "landscape",
+      "observedHighlight": "red",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": true
+    },
+    {
+      "image": "screenshots/10-landscape-rest.png",
+      "sourceArtifact": "app-captures/10-workout-landscape-retry3-rest-live.png",
+      "sha256": "91845a16d4ae9d3e298da60618749e9454b57a583560aefa64856de1db75ffab",
+      "orientation": "landscape",
+      "observedHighlight": "blue",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": true
+    },
+    {
+      "image": "screenshots/10-portrait-hang.png",
+      "sourceArtifact": "final-natural-attachments/2D6C8828-C8A6-428F-98FF-501C5C3E7B6D.png",
+      "sha256": "98c63cb7a7dba7d6053bdeb4bfceb74ebd021fc93c594912457f892498418bc3",
+      "orientation": "portrait",
+      "observedHighlight": "red",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": false
+    },
+    {
+      "image": "screenshots/10-portrait-rest.png",
+      "sourceArtifact": "final-natural-attachments/02CFDFE1-19CB-48C2-B865-EF655076B1B7.png",
+      "sha256": "aeaaa01ce2d79221d7686ba631890743d09cd527bfa94899716aab0f074dce66",
+      "orientation": "portrait",
+      "observedHighlight": "blue",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": false
+    }
+  ],
+  "geometryAndSuspensionUnchanged": true,
+  "bodyHumanApprovalUnchanged": true,
+  "currentAppHumanAcceptance": "pending",
+  "limits": "Landscape captures verify the earlier Rest-red defect is absent. The portrait XCTest captures show the board and highlight; hand cards are below the viewport despite the original attachment title. No continuous or hardware GPU timing claim.",
+  "priorTouchAndContactCoverage": "All 4 logical contacts: jug, wood edge, granite edge and pinch.",
+  "priorTouchRecord": "runtime-final-2026-10-03/boards/10.json"
+}

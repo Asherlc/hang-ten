@@ -1,0 +1,22 @@
+{
+  "package": "nature-stone-hanger",
+  "independentFreshCompileCheck": true,
+  "sourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+  "actualAssetSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+  "descriptorModelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+  "compilerReturnedModelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+  "compilerReport": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/compile-final-check.json",
+  "compilerReportSHA256": "5b78de91b0ba07939cccbfbeba3f4752c1828d73c95089d9541d885434875706",
+  "sourceAssetDescriptorBefore": {
+    "nature-stone-hanger.FCStd": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+    "primary.usdz": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+    "primary.model.json": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c"
+  },
+  "sourceAssetDescriptorAfter": {
+    "nature-stone-hanger.FCStd": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+    "primary.usdz": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+    "primary.model.json": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c"
+  },
+  "elapsedSeconds": 73.992,
+  "closure": "passed"
+}

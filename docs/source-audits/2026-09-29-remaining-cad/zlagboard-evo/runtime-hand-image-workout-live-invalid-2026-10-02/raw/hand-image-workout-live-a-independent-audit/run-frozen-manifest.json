@@ -1,0 +1,221 @@
+{
+  "scope": "Completed LIVE-a run only; independent immutable input inventory",
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/000-stderr.txt",
+      "relativeToRun": "000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/000-stdout.txt",
+      "relativeToRun": "000-stdout.txt",
+      "bytes": 117,
+      "sha256": "35292a343c3b3abbe0dc9c5cc9c928b16c91e85f351d96bdbd775253cdd38fbf"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/001-stderr.txt",
+      "relativeToRun": "001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/001-stdout.txt",
+      "relativeToRun": "001-stdout.txt",
+      "bytes": 176,
+      "sha256": "6468283cbfebc9396fe0097f581814f45b2b98a85f8f9ba3205b3967fe51b7c8"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/002-stderr.txt",
+      "relativeToRun": "002-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/002-stdout.txt",
+      "relativeToRun": "002-stdout.txt",
+      "bytes": 162,
+      "sha256": "fab7d60dcd139971a2cc51eb4b978185ad98afbbbc9d05795982078072d5c529"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/003-stderr.txt",
+      "relativeToRun": "003-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/003-stdout.txt",
+      "relativeToRun": "003-stdout.txt",
+      "bytes": 28,
+      "sha256": "eb4dfe915e9072a9e4e48c92948fb9cbac36d40401260542896e93896994da7d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/004-stderr.txt",
+      "relativeToRun": "004-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/004-stdout.txt",
+      "relativeToRun": "004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/005-stderr.txt",
+      "relativeToRun": "005-stderr.txt",
+      "bytes": 373,
+      "sha256": "0487066bbe2485779cb7286427a63eed062431d637f596005dea992222fd2264"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/005-stdout.txt",
+      "relativeToRun": "005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/006-stderr.txt",
+      "relativeToRun": "006-stderr.txt",
+      "bytes": 337,
+      "sha256": "4083a0e9f5a293b0691768c60d0f454021e2822f2900bad791b5ca880a131099"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/006-stdout.txt",
+      "relativeToRun": "006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/007-stderr.txt",
+      "relativeToRun": "007-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/007-stdout.txt",
+      "relativeToRun": "007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/all-published-artifact-copies.json",
+      "relativeToRun": "all-published-artifact-copies.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/app-cleanup.json",
+      "relativeToRun": "app-cleanup.json",
+      "bytes": 133,
+      "sha256": "e1b91986c11a38854f6a8bde2694aa7a120bd665959d289cb3468483f9ca8e40"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/app-registration.json",
+      "relativeToRun": "app-registration.json",
+      "bytes": 158,
+      "sha256": "f05e30c6f00b8cacfd9825e3ba993822f1531dd4b970041ebd6ece50fa14484d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/appearance-anchor.json",
+      "relativeToRun": "appearance-anchor.json",
+      "bytes": 1338,
+      "sha256": "1fcc38bc0a71cd42a6afe9e4a91fdb6971646b37d064db9350bd0de800c67aec"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/captures.json",
+      "relativeToRun": "captures.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/commands.json",
+      "relativeToRun": "commands.json",
+      "bytes": 3891,
+      "sha256": "a026e0202ddd7e1840e8d05e81f959c877ac739e92e44194671f5b2d68bfd35d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/completion.json",
+      "relativeToRun": "completion.json",
+      "bytes": 595,
+      "sha256": "bb71a60473c2c869bab633390018f27ebe50fc9eaa3a6facae45a8add8c0c92e"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/events-4F1E2EDD-6532-46B6-8C55-6AD3AB5E0301.jsonl",
+      "relativeToRun": "events-4F1E2EDD-6532-46B6-8C55-6AD3AB5E0301.jsonl",
+      "bytes": 46927,
+      "sha256": "ad8bc018e07e6cd2ddb7b263fae0a1733d8ec3ff41908a6519c51181aa34d56b"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/failure.txt",
+      "relativeToRun": "failure.txt",
+      "bytes": 766,
+      "sha256": "5442ca22e6a309c154aede6818bed93026b388af95d77e72319e9f426d76b26f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/installed-binary-gate.json",
+      "relativeToRun": "installed-binary-gate.json",
+      "bytes": 374,
+      "sha256": "83536971fb31836eae4f6eaabaa0e035209a2adc38bd1d6c75a1b3fa44c38de4"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/launch-initial-capture.json",
+      "relativeToRun": "launch-initial-capture.json",
+      "bytes": 152,
+      "sha256": "fbf0fb28aa38f4250cf8da219821b306dd6fe98d1c51888fbe0b730ae4c9b65f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/launch-initial.png",
+      "relativeToRun": "launch-initial.png",
+      "bytes": 717621,
+      "sha256": "beefa880902137e376c5725d62acf7a648356b9d667c553eadece47f33b2b35f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/launch-review-environment.json",
+      "relativeToRun": "launch-review-environment.json",
+      "bytes": 616,
+      "sha256": "a980c581df4ee5a480eb9c784f05bb242706f68200bd9589eb7556e702a75c99"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/missing-initial-sequence.json",
+      "relativeToRun": "missing-initial-sequence.json",
+      "bytes": 1407,
+      "sha256": "f4ca581367f6a847df6412515d9e24fc64fb80a8f565155a4c6ce17008f47541"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/protocol.json",
+      "relativeToRun": "protocol.json",
+      "bytes": 1089,
+      "sha256": "debf5491c479a1de5dd78a87a9d757c9f4a3c22e7ac510cac8bf48418943a9b3"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/runtime-release.json",
+      "relativeToRun": "runtime-release.json",
+      "bytes": 10912,
+      "sha256": "bb1a5eaf910cb84b1309e509d16c3c02e6708a5aca7980a7f4c11b93f6ae2359"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/startup-marker-observations.json",
+      "relativeToRun": "startup-marker-observations.json",
+      "bytes": 1074,
+      "sha256": "7c8e51d3910465c9faf8d59509398dc0cecaa3ffc10200832591522ecbd2c275"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/trace-copy.json",
+      "relativeToRun": "trace-copy.json",
+      "bytes": 725,
+      "sha256": "eb0c77a4bf588fdf0b7072f9779eb557ff771123b5f08f17be9a7d22e8a5b6cd"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/train-startup-readiness.json",
+      "relativeToRun": "train-startup-readiness.json",
+      "bytes": 22551,
+      "sha256": "341f0b620460f36e6d2cf4ce8d4b9fb1e3b7726227d9e09e7cdeea75dfc7c7ee"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/workout-openurl-timing.json",
+      "relativeToRun": "workout-openurl-timing.json",
+      "bytes": 153,
+      "sha256": "1be23cff9115d6548333bcd32878a04bbca92aad9cacb9c4197e48c761def654"
+    }
+  ]
+}

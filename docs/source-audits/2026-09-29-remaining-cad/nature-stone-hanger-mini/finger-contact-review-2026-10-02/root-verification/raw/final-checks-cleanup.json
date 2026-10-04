@@ -1,0 +1,24 @@
+{
+  "owner": "placid-badger",
+  "processGroups": [
+    {
+      "pgid": 9151,
+      "absent": true
+    }
+  ],
+  "resources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-final-checks-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-final-checks-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-final-checks-tmp",
+      "absent": true
+    }
+  ],
+  "exitCode": 0
+}

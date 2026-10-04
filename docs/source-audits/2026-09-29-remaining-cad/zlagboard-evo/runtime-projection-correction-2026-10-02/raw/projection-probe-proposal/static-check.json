@@ -1,0 +1,16 @@
+{
+  "patchAppliesToFrozenSource": true,
+  "command": [
+    "rtk",
+    "proxy",
+    "git",
+    "apply",
+    "--check",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/projection-probe-proposal/projection-probe.patch"
+  ],
+  "exitStatus": 0,
+  "stdout": "",
+  "stderr": "",
+  "swiftTypecheck": "Not run; this is preparation only. Full app compile remains a later authorized gate.",
+  "sourceUnchanged": true
+}

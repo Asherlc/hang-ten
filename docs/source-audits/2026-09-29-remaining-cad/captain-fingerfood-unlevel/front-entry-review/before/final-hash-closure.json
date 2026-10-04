@@ -1,0 +1,22 @@
+{
+  "package": "captain-fingerfood-unlevel",
+  "independentFreshCompileCheck": true,
+  "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+  "actualAssetSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+  "descriptorModelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+  "compilerReturnedModelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+  "compilerReport": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/compile-final-check.json",
+  "compilerReportSHA256": "1addec1829ba7aad3974aa6b70224d541845124562b4ca95feabb8d5a78c93ef",
+  "sourceAssetDescriptorBefore": {
+    "captain-fingerfood-unlevel.FCStd": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+    "primary.usdz": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+    "primary.model.json": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89"
+  },
+  "sourceAssetDescriptorAfter": {
+    "captain-fingerfood-unlevel.FCStd": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+    "primary.usdz": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+    "primary.model.json": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89"
+  },
+  "elapsedSeconds": 17.746,
+  "closure": "passed"
+}

@@ -1,0 +1,52 @@
+{
+  "approvedByRoot": true,
+  "allowedChangedPaths": [
+    "HangTen/Views/BoardModelView.swift",
+    "HangTen/Views/BoardMapView.swift",
+    "HangTen/Views/RootView.swift"
+  ],
+  "approvedPatchPath": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/candidate/candidate.patch",
+  "approvedPatchSHA256": "946269cc3d14c0d78242f40b2ffa34ab411633474bfa3f1931b705e2744a7f4b",
+  "files": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+      "baselineSHA256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "baselineSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+      "baselineSHA256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99"
+    },
+    {
+      "path": "HangTenTests/BoardModelRealityTests.swift",
+      "sha256": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+      "baselineSHA256": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1"
+    },
+    {
+      "path": "HangTenTests/BoardModelTests.swift",
+      "sha256": "74dfab4632f744e10f74f85216b77d3b073d0e84858d750a4ba8fd118d1c4601",
+      "baselineSHA256": "74dfab4632f744e10f74f85216b77d3b073d0e84858d750a4ba8fd118d1c4601"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "81e1a5e8fa50ed009a78f81ebaba7af5a9581ba02a01d20ae18b11a4b95a6e1d",
+      "baselineSHA256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8"
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "b2986f27f69f59d221cb8a84a5d0e0b84e9ff3a94c9457108ccd5ed820ca4e08",
+      "baselineSHA256": "911fba863c2b7dbc66a48c9c70937fb47ecd422e83e761751e662d756aac6b95"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "5e840c019cd28157a4cd180fd0423f32f31050e03b1ac0523c6f9abffd731091",
+      "baselineSHA256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b"
+    }
+  ]
+}

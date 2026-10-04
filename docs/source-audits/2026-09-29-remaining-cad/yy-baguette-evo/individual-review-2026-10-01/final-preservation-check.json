@@ -1,0 +1,22 @@
+{
+  "runtimeFilesVerified": 594,
+  "rawWhitespaceCheckExitStatus": 2,
+  "rawWhitespacePaths": [
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/ios-before-camera-fix/build.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/ios-before-camera-fix/tests.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/ios-before-ordering-fix/build.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/ios/build.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/ios/tests.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/package-checks/native-reopen.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/pose-correction/export-sorted.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/pose-correction/export.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/rounded-ends/author.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/rounded-ends/contact-partition.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/rounded-ends/editability.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/rounded-export/collider.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/rounded-export/compile-check.log",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/rounded-export/compile-publish.log"
+  ],
+  "interpretation": "Whitespace diagnostics are confined to retained raw artifacts. Exact source output bytes are preserved; authored tracked changes pass diff --check.",
+  "humanAcceptance": "pending"
+}

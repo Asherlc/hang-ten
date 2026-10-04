@@ -1,0 +1,317 @@
+{
+  "createdAt": "2026-09-30T21:04:22.047816+00:00",
+  "reviewer": "cad_wall_boards",
+  "package": "frictitious-nug",
+  "reviewNumber": 4,
+  "status": "source-fidelity issue requires resolution before unqualified cord approval",
+  "humanGeometryAcceptance": "pending; technical reports are not user approval",
+  "blockingFindings": [
+    {
+      "id": "NUG-CORD-DIAMETER",
+      "priority": "medium",
+      "finding": "Retained manufacturer product page specifies 6 mm cord; all four modeled leads are 3 mm diameter. Calling radius a display estimate overlooks a directly retained manufacturer dimension.",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/product-page-current.html",
+      "sourceURL": "https://frictitiousclimbing.com/products/the-nug",
+      "sourceExcerpt": "Nug, 6mm rated climbing cord",
+      "sourceDiameterMM": 6,
+      "modeledRadiusMM": 1.5,
+      "modeledDiameterMM": 3,
+      "affectedStrands": [
+        "left-front",
+        "left-rear",
+        "right-front",
+        "right-rear"
+      ],
+      "requestedAction": "Resolve sourced diameter versus deliberate display reduction before claiming cord fidelity. A radius change needs fresh generated native routing/certification and visual comparison; do not merely edit cached paths.",
+      "scope": "Direct source fact, no photographic measurement or hidden threading inference."
+    }
+  ],
+  "sourceReview": {
+    "exactApprovedVisuals": [
+      "NU-2 front",
+      "NU-3 reverse",
+      "NU-4 in-use"
+    ],
+    "allRetainedSourceHashesMatch": true,
+    "HTMLStatus": "Current primary HTML differs from historical approved bytes; sources.json correctly distinguishes authorized supplemental research from exact visual approval.",
+    "dimensionsSupported": "130 x 60 x 40 mm",
+    "holdSizesSupportedMM": [
+      20,
+      25,
+      8,
+      13,
+      40,
+      60
+    ],
+    "visualBodyAssessment": "Rounded rectangular body with opposing stepped cavities, four advertised edge depths and paired visible entrances matches retained front/reverse topology. Exact outline fillets, spacing and entrance dimensions remain explicitly estimated. No additional body fidelity blocker identified from these views.",
+    "topologyAssessment": "Front/rear exposed lead segments are visible. Four external lead depiction and shallow entrance wells deliberately omit unproven hidden connectivity. Do not claim a measured complete rope graph or invent hardware."
+  },
+  "inventory": [
+    {
+      "id": "edge-20",
+      "kind": "edge",
+      "rangeMM": {
+        "minimum": 20,
+        "maximum": 20
+      },
+      "handCapacity": 1
+    },
+    {
+      "id": "edge-25",
+      "kind": "edge",
+      "rangeMM": {
+        "minimum": 25,
+        "maximum": 25
+      },
+      "handCapacity": 1
+    },
+    {
+      "id": "edge-8",
+      "kind": "edge",
+      "rangeMM": {
+        "minimum": 8,
+        "maximum": 8
+      },
+      "handCapacity": 1
+    },
+    {
+      "id": "edge-13",
+      "kind": "edge",
+      "rangeMM": {
+        "minimum": 13,
+        "maximum": 13
+      },
+      "handCapacity": 1
+    },
+    {
+      "id": "jug-40",
+      "kind": "jug",
+      "rangeMM": {
+        "minimum": 40,
+        "maximum": 40
+      },
+      "handCapacity": 1
+    },
+    {
+      "id": "pinch-60",
+      "kind": "pinch",
+      "rangeMM": {
+        "minimum": 60,
+        "maximum": 60
+      },
+      "handCapacity": 1
+    }
+  ],
+  "representationLimits": [
+    "Pinch60 is the opposing body span; compiler depth-axis metric40mm is separately documented and is not the maker pinch dimension. Retained app screenshot shows60mm.",
+    "Shallow4mm entrance wells are display estimates, not proof of blind physical bores. Exact exported-ray report confirms wells exist; front normal-only shading can hide them.",
+    "Cord radius/length and common support are display choices; known cord diameter mismatch is separately flagged.",
+    "The six-pose cord certificate is historical execution on an older algorithm hash, rebound to current sidecar through a camera-only change; no new fresh solve or continuous clearance run was performed here.",
+    "Retained app evidence covers edge20 and pinch60 only; it does not demonstrate all6 canonical selections or physical orbit. App report pins body/descriptor but does not explicitly pin sidecar or installed binary. Fresh review4 app closure should bind current sidecar."
+  ],
+  "technicalEvidence": {
+    "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+    "sidecarSHA256": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088",
+    "modelSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+    "descriptorSHA256": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+    "retainedCompileDepthsMM": {
+      "edge-13": 13.0,
+      "edge-20": 20.0,
+      "edge-25": 25.0,
+      "edge-8": 8.0,
+      "jug-40": 40.0,
+      "pinch-60": 40.0
+    },
+    "nativeReopenEditAndReproducibility": "Retained reports source/model hashes match current files; not rerun.",
+    "retainedContinuousCertificate": {
+      "poses": 6,
+      "minimumCertifiedClearanceMM": 1.5080679843749931,
+      "radiusMM": 1.5,
+      "numericalToleranceMM": 0.01,
+      "historicalAlgorithmSHA256": "98f73d58191ef3f99f612222723c7d1d0e59b886de4ad5a833448d788c2f3de7",
+      "cameraOnlyRebinding": true
+    },
+    "staticTerminalApproachChecks": {
+      "front-25": {
+        "left-front": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "left-rear": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "right-front": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "right-rear": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        }
+      },
+      "front-inverted-20": {
+        "left-front": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "left-rear": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "right-front": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "right-rear": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        }
+      },
+      "reverse-13": {
+        "left-front": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "left-rear": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "right-front": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "right-rear": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        }
+      },
+      "reverse-inverted-8": {
+        "left-front": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "left-rear": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "right-front": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "right-rear": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        }
+      },
+      "outer-upper": {
+        "left-front": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "left-rear": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "right-front": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "right-rear": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        }
+      },
+      "outer-lower": {
+        "left-front": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "left-rear": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "right-front": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        },
+        "right-rear": {
+          "correctExteriorApproach": true,
+          "outwardAxisProjectionMM": 1.570595000000001,
+          "mouthPlaneTerminalPreserved": true
+        }
+      }
+    }
+  },
+  "fileSHA256": {
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/sources.json": "8b9d849e5681d734ac3fdf6601ea0ccf5acd552a952e6b5131fea2eb4ea33a4e",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/native-checks.json": "43c30a8529c2311dfeb96dc414b430c218a58ee21a34facb56f5ae2b203fd5a8",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/mouth-well-export-rays.json": "4b6b9160d75b6397563d010ac780ce4e83bbd6dc8547ae3d27ee28942c349d39",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/native-authoring.md": "305245eea1347fca1999b860c32c10de5c4c1b000e10f69b437fa927f724e202",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/validation.json": "9fb4bc024b15f84c075d41f4943078e46a9be4f76e6dd7148590c09638ad88ef",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-primary-check.json": "fe8235da96ff229162047f6f193b3524f039a64f5c71d4a29a5fd65805c6cd35",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/camera-correction-proof.json": "61db100232d5ee1faa7fa82cb0f6987d1c812a5af09e53411533f65f46213303",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/metadata-diff.json": "7b2d98add33a97b0d32fb7ab2f5ba51785337b8cc5055055af0c11158d0c21b2",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-continuous-clearance.json": "44aa024c6cbaa3842b5b64d69953b307f0b89a5b2612b770d8c4df83cc4ec9d2",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/reproducibility.json": "cf9637c639834c8c935dcc4665b4a2748eee57b4be521074862ace59dc84f776",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/mouth-well-export-review.md": "92bba0ba34a754b6e6ecf23e1b7576a20c1f3cffe5000f3a2e4c2b1433ad86ad",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/contact-contract.json": "339827bb49120ac74649c5d15360d7320b99def6f8e5d6b18bcec3d7ea2ae451",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/compile.json": "682e49dbc48f187105af83ceb7bd0374412da91c2038b74e5c09d177d94b6deb",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/native-cord-evidence.json": "bac5cefa455045d3383e653da500738a2275b087aa06149ad0b02ff87e928289",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/in-use.jpg": "146cbf91b840b7e6ae2063877c08729ae869bbb07da5e478300f9fdbeffd9ecd",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/reverse.jpg": "c3e36dc47c9e4542321d155c337d91a3511ef6d6f9dfbcd0bd40100ce26f8202",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/front.jpg": "7c476ab558d6defdacf4d4105e09cbffe99edaf5455c6ea04e5f00b812f2a384",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/product-page-current.html": "fc5517626285368b665c37139a52657133400bc8cf1ef0b4c54b3d1eac490f78",
+    "Hangboards/frictitious-nug/frictitious-nug.FCStd": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+    "Hangboards/frictitious-nug/assets/primary.usdz": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+    "Hangboards/frictitious-nug/assets/primary.model.json": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+    "Hangboards/frictitious-nug/suspension.json": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-oblique.png": "bcc9e601a70b5a69cccc8381634f8cf77fe8ca998761843bba3a91e58e2fc63e",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-front.png": "7e908f28a80c04600b761d73eab69ca55ed71e18f762a2a57ba220588f13bd38",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-rear.png": "dc65fe3af77bbacd43f489f0dddd9f6bc731459588219566c4b8f5ec187b3c57",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-side.png": "04f36f22bb3f09cc0c79f7bbfadff0ef873afe603aed0d8305978175a5508780",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-top.png": "c0add84559c5a97ade306ff52953969dc05d5cd891d801e0a09875ae8790dd70",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-25-front.png": "3b9157fde07439c6cc1620426744ed8191dcccd5627469370403a03a1c65e374",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-25-side.png": "2aa79aab38633f0ef0f77ec20e3907a3d214c2948da38ad8784ea7c859b66a37",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/default.png": "dc75b0b5119f9d928c95fe95c3f3ae6585402695c6c11b18b8d5055c5fdb1941",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/contact-selection.png": "be2a4ba02b47db6e1b32065267f7a49211348a9f1941a0722f7556ace89db5b1",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/validation.json": "bb56559cb50a21dab424b43df920e36e0d391abc1bfdef9e1eb4e6aa2d866bec"
+  },
+  "visuallyInspected": [
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/front.jpg",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/reverse.jpg",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/in-use.jpg",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-oblique.png",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-front.png",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-rear.png",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-side.png",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-top.png",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-25-front.png",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-25-side.png",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/default.png",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/contact-selection.png"
+  ]
+}

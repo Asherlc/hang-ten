@@ -1,0 +1,11 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/48730D70-A95B-49AC-A208-41D3C6B3CB63/Documents/HighlightDiagnostic-placid-badger-cad-second-half-standalone-timing-long/events-623515D1-EA5D-469E-A2E3-195EEFEE7BAA.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-long/events-623515D1-EA5D-469E-A2E3-195EEFEE7BAA.jsonl",
+      "sha256": "3ec3b9e43bfb46d7a9561e469572d1836037051f6bcb009d8b7f9b3ffc4b6dd0"
+    }
+  ],
+  "records": 76,
+  "completeContiguous": true
+}

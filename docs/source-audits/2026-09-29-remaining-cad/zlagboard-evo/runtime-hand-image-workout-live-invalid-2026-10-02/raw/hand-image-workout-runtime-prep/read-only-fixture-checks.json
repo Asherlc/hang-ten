@@ -1,0 +1,24 @@
+[
+  {
+    "fixture": "hand-image-static-image-d",
+    "check": "protocol",
+    "passed": true,
+    "events": 9
+  },
+  {
+    "fixture": "hand-image-static-image-d",
+    "check": "publication-prefix",
+    "passed": true
+  },
+  {
+    "fixture": "startup-full-color-control-landscape",
+    "check": "protocol",
+    "passed": true,
+    "events": 0
+  },
+  {
+    "fixture": "startup-full-color-control-landscape",
+    "check": "12-sparse-live-capture-prefixes",
+    "passed": true
+  }
+]

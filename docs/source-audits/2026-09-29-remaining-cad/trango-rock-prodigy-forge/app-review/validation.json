@@ -1,0 +1,30 @@
+{
+  "owner": "placid-badger",
+  "simulator": "D7168911-6A46-4FED-9019-968CCEFEB9DB",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS 26.5",
+  "boardID": "trango.rock-prodigy-forge",
+  "sourceSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+  "presentations": {
+    "primary": {
+      "modelSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+      "descriptorSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef"
+    }
+  },
+  "checks": [
+    {
+      "contactID": "sloper-30-left",
+      "selection": "DEBUG initial hold",
+      "image": "default.png",
+      "accessibility": "default-accessibility.json"
+    },
+    {
+      "contactID": "im-shallow-right",
+      "selection": "DEBUG contact review route",
+      "image": "contact-selection.png",
+      "accessibility": "contact-selection-accessibility.json"
+    }
+  ],
+  "humanGeometryAcceptance": "pending one-by-one user review",
+  "limits": "DEBUG hold-review screenshots and accessibility selection checks supplement RealityKit contact/cord tests; they do not certify manufacturer geometric accuracy."
+}

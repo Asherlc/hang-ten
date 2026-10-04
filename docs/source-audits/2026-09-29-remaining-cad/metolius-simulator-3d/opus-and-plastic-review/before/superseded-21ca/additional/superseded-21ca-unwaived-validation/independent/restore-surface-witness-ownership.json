@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "restore-surface-witness",
+  "timeoutSeconds": 240,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/check_restore_surfaces.py"
+  ],
+  "ownedProcessGroup": 48703,
+  "exitCode": -9,
+  "elapsedSeconds": 240.01376833301038,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true,
+  "exactProcessGroupAbsent": true,
+  "incompleteWitness": "240s timeout; no pass or numerical disposition"
+}

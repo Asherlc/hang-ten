@@ -406,6 +406,70 @@ enum SuspendedCordSolver {
         return SolvedCordBranch(samples: samples, tangents: tangents, arcLength: arcLength, polylineArcLength: polylineArcLength, isTaut: isTaut)
     }
 
+    /// Native caches permit endpoint joins, but never positive-length retracing
+    /// or crossings between distinct visible strands. Use Double for the short
+    /// CAD boundary segments so the parallel test is relative to their length.
+    static func validateNativeCordPaths(_ paths: [[SIMD3<Float>]], tolerance: Double = 1e-6) throws {
+        guard paths.allSatisfy({ $0.count >= 2 && $0.allSatisfy(\.allFinite) }) else {
+            throw SuspendedPresentationError.nonFiniteCurve
+        }
+        struct Segment {
+            let path: Int
+            let index: Int
+            let lastIndex: Int
+            let a: SIMD3<Double>
+            let b: SIMD3<Double>
+        }
+        let segments = paths.enumerated().flatMap { pathIndex, points in
+            zip(points, points.dropFirst()).enumerated().map { index, pair in
+                Segment(path: pathIndex, index: index, lastIndex: points.count-2,
+                    a: SIMD3<Double>(pair.0), b: SIMD3<Double>(pair.1))
+            }
+        }
+        for first in segments.indices {
+            let lhs = segments[first]
+            for rhs in segments.dropFirst(first + 1) {
+                if (0..<3).contains(where: { max(lhs.a[$0], lhs.b[$0]) + tolerance < min(rhs.a[$0], rhs.b[$0])
+                    || max(rhs.a[$0], rhs.b[$0]) + tolerance < min(lhs.a[$0], lhs.b[$0]) }) { continue }
+                let u = lhs.b - lhs.a, v = rhs.b - rhs.a, w = lhs.a - rhs.a
+                let aa = simd_dot(u,u), bb = simd_dot(u,v), cc = simd_dot(v,v), dd = simd_dot(u,w), ee = simd_dot(v,w)
+                guard aa > 1e-14, cc > 1e-14 else { throw SuspendedPresentationError.invalidCord }
+                let determinant = aa*cc - bb*bb
+                let clamp: (Double) -> Double = { min(1, max(0, $0)) }
+                if determinant <= aa*cc*1e-12 {
+                    let projected = simd_dot(rhs.a-lhs.a,u)/aa
+                    if simd_length(rhs.a-(lhs.a+u*projected)) <= 1e-8 {
+                        let other = simd_dot(rhs.b-lhs.a,u)/aa
+                        let overlap = max(0, min(1,max(projected,other))-max(0,min(projected,other)))*sqrt(aa)
+                        if overlap > tolerance { throw SuspendedPresentationError.selfIntersection }
+                    }
+                }
+                if lhs.path == rhs.path && rhs.index == lhs.index + 1 { continue }
+                var candidates = [
+                    (0.0,clamp(ee/cc)), (1.0,clamp((ee+bb)/cc)),
+                    (clamp(-dd/aa),0.0), (clamp((bb-dd)/aa),1.0)]
+                if determinant > aa*cc*1e-12 {
+                    let s = (bb*ee-cc*dd)/determinant, t = (aa*ee-bb*dd)/determinant
+                    if (0...1).contains(s), (0...1).contains(t) { candidates.append((s,t)) }
+                }
+                if let closest = candidates.min(by: { simd_length_squared(w+u*$0.0-v*$0.1) < simd_length_squared(w+u*$1.0-v*$1.1) }),
+                   simd_length(w+u*closest.0-v*closest.1) <= tolerance {
+                    let (s,t) = closest
+                    // A sampled interior vertex is a segment endpoint, but not
+                    // an allowed join between distinct physical strands.
+                    let lhsEndpoint = (lhs.index == 0 && s <= 1e-8)
+                        || (lhs.index == lhs.lastIndex && s >= 1-1e-8)
+                    let rhsEndpoint = (rhs.index == 0 && t <= 1e-8)
+                        || (rhs.index == rhs.lastIndex && t >= 1-1e-8)
+                    let endpoints = lhsEndpoint && rhsEndpoint
+                    let closure = lhs.path == rhs.path && lhs.index == 0 && rhs.index == lhs.lastIndex
+                        && simd_length(lhs.a-rhs.b) <= tolerance
+                    if !endpoints || (lhs.path == rhs.path && !closure) { throw SuspendedPresentationError.selfIntersection }
+                }
+            }
+        }
+    }
+
     private static func segmentClosestApproach(_ p0: SIMD3<Float>, _ p1: SIMD3<Float>, _ q0: SIMD3<Float>, _ q1: SIMD3<Float>) -> (distanceSquared: Float, s: Float, t: Float) {
         let u = p1 - p0, v = q1 - q0, w = p0 - q0
         let a = simd_dot(u, u), b = simd_dot(u, v), c = simd_dot(v, v)

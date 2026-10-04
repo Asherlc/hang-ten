@@ -1,0 +1,21 @@
+{
+  "reviewedUTC": "2026-10-01T23:59:43.623320+00:00",
+  "verdict": "pass_no_blocking_findings",
+  "readOnly": true,
+  "filesSHA256": {
+    "Tools/HangboardCAD/native_cord_routes.py": "1bc333253dced31cafb23f08e5bc6892ed0d33ed24541c5f94b6371fc6c2cd9f",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "1c0865f177fd9f50ee2a59f656126f67a6d6b1aa85c70ef3b791003f8de7ad09",
+    "Tools/HangboardCAD/tests/test_native_pose_terminals.py": "c2bd4c3a0d5849d6845a6aef0fcc4c4dd9c76bae01a80fcd8c84a43572c86761",
+    "docs/HANGBOARD_CORD_AUTHORING.md": "7782a584cd4315aecdcbe010b36555699f8f1ca577fc1ace228a168f849ca8d5"
+  },
+  "checks": {
+    "authoringOnlyBoundary": "Only ropeSolver consumed; merge copies suspension only; renderer/runtime schema unchanged.",
+    "fullMapValidation": "Every override recursively uses existing vector, arity, strand identity, axis and topology validation; global map is still validated. Unknown/empty pose maps rejected.",
+    "fallback": "Omitted override resolves the required global terminal map.",
+    "isolation": "Each effective map dispatches as a one-pose document before AStar frame cache and per-call fixed-section cache; coupled3D receives effective axes.",
+    "mutation": "New outer/suspension/solver dictionaries; existing solver reads shared nested inputs and numerical translation is copied. Real-loop tests assert unchanged input.",
+    "grooveCombination": "Explicit rejection exists in parser and solver, with test coverage.",
+    "tests": "Actual closed-solid loops use same frame and distinct sections under both Dijkstra/AStar; compare independent global-station oracle plus clearance/length checks. No broader tests rerun."
+  },
+  "mergeConstraint": "At later explicit integration preserve parent source_metadata parameter and grooveGuides implementation; combined-field rejection must execute before parent groove dispatch. Parent coordination record reviewed; current baseline does not contain those additions."
+}

@@ -1,0 +1,676 @@
+{
+  "status": "requires-review",
+  "blockingFindings": [
+    "body_board_001 degenerate triangle or inconsistent authored normal",
+    "contact_jug_14_center degenerate triangle or inconsistent authored normal",
+    "contact_flat_sloper_2_left degenerate triangle or inconsistent authored normal",
+    "contact_jug_1_left degenerate triangle or inconsistent authored normal",
+    "contact_flat_sloper_2_right degenerate triangle or inconsistent authored normal",
+    "contact_jug_1_right degenerate triangle or inconsistent authored normal"
+  ],
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "meshes": [
+    {
+      "node": "body_board_001",
+      "triangles": 35301,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 25,
+      "minimumNormalWindingCosine": -0.8616123530282886,
+      "trianglesWithOpposingCornerNormal": 23,
+      "opposingCornerTriangleAreaMM2": 0.016002500512687187,
+      "totalAreaMM2": 237867.567701331,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_4_left",
+      "triangles": 461,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.99955050944184,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 4450.118007217554,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_5_left",
+      "triangles": 547,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9985987086682153,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 5435.909389616509,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_6_left",
+      "triangles": 434,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996534289967691,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 4197.580867617414,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_7_left",
+      "triangles": 472,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9994965598940904,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 7300.193114167235,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_8_left",
+      "triangles": 435,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996732303668621,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 2516.519688086232,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_9_left",
+      "triangles": 585,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9973627161591383,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 5512.606481329607,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_10_left",
+      "triangles": 462,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996538306020348,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 2934.754894800018,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_11_left",
+      "triangles": 434,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996759282533825,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 2752.184179608952,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_12_left",
+      "triangles": 456,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9995954901933852,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 3346.7578729271263,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_13_left",
+      "triangles": 583,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9966382961542082,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 1618.8136713533722,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_15_center",
+      "triangles": 856,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.997286101071297,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 7970.002723649079,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_16_center",
+      "triangles": 479,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9988788704064149,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 5919.852627769574,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_17_center",
+      "triangles": 610,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9972598245287794,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 4337.104621922099,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_18_center",
+      "triangles": 477,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9986242495705095,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 4264.442363198667,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_13_right",
+      "triangles": 573,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9972008025770436,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 1618.8151493638761,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_12_right",
+      "triangles": 463,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9984373414477881,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 3346.7622038006384,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_11_right",
+      "triangles": 445,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996876675595752,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 2752.18508282321,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_10_right",
+      "triangles": 476,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9979679242517234,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 2934.7592297173537,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_9_right",
+      "triangles": 572,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9973627161591383,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 5512.600202111865,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_8_right",
+      "triangles": 454,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996789577152927,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 2516.5228832606567,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_7_right",
+      "triangles": 475,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9991103501469341,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 7300.1993692735705,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_6_right",
+      "triangles": 444,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996810655059168,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 4197.5814159389,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_5_right",
+      "triangles": 544,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9985988566543855,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 5435.909686601858,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_4_right",
+      "triangles": 462,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.999550508580576,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 4449.630573484731,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_jug_14_center",
+      "triangles": 2992,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 36,
+      "minimumNormalWindingCosine": -0.8267578965588852,
+      "trianglesWithOpposingCornerNormal": 12,
+      "opposingCornerTriangleAreaMM2": 1.1718329983972342,
+      "totalAreaMM2": 12290.8429079099,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_round_sloper_3_center",
+      "triangles": 3924,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.34972665901883393,
+      "trianglesWithOpposingCornerNormal": 0,
+      "opposingCornerTriangleAreaMM2": 0.0,
+      "totalAreaMM2": 14433.782888996684,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_flat_sloper_2_left",
+      "triangles": 6856,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 7,
+      "minimumNormalWindingCosine": -0.9999986230326409,
+      "trianglesWithOpposingCornerNormal": 7,
+      "opposingCornerTriangleAreaMM2": 0.005187158911342049,
+      "totalAreaMM2": 6556.982203722222,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_jug_1_left",
+      "triangles": 8976,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 599,
+      "minimumNormalWindingCosine": -0.9999999996979938,
+      "trianglesWithOpposingCornerNormal": 522,
+      "opposingCornerTriangleAreaMM2": 2.9463031349143387,
+      "totalAreaMM2": 10965.625181567104,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_flat_sloper_2_right",
+      "triangles": 6862,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 11,
+      "minimumNormalWindingCosine": -0.9999998570770814,
+      "trianglesWithOpposingCornerNormal": 11,
+      "opposingCornerTriangleAreaMM2": 0.00788280468948336,
+      "totalAreaMM2": 6556.984194255712,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_jug_1_right",
+      "triangles": 8929,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 586,
+      "minimumNormalWindingCosine": -0.9999999878366377,
+      "trianglesWithOpposingCornerNormal": 512,
+      "opposingCornerTriangleAreaMM2": 2.746152454789453,
+      "totalAreaMM2": 10965.229701110236,
+      "usdOrientation": "rightHanded"
+    }
+  ],
+  "weldedWholeExportTopology": [
+    {
+      "mode": "exactStoredPositions",
+      "uniqueVertices": 44821,
+      "uniqueEdges": 130514,
+      "boundaryEdges": 2973,
+      "nonManifoldEdges": 62,
+      "inconsistentPairedEdgeWinding": 0,
+      "watertight": false,
+      "windingConsistentOnPairedEdges": true
+    },
+    {
+      "mode": "rounded0.0001mm",
+      "uniqueVertices": 44819,
+      "uniqueEdges": 130514,
+      "boundaryEdges": 2973,
+      "nonManifoldEdges": 62,
+      "inconsistentPairedEdgeWinding": 0,
+      "watertight": false,
+      "windingConsistentOnPairedEdges": true
+    }
+  ],
+  "boundarySeamSpacing": {
+    "method": "Five interior fractions per edge; nearest other boundary segment with abs(direction dot)>0.8. Diagnostic estimate of semantic seam spacing, not a certified global Hausdorff distance.",
+    "boundaryEdgeCount": 2973,
+    "totalBoundaryLengthMM": 4108.120865757827,
+    "maximumSampledDistanceMM": 82.03375711483159,
+    "edgesAboveDeflection028MM": 617,
+    "worstEdges": [
+      {
+        "startRuntimeM": [
+          -0.35529735684394836,
+          0.13699999451637268,
+          0.0060000000521540945
+        ],
+        "endRuntimeM": [
+          -0.3496033251285553,
+          0.13699999451637268,
+          9.999999975056628e-07
+        ],
+        "lengthMM": 8.271033720259933,
+        "maxSampledNearestParallelBoundaryDistanceMM": 82.03375711483159
+      },
+      {
+        "startRuntimeM": [
+          0.3496033251285553,
+          0.13699999451637268,
+          9.999999975056628e-07
+        ],
+        "endRuntimeM": [
+          0.35529735684394836,
+          0.13699999451637268,
+          0.0060000000521540945
+        ],
+        "lengthMM": 8.271033720259933,
+        "maxSampledNearestParallelBoundaryDistanceMM": 81.3496186409268
+      },
+      {
+        "startRuntimeM": [
+          -0.1225501224398613,
+          0.17949318885803223,
+          0.029212070629000702
+        ],
+        "endRuntimeM": [
+          -0.11837346851825714,
+          0.17979298532009125,
+          0.03430663049221043
+        ],
+        "lengthMM": 6.594608108094219,
+        "maxSampledNearestParallelBoundaryDistanceMM": 47.78341135594353
+      },
+      {
+        "startRuntimeM": [
+          0.11837346851825714,
+          0.17979298532009125,
+          0.03430663049221043
+        ],
+        "endRuntimeM": [
+          0.1225501224398613,
+          0.17949318885803223,
+          0.029212070629000702
+        ],
+        "lengthMM": 6.594608108094219,
+        "maxSampledNearestParallelBoundaryDistanceMM": 47.78341135594353
+      },
+      {
+        "startRuntimeM": [
+          -0.04139741510152817,
+          0.18778111040592194,
+          0.00915469601750378
+        ],
+        "endRuntimeM": [
+          -0.03570232167840004,
+          0.18803779780864716,
+          0.0016583143733442248
+        ],
+        "lengthMM": 9.41784026599344,
+        "maxSampledNearestParallelBoundaryDistanceMM": 30.640415713991473
+      },
+      {
+        "startRuntimeM": [
+          -0.045499999076128006,
+          0.18798640370368958,
+          0.004464008845388931
+        ],
+        "endRuntimeM": [
+          -0.04139741510152817,
+          0.18778111040592194,
+          0.00915469601750378
+        ],
+        "lengthMM": 6.235053067408049,
+        "maxSampledNearestParallelBoundaryDistanceMM": 25.806514324352314
+      },
+      {
+        "startRuntimeM": [
+          -0.26891252398490906,
+          0.1694198101758957,
+          0.02444605343043808
+        ],
+        "endRuntimeM": [
+          -0.2581953704357147,
+          0.16402728855609894,
+          0.0244885012507439
+        ],
+        "lengthMM": 11.997436035855031,
+        "maxSampledNearestParallelBoundaryDistanceMM": 18.64239071844558
+      },
+      {
+        "startRuntimeM": [
+          0.2581953704357147,
+          0.16402728855609894,
+          0.0244885012507439
+        ],
+        "endRuntimeM": [
+          0.26494041085243225,
+          0.1668442189693451,
+          0.033435761928558384
+        ],
+        "lengthMM": 11.553533693766138,
+        "maxSampledNearestParallelBoundaryDistanceMM": 17.315981477196868
+      },
+      {
+        "startRuntimeM": [
+          -0.14673066139221191,
+          0.16672289371490476,
+          0.08258902281522755
+        ],
+        "endRuntimeM": [
+          -0.13504989445209503,
+          0.17278459668159482,
+          0.0672814175486565
+        ],
+        "lengthMM": 20.18681099537171,
+        "maxSampledNearestParallelBoundaryDistanceMM": 13.762266206714214
+      },
+      {
+        "startRuntimeM": [
+          0.13504989445209503,
+          0.17278459668159482,
+          0.0672814175486565
+        ],
+        "endRuntimeM": [
+          0.14673066139221191,
+          0.16672289371490476,
+          0.08258902281522755
+        ],
+        "lengthMM": 20.18681099537171,
+        "maxSampledNearestParallelBoundaryDistanceMM": 13.762266206714214
+      },
+      {
+        "startRuntimeM": [
+          -0.13504989445209503,
+          0.17466045916080475,
+          0.054822929203510326
+        ],
+        "endRuntimeM": [
+          -0.13504989445209503,
+          0.17733439803123474,
+          0.0291622988879681
+        ],
+        "lengthMM": 25.79957164903559,
+        "maxSampledNearestParallelBoundaryDistanceMM": 13.24359448978488
+      },
+      {
+        "startRuntimeM": [
+          0.13504989445209503,
+          0.17466045916080475,
+          0.054822929203510326
+        ],
+        "endRuntimeM": [
+          0.13504989445209503,
+          0.17733439803123474,
+          0.0291622988879681
+        ],
+        "lengthMM": 25.79957164903559,
+        "maxSampledNearestParallelBoundaryDistanceMM": 13.24359448978488
+      },
+      {
+        "startRuntimeM": [
+          -0.17247435450553894,
+          0.16643676161766052,
+          0.04985154792666439
+        ],
+        "endRuntimeM": [
+          -0.15998926758766174,
+          0.1683765947818756,
+          0.05515877157449726
+        ],
+        "lengthMM": 13.70426834603196,
+        "maxSampledNearestParallelBoundaryDistanceMM": 12.333841511428764
+      },
+      {
+        "startRuntimeM": [
+          0.15998926758766174,
+          0.1683765947818756,
+          0.05515877157449726
+        ],
+        "endRuntimeM": [
+          0.17247435450553894,
+          0.16643676161766052,
+          0.04985154792666439
+        ],
+        "lengthMM": 13.70426834603196,
+        "maxSampledNearestParallelBoundaryDistanceMM": 12.333841511428764
+      },
+      {
+        "startRuntimeM": [
+          -0.061000000685453415,
+          0.18519672751426697,
+          0.04055986925959591
+        ],
+        "endRuntimeM": [
+          -0.05534379929304123,
+          0.18632487952709198,
+          0.032409414649009746
+        ],
+        "lengthMM": 9.984750949061873,
+        "maxSampledNearestParallelBoundaryDistanceMM": 11.958869230750567
+      },
+      {
+        "startRuntimeM": [
+          0.05534379929304123,
+          0.18632487952709198,
+          0.032409414649009746
+        ],
+        "endRuntimeM": [
+          0.061000000685453415,
+          0.18519672751426697,
+          0.04055986925959591
+        ],
+        "lengthMM": 9.984750949061873,
+        "maxSampledNearestParallelBoundaryDistanceMM": 11.958869230750567
+      },
+      {
+        "startRuntimeM": [
+          -0.16641445457935333,
+          0.16945695877075195,
+          0.03900000080466274
+        ],
+        "endRuntimeM": [
+          -0.14800000190734863,
+          0.1735774129629135,
+          0.039000000804662746
+        ],
+        "lengthMM": 18.86982273258556,
+        "maxSampledNearestParallelBoundaryDistanceMM": 11.677169528065962
+      },
+      {
+        "startRuntimeM": [
+          0.14800000190734863,
+          0.1735774129629135,
+          0.039000000804662746
+        ],
+        "endRuntimeM": [
+          0.16641445457935333,
+          0.16945695877075195,
+          0.03900000080466274
+        ],
+        "lengthMM": 18.86982273258556,
+        "maxSampledNearestParallelBoundaryDistanceMM": 11.677169528065962
+      },
+      {
+        "startRuntimeM": [
+          -0.15998926758766174,
+          0.16629591584205625,
+          0.06774595379829411
+        ],
+        "endRuntimeM": [
+          -0.15998926758766174,
+          0.1683765947818756,
+          0.05515877157449726
+        ],
+        "lengthMM": 12.757992835304277,
+        "maxSampledNearestParallelBoundaryDistanceMM": 11.482193551773854
+      },
+      {
+        "startRuntimeM": [
+          0.15998926758766174,
+          0.16629591584205625,
+          0.06774595379829411
+        ],
+        "endRuntimeM": [
+          0.15998926758766174,
+          0.1683765947818756,
+          0.05515877157449726
+        ],
+        "lengthMM": 12.757992835304277,
+        "maxSampledNearestParallelBoundaryDistanceMM": 11.482193551773854
+      }
+    ]
+  },
+  "actualNativeEnvelopeXYZMM": [
+    711.0000252723694,
+    93.99999678134922,
+    221.99988365173337
+  ],
+  "limits": [
+    "Exact-coordinate topology is reported independently of normals and material gates.",
+    "The secondary0.0001mm positional weld is diagnostic only; it does not repair or rewrite the model.",
+    "No triangle self-intersection/global manufacturing certificate is claimed."
+  ]
+}

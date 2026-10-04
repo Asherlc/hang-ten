@@ -1,0 +1,8 @@
+{
+  "woodSource": "Cavity3",
+  "combinedBody": "CordSeat_Right",
+  "combinedBodyContainsStoneExpected": true,
+  "woodStoneOverlapMM3": 4332.251475033639,
+  "woodStoneMustNotOverlap": false,
+  "graniteContactAreaMM2": 2371.0352227826147
+}

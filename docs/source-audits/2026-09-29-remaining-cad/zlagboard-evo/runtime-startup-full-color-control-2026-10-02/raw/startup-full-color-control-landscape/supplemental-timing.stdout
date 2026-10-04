@@ -1,0 +1,9 @@
+{
+  "checks": {
+    "completeStream": true,
+    "allAmendedCommonCriteria": true
+  },
+  "errors": [],
+  "incompleteFirstOwnershipBracket": false,
+  "requiredAttachedPointCount": 24
+}

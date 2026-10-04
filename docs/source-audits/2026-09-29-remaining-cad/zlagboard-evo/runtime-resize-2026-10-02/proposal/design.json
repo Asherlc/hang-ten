@@ -1,0 +1,29 @@
+{
+  "status": "Unapplied diagnostic proposal only; git apply --check exit0 against exact RootView SHA ce690c12d0182a57c659f3e4f01bf4b25c37c2dc6d98fbe9dafaa57686f4152f. No typecheck/build/runtime performed.",
+  "patch": "resize-probe.patch",
+  "scope": "Only StandaloneBoardHighlightProbe in RootView.swift; BoardMapView and all production renderer code untouched. Current source remains byte-exact before snapshot.",
+  "arms": {
+    "E": "Existing constant caption + BoardMapView + monotonic driver, fixed210x36 throughout. Repeat with same extra sparse observation if comparison is authorized.",
+    "F": "Same as E but clear-phase viewport410x70.28571428571429, shrinks to210x36 at initial active phase. Outer transaction sets animation=nil and disablesAnimations=true, including descendant BoardMap IDs-triggered animation. Intended instantaneous change must be checked in actual UIKit frame rows.",
+    "G": "Same as F viewport/semantics, explicit easeInOut0.18 animation keyed to viewport; keeps existing child BoardMap animation. 0.18 is experimental parameter, not asserted measured production duration."
+  },
+  "preservation": [
+    "No extra observable state; one scriptEpoch still controls monotonic C/D/E/F/G. No state writes by their script after epoch establishment.",
+    "Constant caption, BoardMap wrapper branch, semantic observer, contact IDs, activeHoldID, presentation/position resolution and scene identity unchanged between E/F/G. No mode-based .id or remount.",
+    "All original 8-second phases and snapshot offsets preserved. Six extra snapshots0.025/0.075/0.225/0.325/0.45/0.60 occur only near initial-active transition and identically in every arm. Existing .15/.85 and later offsets remain. Screenshot captureOffsets in recorder stay untouched.",
+    "Readiness checks larger initial viewport for F/G and keeps existing one-second stable leaf readiness. F/G requires final configured210x36. Schedule records initial viewport and each intended-phase marker records its target; semantic observer records target viewport.",
+    "No GeometryReader callbacks, frame-driven invalidation, scene-update subscription or polling added. Existing readiness polling is unchanged. Sparse snapshots only read existing recorder/census."
+  ],
+  "validationRequiredBeforeInterpreting": [
+    "Bind build/source/environment and record full scene/root/camera/view tokens: exactly one board host and unchanged identity across size transition.",
+    "Classify F/G by actual UIKit ARView frameInWindow series and leaf viewport. G intended animation is not proof of interpolation; F disablesAnimations is not proof all UIKit/layout ancestors stopped animating.",
+    "Record actual x/y placement as well as width/height. Existing centered VStack grows/shrinks, so its vertical layout may move caption/buttons too. Both F/G share the same target layout, but this first patch tests size-plus-its-layout consequences; it does not reproduce exact production [232,182.333] to[332,240] coordinates or independently isolate translation.",
+    "Compare full settled frames at every active/preview window; CPU material values alone do not pass. Retain both directions and historical failed runs.",
+    "If both F/G pass, no production animation-removal conclusion. If only G fails, animated transition becomes sufficient in this isolated context. If both fail, next authorized discriminator would separate resize timing from initial material selection."
+  ],
+  "limits": [
+    "SwiftUI TimelineView cadence0.25 means phase change can occur after scheduled phase boundary; sparse samples may miss short interpolation. A missing intermediate sample cannot alone establish instantaneous resize. Existing observed-selection timestamp can align captured samples afterward.",
+    "No compile guarantee; patch has only static apply-check. UIKit private class naming is diagnostic census evidence, not an API dependency for a shipped feature.",
+    "Hand host removal is not a demonstrated repair. This proposal contains no architecture rewrite or production fix."
+  ]
+}

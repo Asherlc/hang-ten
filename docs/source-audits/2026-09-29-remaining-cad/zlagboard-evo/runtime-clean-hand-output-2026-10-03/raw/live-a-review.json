@@ -1,0 +1,24 @@
+{
+  "arm": "live-a",
+  "runtimeValid": true,
+  "allWholeImagesReviewed": true,
+  "reviewedBy": [
+    "root",
+    "evo_orientation_judgment"
+  ],
+  "visualResult": "FAIL",
+  "nextArmAuthorized": "image",
+  "binarySHA256": "f6cf757759394fb5386eb78b8ce4d9360e21075096911526313c0ff3524d7709",
+  "sourceReferenceSHA256": "48f7f2a3918e90bd61d146945bb9db86a8621f72f9ca8595537691c8be6ab114",
+  "findings": [
+    "FirstHang004/005redwithmissinghands;006\u2013009redwithhands.",
+    "Rest010\u2013018redwrong,090/183\u2013190blue.",
+    "Hang2 191\u2013196BLUEwrong;197\u2013207Restblue."
+  ],
+  "tailEvidence": "Independent worker confirmed all19 tailwholeimages before report finalized.",
+  "limits": [
+    "Externaloffsets not CPUmutationtimes",
+    "MutedawakeSimulator only",
+    "No generalproductionremedy claimed"
+  ]
+}

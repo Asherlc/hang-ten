@@ -1,0 +1,841 @@
+{
+  "status": "pass",
+  "blockingFindings": [],
+  "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+  "envelopeXYZMM": [
+    826.0000002,
+    67.00000020000006,
+    279.0000002
+  ],
+  "publishedDepthChecks": {
+    "pocket-4-left": {
+      "expected": 30.0,
+      "actual": 29.999999999999922
+    },
+    "pocket-5-left": {
+      "expected": 40.0,
+      "actual": 40.000000000000014
+    },
+    "pocket-6-left": {
+      "expected": 20.0,
+      "actual": 20.00000000000004
+    },
+    "pocket-7-left": {
+      "expected": 30.0,
+      "actual": 30.00000000000003
+    },
+    "pocket-8-left": {
+      "expected": 32.0,
+      "actual": 32.0
+    },
+    "pocket-9-left": {
+      "expected": 20.0,
+      "actual": 20.000000000000046
+    },
+    "pocket-10-left": {
+      "expected": 25.0,
+      "actual": 24.99999999999997
+    },
+    "pocket-11-left": {
+      "expected": 25.0,
+      "actual": 25.000000000000007
+    },
+    "pocket-12-left": {
+      "expected": 12.0,
+      "actual": 12.000000000000036
+    },
+    "pocket-13-left": {
+      "expected": 17.0,
+      "actual": 17.000000000000043
+    },
+    "pocket-14-left": {
+      "expected": 17.0,
+      "actual": 17.00000000000002
+    },
+    "edge-16-center": {
+      "expected": 15.0,
+      "actual": 15.000000100000001
+    },
+    "edge-17-center": {
+      "expected": 35.0,
+      "actual": 35.000000000000036
+    },
+    "edge-18-center": {
+      "expected": 28.0,
+      "actual": 27.99999999999999
+    },
+    "edge-19-center": {
+      "expected": 23.0,
+      "actual": 22.99999999999998
+    },
+    "pocket-14-right": {
+      "expected": 17.0,
+      "actual": 16.999999999999957
+    },
+    "pocket-13-right": {
+      "expected": 17.0,
+      "actual": 17.00000000000003
+    },
+    "pocket-12-right": {
+      "expected": 12.0,
+      "actual": 12.000000000000004
+    },
+    "pocket-11-right": {
+      "expected": 25.0,
+      "actual": 25.000000000000032
+    },
+    "pocket-10-right": {
+      "expected": 25.0,
+      "actual": 25.000000000000224
+    },
+    "pocket-9-right": {
+      "expected": 20.0,
+      "actual": 19.999999999999993
+    },
+    "pocket-8-right": {
+      "expected": 32.0,
+      "actual": 31.99999999999999
+    },
+    "pocket-7-right": {
+      "expected": 30.0,
+      "actual": 30.000000000000046
+    },
+    "pocket-6-right": {
+      "expected": 20.0,
+      "actual": 19.99999999999996
+    },
+    "pocket-5-right": {
+      "expected": 40.0,
+      "actual": 40.00000000000002
+    },
+    "pocket-4-right": {
+      "expected": 30.0,
+      "actual": 29.99999999999995
+    },
+    "flat-sloper-center": {
+      "expected": 53,
+      "actual": 53.00046979865772
+    },
+    "round-sloper-3-left": {
+      "expected": 63,
+      "actual": 63.00000020000003
+    },
+    "round-sloper-3-right": {
+      "expected": 63,
+      "actual": 63.00000020000003
+    }
+  },
+  "nonpinchComparisons": {
+    "pocket-4-left": {
+      "areaDeltaMM2": -7.275957614183426e-12,
+      "maxBoundDeltaMM": 4.263256414560601e-14
+    },
+    "pocket-4-right": {
+      "areaDeltaMM2": -5.4569682106375694e-12,
+      "maxBoundDeltaMM": 4.618527782440651e-14
+    },
+    "pocket-5-left": {
+      "areaDeltaMM2": -6.366462912410498e-12,
+      "maxBoundDeltaMM": 1.4210854715202004e-13
+    },
+    "pocket-5-right": {
+      "areaDeltaMM2": 0.0,
+      "maxBoundDeltaMM": 2.1316282072803006e-14
+    },
+    "pocket-6-left": {
+      "areaDeltaMM2": 6.821210263296962e-12,
+      "maxBoundDeltaMM": 3.907985046680551e-14
+    },
+    "pocket-6-right": {
+      "areaDeltaMM2": -2.2737367544323206e-12,
+      "maxBoundDeltaMM": 5.684341886080802e-14
+    },
+    "pocket-7-left": {
+      "areaDeltaMM2": 2.964952727779746e-10,
+      "maxBoundDeltaMM": 2.4868995751603507e-14
+    },
+    "pocket-7-right": {
+      "areaDeltaMM2": 7.275957614183426e-12,
+      "maxBoundDeltaMM": 3.552713678800501e-14
+    },
+    "pocket-8-left": {
+      "areaDeltaMM2": -4.547473508864641e-13,
+      "maxBoundDeltaMM": 7.105427357601002e-15
+    },
+    "pocket-8-right": {
+      "areaDeltaMM2": -5.002220859751105e-12,
+      "maxBoundDeltaMM": 1.0658141036401503e-14
+    },
+    "pocket-9-left": {
+      "areaDeltaMM2": 7.73070496506989e-12,
+      "maxBoundDeltaMM": 4.973799150320701e-14
+    },
+    "pocket-9-right": {
+      "areaDeltaMM2": 4.547473508864641e-13,
+      "maxBoundDeltaMM": 7.105427357601002e-15
+    },
+    "pocket-10-left": {
+      "areaDeltaMM2": -8.731149137020111e-11,
+      "maxBoundDeltaMM": 3.197442310920451e-14
+    },
+    "pocket-10-right": {
+      "areaDeltaMM2": -4.547473508864641e-12,
+      "maxBoundDeltaMM": 1.2079226507921703e-12
+    },
+    "pocket-11-left": {
+      "areaDeltaMM2": -5.4569682106375694e-12,
+      "maxBoundDeltaMM": 1.4210854715202004e-14
+    },
+    "pocket-11-right": {
+      "areaDeltaMM2": 4.4593994061870035e-06,
+      "maxBoundDeltaMM": 3.197442310920451e-14
+    },
+    "pocket-12-left": {
+      "areaDeltaMM2": 5.4569682106375694e-12,
+      "maxBoundDeltaMM": 3.907985046680551e-14
+    },
+    "pocket-12-right": {
+      "areaDeltaMM2": 4.547473508864641e-13,
+      "maxBoundDeltaMM": 7.105427357601002e-14
+    },
+    "pocket-13-left": {
+      "areaDeltaMM2": 7.275957614183426e-12,
+      "maxBoundDeltaMM": 4.263256414560601e-14
+    },
+    "pocket-13-right": {
+      "areaDeltaMM2": 8.640199666842818e-12,
+      "maxBoundDeltaMM": 5.684341886080802e-14
+    },
+    "pocket-14-left": {
+      "areaDeltaMM2": 0.0,
+      "maxBoundDeltaMM": 1.4210854715202004e-14
+    },
+    "pocket-14-right": {
+      "areaDeltaMM2": -4.547473508864641e-12,
+      "maxBoundDeltaMM": 3.907985046680551e-14
+    },
+    "edge-16-center": {
+      "areaDeltaMM2": 1.8189894035458565e-11,
+      "maxBoundDeltaMM": 0.0
+    },
+    "edge-17-center": {
+      "areaDeltaMM2": 2.1827872842550278e-11,
+      "maxBoundDeltaMM": 4.263256414560601e-14
+    },
+    "edge-18-center": {
+      "areaDeltaMM2": 0.0,
+      "maxBoundDeltaMM": 1.4210854715202004e-14
+    },
+    "edge-19-center": {
+      "areaDeltaMM2": -9.094947017729282e-12,
+      "maxBoundDeltaMM": 2.3092638912203256e-14
+    },
+    "flat-sloper-center": {
+      "areaDeltaMM2": 0.0,
+      "maxBoundDeltaMM": 0.0
+    },
+    "round-sloper-3-left": {
+      "areaDeltaMM2": 9.094947017729282e-13,
+      "maxBoundDeltaMM": 0.0
+    },
+    "jug-left": {
+      "areaDeltaMM2": 0.0,
+      "maxBoundDeltaMM": 0.0
+    },
+    "round-sloper-3-right": {
+      "areaDeltaMM2": 0.0,
+      "maxBoundDeltaMM": 0.0
+    },
+    "jug-right": {
+      "areaDeltaMM2": -1.8189894035458565e-12,
+      "maxBoundDeltaMM": 0.0
+    }
+  },
+  "sampledFinalShellChecks": {
+    "pocket-4-left": {
+      "faceCount": 11,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "pocket-4-right": {
+      "faceCount": 11,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "pocket-5-left": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "pocket-5-right": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "pocket-6-left": {
+      "faceCount": 11,
+      "maxSampledShellDistanceMM": 7.32410687763558e-15
+    },
+    "pocket-6-right": {
+      "faceCount": 11,
+      "maxSampledShellDistanceMM": 7.32410687763558e-15
+    },
+    "pocket-7-left": {
+      "faceCount": 11,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "pocket-7-right": {
+      "faceCount": 11,
+      "maxSampledShellDistanceMM": 3.552713678800501e-15
+    },
+    "pocket-8-left": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 3.552713678800501e-15
+    },
+    "pocket-8-right": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 2.6645352591003757e-15
+    },
+    "pocket-9-left": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "pocket-9-right": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "pocket-10-left": {
+      "faceCount": 14,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "pocket-10-right": {
+      "faceCount": 14,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "pocket-11-left": {
+      "faceCount": 15,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "pocket-11-right": {
+      "faceCount": 15,
+      "maxSampledShellDistanceMM": 7.105427357601002e-15
+    },
+    "pocket-12-left": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 1.4210854715202004e-14
+    },
+    "pocket-12-right": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 1.4210854715202004e-14
+    },
+    "pocket-13-left": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "pocket-13-right": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "pocket-14-left": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 3.552713678800501e-15
+    },
+    "pocket-14-right": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "edge-16-center": {
+      "faceCount": 22,
+      "maxSampledShellDistanceMM": 0.0
+    },
+    "edge-17-center": {
+      "faceCount": 17,
+      "maxSampledShellDistanceMM": 3.552713678800501e-15
+    },
+    "edge-18-center": {
+      "faceCount": 17,
+      "maxSampledShellDistanceMM": 3.552713678800501e-15
+    },
+    "edge-19-center": {
+      "faceCount": 12,
+      "maxSampledShellDistanceMM": 3.552713678800501e-15
+    },
+    "flat-sloper-center": {
+      "faceCount": 2,
+      "maxSampledShellDistanceMM": 2.842170943040401e-14
+    },
+    "round-sloper-3-left": {
+      "faceCount": 3,
+      "maxSampledShellDistanceMM": 1.7053025658242404e-13
+    },
+    "jug-left": {
+      "faceCount": 4,
+      "maxSampledShellDistanceMM": 2.847716647714797e-14
+    },
+    "round-sloper-3-right": {
+      "faceCount": 3,
+      "maxSampledShellDistanceMM": 1.7053025658242404e-13
+    },
+    "jug-right": {
+      "faceCount": 4,
+      "maxSampledShellDistanceMM": 2.847716647714797e-14
+    },
+    "pinch-right": {
+      "faceCount": 31,
+      "maxSampledShellDistanceMM": 5.728578676879116e-14
+    },
+    "pinch-left": {
+      "faceCount": 31,
+      "maxSampledShellDistanceMM": 1.1368683772161603e-13
+    }
+  },
+  "contactOverlaps": [],
+  "railSections": [
+    {
+      "zMM": -20,
+      "yMM": -55,
+      "witnesses": [
+        {
+          "side": -1,
+          "xLimits": [
+            -362.6974918642499,
+            -331.1028804727899
+          ],
+          "widthMM": 31.594611391460035,
+          "opposedFaces": [
+            {
+              "x": -362.6974918642499,
+              "normals": [
+                {
+                  "normal": [
+                    -0.8686486756328418,
+                    -0.0,
+                    0.4954285804445582
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 0.0
+            },
+            {
+              "x": -331.1028804727899,
+              "normals": [
+                {
+                  "normal": [
+                    0.9846519073784376,
+                    -0.0,
+                    -0.17452971465055683
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 3.552713678800501e-15
+            }
+          ],
+          "oldFrontY": -43.46142578125,
+          "newFrontY": -67.0,
+          "projectionMM": 23.53857421875
+        },
+        {
+          "side": 1,
+          "xLimits": [
+            331.1028804727899,
+            362.6974918642499
+          ],
+          "widthMM": 31.594611391460035,
+          "opposedFaces": [
+            {
+              "x": 331.1028804727899,
+              "normals": [
+                {
+                  "normal": [
+                    -0.9846519073784376,
+                    -0.0,
+                    -0.17452971465055683
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 3.552713678800501e-15
+            },
+            {
+              "x": 362.6974918642499,
+              "normals": [
+                {
+                  "normal": [
+                    0.8686486756328418,
+                    0.0,
+                    0.4954285804445582
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 0.0
+            }
+          ],
+          "oldFrontY": -43.46142578125,
+          "newFrontY": -67.0,
+          "projectionMM": 23.53857421875
+        }
+      ]
+    },
+    {
+      "zMM": -40,
+      "yMM": -55,
+      "witnesses": [
+        {
+          "side": -1,
+          "xLimits": [
+            -373.9557714092181,
+            -333.94266995094443
+          ],
+          "widthMM": 40.01310145827364,
+          "opposedFaces": [
+            {
+              "x": -373.9557714092181,
+              "normals": [
+                {
+                  "normal": [
+                    -0.8750074470134442,
+                    -0.0,
+                    0.4841094583573168
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 0.0
+            },
+            {
+              "x": -333.94266995094443,
+              "normals": [
+                {
+                  "normal": [
+                    0.9966117721690724,
+                    -0.0,
+                    -0.08224947157289614
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 7.105427357601002e-15
+            }
+          ],
+          "oldFrontY": -40.536,
+          "newFrontY": -67.00000000000001,
+          "projectionMM": 26.464000000000013
+        },
+        {
+          "side": 1,
+          "xLimits": [
+            333.94266995094443,
+            373.9557714092181
+          ],
+          "widthMM": 40.01310145827364,
+          "opposedFaces": [
+            {
+              "x": 333.94266995094443,
+              "normals": [
+                {
+                  "normal": [
+                    -0.9966117721690724,
+                    -0.0,
+                    -0.08224947157289614
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 7.105427357601002e-15
+            },
+            {
+              "x": 373.9557714092181,
+              "normals": [
+                {
+                  "normal": [
+                    0.8750074470134442,
+                    0.0,
+                    0.4841094583573168
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 0.0
+            }
+          ],
+          "oldFrontY": -40.536,
+          "newFrontY": -67.00000000000001,
+          "projectionMM": 26.464000000000013
+        }
+      ]
+    },
+    {
+      "zMM": -60,
+      "yMM": -55,
+      "witnesses": [
+        {
+          "side": -1,
+          "xLimits": [
+            -384.74115078790214,
+            -334.77218254251886
+          ],
+          "widthMM": 49.96896824538328,
+          "opposedFaces": [
+            {
+              "x": -384.74115078790214,
+              "normals": [
+                {
+                  "normal": [
+                    -0.8861319363185839,
+                    -0.0,
+                    0.4634330495727266
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 0.0
+            },
+            {
+              "x": -334.77218254251886,
+              "normals": [
+                {
+                  "normal": [
+                    0.9999438554192099,
+                    -0.0,
+                    -0.010596509301001372
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 0.0
+            }
+          ],
+          "oldFrontY": -36.01681632653061,
+          "newFrontY": -67.00000000000001,
+          "projectionMM": 30.983183673469405
+        },
+        {
+          "side": 1,
+          "xLimits": [
+            334.77218254251886,
+            384.74115078790214
+          ],
+          "widthMM": 49.96896824538328,
+          "opposedFaces": [
+            {
+              "x": 334.77218254251886,
+              "normals": [
+                {
+                  "normal": [
+                    -0.9999438554192099,
+                    -0.0,
+                    -0.010596509301001372
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 0.0
+            },
+            {
+              "x": 384.74115078790214,
+              "normals": [
+                {
+                  "normal": [
+                    0.8861319363185839,
+                    0.0,
+                    0.4634330495727266
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 0.0
+            }
+          ],
+          "oldFrontY": -36.01681632653061,
+          "newFrontY": -67.00000000000001,
+          "projectionMM": 30.983183673469405
+        }
+      ]
+    },
+    {
+      "zMM": -80,
+      "yMM": -55,
+      "witnesses": [
+        {
+          "side": -1,
+          "xLimits": [
+            -394.7689901059194,
+            -334.6853491999575
+          ],
+          "widthMM": 60.083640905961886,
+          "opposedFaces": [
+            {
+              "x": -394.7689901059194,
+              "normals": [
+                {
+                  "normal": [
+                    -0.9027216054368777,
+                    -0.0,
+                    0.4302251771775636
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 1.4210854715202004e-14
+            },
+            {
+              "x": -334.6853491999575,
+              "normals": [
+                {
+                  "normal": [
+                    0.9999267866074655,
+                    0.0,
+                    0.012100472092786887
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 0.0
+            }
+          ],
+          "oldFrontY": -32.05110204081632,
+          "newFrontY": -67.00000000000001,
+          "projectionMM": 34.9488979591837
+        },
+        {
+          "side": 1,
+          "xLimits": [
+            334.6853491999575,
+            394.7689901059194
+          ],
+          "widthMM": 60.083640905961886,
+          "opposedFaces": [
+            {
+              "x": 334.6853491999575,
+              "normals": [
+                {
+                  "normal": [
+                    -0.9999267866074655,
+                    0.0,
+                    0.012100472092786887
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 0.0
+            },
+            {
+              "x": 394.7689901059194,
+              "normals": [
+                {
+                  "normal": [
+                    0.9027216054368777,
+                    0.0,
+                    0.4302251771775636
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 1.4210854715202004e-14
+            }
+          ],
+          "oldFrontY": -32.05110204081632,
+          "newFrontY": -67.00000000000001,
+          "projectionMM": 34.9488979591837
+        }
+      ]
+    },
+    {
+      "zMM": -100,
+      "yMM": -55,
+      "witnesses": [
+        {
+          "side": -1,
+          "xLimits": [
+            -403.6362261871374,
+            -334.6278055848586
+          ],
+          "widthMM": 69.00842060227882,
+          "opposedFaces": [
+            {
+              "x": -403.6362261871374,
+              "normals": [
+                {
+                  "normal": [
+                    -0.9270441877074636,
+                    -0.0,
+                    0.3749520956573104
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 0.0
+            },
+            {
+              "x": -334.6278055848586,
+              "normals": [
+                {
+                  "normal": [
+                    0.9998293294254951,
+                    -0.0,
+                    -0.018474631811346582
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 1.4210854715202004e-14
+            }
+          ],
+          "oldFrontY": -28.54757988953733,
+          "newFrontY": -67.00000000000003,
+          "projectionMM": 38.4524201104627
+        },
+        {
+          "side": 1,
+          "xLimits": [
+            334.6278055848586,
+            403.6362261871374
+          ],
+          "widthMM": 69.00842060227882,
+          "opposedFaces": [
+            {
+              "x": 334.6278055848586,
+              "normals": [
+                {
+                  "normal": [
+                    -0.9998293294254951,
+                    -0.0,
+                    -0.018474631811346582
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 1.4210854715202004e-14
+            },
+            {
+              "x": 403.6362261871374,
+              "normals": [
+                {
+                  "normal": [
+                    0.9270441877074636,
+                    0.0,
+                    0.3749520956573104
+                  ],
+                  "outwardPointOutsideSolid": true
+                }
+              ],
+              "contactGapMM": 0.0
+            }
+          ],
+          "oldFrontY": -28.54757988953733,
+          "newFrontY": -67.00000000000003,
+          "projectionMM": 38.4524201104627
+        }
+      ]
+    }
+  ],
+  "nativeCavityEdit": {
+    "parameter": "Depth_edge_16_center",
+    "before": 15.0,
+    "after": 17.0,
+    "changedContacts": [
+      "edge-16-center"
+    ]
+  },
+  "sourceBytesUnchanged": true,
+  "limits": "Five native section stations verify local projection, opposing surfaces and symmetry. Outward0.1mm probes are local accessibility witnesses, not human-hand clearance or manufacturer dimensional certification. Final-shell sampling is supplemented by author/standard compiler surface topology checks."
+}

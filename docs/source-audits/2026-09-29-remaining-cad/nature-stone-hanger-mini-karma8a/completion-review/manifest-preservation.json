@@ -1,0 +1,64 @@
+{
+  "status": "pass",
+  "canonicalSHA256": {
+    "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+    "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.usdz": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+    "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.model.json": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+    "Hangboards/nature-stone-hanger-mini-karma8a/suspension.json": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf"
+  },
+  "generatedBoardSHA256": "024c2c5df652271ae699487abfc963c33761a18e0c3dbd5d43aff0ac3cfe16a4",
+  "allLogicalContactFieldsExactlyPreserved": true,
+  "allOtherBoardFactsExactlyPreserved": true,
+  "allThreePositionsPreserved": true,
+  "contactIDs": [
+    "wood-edge-15",
+    "granite-edge-15",
+    "pinch-60"
+  ],
+  "positionIDs": [
+    "granite-front",
+    "wood-inverted",
+    "pinch-side"
+  ],
+  "display": {
+    "before": {
+      "camera": {
+        "type": "orthographic",
+        "viewDirection": [
+          0,
+          0,
+          -1
+        ],
+        "up": [
+          0,
+          1,
+          0
+        ],
+        "fitPadding": 0.12
+      }
+    },
+    "after": {
+      "camera": {
+        "type": "orthographic",
+        "viewDirection": [
+          0,
+          0,
+          -1
+        ],
+        "up": [
+          0,
+          1,
+          0
+        ],
+        "fitPadding": 0.12
+      },
+      "surfaceFinish": "wood",
+      "graniteNodeIDs": [
+        "nature_stone"
+      ]
+    }
+  },
+  "suspension": "Same topology, stations, pose IDs/rotations and cameras. Fresh routes/heights with 110 mm estimated leads and 15 mm initial support offset.",
+  "newGripFacts": [],
+  "trainingContentChanged": false
+}

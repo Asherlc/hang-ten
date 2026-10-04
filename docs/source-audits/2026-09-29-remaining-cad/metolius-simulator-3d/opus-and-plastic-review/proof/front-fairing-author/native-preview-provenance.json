@@ -1,0 +1,64 @@
+{
+  "original-9449": {
+    "triangleCount": 34634,
+    "nodeCount": 31
+  },
+  "frozen-3ff3": {
+    "triangleCount": 86039,
+    "nodeCount": 31
+  },
+  "native-correction": {
+    "triangleCount": 72418,
+    "nodeCount": 1
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top",
+    "oblique",
+    "raking"
+  ],
+  "renderer": "Shared preview.py Lambert triangle-face rendering at matching view and size; oblique applies fixed orthographic rotation.",
+  "status": "pass",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "sourcePath": ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/metolius-simulator-3d.FCStd",
+  "beforeSourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "nativeBodyMeshSHA256": "7d5e212155ad184a77946b0074ef166b0997a86ddf11e4a6521c54388716b495",
+  "nativeBodyMeshPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/final-native-body-mesh.json",
+  "sectionsSHA256": "e2c077c96addb310a9ceedf1a1e5369a6dc711016d0b8f286f6184d4b09a0d93",
+  "sectionsPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/author-native-check.json",
+  "images": {
+    "review/comparison-front.png": "e62be15b6622f7b5b24b85247b2d4ad9a5b91d501ac956f6b0b3220f44c9726f",
+    "review/comparison-oblique.png": "87030c1652cb3b8db79de96aa002a963e79661c494ffb64568b177b90caf76ce",
+    "review/comparison-raking.png": "b89ddf25dd09f48820e296ddfb7f29535e435d1915940f11018f2b061f4c3ec7",
+    "review/comparison-side.png": "ba4f5bd879d55cf823c512a786ca30f2a48c825479ea46932587045a36cadae2",
+    "review/comparison-top.png": "26d457d9f4c7cfbad45d2b8a3b0470b08c4a9bb99a154297a7c7ca256345cff0",
+    "review/frozen-3ff3-front.png": "1e952c3a45d8409d37f19d45cdfef846c5922c2694ca068e548524d731eef35a",
+    "review/frozen-3ff3-oblique.png": "070fa690b0c062a82457493b1806131c3a552c09fb0aea4653bca5b107d06afe",
+    "review/frozen-3ff3-raking.png": "767148c4e4cae73b6d178f65666249504ae2f6ede9993023853eae86d345b033",
+    "review/frozen-3ff3-side.png": "b9c5788f983fed856c4c2c018e761d2d9020a0b4079db1329b8bf29b03f92136",
+    "review/frozen-3ff3-top.png": "4ffe16c07c91d5ac7f0f1de10379fd669345d51e5e29db548fc3e854fbc121d2",
+    "review/native-correction-front.png": "3ac9d17c03554f4d71168d77fe9d8cc2c801d62fc8ad0342e91097e032703117",
+    "review/native-correction-oblique.png": "64fbb614d95530ad88eb83f89ff272478ad598b222f3f42c0c2a6e2b684fc69b",
+    "review/native-correction-raking.png": "71c7a83d6b4906fd1116bd1c508c77251ab7d4a4676b9e08a652f4427282348d",
+    "review/native-correction-side.png": "cb27db76f9bfa84f7639aeb5705d7e6ab73494b4faf312c710e6b7dce7eda64d",
+    "review/native-correction-top.png": "40eaa5706ac82d3e7c789f516e3d0f495da06992ba0173be0bd8695d5f09859e",
+    "review/original-9449-front.png": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+    "review/original-9449-oblique.png": "0195e673d789e0fd38e1b58f86e3ef7e8cbb5e908125187d47e293e3d739aeaf",
+    "review/original-9449-raking.png": "efe3cf3b36bdf265a10b5747938de73719c2ab27212e7e7d0ceafa363402f7ae",
+    "review/original-9449-side.png": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+    "review/original-9449-top.png": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860",
+    "native-profile-sections.png": "3f74de14a3bf79dffc2d2f3c02cc18c84cfb487f139c2176f9fc8b763898d304"
+  },
+  "scope": "Final frozen native source and actual final BodySolid mesh, complete comparative views and native profile/normal/solid sections; independent and Opus gates separate.",
+  "labelCorrection": {
+    "scope": "Axis labels only; underlying sections, native mesh and frozen source unchanged",
+    "priorRawDirectory": "labels-v1-diagnostic",
+    "xAxes": [
+      "Forward depth (mm)",
+      "Front normal tilt (degrees)",
+      "Forward depth (mm)"
+    ],
+    "allYAxes": "Height Z (mm)"
+  }
+}

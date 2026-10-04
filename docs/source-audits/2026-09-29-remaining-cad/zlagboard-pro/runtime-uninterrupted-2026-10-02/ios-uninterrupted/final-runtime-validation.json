@@ -1,0 +1,59 @@
+{
+  "boardID": "zlagboard.pro",
+  "runtime": "iOS26.5",
+  "owner": "placid-badger-cad-second-half",
+  "status": "BLOCKED before build/install: one uninterrupted900s first boot remained in AddressBook migration and never reached Home AX.",
+  "appWorkflowPassed": false,
+  "readyForHumanGeometryReview": false,
+  "humanAccepted": false,
+  "humanAcceptance": "Pending; fresh app review gate unmet.",
+  "buildAttempted": false,
+  "installAttempted": false,
+  "testsRun": 0,
+  "contactCoverage": {
+    "required": 28,
+    "captured": 0
+  },
+  "workoutAttempted": false,
+  "boot": {
+    "simulator": "87CE3964-139D-4FAE-B121-AB12237401DB",
+    "maximumBootSeconds": 900,
+    "elapsedSeconds": 900.0147610409986,
+    "uninterruptedDeviceBoot": true,
+    "rebootsPerformed": 0,
+    "readyForVisualApproval": false,
+    "bootstatusCommand": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "bootstatus",
+      "87CE3964-139D-4FAE-B121-AB12237401DB",
+      "-b"
+    ],
+    "bootstatusExitBeforeMonitorStop": null,
+    "bootstatusExitAfterMonitorStop": -15,
+    "note": "Only the monitoring subprocess is stopped after success/deadline; the device is never rebooted. Build requires separate whole-screen visual approval."
+  },
+  "rawBoot": "boot-uninterrupted.log",
+  "readinessProbes": "readiness-commands.json",
+  "startupScreen": "startup-after-eight-minutes.png",
+  "migrationDiagnostic": {
+    "command": "migration-diagnostic-command.json",
+    "raw": "migration-diagnostic-command.stdout",
+    "result": "Bounded exact-device filtered query succeeded but returned only the header. No progress or stuck-RPC conclusion follows."
+  },
+  "sourceGate": "No Home screenshot candidate or visual approval was produced; clean-HEAD build gate never opened. No app/package/shared-service changes.",
+  "cleanup": {
+    "uuid": "87CE3964-139D-4FAE-B121-AB12237401DB",
+    "simulatorQueryError": null,
+    "createRecoveryError": 0,
+    "simulatorDeleted": true,
+    "derivedDataDeleted": true,
+    "resultBundleDeleted": true,
+    "testResultBundleDeleted": true
+  },
+  "helperCleanup": "helper-cleanup-verification.json",
+  "priorEvidence": "Original26.4/26.5 startup failures and two successful fresh builds remain retained separately under zlagboard-pro; this attempt did not rebuild or supersede them.",
+  "interpretation": "Longer uninterrupted first boot did not resolve startup within its bound. No root cause is proven; no further attempt or private/shared-service repair was performed."
+}

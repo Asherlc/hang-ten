@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/DE3D0FB9-0185-4900-926D-AF1C3C526313/Documents/HighlightDiagnostic-placid-badger-cad-second-half-weak-hand-perspective/events-BFDA1690-1523-4DCC-A759-B4ACE9DA7D26.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/events-BFDA1690-1523-4DCC-A759-B4ACE9DA7D26.jsonl",
+      "sha256": "6c03631449b2da54eb05ebc50549164a4433cda97ad30f1df6ab815d18ab9820"
+    }
+  ],
+  "records": 165,
+  "completeContiguous": true,
+  "copiedEpoch": 1790996238.317636,
+  "includesSamplerEnd": true
+}

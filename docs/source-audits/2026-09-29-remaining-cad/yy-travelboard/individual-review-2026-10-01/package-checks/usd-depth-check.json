@@ -1,0 +1,49 @@
+{
+  "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+  "coordinateSpace": "composed USD world, board depth Z; no image measurements",
+  "nodes": [
+    {
+      "node": "yy_body",
+      "depthSpanMM": 29.999999329447768,
+      "expectedMM": null,
+      "matches": true
+    },
+    {
+      "node": "yy_tray",
+      "depthSpanMM": 29.999999329447746,
+      "expectedMM": 30,
+      "matches": true
+    },
+    {
+      "node": "yy_edge_25",
+      "depthSpanMM": 24.999999441206462,
+      "expectedMM": 25,
+      "matches": true
+    },
+    {
+      "node": "yy_edge_15",
+      "depthSpanMM": 14.999999664723878,
+      "expectedMM": 15,
+      "matches": true
+    },
+    {
+      "node": "yy_edge_10",
+      "depthSpanMM": 9.999999776482587,
+      "expectedMM": 10,
+      "matches": true
+    },
+    {
+      "node": "yy_mono_left",
+      "depthSpanMM": 29.999999329447753,
+      "expectedMM": 30,
+      "matches": true
+    },
+    {
+      "node": "yy_mono_right",
+      "depthSpanMM": 29.999999329447753,
+      "expectedMM": 30,
+      "matches": true
+    }
+  ],
+  "allDepthSpansMatch": true
+}

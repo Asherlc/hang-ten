@@ -1,0 +1,12 @@
+{
+  "reservedForParent": [
+    "testBoardPitchUsesPairedAttachmentsBoreMouthsAndIndependentInstancePivots",
+    "testNativeCADCordRoutesKeepBodyAndCordTogetherDuringOrbit (new name)"
+  ],
+  "noLocalDiff": true,
+  "noPlannedOverlap": true,
+  "newNameAbsentLocally": true,
+  "existingLocalTestPreserved": "testNativeCADRouteOrbitPreservesSolvedBodyAndCord",
+  "priorReservationsUnchanged": true,
+  "integration": "None; later explicit substantive reconciliation required"
+}

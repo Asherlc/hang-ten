@@ -1,0 +1,102 @@
+{
+  "scope": "Read-only integration review; no source/index/runtime mutations. Scratch report only.",
+  "timeUTC": "2026-10-03T14:44:40.467697+00:00",
+  "HEAD": "e1cc8ff270ba1a0b16b621582f2fc8296b5dd64e",
+  "MERGE_HEAD": "d53c019c43319a70b32e6dc654814de29e87ab89",
+  "sourceSHA256": {
+    "HangTen/Views/BoardModelView.swift": "4ba1f9f18ac980da4a168def3761e1bddff475702092d0d48d752b0c48c8cef4",
+    "HangTen/Views/BoardMapView.swift": "bb126b43ac1065fa048cc10ff90d275c1816bdbb3ea3beed3609b005521e0cec",
+    "HangTen/Views/WorkoutView.swift": "caa67bd053af93b60b92adc14e9ba6a3325ac0e91936d765f56d6232314a7029",
+    "HangTen/Views/TrainView.swift": "b8720ac7c42252f22dceecb8a58f96a1de297068bbb7a3972bddac8c7072fccf",
+    "HangTen/Views/RootView.swift": "6d4439ffa97e0a93c25fc2b253710c2711186bbbc1515f830d33dd11a36a8b89",
+    "HangTen/Views/GripHandModelView.swift": "4927d32b64ce78a987d13bd5f89b37cc572ec670f72833451dad245079cbe42c",
+    "HangTen/Models/WorkoutTimeline.swift": "d5e570e784a48019552ab6c792208d490377682f01e40e75c900a76832e449a3",
+    "HangTen/Models/BoardModelRealityTypes.swift": "a8ddd62b3962870a6d42b7d5de15756f7ec0f7d38cd49e95141f5cd91204b00e",
+    "HangTen/Models/TrainingModels.swift": "e5bae9c4e770b016a1a8f7362fa1ca91dacb21acc8f8ed13ce069169f6e5cf11",
+    "HangTen/Models/WorkoutActivityRecording.swift": "85b99c73ee4fb02cd4e3746cf38c8cfdb3549641a0c8112ffa37ee4b25b1e0ac",
+    "HangTenTests/BoardModelRealityTests.swift": "e720fe71b08bf5d0e4d25a916c5e4fd36b7876a827f1ae5468260b6cb9cc0e10"
+  },
+  "parse": {
+    "command": [
+      "swiftc",
+      "-frontend",
+      "-parse",
+      "HangTen/Views/BoardModelView.swift",
+      "HangTen/Views/BoardMapView.swift",
+      "HangTen/Views/WorkoutView.swift",
+      "HangTen/Views/TrainView.swift",
+      "HangTen/Views/RootView.swift",
+      "HangTen/Views/GripHandModelView.swift",
+      "HangTen/Models/WorkoutTimeline.swift",
+      "HangTen/Models/BoardModelRealityTypes.swift",
+      "HangTen/Models/TrainingModels.swift",
+      "HangTen/Models/WorkoutActivityRecording.swift",
+      "HangTenTests/BoardModelRealityTests.swift"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "",
+    "notTypecheckOrRuntime": true
+  },
+  "mainExactFiles": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "matchesMain": true
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "matchesMain": true
+    }
+  ],
+  "testInventory": {
+    "Main": 61,
+    "oursHEAD": 26,
+    "merged": 72,
+    "missingMainMethods": [],
+    "missingOursMethods": []
+  },
+  "findings": [
+    {
+      "severity": "resolved-during-review",
+      "issue": "Two Timeline-scope presentation resolver calls used undefined cueStep. Reported to root; root moved calls into portrait/landscape helpers with in-scope cueStep and selected task/hand inputs."
+    },
+    {
+      "severity": "resolved-during-review",
+      "issue": "Auto-merged raw published-generated-board.json gained surfaceFinish wood. Reported to root; final worktree now matches historical HEAD along with both conflicted manifests."
+    }
+  ],
+  "preservedFeatures": [
+    "Main Root/Workout decomposition; task cursor and hand selection passed to contacts, cues and presentation resolver.",
+    "Main preferred rotation dictionary and stable size modifier retained; Detail selectedPositionID binding reaches Train configured selected-hold facts.",
+    "Main default four-finger/mirrored hand implementation unchanged.",
+    "Main virtual live camera, cameraRevision update, selection animation, SceneEvents.Update rope subscription, activity/reduceMotion lifecycle and interactive Simulator presentation adapter retained.",
+    "Main baked reflection and native material culling combined with branch path-aware inherited mixed finishes and shared-contact union highlighting.",
+    "All four suspension enum cases covered in renderer solving and geometric-pivot selection; CAD uses source-bound solved routes and camera-only orbit, leaving Main other cord pivots unchanged.",
+    "Frame image renderer opt-in forwarded only from two Workout BoardMaps; DEBUG environment flag defaults false and release false; callbacks force live path."
+  ],
+  "limitations": [
+    "Syntax parse is not Swift SDK typechecking or a build/test pass.",
+    "Frame prototype remains unvalidated/disabled. Main contact-aware animated highlight camera changes may require explicit settle/snapshot handling before future frame-renderer validation; prior candidate proof does not transfer to merged code.",
+    "Historical proof spot check covers only the three identified raw JSON paths. Parent owns full historical inventory and index reconciliation.",
+    "Unmerged index entries can remain after worktree resolution; this review did not stage or resolve index."
+  ],
+  "historicalProofSpotChecks": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/finish/before-manifest.json",
+      "sha256": "3ca33642d68dd86ddb3d3842ee6a06549e2a814663656aa93cc45d0590897118",
+      "matchesHEAD": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/initial/metadata/final-wood-manifest.json",
+      "sha256": "f8faa145bde9a9544dd2ba90db48d9a3791ad2a490f8b02e20fe057943ea701a",
+      "matchesHEAD": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/initial/package-checks/published-generated-board.json",
+      "sha256": "b083be4185475e8c11936fc1625ed625a71ea2c148fea9b5b1f4006baa61120d",
+      "matchesHEAD": true
+    }
+  ],
+  "appRepairClaim": false,
+  "humanAcceptanceChanged": false
+}

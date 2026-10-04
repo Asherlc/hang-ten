@@ -1,0 +1,4089 @@
+import SwiftUI
+import UIKit
+#if DEBUG
+import RealityKit
+#endif
+
+struct MotherboardWorkoutPreparationHandoff {
+    private(set) var didAccept = false
+
+    mutating func accept() -> Bool {
+        guard !didAccept else { return false }
+        didAccept = true
+        return true
+    }
+}
+
+@MainActor
+protocol RootViewBackgroundTaskApplication: AnyObject {
+	func beginBackgroundTask(withName taskName: String?, expirationHandler handler: (@MainActor @Sendable () -> Void)?) -> UIBackgroundTaskIdentifier
+	func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier)
+}
+
+extension UIApplication: RootViewBackgroundTaskApplication {}
+
+@MainActor
+final class RootViewSessionPersistenceCoordinator {
+	private let application: RootViewBackgroundTaskApplication
+	private var backgroundTaskIdentifier = UIBackgroundTaskIdentifier.invalid
+
+	init(application: RootViewBackgroundTaskApplication) {
+		self.application = application
+	}
+
+	func flush(store: AppStore) {
+		backgroundTaskIdentifier = application.beginBackgroundTask(
+			withName: "Persist workout sessions",
+			expirationHandler: { [weak self] in
+				self?.finish()
+			}
+		)
+		store.flushSessionPersistence { [self] in
+			finish()
+		}
+	}
+
+	private func finish() {
+		guard backgroundTaskIdentifier != .invalid else { return }
+		let identifier = backgroundTaskIdentifier
+		backgroundTaskIdentifier = .invalid
+		application.endBackgroundTask(identifier)
+	}
+}
+
+struct InstructionAccessoryCardRow: Equatable {
+    enum Kind: Equatable {
+        case instruction
+        case accessory
+    }
+
+    let kind: Kind
+    let text: String
+}
+
+enum InstructionAccessoryCardContent {
+    static func rows(instruction: String, accessory: String) -> [InstructionAccessoryCardRow] {
+        [
+            row(kind: .instruction, text: instruction),
+            row(kind: .accessory, text: accessory)
+        ].compactMap { $0 }
+    }
+
+    static func instructionText(_ text: String) -> String? {
+        row(kind: .instruction, text: text)?.text
+    }
+
+    static func accessoryText(_ text: String) -> String? {
+        row(kind: .accessory, text: text)?.text
+    }
+
+    private static func row(
+        kind: InstructionAccessoryCardRow.Kind,
+        text: String
+    ) -> InstructionAccessoryCardRow? {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            return nil
+        }
+        return InstructionAccessoryCardRow(kind: kind, text: trimmed)
+    }
+}
+
+enum WorkoutPresentationContent {
+    static let portraitTimerLineLimit = 1
+    static let portraitTimerSupportingStatus: String? = nil
+
+    static func title(step: WorkoutStep, isComplete: Bool) -> String {
+        isComplete ? "Session complete" : step.title
+    }
+
+    static func cueCardRows(
+        step: WorkoutStep,
+        countdown: Int,
+        isComplete: Bool
+    ) -> [InstructionAccessoryCardRow]? {
+        guard !isComplete else { return nil }
+        let rows = countdown > 0
+            ? InstructionAccessoryCardContent.rows(instruction: step.instruction, accessory: "")
+            : InstructionAccessoryCardContent.rows(instruction: step.instruction, accessory: step.accessory)
+        return rows.isEmpty ? nil : rows
+    }
+}
+
+enum PlanSourcePresentationContent {
+    static func label(for plan: TrainingPlan) -> String {
+        "Source: \(plan.sourceLabel)"
+    }
+}
+
+enum WorkoutLabelPresentationContent {
+    static func displayLabels(for labels: [String]) -> [String] {
+        labels.map { $0.replacingOccurrences(of: "-", with: " ").capitalized }
+    }
+}
+
+enum PlanFilterPresentationContent {
+    enum Facet: Hashable {
+        case difficulty
+        case category
+        case tags
+    }
+
+    static func visibleFacets(for options: PlanFilterOptions) -> [Facet] {
+        [
+            options.levels.isEmpty ? nil : .difficulty,
+            options.categories.isEmpty ? nil : .category,
+            options.tags.isEmpty ? nil : .tags
+        ].compactMap { $0 }
+    }
+}
+
+enum RootTab: Hashable, CaseIterable {
+    case train
+    case plans
+    case history
+
+    static func initial(environment: [String: String]) -> RootTab {
+        #if DEBUG
+        if environment["HANGTEN_REVIEW_HISTORY"] == "1" {
+            return .history
+        }
+        if environment["HANGTEN_REVIEW_PLANS"] == "1" {
+            return .plans
+        }
+        #endif
+        return .train
+    }
+}
+
+enum WorkoutLandscapeControlLayoutPolicy {
+    static func usesCompactControls(
+        isFirstStart: Bool,
+        countdown: Int,
+        isComplete: Bool
+    ) -> Bool {
+        isFirstStart && countdown == 0 && !isComplete
+    }
+}
+
+struct WorkoutLandscapePreStartPresentation: Equatable {
+    let cueCardRows: [InstructionAccessoryCardRow]?
+    let stopwatchKey: WorkoutActivitySegmentKey?
+
+    static func content(
+        for step: WorkoutStep,
+        countdown: Int,
+        isResting: Bool,
+        isComplete: Bool,
+        currentStopwatchKey: WorkoutActivitySegmentKey?
+    ) -> Self {
+        Self(
+            cueCardRows: WorkoutPresentationContent.cueCardRows(
+                step: step,
+                countdown: countdown,
+                isComplete: isComplete
+            ),
+            stopwatchKey: countdown == 0 && !isResting && !isComplete
+                ? currentStopwatchKey
+                : nil
+        )
+    }
+}
+
+struct RootView: View {
+    @EnvironmentObject private var store: AppStore
+    @StateObject private var workoutAudioCoach = WorkoutAudioCoach()
+    @StateObject private var deepLinkManager = DeepLinkManager()
+    @State private var selectedTab = RootTab.initial(
+        environment: ProcessInfo.processInfo.environment
+    )
+
+    var body: some View {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_BOARD"] == "1" {
+            StandaloneBoardHighlightProbe()
+        } else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_WORKOUT_AT_ROOT"] == "1" {
+            diagnosticRootWorkout
+        } else {
+            normalBody
+        }
+        #else
+        normalBody
+        #endif
+    }
+
+    #if DEBUG
+    @ViewBuilder
+    private var diagnosticRootWorkout: some View {
+        let environment = ProcessInfo.processInfo.environment
+        if environment["HANGTEN_REVIEW_PLAN_ID"] == "research.max-hangs",
+           environment["HANGTEN_REVIEW_BOARD_ID"] == "zlagboard.evo",
+           let plan = store.plans.first(where: { $0.id == "research.max-hangs" }),
+           store.selectedBoard.id == "zlagboard.evo",
+           store.board(for: plan).id == "zlagboard.evo" {
+            Group {
+                if environment["HANGTEN_REVIEW_ROOT_NAVIGATION_STACK"] == "1" {
+                    NavigationStack {
+                        WorkoutAccessGate(plan: plan)
+                    }
+                } else {
+                    WorkoutAccessGate(plan: plan)
+                }
+            }
+                .environmentObject(workoutAudioCoach)
+                .environmentObject(deepLinkManager)
+                .onAppear {
+                    let orientationMask: UIInterfaceOrientationMask?
+                    if environment["HANGTEN_REVIEW_LANDSCAPE"] == "1" {
+                        orientationMask = .landscapeRight
+                    } else if environment["HANGTEN_REVIEW_PORTRAIT"] == "1" {
+                        orientationMask = .portrait
+                    } else {
+                        orientationMask = nil
+                    }
+                    guard let orientationMask,
+                          let windowScene = UIApplication.shared.connectedScenes
+                            .compactMap({ $0 as? UIWindowScene }).first else { return }
+                    windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientationMask))
+                }
+        } else {
+            Text("Root workout diagnostic: exact Evo/Max Hangs inputs unavailable")
+        }
+    }
+    #endif
+
+    private var normalBody: some View {
+		TabView(selection: $selectedTab) {
+			TrainView { selectedTab = .plans }
+				.tabItem { Label("Train", systemImage: "figure.climbing") }
+				.tag(RootTab.train)
+
+			PlansView()
+				.tabItem {
+					Label("Plans", systemImage: "list.bullet.rectangle.portrait.fill")
+				}
+				.tag(RootTab.plans)
+
+			HistoryView()
+				.tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
+				.tag(RootTab.history)
+		}
+		.tint(.hangGreenDark)
+		.environmentObject(workoutAudioCoach)
+		.environmentObject(deepLinkManager)
+		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+			RootViewSessionPersistenceCoordinator(application: UIApplication.shared).flush(store: store)
+		}
+		.onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
+			store.flushSessionPersistenceSynchronously()
+		}
+        .onAppear {
+            #if DEBUG
+            let environment = ProcessInfo.processInfo.environment
+            let orientationMask: UIInterfaceOrientationMask?
+            if environment["HANGTEN_REVIEW_LANDSCAPE"] == "1" {
+                orientationMask = .landscapeRight
+            } else if environment["HANGTEN_REVIEW_PORTRAIT"] == "1" {
+                orientationMask = .portrait
+            } else {
+                orientationMask = nil
+            }
+
+            guard let orientationMask,
+                  let windowScene = UIApplication.shared.connectedScenes
+                    .compactMap({ $0 as? UIWindowScene })
+                    .first else { return }
+
+            windowScene.requestGeometryUpdate(
+                .iOS(interfaceOrientations: orientationMask)
+            )
+            #endif
+        }
+        .onOpenURL { url in
+            deepLinkManager.handle(url: url)
+            if let boardID = deepLinkManager.pendingBoardID,
+               let board = BoardCatalog.all.first(where: { $0.id == boardID }) {
+                store.selectBoard(board)
+                selectedTab = .train
+            } else if deepLinkManager.pendingWorkoutPlanID != nil {
+                selectedTab = .train
+            }
+        }
+    }
+}
+
+struct PlansView: View {
+    @EnvironmentObject private var store: AppStore
+    @State private var filters = PlanFilters()
+    @State private var isCreatingRoutine = false
+
+    var body: some View {
+        let compatiblePlans = store.plans
+        let metadataByPlanID = Dictionary(
+            compatiblePlans.map { plan in
+                (plan.id, store.metadata(for: plan))
+            },
+            uniquingKeysWith: { first, _ in first }
+        )
+        let filterOptions = PlanFilterOptions(metadata: Array(metadataByPlanID.values))
+        let filteredPlans = filters.isEmpty
+            ? compatiblePlans
+            : compatiblePlans.filter { plan in
+                guard let metadata = metadataByPlanID[plan.id] else { return false }
+                return filters.matches(metadata)
+            }
+        let customPlanIDs = Set(store.customPlans.map(\.id))
+        let myRoutines = filteredPlans.filter { customPlanIDs.contains($0.id) }
+        let libraryPlans = filteredPlans.filter { !customPlanIDs.contains($0.id) }
+
+        NavigationStack {
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        SectionLabel(title: "Training library")
+                        Text("Choose your session.")
+                            .font(.system(size: 31, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color.hangInk)
+                        Text("Browse routines for your board.")
+                            .font(.system(size: 15, weight: .medium, design: .rounded))
+                            .foregroundStyle(Color.hangMuted)
+                            .fixedSize(horizontal: false, vertical: true)
+
+                        currentBoardControl
+
+                        Button {
+                            isCreatingRoutine = true
+                        } label: {
+                            Label("Create routine", systemImage: "plus")
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color.hangInk)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 10)
+                                .background(
+                                    Color.hangGreen,
+                                    in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("customRoutine.create")
+
+                        if let persistenceError = store.customRoutinePersistenceError {
+                            HStack(alignment: .top, spacing: 10) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundStyle(.orange)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Some custom routines are unavailable")
+                                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                                        .foregroundStyle(Color.hangInk)
+                                    Text(persistenceError)
+                                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                                        .foregroundStyle(Color.hangMuted)
+                                }
+                            }
+                            .padding(12)
+                            .background(
+                                Color.orange.opacity(0.12),
+                                in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            )
+                            .accessibilityIdentifier("customRoutine.persistenceError")
+                        }
+
+                        filterBar(options: filterOptions)
+                    }
+
+                    if !myRoutines.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            SectionLabel(title: "My routines")
+                            ForEach(myRoutines) { plan in
+                                FavoritePlanCard(
+                                    plan: plan,
+                                    board: store.board(for: plan),
+                                    labels: store.metadata(for: plan).athleteFacingLabels,
+                                    isFavorite: store.isFavorite(plan),
+                                    isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
+                                ) {
+                                    store.toggleFavorite(plan)
+                                }
+                            }
+                        }
+                    }
+
+                    if compatiblePlans.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            SectionLabel(title: "No compatible routines")
+                            Text("No plan currently resolves every required hold on \(store.selectedBoard.name).")
+                                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                                .foregroundStyle(Color.hangInk)
+                        }
+                        .hangCard()
+                    } else if filteredPlans.isEmpty {
+                        NoMatchingPlansCard {
+                            filters.clear()
+                        }
+                    } else if !libraryPlans.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            SectionLabel(title: "Training library")
+                            ForEach(libraryPlans) { plan in
+                            FavoritePlanCard(
+                                plan: plan,
+                                board: store.board(for: plan),
+                                labels: store.metadata(for: plan).athleteFacingLabels,
+                                isFavorite: store.isFavorite(plan),
+                                isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
+                            ) {
+                                store.toggleFavorite(plan)
+                            }
+                        }
+                        }
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 18)
+                .padding(.bottom, 30)
+            }
+            .background(Color.hangBackground)
+            .toolbar(.hidden, for: .navigationBar)
+            .sheet(isPresented: $isCreatingRoutine) {
+                CustomRoutineEditorView(
+                    draft: CustomRoutineDraft(
+                        createWith: .boardSpecific(boardID: store.selectedBoard.id)
+                    ),
+                    onSave: store.saveCustomRoutine
+                )
+            }
+        }
+    }
+
+    private var currentBoardControl: some View {
+        NavigationLink {
+            BoardPickerView()
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "rectangle.portrait.fill")
+                    .foregroundStyle(Color.hangGreenDark)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Training on")
+                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                    Text(store.selectedBoard.name)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangGreenDark)
+            }
+            .padding(14)
+            .background(
+                Color.hangCream,
+                in: RoundedRectangle(cornerRadius: 16, style: .continuous)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("plans.changeBoard")
+    }
+
+    private func filterBar(options: PlanFilterOptions) -> some View {
+        let visibleFacets = PlanFilterPresentationContent.visibleFacets(for: options)
+
+        return ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                if visibleFacets.contains(.difficulty) {
+                    Menu {
+                        filterAllButton(isSelected: filters.levels.isEmpty) {
+                            filters.levels.removeAll()
+                        }
+                        ForEach(options.levels, id: \.self) { value in
+                            filterValueButton(value, isSelected: filters.levels.contains(value)) {
+                                filters.toggle(level: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Difficulty",
+                            selectionCount: filters.levels.count,
+                            singleSelection: filters.levels.first
+                        )
+                    }
+                    .accessibilityLabel("Filter by difficulty")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.levels.count,
+                        singleSelection: filters.levels.first
+                    ))
+                }
+
+                if visibleFacets.contains(.category) {
+                    Menu {
+                        filterAllButton(isSelected: filters.categories.isEmpty) {
+                            filters.categories.removeAll()
+                        }
+                        ForEach(options.categories, id: \.self) { value in
+                            filterValueButton(displayName(value), isSelected: filters.categories.contains(value)) {
+                                filters.toggle(category: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Category",
+                            selectionCount: filters.categories.count,
+                            singleSelection: filters.categories.first.map(displayName)
+                        )
+                    }
+                    .accessibilityLabel("Filter by category")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.categories.count,
+                        singleSelection: filters.categories.first.map(displayName)
+                    ))
+                }
+
+                if visibleFacets.contains(.tags) {
+                    Menu {
+                        filterAllButton(isSelected: filters.tags.isEmpty) {
+                            filters.tags.removeAll()
+                        }
+                        ForEach(options.tags, id: \.self) { value in
+                            filterValueButton(displayName(value), isSelected: filters.tags.contains(value)) {
+                                filters.toggle(tag: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Tags",
+                            selectionCount: filters.tags.count,
+                            singleSelection: filters.tags.first.map(displayName)
+                        )
+                    }
+                    .accessibilityLabel("Filter by tags")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.tags.count,
+                        singleSelection: filters.tags.first.map(displayName)
+                    ))
+                }
+
+                if !filters.isEmpty {
+                    Button("Clear") {
+                        filters.clear()
+                    }
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .accessibilityLabel("Clear plan filters")
+                }
+            }
+            .padding(.vertical, 2)
+        }
+    }
+
+    private func filterAllButton(isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label("All", systemImage: isSelected ? "checkmark" : "rectangle")
+        }
+    }
+
+    private func filterValueButton(_ title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: isSelected ? "checkmark" : "rectangle")
+        }
+    }
+
+    private func filterMenuLabel(title: String, selectionCount: Int, singleSelection: String?) -> some View {
+        let isActive = selectionCount > 0
+        let label = if selectionCount == 1 {
+            singleSelection ?? title
+        } else if selectionCount > 1 {
+            "\(selectionCount) selected"
+        } else {
+            title
+        }
+
+        return HStack(spacing: 5) {
+            Text(label)
+            Image(systemName: "chevron.down")
+                .font(.system(size: 10, weight: .bold))
+        }
+        .font(.system(size: 13, weight: .bold, design: .rounded))
+        .foregroundStyle(isActive ? Color.hangGreenDark : Color.hangInk)
+        .padding(.horizontal, 11)
+        .padding(.vertical, 8)
+        .background(
+            isActive ? Color.hangGreen.opacity(0.25) : Color.hangCream,
+            in: Capsule()
+        )
+        .overlay {
+            Capsule()
+                .stroke(isActive ? Color.hangGreenDark.opacity(0.55) : Color.hangLine.opacity(0.8), lineWidth: 1)
+        }
+    }
+
+    private func filterMenuAccessibilityValue(selectionCount: Int, singleSelection: String?) -> String {
+        if selectionCount == 0 {
+            return "All"
+        } else if selectionCount == 1 {
+            return singleSelection ?? "1 selected"
+        } else {
+            return "\(selectionCount) selected"
+        }
+    }
+
+    private func displayName(_ rawValue: String) -> String {
+        rawValue.replacingOccurrences(of: "-", with: " ").capitalized
+    }
+
+}
+
+private struct NoMatchingPlansCard: View {
+    let onClear: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            SectionLabel(title: "No matching routines")
+            Text("No routines match these filters")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            Button("Clear filters", action: onClear)
+                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangGreenDark)
+        }
+        .hangCard()
+    }
+}
+
+private struct PlanCard: View {
+    let plan: TrainingPlan
+    let board: BoardRevision
+    let labels: [String]
+    var isIncompatible: Bool = false
+
+    var body: some View {
+        let displayLabels = WorkoutLabelPresentationContent.displayLabels(for: labels)
+
+        VStack(alignment: .leading, spacing: 15) {
+            HStack {
+                Pill(title: plan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
+                if isIncompatible {
+                    Pill(title: "Not on this board", tint: .orange, fill: Color.orange.opacity(0.12))
+                }
+                Spacer()
+                Text(plan.durationLabel)
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+            }
+            .padding(.trailing, 52)
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text(plan.title)
+                    .font(.system(size: 21, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text(plan.subtitle)
+                    .font(.system(size: 14, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            if !displayLabels.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(displayLabels, id: \.self) { label in
+                            Pill(
+                                title: label,
+                                tint: Color.hangGreenDark,
+                                fill: Color.hangGreen.opacity(0.18)
+                            )
+                        }
+                    }
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Workout labels: \(displayLabels.joined(separator: ", "))")
+            }
+
+            HStack(spacing: 8) {
+                Image(systemName: "rectangle.portrait.and.arrow.right")
+                Text(board.name)
+                Spacer()
+                Image(systemName: "chevron.right")
+            }
+            .font(.system(size: 12, weight: .semibold, design: .rounded))
+            .foregroundStyle(Color.hangGreenDark)
+        }
+        .hangCard()
+    }
+}
+
+struct FavoritePlanCard: View {
+    let plan: TrainingPlan
+    let board: BoardRevision
+    var labels: [String] = []
+    let isFavorite: Bool
+    var isIncompatible: Bool = false
+    let onToggle: () -> Void
+
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            NavigationLink(destination: PlanDetailView(plan: plan)) {
+                PlanCard(plan: plan, board: board, labels: labels, isIncompatible: isIncompatible)
+            }
+            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity)
+
+            Button(action: onToggle) {
+                Image(systemName: isFavorite ? "star.fill" : "star")
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(isFavorite ? Color.hangGreenDark : Color.hangMuted)
+                    .frame(width: 34, height: 34)
+                    .background(
+                        isFavorite ? Color.hangGreen.opacity(0.28) : Color.hangCream,
+                        in: Circle()
+                    )
+                    .overlay {
+                        Circle()
+                            .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
+                    }
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(
+                isFavorite
+                    ? "Remove \(plan.title) from favorites"
+                    : "Add \(plan.title) to favorites"
+            )
+            .padding(.top, 8)
+            .padding(.trailing, 8)
+        }
+    }
+}
+
+enum PlanDetailPlanResolver {
+    static func resolve(
+        capturedPlan: TrainingPlan,
+        eligiblePlans: [TrainingPlan]
+    ) -> TrainingPlan? {
+        eligiblePlans.first { $0.id == capturedPlan.id }
+    }
+}
+
+enum PlanStartAvailability: Equatable {
+    case available
+    case unavailable(requirement: String)
+}
+
+enum PlanStartAvailabilityPolicy {
+    private static let forceFeedbackRequirementTag = "requires-instrumented-12mm-force-feedback"
+    private static let forceFeedbackPlanIDs: Set<String> = [
+        "research.force-feedback-f80",
+        "research.force-feedback-f100"
+    ]
+
+    static func availability(
+        for plan: TrainingPlan,
+        metadata: PlanMetadata? = nil
+    ) -> PlanStartAvailability {
+        let requiresForceFeedback = forceFeedbackPlanIDs.contains(plan.id) ||
+            metadata?.tags.contains(forceFeedbackRequirementTag) == true
+        guard requiresForceFeedback else { return .available }
+        return .unavailable(
+            requirement: "Requires real-time force feedback from an instrumented 12 mm edge."
+        )
+    }
+}
+
+private enum PlanDetailResolutionError: LocalizedError {
+    case unavailable
+
+    var errorDescription: String? {
+        "This routine is not available for the selected board."
+    }
+}
+
+struct PlanDetailView: View {
+    @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
+    @EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
+    @Environment(\.dismiss) private var dismiss
+    let plan: TrainingPlan
+    @State private var editorDraft: CustomRoutineDraft?
+    @State private var isShowingEditor = false
+    @State private var isShowingDeleteConfirmation = false
+    @State private var lifecycleError: String?
+    @State private var initialWeightSource = WorkoutInitialWeightSource.untracked
+    @State private var manualWeight = 0.0
+    @State private var manualWeightIncludesBodyweight = false
+
+    private var currentPlan: TrainingPlan? {
+        PlanDetailPlanResolver.resolve(
+            capturedPlan: plan,
+            eligiblePlans: store.plans
+        )
+    }
+
+    @MainActor
+    static func duplicateDefinition(
+        for plan: TrainingPlan,
+        in store: AppStore
+    ) throws -> CustomRoutineDefinition {
+        guard let currentPlan = PlanDetailPlanResolver.resolve(
+            capturedPlan: plan,
+            eligiblePlans: store.plans
+        ) else {
+            throw PlanDetailResolutionError.unavailable
+        }
+        return try store.duplicateRoutine(currentPlan)
+    }
+
+    var body: some View {
+        Group {
+            if let currentPlan {
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 21) {
+                        titleBlock(for: currentPlan)
+                        if let firstStep = currentPlan.steps.first,
+                           !firstStep.workRequirements.isEmpty {
+                            boardPreview(for: currentPlan)
+                        }
+                        stepsCard(for: currentPlan)
+                        sourceCard(for: currentPlan)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 18)
+                    .padding(.bottom, 116)
+                }
+            } else {
+                unavailableContent
+            }
+        }
+        .background(Color.hangBackground)
+        .navigationTitle("Plan")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if let currentPlan {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button("Duplicate", action: duplicateRoutine)
+                        if store.isCustom(currentPlan) {
+                            Button("Edit", action: editRoutine)
+                            Button("Delete", role: .destructive) {
+                                isShowingDeleteConfirmation = true
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                    }
+                    .accessibilityIdentifier("customRoutine.actions")
+                }
+            }
+        }
+        .sheet(isPresented: $isShowingEditor) {
+            if let editorDraft {
+                CustomRoutineEditorView(draft: editorDraft, onSave: store.saveCustomRoutine)
+            }
+        }
+        .confirmationDialog(
+            "Delete \(currentPlan?.title ?? plan.title)?",
+            isPresented: $isShowingDeleteConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("Delete", role: .destructive, action: deleteRoutine)
+                .accessibilityIdentifier("customRoutine.deleteConfirm")
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This custom routine will be removed from your library.")
+        }
+        .alert("Routine action failed", isPresented: lifecycleErrorAlertBinding) {
+            Button("OK", role: .cancel) {
+                lifecycleError = nil
+            }
+        } message: {
+            Text(lifecycleError ?? "An unknown error occurred.")
+        }
+    }
+
+    private func titleBlock(for currentPlan: TrainingPlan) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Pill(title: currentPlan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
+                Spacer()
+                Label(currentPlan.durationLabel, systemImage: "timer")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+            }
+            Text(currentPlan.title)
+                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            Text(currentPlan.subtitle)
+                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+                .fixedSize(horizontal: false, vertical: true)
+
+            initialWeightSetupCard
+
+            switch PlanStartAvailabilityPolicy.availability(
+                for: currentPlan,
+                metadata: store.metadata(for: currentPlan)
+            ) {
+            case .available:
+                WorkoutAccessGate(
+                    plan: currentPlan,
+                    initialWeight: initialWeightConfiguration
+                ) {
+                    startRoutineLabel(for: currentPlan)
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("plan.startRoutine")
+            case .unavailable(let requirement):
+                VStack(alignment: .leading, spacing: 8) {
+                    Button(action: {}) {
+                        startRoutineLabel(for: currentPlan)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(true)
+                    Text(requirement)
+                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Routine unavailable. \(requirement)")
+            }
+        }
+    }
+
+    private var initialWeightSetupCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 5) {
+                SectionLabel(title: "Weight tracking")
+                Text("Optional. Skip tracking, connect a supported scale, or enter a weight manually before you start.")
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Picker("Weight tracking", selection: $initialWeightSource) {
+                ForEach(WorkoutInitialWeightSource.allCases) { source in
+                    Text(source.label).tag(source)
+                }
+            }
+            .pickerStyle(.segmented)
+            .accessibilityIdentifier("workout.initialWeight.sourcePicker")
+            .accessibilityLabel("Weight tracking")
+
+            switch initialWeightSource {
+            case .untracked:
+                Text("No weight or scale data will be recorded. You can still run and save the routine.")
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            case .sensor:
+                scaleSetup
+            case .manual:
+                manualWeightSetup
+            }
+        }
+        .hangCard()
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("plan.initialWeight.setup")
+    }
+
+    private var manualWeightSetup: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                TextField(
+                    "Weight",
+                    value: $manualWeight,
+                    format: .number.precision(.fractionLength(1))
+                )
+                .keyboardType(.decimalPad)
+                .accessibilityIdentifier("workout.initialWeight.manualField")
+                .accessibilityLabel("Manual weight")
+
+                Text(motherboardSettingsStore.loadAdjustmentUnit.label)
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+            }
+
+            HStack {
+                Text("Add bodyweight")
+                    .onTapGesture {
+                        manualWeightIncludesBodyweight.toggle()
+                    }
+                    .accessibilityHidden(true)
+                Spacer(minLength: 12)
+                Toggle("Add bodyweight", isOn: $manualWeightIncludesBodyweight)
+                    .labelsHidden()
+                    .fixedSize()
+                    .accessibilityIdentifier("workout.initialWeight.addBodyweight")
+                    .accessibilityLabel("Add bodyweight")
+            }
+
+            Text("Off records a standalone weight. On records this as added load on top of bodyweight.")
+                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var scaleSetup: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Picker("Scale profile", selection: $motherboardSettingsStore.forceSensorProfile) {
+                ForEach(ForceSensorProfile.connectableCases) { profile in
+                    Text(profile.label).tag(profile)
+                }
+            }
+            .disabled(scaleConnectionIsActive)
+            .accessibilityIdentifier("plan.initialWeight.scaleProfile")
+
+            Text(scaleConnectionDetail)
+                .font(.system(size: 13, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("plan.initialWeight.scaleStatus")
+
+            Button(action: toggleScaleConnection) {
+                Label(scaleConnectionActionTitle, systemImage: scaleConnectionActionIcon)
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .tint(Color.hangGreenDark)
+            .accessibilityIdentifier("plan.initialWeight.connect")
+            .accessibilityLabel(scaleConnectionActionTitle)
+        }
+    }
+
+    private var initialWeightConfiguration: WorkoutInitialWeightConfiguration {
+        switch initialWeightSource {
+        case .untracked:
+            .untracked
+        case .sensor:
+            .sensor
+        case .manual:
+            .manual(
+                weightKGF: motherboardSettingsStore.loadAdjustmentUnit.kilogramsForce(
+                    fromDisplayedForce: manualWeight
+                ),
+                includesBodyweight: manualWeightIncludesBodyweight
+            )
+        }
+    }
+
+    private var scaleConnectionIsActive: Bool {
+        switch motherboardBluetoothService.state {
+        case .scanning, .connecting, .calibrating, .streaming:
+            true
+        case .bluetoothUnavailable, .unauthorized, .idle, .disconnected, .failed:
+            false
+        }
+    }
+
+    private var scaleConnectionActionTitle: String {
+        switch motherboardBluetoothService.state {
+        case .scanning, .connecting, .calibrating:
+            "Cancel connection"
+        case .streaming:
+            "Disconnect scale"
+        case .bluetoothUnavailable, .unauthorized, .idle, .disconnected, .failed:
+            "Connect supported scale"
+        }
+    }
+
+    private var scaleConnectionActionIcon: String {
+        scaleConnectionIsActive ? "xmark.circle" : "scalemass"
+    }
+
+    private var scaleConnectionDetail: String {
+        switch motherboardBluetoothService.state {
+        case .bluetoothUnavailable:
+            "Turn on Bluetooth, then check Hang Ten’s Bluetooth access in Settings. Starting the routine remains available."
+        case .unauthorized:
+            "Allow Bluetooth access in Settings to connect a supported scale. Starting the routine remains available."
+        case .idle, .disconnected:
+            "Connect any supported scale to track live load, or start the routine without live scale data."
+        case .scanning:
+            "Looking nearby for a supported scale. You can still start the routine."
+        case .connecting:
+            "Connecting to the supported scale. You can still start the routine."
+        case .calibrating:
+            "Preparing the supported scale for live readings."
+        case .streaming:
+            "Your supported scale is connected and ready."
+        case .failed:
+            "Couldn’t connect to the selected scale. Retry or start the routine without live scale data."
+        }
+    }
+
+    private func toggleScaleConnection() {
+        if scaleConnectionIsActive {
+            motherboardBluetoothService.disconnect()
+        } else {
+            motherboardBluetoothService.connect(profile: motherboardSettingsStore.forceSensorProfile)
+        }
+    }
+
+    private func startRoutineLabel(for plan: TrainingPlan) -> some View {
+        HStack {
+            Image(systemName: "play.fill")
+            Text("Start routine")
+            Spacer()
+            Text(plan.durationLabel)
+                .font(.system(size: 12, weight: .bold, design: .rounded))
+        }
+        .font(.system(size: 16, weight: .bold, design: .rounded))
+        .foregroundStyle(Color.hangInk)
+        .padding(.horizontal, 17)
+        .padding(.vertical, 15)
+        .background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+
+    private func boardPreview(for currentPlan: TrainingPlan) -> some View {
+        let board = store.board(for: currentPlan)
+        let firstStep = currentPlan.steps.first
+        let resolvedHoldIDs = firstStep.map { store.contactIDs(for: $0, on: board) } ?? []
+        // Prefer a pose-backed hold so Dual-style multi-pose boards face the lit contact.
+        let firstStepHold = board.contacts.first { hold in
+            resolvedHoldIDs.contains(hold.id)
+                && board.position(
+                    presentationID: board.defaultPresentation.id,
+                    containingContactID: hold.id
+                ) != nil
+        }
+        let firstStepHoldIDs: Set<String> = {
+            guard let hold = firstStepHold,
+                  let position = board.position(
+                    presentationID: board.defaultPresentation.id,
+                    containingContactID: hold.id
+                  ) else {
+                return resolvedHoldIDs
+            }
+            let visible = resolvedHoldIDs.intersection(Set(position.contactIDs))
+            return visible.isEmpty ? resolvedHoldIDs : visible
+        }()
+        let firstStepHoldCue = WorkoutHoldCuePolicy.resolve(
+            step: firstStep,
+            hold: firstStepHold,
+            on: board
+        )
+
+        return VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                SectionLabel(title: "First hold cue")
+                Text(board.name)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+            }
+            BoardMapView(
+                board: board,
+                highlightedHoldIDs: firstStepHoldIDs,
+                activeHoldID: firstStepHold?.id
+            )
+                .padding(.horizontal, 12)
+            if let firstStepHoldCue, let hold = firstStepHoldCue.hold {
+                GripDiagramView(
+                    hold: hold,
+                    gripType: firstStepHoldCue.gripType,
+                    fingerConfiguration: firstStepHoldCue.fingerConfiguration
+                )
+            }
+        }
+        .hangCard()
+    }
+
+    private func stepsCard(for currentPlan: TrainingPlan) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                SectionLabel(title: "Session flow")
+                Spacer()
+                Text("\(currentPlan.steps.count) cues")
+                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+            }
+            .padding(.bottom, 14)
+
+            ForEach(Array(currentPlan.steps.enumerated()), id: \.element.id) { index, step in
+                StepRow(step: step, isLast: index == currentPlan.steps.count - 1)
+            }
+
+        }
+        .hangCard()
+    }
+
+    @ViewBuilder
+    private func sourceCard(for currentPlan: TrainingPlan) -> some View {
+        if let sourceURL = currentPlan.sourceURL {
+            Link(destination: sourceURL) {
+                sourceCardContent(for: currentPlan, showsExternalLink: true)
+            }
+            .buttonStyle(.plain)
+        } else {
+            customSourceCard
+        }
+    }
+
+    private var customSourceCard: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "person.crop.circle.badge.plus")
+                .font(.system(size: 17, weight: .bold))
+                .foregroundStyle(Color.hangGreenDark)
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Created in Hang Ten")
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text("This is a custom routine stored on this device.")
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .hangCard(padding: 16)
+    }
+
+    private func sourceCardContent(
+        for currentPlan: TrainingPlan,
+        showsExternalLink: Bool
+    ) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "book.pages.fill")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(Color.hangGreenDark)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(PlanSourcePresentationContent.label(for: currentPlan))
+                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                }
+                Spacer(minLength: 0)
+                if showsExternalLink {
+                    Image(systemName: "arrow.up.right")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(Color.hangGreenDark)
+                }
+            }
+            .hangCard(padding: 16)
+    }
+
+    private var unavailableContent: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Image(systemName: "rectangle.portrait.and.arrow.right")
+                .font(.system(size: 28, weight: .bold))
+                .foregroundStyle(Color.hangGreenDark)
+            SectionLabel(title: "Routine unavailable")
+            Text(plan.title)
+                .font(.system(size: 24, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            Text("Choose another board or a different routine.")
+                .font(.system(size: 14, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+                .fixedSize(horizontal: false, vertical: true)
+            Button("Go back", action: dismiss.callAsFunction)
+                .buttonStyle(.borderedProminent)
+                .tint(.hangGreenDark)
+        }
+        .hangCard()
+        .padding(.horizontal, 20)
+        .padding(.top, 18)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .accessibilityIdentifier("plan.unavailable")
+    }
+
+    private var lifecycleErrorAlertBinding: Binding<Bool> {
+        Binding(
+            get: { lifecycleError != nil },
+            set: { isPresented in
+                if !isPresented {
+                    lifecycleError = nil
+                }
+            }
+        )
+    }
+
+    private func duplicateRoutine() {
+        do {
+            editorDraft = CustomRoutineDraft(
+                duplicate: try Self.duplicateDefinition(for: plan, in: store)
+            )
+            isShowingEditor = true
+        } catch {
+            lifecycleError = error.localizedDescription
+        }
+    }
+
+    private func editRoutine() {
+        guard currentPlan != nil else {
+            lifecycleError = PlanDetailResolutionError.unavailable.localizedDescription
+            return
+        }
+        guard let definition = store.customDefinition(for: plan.id) else {
+            lifecycleError = "The custom routine could not be found."
+            return
+        }
+        editorDraft = CustomRoutineDraft(editing: definition)
+        isShowingEditor = true
+    }
+
+    private func deleteRoutine() {
+        guard currentPlan != nil else {
+            lifecycleError = PlanDetailResolutionError.unavailable.localizedDescription
+            return
+        }
+        do {
+            try store.deleteCustomRoutine(id: plan.id)
+            dismiss()
+        } catch {
+            lifecycleError = error.localizedDescription
+        }
+    }
+}
+
+private struct StepRow: View {
+    let step: WorkoutStep
+    let isLast: Bool
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(spacing: 0) {
+                ZStack {
+                    Circle()
+                        .fill(step.phase.tint.opacity(0.17))
+                        .frame(width: 31, height: 31)
+                    Text("\(step.number)")
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(step.phase.textTint)
+                }
+                if !isLast {
+                    Rectangle()
+                        .fill(Color.hangLine)
+                        .frame(width: 1, height: 44)
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(step.title)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                    Spacer()
+                    Text(step.durationLabel)
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                }
+                ForEach(
+                    Array(
+                        InstructionAccessoryCardContent.rows(
+                            instruction: step.instruction,
+                            accessory: step.accessory
+                        ).enumerated()
+                    ),
+                    id: \.offset
+                ) { _, row in
+                    switch row.kind {
+                    case .instruction:
+                        Text(row.text)
+                            .font(.system(size: 13, weight: .medium, design: .rounded))
+                            .foregroundStyle(Color.hangMuted)
+                            .fixedSize(horizontal: false, vertical: true)
+                    case .accessory:
+                        Text(row.text)
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .foregroundStyle(step.phase.textTint)
+                    }
+                }
+            }
+            .padding(.bottom, isLast ? 0 : 12)
+        }
+    }
+}
+
+struct WorkoutAudioMoment: Hashable {
+	let key: String
+	let phrase: String
+	let countdownSchedule: CountdownAudioSchedule?
+
+	init(
+		key: String,
+		phrase: String,
+		countdownSchedule: CountdownAudioSchedule? = nil
+	) {
+		self.key = key
+		self.phrase = phrase
+		self.countdownSchedule = countdownSchedule
+	}
+}
+
+enum WorkoutAudioCueAction: Equatable {
+	case none
+	case speak(WorkoutAudioMoment)
+	case startCountdown(schedule: CountdownAudioSchedule, startUptime: TimeInterval)
+}
+
+@MainActor
+enum WorkoutAudioCueRouter {
+	@discardableResult
+	static func route(
+		_ action: WorkoutAudioCueAction,
+		to audioCoach: WorkoutAudioCoach
+	) -> Bool {
+		switch action {
+		case .none:
+			return false
+		case .speak(let moment):
+			audioCoach.speak(moment.phrase)
+			return true
+		case .startCountdown(let schedule, let startUptime):
+			return audioCoach.startCountdown(schedule, startUptime: startUptime)
+		}
+	}
+}
+
+enum WorkoutCountdownKind: Equatable {
+    case initial
+    case skip
+}
+
+struct MotherboardWorkoutMeasurementCollector {
+    static let maximumMeasurementCount = 20_000
+    private(set) var measurements: [MotherboardMeasurement] = []
+    private(set) var didTruncate = false
+
+    mutating func capture(
+        _ measurement: MotherboardMeasurement,
+        startedAt: Date?,
+        countdownRemaining: Int,
+        workoutElapsed: TimeInterval,
+        planDuration: TimeInterval
+    ) {
+        guard let startedAt,
+              WorkoutSessionPolicy.isMeasurementEligible(
+                routineStartedAt: startedAt,
+                measurementTimestamp: measurement.timestamp
+              ),
+              countdownRemaining == 0,
+              workoutElapsed < planDuration else { return }
+
+        if measurements.count >= Self.maximumMeasurementCount {
+            didTruncate = true
+            return
+        }
+
+        measurements.append(measurement)
+    }
+
+    mutating func reset() {
+        measurements = []
+        didTruncate = false
+    }
+}
+
+enum WorkoutAudioCuePolicy {
+	static func scheduledMoment(
+		stepID: String,
+		segmentName: String,
+		initialCountdown: Int,
+		intervalSecondsRemaining: Int,
+		intervalDuration: TimeInterval? = nil,
+		followingShortSegmentDurations: [TimeInterval] = [],
+		isComplete: Bool,
+		countdownKind: WorkoutCountdownKind? = nil
+	) -> WorkoutAudioMoment? {
+		if initialCountdown == 0,
+		   let intervalDuration,
+		   intervalDuration <= 3 {
+			return nil
+		}
+		if initialCountdown == 0, intervalSecondsRemaining == 4, !isComplete {
+			let schedule = CountdownAudioSchedule(remainingFrom: "3")
+				.appendingShortIntervals(
+					followingShortSegmentDurations,
+					startingAt: 3
+				)
+			return WorkoutAudioMoment(
+				key: "\(stepID)-\(segmentName)-3",
+				phrase: "3",
+				countdownSchedule: schedule
+			)
+		}
+		return moment(
+			stepID: stepID,
+			segmentName: segmentName,
+			initialCountdown: initialCountdown,
+			intervalSecondsRemaining: intervalSecondsRemaining,
+			isComplete: isComplete,
+			countdownKind: countdownKind
+		)
+	}
+
+	static func moment(
+		stepID: String,
+		segmentName: String,
+		initialCountdown: Int,
+		intervalSecondsRemaining: Int,
+		isComplete: Bool,
+		countdownKind: WorkoutCountdownKind? = nil
+	) -> WorkoutAudioMoment? {
+		guard !isComplete else { return nil }
+
+		if (1...3).contains(initialCountdown) {
+			return WorkoutAudioMoment(
+				key: "\(countdownKind == .skip ? "skip" : "initial")-\(initialCountdown)",
+				phrase: "\(initialCountdown)"
+			)
+		}
+
+		guard (1...3).contains(intervalSecondsRemaining) else {
+			return nil
+		}
+
+		return WorkoutAudioMoment(
+			key: "\(stepID)-\(segmentName)-\(intervalSecondsRemaining)",
+			phrase: "\(intervalSecondsRemaining)"
+		)
+	}
+
+	static func action(
+		previous: WorkoutAudioMoment?,
+		current moment: WorkoutAudioMoment?,
+		countdownStartUptime: TimeInterval?
+	) -> WorkoutAudioCueAction {
+		guard let moment else { return .none }
+		guard let sequenceKey = numericSequenceKey(for: moment) else {
+			return .speak(moment)
+		}
+		if let previous,
+		   numericSequenceKey(for: previous) == sequenceKey {
+			return .none
+		}
+		guard let countdownStartUptime else { return .none }
+		return .startCountdown(
+			schedule: moment.countdownSchedule
+				?? CountdownAudioSchedule(remainingFrom: moment.phrase),
+			startUptime: countdownStartUptime
+		)
+	}
+
+	private static func numericSequenceKey(for moment: WorkoutAudioMoment) -> String? {
+		guard ["3", "2", "1"].contains(moment.phrase) else { return nil }
+		let suffix = "-\(moment.phrase)"
+		guard moment.key.hasSuffix(suffix) else { return nil }
+		return String(moment.key.dropLast(suffix.count))
+	}
+}
+
+enum WorkoutCountdownIntervalPolicy {
+	static func duration(
+		for step: WorkoutStep,
+		isTimedResting: Bool
+	) -> TimeInterval {
+		if step.phase == .rest {
+			return step.duration
+		}
+		return isTimedResting
+			? step.duration - step.activeDuration
+			: step.activeDuration
+	}
+
+	static func shortDurations(
+		in steps: [WorkoutStep],
+		startingAt startElapsed: TimeInterval
+	) -> [TimeInterval] {
+		var cursor: TimeInterval = 0
+		var result: [TimeInterval] = []
+		var reachedStart = false
+
+		for step in steps {
+			let durations: [TimeInterval]
+			if step.phase == .rest || !step.hasRestInterval {
+				durations = [step.duration]
+			} else {
+				durations = [step.activeDuration, step.duration - step.activeDuration]
+			}
+
+			for duration in durations where duration > 0 {
+				if !reachedStart {
+					reachedStart = abs(cursor - startElapsed) < 0.001
+				}
+				if reachedStart {
+					guard duration <= 3 else { return result }
+					result.append(duration)
+				}
+				cursor += duration
+			}
+		}
+
+		return result
+	}
+}
+
+enum WorkoutSessionPolicy {
+    static let initialCountdownDuration: TimeInterval = 3
+    static let skipCountdownDuration: TimeInterval = 3
+
+    static func countdownDuration(for kind: WorkoutCountdownKind) -> TimeInterval {
+        kind == .initial ? initialCountdownDuration : skipCountdownDuration
+    }
+
+    static func shouldAutoStart(
+        didAutoStart: Bool,
+        isRunning: Bool,
+        routineStartedAt: Date?
+    ) -> Bool {
+        !didAutoStart
+            && !isRunning
+            && isFirstStart(routineStartedAt: routineStartedAt)
+    }
+
+    static func isFirstStart(routineStartedAt: Date?) -> Bool {
+        routineStartedAt == nil
+    }
+
+    static func isScaleTrackingReady(
+        source: WorkoutInitialWeightSource,
+        didCompleteInitialPreparation: Bool
+    ) -> Bool {
+        source == .sensor && didCompleteInitialPreparation
+    }
+
+    static func recordedForceSensorProfile(
+        source: WorkoutInitialWeightSource,
+        connectedProfile: ForceSensorProfile?,
+        configuredProfile: ForceSensorProfile
+    ) -> ForceSensorProfile {
+        guard source == .sensor else { return .automatic }
+        return connectedProfile ?? configuredProfile
+    }
+
+    static func shouldDeferCountdownStart(
+        isFirstStart _: Bool,
+        preparationState: CountdownAudioPreparationState
+    ) -> Bool {
+        preparationState == .preparing
+    }
+
+    enum PendingCountdownResolution: Equatable {
+        case none
+        case beginVisibly
+        case requestAudioCountdown
+    }
+
+    static func shouldPrepareCountdownAudio(
+        preparationState: CountdownAudioPreparationState
+    ) -> Bool {
+        preparationState == .idle || preparationState == .failed
+    }
+
+    static func consumePendingCountdown<Countdown>(
+        _ pendingCountdown: inout Countdown?,
+        afterPreparationState preparationState: CountdownAudioPreparationState
+    ) -> PendingCountdownResolution {
+        guard preparationState != .preparing, pendingCountdown != nil else {
+            return .none
+        }
+
+        pendingCountdown = nil
+        return preparationState == .failed ? .beginVisibly : .requestAudioCountdown
+    }
+
+    static func countdownAudioArmLead(environment: [String: String]) -> TimeInterval {
+        #if DEBUG
+        if environment["HANGTEN_REVIEW_COUNTDOWN_CAPTURE"] == "1" {
+            return 5
+        }
+        #endif
+        return 0.1
+    }
+
+    static func startDate(for kind: WorkoutCountdownKind, now: Date) -> Date {
+        now.addingTimeInterval(countdownDuration(for: kind))
+    }
+
+    static func startUptime(for kind: WorkoutCountdownKind, at uptime: TimeInterval) -> TimeInterval {
+        uptime + countdownDuration(for: kind)
+    }
+
+    static func countdownRemaining(startUptime: TimeInterval?, nowUptime: TimeInterval) -> Int {
+        guard let startUptime, startUptime > nowUptime else { return 0 }
+        return max(1, Int(ceil(startUptime - nowUptime)))
+    }
+
+    static func runStartDate(routineStartedAt: Date?, now: Date) -> Date {
+        isFirstStart(routineStartedAt: routineStartedAt)
+            ? startDate(for: .initial, now: now)
+            : now
+    }
+
+    static func completedWorkoutInterval(
+        sessionStartedAt: Date,
+        planDuration: TimeInterval,
+        elapsed: TimeInterval
+    ) -> DateInterval {
+        let activeElapsed = min(planDuration, max(0, elapsed))
+        return DateInterval(
+            start: sessionStartedAt,
+            end: sessionStartedAt.addingTimeInterval(activeElapsed)
+        )
+    }
+
+    static func completedWorkoutInterval(
+        sessionStartedAt: Date,
+        recordedAt: Date
+    ) -> DateInterval {
+        DateInterval(start: sessionStartedAt, end: max(sessionStartedAt, recordedAt))
+    }
+
+    static func isMeasurementEligible(
+        routineStartedAt: Date?,
+        measurementTimestamp: Date
+    ) -> Bool {
+        guard let routineStartedAt else { return false }
+        return routineStartedAt <= measurementTimestamp
+    }
+}
+
+struct WorkoutSessionState: Equatable {
+    var activeStartUptime: TimeInterval?
+    var countdownKind: WorkoutCountdownKind?
+    var pausedElapsed: TimeInterval
+    var routineStartedAt: Date?
+
+    init(
+        activeStartUptime: TimeInterval? = nil,
+        countdownKind: WorkoutCountdownKind? = nil,
+        pausedElapsed: TimeInterval = 0,
+        routineStartedAt: Date? = nil
+    ) {
+        self.activeStartUptime = activeStartUptime
+        self.countdownKind = countdownKind
+        self.pausedElapsed = pausedElapsed
+        self.routineStartedAt = routineStartedAt
+    }
+
+    func currentElapsed(planDuration: TimeInterval, at uptime: TimeInterval) -> TimeInterval {
+        let activeElapsed = activeStartUptime.map { max(0, uptime - $0) } ?? 0
+        return min(planDuration, pausedElapsed + max(0, activeElapsed))
+    }
+
+    func countdownRemaining(at uptime: TimeInterval) -> Int {
+        pendingCountdownRemaining(at: uptime)
+    }
+
+    private func pendingCountdownRemaining(at uptime: TimeInterval) -> Int {
+        guard countdownKind != nil else { return 0 }
+        return WorkoutSessionPolicy.countdownRemaining(
+            startUptime: activeStartUptime,
+            nowUptime: uptime
+        )
+    }
+
+    mutating func transitionExpiredCountdown(at uptime: TimeInterval) {
+        guard countdownKind != nil, pendingCountdownRemaining(at: uptime) == 0 else { return }
+        countdownKind = nil
+    }
+
+    func canNavigate(planDuration: TimeInterval, at uptime: TimeInterval) -> Bool {
+        routineStartedAt != nil
+            && pendingCountdownRemaining(at: uptime) == 0
+            && currentElapsed(planDuration: planDuration, at: uptime) < planDuration
+    }
+
+    mutating func toggleRunning(uptime: TimeInterval, now: Date? = nil) {
+        if let activeStartUptime {
+            if activeStartUptime > uptime {
+                cancelCountdown(at: uptime)
+                return
+            }
+            pausedElapsed += max(0, uptime - activeStartUptime)
+            self.activeStartUptime = nil
+            countdownKind = nil
+        } else {
+            let isFirstStart = WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt)
+            if isFirstStart {
+                guard let now else { return }
+                routineStartedAt = WorkoutSessionPolicy.startDate(for: .initial, now: now)
+                activeStartUptime = WorkoutSessionPolicy.startUptime(for: .initial, at: uptime)
+                countdownKind = .initial
+            } else {
+                activeStartUptime = uptime
+                countdownKind = nil
+            }
+        }
+    }
+
+    mutating func cancelCountdown(at uptime: TimeInterval) {
+        guard countdownKind != nil, countdownRemaining(at: uptime) > 0 else { return }
+
+        switch countdownKind {
+        case .skip:
+            activeStartUptime = nil
+            countdownKind = nil
+        case .initial, nil:
+            activeStartUptime = nil
+            routineStartedAt = nil
+            countdownKind = nil
+        }
+    }
+
+    mutating func pauseForInterruption(at uptime: TimeInterval) {
+        guard let activeStartUptime else {
+            return
+        }
+        if activeStartUptime > uptime {
+            cancelCountdown(at: uptime)
+            return
+        }
+
+        pausedElapsed += max(0, uptime - activeStartUptime)
+        self.activeStartUptime = nil
+        countdownKind = nil
+    }
+
+    mutating func seek(to targetElapsed: TimeInterval, planDuration: TimeInterval, at uptime: TimeInterval) {
+        let target = min(max(0, targetElapsed), planDuration)
+        let wasActive = activeStartUptime != nil
+        countdownKind = nil
+        pausedElapsed = target
+        if wasActive {
+            activeStartUptime = uptime
+        }
+    }
+
+    mutating func skipCurrentStep(timeline: WorkoutTimeline, planDuration: TimeInterval, at uptime: TimeInterval) -> Bool {
+        guard canNavigate(planDuration: planDuration, at: uptime) else { return false }
+
+        let elapsed = currentElapsed(planDuration: planDuration, at: uptime)
+        guard let target = timeline.skipTarget(from: elapsed) else { return false }
+
+        if target >= planDuration {
+            seek(to: target, planDuration: planDuration, at: uptime)
+        } else if timeline.step(at: target)?.phase == .rest {
+            seek(to: target, planDuration: planDuration, at: uptime)
+        } else {
+            startSkipCountdown(to: target, at: uptime)
+        }
+        return true
+    }
+
+    mutating func startSkipCountdown(to targetElapsed: TimeInterval, at uptime: TimeInterval) {
+        pausedElapsed = targetElapsed
+        activeStartUptime = WorkoutSessionPolicy.startUptime(for: .skip, at: uptime)
+        countdownKind = .skip
+    }
+}
+
+enum WorkoutStopwatchLifecycle {
+    static func finalizeStopwatches(
+        for stepID: String,
+        at monotonicTime: TimeInterval,
+        in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
+    ) {
+        for key in stopwatches.keys where key.stepID == stepID {
+            finalizeStopwatch(for: key, at: monotonicTime, in: &stopwatches)
+        }
+    }
+
+    static func finalizeStopwatch(
+        for key: WorkoutActivitySegmentKey,
+        at monotonicTime: TimeInterval,
+        in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
+    ) {
+        guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
+        stopwatch.stop(at: monotonicTime)
+        stopwatches[key] = stopwatch
+    }
+
+    static func finalizeAndSnapshotStopwatches(
+        at monotonicTime: TimeInterval,
+        in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
+    ) -> [WorkoutActivitySegmentKey: TimeInterval] {
+        for key in stopwatches.keys {
+            finalizeStopwatch(for: key, at: monotonicTime, in: &stopwatches)
+        }
+
+        return stopwatches.reduce(into: [WorkoutActivitySegmentKey: TimeInterval]()) { result, entry in
+            guard entry.value.hasStarted, let elapsed = entry.value.elapsed(at: monotonicTime) else { return }
+            result[entry.key] = elapsed
+        }
+    }
+}
+
+struct WorkoutView: View {
+    private enum PendingCountdownStart: Equatable {
+        case initial
+        case skip(targetElapsed: TimeInterval)
+    }
+
+    private enum LandscapeLayout {
+        static let sideCueSlotWidth: CGFloat = 142
+        static let boardMaxHeight: CGFloat = 132
+        static let normalCueRowHeight: CGFloat = 149
+        static let previewLabelHeight: CGFloat = 13
+    }
+
+    @EnvironmentObject private var store: AppStore
+	@EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
+	@EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
+	@EnvironmentObject private var audioCoach: WorkoutAudioCoach
+	@Environment(\.dismiss) private var dismiss
+	@Environment(\.scenePhase) private var scenePhase
+    @AppStorage("workoutAudioCuesEnabled") private var audioCuesEnabled = true
+
+    let plan: TrainingPlan
+    let initialWeight: WorkoutInitialWeightConfiguration
+
+    init(
+        plan: TrainingPlan,
+        initialWeight: WorkoutInitialWeightConfiguration = .untracked
+    ) {
+        self.plan = plan
+        self.initialWeight = initialWeight
+    }
+
+    @State private var sessionState = WorkoutSessionState()
+    @State private var didAutoStart = false
+    @State private var showEndConfirmation = false
+    @State private var showsStepPicker = false
+    @State private var showsReportProblem = false
+    @State private var didComplete = false
+    @State private var didApplyReviewStep = false
+	    @State private var recorder = MotherboardWorkoutRecorder()
+	@State private var completedSession: WorkoutSessionRecord?
+	@State private var summarySession: WorkoutSessionRecord?
+    @State private var didSaveSession = false
+    @State private var didInterruptRecorder = false
+	@State private var showsWorkoutPreparation = false
+	@State private var didCompleteWorkoutPreparation = false
+	    @State private var workoutPreparationHandoff = MotherboardWorkoutPreparationHandoff()
+	    @State private var bodyweightKGF: Double?
+	    @State private var motherboardMeasurementCollector = MotherboardWorkoutMeasurementCollector()
+	    @State private var stopwatches: [WorkoutActivitySegmentKey: WorkoutStopwatch] = [:]
+	    @State private var completedStopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:]
+	    @State private var liftCompletion = WorkoutLiftCompletion()
+	    @State private var pendingCountdownStart: PendingCountdownStart?
+	    @State private var countdownArmTask: Task<Void, Never>?
+	    @State private var handPreference: WorkoutSessionHandPreference?
+	    /// Preference-expanded steps; source of truth for timeline once set.
+	    @State private var sessionSteps: [WorkoutStep]?
+	    @State private var bothHandsResolvable = true
+
+    private var board: BoardRevision {
+        store.board(for: plan)
+    }
+
+    private var boardIsOneHanded: Bool {
+        board.isOneHanded
+    }
+
+    private var planNeedsHandChoice: Bool {
+        WorkoutSessionHandResolver.needsHandChoice(plan: plan, board: board)
+    }
+
+	/// Session-expanded steps when a preference is chosen; otherwise authored plan steps.
+	private var activeSteps: [WorkoutStep] {
+		sessionSteps ?? plan.steps
+	}
+
+	private var sessionDuration: TimeInterval {
+		activeSteps.reduce(0) { $0 + $1.duration }
+	}
+
+	private var timeline: WorkoutTimeline {
+		WorkoutTimeline(steps: activeSteps)
+	}
+
+    var body: some View {
+		GeometryReader { geometry in
+			TimelineView(.periodic(from: .now, by: 0.25)) { context in
+				let monotonicTime = WorkoutClock.monotonicTime
+				let elapsed = currentElapsed(at: monotonicTime)
+				let step = step(at: elapsed)
+				// Session steps are already preference-materialized / alternate-expanded.
+				let presentedStep = step
+				let stepElapsed = elapsedInStep(at: elapsed)
+				let countdown = countdownRemaining(at: monotonicTime)
+				let canNavigate = canNavigate(at: monotonicTime)
+				let isComplete = elapsed >= sessionDuration
+				let isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)
+				let boardCue = timeline.boardCue(
+					currentStep: step,
+					stepElapsed: stepElapsed,
+					countdown: countdown,
+					isComplete: isComplete,
+					isSkipCountdown: sessionState.countdownKind == .skip
+				)
+				let isResting = boardCue.isResting
+				let highlightedStep = boardCue.step
+				let resolvedHighlightedStep = highlightedStep
+				let previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
+				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
+				let highlightMode = boardCue.mode
+				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
+				let activeHold = resolvedHighlightedStep.flatMap { WorkoutHighlightResolver.contacts(for: $0, on: board).first }
+				let holdCue = WorkoutHoldCuePolicy.resolve(step: resolvedHighlightedStep, hold: activeHold, on: board)
+				let isLandscape = geometry.size.width > geometry.size.height
+				let audioMoment = audioMoment(
+					step: step,
+					stepElapsed: stepElapsed,
+					elapsed: elapsed,
+					countdown: countdown,
+					isTimedResting: isTimedResting,
+					isComplete: isComplete
+				)
+				let audioCountdownStartUptime = audioCountdownStartUptime(
+					step: step,
+					elapsed: elapsed,
+					countdown: countdown,
+					isTimedResting: isTimedResting,
+					moment: audioMoment
+				)
+
+				Group {
+					if isLandscape {
+						landscapeSession(
+							step: presentedStep,
+							stepElapsed: stepElapsed,
+							elapsed: elapsed,
+							monotonicTime: monotonicTime,
+							countdown: countdown,
+							canNavigate: canNavigate,
+							isResting: isResting,
+							isComplete: isComplete,
+							highlightedHoldIDs: highlightedHoldIDs,
+							highlightMode: highlightMode,
+							showsHoldPreview: showsHoldPreview,
+							holdCue: holdCue,
+							cueStep: resolvedHighlightedStep,
+							isSkipCountdown: sessionState.countdownKind == .skip
+						)
+					} else {
+						portraitSession(
+							step: presentedStep,
+							stepElapsed: stepElapsed,
+							elapsed: elapsed,
+							monotonicTime: monotonicTime,
+							countdown: countdown,
+							canNavigate: canNavigate,
+							isResting: isResting,
+							isComplete: isComplete,
+							highlightedHoldIDs: highlightedHoldIDs,
+							highlightMode: highlightMode,
+							showsHoldPreview: showsHoldPreview,
+							holdCue: holdCue,
+							cueStep: resolvedHighlightedStep,
+							isSkipCountdown: sessionState.countdownKind == .skip
+						)
+					}
+				}
+                #if DEBUG
+                .environment(\.workoutDiagnosticIsPrestart, sessionState.routineStartedAt == nil)
+                #endif
+				.frame(maxWidth: .infinity, maxHeight: .infinity)
+				.background(Color.hangBackground)
+				.onChange(of: isComplete) { _, routineComplete in
+					guard routineComplete else { return }
+					finalizeRoutine()
+				}
+				.onChange(of: step.id) { _, _ in
+					recorder.pause(at: elapsed)
+				}
+				.onChange(of: isResting) { _, resting in
+					guard resting else { return }
+					recorder.pause(at: elapsed)
+				}
+				.onChange(of: audioMoment, initial: true) { previousMoment, moment in
+					guard audioCuesEnabled else {
+						audioCoach.stop()
+						return
+					}
+
+				_ = WorkoutAudioCueRouter.route(
+					WorkoutAudioCuePolicy.action(
+						previous: previousMoment,
+						current: moment,
+						countdownStartUptime: audioCountdownStartUptime
+					),
+					to: audioCoach
+				)
+				}
+				.onChange(of: countdown, initial: true) { _, countdown in
+                    #if DEBUG
+                    if BoardHighlightDiagnostic.recordsHandLifetimes {
+                        BoardHighlightDiagnostic.shared.harnessEvent(
+                            "workout-prestart-hand-state",
+                            state: "flag=\(WorkoutPrestartHandDiagnostic.isEnabled);routineStartedIsNil=\(sessionState.routineStartedAt == nil);suppressed=\(WorkoutPrestartHandDiagnostic.isEnabled && sessionState.routineStartedAt == nil);countdown=\(countdown)",
+                            viewport: .zero // State evidence, not a layout measurement.
+                        )
+                    }
+                    #endif
+					guard countdown == 0 else { return }
+					sessionState.transitionExpiredCountdown(at: monotonicTime)
+				}
+				.onChange(of: isComplete, initial: true) { _, complete in
+					guard complete else { return }
+					finalizeAllStopwatches(at: monotonicTime)
+				}
+				.onChange(of: step.id) { previousStepID, _ in
+					finalizeStopwatches(for: previousStepID, at: monotonicTime)
+				}
+				.onChange(of: isResting) { wasResting, resting in
+					guard resting, !wasResting else { return }
+					finalizeCurrentStopwatch(at: monotonicTime)
+				}
+				.sheet(isPresented: $showsStepPicker) {
+					WorkoutStepPickerView(
+						steps: activeSteps,
+						currentStepID: step.id
+					) { selectedStep in
+						jump(to: selectedStep)
+					}
+				}
+			}
+		}
+        .navigationTitle("Session")
+        .navigationBarTitleDisplayMode(.inline)
+		.toolbar(.hidden, for: .tabBar)
+        .toolbar {
+			ToolbarItemGroup(placement: .topBarTrailing) {
+				Button {
+					audioCuesEnabled.toggle()
+					if !audioCuesEnabled {
+						audioCoach.stop()
+					}
+				} label: {
+					Image(systemName: audioCuesEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill")
+				}
+				.accessibilityLabel(audioCuesEnabled ? "Turn off spoken cues" : "Turn on spoken cues")
+
+				Button {
+					showsReportProblem = true
+				} label: {
+					Image(systemName: "exclamationmark.bubble")
+				}
+				.accessibilityLabel("Report a problem")
+				.accessibilityIdentifier("workout.reportProblem")
+
+				Button("End") {
+					showEndConfirmation = true
+				}
+				.font(.system(size: 13, weight: .bold, design: .rounded))
+				.foregroundStyle(Color.hangGreenDark)
+			}
+        }
+        .sheet(isPresented: $showsReportProblem) {
+            ReportProblemView(
+                source: .workout,
+                boardID: board.id,
+                planID: plan.id,
+                stepID: step(at: currentElapsed(at: WorkoutClock.monotonicTime)).id
+            )
+            .environmentObject(store)
+        }
+        .confirmationDialog("End this session?", isPresented: $showEndConfirmation, titleVisibility: .visible) {
+            Button("End session", role: .destructive) {
+                endSession()
+            }
+            Button("Keep training", role: .cancel) {}
+        } message: {
+            Text("This will stop the timer without logging a workout to Apple Health.")
+        }
+		.sheet(item: $summarySession) { session in
+			WorkoutSummaryView(
+				session: session,
+				unit: motherboardSettingsStore.forceUnit,
+				loadAdjustmentUnit: motherboardSettingsStore.loadAdjustmentUnit,
+				onSave: { save(session) },
+				onDiscard: { discard(session) }
+			)
+		}
+		.sheet(isPresented: $showsWorkoutPreparation) {
+			MotherboardWorkoutPreparationView(
+				service: motherboardBluetoothService,
+				unit: motherboardSettingsStore.forceUnit,
+				bodyweightCaptureDuration: motherboardSettingsStore.bodyweightCaptureDuration,
+				onComplete: { baseline in
+					guard workoutPreparationHandoff.accept() else { return }
+					bodyweightKGF = baseline
+					didCompleteWorkoutPreparation = true
+					showsWorkoutPreparation = false
+					toggleRunning()
+				},
+				onSkip: {
+					guard workoutPreparationHandoff.accept() else { return }
+					bodyweightKGF = nil
+					didCompleteWorkoutPreparation = true
+					showsWorkoutPreparation = false
+					toggleRunning()
+				}
+			)
+		}
+		.onAppear {
+			UIApplication.shared.isIdleTimerDisabled = true
+			configureRecorder()
+			if planNeedsHandChoice {
+				bothHandsResolvable = WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board)
+				if handPreference == nil {
+					applyHandPreference(
+						WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board)
+					)
+				}
+			}
+			#if DEBUG
+            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS"] == "1" {
+                BoardHighlightDiagnostic.shared.harnessEvent(
+                    "workout-probe-appear-before-autostart",
+                    state: "plan=\(plan.id);board=\(board.id);pausedElapsed=\(sessionState.pausedElapsed);activeStartIsNil=\(sessionState.activeStartUptime == nil);routineStartedIsNil=\(sessionState.routineStartedAt == nil);prestartHandFlag=\(WorkoutPrestartHandDiagnostic.isEnabled);prestartHandsSuppressed=\(WorkoutPrestartHandDiagnostic.isEnabled && sessionState.routineStartedAt == nil)",
+                    viewport: .zero // Not a layout measurement; actual leaf comes from scene snapshots.
+                )
+            }
+			if !didApplyReviewStep {
+				didApplyReviewStep = true
+				if let rawStep = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STEP"],
+				   let requestedStep = Int(rawStep),
+				   requestedStep > 1 {
+						sessionState.pausedElapsed = activeSteps
+							.prefix(min(requestedStep - 1, activeSteps.count))
+							.reduce(0) { $0 + $1.duration }
+				}
+			}
+
+				if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_AUTOSTART"] == "1",
+				   sessionState.activeStartUptime == nil {
+					didCompleteWorkoutPreparation = true
+					toggleRunning()
+				}
+			#endif
+			if !planNeedsHandChoice,
+			   WorkoutSessionPolicy.shouldAutoStart(
+				didAutoStart: didAutoStart,
+				isRunning: sessionState.activeStartUptime != nil,
+				routineStartedAt: sessionState.routineStartedAt
+			) {
+				didAutoStart = true
+				toggleRunning()
+			}
+			initializeStopwatches()
+		}
+		.onChange(of: scenePhase) { _, phase in
+			guard phase != .active else { return }
+			pauseForInterruption()
+		}
+		.onChange(of: audioCoach.countdownPreparationState) { _, state in
+			guard let pendingCountdownStart else { return }
+			switch WorkoutSessionPolicy.consumePendingCountdown(
+				&self.pendingCountdownStart,
+				afterPreparationState: state
+			) {
+			case .none:
+				return
+			case .beginVisibly:
+				beginVisibleCountdown(pendingCountdownStart, at: WorkoutClock.monotonicTime)
+			case .requestAudioCountdown:
+				requestCountdownStart(pendingCountdownStart)
+			}
+		}
+		.onReceive(motherboardBluetoothService.$latestMeasurement.compactMap { $0 }) { measurement in
+			let monotonicTime = WorkoutClock.monotonicTime
+			guard sessionState.activeStartUptime != nil, isScaleTrackingReady else { return }
+			consume(measurement, at: monotonicTime)
+			capture(measurement, at: monotonicTime)
+		}
+		.onChange(of: motherboardBluetoothService.state) { previousState, state in
+			guard isScaleTrackingReady,
+			      previousState == .streaming,
+			      state != .streaming else { return }
+			interruptRecorderForSensorLoss()
+		}
+		.onDisappear {
+			countdownArmTask?.cancel()
+			countdownArmTask = nil
+			pendingCountdownStart = nil
+			interruptRecorderIfNeeded()
+			finalizeAllStopwatches(at: WorkoutClock.monotonicTime)
+			UIApplication.shared.isIdleTimerDisabled = false
+			audioCoach.stop()
+		}
+    }
+
+	private func portraitSession(
+		step: WorkoutStep,
+		stepElapsed: TimeInterval,
+		elapsed: TimeInterval,
+		monotonicTime: TimeInterval,
+		countdown: Int,
+		canNavigate: Bool,
+		isResting: Bool,
+		isComplete: Bool,
+		highlightedHoldIDs: Set<String>,
+		highlightMode: BoardHighlightMode,
+		showsHoldPreview: Bool,
+		holdCue: WorkoutHoldCue?,
+		cueStep: WorkoutStep?,
+		isSkipCountdown: Bool
+	) -> some View {
+		ScrollView(showsIndicators: false) {
+			VStack(alignment: .leading, spacing: 19) {
+				sessionHeader(
+					step: step,
+					stepElapsed: stepElapsed,
+					elapsed: elapsed,
+					countdown: countdown,
+					canNavigate: canNavigate,
+					isResting: isResting,
+					isComplete: isComplete
+				)
+				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
+				if showsHoldPreview {
+					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+				}
+				BoardMapView(
+					board: board,
+					highlightedHoldIDs: highlightedHoldIDs,
+					highlightMode: highlightMode,
+					selectedPresentationID: WorkoutHighlightResolver.presentationID(for: cueStep, on: board),
+					activeHoldID: holdCue?.hold?.id
+				)
+					.padding(.horizontal, 2)
+				if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
+					holdCue: holdCue,
+					countdown: countdown,
+					isComplete: isComplete,
+					isSkipCountdown: isSkipCountdown
+				) {
+					if let hold = holdCue.hold {
+						GripDiagramView(
+							hold: hold,
+							gripType: holdCue.gripType,
+							fingerConfiguration: holdCue.fingerConfiguration,
+							resolvedHandSide: resolvedHandSide(for: step)
+						)
+					} else {
+						portraitHandCueCards(holdCue: holdCue, cueStep: cueStep)
+					}
+				}
+				if let cueCardRows = WorkoutPresentationContent.cueCardRows(
+					step: step,
+					countdown: countdown,
+					isComplete: isComplete
+				) {
+					cueCard(
+						rows: cueCardRows,
+						step: step,
+						countdown: countdown,
+						isResting: isResting
+					)
+				}
+				if isScaleTrackingReady, motherboardBluetoothService.state.showsWorkoutMeter {
+					meter(step: step)
+				}
+			}
+			.padding(.horizontal, 20)
+			.padding(.top, 16)
+			.padding(.bottom, 34)
+		}
+	}
+
+	@ViewBuilder
+	private func portraitHandCueCards(holdCue: WorkoutHoldCue, cueStep: WorkoutStep?) -> some View {
+		let showsLeft = WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: cueStep)
+		let showsRight = WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: cueStep)
+		if showsLeft && showsRight {
+			GripHandPairCueCards(posture: holdCue.gripType,
+								fingerConfiguration: holdCue.fingerConfiguration)
+		} else {
+			HStack(spacing: 12) {
+				if showsLeft {
+					GripHandCueCard(posture: holdCue.gripType,
+									fingerConfiguration: holdCue.fingerConfiguration, side: .left)
+				}
+				if showsRight {
+					GripHandCueCard(posture: holdCue.gripType,
+									fingerConfiguration: holdCue.fingerConfiguration, side: .right)
+				}
+			}
+		}
+	}
+
+	private func landscapeSession(
+		step: WorkoutStep,
+		stepElapsed: TimeInterval,
+		elapsed: TimeInterval,
+		monotonicTime: TimeInterval,
+		countdown: Int,
+		canNavigate: Bool,
+		isResting: Bool,
+		isComplete: Bool,
+		highlightedHoldIDs: Set<String>,
+		highlightMode: BoardHighlightMode,
+		showsHoldPreview: Bool,
+		holdCue: WorkoutHoldCue?,
+		cueStep: WorkoutStep?,
+		isSkipCountdown: Bool
+	) -> some View {
+		let showsPairedHandCue: Bool = {
+			guard let holdCue else { return false }
+			return WorkoutLandscapeHandCuePolicy.showsHandCue(
+				for: .left, holdCue: holdCue, cueStep: cueStep, countdown: countdown,
+				isComplete: isComplete, isSkipCountdown: isSkipCountdown
+			) && WorkoutLandscapeHandCuePolicy.showsHandCue(
+				for: .right, holdCue: holdCue, cueStep: cueStep, countdown: countdown,
+				isComplete: isComplete, isSkipCountdown: isSkipCountdown
+			)
+		}()
+		return VStack(spacing: 9) {
+			landscapeHeader(
+				step: step,
+				stepElapsed: stepElapsed,
+				countdown: countdown,
+				canNavigate: canNavigate,
+				isResting: isResting,
+				isComplete: isComplete
+			)
+
+			ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
+				.tint(Color.hangGreenDark)
+
+			VStack(spacing: 2) {
+				if showsPairedHandCue, let holdCue {
+					Group {
+						#if DEBUG
+						if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_WORKOUT_HAND_HOST"] == "1" {
+							Color.clear
+						} else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAIN_SECOND_HOST"] == "1" {
+							WorkoutPlainSecondHostProbe(posture: holdCue.gripType,
+								fingerConfiguration: holdCue.fingerConfiguration)
+						} else {
+							GripHandPairModelView(posture: holdCue.gripType,
+								fingerConfiguration: holdCue.fingerConfiguration)
+						}
+						#else
+						GripHandPairModelView(posture: holdCue.gripType,
+							fingerConfiguration: holdCue.fingerConfiguration)
+						#endif
+					}
+						.frame(height: 68)
+						.accessibilityHidden(true)
+				}
+				HStack(spacing: 12) {
+				landscapeHandCueSlot(
+					holdCue: holdCue,
+					cueStep: cueStep,
+					countdown: countdown,
+					isComplete: isComplete,
+					isSkipCountdown: isSkipCountdown,
+					side: .left,
+					usesSharedPairPreview: showsPairedHandCue
+				)
+
+				VStack(alignment: .leading, spacing: 4) {
+					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+						.frame(maxWidth: .infinity, minHeight: LandscapeLayout.previewLabelHeight, alignment: .center)
+						.opacity(showsHoldPreview ? 1 : 0)
+						.accessibilityHidden(!showsHoldPreview)
+					BoardMapView(
+						board: board,
+						highlightedHoldIDs: highlightedHoldIDs,
+						highlightMode: highlightMode,
+						selectedPresentationID: WorkoutHighlightResolver.presentationID(for: cueStep, on: board),
+						activeHoldID: holdCue?.hold?.id
+					)
+						.frame(maxWidth: .infinity)
+						.frame(maxHeight: LandscapeLayout.boardMaxHeight)
+				}
+				.frame(maxWidth: .infinity)
+
+				landscapeHandCueSlot(
+					holdCue: holdCue,
+					cueStep: cueStep,
+					countdown: countdown,
+					isComplete: isComplete,
+					isSkipCountdown: isSkipCountdown,
+					side: .right,
+					usesSharedPairPreview: showsPairedHandCue
+				)
+				}
+			}
+			.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
+
+			if WorkoutLandscapeControlLayoutPolicy.usesCompactControls(
+				isFirstStart: WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
+				countdown: countdown,
+				isComplete: isComplete
+			) {
+				landscapePreStartControls(
+					step: step,
+					isResting: isResting,
+					isComplete: isComplete,
+					countdown: countdown,
+					monotonicTime: monotonicTime,
+					canNavigate: canNavigate,
+					currentStopwatchKey: currentStopwatchKey(for: step)
+				)
+			} else {
+				HStack(alignment: .center, spacing: 12) {
+					if let cueCardRows = WorkoutPresentationContent.cueCardRows(
+						step: step,
+						countdown: countdown,
+						isComplete: isComplete
+					) {
+						landscapeCueCard(
+							rows: cueCardRows,
+							step: step,
+							countdown: countdown,
+							isResting: isResting
+						)
+					}
+					controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
+						.frame(width: 224)
+				}
+			}
+			if isScaleTrackingReady, motherboardBluetoothService.state.showsWorkoutMeter {
+				meter(step: step)
+			}
+		}
+		.padding(.horizontal, 16)
+		.padding(.vertical, 10)
+	}
+
+	private func landscapeHandCueSlot(
+		holdCue: WorkoutHoldCue?,
+		cueStep: WorkoutStep?,
+		countdown: Int,
+		isComplete: Bool,
+		isSkipCountdown: Bool,
+		side: GripCueSide,
+		usesSharedPairPreview: Bool = false
+	) -> some View {
+		ZStack {
+			Color.clear
+				.accessibilityHidden(true)
+			if let holdCue, WorkoutLandscapeHandCuePolicy.showsHandCue(
+				for: side == .left ? .left : .right,
+				holdCue: holdCue,
+				cueStep: cueStep,
+				countdown: countdown,
+				isComplete: isComplete,
+				isSkipCountdown: isSkipCountdown
+			) {
+				GripHandCueCard(
+					posture: holdCue.gripType,
+					fingerConfiguration: holdCue.fingerConfiguration,
+					side: side,
+					usesSharedPairPreview: usesSharedPairPreview
+				)
+			}
+		}
+		.frame(width: LandscapeLayout.sideCueSlotWidth)
+		.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
+	}
+
+	private func landscapeHeader(
+		step: WorkoutStep,
+		stepElapsed: TimeInterval,
+		countdown: Int,
+		canNavigate: Bool,
+		isResting: Bool,
+		isComplete: Bool
+	) -> some View {
+		HStack(alignment: .center, spacing: 16) {
+			VStack(alignment: .leading, spacing: 3) {
+				SectionLabel(
+					title: isComplete
+						? "Session complete"
+						: countdown > 0
+							? "Get ready"
+							: "Step \(step.number) of \(activeSteps.count)"
+				)
+				Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
+					.font(.system(size: 22, weight: .bold, design: .rounded))
+					.foregroundStyle(Color.hangInk)
+					.lineLimit(1)
+			}
+
+			Spacer(minLength: 12)
+
+			Pill(
+				title: isComplete ? "Done" : countdown > 0 ? "Ready" : isResting ? "Rest" : intervalLabel(for: step),
+				tint: isComplete ? Color.hangGreenDark : countdown > 0 ? Color.hangInk : isResting ? WorkoutPhase.rest.textTint : step.phase.textTint,
+				fill: (isComplete ? Color.hangGreen : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.18)
+			)
+
+			Text(
+				timeLabel(
+					isComplete
+						? 0
+						: countdown > 0
+							? TimeInterval(countdown)
+							: intervalRemaining(step: step, stepElapsed: stepElapsed)
+				)
+			)
+			.font(.system(size: 34, weight: .heavy, design: .rounded).monospacedDigit())
+			.foregroundStyle(Color.hangInk)
+
+			Button("Routine") {
+				showsStepPicker = true
+			}
+			.font(.system(size: 13, weight: .bold, design: .rounded))
+			.foregroundStyle(Color.hangGreenDark)
+			.disabled(!canNavigate)
+			.accessibilityLabel("Routine, current step \(step.number): \(step.title)")
+			.accessibilityIdentifier("workout.routinePicker")
+
+			if planNeedsHandChoice {
+				handPreferenceMenu()
+			}
+		}
+	}
+
+	private func landscapeCueCard(
+		rows: [InstructionAccessoryCardRow],
+		step: WorkoutStep,
+		countdown: Int,
+		isResting: Bool
+	) -> some View {
+		let instructionText = rows.first { $0.kind == .instruction }?.text
+		let accessoryText = rows.first { $0.kind == .accessory }?.text
+		return VStack(alignment: .leading, spacing: 5) {
+			SectionLabel(title: countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions")
+			if let text = instructionText {
+				Text(text)
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.82)
+            }
+
+			if let accessoryText {
+                Text(accessoryText)
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .foregroundStyle(step.phase.textTint)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.78)
+            }
+		}
+		.frame(maxWidth: .infinity, alignment: .leading)
+		.hangCard(padding: 12)
+	}
+
+	private func landscapePreStartControls(
+		step: WorkoutStep,
+		isResting: Bool,
+		isComplete: Bool,
+		countdown: Int,
+		monotonicTime: TimeInterval,
+		canNavigate: Bool,
+		currentStopwatchKey: WorkoutActivitySegmentKey?
+	) -> some View {
+		let presentation = WorkoutLandscapePreStartPresentation.content(
+			for: step,
+			countdown: countdown,
+			isResting: isResting,
+			isComplete: isComplete,
+			currentStopwatchKey: currentStopwatchKey
+		)
+		return HStack(alignment: .center, spacing: 12) {
+			if let cueCardRows = presentation.cueCardRows {
+				landscapeCueCard(
+					rows: cueCardRows,
+					step: step,
+					countdown: countdown,
+					isResting: isResting
+				)
+				.frame(minWidth: 156, maxWidth: .infinity)
+			}
+
+			VStack(spacing: 6) {
+				HStack(spacing: 10) {
+					Spacer(minLength: 0)
+
+					controlButton(isComplete: isComplete, countdown: countdown)
+						.frame(maxWidth: 164)
+					skipStepButton(step: step, canNavigate: canNavigate, compact: true)
+				}
+
+				if let stopwatchKey = presentation.stopwatchKey {
+					compactStopwatchControl(for: stopwatchKey, at: monotonicTime)
+				}
+
+				if countdown == 0, !isResting, !isComplete, step.action == .loadedLift {
+					liftCompletionControl(for: step, sessionCanNavigate: canNavigate)
+				}
+			}
+			.frame(maxWidth: 400)
+			.layoutPriority(1)
+		}
+	}
+
+    private func sessionHeader(
+        step: WorkoutStep,
+        stepElapsed: TimeInterval,
+        elapsed: TimeInterval,
+        countdown: Int,
+        canNavigate: Bool,
+        isResting: Bool,
+        isComplete: Bool
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 13) {
+            HStack {
+                SectionLabel(
+                    title: isComplete
+                        ? "Session complete"
+                        : countdown > 0
+                            ? "Get ready"
+                            : "Step \(step.number) of \(activeSteps.count)"
+                )
+                Spacer()
+                Pill(
+                    title: isComplete ? "Done" : countdown > 0 ? "Ready" : isResting ? "Rest" : intervalLabel(for: step),
+                    tint: isComplete ? Color.hangGreenDark : countdown > 0 ? Color.hangInk : isResting ? WorkoutPhase.rest.textTint : step.phase.textTint,
+                    fill: (isComplete ? Color.hangGreen : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.19)
+                )
+            }
+
+            Button("Routine") {
+                showsStepPicker = true
+            }
+            .font(.system(size: 13, weight: .bold, design: .rounded))
+            .foregroundStyle(Color.hangGreenDark)
+            .disabled(!canNavigate)
+            .accessibilityLabel("Routine, current step \(step.number): \(step.title)")
+            .accessibilityIdentifier("workout.routinePicker")
+
+            if planNeedsHandChoice {
+                handPreferenceMenu()
+            }
+
+			Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
+				.font(.system(size: 30, weight: .bold, design: .rounded))
+				.foregroundStyle(Color.hangInk)
+
+			if !step.isRestStep {
+				Text(WorkoutStepFormatting.labels(for: step).joined(separator: " • "))
+					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.foregroundStyle(step.phase.textTint)
+			}
+
+            portraitTimerLabel(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete)
+
+            ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
+                .tint(Color.hangGreenDark)
+        }
+    }
+
+    private func portraitTimerLabel(
+        step: WorkoutStep,
+        stepElapsed: TimeInterval,
+        countdown: Int,
+        isComplete: Bool
+    ) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 7) {
+            Text(
+                timeLabel(
+                    isComplete
+                        ? 0
+                        : countdown > 0
+                            ? TimeInterval(countdown)
+                            : intervalRemaining(step: step, stepElapsed: stepElapsed)
+                )
+            )
+            .font(.system(size: 46, weight: .heavy, design: .rounded).monospacedDigit())
+            .foregroundStyle(Color.hangInk)
+            .lineLimit(WorkoutPresentationContent.portraitTimerLineLimit)
+            .fixedSize(horizontal: true, vertical: false)
+            .layoutPriority(2)
+
+            if let supportingStatus = WorkoutPresentationContent.portraitTimerSupportingStatus {
+                Text(supportingStatus)
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+            }
+        }
+    }
+
+	private func cueCard(
+		rows: [InstructionAccessoryCardRow],
+		step: WorkoutStep,
+		countdown: Int,
+		isResting: Bool
+	) -> some View {
+		let instructionText = rows.first { $0.kind == .instruction }?.text
+		let accessoryText = rows.first { $0.kind == .accessory }?.text
+		return VStack(alignment: .leading, spacing: 11) {
+			HStack {
+				SectionLabel(title: countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions")
+				Spacer()
+				if countdown == 0 {
+                    Text(intervalLabel(for: step))
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(isResting ? WorkoutPhase.rest.textTint : step.phase.textTint)
+                }
+            }
+
+			if let text = instructionText {
+                Text(text)
+                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+			if let text = accessoryText {
+				Text(text)
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundStyle(isResting ? WorkoutPhase.rest.textTint : step.phase.textTint)
+            }
+        }
+        .hangCard()
+    }
+
+	private func controlGroup(
+		step: WorkoutStep,
+		isResting: Bool,
+		isComplete: Bool,
+		countdown: Int,
+		monotonicTime: TimeInterval,
+		canNavigate: Bool
+	) -> some View {
+        VStack(spacing: 10) {
+			controlButton(isComplete: isComplete, countdown: countdown)
+
+			if countdown == 0, !isResting, !isComplete, step.action == .loadedLift {
+				liftCompletionControl(for: step, sessionCanNavigate: canNavigate)
+			}
+
+            if countdown == 0, !isResting, !isComplete, let key = currentStopwatchKey(for: step) {
+                stopwatchControl(for: key, at: monotonicTime)
+            }
+
+			skipStepButton(step: step, canNavigate: canNavigate)
+		}
+	}
+
+	private func liftCompletionControl(
+		for step: WorkoutStep,
+		sessionCanNavigate: Bool
+	) -> some View {
+		let prescribed = step.repetitions ?? 0
+		let completed = liftCompletion.completedRepetitions(for: step)
+		let unit = motherboardSettingsStore.forceUnit
+		return VStack(spacing: 6) {
+			HStack(spacing: 8) {
+				Text("External load")
+					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.foregroundStyle(Color.hangMuted)
+				TextField(
+					"0",
+					value: loadedLiftExternalLoadBinding(for: step, unit: unit),
+					format: .number.precision(.fractionLength(1))
+				)
+				.keyboardType(.numbersAndPunctuation)
+				.multilineTextAlignment(.center)
+				.frame(maxWidth: 100)
+				.textFieldStyle(.roundedBorder)
+				.accessibilityIdentifier("workout.loadedLiftExternalLoad")
+				Text(unit.label)
+					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.foregroundStyle(Color.hangMuted)
+			}
+			Text("\(completed) of \(prescribed) lifts complete")
+				.font(.system(size: 13, weight: .bold, design: .rounded))
+				.foregroundStyle(Color.hangMuted)
+			Button("Complete lift") {
+				liftCompletion.completeLift(for: step)
+			}
+			.frame(maxWidth: .infinity)
+			.font(.system(size: 15, weight: .bold, design: .rounded))
+			.foregroundStyle(Color.hangGreenDark)
+			.padding(.vertical, 10)
+			.background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+			.disabled(
+				!WorkoutLiftCompletionPolicy.isEnabled(
+					completedRepetitions: completed,
+					prescribedRepetitions: prescribed,
+					sessionCanNavigate: sessionCanNavigate
+				)
+			)
+			.accessibilityIdentifier("workout.completeLift")
+		}
+	}
+
+	private func loadedLiftExternalLoadBinding(
+		for step: WorkoutStep,
+		unit: MotherboardForceUnit
+	) -> Binding<Double> {
+		Binding(
+			get: {
+				unit.value(fromKilogramsForce: liftCompletion.externalLoadKGF(for: step) ?? 0)
+			},
+			set: { displayedValue in
+				liftCompletion.setExternalLoadKGF(
+					unit.kilogramsForce(fromDisplayedForce: displayedValue),
+					for: step
+				)
+			}
+		)
+	}
+
+	private func skipStepButton(step: WorkoutStep, canNavigate: Bool, compact: Bool = false) -> some View {
+		Button {
+			skipCurrentStep()
+		} label: {
+			Group {
+				if compact {
+					Image(systemName: "forward.fill")
+				} else {
+					Label("Skip step", systemImage: "forward.fill")
+				}
+			}
+				.frame(maxWidth: .infinity)
+				.font(.system(size: 14, weight: .bold, design: .rounded))
+				.foregroundStyle(Color.hangGreenDark)
+				.padding(.horizontal, compact ? 13 : 0)
+				.padding(.vertical, 10)
+				.background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+		}
+		.buttonStyle(.plain)
+		.disabled(!canNavigate)
+		.accessibilityLabel("Skip step \(step.number): \(step.title)")
+		.accessibilityIdentifier("workout.skipStep")
+	}
+
+    private func controlButton(isComplete: Bool, countdown: Int) -> some View {
+        Button {
+            if isComplete {
+                completeSession()
+            } else if countdown > 0 {
+                cancelCountdown()
+            } else {
+                toggleRunning()
+            }
+        } label: {
+			HStack {
+                    Image(systemName: isComplete ? "checkmark" : countdown > 0 ? "xmark" : (sessionState.activeStartUptime == nil ? "play.fill" : "pause.fill"))
+                Text(
+                    isComplete
+						? "Log session"
+						: countdown > 0
+							? "Cancel countdown"
+							: (sessionState.activeStartUptime == nil && WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt) ? "Start" : (sessionState.activeStartUptime == nil ? "Resume" : "Pause"))
+                )
+                if isComplete {
+                    Image(systemName: "arrow.right")
+                }
+            }
+			.frame(maxWidth: .infinity, alignment: .center)
+            .font(.system(size: 16, weight: .bold, design: .rounded))
+            .foregroundStyle(Color.hangInk)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 16)
+            .background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 17, style: .continuous))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func stopwatchControl(for key: WorkoutActivitySegmentKey, at monotonicTime: TimeInterval) -> some View {
+        let stopwatch = stopwatches[key] ?? WorkoutStopwatch()
+        let elapsed = stopwatch.elapsed(at: monotonicTime) ?? 0
+        let label = stopwatch.isFinalized
+            ? "Stopwatch finalized"
+            : stopwatch.isRunning
+                ? "Stop stopwatch"
+                : stopwatch.hasStarted
+                    ? "Resume stopwatch"
+                    : "Start stopwatch"
+
+        return VStack(spacing: 6) {
+            Text(stopwatchTimeLabel(elapsed))
+                .font(.system(size: 34, weight: .heavy, design: .rounded).monospacedDigit())
+                .foregroundStyle(Color.hangInk)
+                .frame(maxWidth: .infinity)
+
+            Button {
+                toggleStopwatch(for: key, at: WorkoutClock.monotonicTime)
+            } label: {
+                Label(label, systemImage: stopwatch.isRunning ? "pause.fill" : stopwatch.isFinalized ? "checkmark" : "stopwatch")
+                    .frame(maxWidth: .infinity)
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .padding(.vertical, 10)
+                    .background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+            }
+	            .buttonStyle(.plain)
+	            .disabled(stopwatch.isFinalized)
+	            .accessibilityLabel(label)
+            .accessibilityIdentifier("workout.stopwatch.toggle")
+        }
+        .padding(.vertical, 4)
+        .accessibilityIdentifier("workout.stopwatch")
+    }
+
+	private func compactStopwatchControl(for key: WorkoutActivitySegmentKey, at monotonicTime: TimeInterval) -> some View {
+		let stopwatch = stopwatches[key] ?? WorkoutStopwatch()
+		let elapsed = stopwatch.elapsed(at: monotonicTime) ?? 0
+		let label = stopwatch.isFinalized
+			? "Stopwatch finalized"
+			: stopwatch.isRunning
+				? "Stop stopwatch"
+				: stopwatch.hasStarted
+					? "Resume stopwatch"
+					: "Start stopwatch"
+
+		return HStack(spacing: 10) {
+			Text(stopwatchTimeLabel(elapsed))
+				.font(.system(size: 24, weight: .heavy, design: .rounded).monospacedDigit())
+				.foregroundStyle(Color.hangInk)
+				.frame(minWidth: 68, alignment: .leading)
+
+			Button {
+				toggleStopwatch(for: key, at: monotonicTime)
+			} label: {
+				Label(label, systemImage: stopwatch.isRunning ? "pause.fill" : stopwatch.isFinalized ? "checkmark" : "stopwatch")
+					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.foregroundStyle(Color.hangGreenDark)
+					.padding(.horizontal, 12)
+					.padding(.vertical, 8)
+					.background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+			}
+			.buttonStyle(.plain)
+			.disabled(stopwatch.isFinalized)
+			.accessibilityLabel(label)
+			.accessibilityIdentifier("workout.stopwatch.toggle")
+
+			Spacer(minLength: 0)
+		}
+		.accessibilityIdentifier("workout.stopwatch")
+	}
+
+	private func handPreferenceMenu() -> some View {
+		Menu {
+			handPreferenceMenuButton(.left, title: "Left hand", accessibilityID: "handSide.left")
+			handPreferenceMenuButton(.right, title: "Right hand", accessibilityID: "handSide.right")
+			handPreferenceMenuButton(.alternate, title: "Alternate hands", accessibilityID: "handSide.alternate")
+			handPreferenceMenuButton(
+				.both,
+				title: HandChoiceCopy.bothHandsTitle(boardIsOneHanded: boardIsOneHanded),
+				accessibilityID: "handSide.both",
+				disabled: !bothHandsResolvable,
+				hint: HandChoiceCopy.bothHandsHint(boardIsOneHanded: boardIsOneHanded)
+			)
+		} label: {
+			HStack(spacing: 6) {
+				Image(systemName: "hand.raised")
+				Text(handChoiceLabel)
+			}
+			.font(.system(size: 13, weight: .bold, design: .rounded))
+			.foregroundStyle(Color.hangGreenDark)
+		}
+		.disabled(!WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt))
+		.accessibilityLabel("Hand choice, \(handChoiceLabel)")
+		.accessibilityIdentifier("workout.handPicker")
+	}
+
+	@ViewBuilder
+	private func handPreferenceMenuButton(
+		_ preference: WorkoutSessionHandPreference,
+		title: String,
+		accessibilityID: String,
+		disabled: Bool = false,
+		hint: String? = nil
+	) -> some View {
+		let button = Button {
+			applyHandPreference(preference)
+		} label: {
+			if handPreference == preference {
+				Label(title, systemImage: "checkmark")
+			} else {
+				Text(title)
+			}
+		}
+		.disabled(disabled)
+		.accessibilityIdentifier(accessibilityID)
+
+		if let hint {
+			button.accessibilityHint(Text(hint))
+		} else {
+			button
+		}
+	}
+
+	private var handChoiceLabel: String {
+		switch handPreference {
+		case .left: "Left hand"
+		case .right: "Right hand"
+		case .alternate: "Alternate hands"
+		case .both, .none: HandChoiceCopy.bothHandsTitle(boardIsOneHanded: boardIsOneHanded)
+		}
+	}
+
+	private func applyHandPreference(_ preference: WorkoutSessionHandPreference) {
+		handPreference = preference
+		sessionSteps = WorkoutSessionHandResolver.sessionSteps(
+			from: plan.steps,
+			preference: preference,
+			boardIsOneHanded: boardIsOneHanded
+		)
+		initializeStopwatches()
+	}
+
+	private func resolvedHandSide(for step: WorkoutStep) -> WorkoutSide? {
+		if step.side == .left || step.side == .right {
+			return step.side
+		}
+		return handPreference?.selectedHandSide
+	}
+
+    private func toggleRunning() {
+		if sessionState.activeStartUptime == nil,
+		   WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
+		   planNeedsHandChoice,
+		   handPreference == nil {
+			applyHandPreference(
+				WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board)
+			)
+		}
+		let monotonicTime = WorkoutClock.monotonicTime
+		if pendingCountdownStart != nil || countdownArmTask != nil {
+			countdownArmTask?.cancel()
+			countdownArmTask = nil
+			pendingCountdownStart = nil
+			audioCoach.stop()
+			return
+		}
+		if sessionState.activeStartUptime != nil {
+			if countdownRemaining(at: monotonicTime) > 0 {
+				cancelCountdown()
+				return
+			}
+			recorder.pause(at: currentElapsed(at: monotonicTime))
+			pauseStopwatches(at: monotonicTime)
+			sessionState.toggleRunning(uptime: monotonicTime)
+			audioCoach.stop()
+		} else if needsWorkoutPreparation {
+			showsWorkoutPreparation = true
+		} else {
+			let isFirstStart = WorkoutSessionPolicy.isFirstStart(
+				routineStartedAt: sessionState.routineStartedAt
+			)
+			if isFirstStart {
+				motherboardMeasurementCollector.reset()
+				requestCountdownStart(.initial)
+				return
+			}
+			sessionState.toggleRunning(
+				uptime: monotonicTime,
+				now: nil
+			)
+		}
+    }
+
+	private func requestCountdownStart(_ countdown: PendingCountdownStart) {
+		if audioCuesEnabled,
+		   WorkoutSessionPolicy.shouldPrepareCountdownAudio(
+			preparationState: audioCoach.countdownPreparationState
+		   ) {
+			audioCoach.prepareCountdownAudio()
+		}
+		if audioCuesEnabled,
+		   WorkoutSessionPolicy.shouldDeferCountdownStart(
+			isFirstStart: countdown == .initial,
+			preparationState: audioCoach.countdownPreparationState
+		   ) {
+			pendingCountdownStart = countdown
+			return
+		}
+
+		let now = WorkoutClock.monotonicTime
+		guard audioCuesEnabled, audioCoach.countdownPreparationState == .ready else {
+			beginVisibleCountdown(countdown, at: now)
+			return
+		}
+
+		let armUptime = now + WorkoutSessionPolicy.countdownAudioArmLead(
+			environment: ProcessInfo.processInfo.environment
+		)
+		let targetElapsed: TimeInterval
+		switch countdown {
+		case .initial:
+			targetElapsed = 0
+		case .skip(let elapsed):
+			targetElapsed = elapsed
+		}
+		let schedule = CountdownAudioSchedule(remainingFrom: "3")
+			.appendingShortIntervals(
+				WorkoutCountdownIntervalPolicy.shortDurations(
+					in: activeSteps,
+					startingAt: targetElapsed
+				),
+				startingAt: 3
+			)
+		_ = audioCoach.startCountdown(schedule, startUptime: armUptime)
+		countdownArmTask?.cancel()
+		countdownArmTask = Task { @MainActor in
+			do {
+				try await Task.sleep(for: .seconds(max(0, armUptime - WorkoutClock.monotonicTime)))
+			} catch {
+				return
+			}
+			guard !Task.isCancelled else { return }
+			countdownArmTask = nil
+			beginVisibleCountdown(countdown, at: armUptime)
+		}
+	}
+
+	private func beginVisibleCountdown(
+		_ countdown: PendingCountdownStart,
+		at armUptime: TimeInterval
+	) {
+		switch countdown {
+		case .initial:
+			sessionState.toggleRunning(uptime: armUptime, now: Date())
+		case .skip(let targetElapsed):
+			sessionState.startSkipCountdown(to: targetElapsed, at: armUptime)
+		}
+	}
+
+    private func cancelCountdown() {
+		let monotonicTime = WorkoutClock.monotonicTime
+		sessionState.cancelCountdown(at: monotonicTime)
+		audioCoach.stop()
+    }
+
+	private func endSession() {
+		cancelPendingCountdownArm()
+		interruptRecorderIfNeeded()
+        finalizeAllStopwatches(at: WorkoutClock.monotonicTime)
+		sessionState.activeStartUptime = nil
+		audioCoach.stop()
+        dismiss()
+    }
+
+	private func pauseForInterruption() {
+		cancelPendingCountdownArm()
+		let monotonicTime = WorkoutClock.monotonicTime
+		pauseStopwatches(at: monotonicTime)
+		guard sessionState.activeStartUptime != nil else {
+			audioCoach.stop()
+			return
+		}
+		if countdownRemaining(at: monotonicTime) == 0 {
+			recorder.pause(at: currentElapsed(at: monotonicTime))
+		}
+		sessionState.pauseForInterruption(at: monotonicTime)
+		audioCoach.stop()
+	}
+
+	private func completeSession() {
+		cancelPendingCountdownArm()
+		finalizeRoutine(monotonicTime: WorkoutClock.monotonicTime)
+		if let completedSession {
+			summarySession = completedSession
+		}
+		audioCoach.stop()
+	}
+
+	private func cancelPendingCountdownArm() {
+		countdownArmTask?.cancel()
+		countdownArmTask = nil
+		pendingCountdownStart = nil
+	}
+
+	private func meter(step: WorkoutStep) -> some View {
+		MotherboardMeterView(
+			measurement: motherboardBluetoothService.latestMeasurement,
+			peakLoadKGF: recorder.currentStepID == step.id ? recorder.currentPeakLoadKGF : nil,
+			actualLoadedTime: recorder.currentStepID == step.id ? recorder.currentLoadedDuration : 0,
+			plannedActiveDuration: step.activeDuration,
+			bodyweightKGF: bodyweightKGF,
+			unit: motherboardSettingsStore.forceUnit,
+			state: motherboardBluetoothService.state,
+			thresholdKGF: motherboardSettingsStore.thresholdKGF
+		)
+	}
+
+	private func consume(_ measurement: MotherboardMeasurement, at monotonicTime: TimeInterval) {
+		guard isScaleTrackingReady else { return }
+		guard sessionState.activeStartUptime != nil,
+			  countdownRemaining(at: monotonicTime) == 0,
+              WorkoutSessionPolicy.isMeasurementEligible(
+				routineStartedAt: sessionState.routineStartedAt,
+              measurementTimestamp: measurement.timestamp
+              ) else { return }
+
+		let elapsed = currentElapsed(at: monotonicTime)
+		guard elapsed < sessionDuration else { return }
+		let currentStep = step(at: elapsed)
+		guard !currentStep.isRestStep,
+			  !isRestInterval(step: currentStep, stepElapsed: elapsedInStep(at: elapsed)) else { return }
+
+		recorder.consume(
+			measurement,
+			stepID: currentStep.id,
+			plannedActiveDuration: currentStep.activeDuration,
+			workoutElapsed: elapsed,
+			stepStartElapsed: stepStartElapsed(at: elapsed),
+			isActive: true
+		)
+	}
+
+	private func capture(_ measurement: MotherboardMeasurement, at monotonicTime: TimeInterval) {
+		guard isScaleTrackingReady else { return }
+		guard sessionState.activeStartUptime != nil,
+			  motherboardBluetoothService.connectedProfile == .motherboard else { return }
+		motherboardMeasurementCollector.capture(
+			measurement,
+			startedAt: sessionState.routineStartedAt,
+			countdownRemaining: countdownRemaining(at: monotonicTime),
+			workoutElapsed: currentElapsed(at: monotonicTime),
+			planDuration: sessionDuration
+		)
+	}
+
+	private func finalizeRoutine(monotonicTime: TimeInterval = WorkoutClock.monotonicTime) {
+		guard !didComplete else { return }
+		didComplete = true
+		completedStopwatchDurations = WorkoutStopwatchLifecycle.finalizeAndSnapshotStopwatches(
+			at: monotonicTime,
+			in: &stopwatches
+		)
+		recorder.pause(at: sessionDuration)
+
+		let completedMeasurements = Dictionary(
+			uniqueKeysWithValues: recorder.finish(at: sessionDuration).map { ($0.stepID, $0) }
+		)
+		// Session steps already carry resolved handUse/side (left/right/both/alternate expansion).
+		let steps = activeSteps.map { step in
+			let measurement = completedMeasurements[step.id] ?? WorkoutStepMeasurement(
+				stepID: step.id,
+				plannedActiveDuration: step.activeDuration,
+				intervals: [],
+				peakLoadKGF: nil,
+				sampleCount: 0,
+				status: .unmeasured
+			)
+			return WorkoutStepMeasurement(
+				stepID: measurement.stepID,
+				plannedActiveDuration: measurement.plannedActiveDuration,
+				intervals: measurement.intervals,
+				peakLoadKGF: measurement.peakLoadKGF,
+				sampleCount: measurement.sampleCount,
+				status: measurement.status,
+				handUse: step.handUse,
+				side: step.side,
+				action: step.action,
+				repetitions: step.repetitions,
+				completedRepetitions: step.action == .loadedLift
+					? liftCompletion.completedRepetitions(for: step)
+					: nil,
+				externalLoadKGF: step.action == .loadedLift
+					? liftCompletion.externalLoadKGF(for: step)
+					: step.externalLoadKGF,
+				isRest: step.isRestStep
+			)
+		}
+		let recordedAt = Date()
+		let startDate = sessionState.routineStartedAt ?? recordedAt.addingTimeInterval(-sessionDuration)
+		let endDate = WorkoutSessionPolicy.completedWorkoutInterval(
+			sessionStartedAt: startDate,
+			recordedAt: recordedAt
+		).end
+		let session = WorkoutSessionRecord(
+			id: UUID(),
+			planID: plan.id,
+			planTitle: plan.title,
+			recordedAt: recordedAt,
+			startDate: startDate,
+			endDate: endDate,
+			motherboardIdentifier: initialWeight.source == .sensor ? motherboardBluetoothService.connectedDeviceID?.uuidString : nil,
+			batteryValue: initialWeight.source == .sensor ? motherboardBluetoothService.batteryValue : nil,
+			steps: steps,
+			stepTitles: activeSteps.map(\.title),
+			forceSensorProfile: WorkoutSessionPolicy.recordedForceSensorProfile(
+				source: initialWeight.source,
+				connectedProfile: motherboardBluetoothService.connectedProfile,
+				configuredProfile: motherboardSettingsStore.forceSensorProfile
+			),
+			bodyweightKGF: initialWeight.source == .sensor ? bodyweightKGF : nil,
+			initialWeight: initialWeight,
+			loadAdjustmentKGF: 0,
+			loadAdjustmentDisplayUnit: motherboardSettingsStore.loadAdjustmentUnit,
+			motherboardMeasurements: initialWeight.source == .sensor
+				? motherboardMeasurementCollector.measurements
+				: [],
+			motherboardMeasurementsTruncated: initialWeight.source == .sensor
+				&& motherboardMeasurementCollector.didTruncate
+		)
+		completedSession = session
+		summarySession = session
+	}
+
+	private func configureRecorder() {
+		guard sessionState.activeStartUptime == nil, sessionState.pausedElapsed == 0, !didComplete else { return }
+		recorder = MotherboardWorkoutRecorder(configuration: .init(
+			thresholdKGF: motherboardSettingsStore.thresholdKGF
+		))
+	}
+
+	private var needsWorkoutPreparation: Bool {
+		initialWeight.source == .sensor && MotherboardWorkoutPreparation.requiresPreparation(
+			isInitialStart: sessionState.activeStartUptime == nil
+				&& sessionState.pausedElapsed == 0
+				&& !didCompleteWorkoutPreparation,
+			isStreaming: motherboardBluetoothService.state == .streaming
+		)
+	}
+
+	private var isScaleTrackingReady: Bool {
+		WorkoutSessionPolicy.isScaleTrackingReady(
+			source: initialWeight.source,
+			didCompleteInitialPreparation: didCompleteWorkoutPreparation
+		)
+	}
+
+	private func save(_ session: WorkoutSessionRecord) {
+		guard !didSaveSession, completedSession?.id == session.id else { return }
+		didSaveSession = true
+		store.markSessionComplete(
+			plan,
+			board: board,
+			stopwatchDurations: completedStopwatchDurations,
+			startDate: session.startDate,
+			endDate: session.endDate,
+			handPreference: planNeedsHandChoice ? handPreference : nil,
+			sessionSteps: planNeedsHandChoice ? sessionSteps : nil,
+			session: session
+		)
+		summarySession = nil
+		dismiss()
+	}
+
+	private func discard(_ session: WorkoutSessionRecord) {
+		guard completedSession?.id == session.id else { return }
+		summarySession = nil
+		completedSession = nil
+		sessionState = WorkoutSessionState()
+		audioCoach.stop()
+		dismiss()
+	}
+
+	private func interruptRecorderForSensorLoss() {
+		guard isScaleTrackingReady else { return }
+		let monotonicTime = WorkoutClock.monotonicTime
+		guard sessionState.activeStartUptime != nil,
+			  countdownRemaining(at: monotonicTime) == 0,
+			  !didComplete else { return }
+
+		let elapsed = currentElapsed(at: monotonicTime)
+		let currentStep = step(at: elapsed)
+		guard !currentStep.isRestStep,
+			  !isRestInterval(step: currentStep, stepElapsed: elapsedInStep(at: elapsed)) else { return }
+
+		recorder.interrupt(
+			stepID: currentStep.id,
+			plannedActiveDuration: currentStep.activeDuration,
+			stepStartElapsed: stepStartElapsed(at: elapsed),
+			at: elapsed
+		)
+	}
+
+	private func interruptRecorderIfNeeded() {
+		guard isScaleTrackingReady else { return }
+		let monotonicTime = WorkoutClock.monotonicTime
+		let hasStartedActiveWork = sessionState.activeStartUptime != nil && countdownRemaining(at: monotonicTime) == 0
+		let hasElapsedWork = currentElapsed(at: monotonicTime) > 0
+		guard !didComplete, !didInterruptRecorder, hasStartedActiveWork || hasElapsedWork else { return }
+		recorder.interrupt(at: currentElapsed(at: monotonicTime))
+		didInterruptRecorder = true
+	}
+
+    private func currentElapsed(at uptime: TimeInterval) -> TimeInterval {
+        sessionState.currentElapsed(planDuration: sessionDuration, at: uptime)
+    }
+
+    private func countdownRemaining(at uptime: TimeInterval) -> Int {
+        sessionState.countdownRemaining(at: uptime)
+    }
+
+    private func step(at elapsed: TimeInterval) -> WorkoutStep {
+        timeline.step(at: elapsed) ?? activeSteps.last ?? PlanCatalog.metoliusTenMinute.steps[0]
+    }
+
+    private func elapsedInStep(at elapsed: TimeInterval) -> TimeInterval {
+        timeline.elapsedInStep(at: elapsed)
+    }
+
+    private func canNavigate(at uptime: TimeInterval) -> Bool {
+        sessionState.canNavigate(planDuration: sessionDuration, at: uptime)
+    }
+
+    private func seek(to targetElapsed: TimeInterval, at uptime: TimeInterval) {
+        sessionState.seek(to: targetElapsed, planDuration: sessionDuration, at: uptime)
+        audioCoach.stop()
+    }
+
+    private func jump(to step: WorkoutStep) {
+        let monotonicTime = WorkoutClock.monotonicTime
+        guard canNavigate(at: monotonicTime) else { return }
+
+        let elapsed = currentElapsed(at: monotonicTime)
+        guard let target = timeline.selectionTarget(for: step.id, at: elapsed) else { return }
+		finalizeCurrentStopwatch(at: monotonicTime)
+		seek(to: target, at: monotonicTime)
+    }
+
+	private func skipCurrentStep() {
+		let monotonicTime = WorkoutClock.monotonicTime
+		guard canNavigate(at: monotonicTime) else { return }
+        finalizeCurrentStopwatch(at: monotonicTime)
+		let elapsed = currentElapsed(at: monotonicTime)
+		guard let target = timeline.skipTarget(from: elapsed) else { return }
+
+		if target >= sessionDuration || timeline.step(at: target)?.phase == .rest {
+			sessionState.seek(to: target, planDuration: sessionDuration, at: monotonicTime)
+			audioCoach.stop()
+			return
+		}
+
+		audioCoach.stop()
+		requestCountdownStart(.skip(targetElapsed: target))
+	}
+
+	private func stepStartElapsed(at elapsed: TimeInterval) -> TimeInterval {
+		var cursor: TimeInterval = 0
+        for step in activeSteps {
+            if elapsed < cursor + step.duration {
+                return cursor
+            }
+            cursor += step.duration
+		}
+		return max(0, cursor - (activeSteps.last?.duration ?? 0))
+	}
+	private func initializeStopwatches() {
+		for step in activeSteps {
+			for (index, segment) in step.segments.enumerated() where segment.kind == .work && segment.timing == .stopwatch {
+				let key = WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
+				if stopwatches[key] == nil { stopwatches[key] = WorkoutStopwatch() }
+			}
+		}
+	}
+
+	private func currentStopwatchKey(for step: WorkoutStep) -> WorkoutActivitySegmentKey? {
+		let keys = step.segments.enumerated().compactMap { index, segment -> WorkoutActivitySegmentKey? in
+			guard segment.kind == .work, segment.timing == .stopwatch else { return nil }
+			return WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
+		}
+		return keys.first(where: { !(stopwatches[$0]?.isFinalized ?? false) }) ?? keys.last
+	}
+
+	private func toggleStopwatch(for key: WorkoutActivitySegmentKey, at monotonicTime: TimeInterval) {
+		guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
+		if stopwatch.isRunning {
+			stopwatch.pause(at: monotonicTime)
+		} else {
+			stopwatch.start(at: monotonicTime)
+		}
+		stopwatches[key] = stopwatch
+	}
+
+	private func pauseStopwatches(at monotonicTime: TimeInterval) {
+		for key in stopwatches.keys {
+			guard var stopwatch = stopwatches[key], stopwatch.isRunning else { continue }
+			stopwatch.pause(at: monotonicTime)
+			stopwatches[key] = stopwatch
+		}
+	}
+
+	private func finalizeCurrentStopwatch(at monotonicTime: TimeInterval) {
+		let elapsed = currentElapsed(at: monotonicTime)
+		let step = step(at: elapsed)
+		guard let key = currentStopwatchKey(for: step) else { return }
+		WorkoutStopwatchLifecycle.finalizeStopwatch(for: key, at: monotonicTime, in: &stopwatches)
+	}
+
+	private func finalizeStopwatches(for stepID: String, at monotonicTime: TimeInterval) {
+		WorkoutStopwatchLifecycle.finalizeStopwatches(for: stepID, at: monotonicTime, in: &stopwatches)
+	}
+
+	private func finalizeAllStopwatches(at monotonicTime: TimeInterval) {
+		for key in stopwatches.keys {
+			guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { continue }
+			stopwatch.stop(at: monotonicTime)
+			stopwatches[key] = stopwatch
+		}
+	}
+
+    private func isRestInterval(step: WorkoutStep, stepElapsed: TimeInterval) -> Bool {
+        step.phase == .rest || (step.hasRestInterval && stepElapsed >= step.activeDuration)
+    }
+
+    private func intervalRemaining(step: WorkoutStep, stepElapsed: TimeInterval) -> TimeInterval {
+        if isRestInterval(step: step, stepElapsed: stepElapsed) {
+            return max(0, step.duration - stepElapsed)
+        }
+        return max(0, step.activeDuration - stepElapsed)
+    }
+
+    private func intervalLabel(for step: WorkoutStep) -> String {
+        if step.phase == .rest {
+            return step.phase.label
+        }
+        if step.timedWorkDuration != nil {
+            switch step.phase {
+            case .hang:
+                return "Hang"
+            case .pull:
+                return "Pull"
+            case .conditioning:
+                return "Conditioning"
+            default:
+                break
+            }
+        }
+        return step.hasRestInterval ? "Hang" : "Cycle"
+    }
+
+    private func timeLabel(_ value: TimeInterval) -> String {
+        let seconds = max(0, Int(value.rounded(.up)))
+        return String(format: "%02d:%02d", seconds / 60, seconds % 60)
+    }
+
+	private func stopwatchTimeLabel(_ value: TimeInterval) -> String {
+		let seconds = max(0, Int(value.rounded(.down)))
+		return String(format: "%02d:%02d", seconds / 60, seconds % 60)
+	}
+
+	private func audioMoment(
+		step: WorkoutStep,
+		stepElapsed: TimeInterval,
+		elapsed: TimeInterval,
+		countdown: Int,
+		isTimedResting: Bool,
+		isComplete: Bool
+	) -> WorkoutAudioMoment? {
+		guard sessionState.activeStartUptime != nil else { return nil }
+		let segmentName = isTimedResting ? "rest" : "active"
+
+		if countdown > 0 {
+			return WorkoutAudioCuePolicy.moment(
+				stepID: step.id,
+				segmentName: segmentName,
+				initialCountdown: countdown,
+				intervalSecondsRemaining: 0,
+				isComplete: isComplete,
+				countdownKind: sessionState.countdownKind
+			)
+		}
+		let secondsRemaining = Int(
+			ceil(intervalRemaining(step: step, stepElapsed: stepElapsed))
+		)
+		let intervalDuration = WorkoutCountdownIntervalPolicy.duration(
+			for: step,
+			isTimedResting: isTimedResting
+		)
+		let intervalEndElapsed = stepStartElapsed(at: elapsed)
+			+ (isTimedResting ? step.duration : step.activeDuration)
+
+		return WorkoutAudioCuePolicy.scheduledMoment(
+			stepID: step.id,
+			segmentName: segmentName,
+			initialCountdown: countdown,
+			intervalSecondsRemaining: secondsRemaining,
+			intervalDuration: intervalDuration,
+			followingShortSegmentDurations: WorkoutCountdownIntervalPolicy.shortDurations(
+				in: activeSteps,
+				startingAt: intervalEndElapsed
+			),
+			isComplete: isComplete
+		)
+	}
+
+	private func audioCountdownStartUptime(
+		step: WorkoutStep,
+		elapsed: TimeInterval,
+		countdown: Int,
+		isTimedResting: Bool,
+		moment: WorkoutAudioMoment?
+	) -> TimeInterval? {
+		guard let activeStartUptime = sessionState.activeStartUptime,
+		      let moment,
+		      let remaining = Int(moment.phrase),
+		      (1...3).contains(remaining) else { return nil }
+
+		if countdown > 0 {
+			return activeStartUptime - TimeInterval(remaining)
+		}
+
+		let intervalEndElapsed = stepStartElapsed(at: elapsed)
+			+ (isTimedResting ? step.duration : step.activeDuration)
+		return activeStartUptime
+			+ intervalEndElapsed
+			- sessionState.pausedElapsed
+			- TimeInterval(remaining)
+	}
+}
+
+#if DEBUG
+/// Diagnostic-only nonempty second renderer without hand meshes or custom materials.
+@MainActor
+private struct WorkoutPlainSecondHostProbe: View {
+    let posture: GripType?
+    let fingerConfiguration: FingerConfiguration?
+    @State private var storage = WorkoutPlainSecondHostStorage()
+
+    var body: some View {
+        GeometryReader { proxy in
+            let size = proxy.size
+            RealityView { content in
+                content.camera = .virtual
+                // Both variants finish camera configuration before root attachment.
+                storage.scene.update(pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
+                                     viewportSize: size)
+                content.add(storage.scene.root)
+                storage.scene.record("second-host-make")
+            } update: { _ in
+                storage.scene.update(pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
+                                     viewportSize: size)
+            }
+        }
+        .accessibilityHidden(true)
+        .onDisappear { storage.scene.record("second-host-disappear") }
+    }
+}
+
+@MainActor
+private final class WorkoutPlainSecondHostStorage {
+    lazy var scene = WorkoutPlainSecondHostScene()
+}
+
+@MainActor
+private final class WorkoutPlainSecondHostScene {
+    let root = Entity()
+    private let camera = Entity()
+    private let lifecycleToken = UUID()
+    private let perspective = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAIN_SECOND_HOST_PROJECTION"] == "perspective"
+    private var currentPose: GripHandPose?
+    private var currentViewportSize: CGSize = .zero
+    private let halfSize = SIMD3<Float>(0.65, 0.5, 0.275)
+
+    init() {
+        var material = PhysicallyBasedMaterial()
+        material.baseColor = .init(tint: .systemPurple)
+        material.roughness = .init(floatLiteral: 0.8)
+        material.metallic = .init(floatLiteral: 0)
+        let box = ModelEntity(mesh: .generateBox(size: halfSize * 2), materials: [material])
+        box.name = "diagnostic_plain_pbr_box"
+        root.addChild(box)
+        // Exactly one projection component, chosen once before attachment.
+        if perspective {
+            camera.components.set(PerspectiveCameraComponent(
+                near: 0.1, far: 100, fieldOfViewInDegrees: 60,
+                fieldOfViewOrientation: .vertical))
+        } else {
+            var component = OrthographicCameraComponent()
+            component.near = 0.1
+            component.far = 100
+            component.scale = 3.2
+            component.scaleDirection = .vertical
+            camera.components.set(component)
+        }
+        root.addChild(camera)
+        let key = Entity()
+        let fill = Entity()
+        key.components.set(DirectionalLightComponent(color: .white, intensity: 3_200))
+        fill.components.set(DirectionalLightComponent(color: .white, intensity: 600))
+        root.addChild(key)
+        root.addChild(fill)
+        key.look(at: .zero, from: SIMD3(0, 8, 7), relativeTo: root)
+        fill.look(at: .zero, from: SIMD3(0, 2, -5), relativeTo: root)
+    }
+
+    func update(pose: GripHandPose, viewportSize: CGSize) {
+        guard currentPose != pose || currentViewportSize != viewportSize else { return }
+        currentPose = pose
+        currentViewportSize = viewportSize
+        camera.look(at: .zero, from: SIMD3<Float>(0, 2.75, 9.4), relativeTo: root)
+        let inverse = simd_inverse(camera.transform.matrix)
+        var halfWidth: Float = 0
+        var halfHeight: Float = 0
+        var tangentHalfFOV: Float = 0
+        let aspect = viewportSize.width > 0 && viewportSize.height > 0
+            ? Float(viewportSize.width / viewportSize.height) : 0.85
+        for x: Float in [-halfSize.x, halfSize.x] {
+            for y: Float in [-halfSize.y, halfSize.y] {
+                for z: Float in [-halfSize.z, halfSize.z] {
+                    let point = inverse * SIMD4<Float>(x, y, z, 1)
+                    halfWidth = max(halfWidth, abs(point.x))
+                    halfHeight = max(halfHeight, abs(point.y))
+                    let depth = -point.z
+                    precondition(depth > 0)
+                    tangentHalfFOV = max(tangentHalfFOV,
+                        max(abs(point.y), abs(point.x) / aspect) / depth)
+                }
+            }
+        }
+        if perspective {
+            var component = camera.components[PerspectiveCameraComponent.self]!
+            component.fieldOfViewInDegrees = 2 * atan(tangentHalfFOV * 1.08) * 180 / .pi
+            camera.components.set(component)
+        } else {
+            var component = camera.components[OrthographicCameraComponent.self]!
+            component.scale = max(halfHeight, halfWidth / aspect) * 1.08
+            camera.components.set(component)
+        }
+        record("second-host-semantic-update")
+    }
+
+    func record(_ event: String) {
+        guard BoardHighlightDiagnostic.isEnabled else { return }
+        BoardHighlightDiagnostic.shared.captureSecondHost(event, token: lifecycleToken,
+                                                           root: root, camera: camera)
+    }
+}
+#endif
+
+#if DEBUG
+/// Deliberately outside TabView, navigation, workout and every hand host.
+@MainActor
+private struct StandaloneBoardHighlightProbe: View {
+    private enum Selection: String { case active, preview, clear }
+    private struct SemanticSelection: Equatable {
+        let ids: Set<String>
+        let mode: BoardHighlightMode
+        let positionID: String?
+    }
+    @State private var selection: Selection = .clear
+    @State private var scriptEpoch: TimeInterval?
+    private var driver: String { env["HANGTEN_REVIEW_STANDALONE_DRIVER"] ?? "A" }
+    private let env = ProcessInfo.processInfo.environment
+    private var viewport: CGSize {
+        CGSize(width: Double(env["HANGTEN_REVIEW_STANDALONE_WIDTH"] ?? "210") ?? 210,
+               height: Double(env["HANGTEN_REVIEW_STANDALONE_HEIGHT"] ?? "36") ?? 36)
+    }
+    private var timingProfile: String { env["HANGTEN_REVIEW_STANDALONE_TIMING_PROFILE"] ?? "legacy" }
+    private var phaseDurations: [TimeInterval] {
+        switch timingProfile {
+        case "short": return [8, 7, 8, 7, 8]
+        case "long": return [8, 7, 180, 7, 8]
+        default: return [8, 8, 8, 8, 8]
+        }
+    }
+    private var phaseStartOffsets: [TimeInterval] {
+        phaseDurations.indices.map { phaseDurations.prefix($0).reduce(0, +) }
+    }
+    private var captureOffsets: [TimeInterval] {
+        timingProfile == "legacy" ? [0.25, 1, 3, 7] : [0.25, 1, 3, 5]
+    }
+    private var snapshotOffsets: [[TimeInterval]] {
+        phaseDurations.indices.map { index in
+            guard timingProfile == "legacy" else {
+                return [0.15, 0.85, 1.75, 2.85, 3.75, 4.85, 5.85, 6.75]
+            }
+            let regular: [TimeInterval] = [0.15, 0.85, 1.75, 2.85, 3.75, 6.85, 7.75]
+            return index == 1
+                ? ([0.025, 0.075, 0.225, 0.325, 0.45, 0.60] + regular).sorted()
+                : regular
+        }
+    }
+    private var completionTailOffset: TimeInterval { phaseDurations.reduce(0, +) + 2 }
+    private var isResizeDriver: Bool { ["F", "G"].contains(driver) }
+    private var initialViewport: CGSize {
+        isResizeDriver ? CGSize(width: 410.0, height: 410.0 * 120.0 / 700.0) : viewport
+    }
+    private func viewport(for phase: Selection) -> CGSize {
+        isResizeDriver && phase == .clear ? initialViewport : viewport
+    }
+    var body: some View {
+        driverContent
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.hangBackground)
+        .task { await runScript() }
+        .onAppear {
+            if env["HANGTEN_REVIEW_LANDSCAPE"] == "1",
+               let scene = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first {
+                scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+            }
+            BoardHighlightDiagnostic.shared.harnessEvent("standalone-appear", state: selection.rawValue,
+                                                         viewport: initialViewport)
+        }
+    }
+    @ViewBuilder
+    private var driverContent: some View {
+        if driver == "A" {
+            fixedContent(phase: selection)
+        } else {
+            TimelineView(.periodic(from: .now, by: 0.25)) { _ in
+                // Production also reads monotonic uptime rather than context.date.
+                let uptime = ProcessInfo.processInfo.systemUptime
+                let phase = ["C", "D", "E", "F", "G", "H0", "H1"].contains(driver) ? derivedPhase(at: uptime) : selection
+                fixedContent(phase: phase)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .overlay(alignment: .top) {
+                        if ["H0", "H1"].contains(driver) {
+                            diagnosticSiblings(at: uptime)
+                        }
+                    }
+            }
+        }
+    }
+
+    // Synthetic 40-second diagnostic presentation, not authored training content.
+    private func diagnosticSiblings(at uptime: TimeInterval) -> some View {
+        let elapsed = min(max(uptime - (scriptEpoch ?? uptime), 0), 40)
+        let progress = driver == "H1" ? elapsed : 0
+        let remaining = driver == "H1"
+            ? (elapsed >= 40 ? 0 : 8 - elapsed.truncatingRemainder(dividingBy: 8))
+            : 8
+        return VStack(spacing: 8) {
+            Text(diagnosticTimeLabel(remaining))
+                .font(.system(size: 34, weight: .heavy, design: .rounded).monospacedDigit())
+                .foregroundStyle(Color.hangInk)
+                .accessibilityLabel("Synthetic diagnostic phase timer")
+            ProgressView(value: progress, total: 40)
+                .tint(Color.hangGreenDark)
+                .accessibilityLabel("Synthetic 40-second diagnostic progress")
+        }
+        .frame(width: 210, height: 54)
+    }
+
+    // Exact production timeLabel arithmetic, with diagnostic-only input values.
+    private func diagnosticTimeLabel(_ value: TimeInterval) -> String {
+        let seconds = max(0, Int(value.rounded(.up)))
+        return String(format: "%02d:%02d", seconds / 60, seconds % 60)
+    }
+
+    private func derivedPhase(at uptime: TimeInterval) -> Selection {
+        guard let scriptEpoch else { return .clear }
+        let elapsed = uptime - scriptEpoch
+        let phases: [Selection] = [.clear, .active, .preview, .active, .preview]
+        for index in 0..<4 where elapsed < phaseStartOffsets[index] + phaseDurations[index] {
+            return phases[index]
+        }
+        return .preview
+    }
+
+    private func fixedContent(phase: Selection) -> some View {
+        let renderViewport = viewport(for: phase)
+        return VStack(spacing: 24) {
+            Text(["D", "E", "F", "G", "H0", "H1"].contains(driver) ? "Standalone board" : "Standalone board: \(phase.rawValue)")
+                .accessibilityIdentifier("standalone.state")
+            if let board = BoardCatalog.all.first(where: { $0.id == "zlagboard.evo" }) {
+                let semantic = SemanticSelection(
+                    ids: phase == .clear ? [] : ["edge-20-left", "edge-20-right"],
+                    mode: phase == .preview ? .preview : .active,
+                    positionID: board.position(presentationID: board.defaultPresentation.id,
+                                               containingContactID: "edge-20-left")?.id)
+                Group {
+                    if ["E", "F", "G", "H0", "H1"].contains(driver) {
+                        // Controlled workout-equivalent inputs; verify actual Surface resolution.
+                        BoardMapView(board: board,
+                            highlightedHoldIDs: semantic.ids, highlightMode: semantic.mode,
+                            selectedPresentationID: board.defaultPresentation.id,
+                            activeHoldID: phase == .clear ? nil : "edge-20-left")
+                    } else {
+                        BoardModelSurface(board: board, presentation: board.defaultPresentation,
+                            positionID: semantic.positionID,
+                            highlightedContactIDs: semantic.ids,
+                            highlightMode: semantic.mode,
+                            onContactTap: nil, isDisplayOnly: false)
+                    }
+                }
+                    .frame(width: renderViewport.width, height: renderViewport.height)
+                    // Experimental resize arms; this is not a production repair.
+                    .animation(driver == "G" ? .easeInOut(duration: 0.18) : nil,
+                               value: renderViewport)
+                    .transaction { transaction in
+                        if driver == "F" {
+                            transaction.animation = nil
+                            transaction.disablesAnimations = true
+                        }
+                    }
+                    .onChange(of: semantic, initial: true) { _, observed in
+                        BoardHighlightDiagnostic.shared.harnessObservedSelection(
+                            state: observed.ids.isEmpty ? "clear" : (observed.mode == .preview ? "preview" : "active"),
+                            ids: observed.ids, mode: observed.mode, positionID: observed.positionID,
+                            viewport: renderViewport)
+                    }
+            } else {
+                Text("Missing Evo catalog entry")
+            }
+            HStack {
+                control("Active", .active)
+                control("Preview", .preview)
+                control("Clear", .clear)
+            }
+        }
+    }
+
+    private func runScript() async {
+        let recorder = BoardHighlightDiagnostic.shared
+        guard ["A", "B", "C", "D", "E", "F", "G", "H0", "H1"].contains(driver),
+              env["HANGTEN_REVIEW_SCENE_UPDATE_COUNTER"] != "1",
+              ["legacy", "short", "long"].contains(timingProfile),
+              (timingProfile == "legacy" || (driver == "E" && viewport == CGSize(width: 210, height: 36))) else {
+            recorder.harnessEvent("standalone-driver-invalid", state: driver, viewport: viewport)
+            return
+        }
+        let readyDeadline = ProcessInfo.processInfo.systemUptime + 20
+        do {
+            while !recorder.standaloneIsReady {
+                guard ProcessInfo.processInfo.systemUptime < readyDeadline else {
+                    recorder.harnessEvent("standalone-readiness-timeout", state: selection.rawValue,
+                                          viewport: viewport)
+                    return
+                }
+                try await Task.sleep(for: .milliseconds(100))
+            }
+            guard viewport.width.isFinite, viewport.height.isFinite,
+                  viewport.width > 0, viewport.height > 0,
+                  (!isResizeDriver || viewport == CGSize(width: 210, height: 36)),
+                  recorder.standaloneViewportMatches(initialViewport) else {
+                recorder.harnessEvent("standalone-viewport-invalid", state: selection.rawValue,
+                                      viewport: initialViewport)
+                return
+            }
+            // Future epoch lets host schedule screenshots before the first state window.
+            let baseUptime = ProcessInfo.processInfo.systemUptime + 2
+            scriptEpoch = baseUptime // Established once, before the measurement window.
+            recorder.standaloneSchedule(baseUptime: baseUptime, viewport: initialViewport,
+                phaseDurations: phaseDurations, phaseStartOffsets: phaseStartOffsets,
+                captureOffsets: captureOffsets, snapshotOffsets: snapshotOffsets,
+                completionTailOffset: completionTailOffset, timingProfile: timingProfile)
+            defer { recorder.finishStandaloneObservation() }
+            let phases: [Selection] = [.clear, .active, .preview, .active, .preview]
+            for (index, phase) in phases.enumerated() {
+                let start = baseUptime + phaseStartOffsets[index]
+                try await sleepUntil(start)
+                recorder.harnessEvent("standalone-intended-\(index)", state: phase.rawValue,
+                                      viewport: viewport(for: phase))
+                // C/D/E/F/G tasks observe only: no state writes after epoch establishment.
+                if ["A", "B"].contains(driver), selection != phase { selection = phase }
+                // Predetermined sparse snapshots, no 1 Hz sampler in standalone mode.
+                for offset in snapshotOffsets[index] {
+                    try await sleepUntil(start + offset)
+                    recorder.standaloneSnapshot("standalone-snapshot-\(index)-\(offset)")
+                }
+            }
+            // Identical off-body tail observation for robust final screenshot bracketing.
+            try await sleepUntil(baseUptime + completionTailOffset)
+            recorder.standaloneSnapshot(timingProfile == "legacy" ? "standalone-tail-42" : "standalone-timing-tail")
+            recorder.harnessEvent("standalone-script-complete", state: "preview",
+                                  viewport: viewport)
+        } catch {
+            recorder.harnessEvent("standalone-script-cancelled", state: selection.rawValue,
+                                  viewport: viewport)
+        }
+    }
+
+    private func sleepUntil(_ uptime: TimeInterval) async throws {
+        try Task.checkCancellation()
+        let remaining = uptime - ProcessInfo.processInfo.systemUptime
+        if remaining > 0 { try await Task.sleep(for: .seconds(remaining)) }
+    }
+
+    private func control(_ title: String, _ target: Selection) -> some View {
+        Button(title) {
+            guard selection != target else { return }
+            BoardHighlightDiagnostic.shared.harnessEvent("standalone-button", state: target.rawValue,
+                                                         viewport: viewport)
+            selection = target
+        }
+        .buttonStyle(.borderedProminent)
+        .accessibilityIdentifier("standalone.\(target.rawValue)")
+    }
+}
+#endif

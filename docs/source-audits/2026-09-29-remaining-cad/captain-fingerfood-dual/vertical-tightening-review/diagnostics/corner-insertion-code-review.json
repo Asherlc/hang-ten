@@ -1,0 +1,56 @@
+{
+  "reviewedAt": "2026-09-30T17:31:58.508879+00:00",
+  "reviewer": "cad_wall_boards",
+  "status": "Revised code passed; second actual native probe pending. First probe remains rejected.",
+  "remainingCodeBlockers": [],
+  "independentTests": {
+    "sameStrandMarginCounterexampleResolved": true,
+    "improvementMM": 108.64897796758206,
+    "report": {
+      "converged": true,
+      "sweeps": 20,
+      "acceptedMoves": 98,
+      "candidateChecks": 4546,
+      "minimumAcceptedGain": 1e-07,
+      "proposalSolidMargin": 2e-05,
+      "proposalTubeCertification": "Runtime-quantized changed vertices; unchanged whole-path tube gate",
+      "vertexBudget": 256,
+      "candidateCheckBudget": 20000,
+      "lengthBefore": {
+        "a": 0.33641201570751955,
+        "b": 0.04019950248448357
+      },
+      "lengthAfter": {
+        "a": 0.2277630377399375,
+        "b": 0.04019950248448357
+      },
+      "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."
+    },
+    "analyticTests": "....................                                                     [100%]\n20 passed in 6.08s"
+  },
+  "review": {
+    "cornerInsertion": "A local equal-length corner trim introduces two free vertices, preserves remote constrained segments, and checks the entire new chord. No pinned replacement witness. Accepted gains exceed0.1 micrometre.",
+    "proposalRounding": "Changed body vertices quantized to9dec before objective, front-entry and original whole-path tube validation. No radius inflation remains. Settled height quantized before recomputing support.",
+    "solidPrecisionReserve": "Changed solid spans certified with radius+20 micrometres; original final solid gate unchanged.",
+    "coupledBearingProposal": "Entire interior chain can translate under a deterministic list of full/component directions; support/mouth fixed and complete moved path checked. Candidates ordered by decreasing gain with stable ties.",
+    "boundedness": "128sweeps,256vertices per strand and20,000candidate checks per tightening pass;16height rounds. Accepted shortcuts remove vertices; insertion/chain work remains subject to explicit limits. Failure raises rather than publishes partial result.",
+    "convergenceMeaning": "No accepted proposed shortening above threshold in a complete sweep. This is bounded local geometric search, not a global optimum or complete surface stationarity proof. Independent native corner-cut postcondition still required.",
+    "confirmedMarginFixes": "Both other-strand and same-strand unchanged near-contact counterexamples resolved by certifying quantized geometry at original radii.",
+    "genericSeedCaveat": "For arbitrary unrounded helper inputs, rounding boundary vertices of the changed span may also alter an adjacent segment. Real native seeds are rounded and final whole-path recertification protects publication; author notified to expand affected span if supporting arbitrary unrounded seeds."
+  },
+  "pending": [
+    "Second native probe final rounded routes, convergence, unsupported-knee cuts and lateral bow measurement.",
+    "Current-code full regeneration and unrelated-cache parity after a successful native result."
+  ],
+  "fileSHA256": {
+    "Tools/HangboardCAD/native_cord_routes.py": "b0b123a164effc28f685b9b4b22f857e0d2ba6dcf831ca09b71a82d958688e38",
+    "Tools/HangboardCAD/tests/test_native_cord_tightening.py": "822d85044cc0b1ff1033e59bfc2d1f70864e8dc099db6a1ac2f8ba965aecbedd",
+    "Tools/HangboardPackages/src/hangboard_packages/cord_paths.py": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "31a4896a3e423f23199907fabd8d63481d1890beca90307394e28c1cfac20661",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py": "31d1262891ed33ad28fa1cf5fb459015701044b03a9a77ea3344deb29a63a2c7",
+    ".context/placid-badger/dual-vertical-review/corner-quantization-independent-result.json": "3c57b5e9b2f91dcedd3fcda81241107cfdf684d2469cf2eb2c6d31190e330158",
+    ".context/placid-badger/dual-vertical-review/native-probe-independent-corner-cuts.json": "64de37404e9721a34081b92a07c6a0a9f539ae3c361d4fa67c0eefa13c6de09d",
+    ".context/placid-badger/dual-vertical-review/proposal-margin-freeze-probe.json": "cef73e92574fa0bd9009c4fd5afb717be4daeb227804cf08b381657e89cf3912",
+    ".context/placid-badger/dual-vertical-review/same-strand-margin-freeze-probe.json": "16deab5672034c6af9e750ecbe549d92a5b996e1dc0ec479d5f7a06e3f55d909"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "approvedByRoot": true,
+  "baselineOnly": false,
+  "commit": "a314f39c03121465b493da6f45e49fa7c928b1cc",
+  "files": [
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "9ffdb0e7c38254b10da4dec42bc3116be9f32cb8f8efeaad4588633a0464014f"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "10e4fe7d6d945cc0ad22623113e51c4bccc280a949c7408c3fbeaf9a25861747"
+    },
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "sha256": "668f7b0d7433d81de39ebaccc5b6c6ab92732df58d6ae6232e16a28a7ab082bf"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "6d4439ffa97e0a93c25fc2b253710c2711186bbbc1515f830d33dd11a36a8b89"
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "4a023bf0e3ce4115fcb69862b2373bf7bedfebece9b4f856298c18f57874602a"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "4e5f858f149e57f350344a6ef009adfff7a40d73c73ab1a3f8912cdf4777d2fc"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "b8720ac7c42252f22dceecb8a58f96a1de297068bbb7a3972bddac8c7072fccf"
+    },
+    {
+      "path": "HangTen/Resources/PlanLibrary.json",
+      "sha256": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1"
+    },
+    {
+      "path": "HangTen/Models/WorkoutTimeline.swift",
+      "sha256": "d5e570e784a48019552ab6c792208d490377682f01e40e75c900a76832e449a3"
+    },
+    {
+      "path": "HangTen/Models/WorkoutActivityRecording.swift",
+      "sha256": "85b99c73ee4fb02cd4e3746cf38c8cfdb3549641a0c8112ffa37ee4b25b1e0ac"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/WorkoutTimelineTests.swift",
+      "sha256": "1c18ff421376441e4f740ff730416332375b05f05892fba0f76f81ec4cf4c6e5"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/BoardModelRealityTests.swift",
+      "sha256": "9a8d150975a18b0d6b69f1ebd13998414c9332be57f3e16d1124eaebc806e9af"
+    }
+  ],
+  "uncommittedCandidate": true
+}

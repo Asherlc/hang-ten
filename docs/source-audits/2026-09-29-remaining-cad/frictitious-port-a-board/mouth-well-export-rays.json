@@ -1,0 +1,1566 @@
+{
+  "package": "frictitious-port-a-board",
+  "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "modelSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+  "collisionFixtureSHA256": "4fb0c5f1cb2c47d3f75920ad7f97a6f27c0eaacbbf3b497c2982d8ea70fd7f0f",
+  "nativeFinalFeature": "RightBackEntryCut",
+  "closedNativeMeshVerified": true,
+  "nodeRoles": {
+    "pab_body": {
+      "role": "body",
+      "contactID": null
+    },
+    "pab_edge_10": {
+      "role": "contact",
+      "contactID": "edge-10"
+    },
+    "pab_edge_12": {
+      "role": "contact",
+      "contactID": "edge-12"
+    },
+    "pab_edge_15": {
+      "role": "contact",
+      "contactID": "edge-15"
+    },
+    "pab_edge_20": {
+      "role": "contact",
+      "contactID": "edge-20"
+    },
+    "pab_edge_25": {
+      "role": "contact",
+      "contactID": "edge-25"
+    },
+    "pab_edge_30": {
+      "role": "contact",
+      "contactID": "edge-30"
+    },
+    "pab_edge_8": {
+      "role": "contact",
+      "contactID": "edge-8"
+    },
+    "pab_jug_outer_rim": {
+      "role": "contact",
+      "contactID": "jug-outer-rim"
+    },
+    "pab_pinch_body": {
+      "role": "contact",
+      "contactID": "pinch-body"
+    }
+  },
+  "rays": [
+    {
+      "mouth": "left-front",
+      "sample": "center",
+      "rayOriginMM": [
+        -50.0,
+        0.0,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          -50.0,
+          0.0,
+          20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          -50.0,
+          0.0,
+          19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          -2.220446049250313e-16,
+          1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-front",
+      "sample": "inner-left",
+      "rayOriginMM": [
+        -53.3,
+        0.0,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          -53.3,
+          0.0,
+          20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          -53.3,
+          0.0,
+          19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          -2.220446049250313e-16,
+          1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-front",
+      "sample": "inner-right",
+      "rayOriginMM": [
+        -46.7,
+        0.0,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          -46.7,
+          0.0,
+          20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          -46.7,
+          0.0,
+          19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          -2.220446049250313e-16,
+          1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-front",
+      "sample": "inner-up",
+      "rayOriginMM": [
+        -50.0,
+        3.3,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          -50.0,
+          3.3,
+          20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          -50.0,
+          3.3,
+          19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          -2.220446049250313e-16,
+          1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-front",
+      "sample": "inner-down",
+      "rayOriginMM": [
+        -50.0,
+        -3.3,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 80.0,
+        "pointMM": [
+          -50.0,
+          -3.3,
+          20.000000000000004
+        ],
+        "owner": null,
+        "faceNormal": [
+          -0.0,
+          -0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703482,
+        "pointMM": [
+          -50.0,
+          -3.3,
+          19.99999955296518
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          -0.0,
+          -0.0,
+          1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          -2.220446049250313e-16,
+          1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.4703482160457497e-07,
+      "recessDepthFromFaceMM": 4.000000447034822,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-front",
+      "sample": "near-rim",
+      "rayOriginMM": [
+        -44.775,
+        0.0,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 80.00000000000001,
+        "pointMM": [
+          -44.775,
+          0.0,
+          19.99999999999999
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703482,
+        "pointMM": [
+          -44.775,
+          0.0,
+          19.99999955296518
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          -2.220446049250313e-16,
+          1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.4703480739372026e-07,
+      "recessDepthFromFaceMM": 4.000000447034822,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-front",
+      "sample": "surround",
+      "rayOriginMM": [
+        -43.125,
+        0.0,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 76.0,
+        "pointMM": [
+          -43.125,
+          0.0,
+          24.000000000000007
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          -0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 75.99999979138374,
+        "pointMM": [
+          -43.125,
+          0.0,
+          24.000000208616257
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          -5.5093974013601685e-17,
+          -2.6688052925928294e-16,
+          1.0
+        ],
+        "authoredNormal": [
+          1.4852857207009232e-05,
+          0.0006050383380467902,
+          0.9999998168539843
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 2.086162567138672e-07,
+      "recessDepthFromFaceMM": -2.086162567138672e-07,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-rear",
+      "sample": "center",
+      "rayOriginMM": [
+        -50.0,
+        0.0,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          -50.0,
+          0.0,
+          -20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          -50.0,
+          0.0,
+          -19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          2.220446049250313e-16,
+          -1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-rear",
+      "sample": "inner-left",
+      "rayOriginMM": [
+        -53.3,
+        0.0,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          -53.3,
+          0.0,
+          -20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          -53.3,
+          0.0,
+          -19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          2.220446049250313e-16,
+          -1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-rear",
+      "sample": "inner-right",
+      "rayOriginMM": [
+        -46.7,
+        0.0,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          -46.7,
+          0.0,
+          -20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          -46.7,
+          0.0,
+          -19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          2.220446049250313e-16,
+          -1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-rear",
+      "sample": "inner-up",
+      "rayOriginMM": [
+        -50.0,
+        3.3,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 80.0,
+        "pointMM": [
+          -50.0,
+          3.3,
+          -20.000000000000004
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          -0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703482,
+        "pointMM": [
+          -50.0,
+          3.3,
+          -19.99999955296518
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          -0.0,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          2.220446049250313e-16,
+          -1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.4703482160457497e-07,
+      "recessDepthFromFaceMM": 4.000000447034822,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-rear",
+      "sample": "inner-down",
+      "rayOriginMM": [
+        -50.0,
+        -3.3,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          -50.0,
+          -3.3,
+          -20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          -50.0,
+          -3.3,
+          -19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          2.220446049250313e-16,
+          -1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-rear",
+      "sample": "near-rim",
+      "rayOriginMM": [
+        -44.775,
+        0.0,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 80.00000000000001,
+        "pointMM": [
+          -44.775,
+          0.0,
+          -19.99999999999999
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703482,
+        "pointMM": [
+          -44.775,
+          0.0,
+          -19.99999955296518
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          2.220446049250313e-16,
+          -1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.4703480739372026e-07,
+      "recessDepthFromFaceMM": 4.000000447034822,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "left-rear",
+      "sample": "surround",
+      "rayOriginMM": [
+        -43.125,
+        0.0,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 76.0,
+        "pointMM": [
+          -43.125,
+          0.0,
+          -24.000000000000007
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          -0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 75.99999979138373,
+        "pointMM": [
+          -43.125,
+          0.0,
+          -24.00000020861627
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          3.9887817918386973e-17,
+          2.891205768163323e-16,
+          -1.0
+        ],
+        "authoredNormal": [
+          1.4571708931800403e-05,
+          0.00020390023300743016,
+          -0.9999999791061799
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 2.086162709247219e-07,
+      "recessDepthFromFaceMM": -2.086162709247219e-07,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-front",
+      "sample": "center",
+      "rayOriginMM": [
+        50.0,
+        0.0,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          50.0,
+          0.0,
+          20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          50.0,
+          0.0,
+          19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          -2.220446049250313e-16,
+          1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-front",
+      "sample": "inner-left",
+      "rayOriginMM": [
+        46.7,
+        0.0,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          46.7,
+          0.0,
+          20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          46.7,
+          0.0,
+          19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          -2.220446049250313e-16,
+          1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-front",
+      "sample": "inner-right",
+      "rayOriginMM": [
+        53.3,
+        0.0,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          53.3,
+          0.0,
+          20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          53.3,
+          0.0,
+          19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          -2.220446049250313e-16,
+          1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-front",
+      "sample": "inner-up",
+      "rayOriginMM": [
+        50.0,
+        3.3,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          50.0,
+          3.3,
+          20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          50.0,
+          3.3,
+          19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          -2.220446049250313e-16,
+          1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-front",
+      "sample": "inner-down",
+      "rayOriginMM": [
+        50.0,
+        -3.3,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 80.0,
+        "pointMM": [
+          50.0,
+          -3.3,
+          20.000000000000004
+        ],
+        "owner": null,
+        "faceNormal": [
+          -0.0,
+          -0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703485,
+        "pointMM": [
+          50.0,
+          -3.3,
+          19.99999955296515
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          -0.0,
+          -0.0,
+          1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          -2.220446049250313e-16,
+          1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.00000044703485,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-front",
+      "sample": "near-rim",
+      "rayOriginMM": [
+        55.225,
+        0.0,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 80.0,
+        "pointMM": [
+          55.225,
+          0.0,
+          20.000000000000004
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703482,
+        "pointMM": [
+          55.225,
+          0.0,
+          19.99999955296518
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          -2.220446049250313e-16,
+          1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.4703482160457497e-07,
+      "recessDepthFromFaceMM": 4.000000447034822,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-front",
+      "sample": "surround",
+      "rayOriginMM": [
+        56.875,
+        0.0,
+        100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 76.00000000000003,
+        "pointMM": [
+          56.875,
+          0.0,
+          23.99999999999998
+        ],
+        "owner": null,
+        "faceNormal": [
+          2.3129646346357446e-15,
+          2.262682794752357e-16,
+          1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 75.99999979138374,
+        "pointMM": [
+          56.875,
+          0.0,
+          24.000000208616257
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          -2.2626827903545394e-16,
+          1.0
+        ],
+        "authoredNormal": [
+          0.00033648489996576463,
+          -1.1800487339374541e-06,
+          0.9999999433882582
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 2.0861628513557662e-07,
+      "recessDepthFromFaceMM": -2.086162567138672e-07,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-rear",
+      "sample": "center",
+      "rayOriginMM": [
+        50.0,
+        0.0,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          50.0,
+          0.0,
+          -20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          50.0,
+          0.0,
+          -19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          2.220446049250313e-16,
+          -1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-rear",
+      "sample": "inner-left",
+      "rayOriginMM": [
+        46.7,
+        0.0,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          46.7,
+          0.0,
+          -20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          46.7,
+          0.0,
+          -19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          2.220446049250313e-16,
+          -1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-rear",
+      "sample": "inner-right",
+      "rayOriginMM": [
+        53.3,
+        0.0,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          53.3,
+          0.0,
+          -20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          53.3,
+          0.0,
+          -19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          2.220446049250313e-16,
+          -1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-rear",
+      "sample": "inner-up",
+      "rayOriginMM": [
+        50.0,
+        3.3,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 80.0,
+        "pointMM": [
+          50.0,
+          3.3,
+          -20.000000000000004
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          -0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703485,
+        "pointMM": [
+          50.0,
+          3.3,
+          -19.99999955296515
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          -0.0,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          2.220446049250313e-16,
+          -1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.00000044703485,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-rear",
+      "sample": "inner-down",
+      "rayOriginMM": [
+        50.0,
+        -3.3,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 79.99999999999999,
+        "pointMM": [
+          50.0,
+          -3.3,
+          -20.000000000000018
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703484,
+        "pointMM": [
+          50.0,
+          -3.3,
+          -19.999999552965164
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          2.220446049250313e-16,
+          -1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.470348500262844e-07,
+      "recessDepthFromFaceMM": 4.000000447034836,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-rear",
+      "sample": "near-rim",
+      "rayOriginMM": [
+        55.225,
+        0.0,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 80.0,
+        "pointMM": [
+          55.225,
+          0.0,
+          -20.000000000000004
+        ],
+        "owner": null,
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 80.00000044703482,
+        "pointMM": [
+          55.225,
+          0.0,
+          -19.99999955296518
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0,
+          2.220446049250313e-16,
+          -1.0
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 4.4703482160457497e-07,
+      "recessDepthFromFaceMM": 4.000000447034822,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    },
+    {
+      "mouth": "right-rear",
+      "sample": "surround",
+      "rayOriginMM": [
+        56.875,
+        0.0,
+        -100.0
+      ],
+      "rayDirection": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeFirstHit": {
+        "distanceMM": 76.00000000000001,
+        "pointMM": [
+          56.875,
+          0.0,
+          -23.999999999999993
+        ],
+        "owner": null,
+        "faceNormal": [
+          -2.3129646346357446e-15,
+          -2.262682794752357e-16,
+          -1.0
+        ],
+        "authoredNormal": null
+      },
+      "usdzFirstHit": {
+        "distanceMM": 75.99999979138374,
+        "pointMM": [
+          56.875,
+          0.0,
+          -24.000000208616257
+        ],
+        "owner": "pab_body",
+        "faceNormal": [
+          0.0,
+          2.2626827903545394e-16,
+          -1.0
+        ],
+        "authoredNormal": [
+          0.0005661538099737383,
+          -2.6223699135715233e-07,
+          -0.9999998397348845
+        ]
+      },
+      "nativeUSDZFirstHitDifferenceMM": 2.086162709247219e-07,
+      "recessDepthFromFaceMM": -2.086162567138672e-07,
+      "usdzAllOwners": [
+        "pab_body",
+        "pab_body"
+      ]
+    }
+  ],
+  "maxFirstHitDifferenceMM": 4.470348500262844e-07,
+  "conclusion": "All four mouth wells are present in USDZ and match the closed native solid. No exported contact mesh caps any tested well. A straight-on normal-shaded view gives the recessed planar floors the same normal/color as the surrounding planar face; the cylindrical walls are edge-on and do not produce a dark hole without occlusion lighting."
+}

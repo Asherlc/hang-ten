@@ -1,0 +1,16 @@
+{
+  "sourceFiles": {
+    "HangTen/Models/WorkoutActivityRecording.swift": "36b12abb1dd8a85c012f40173df893b1a28a904fa37463de3fb0395af0cf4064",
+    "HangTenTests/BoardSourceBoundaryTests.swift": "6a4ae7a63ee9488186b4548196ff6be3c30b83b62367e86d9d4028e8edc5b295",
+    "HangTenTests/BoardTargetSubstitutionTests.swift": "91c1b8fe27bd0cbc9a5b99f046157787da99276cac816e360bf1b0248ec6512c"
+  },
+  "focusedPassed": 33,
+  "focusedFailures": 0,
+  "focusedTestExitStatus": 0,
+  "fullSuiteStatus": "RUNNING_AFTER_CORRECTIONS",
+  "runtimeStatus": "PENDING_FRESH_NORMAL_WORKFLOWS",
+  "terminalFixAlreadyPassed": 21,
+  "canonicalGeometryChanged": false,
+  "review": "additional-raw-evidence-test-corrections",
+  "limits": "No PR-readiness or hardware claim. Original full1509 suite had2failures/3skips; post-test collector interrupted after completion. Exact raw proof and corrections retained."
+}

@@ -1,0 +1,160 @@
+141: enum RootTab: Hashable, CaseIterable {
+142:     case train
+143:     case plans
+144:     case history
+145: 
+146:     static func initial(environment: [String: String]) -> RootTab {
+147:         #if DEBUG
+148:         if environment["HANGTEN_REVIEW_HISTORY"] == "1" {
+149:             return .history
+150:         }
+151:         if environment["HANGTEN_REVIEW_PLANS"] == "1" {
+152:             return .plans
+153:         }
+154:         #endif
+155:         return .train
+156:     }
+
+255:     private var normalBody: some View {
+256: 		TabView(selection: $selectedTab) {
+257: 			TrainView { selectedTab = .plans }
+258: 				.tabItem { Label("Train", systemImage: "figure.climbing") }
+259: 				.tag(RootTab.train)
+260: 
+261: 			PlansView()
+262: 				.tabItem {
+263: 					Label("Plans", systemImage: "list.bullet.rectangle.portrait.fill")
+264: 				}
+265: 				.tag(RootTab.plans)
+266: 
+267: 			HistoryView()
+268: 				.tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
+269: 				.tag(RootTab.history)
+270: 		}
+271: 		.tint(.hangGreenDark)
+272: 		.environmentObject(workoutAudioCoach)
+273: 		.environmentObject(deepLinkManager)
+274: 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+275: 			RootViewSessionPersistenceCoordinator(application: UIApplication.shared).flush(store: store)
+276: 		}
+277: 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
+278: 			store.flushSessionPersistenceSynchronously()
+279: 		}
+280:         .onAppear {
+281:             #if DEBUG
+282:             let environment = ProcessInfo.processInfo.environment
+283:             let orientationMask: UIInterfaceOrientationMask?
+284:             if environment["HANGTEN_REVIEW_LANDSCAPE"] == "1" {
+285:                 orientationMask = .landscapeRight
+286:             } else if environment["HANGTEN_REVIEW_PORTRAIT"] == "1" {
+287:                 orientationMask = .portrait
+288:             } else {
+289:                 orientationMask = nil
+290:             }
+291: 
+292:             guard let orientationMask,
+293:                   let windowScene = UIApplication.shared.connectedScenes
+294:                     .compactMap({ $0 as? UIWindowScene })
+295:                     .first else { return }
+296: 
+297:             windowScene.requestGeometryUpdate(
+298:                 .iOS(interfaceOrientations: orientationMask)
+299:             )
+300:             #endif
+301:         }
+302:         .onOpenURL { url in
+303:             deepLinkManager.handle(url: url)
+304:             if let boardID = deepLinkManager.pendingBoardID,
+305:                let board = BoardCatalog.all.first(where: { $0.id == boardID }) {
+306:                 store.selectBoard(board)
+307:                 selectedTab = .train
+308:             } else if deepLinkManager.pendingWorkoutPlanID != nil {
+309:                 selectedTab = .train
+310:             }
+311:         }
+
+339:         NavigationStack {
+340:             ScrollView(showsIndicators: false) {
+341:                 VStack(alignment: .leading, spacing: 20) {
+342:                     VStack(alignment: .leading, spacing: 6) {
+343:                         SectionLabel(title: "Training library")
+344:                         Text("Choose your session.")
+345:                             .font(.system(size: 31, weight: .bold, design: .rounded))
+346:                             .foregroundStyle(Color.hangInk)
+347:                         Text("Browse routines for your board.")
+348:                             .font(.system(size: 15, weight: .medium, design: .rounded))
+349:                             .foregroundStyle(Color.hangMuted)
+350:                             .fixedSize(horizontal: false, vertical: true)
+351: 
+352:                         currentBoardControl
+353: 
+354:                         Button {
+355:                             isCreatingRoutine = true
+
+446:             .sheet(isPresented: $isCreatingRoutine) {
+447:                 CustomRoutineEditorView(
+448:                     draft: CustomRoutineDraft(
+449:                         createWith: .boardSpecific(boardID: store.selectedBoard.id)
+450:                     ),
+451:                     onSave: store.saveCustomRoutine
+452:                 )
+453:             }
+454:         }
+455:     }
+456: 
+457:     private var currentBoardControl: some View {
+458:         NavigationLink {
+459:             BoardPickerView()
+460:         } label: {
+
+1169:         return VStack(alignment: .leading, spacing: 12) {
+1170:             VStack(alignment: .leading, spacing: 4) {
+1171:                 SectionLabel(title: "First hold cue")
+1172:                 Text(board.name)
+1173:                     .font(.system(size: 15, weight: .bold, design: .rounded))
+1174:                     .foregroundStyle(Color.hangInk)
+1175:             }
+1176:             BoardMapView(
+1177:                 board: board,
+1178:                 highlightedHoldIDs: firstStepHoldIDs,
+1179:                 activeHoldID: firstStepHold?.id
+1180:             )
+1181:                 .padding(.horizontal, 12)
+1182:             if let firstStepHoldCue, let hold = firstStepHoldCue.hold {
+1183:                 GripDiagramView(
+1184:                     hold: hold,
+1185:                     gripType: firstStepHoldCue.gripType,
+1186:                     fingerConfiguration: firstStepHoldCue.fingerConfiguration
+1187:                 )
+1188:             }
+
+2319: 				)
+2320: 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
+2321: 				if showsHoldPreview {
+2322: 					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+2323: 				}
+2324: 				BoardMapView(
+2325: 					board: board,
+2326: 					highlightedHoldIDs: highlightedHoldIDs,
+2327: 					highlightMode: highlightMode,
+2328: 					selectedPresentationID: WorkoutHighlightResolver.presentationID(for: cueStep, on: board),
+2329: 					activeHoldID: holdCue?.hold?.id
+2330: 				)
+2331: 					.padding(.horizontal, 2)
+
+2463: 				VStack(alignment: .leading, spacing: 4) {
+2464: 					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+2465: 						.frame(maxWidth: .infinity, minHeight: LandscapeLayout.previewLabelHeight, alignment: .center)
+2466: 						.opacity(showsHoldPreview ? 1 : 0)
+2467: 						.accessibilityHidden(!showsHoldPreview)
+2468: 					BoardMapView(
+2469: 						board: board,
+2470: 						highlightedHoldIDs: highlightedHoldIDs,
+2471: 						highlightMode: highlightMode,
+2472: 						selectedPresentationID: WorkoutHighlightResolver.presentationID(for: cueStep, on: board),
+2473: 						activeHoldID: holdCue?.hold?.id
+2474: 					)
+2475: 						.frame(maxWidth: .infinity)
+2476: 						.frame(maxHeight: LandscapeLayout.boardMaxHeight)
+2477: 				}
+2478: 				.frame(maxWidth: .infinity)

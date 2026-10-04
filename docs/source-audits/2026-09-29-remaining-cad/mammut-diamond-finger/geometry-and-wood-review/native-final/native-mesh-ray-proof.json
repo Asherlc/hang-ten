@@ -1,0 +1,188 @@
+{
+  "sourceSHA256": "5e06a1e7ae4f6bee8391605f61395ff86807e4234a54d6b8b2d46c015fa4ddd8",
+  "rayCount": 12,
+  "allFirstHitsMatchWithinMM": 0.001,
+  "maximumDifferenceMM": 4.319403501540364e-09,
+  "rays": [
+    {
+      "label": "center-upper-floor",
+      "nativeXZ": [
+        0,
+        -20
+      ],
+      "surfaceIntersectionsY": [
+        -35.28660483,
+        0.0
+      ],
+      "firstHitY": -35.28660483,
+      "depthFromLocalFlatFrontMM": 26.71339517,
+      "meshFirstHitY": -35.2866048256806,
+      "nativeMeshDifferenceMM": 4.319403501540364e-09
+    },
+    {
+      "label": "center-dip-floor",
+      "nativeXZ": [
+        0,
+        -42
+      ],
+      "surfaceIntersectionsY": [
+        -28.56052983,
+        -0.0
+      ],
+      "firstHitY": -28.56052983,
+      "depthFromLocalFlatFrontMM": 33.43947017,
+      "meshFirstHitY": -28.560529833590067,
+      "nativeMeshDifferenceMM": 3.5900669104194094e-09
+    },
+    {
+      "label": "center-unrecessed-front",
+      "nativeXZ": [
+        0,
+        -70
+      ],
+      "surfaceIntersectionsY": [
+        -62.0,
+        -0.0
+      ],
+      "firstHitY": -62.0,
+      "depthFromLocalFlatFrontMM": 0.0,
+      "meshFirstHitY": -62.000000000000014,
+      "nativeMeshDifferenceMM": 1.4210854715202004e-14
+    },
+    {
+      "label": "lateral-middle-floor",
+      "nativeXZ": [
+        300,
+        -15
+      ],
+      "surfaceIntersectionsY": [
+        -27.53060849,
+        0.0
+      ],
+      "firstHitY": -27.53060849,
+      "depthFromLocalFlatFrontMM": 34.46939151,
+      "meshFirstHitY": -27.53060849409613,
+      "nativeMeshDifferenceMM": 4.096129657682468e-09
+    },
+    {
+      "label": "lateral-lower-shelf",
+      "nativeXZ": [
+        300,
+        -25
+      ],
+      "surfaceIntersectionsY": [
+        -30.05103499,
+        0.0
+      ],
+      "firstHitY": -30.05103499,
+      "depthFromLocalFlatFrontMM": 31.94896501,
+      "meshFirstHitY": -30.05103498657786,
+      "nativeMeshDifferenceMM": 3.422140792963546e-09
+    },
+    {
+      "label": "lateral-inner-rise",
+      "nativeXZ": [
+        210,
+        10
+      ],
+      "surfaceIntersectionsY": [
+        -31.93878301,
+        0.0
+      ],
+      "firstHitY": -31.93878301,
+      "depthFromLocalFlatFrontMM": 30.06121699,
+      "meshFirstHitY": -31.938783011807743,
+      "nativeMeshDifferenceMM": 1.807741512038774e-09
+    },
+    {
+      "label": "mono-left",
+      "nativeXZ": [
+        -260,
+        37
+      ],
+      "surfaceIntersectionsY": [
+        -20.0,
+        0.0
+      ],
+      "firstHitY": -20.0,
+      "depthFromLocalFlatFrontMM": 42.0,
+      "meshFirstHitY": -19.999999999999986,
+      "nativeMeshDifferenceMM": 1.4210854715202004e-14
+    },
+    {
+      "label": "mono-center",
+      "nativeXZ": [
+        260,
+        37
+      ],
+      "surfaceIntersectionsY": [
+        -20.0,
+        0.0
+      ],
+      "firstHitY": -20.0,
+      "depthFromLocalFlatFrontMM": 42.0,
+      "meshFirstHitY": -20.0,
+      "nativeMeshDifferenceMM": 0.0
+    },
+    {
+      "label": "mono-inner-side",
+      "nativeXZ": [
+        250,
+        37
+      ],
+      "surfaceIntersectionsY": [
+        -20.0,
+        0.0
+      ],
+      "firstHitY": -20.0,
+      "depthFromLocalFlatFrontMM": 42.0,
+      "meshFirstHitY": -20.0,
+      "nativeMeshDifferenceMM": 0.0
+    },
+    {
+      "label": "mono-outer-side",
+      "nativeXZ": [
+        270,
+        37
+      ],
+      "surfaceIntersectionsY": [
+        -20.0,
+        0.0
+      ],
+      "firstHitY": -20.0,
+      "depthFromLocalFlatFrontMM": 42.0,
+      "meshFirstHitY": -20.0,
+      "nativeMeshDifferenceMM": 0.0
+    },
+    {
+      "label": "mono-upper",
+      "nativeXZ": [
+        260,
+        43
+      ],
+      "surfaceIntersectionsY": [
+        -20.0,
+        0.0
+      ],
+      "firstHitY": -20.0,
+      "depthFromLocalFlatFrontMM": 42.0,
+      "meshFirstHitY": -20.0,
+      "nativeMeshDifferenceMM": 0.0
+    },
+    {
+      "label": "lower-slot",
+      "nativeXZ": [
+        300,
+        -73
+      ],
+      "surfaceIntersectionsY": [
+        -38.0,
+        -0.0
+      ],
+      "firstHitY": -38.0,
+      "depthFromLocalFlatFrontMM": 24.0,
+      "meshFirstHitY": -38.0,
+      "nativeMeshDifferenceMM": 0.0
+    }
+  ]
+}

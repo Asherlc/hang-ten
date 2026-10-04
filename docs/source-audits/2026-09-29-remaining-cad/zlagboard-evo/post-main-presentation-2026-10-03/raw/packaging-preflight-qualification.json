@@ -1,0 +1,5 @@
+{
+  "preflight": "packaging-plan-during-clean-evo.json",
+  "qualification": "Preparatory inventory wrote stdout inside inventoried root and includes its own prewrite file hash. Do not use for copy. Final copy plan will be generated outside the inventoried root; retain original plan unchanged.",
+  "scope": "Archive planning only; no copy or proof bytes changed."
+}

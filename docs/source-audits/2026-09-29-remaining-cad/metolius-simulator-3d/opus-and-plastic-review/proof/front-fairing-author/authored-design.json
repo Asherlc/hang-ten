@@ -1,0 +1,4224 @@
+{
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "silhouetteBezierSpansRightXZ": [
+    [
+      [
+        0.0,
+        222.0
+      ],
+      [
+        24.0,
+        222.0
+      ],
+      [
+        42.0,
+        211.0
+      ],
+      [
+        47.0,
+        188.0
+      ]
+    ],
+    [
+      [
+        47.0,
+        188.0
+      ],
+      [
+        83.0,
+        185.0
+      ],
+      [
+        222.0,
+        162.0
+      ],
+      [
+        245.0,
+        162.0
+      ]
+    ],
+    [
+      [
+        245.0,
+        162.0
+      ],
+      [
+        267.0,
+        162.0
+      ],
+      [
+        278.0,
+        180.0
+      ],
+      [
+        294.0,
+        180.0
+      ]
+    ],
+    [
+      [
+        294.0,
+        180.0
+      ],
+      [
+        322.0,
+        180.0
+      ],
+      [
+        355.5,
+        156.0
+      ],
+      [
+        355.5,
+        134.0
+      ]
+    ],
+    [
+      [
+        355.5,
+        134.0
+      ],
+      [
+        355.5,
+        104.0
+      ],
+      [
+        288.0,
+        0.0
+      ],
+      [
+        261.0,
+        0.0
+      ]
+    ],
+    [
+      [
+        261.0,
+        0.0
+      ],
+      [
+        244.0,
+        0.0
+      ],
+      [
+        219.0,
+        7.650000000000001
+      ],
+      [
+        190.0,
+        12.000000000000004
+      ]
+    ],
+    [
+      [
+        190.0,
+        12.0
+      ],
+      [
+        110.0,
+        24.0
+      ],
+      [
+        56.0,
+        30.25
+      ],
+      [
+        31.0,
+        24.0
+      ]
+    ],
+    [
+      [
+        31.0,
+        24.0
+      ],
+      [
+        15.0,
+        20.0
+      ],
+      [
+        18.0,
+        18.0
+      ],
+      [
+        0.0,
+        18.0
+      ]
+    ]
+  ],
+  "transitionSections": [
+    {
+      "transition": "CenterShoulder",
+      "x": 45.5,
+      "floorZ": 145.0,
+      "rearNativeEdgesMerged": 1,
+      "rearRoofZ": 187.93378964134104,
+      "nativeOuterCurveDegree": 3,
+      "nativeOuterCurvePoles": 8
+    },
+    {
+      "transition": "CenterShoulder",
+      "x": 45.7,
+      "floorZ": 145.0,
+      "rearNativeEdgesMerged": 1,
+      "rearRoofZ": 187.9402351368747,
+      "nativeOuterCurveDegree": 3,
+      "nativeOuterCurvePoles": 8
+    },
+    {
+      "transition": "CenterShoulder",
+      "x": 59.5,
+      "floorZ": 145.0,
+      "rearNativeEdgesMerged": 1,
+      "rearRoofZ": 186.76237623762376,
+      "nativeOuterCurveDegree": 3,
+      "nativeOuterCurvePoles": 4
+    },
+    {
+      "transition": "CenterShoulder",
+      "x": 61.0,
+      "floorZ": 145.0,
+      "rearNativeEdgesMerged": 1,
+      "rearRoofZ": 186.61386138613864,
+      "nativeOuterCurveDegree": 3,
+      "nativeOuterCurvePoles": 4
+    },
+    {
+      "transition": "RoundFlat",
+      "x": 110.0,
+      "floorZ": 135.0,
+      "rearNativeEdgesMerged": 2,
+      "rearRoofZ": 181.76237623762376,
+      "nativeOuterCurveDegree": 8,
+      "nativeOuterCurvePoles": 72
+    },
+    {
+      "transition": "RoundFlat",
+      "x": 112.0,
+      "floorZ": 135.0,
+      "rearNativeEdgesMerged": 2,
+      "rearRoofZ": 181.56435643564356,
+      "nativeOuterCurveDegree": 8,
+      "nativeOuterCurvePoles": 72
+    },
+    {
+      "transition": "RoundFlat",
+      "x": 183.0,
+      "floorZ": 135.0,
+      "rearNativeEdgesMerged": 1,
+      "rearRoofZ": 173.22727272727275,
+      "nativeOuterCurveDegree": 7,
+      "nativeOuterCurvePoles": 50
+    },
+    {
+      "transition": "RoundFlat",
+      "x": 185.0,
+      "floorZ": 135.0,
+      "rearNativeEdgesMerged": 1,
+      "rearRoofZ": 172.95454545454544,
+      "nativeOuterCurveDegree": 7,
+      "nativeOuterCurvePoles": 50
+    },
+    {
+      "transition": "OuterShoulder",
+      "x": 238.0,
+      "floorZ": 135.0,
+      "rearNativeEdgesMerged": 1,
+      "rearRoofZ": 165.72727272727275,
+      "nativeOuterCurveDegree": 7,
+      "nativeOuterCurvePoles": 50
+    },
+    {
+      "transition": "OuterShoulder",
+      "x": 240.0,
+      "floorZ": 135.0,
+      "rearNativeEdgesMerged": 1,
+      "rearRoofZ": 165.45454545454544,
+      "nativeOuterCurveDegree": 7,
+      "nativeOuterCurvePoles": 50
+    },
+    {
+      "transition": "OuterShoulder",
+      "x": 276.0,
+      "floorZ": 135.0,
+      "rearNativeEdgesMerged": 1,
+      "rearRoofZ": 173.30677605116622,
+      "nativeOuterCurveDegree": 6,
+      "nativeOuterCurvePoles": 29
+    },
+    {
+      "transition": "OuterShoulder",
+      "x": 278.0,
+      "floorZ": 135.0,
+      "rearNativeEdgesMerged": 1,
+      "rearRoofZ": 174.31851190809715,
+      "nativeOuterCurveDegree": 6,
+      "nativeOuterCurvePoles": 29
+    }
+  ],
+  "depthFloorCorrections": [
+    {
+      "contactID": "edge-5-left",
+      "floorTranslationMm": -0.6478224701150026
+    },
+    {
+      "contactID": "edge-6-left",
+      "floorTranslationMm": -0.3622775284857269
+    },
+    {
+      "contactID": "pocket-8-left",
+      "floorTranslationMm": -0.03204756584677426
+    },
+    {
+      "contactID": "pocket-9-left",
+      "floorTranslationMm": -0.5224864001332037
+    },
+    {
+      "contactID": "pocket-10-left",
+      "floorTranslationMm": -1.3097484798844548
+    },
+    {
+      "contactID": "edge-11-left",
+      "floorTranslationMm": -0.6335744649390058
+    },
+    {
+      "contactID": "pocket-12-left",
+      "floorTranslationMm": 1.1263213904575764
+    },
+    {
+      "contactID": "pocket-13-left",
+      "floorTranslationMm": 1.2276214372502245
+    },
+    {
+      "contactID": "pocket-16-center",
+      "floorTranslationMm": -0.11124696704704462
+    },
+    {
+      "contactID": "pocket-17-center",
+      "floorTranslationMm": -1.3727531515483768
+    },
+    {
+      "contactID": "pocket-18-center",
+      "floorTranslationMm": 0.9023082628262031
+    },
+    {
+      "contactID": "pocket-13-right",
+      "floorTranslationMm": 1.2274700801024245
+    },
+    {
+      "contactID": "pocket-12-right",
+      "floorTranslationMm": 1.1263213835218195
+    },
+    {
+      "contactID": "edge-11-right",
+      "floorTranslationMm": -0.6335736971406796
+    },
+    {
+      "contactID": "pocket-10-right",
+      "floorTranslationMm": -1.3097543062769574
+    },
+    {
+      "contactID": "pocket-9-right",
+      "floorTranslationMm": -0.5224869709135618
+    },
+    {
+      "contactID": "pocket-8-right",
+      "floorTranslationMm": -0.03204700183971454
+    },
+    {
+      "contactID": "edge-6-right",
+      "floorTranslationMm": -0.36227712519808364
+    },
+    {
+      "contactID": "edge-5-right",
+      "floorTranslationMm": -0.647822553079763
+    }
+  ],
+  "allNewGeometryValues": "Operator-selected display estimates; exact native section loops use existing CAD only, no pixels or reference mesh",
+  "finalBody": "BodySolid",
+  "contactCount": 30,
+  "fullyConstrainedSketchCount": 159,
+  "rawManifestUnchanged": true,
+  "gripSelections": {
+    "jug-14-center": {
+      "limits": [
+        -47,
+        47,
+        -94,
+        -0.001,
+        182.8,
+        222.01
+      ],
+      "localSelection": [
+        {
+          "sourceFace": 30,
+          "localNormalZ": [
+            0.7602364315197598
+          ]
+        },
+        {
+          "sourceFace": 31,
+          "localNormalZ": [
+            0.7602364315197596
+          ]
+        },
+        {
+          "sourceFace": 54,
+          "localNormalZ": [
+            0.6632017557773234
+          ]
+        },
+        {
+          "sourceFace": 56,
+          "localNormalZ": [
+            0.6632017557773234
+          ]
+        },
+        {
+          "sourceFace": 57,
+          "localNormalZ": [
+            0.45896164201522816
+          ]
+        },
+        {
+          "sourceFace": 58,
+          "localNormalZ": [
+            0.4589616420225948
+          ]
+        },
+        {
+          "sourceFace": 79,
+          "localNormalZ": [
+            0.6301259316082086
+          ]
+        },
+        {
+          "sourceFace": 82,
+          "localNormalZ": [
+            0.6301259316082086
+          ]
+        }
+      ],
+      "nativeConstruction": "Individual native final-BodySolid face binders each intersected with local bounds and aggregated as a contact Compound; follows final body and roof recomputation"
+    },
+    "round-sloper-3-center": {
+      "limits": [
+        -148,
+        148,
+        -94,
+        -29,
+        145,
+        215
+      ],
+      "localSelection": [
+        {
+          "sourceFace": 26,
+          "localNormalZ": [
+            0.9662924582285055
+          ]
+        },
+        {
+          "sourceFace": 30,
+          "localNormalZ": [
+            0.7605883916326034
+          ]
+        },
+        {
+          "sourceFace": 31,
+          "localNormalZ": [
+            0.7605883916326039
+          ]
+        },
+        {
+          "sourceFace": 32,
+          "localNormalZ": [
+            0.9662924582285055
+          ]
+        },
+        {
+          "sourceFace": 52,
+          "localNormalZ": [
+            0.9686901899835125
+          ]
+        },
+        {
+          "sourceFace": 54,
+          "localNormalZ": [
+            0.9751498619390566
+          ]
+        },
+        {
+          "sourceFace": 55,
+          "localNormalZ": [
+            0.9686901899835125
+          ]
+        },
+        {
+          "sourceFace": 56,
+          "localNormalZ": [
+            0.9751498619390566
+          ]
+        },
+        {
+          "sourceFace": 57,
+          "localNormalZ": [
+            0.45896164201522816
+          ]
+        },
+        {
+          "sourceFace": 58,
+          "localNormalZ": [
+            0.4589616420225948
+          ]
+        },
+        {
+          "sourceFace": 79,
+          "localNormalZ": [
+            0.6599254349357679
+          ]
+        },
+        {
+          "sourceFace": 82,
+          "localNormalZ": [
+            0.6599254349357679
+          ]
+        }
+      ],
+      "nativeConstruction": "Individual native final-BodySolid face binders each intersected with local bounds and aggregated as a contact Compound; follows final body and roof recomputation"
+    },
+    "flat-sloper-2-left": {
+      "limits": [
+        -258,
+        -148,
+        -94,
+        -39,
+        135,
+        215
+      ],
+      "localSelection": [
+        {
+          "sourceFace": 23,
+          "localNormalZ": [
+            0.9372255094406227
+          ]
+        },
+        {
+          "sourceFace": 24,
+          "localNormalZ": [
+            0.9766306091257744
+          ]
+        },
+        {
+          "sourceFace": 26,
+          "localNormalZ": [
+            0.9602568773769538
+          ]
+        }
+      ],
+      "nativeConstruction": "Individual native final-BodySolid face binders each intersected with local bounds and aggregated as a contact Compound; follows final body and roof recomputation"
+    },
+    "jug-1-left": {
+      "limits": [
+        -356,
+        -258,
+        -110,
+        -0.001,
+        137,
+        210
+      ],
+      "localSelection": [
+        {
+          "sourceFace": 21,
+          "localNormalZ": [
+            0.926460356508637
+          ]
+        },
+        {
+          "sourceFace": 22,
+          "localNormalZ": [
+            0.6348239943037085
+          ]
+        },
+        {
+          "sourceFace": 23,
+          "localNormalZ": [
+            0.8247967342427229
+          ]
+        },
+        {
+          "sourceFace": 47,
+          "localNormalZ": [
+            0.9410584309224217
+          ]
+        },
+        {
+          "sourceFace": 48,
+          "localNormalZ": [
+            0.8202850267110883
+          ]
+        }
+      ],
+      "nativeConstruction": "Individual native final-BodySolid face binders each intersected with local bounds and aggregated as a contact Compound; follows final body and roof recomputation"
+    },
+    "flat-sloper-2-right": {
+      "limits": [
+        148,
+        258,
+        -94,
+        -39,
+        135,
+        215
+      ],
+      "localSelection": [
+        {
+          "sourceFace": 32,
+          "localNormalZ": [
+            0.9602568773769538
+          ]
+        },
+        {
+          "sourceFace": 33,
+          "localNormalZ": [
+            0.9766306091257744
+          ]
+        },
+        {
+          "sourceFace": 34,
+          "localNormalZ": [
+            0.9372255094406227
+          ]
+        }
+      ],
+      "nativeConstruction": "Individual native final-BodySolid face binders each intersected with local bounds and aggregated as a contact Compound; follows final body and roof recomputation"
+    },
+    "jug-1-right": {
+      "limits": [
+        258,
+        356,
+        -110,
+        -0.001,
+        137,
+        210
+      ],
+      "localSelection": [
+        {
+          "sourceFace": 34,
+          "localNormalZ": [
+            0.8247967342427229
+          ]
+        },
+        {
+          "sourceFace": 35,
+          "localNormalZ": [
+            0.6348239943037085
+          ]
+        },
+        {
+          "sourceFace": 36,
+          "localNormalZ": [
+            0.926460356508637
+          ]
+        },
+        {
+          "sourceFace": 62,
+          "localNormalZ": [
+            0.9410584309224216
+          ]
+        },
+        {
+          "sourceFace": 64,
+          "localNormalZ": [
+            0.8202850267110882
+          ]
+        }
+      ],
+      "nativeConstruction": "Individual native final-BodySolid face binders each intersected with local bounds and aggregated as a contact Compound; follows final body and roof recomputation"
+    }
+  },
+  "functionalProbe": {
+    "sourceSHA256": "7750992f4afb3a6127cafe34ecb26445f1907078dd830fde69bbc53a28a6edfd",
+    "beforeSourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+    "status": "native-shape-probe-pass-contacts-pending",
+    "frontFairingStationsYZAndDyDz": [
+      [
+        -72.128,
+        135.0,
+        -0.528
+      ],
+      [
+        -65.0,
+        117.0,
+        -0.35
+      ],
+      [
+        -55.0,
+        87.0,
+        -0.364
+      ],
+      [
+        -44.0,
+        59.0,
+        -0.394
+      ],
+      [
+        -32.0,
+        29.0,
+        -0.414
+      ],
+      [
+        -18.0,
+        -4.0,
+        -0.43
+      ]
+    ],
+    "upperProtectedZMinimumMM": 135,
+    "upperBodyBidirectionalDifferenceVolumesMM3": [
+      0.0,
+      0.0
+    ],
+    "finalSolidValid": true,
+    "solidCount": 1,
+    "volumeMM3": 5740248.833095984,
+    "fullyConstrainedRelief": true,
+    "rawManifestUnchanged": true,
+    "nativeSamples": [
+      {
+        "yz": [
+          -72.128,
+          135.0
+        ],
+        "tiltDegrees": 27.834053940550877
+      },
+      {
+        "yz": [
+          -72.03335085199998,
+          134.82
+        ],
+        "tiltDegrees": 27.639513180310548
+      },
+      {
+        "yz": [
+          -71.939477216,
+          134.64000000000001
+        ],
+        "tiltDegrees": 27.446606564466382
+      },
+      {
+        "yz": [
+          -71.84636980399999,
+          134.46
+        ],
+        "tiltDegrees": 27.255359384508022
+      },
+      {
+        "yz": [
+          -71.75401932800001,
+          134.28
+        ],
+        "tiltDegrees": 27.06579664309427
+      },
+      {
+        "yz": [
+          -71.66241649999999,
+          134.1
+        ],
+        "tiltDegrees": 26.877943048792858
+      },
+      {
+        "yz": [
+          -71.571552032,
+          133.92
+        ],
+        "tiltDegrees": 26.691823011087525
+      },
+      {
+        "yz": [
+          -71.481416636,
+          133.74
+        ],
+        "tiltDegrees": 26.507460635652382
+      },
+      {
+        "yz": [
+          -71.392001024,
+          133.56
+        ],
+        "tiltDegrees": 26.32487971989284
+      },
+      {
+        "yz": [
+          -71.30329590800001,
+          133.38000000000002
+        ],
+        "tiltDegrees": 26.144103748752418
+      },
+      {
+        "yz": [
+          -71.215292,
+          133.20000000000002
+        ],
+        "tiltDegrees": 25.965155890783663
+      },
+      {
+        "yz": [
+          -71.127980012,
+          133.02
+        ],
+        "tiltDegrees": 25.78805899448183
+      },
+      {
+        "yz": [
+          -71.04135065599999,
+          132.84
+        ],
+        "tiltDegrees": 25.612835584878727
+      },
+      {
+        "yz": [
+          -70.955394644,
+          132.66
+        ],
+        "tiltDegrees": 25.439507860394436
+      },
+      {
+        "yz": [
+          -70.87010268799999,
+          132.48
+        ],
+        "tiltDegrees": 25.268097689943783
+      },
+      {
+        "yz": [
+          -70.7854655,
+          132.29999999999998
+        ],
+        "tiltDegrees": 25.09862661029438
+      },
+      {
+        "yz": [
+          -70.701473792,
+          132.11999999999998
+        ],
+        "tiltDegrees": 24.93111582367249
+      },
+      {
+        "yz": [
+          -70.618118276,
+          131.94
+        ],
+        "tiltDegrees": 24.76558619561277
+      },
+      {
+        "yz": [
+          -70.53538966400001,
+          131.75999999999996
+        ],
+        "tiltDegrees": 24.60205825304767
+      },
+      {
+        "yz": [
+          -70.453278668,
+          131.58000000000004
+        ],
+        "tiltDegrees": 24.440552182631716
+      },
+      {
+        "yz": [
+          -70.37177599999998,
+          131.4
+        ],
+        "tiltDegrees": 24.281087829295945
+      },
+      {
+        "yz": [
+          -70.29087237200001,
+          131.22
+        ],
+        "tiltDegrees": 24.123684695027304
+      },
+      {
+        "yz": [
+          -70.21055849599999,
+          131.04
+        ],
+        "tiltDegrees": 23.968361937867492
+      },
+      {
+        "yz": [
+          -70.13082508400001,
+          130.86
+        ],
+        "tiltDegrees": 23.815138371125776
+      },
+      {
+        "yz": [
+          -70.051662848,
+          130.68
+        ],
+        "tiltDegrees": 23.664032462799746
+      },
+      {
+        "yz": [
+          -69.9730625,
+          130.5
+        ],
+        "tiltDegrees": 23.51506233519795
+      },
+      {
+        "yz": [
+          -69.895014752,
+          130.32
+        ],
+        "tiltDegrees": 23.36824576475824
+      },
+      {
+        "yz": [
+          -69.817510316,
+          130.14
+        ],
+        "tiltDegrees": 23.223600182055232
+      },
+      {
+        "yz": [
+          -69.740539904,
+          129.95999999999998
+        ],
+        "tiltDegrees": 23.081142671990325
+      },
+      {
+        "yz": [
+          -69.664094228,
+          129.78
+        ],
+        "tiltDegrees": 22.9408899741576
+      },
+      {
+        "yz": [
+          -69.58816399999999,
+          129.6
+        ],
+        "tiltDegrees": 22.80285848337847
+      },
+      {
+        "yz": [
+          -69.512739932,
+          129.42
+        ],
+        "tiltDegrees": 22.667064250398386
+      },
+      {
+        "yz": [
+          -69.437812736,
+          129.24
+        ],
+        "tiltDegrees": 22.533522982738255
+      },
+      {
+        "yz": [
+          -69.36337312399999,
+          129.06
+        ],
+        "tiltDegrees": 22.40225004569346
+      },
+      {
+        "yz": [
+          -69.289411808,
+          128.88
+        ],
+        "tiltDegrees": 22.273260463473257
+      },
+      {
+        "yz": [
+          -69.2159195,
+          128.70000000000002
+        ],
+        "tiltDegrees": 22.14656892047314
+      },
+      {
+        "yz": [
+          -69.142886912,
+          128.52
+        ],
+        "tiltDegrees": 22.022189762672912
+      },
+      {
+        "yz": [
+          -69.07030475599998,
+          128.34
+        ],
+        "tiltDegrees": 21.900136999152988
+      },
+      {
+        "yz": [
+          -68.998163744,
+          128.16
+        ],
+        "tiltDegrees": 21.78042430372161
+      },
+      {
+        "yz": [
+          -68.92645458800001,
+          127.97999999999999
+        ],
+        "tiltDegrees": 21.66306501664544
+      },
+      {
+        "yz": [
+          -68.85516799999999,
+          127.79999999999998
+        ],
+        "tiltDegrees": 21.548072146476247
+      },
+      {
+        "yz": [
+          -68.78429469199999,
+          127.61999999999999
+        ],
+        "tiltDegrees": 21.435458371966266
+      },
+      {
+        "yz": [
+          -68.71382537599999,
+          127.44000000000001
+        ],
+        "tiltDegrees": 21.325236044064834
+      },
+      {
+        "yz": [
+          -68.64375076399999,
+          127.25999999999998
+        ],
+        "tiltDegrees": 21.21741718798906
+      },
+      {
+        "yz": [
+          -68.57406156799999,
+          127.08
+        ],
+        "tiltDegrees": 21.11201350536128
+      },
+      {
+        "yz": [
+          -68.5047485,
+          126.89999999999999
+        ],
+        "tiltDegrees": 21.00903637640598
+      },
+      {
+        "yz": [
+          -68.43580227199999,
+          126.72000000000001
+        ],
+        "tiltDegrees": 20.90849686219929
+      },
+      {
+        "yz": [
+          -68.367213596,
+          126.54000000000002
+        ],
+        "tiltDegrees": 20.810405706963774
+      },
+      {
+        "yz": [
+          -68.298973184,
+          126.36
+        ],
+        "tiltDegrees": 20.714773340401756
+      },
+      {
+        "yz": [
+          -68.231071748,
+          126.18
+        ],
+        "tiltDegrees": 20.621609880060266
+      },
+      {
+        "yz": [
+          -68.1635,
+          126.0
+        ],
+        "tiltDegrees": 20.530925133720817
+      },
+      {
+        "yz": [
+          -68.096248652,
+          125.82
+        ],
+        "tiltDegrees": 20.44272860180749
+      },
+      {
+        "yz": [
+          -68.02930841599999,
+          125.63999999999999
+        ],
+        "tiltDegrees": 20.357029479806762
+      },
+      {
+        "yz": [
+          -67.96267000399999,
+          125.46
+        ],
+        "tiltDegrees": 20.2738366606927
+      },
+      {
+        "yz": [
+          -67.896324128,
+          125.28
+        ],
+        "tiltDegrees": 20.193158737351343
+      },
+      {
+        "yz": [
+          -67.83026149999999,
+          125.10000000000001
+        ],
+        "tiltDegrees": 20.11500400499804
+      },
+      {
+        "yz": [
+          -67.764472832,
+          124.92
+        ],
+        "tiltDegrees": 20.03938046358202
+      },
+      {
+        "yz": [
+          -67.698948836,
+          124.74
+        ],
+        "tiltDegrees": 19.96629582017207
+      },
+      {
+        "yz": [
+          -67.63368022399999,
+          124.55999999999999
+        ],
+        "tiltDegrees": 19.895757491318015
+      },
+      {
+        "yz": [
+          -67.56865770799999,
+          124.38
+        ],
+        "tiltDegrees": 19.827772605382247
+      },
+      {
+        "yz": [
+          -67.50387199999999,
+          124.2
+        ],
+        "tiltDegrees": 19.762348004836113
+      },
+      {
+        "yz": [
+          -67.439313812,
+          124.02000000000001
+        ],
+        "tiltDegrees": 19.699490248515993
+      },
+      {
+        "yz": [
+          -67.374973856,
+          123.84
+        ],
+        "tiltDegrees": 19.63920561383398
+      },
+      {
+        "yz": [
+          -67.31084284399999,
+          123.66
+        ],
+        "tiltDegrees": 19.581500098938566
+      },
+      {
+        "yz": [
+          -67.246911488,
+          123.47999999999999
+        ],
+        "tiltDegrees": 19.526379424820412
+      },
+      {
+        "yz": [
+          -67.1831705,
+          123.3
+        ],
+        "tiltDegrees": 19.47384903735902
+      },
+      {
+        "yz": [
+          -67.119610592,
+          123.11999999999999
+        ],
+        "tiltDegrees": 19.4239141093058
+      },
+      {
+        "yz": [
+          -67.056222476,
+          122.94
+        ],
+        "tiltDegrees": 19.376579542199657
+      },
+      {
+        "yz": [
+          -66.99299686399999,
+          122.76
+        ],
+        "tiltDegrees": 19.331849968211
+      },
+      {
+        "yz": [
+          -66.929924468,
+          122.58
+        ],
+        "tiltDegrees": 19.28972975191057
+      },
+      {
+        "yz": [
+          -66.866996,
+          122.4
+        ],
+        "tiltDegrees": 19.250222991959582
+      },
+      {
+        "yz": [
+          -66.80420217199999,
+          122.22000000000001
+        ],
+        "tiltDegrees": 19.213333522717665
+      },
+      {
+        "yz": [
+          -66.741533696,
+          122.03999999999999
+        ],
+        "tiltDegrees": 19.179064915765718
+      },
+      {
+        "yz": [
+          -66.67898128399999,
+          121.86
+        ],
+        "tiltDegrees": 19.1474204813405
+      },
+      {
+        "yz": [
+          -66.616535648,
+          121.68
+        ],
+        "tiltDegrees": 19.11840326967834
+      },
+      {
+        "yz": [
+          -66.5541875,
+          121.5
+        ],
+        "tiltDegrees": 19.092016072265277
+      },
+      {
+        "yz": [
+          -66.49192755199999,
+          121.32
+        ],
+        "tiltDegrees": 19.068261422991416
+      },
+      {
+        "yz": [
+          -66.42974651600001,
+          121.13999999999999
+        ],
+        "tiltDegrees": 19.047141599207148
+      },
+      {
+        "yz": [
+          -66.367635104,
+          120.96
+        ],
+        "tiltDegrees": 19.028658622679423
+      },
+      {
+        "yz": [
+          -66.305584028,
+          120.78
+        ],
+        "tiltDegrees": 19.012814260446184
+      },
+      {
+        "yz": [
+          -66.243584,
+          120.60000000000001
+        ],
+        "tiltDegrees": 18.999610025567392
+      },
+      {
+        "yz": [
+          -66.181625732,
+          120.42
+        ],
+        "tiltDegrees": 18.989047177771294
+      },
+      {
+        "yz": [
+          -66.11969993599999,
+          120.24
+        ],
+        "tiltDegrees": 18.981126723994752
+      },
+      {
+        "yz": [
+          -66.057797324,
+          120.05999999999999
+        ],
+        "tiltDegrees": 18.975849418816576
+      },
+      {
+        "yz": [
+          -65.99590860800001,
+          119.88000000000001
+        ],
+        "tiltDegrees": 18.973215764783106
+      },
+      {
+        "yz": [
+          -65.9340245,
+          119.70000000000002
+        ],
+        "tiltDegrees": 18.973226012625496
+      },
+      {
+        "yz": [
+          -65.872135712,
+          119.52000000000001
+        ],
+        "tiltDegrees": 18.97588016136821
+      },
+      {
+        "yz": [
+          -65.810232956,
+          119.34
+        ],
+        "tiltDegrees": 18.981177958328594
+      },
+      {
+        "yz": [
+          -65.74830694399999,
+          119.16
+        ],
+        "tiltDegrees": 18.98911889900754
+      },
+      {
+        "yz": [
+          -65.68634838799998,
+          118.97999999999999
+        ],
+        "tiltDegrees": 18.99970222687137
+      },
+      {
+        "yz": [
+          -65.624348,
+          118.79999999999998
+        ],
+        "tiltDegrees": 19.012926933025412
+      },
+      {
+        "yz": [
+          -65.56229649199999,
+          118.62
+        ],
+        "tiltDegrees": 19.028791755779807
+      },
+      {
+        "yz": [
+          -65.50018457600001,
+          118.44000000000001
+        ],
+        "tiltDegrees": 19.047295180108406
+      },
+      {
+        "yz": [
+          -65.438002964,
+          118.26
+        ],
+        "tiltDegrees": 19.06843543700164
+      },
+      {
+        "yz": [
+          -65.375742368,
+          118.08
+        ],
+        "tiltDegrees": 19.092210502714728
+      },
+      {
+        "yz": [
+          -65.3133935,
+          117.89999999999999
+        ],
+        "tiltDegrees": 19.11861809791237
+      },
+      {
+        "yz": [
+          -65.250947072,
+          117.71999999999998
+        ],
+        "tiltDegrees": 19.14765568671182
+      },
+      {
+        "yz": [
+          -65.188393796,
+          117.54000000000002
+        ],
+        "tiltDegrees": 19.179320475625754
+      },
+      {
+        "yz": [
+          -65.12572438400001,
+          117.36000000000001
+        ],
+        "tiltDegrees": 19.2136094124073
+      },
+      {
+        "yz": [
+          -65.062929548,
+          117.18
+        ],
+        "tiltDegrees": 19.250519184799046
+      },
+      {
+        "yz": [
+          -65.0,
+          117.0
+        ],
+        "tiltDegrees": 19.290046219188685
+      },
+      {
+        "yz": [
+          -65.0,
+          117.0
+        ],
+        "tiltDegrees": 19.290046219188735
+      },
+      {
+        "yz": [
+          -64.89519057999999,
+          116.7
+        ],
+        "tiltDegrees": 19.225410493123967
+      },
+      {
+        "yz": [
+          -64.79075664,
+          116.39999999999999
+        ],
+        "tiltDegrees": 19.16217576304336
+      },
+      {
+        "yz": [
+          -64.68668965999998,
+          116.10000000000001
+        ],
+        "tiltDegrees": 19.100345472632107
+      },
+      {
+        "yz": [
+          -64.58298112,
+          115.8
+        ],
+        "tiltDegrees": 19.039922976227782
+      },
+      {
+        "yz": [
+          -64.4796225,
+          115.5
+        ],
+        "tiltDegrees": 18.980911539448485
+      },
+      {
+        "yz": [
+          -64.37660527999999,
+          115.19999999999999
+        ],
+        "tiltDegrees": 18.923314339816677
+      },
+      {
+        "yz": [
+          -64.27392093999998,
+          114.89999999999999
+        ],
+        "tiltDegrees": 18.867134467378094
+      },
+      {
+        "yz": [
+          -64.17156096000001,
+          114.60000000000001
+        ],
+        "tiltDegrees": 18.812374925314927
+      },
+      {
+        "yz": [
+          -64.06951682,
+          114.3
+        ],
+        "tiltDegrees": 18.759038630552617
+      },
+      {
+        "yz": [
+          -63.96778000000001,
+          114.0
+        ],
+        "tiltDegrees": 18.707128414359566
+      },
+      {
+        "yz": [
+          -63.866341979999994,
+          113.69999999999999
+        ],
+        "tiltDegrees": 18.656647022939072
+      },
+      {
+        "yz": [
+          -63.76519423999999,
+          113.39999999999999
+        ],
+        "tiltDegrees": 18.607597118012823
+      },
+      {
+        "yz": [
+          -63.66432826,
+          113.10000000000001
+        ],
+        "tiltDegrees": 18.559981277395362
+      },
+      {
+        "yz": [
+          -63.56373552,
+          112.80000000000001
+        ],
+        "tiltDegrees": 18.513801995558843
+      },
+      {
+        "yz": [
+          -63.4634075,
+          112.5
+        ],
+        "tiltDegrees": 18.469061684187523
+      },
+      {
+        "yz": [
+          -63.36333568,
+          112.20000000000002
+        ],
+        "tiltDegrees": 18.425762672721312
+      },
+      {
+        "yz": [
+          -63.26351154,
+          111.9
+        ],
+        "tiltDegrees": 18.383907208887972
+      },
+      {
+        "yz": [
+          -63.16392656000001,
+          111.60000000000001
+        ],
+        "tiltDegrees": 18.34349745922319
+      },
+      {
+        "yz": [
+          -63.06457222,
+          111.3
+        ],
+        "tiltDegrees": 18.304535509578226
+      },
+      {
+        "yz": [
+          -62.965439999999994,
+          111.0
+        ],
+        "tiltDegrees": 18.267023365614378
+      },
+      {
+        "yz": [
+          -62.86652138,
+          110.7
+        ],
+        "tiltDegrees": 18.23096295328402
+      },
+      {
+        "yz": [
+          -62.76780784,
+          110.4
+        ],
+        "tiltDegrees": 18.19635611929746
+      },
+      {
+        "yz": [
+          -62.669290860000004,
+          110.1
+        ],
+        "tiltDegrees": 18.16320463157537
+      },
+      {
+        "yz": [
+          -62.57096192,
+          109.80000000000001
+        ],
+        "tiltDegrees": 18.131510179686227
+      },
+      {
+        "yz": [
+          -62.4728125,
+          109.5
+        ],
+        "tiltDegrees": 18.101274375268392
+      },
+      {
+        "yz": [
+          -62.37483408,
+          109.20000000000002
+        ],
+        "tiltDegrees": 18.07249875243632
+      },
+      {
+        "yz": [
+          -62.277018139999996,
+          108.89999999999999
+        ],
+        "tiltDegrees": 18.045184768170667
+      },
+      {
+        "yz": [
+          -62.17935616,
+          108.6
+        ],
+        "tiltDegrees": 18.01933380269173
+      },
+      {
+        "yz": [
+          -62.081839620000004,
+          108.3
+        ],
+        "tiltDegrees": 17.994947159816046
+      },
+      {
+        "yz": [
+          -61.984460000000006,
+          108.0
+        ],
+        "tiltDegrees": 17.972026067295673
+      },
+      {
+        "yz": [
+          -61.88720878,
+          107.7
+        ],
+        "tiltDegrees": 17.950571677139887
+      },
+      {
+        "yz": [
+          -61.79007744,
+          107.39999999999999
+        ],
+        "tiltDegrees": 17.930585065919022
+      },
+      {
+        "yz": [
+          -61.69305746,
+          107.1
+        ],
+        "tiltDegrees": 17.912067235050078
+      },
+      {
+        "yz": [
+          -61.596140319999996,
+          106.8
+        ],
+        "tiltDegrees": 17.89501911106394
+      },
+      {
+        "yz": [
+          -61.499317500000004,
+          106.5
+        ],
+        "tiltDegrees": 17.879441545853883
+      },
+      {
+        "yz": [
+          -61.40258048,
+          106.2
+        ],
+        "tiltDegrees": 17.865335316905174
+      },
+      {
+        "yz": [
+          -61.305920740000005,
+          105.9
+        ],
+        "tiltDegrees": 17.85270112750551
+      },
+      {
+        "yz": [
+          -61.20932976,
+          105.60000000000001
+        ],
+        "tiltDegrees": 17.84153960693618
+      },
+      {
+        "yz": [
+          -61.11279902,
+          105.3
+        ],
+        "tiltDegrees": 17.83185131064369
+      },
+      {
+        "yz": [
+          -61.01632,
+          105.0
+        ],
+        "tiltDegrees": 17.82363672039174
+      },
+      {
+        "yz": [
+          -60.91988418,
+          104.70000000000002
+        ],
+        "tiltDegrees": 17.81689624439344
+      },
+      {
+        "yz": [
+          -60.823483040000006,
+          104.4
+        ],
+        "tiltDegrees": 17.81163021742358
+      },
+      {
+        "yz": [
+          -60.727108060000006,
+          104.10000000000001
+        ],
+        "tiltDegrees": 17.80783890091086
+      },
+      {
+        "yz": [
+          -60.63075072,
+          103.8
+        ],
+        "tiltDegrees": 17.805522483010108
+      },
+      {
+        "yz": [
+          -60.5344025,
+          103.5
+        ],
+        "tiltDegrees": 17.804681078654244
+      },
+      {
+        "yz": [
+          -60.438054879999996,
+          103.2
+        ],
+        "tiltDegrees": 17.805314729586073
+      },
+      {
+        "yz": [
+          -60.341699340000005,
+          102.89999999999999
+        ],
+        "tiltDegrees": 17.80742340436987
+      },
+      {
+        "yz": [
+          -60.24532736,
+          102.60000000000001
+        ],
+        "tiltDegrees": 17.811006998382616
+      },
+      {
+        "yz": [
+          -60.14893042,
+          102.3
+        ],
+        "tiltDegrees": 17.816065333785144
+      },
+      {
+        "yz": [
+          -60.052499999999995,
+          102.0
+        ],
+        "tiltDegrees": 17.822598159472886
+      },
+      {
+        "yz": [
+          -59.95602758,
+          101.70000000000002
+        ],
+        "tiltDegrees": 17.83060515100662
+      },
+      {
+        "yz": [
+          -59.859504640000004,
+          101.39999999999999
+        ],
+        "tiltDegrees": 17.840085910523012
+      },
+      {
+        "yz": [
+          -59.76292266,
+          101.10000000000001
+        ],
+        "tiltDegrees": 17.851039966625112
+      },
+      {
+        "yz": [
+          -59.66627312,
+          100.8
+        ],
+        "tiltDegrees": 17.863466774253038
+      },
+      {
+        "yz": [
+          -59.56954749999999,
+          100.5
+        ],
+        "tiltDegrees": 17.877365714534694
+      },
+      {
+        "yz": [
+          -59.47273728,
+          100.2
+        ],
+        "tiltDegrees": 17.892736094616925
+      },
+      {
+        "yz": [
+          -59.37583394,
+          99.89999999999999
+        ],
+        "tiltDegrees": 17.909577147477144
+      },
+      {
+        "yz": [
+          -59.27882896,
+          99.60000000000001
+        ],
+        "tiltDegrees": 17.927888031715508
+      },
+      {
+        "yz": [
+          -59.18171382,
+          99.30000000000001
+        ],
+        "tiltDegrees": 17.94766783132809
+      },
+      {
+        "yz": [
+          -59.08448,
+          99.0
+        ],
+        "tiltDegrees": 17.96891555546095
+      },
+      {
+        "yz": [
+          -58.987118980000005,
+          98.7
+        ],
+        "tiltDegrees": 17.991630138145606
+      },
+      {
+        "yz": [
+          -58.88962224,
+          98.39999999999999
+        ],
+        "tiltDegrees": 18.01581043801595
+      },
+      {
+        "yz": [
+          -58.79198126,
+          98.10000000000001
+        ],
+        "tiltDegrees": 18.041455238006975
+      },
+      {
+        "yz": [
+          -58.69418752,
+          97.8
+        ],
+        "tiltDegrees": 18.06856324503558
+      },
+      {
+        "yz": [
+          -58.5962325,
+          97.5
+        ],
+        "tiltDegrees": 18.097133089663743
+      },
+      {
+        "yz": [
+          -58.498107680000004,
+          97.19999999999999
+        ],
+        "tiltDegrees": 18.127163325744323
+      },
+      {
+        "yz": [
+          -58.399804540000005,
+          96.89999999999999
+        ],
+        "tiltDegrees": 18.158652430050022
+      },
+      {
+        "yz": [
+          -58.301314559999994,
+          96.60000000000001
+        ],
+        "tiltDegrees": 18.191598801885544
+      },
+      {
+        "yz": [
+          -58.202629220000006,
+          96.30000000000001
+        ],
+        "tiltDegrees": 18.22600076268366
+      },
+      {
+        "yz": [
+          -58.10374,
+          96.0
+        ],
+        "tiltDegrees": 18.26185655558534
+      },
+      {
+        "yz": [
+          -58.00463838,
+          95.70000000000002
+        ],
+        "tiltDegrees": 18.299164345004424
+      },
+      {
+        "yz": [
+          -57.90531584000001,
+          95.39999999999999
+        ],
+        "tiltDegrees": 18.337922216177343
+      },
+      {
+        "yz": [
+          -57.80576386,
+          95.10000000000001
+        ],
+        "tiltDegrees": 18.378128174698166
+      },
+      {
+        "yz": [
+          -57.705973920000005,
+          94.8
+        ],
+        "tiltDegrees": 18.419780146039617
+      },
+      {
+        "yz": [
+          -57.605937499999996,
+          94.5
+        ],
+        "tiltDegrees": 18.46287597506042
+      },
+      {
+        "yz": [
+          -57.50564607999999,
+          94.2
+        ],
+        "tiltDegrees": 18.50741342549953
+      },
+      {
+        "yz": [
+          -57.40509114,
+          93.89999999999999
+        ],
+        "tiltDegrees": 18.553390179457683
+      },
+      {
+        "yz": [
+          -57.30426416,
+          93.60000000000001
+        ],
+        "tiltDegrees": 18.60080383686698
+      },
+      {
+        "yz": [
+          -57.20315662,
+          93.29999999999998
+        ],
+        "tiltDegrees": 18.64965191494884
+      },
+      {
+        "yz": [
+          -57.101760000000006,
+          93.0
+        ],
+        "tiltDegrees": 18.699931847661027
+      },
+      {
+        "yz": [
+          -57.00006578,
+          92.70000000000002
+        ],
+        "tiltDegrees": 18.75164098513429
+      },
+      {
+        "yz": [
+          -56.89806544,
+          92.39999999999999
+        ],
+        "tiltDegrees": 18.804776593099255
+      },
+      {
+        "yz": [
+          -56.79575046,
+          92.10000000000001
+        ],
+        "tiltDegrees": 18.85933585230416
+      },
+      {
+        "yz": [
+          -56.69311232,
+          91.8
+        ],
+        "tiltDegrees": 18.915315857924035
+      },
+      {
+        "yz": [
+          -56.5901425,
+          91.5
+        ],
+        "tiltDegrees": 18.97271361896209
+      },
+      {
+        "yz": [
+          -56.48683248,
+          91.20000000000002
+        ],
+        "tiltDegrees": 19.03152605764385
+      },
+      {
+        "yz": [
+          -56.38317374,
+          90.89999999999999
+        ],
+        "tiltDegrees": 19.091750008804848
+      },
+      {
+        "yz": [
+          -56.27915776,
+          90.60000000000001
+        ],
+        "tiltDegrees": 19.153382219272455
+      },
+      {
+        "yz": [
+          -56.17477602,
+          90.29999999999998
+        ],
+        "tiltDegrees": 19.216419347242706
+      },
+      {
+        "yz": [
+          -56.07002,
+          90.0
+        ],
+        "tiltDegrees": 19.280857961652725
+      },
+      {
+        "yz": [
+          -55.96488117999999,
+          89.70000000000002
+        ],
+        "tiltDegrees": 19.346694541549574
+      },
+      {
+        "yz": [
+          -55.85935104,
+          89.39999999999999
+        ],
+        "tiltDegrees": 19.413925475456285
+      },
+      {
+        "yz": [
+          -55.75342106000001,
+          89.10000000000001
+        ],
+        "tiltDegrees": 19.482547060735815
+      },
+      {
+        "yz": [
+          -55.64708272,
+          88.79999999999998
+        ],
+        "tiltDegrees": 19.552555502953794
+      },
+      {
+        "yz": [
+          -55.540327500000004,
+          88.5
+        ],
+        "tiltDegrees": 19.623946915240804
+      },
+      {
+        "yz": [
+          -55.43314688,
+          88.20000000000002
+        ],
+        "tiltDegrees": 19.696717317654986
+      },
+      {
+        "yz": [
+          -55.32553234,
+          87.89999999999999
+        ],
+        "tiltDegrees": 19.77086263654598
+      },
+      {
+        "yz": [
+          -55.21747536,
+          87.60000000000001
+        ],
+        "tiltDegrees": 19.846378703920795
+      },
+      {
+        "yz": [
+          -55.10896742,
+          87.29999999999998
+        ],
+        "tiltDegrees": 19.923261256812694
+      },
+      {
+        "yz": [
+          -55.0,
+          87.0
+        ],
+        "tiltDegrees": 20.00150593665385
+      },
+      {
+        "yz": [
+          -55.0,
+          87.0
+        ],
+        "tiltDegrees": 20.00150593665387
+      },
+      {
+        "yz": [
+          -54.897922376000004,
+          86.72
+        ],
+        "tiltDegrees": 20.058306549228764
+      },
+      {
+        "yz": [
+          -54.795532608,
+          86.44000000000001
+        ],
+        "tiltDegrees": 20.114226003189387
+      },
+      {
+        "yz": [
+          -54.692835352,
+          86.16000000000001
+        ],
+        "tiltDegrees": 20.16926603424838
+      },
+      {
+        "yz": [
+          -54.589835264,
+          85.88
+        ],
+        "tiltDegrees": 20.22342835708614
+      },
+      {
+        "yz": [
+          -54.486537000000006,
+          85.6
+        ],
+        "tiltDegrees": 20.27671466508218
+      },
+      {
+        "yz": [
+          -54.382945215999996,
+          85.32000000000002
+        ],
+        "tiltDegrees": 20.329126630053715
+      },
+      {
+        "yz": [
+          -54.279064568,
+          85.03999999999999
+        ],
+        "tiltDegrees": 20.380665902001073
+      },
+      {
+        "yz": [
+          -54.174899712,
+          84.76
+        ],
+        "tiltDegrees": 20.431334108860096
+      },
+      {
+        "yz": [
+          -54.070455304,
+          84.47999999999999
+        ],
+        "tiltDegrees": 20.481132856261045
+      },
+      {
+        "yz": [
+          -53.965736,
+          84.19999999999999
+        ],
+        "tiltDegrees": 20.530063727294266
+      },
+      {
+        "yz": [
+          -53.860746456,
+          83.92000000000002
+        ],
+        "tiltDegrees": 20.578128282282112
+      },
+      {
+        "yz": [
+          -53.755491328,
+          83.64
+        ],
+        "tiltDegrees": 20.625328058557265
+      },
+      {
+        "yz": [
+          -53.649975272,
+          83.36
+        ],
+        "tiltDegrees": 20.671664570247188
+      },
+      {
+        "yz": [
+          -53.544202944,
+          83.08
+        ],
+        "tiltDegrees": 20.717139308064617
+      },
+      {
+        "yz": [
+          -53.438179,
+          82.80000000000001
+        ],
+        "tiltDegrees": 20.76175373910399
+      },
+      {
+        "yz": [
+          -53.331908096,
+          82.52000000000001
+        ],
+        "tiltDegrees": 20.805509306643664
+      },
+      {
+        "yz": [
+          -53.225394888000004,
+          82.23999999999998
+        ],
+        "tiltDegrees": 20.848407429953813
+      },
+      {
+        "yz": [
+          -53.118644032,
+          81.96
+        ],
+        "tiltDegrees": 20.890449504109885
+      },
+      {
+        "yz": [
+          -53.011660184,
+          81.67999999999998
+        ],
+        "tiltDegrees": 20.931636899811533
+      },
+      {
+        "yz": [
+          -52.904448,
+          81.39999999999999
+        ],
+        "tiltDegrees": 20.971970963206857
+      },
+      {
+        "yz": [
+          -52.79701213599999,
+          81.12
+        ],
+        "tiltDegrees": 21.01145301572189
+      },
+      {
+        "yz": [
+          -52.689357248,
+          80.84
+        ],
+        "tiltDegrees": 21.050084353895205
+      },
+      {
+        "yz": [
+          -52.581487992,
+          80.56
+        ],
+        "tiltDegrees": 21.087866249217534
+      },
+      {
+        "yz": [
+          -52.47340902399999,
+          80.28000000000002
+        ],
+        "tiltDegrees": 21.124799947976314
+      },
+      {
+        "yz": [
+          -52.365125000000006,
+          80.0
+        ],
+        "tiltDegrees": 21.160886671105036
+      },
+      {
+        "yz": [
+          -52.256640576,
+          79.72000000000001
+        ],
+        "tiltDegrees": 21.196127614037323
+      },
+      {
+        "yz": [
+          -52.147960408,
+          79.44
+        ],
+        "tiltDegrees": 21.230523946565643
+      },
+      {
+        "yz": [
+          -52.039089151999995,
+          79.16000000000001
+        ],
+        "tiltDegrees": 21.264076812704488
+      },
+      {
+        "yz": [
+          -51.930031463999995,
+          78.88
+        ],
+        "tiltDegrees": 21.296787330558082
+      },
+      {
+        "yz": [
+          -51.820792000000004,
+          78.6
+        ],
+        "tiltDegrees": 21.328656592192374
+      },
+      {
+        "yz": [
+          -51.711375416,
+          78.32000000000001
+        ],
+        "tiltDegrees": 21.359685663511318
+      },
+      {
+        "yz": [
+          -51.601786368000006,
+          78.04
+        ],
+        "tiltDegrees": 21.38987558413732
+      },
+      {
+        "yz": [
+          -51.492029512,
+          77.76
+        ],
+        "tiltDegrees": 21.41922736729583
+      },
+      {
+        "yz": [
+          -51.382109504000006,
+          77.48
+        ],
+        "tiltDegrees": 21.447741999703844
+      },
+      {
+        "yz": [
+          -51.272031,
+          77.2
+        ],
+        "tiltDegrees": 21.475420441462482
+      },
+      {
+        "yz": [
+          -51.16179865600001,
+          76.92
+        ],
+        "tiltDegrees": 21.502263625953336
+      },
+      {
+        "yz": [
+          -51.051417128,
+          76.64
+        ],
+        "tiltDegrees": 21.528272459738645
+      },
+      {
+        "yz": [
+          -50.940891072,
+          76.36
+        ],
+        "tiltDegrees": 21.553447822465188
+      },
+      {
+        "yz": [
+          -50.830225144,
+          76.08
+        ],
+        "tiltDegrees": 21.57779056677181
+      },
+      {
+        "yz": [
+          -50.719424,
+          75.8
+        ],
+        "tiltDegrees": 21.60130151820061
+      },
+      {
+        "yz": [
+          -50.608492296,
+          75.52
+        ],
+        "tiltDegrees": 21.623981475111535
+      },
+      {
+        "yz": [
+          -50.497434688,
+          75.24
+        ],
+        "tiltDegrees": 21.64583120860054
+      },
+      {
+        "yz": [
+          -50.386255832,
+          74.96
+        ],
+        "tiltDegrees": 21.666851462421103
+      },
+      {
+        "yz": [
+          -50.274960384,
+          74.67999999999999
+        ],
+        "tiltDegrees": 21.68704295290905
+      },
+      {
+        "yz": [
+          -50.163553,
+          74.4
+        ],
+        "tiltDegrees": 21.70640636891079
+      },
+      {
+        "yz": [
+          -50.052038336,
+          74.11999999999999
+        ],
+        "tiltDegrees": 21.724942371714622
+      },
+      {
+        "yz": [
+          -49.940421048000005,
+          73.83999999999999
+        ],
+        "tiltDegrees": 21.742651594985357
+      },
+      {
+        "yz": [
+          -49.828705792,
+          73.56
+        ],
+        "tiltDegrees": 21.759534644702022
+      },
+      {
+        "yz": [
+          -49.71689722400001,
+          73.28
+        ],
+        "tiltDegrees": 21.775592099098652
+      },
+      {
+        "yz": [
+          -49.605000000000004,
+          73.0
+        ],
+        "tiltDegrees": 21.79082450860814
+      },
+      {
+        "yz": [
+          -49.49301877599999,
+          72.72
+        ],
+        "tiltDegrees": 21.80523239580909
+      },
+      {
+        "yz": [
+          -49.380958208,
+          72.44
+        ],
+        "tiltDegrees": 21.818816255375616
+      },
+      {
+        "yz": [
+          -49.268822951999994,
+          72.16
+        ],
+        "tiltDegrees": 21.831576554030093
+      },
+      {
+        "yz": [
+          -49.156617664,
+          71.88
+        ],
+        "tiltDegrees": 21.84351373049875
+      },
+      {
+        "yz": [
+          -49.044346999999995,
+          71.6
+        ],
+        "tiltDegrees": 21.85462819547018
+      },
+      {
+        "yz": [
+          -48.932015616,
+          71.32
+        ],
+        "tiltDegrees": 21.864920331556604
+      },
+      {
+        "yz": [
+          -48.819628168,
+          71.04
+        ],
+        "tiltDegrees": 21.874390493257966
+      },
+      {
+        "yz": [
+          -48.707189312,
+          70.76
+        ],
+        "tiltDegrees": 21.88303900692881
+      },
+      {
+        "yz": [
+          -48.594703704000004,
+          70.47999999999999
+        ],
+        "tiltDegrees": 21.890866170747845
+      },
+      {
+        "yz": [
+          -48.482176,
+          70.2
+        ],
+        "tiltDegrees": 21.89787225469023
+      },
+      {
+        "yz": [
+          -48.369610856,
+          69.92
+        ],
+        "tiltDegrees": 21.90405750050263
+      },
+      {
+        "yz": [
+          -48.257012928,
+          69.64
+        ],
+        "tiltDegrees": 21.909422121680823
+      },
+      {
+        "yz": [
+          -48.144386872,
+          69.36
+        ],
+        "tiltDegrees": 21.91396630345005
+      },
+      {
+        "yz": [
+          -48.031737344,
+          69.08
+        ],
+        "tiltDegrees": 21.917690202748002
+      },
+      {
+        "yz": [
+          -47.919069,
+          68.8
+        ],
+        "tiltDegrees": 21.92059394821038
+      },
+      {
+        "yz": [
+          -47.806386495999995,
+          68.52
+        ],
+        "tiltDegrees": 21.922677640159115
+      },
+      {
+        "yz": [
+          -47.693694488000006,
+          68.24
+        ],
+        "tiltDegrees": 21.923941350593193
+      },
+      {
+        "yz": [
+          -47.580997632,
+          67.96
+        ],
+        "tiltDegrees": 21.924385123182056
+      },
+      {
+        "yz": [
+          -47.468300584000005,
+          67.67999999999999
+        ],
+        "tiltDegrees": 21.924008973261603
+      },
+      {
+        "yz": [
+          -47.355608000000004,
+          67.39999999999999
+        ],
+        "tiltDegrees": 21.922812887832823
+      },
+      {
+        "yz": [
+          -47.242924536000004,
+          67.11999999999999
+        ],
+        "tiltDegrees": 21.92079682556294
+      },
+      {
+        "yz": [
+          -47.130254848,
+          66.83999999999999
+        ],
+        "tiltDegrees": 21.917960716789224
+      },
+      {
+        "yz": [
+          -47.017603592,
+          66.55999999999999
+        ],
+        "tiltDegrees": 21.914304463525323
+      },
+      {
+        "yz": [
+          -46.90497542400001,
+          66.27999999999999
+        ],
+        "tiltDegrees": 21.90982793947029
+      },
+      {
+        "yz": [
+          -46.79237500000001,
+          66.0
+        ],
+        "tiltDegrees": 21.904530990020113
+      },
+      {
+        "yz": [
+          -46.679806976,
+          65.72
+        ],
+        "tiltDegrees": 21.898413432281938
+      },
+      {
+        "yz": [
+          -46.567276008,
+          65.44
+        ],
+        "tiltDegrees": 21.891475055090858
+      },
+      {
+        "yz": [
+          -46.454786752000004,
+          65.16
+        ],
+        "tiltDegrees": 21.88371561902938
+      },
+      {
+        "yz": [
+          -46.34234386399999,
+          64.88
+        ],
+        "tiltDegrees": 21.875134856449556
+      },
+      {
+        "yz": [
+          -46.229952000000004,
+          64.6
+        ],
+        "tiltDegrees": 21.86573247149773
+      },
+      {
+        "yz": [
+          -46.117615816,
+          64.32
+        ],
+        "tiltDegrees": 21.85550814014203
+      },
+      {
+        "yz": [
+          -46.005339968,
+          64.04
+        ],
+        "tiltDegrees": 21.844461510202564
+      },
+      {
+        "yz": [
+          -45.893129112000004,
+          63.76
+        ],
+        "tiltDegrees": 21.83259220138433
+      },
+      {
+        "yz": [
+          -45.78098790400001,
+          63.48
+        ],
+        "tiltDegrees": 21.81989980531288
+      },
+      {
+        "yz": [
+          -45.668921000000005,
+          63.199999999999996
+        ],
+        "tiltDegrees": 21.80638388557284
+      },
+      {
+        "yz": [
+          -45.556933056,
+          62.92
+        ],
+        "tiltDegrees": 21.79204397774915
+      },
+      {
+        "yz": [
+          -45.445028728000004,
+          62.63999999999999
+        ],
+        "tiltDegrees": 21.776879589471246
+      },
+      {
+        "yz": [
+          -45.333212672,
+          62.36
+        ],
+        "tiltDegrees": 21.760890200460075
+      },
+      {
+        "yz": [
+          -45.221489544,
+          62.07999999999999
+        ],
+        "tiltDegrees": 21.74407526257803
+      },
+      {
+        "yz": [
+          -45.109864,
+          61.8
+        ],
+        "tiltDegrees": 21.72643419988186
+      },
+      {
+        "yz": [
+          -44.998340696,
+          61.519999999999996
+        ],
+        "tiltDegrees": 21.707966408678598
+      },
+      {
+        "yz": [
+          -44.886924287999996,
+          61.24
+        ],
+        "tiltDegrees": 21.688671257584485
+      },
+      {
+        "yz": [
+          -44.775619432,
+          60.96000000000001
+        ],
+        "tiltDegrees": 21.668548087587006
+      },
+      {
+        "yz": [
+          -44.664430784000004,
+          60.68000000000001
+        ],
+        "tiltDegrees": 21.64759621211004
+      },
+      {
+        "yz": [
+          -44.553363,
+          60.400000000000006
+        ],
+        "tiltDegrees": 21.62581491708225
+      },
+      {
+        "yz": [
+          -44.442420736,
+          60.120000000000005
+        ],
+        "tiltDegrees": 21.603203461008615
+      },
+      {
+        "yz": [
+          -44.33160864800001,
+          59.84
+        ],
+        "tiltDegrees": 21.57976107504531
+      },
+      {
+        "yz": [
+          -44.220931392,
+          59.56
+        ],
+        "tiltDegrees": 21.55548696307791
+      },
+      {
+        "yz": [
+          -44.110393624000004,
+          59.28
+        ],
+        "tiltDegrees": 21.53038030180296
+      },
+      {
+        "yz": [
+          -44.0,
+          59.0
+        ],
+        "tiltDegrees": 21.504440240813086
+      },
+      {
+        "yz": [
+          -44.0,
+          59.0
+        ],
+        "tiltDegrees": 21.504440240813043
+      },
+      {
+        "yz": [
+          -43.88180576,
+          58.699999999999996
+        ],
+        "tiltDegrees": 21.50257538468351
+      },
+      {
+        "yz": [
+          -43.76362208,
+          58.4
+        ],
+        "tiltDegrees": 21.500948556236317
+      },
+      {
+        "yz": [
+          -43.64544752,
+          58.09999999999999
+        ],
+        "tiltDegrees": 21.49955977145068
+      },
+      {
+        "yz": [
+          -43.52728064,
+          57.800000000000004
+        ],
+        "tiltDegrees": 21.498409043966586
+      },
+      {
+        "yz": [
+          -43.409119999999994,
+          57.5
+        ],
+        "tiltDegrees": 21.497496385085178
+      },
+      {
+        "yz": [
+          -43.29096416,
+          57.199999999999996
+        ],
+        "tiltDegrees": 21.496821803769045
+      },
+      {
+        "yz": [
+          -43.172811679999995,
+          56.89999999999999
+        ],
+        "tiltDegrees": 21.496385306642523
+      },
+      {
+        "yz": [
+          -43.054661120000006,
+          56.599999999999994
+        ],
+        "tiltDegrees": 21.49618689799184
+      },
+      {
+        "yz": [
+          -42.93651103999999,
+          56.300000000000004
+        ],
+        "tiltDegrees": 21.49622657976527
+      },
+      {
+        "yz": [
+          -42.818360000000006,
+          56.0
+        ],
+        "tiltDegrees": 21.496504351573158
+      },
+      {
+        "yz": [
+          -42.70020655999999,
+          55.699999999999996
+        ],
+        "tiltDegrees": 21.49702021068793
+      },
+      {
+        "yz": [
+          -42.58204927999999,
+          55.4
+        ],
+        "tiltDegrees": 21.49777415204399
+      },
+      {
+        "yz": [
+          -42.46388672,
+          55.1
+        ],
+        "tiltDegrees": 21.49876616823762
+      },
+      {
+        "yz": [
+          -42.345717439999994,
+          54.800000000000004
+        ],
+        "tiltDegrees": 21.49999624952674
+      },
+      {
+        "yz": [
+          -42.227540000000005,
+          54.5
+        ],
+        "tiltDegrees": 21.50146438383062
+      },
+      {
+        "yz": [
+          -42.10935296,
+          54.199999999999996
+        ],
+        "tiltDegrees": 21.503170556729593
+      },
+      {
+        "yz": [
+          -41.991154879999996,
+          53.900000000000006
+        ],
+        "tiltDegrees": 21.505114751464593
+      },
+      {
+        "yz": [
+          -41.872944319999995,
+          53.6
+        ],
+        "tiltDegrees": 21.507296948936705
+      },
+      {
+        "yz": [
+          -41.75471984,
+          53.300000000000004
+        ],
+        "tiltDegrees": 21.509717127706647
+      },
+      {
+        "yz": [
+          -41.63648,
+          53.0
+        ],
+        "tiltDegrees": 21.512375263994134
+      },
+      {
+        "yz": [
+          -41.51822336000001,
+          52.7
+        ],
+        "tiltDegrees": 21.515271331677223
+      },
+      {
+        "yz": [
+          -41.399948480000006,
+          52.4
+        ],
+        "tiltDegrees": 21.518405302291594
+      },
+      {
+        "yz": [
+          -41.28165392,
+          52.1
+        ],
+        "tiltDegrees": 21.521777145029727
+      },
+      {
+        "yz": [
+          -41.16333824,
+          51.8
+        ],
+        "tiltDegrees": 21.525386826740064
+      },
+      {
+        "yz": [
+          -41.045,
+          51.5
+        ],
+        "tiltDegrees": 21.529234311926057
+      },
+      {
+        "yz": [
+          -40.92663776,
+          51.199999999999996
+        ],
+        "tiltDegrees": 21.533319562745213
+      },
+      {
+        "yz": [
+          -40.80825008,
+          50.9
+        ],
+        "tiltDegrees": 21.537642539007976
+      },
+      {
+        "yz": [
+          -40.68983552,
+          50.6
+        ],
+        "tiltDegrees": 21.542203198176676
+      },
+      {
+        "yz": [
+          -40.57139264,
+          50.300000000000004
+        ],
+        "tiltDegrees": 21.547001495364306
+      },
+      {
+        "yz": [
+          -40.45292,
+          49.99999999999999
+        ],
+        "tiltDegrees": 21.552037383333282
+      },
+      {
+        "yz": [
+          -40.33441616000001,
+          49.699999999999996
+        ],
+        "tiltDegrees": 21.557310812494126
+      },
+      {
+        "yz": [
+          -40.21587968,
+          49.400000000000006
+        ],
+        "tiltDegrees": 21.562821730904112
+      },
+      {
+        "yz": [
+          -40.09730912,
+          49.1
+        ],
+        "tiltDegrees": 21.56857008426581
+      },
+      {
+        "yz": [
+          -39.97870304,
+          48.800000000000004
+        ],
+        "tiltDegrees": 21.574555815925606
+      },
+      {
+        "yz": [
+          -39.860060000000004,
+          48.5
+        ],
+        "tiltDegrees": 21.58077886687212
+      },
+      {
+        "yz": [
+          -39.74137856,
+          48.2
+        ],
+        "tiltDegrees": 21.58723917573461
+      },
+      {
+        "yz": [
+          -39.62265728,
+          47.900000000000006
+        ],
+        "tiltDegrees": 21.59393667878127
+      },
+      {
+        "yz": [
+          -39.503894720000005,
+          47.6
+        ],
+        "tiltDegrees": 21.600871309917483
+      },
+      {
+        "yz": [
+          -39.38508944,
+          47.3
+        ],
+        "tiltDegrees": 21.60804300068405
+      },
+      {
+        "yz": [
+          -39.26624,
+          47.0
+        ],
+        "tiltDegrees": 21.615451680255273
+      },
+      {
+        "yz": [
+          -39.147344960000005,
+          46.7
+        ],
+        "tiltDegrees": 21.62309727543708
+      },
+      {
+        "yz": [
+          -39.02840288,
+          46.400000000000006
+        ],
+        "tiltDegrees": 21.630979710665017
+      },
+      {
+        "yz": [
+          -38.90941232,
+          46.1
+        ],
+        "tiltDegrees": 21.63909890800221
+      },
+      {
+        "yz": [
+          -38.790371840000006,
+          45.800000000000004
+        ],
+        "tiltDegrees": 21.647454787137264
+      },
+      {
+        "yz": [
+          -38.67128,
+          45.5
+        ],
+        "tiltDegrees": 21.65604726538211
+      },
+      {
+        "yz": [
+          -38.55213536,
+          45.199999999999996
+        ],
+        "tiltDegrees": 21.664876257669775
+      },
+      {
+        "yz": [
+          -38.43293648,
+          44.900000000000006
+        ],
+        "tiltDegrees": 21.673941676552133
+      },
+      {
+        "yz": [
+          -38.31368192,
+          44.6
+        ],
+        "tiltDegrees": 21.683243432197568
+      },
+      {
+        "yz": [
+          -38.194370240000005,
+          44.300000000000004
+        ],
+        "tiltDegrees": 21.692781432388553
+      },
+      {
+        "yz": [
+          -38.075,
+          44.0
+        ],
+        "tiltDegrees": 21.70255558251929
+      },
+      {
+        "yz": [
+          -37.95556976,
+          43.699999999999996
+        ],
+        "tiltDegrees": 21.712565785593128
+      },
+      {
+        "yz": [
+          -37.83607808,
+          43.4
+        ],
+        "tiltDegrees": 21.72281194222007
+      },
+      {
+        "yz": [
+          -37.71652352,
+          43.099999999999994
+        ],
+        "tiltDegrees": 21.733293950614147
+      },
+      {
+        "yz": [
+          -37.59690463999999,
+          42.800000000000004
+        ],
+        "tiltDegrees": 21.744011706590783
+      },
+      {
+        "yz": [
+          -37.47722,
+          42.5
+        ],
+        "tiltDegrees": 21.754965103564054
+      },
+      {
+        "yz": [
+          -37.35746816,
+          42.199999999999996
+        ],
+        "tiltDegrees": 21.766154032543962
+      },
+      {
+        "yz": [
+          -37.23764768,
+          41.900000000000006
+        ],
+        "tiltDegrees": 21.777578382133612
+      },
+      {
+        "yz": [
+          -37.11775712,
+          41.6
+        ],
+        "tiltDegrees": 21.789238038526335
+      },
+      {
+        "yz": [
+          -36.99779504,
+          41.300000000000004
+        ],
+        "tiltDegrees": 21.8011328855028
+      },
+      {
+        "yz": [
+          -36.87776,
+          41.0
+        ],
+        "tiltDegrees": 21.813262804428046
+      },
+      {
+        "yz": [
+          -36.75765056,
+          40.699999999999996
+        ],
+        "tiltDegrees": 21.825627674248466
+      },
+      {
+        "yz": [
+          -36.63746528,
+          40.400000000000006
+        ],
+        "tiltDegrees": 21.838227371488756
+      },
+      {
+        "yz": [
+          -36.51720272,
+          40.1
+        ],
+        "tiltDegrees": 21.851061770248833
+      },
+      {
+        "yz": [
+          -36.39686144,
+          39.800000000000004
+        ],
+        "tiltDegrees": 21.86413074220063
+      },
+      {
+        "yz": [
+          -36.276439999999994,
+          39.5
+        ],
+        "tiltDegrees": 21.877434156584943
+      },
+      {
+        "yz": [
+          -36.15593696,
+          39.199999999999996
+        ],
+        "tiltDegrees": 21.890971880208212
+      },
+      {
+        "yz": [
+          -36.035350879999996,
+          38.9
+        ],
+        "tiltDegrees": 21.904743777439165
+      },
+      {
+        "yz": [
+          -35.914680319999995,
+          38.6
+        ],
+        "tiltDegrees": 21.91874971020557
+      },
+      {
+        "yz": [
+          -35.793923840000005,
+          38.300000000000004
+        ],
+        "tiltDegrees": 21.932989537990807
+      },
+      {
+        "yz": [
+          -35.673080000000006,
+          38.0
+        ],
+        "tiltDegrees": 21.94746311783047
+      },
+      {
+        "yz": [
+          -35.55214736,
+          37.7
+        ],
+        "tiltDegrees": 21.962170304308945
+      },
+      {
+        "yz": [
+          -35.43112448,
+          37.4
+        ],
+        "tiltDegrees": 21.977110949555872
+      },
+      {
+        "yz": [
+          -35.31000992,
+          37.1
+        ],
+        "tiltDegrees": 21.99228490324265
+      },
+      {
+        "yz": [
+          -35.188802239999994,
+          36.800000000000004
+        ],
+        "tiltDegrees": 22.00769201257885
+      },
+      {
+        "yz": [
+          -35.0675,
+          36.5
+        ],
+        "tiltDegrees": 22.0233321223086
+      },
+      {
+        "yz": [
+          -34.94610176,
+          36.199999999999996
+        ],
+        "tiltDegrees": 22.03920507470697
+      },
+      {
+        "yz": [
+          -34.82460608,
+          35.9
+        ],
+        "tiltDegrees": 22.055310709576258
+      },
+      {
+        "yz": [
+          -34.70301152,
+          35.6
+        ],
+        "tiltDegrees": 22.071648864242288
+      },
+      {
+        "yz": [
+          -34.58131664,
+          35.3
+        ],
+        "tiltDegrees": 22.08821937355069
+      },
+      {
+        "yz": [
+          -34.459520000000005,
+          35.0
+        ],
+        "tiltDegrees": 22.10502206986306
+      },
+      {
+        "yz": [
+          -34.33762016,
+          34.699999999999996
+        ],
+        "tiltDegrees": 22.12205678305322
+      },
+      {
+        "yz": [
+          -34.21561568,
+          34.4
+        ],
+        "tiltDegrees": 22.13932334050331
+      },
+      {
+        "yz": [
+          -34.09350512,
+          34.1
+        ],
+        "tiltDegrees": 22.156821567099932
+      },
+      {
+        "yz": [
+          -33.97128704,
+          33.800000000000004
+        ],
+        "tiltDegrees": 22.174551285230287
+      },
+      {
+        "yz": [
+          -33.848960000000005,
+          33.5
+        ],
+        "tiltDegrees": 22.192512314778185
+      },
+      {
+        "yz": [
+          -33.72652256,
+          33.2
+        ],
+        "tiltDegrees": 22.210704473120124
+      },
+      {
+        "yz": [
+          -33.60397328,
+          32.9
+        ],
+        "tiltDegrees": 22.229127575121293
+      },
+      {
+        "yz": [
+          -33.481310719999996,
+          32.6
+        ],
+        "tiltDegrees": 22.24778143313158
+      },
+      {
+        "yz": [
+          -33.35853344,
+          32.3
+        ],
+        "tiltDegrees": 22.2666658569815
+      },
+      {
+        "yz": [
+          -33.235640000000004,
+          32.0
+        ],
+        "tiltDegrees": 22.285780653978193
+      },
+      {
+        "yz": [
+          -33.11262896,
+          31.699999999999996
+        ],
+        "tiltDegrees": 22.305125628901305
+      },
+      {
+        "yz": [
+          -32.98949888,
+          31.400000000000002
+        ],
+        "tiltDegrees": 22.324700583998894
+      },
+      {
+        "yz": [
+          -32.86624832,
+          31.099999999999998
+        ],
+        "tiltDegrees": 22.34450531898334
+      },
+      {
+        "yz": [
+          -32.74287584,
+          30.800000000000004
+        ],
+        "tiltDegrees": 22.36453963102719
+      },
+      {
+        "yz": [
+          -32.61938,
+          30.5
+        ],
+        "tiltDegrees": 22.384803314758983
+      },
+      {
+        "yz": [
+          -32.495759359999994,
+          30.2
+        ],
+        "tiltDegrees": 22.405296162259127
+      },
+      {
+        "yz": [
+          -32.37201248,
+          29.900000000000002
+        ],
+        "tiltDegrees": 22.426017963055664
+      },
+      {
+        "yz": [
+          -32.24813792,
+          29.599999999999998
+        ],
+        "tiltDegrees": 22.44696850412013
+      },
+      {
+        "yz": [
+          -32.124134240000004,
+          29.300000000000004
+        ],
+        "tiltDegrees": 22.468147569863273
+      },
+      {
+        "yz": [
+          -32.0,
+          29.0
+        ],
+        "tiltDegrees": 22.489554942130884
+      },
+      {
+        "yz": [
+          -32.0,
+          29.0
+        ],
+        "tiltDegrees": 22.489554942130873
+      },
+      {
+        "yz": [
+          -31.863331548,
+          28.669999999999998
+        ],
+        "tiltDegrees": 22.503894569028816
+      },
+      {
+        "yz": [
+          -31.726566783999996,
+          28.339999999999993
+        ],
+        "tiltDegrees": 22.518099658534215
+      },
+      {
+        "yz": [
+          -31.589706596,
+          28.009999999999998
+        ],
+        "tiltDegrees": 22.532170290918227
+      },
+      {
+        "yz": [
+          -31.452751872000004,
+          27.68
+        ],
+        "tiltDegrees": 22.546106545748845
+      },
+      {
+        "yz": [
+          -31.3157035,
+          27.35
+        ],
+        "tiltDegrees": 22.559908501889655
+      },
+      {
+        "yz": [
+          -31.178562367999994,
+          27.02
+        ],
+        "tiltDegrees": 22.573576237498607
+      },
+      {
+        "yz": [
+          -31.041329364,
+          26.69
+        ],
+        "tiltDegrees": 22.587109830026826
+      },
+      {
+        "yz": [
+          -30.904005375999997,
+          26.36
+        ],
+        "tiltDegrees": 22.60050935621741
+      },
+      {
+        "yz": [
+          -30.766591292000005,
+          26.03
+        ],
+        "tiltDegrees": 22.613774892104278
+      },
+      {
+        "yz": [
+          -30.629088,
+          25.7
+        ],
+        "tiltDegrees": 22.626906513010972
+      },
+      {
+        "yz": [
+          -30.491496388,
+          25.369999999999997
+        ],
+        "tiltDegrees": 22.63990429354958
+      },
+      {
+        "yz": [
+          -30.353817344,
+          25.04
+        ],
+        "tiltDegrees": 22.65276830761955
+      },
+      {
+        "yz": [
+          -30.216051756000002,
+          24.71
+        ],
+        "tiltDegrees": 22.665498628406628
+      },
+      {
+        "yz": [
+          -30.078200512,
+          24.38
+        ],
+        "tiltDegrees": 22.678095328381737
+      },
+      {
+        "yz": [
+          -29.940264499999998,
+          24.049999999999997
+        ],
+        "tiltDegrees": 22.69055847929992
+      },
+      {
+        "yz": [
+          -29.802244608,
+          23.72
+        ],
+        "tiltDegrees": 22.70288815219926
+      },
+      {
+        "yz": [
+          -29.664141724,
+          23.39
+        ],
+        "tiltDegrees": 22.71508441739987
+      },
+      {
+        "yz": [
+          -29.525956736000005,
+          23.060000000000002
+        ],
+        "tiltDegrees": 22.727147344502796
+      },
+      {
+        "yz": [
+          -29.387690532,
+          22.73
+        ],
+        "tiltDegrees": 22.739077002389084
+      },
+      {
+        "yz": [
+          -29.249344,
+          22.400000000000002
+        ],
+        "tiltDegrees": 22.75087345921871
+      },
+      {
+        "yz": [
+          -29.110918027999997,
+          22.07
+        ],
+        "tiltDegrees": 22.76253678242963
+      },
+      {
+        "yz": [
+          -28.972413504,
+          21.74
+        ],
+        "tiltDegrees": 22.77406703873681
+      },
+      {
+        "yz": [
+          -28.833831315999998,
+          21.41
+        ],
+        "tiltDegrees": 22.785464294131234
+      },
+      {
+        "yz": [
+          -28.695172352,
+          21.080000000000002
+        ],
+        "tiltDegrees": 22.796728613879015
+      },
+      {
+        "yz": [
+          -28.556437499999998,
+          20.75
+        ],
+        "tiltDegrees": 22.80786006252041
+      },
+      {
+        "yz": [
+          -28.417627648,
+          20.419999999999995
+        ],
+        "tiltDegrees": 22.818858703868965
+      },
+      {
+        "yz": [
+          -28.278743684000002,
+          20.09
+        ],
+        "tiltDegrees": 22.82972460101054
+      },
+      {
+        "yz": [
+          -28.139786496,
+          19.76
+        ],
+        "tiltDegrees": 22.840457816302518
+      },
+      {
+        "yz": [
+          -28.000756971999998,
+          19.43
+        ],
+        "tiltDegrees": 22.851058411372826
+      },
+      {
+        "yz": [
+          -27.861655999999996,
+          19.099999999999998
+        ],
+        "tiltDegrees": 22.861526447119164
+      },
+      {
+        "yz": [
+          -27.722484467999998,
+          18.77
+        ],
+        "tiltDegrees": 22.871861983708122
+      },
+      {
+        "yz": [
+          -27.583243264,
+          18.439999999999998
+        ],
+        "tiltDegrees": 22.88206508057434
+      },
+      {
+        "yz": [
+          -27.443933276000003,
+          18.11
+        ],
+        "tiltDegrees": 22.892135796419687
+      },
+      {
+        "yz": [
+          -27.304555392,
+          17.779999999999998
+        ],
+        "tiltDegrees": 22.902074189212506
+      },
+      {
+        "yz": [
+          -27.1651105,
+          17.450000000000003
+        ],
+        "tiltDegrees": 22.91188031618675
+      },
+      {
+        "yz": [
+          -27.025599488,
+          17.12
+        ],
+        "tiltDegrees": 22.921554233841235
+      },
+      {
+        "yz": [
+          -26.886023244,
+          16.79
+        ],
+        "tiltDegrees": 22.931095997938904
+      },
+      {
+        "yz": [
+          -26.746382655999998,
+          16.46
+        ],
+        "tiltDegrees": 22.940505663506006
+      },
+      {
+        "yz": [
+          -26.606678612,
+          16.130000000000003
+        ],
+        "tiltDegrees": 22.949783284831415
+      },
+      {
+        "yz": [
+          -26.466912,
+          15.8
+        ],
+        "tiltDegrees": 22.95892891546586
+      },
+      {
+        "yz": [
+          -26.327083708000004,
+          15.470000000000002
+        ],
+        "tiltDegrees": 22.967942608221243
+      },
+      {
+        "yz": [
+          -26.187194624000004,
+          15.140000000000002
+        ],
+        "tiltDegrees": 22.976824415169908
+      },
+      {
+        "yz": [
+          -26.047245636000003,
+          14.810000000000002
+        ],
+        "tiltDegrees": 22.98557438764395
+      },
+      {
+        "yz": [
+          -25.907237632,
+          14.480000000000004
+        ],
+        "tiltDegrees": 22.99419257623456
+      },
+      {
+        "yz": [
+          -25.767171500000003,
+          14.15
+        ],
+        "tiltDegrees": 23.00267903079132
+      },
+      {
+        "yz": [
+          -25.627048128000002,
+          13.82
+        ],
+        "tiltDegrees": 23.011033800421597
+      },
+      {
+        "yz": [
+          -25.486868404,
+          13.49
+        ],
+        "tiltDegrees": 23.019256933489842
+      },
+      {
+        "yz": [
+          -25.346633216,
+          13.16
+        ],
+        "tiltDegrees": 23.027348477617004
+      },
+      {
+        "yz": [
+          -25.206343452,
+          12.829999999999998
+        ],
+        "tiltDegrees": 23.03530847967988
+      },
+      {
+        "yz": [
+          -25.066000000000003,
+          12.5
+        ],
+        "tiltDegrees": 23.043136985810534
+      },
+      {
+        "yz": [
+          -24.925603748000004,
+          12.170000000000002
+        ],
+        "tiltDegrees": 23.05083404139567
+      },
+      {
+        "yz": [
+          -24.785155584,
+          11.84
+        ],
+        "tiltDegrees": 23.058399691076065
+      },
+      {
+        "yz": [
+          -24.644656396000002,
+          11.51
+        ],
+        "tiltDegrees": 23.06583397874599
+      },
+      {
+        "yz": [
+          -24.504107072,
+          11.18
+        ],
+        "tiltDegrees": 23.073136947552662
+      },
+      {
+        "yz": [
+          -24.363508500000002,
+          10.849999999999998
+        ],
+        "tiltDegrees": 23.08030863989564
+      },
+      {
+        "yz": [
+          -24.222861568,
+          10.52
+        ],
+        "tiltDegrees": 23.087349097426358
+      },
+      {
+        "yz": [
+          -24.082167164,
+          10.190000000000001
+        ],
+        "tiltDegrees": 23.094258361047547
+      },
+      {
+        "yz": [
+          -23.941426176,
+          9.860000000000001
+        ],
+        "tiltDegrees": 23.101036470912717
+      },
+      {
+        "yz": [
+          -23.800639492,
+          9.53
+        ],
+        "tiltDegrees": 23.107683466425673
+      },
+      {
+        "yz": [
+          -23.659808,
+          9.200000000000001
+        ],
+        "tiltDegrees": 23.114199386240003
+      },
+      {
+        "yz": [
+          -23.518932588,
+          8.87
+        ],
+        "tiltDegrees": 23.120584268258593
+      },
+      {
+        "yz": [
+          -23.378014144,
+          8.540000000000001
+        ],
+        "tiltDegrees": 23.12683814963314
+      },
+      {
+        "yz": [
+          -23.237053556000003,
+          8.21
+        ],
+        "tiltDegrees": 23.13296106676373
+      },
+      {
+        "yz": [
+          -23.096051712,
+          7.88
+        ],
+        "tiltDegrees": 23.13895305529832
+      },
+      {
+        "yz": [
+          -22.9550095,
+          7.549999999999999
+        ],
+        "tiltDegrees": 23.144814150132344
+      },
+      {
+        "yz": [
+          -22.813927808,
+          7.219999999999999
+        ],
+        "tiltDegrees": 23.150544385408256
+      },
+      {
+        "yz": [
+          -22.672807524,
+          6.889999999999999
+        ],
+        "tiltDegrees": 23.156143794515124
+      },
+      {
+        "yz": [
+          -22.531649536000003,
+          6.559999999999999
+        ],
+        "tiltDegrees": 23.161612410088185
+      },
+      {
+        "yz": [
+          -22.390454732000002,
+          6.230000000000002
+        ],
+        "tiltDegrees": 23.1669502640085
+      },
+      {
+        "yz": [
+          -22.249224,
+          5.900000000000002
+        ],
+        "tiltDegrees": 23.172157387402482
+      },
+      {
+        "yz": [
+          -22.107958228,
+          5.570000000000001
+        ],
+        "tiltDegrees": 23.17723381064159
+      },
+      {
+        "yz": [
+          -21.966658304,
+          5.240000000000001
+        ],
+        "tiltDegrees": 23.182179563341897
+      },
+      {
+        "yz": [
+          -21.825325116000002,
+          4.910000000000001
+        ],
+        "tiltDegrees": 23.18699467436379
+      },
+      {
+        "yz": [
+          -21.683959552,
+          4.58
+        ],
+        "tiltDegrees": 23.191679171811543
+      },
+      {
+        "yz": [
+          -21.542562500000003,
+          4.25
+        ],
+        "tiltDegrees": 23.196233083033047
+      },
+      {
+        "yz": [
+          -21.401134848,
+          3.92
+        ],
+        "tiltDegrees": 23.200656434619418
+      },
+      {
+        "yz": [
+          -21.259677484,
+          3.589999999999999
+        ],
+        "tiltDegrees": 23.204949252404724
+      },
+      {
+        "yz": [
+          -21.118191296,
+          3.259999999999999
+        ],
+        "tiltDegrees": 23.20911156146563
+      },
+      {
+        "yz": [
+          -20.976677172,
+          2.929999999999999
+        ],
+        "tiltDegrees": 23.213143386121125
+      },
+      {
+        "yz": [
+          -20.835136,
+          2.5999999999999988
+        ],
+        "tiltDegrees": 23.21704474993221
+      },
+      {
+        "yz": [
+          -20.693568667999998,
+          2.2699999999999982
+        ],
+        "tiltDegrees": 23.220815675701612
+      },
+      {
+        "yz": [
+          -20.551976064,
+          1.9400000000000015
+        ],
+        "tiltDegrees": 23.224456185473557
+      },
+      {
+        "yz": [
+          -20.410359076,
+          1.6100000000000017
+        ],
+        "tiltDegrees": 23.227966300533414
+      },
+      {
+        "yz": [
+          -20.268718592000003,
+          1.2800000000000007
+        ],
+        "tiltDegrees": 23.231346041407534
+      },
+      {
+        "yz": [
+          -20.1270555,
+          0.950000000000001
+        ],
+        "tiltDegrees": 23.23459542786293
+      },
+      {
+        "yz": [
+          -19.985370688,
+          0.6200000000000006
+        ],
+        "tiltDegrees": 23.237714478907105
+      },
+      {
+        "yz": [
+          -19.843665044,
+          0.2900000000000003
+        ],
+        "tiltDegrees": 23.240703212787768
+      },
+      {
+        "yz": [
+          -19.701939456,
+          -0.04000000000000004
+        ],
+        "tiltDegrees": 23.243561646992656
+      },
+      {
+        "yz": [
+          -19.560194812000002,
+          -0.3700000000000005
+        ],
+        "tiltDegrees": 23.2462897982493
+      },
+      {
+        "yz": [
+          -19.418432,
+          -0.7000000000000007
+        ],
+        "tiltDegrees": 23.24888768252484
+      },
+      {
+        "yz": [
+          -19.276651907999998,
+          -1.030000000000001
+        ],
+        "tiltDegrees": 23.251355315025844
+      },
+      {
+        "yz": [
+          -19.134855423999998,
+          -1.3600000000000014
+        ],
+        "tiltDegrees": 23.253692710198095
+      },
+      {
+        "yz": [
+          -18.993043436,
+          -1.6900000000000013
+        ],
+        "tiltDegrees": 23.255899881726467
+      },
+      {
+        "yz": [
+          -18.851216832,
+          -2.0199999999999982
+        ],
+        "tiltDegrees": 23.257976842534703
+      },
+      {
+        "yz": [
+          -18.709376499999998,
+          -2.3499999999999983
+        ],
+        "tiltDegrees": 23.259923604785318
+      },
+      {
+        "yz": [
+          -18.567523328,
+          -2.679999999999999
+        ],
+        "tiltDegrees": 23.261740179879425
+      },
+      {
+        "yz": [
+          -18.425658204,
+          -3.0099999999999993
+        ],
+        "tiltDegrees": 23.263426578456613
+      },
+      {
+        "yz": [
+          -18.283782016,
+          -3.3399999999999994
+        ],
+        "tiltDegrees": 23.264982810394798
+      },
+      {
+        "yz": [
+          -18.141895652000002,
+          -3.6699999999999995
+        ],
+        "tiltDegrees": 23.266408884810154
+      },
+      {
+        "yz": [
+          -18.0,
+          -4.0
+        ],
+        "tiltDegrees": 23.267704810056955
+      }
+    ],
+    "displayEstimate": "Author-selected shared slopes; original depth station positions retained. Complete primary images reviewed without measurement.",
+    "existingGripFeatures": "Unchanged above Z135; same forward sloper profiles, center crest/return/nose, roof joins and semantic bounds."
+  }
+}

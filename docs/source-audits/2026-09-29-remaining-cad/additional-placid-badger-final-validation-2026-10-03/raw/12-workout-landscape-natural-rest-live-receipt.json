@@ -1,0 +1,29 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+  "launch": {
+    "number": 12,
+    "boardID": "owl-climb.poker",
+    "package": "owl-climb-poker",
+    "contactID": null,
+    "planID": "research.abrahangs",
+    "flags": {
+      "BOARD_ID": "owl-climb.poker",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "LANDSCAPE": "1",
+      "PLAN": "1",
+      "PLAN_ID": "research.abrahangs",
+      "STEP": "17"
+    },
+    "launchedAt": 1791080096.950325
+  },
+  "image": "12-workout-landscape-natural-rest-live.png",
+  "imageSHA256": "0ad85794aa05be5b16fae6354a1d3f4cd5cda4c3c0774ce95f8dd56b6553e53c",
+  "accessibilitySHA256": "74f9be48ac383543e9cedcd9405afbc1bf5ee2167545c93df22782b77fc84a51",
+  "binarySHA256": "36fdf093a45c7357d6768218356c8bf1f315f39765b4925e1b610ca37202368f",
+  "installedProvenanceSHA256": "b9dc21302641bbff22192bc2f7bc064e7a008536db4b1015efd5253e4de3ea0d",
+  "rendererDiagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-a-left-outer-slot,face-a-right-outer-slot;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "rawFailureCapture": false
+}

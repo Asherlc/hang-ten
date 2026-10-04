@@ -1,0 +1,25 @@
+{
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "exactSimulatorAbsent": true,
+  "ownedPaths": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/build-placid-badger-cad-second-half.xcresult",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/tests-placid-badger-cad-second-half.xcresult",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/module-cache",
+      "absent": true
+    }
+  ],
+  "moduleCachePreviouslyExisted": true,
+  "sharedResourcesTouched": false,
+  "workspaceAndAgentsPreserved": true
+}

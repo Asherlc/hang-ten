@@ -1,0 +1,84 @@
+{
+  "make": {
+    "complete": true,
+    "epoch": 1791006584.423849,
+    "event": "hand-lifecycle",
+    "handCameraID": "ObjectIdentifier(0x0000000112d2ac20)",
+    "handKind": "pair",
+    "handLifecycleCounts": {
+      "pair.constructor-entry": 1,
+      "pair.make-entry": 1,
+      "single.constructor-entry": 0,
+      "single.make-entry": 0
+    },
+    "handLifetimeToken": "D36A3CB8-6B96-4210-846D-AC9D7EBB14E9",
+    "handRootID": "ObjectIdentifier(0x0000000112d2a880)",
+    "lifecycleEvent": "make-entry",
+    "sequence": 5,
+    "uptime": 88382.64675675001,
+    "viewToken": "A1E3CDC9-E06A-4BBB-B34E-DCA76623064A"
+  },
+  "fit": {
+    "allDepthsFinite": true,
+    "allDepthsInsideUnchangedClips": true,
+    "cameraEvent": "reset-fitted",
+    "cameraTransform": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0.959770917892456,
+      -0.28078407049179077,
+      0,
+      0,
+      0.28078407049179077,
+      0.959770917892456,
+      0,
+      0,
+      3.961261034011841,
+      9.515283584594727,
+      1
+    ],
+    "complete": true,
+    "epoch": 1791006584.581593,
+    "event": "hand-camera",
+    "far": 100,
+    "framingVertexCount": 37284,
+    "handCameraID": "ObjectIdentifier(0x0000000112d2ac20)",
+    "handKind": "pair",
+    "handLifecycleCounts": {
+      "pair.constructor-entry": 1,
+      "pair.make-entry": 1,
+      "single.constructor-entry": 0,
+      "single.make-entry": 0
+    },
+    "handLifetimeToken": "D36A3CB8-6B96-4210-846D-AC9D7EBB14E9",
+    "maximumDepth": 10.936546325683594,
+    "minimumDepth": 8.617655754089355,
+    "near": 0.10000000149011612,
+    "orthographicPresent": true,
+    "orthographicScale": 2.3900222778320312,
+    "perspectivePresent": false,
+    "sequence": 6,
+    "uptime": 88382.80450258334
+  },
+  "constructor": {
+    "complete": true,
+    "epoch": 1791006584.308888,
+    "event": "hand-lifecycle",
+    "handCameraID": "ObjectIdentifier(0x0000000112d2ac20)",
+    "handKind": "pair",
+    "handLifecycleCounts": {
+      "pair.constructor-entry": 1,
+      "pair.make-entry": 0,
+      "single.constructor-entry": 0,
+      "single.make-entry": 0
+    },
+    "handLifetimeToken": "D36A3CB8-6B96-4210-846D-AC9D7EBB14E9",
+    "handRootID": "ObjectIdentifier(0x0000000112d2a880)",
+    "lifecycleEvent": "constructor-entry",
+    "sequence": 3,
+    "uptime": 88382.53179695834
+  }
+}

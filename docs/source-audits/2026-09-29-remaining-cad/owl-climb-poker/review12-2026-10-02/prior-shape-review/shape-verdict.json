@@ -1,0 +1,53 @@
+{
+  "owner": "placid-badger",
+  "reviewDate": "2026-10-02",
+  "mode": "read-only authoritative physical-shape judgment",
+  "nativeSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+  "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+  "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
+  "sourceHashesVerified": true,
+  "verdict": "One source-supported shape discrepancy; withhold an unqualified source-fidelity pass for Face A pending human disposition.",
+  "findings": [
+    {
+      "id": "POKER-A-RELIEF-EXTENT",
+      "confidence": "medium-high",
+      "severity": "source-fidelity review blocker",
+      "source": "OP-PHOTO-0 / owl-climb-poker-face-a.jpg",
+      "observation": "In the whole maker image, the side transitions of both broad reliefs continue down beside the mono/duo row. In the actual USDZ and native solid they terminate near the lower edge of the upper long slots, leaving a much taller uninterrupted lower strip.",
+      "scope": "The Face A view of the paired face-B deep-sloper forms, not the seven Face A pocket identities.",
+      "interpretation": "This is an inherited display-shape approximation also visible in the historical prior-asset preview, not a newly introduced CAD regression. Native/export parity does not establish agreement with the maker image.",
+      "limit": "No photo measurements were made. The exact intended depth, radius and terminal position are not recoverable from this review; no replacement dimension is proposed. Photo lighting affects the soft lower transition, so confidence is medium-high rather than absolute.",
+      "action": "Present the whole source and fresh native/USDZ views for explicit human disposition; if correcting, target only this broad relief profile under the source gate. No mutation performed."
+    }
+  ],
+  "passedObservations": [
+    "All four faces retain seven pockets each: two long upper outer slots, two monos, two duos, and one lower central slot.",
+    "On both ends, every photographed face shows mono then duo in left-to-right viewing order; current native and USDZ reproduce this repeated, deliberately non-mirrored sequence.",
+    "The six additional broad contact regions are the two face-B deep slopers, two face-C shallow half-rounds, and two face-D deep rounded recesses. Total native/descriptor inventory is 34.",
+    "Face B has the expected two large deep sloper regions and lower-edge interruptions; no additional source-supported blocker identified.",
+    "Face C has the expected pair of shallower curved upper reliefs; no additional source-supported blocker identified.",
+    "Face D retains two substantial rounded recesses, distinct from shallow pockets; no additional source-supported blocker identified.",
+    "Native Cut33 reopens and recomputes as one valid 660 x 100 x 100 mm solid. Source bytes remain unchanged.",
+    "Fresh actual-USDZ C/D regression passes all 14 C rays, all 8 D rays, relief-depth guards, and both seam angles at 2.7528456839127657 degrees."
+  ],
+  "previewProvenance": "Historical geometry-visual-review and final-hash closure records match current exact source/model hashes. They lacked all-four-face rotated views; freshly rendered all four native and USDZ faces, four USDZ obliques, and an end view.",
+  "exclusions": [
+    "No cord is documented or proposed. Mounting hardware omitted per policy.",
+    "Runtime appearance, wood finish and simulator behavior not evaluated by this CPU shape review.",
+    "No source-photo pixels measured, traced, cropped, registered or vectorized; no canonical geometry, metadata, tests or docs changed."
+  ],
+  "artifacts": [
+    "whole-face-review.html",
+    "render-provenance.json",
+    "native-inspection.json",
+    "current-cd-regression.json",
+    "resources.json",
+    "targeted-correction-plan.json"
+  ],
+  "nativeViewsInspected": [
+    "native-face-a.png",
+    "native-face-b.png",
+    "native-face-c.png",
+    "native-face-d.png"
+  ]
+}

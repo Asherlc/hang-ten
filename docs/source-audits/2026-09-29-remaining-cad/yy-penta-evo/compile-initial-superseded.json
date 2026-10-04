@@ -1,0 +1,49 @@
+{
+  "asset": "Hangboards/yy-penta-evo/assets/primary.usdz",
+  "assetBytes": 1575004,
+  "assetSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+  "board": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "duo",
+    "edge-10",
+    "edge-15",
+    "edge-20",
+    "edge-25",
+    "mono",
+    "tray"
+  ],
+  "descriptor": "Hangboards/yy-penta-evo/assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "duo": 30.0,
+    "edge-10": 10.0,
+    "edge-15": 15.0,
+    "edge-20": 20.0,
+    "edge-25": 25.0,
+    "mono": 30.0,
+    "tray": 30.0
+  },
+  "modelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+  "nodes": [
+    "central_ring_001",
+    "penta_body_001",
+    "unit_duo_001",
+    "unit_edge_10_001",
+    "unit_edge_15_001",
+    "unit_edge_20_001",
+    "unit_edge_25_001",
+    "unit_mono_001",
+    "unit_tray_001",
+    "upper_band_exterior_001"
+  ],
+  "package": "yy-penta-evo",
+  "presentationID": "front-pair",
+  "published": true,
+  "schemaVersion": 2,
+  "source": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "dc4fef3a50cd990ad2c3abe3758f195daa4518493cb9b6aa29f517ee56e34ea4",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 72050,
+  "reportStatus": "superseded initial publication; use compile-final-check.json for final source hash closure"
+}

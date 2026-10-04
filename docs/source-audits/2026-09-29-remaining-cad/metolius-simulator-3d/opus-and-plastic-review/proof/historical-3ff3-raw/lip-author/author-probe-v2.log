@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-probe-v2-tmp/hangten-freecad-k_utt054/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/author_functional_probe.py", line 141, in <module>
+    for curve in ge[rear_count+1:lip_end]:assert outer.join(curve.toBSpline()),(label,j,'exact roof join')
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('CenterShoulder', 0, 'exact roof join')
+
+Opened frozen source; native contacts removed for rebuild
+Simple forward sloper profiles recomputed
+Forward center crest retained; local front nose removes cap shelf
+
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								

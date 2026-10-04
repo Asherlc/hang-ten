@@ -1,0 +1,81 @@
+{
+  "status": "PREPARED_NOT_AUTHORIZED_NOT_RUN",
+  "audioMuted": true,
+  "appArguments": [
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "roles": [
+    "hand-image-muted-workout-live-a",
+    "hand-image-muted-workout-image-a"
+  ],
+  "sourceURL": "https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html",
+  "semantics": "Apple documents -key value as a volatile argument-domain override ahead of persisted application defaults. simctl launch accepts app argv. No persisted default or service mutation is requested.",
+  "checks": {
+    "pythonAST": true,
+    "positiveScalarFixture": true,
+    "negativeFixturesRejected": [
+      "true",
+      "missing",
+      "prepare",
+      "no-snapshots"
+    ],
+    "branchSchemaUnchanged": true,
+    "routineReferenceUnchanged": true,
+    "originalCloneBytesPreserved": true
+  },
+  "preservedProtocol": "300s overall;20s Train attachment readiness;30s initial sequence;natural7/180/7;12 shots at+.25/+1/+3/+5;150ms start tolerance;no waiting for hand readiness;all PNG retention;exact app/child cleanup;27-hash parity;fixed-cue whole-image limits.",
+  "newGates": "Release audioMuted true and exact argv; every declared startup snapshot audioEnabled false; no prepare-before/after; final request/visible-before/visible-after required; image gate may use only new muted LIVE control.",
+  "limits": [
+    "Separate supported audio-off workflow, not normal-audio-on transfer or repair.",
+    "No runtime has verified this override on this binary yet; emitted scalar gates will do so.",
+    "No general dynamic semantic or live/image appearance equivalence claim.",
+    "Common validators must be path-adapted and startup correlations interpreted for legitimate immediate muted countdown (no audio-arm events required)."
+  ],
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/apple-argument-domain.html",
+      "sha256": "825bc3a7b36017ac5b8079498b1479f3d708326ae4001ec6491c001890d50a29"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/branch_schema.py",
+      "sha256": "87eb845d31e1dda2a23b5df847dab02454b2057e625d9ead35d0135cd9585aea"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/capture.diff",
+      "sha256": "95954a7b13faac6053999cc4a56eafc53ba480ae52d47869f2f3da12f96cf352"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/capture.py",
+      "sha256": "4cd95885f85b1be48824ec41e8d05879d091e4da4b532e5652dc03d6c481aa32"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/event-schema.json",
+      "sha256": "67f947eeed4bb423d6d6d10a08eb31dce2c8811dac67e50b557a27f83cf47e88"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/fixed-routine-reference.json",
+      "sha256": "c5f4f4bae33049e2a0100af2c052a74c31946be453a004c5b3dc4a9bddb48d22"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/marker-schema.json",
+      "sha256": "a4a9065f46d9a8f018dfd47ccf5a13c9d9c8eb4b6b22554e701e3fa678d23707"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/muted_audio_schema.py",
+      "sha256": "538b6041f788d6903f680c2797f4be59c12278114deaf9cc9166f4a76be02948"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/release-template.NOT-AUTHORIZED.json",
+      "sha256": "91c35f9d234d0e9f5c5e6e5e1246fd6e5d1ef545c0e111a31ec889dec6154991"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/simctl-launch-help.stderr",
+      "sha256": "94ae148cf375cb65a0e14daa78230d1cd0520ea6772d75afecba422d96fcc4b2"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-prep/simctl-launch-help.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

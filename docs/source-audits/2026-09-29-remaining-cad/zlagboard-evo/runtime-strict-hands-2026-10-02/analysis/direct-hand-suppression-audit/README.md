@@ -1,0 +1,13 @@
+# Prospective strict hand-host suppression audit
+
+Existing `HANGTEN_REVIEW_SUPPRESS_WORKOUT_HAND_HOST` is not history-free: it guards only the landscape shared pair at RootView:2435. Portrait resolved-hold diagrams, portrait pair/single cards and non-paired landscape single cards still construct hand views. Inspector sheets also reach the single host if opened. The normal Train first-hold preview has another path; valid direct-root launch bypasses that normal branch but not portrait workout startup.
+
+Direct root requests landscape in `onAppear`. WorkoutView selects its layout from current geometry; no orientation-ready barrier prevents the portrait branch before rotation. This creates a possible hand-host history even when the final landscape pair is absent. Source does not prove that this occurred in every historical run.
+
+The smallest prospective host-only switch is a DEBUG gate at both hand model view bodies in `GripHandModelView.swift`, before `GeometryReader`/`RealityView` and lazy scene access, yielding flexible `Color.clear` when enabled. Preserve caller frames (88-point portrait/single and 68-point landscape pair), surrounding labels, cards, paddings, gestures' container footprint and sourced cues. Do not use opacity/hidden, which keep construction. Existing lazy storage initializers defer hand scene construction until accessed. Both paired and single leaves must be covered; the inspector then inherits the same suppression. A strict run should not also enable the plain-second-host probe. This is prospective only and requires technical coordination to reserve the hand file outside the current five paths; no changes were made.
+
+A RootView-only workaround would duplicate or replace portrait cue internals and disturb dimensions/cues; forcing shared-pair card behavior also changes card height and background. It is not the clean minimal layout-preserving alternative.
+
+Proof requires fresh launch with the strict flag fixed from first construction, complete instrumentation of the two hand scene constructors and two host make sites, and zero creation events with intact stream coverage. Board layout/cue checks remain necessary. Old `hand-off-a-landscape` and `projection-off-a-landscape` traces have no application census or hand constructor lifecycle instrumentation. Later census uses sparse class-name matches for currently attached UIKit descendants, not a lifetime registry. Historical OFF must not be called single-host/history-free.
+
+`audit.json` gives call sites, exact excerpt hashes and trace hashes. Excerpts deliberately omit the concurrently changing timing section; this is not a whole-source freeze. The only authorized running experiment remains timing. No source, device, build or tracked-document changes occurred.

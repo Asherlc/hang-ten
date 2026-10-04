@@ -1,0 +1,12 @@
+{
+  "owner": "placid-badger",
+  "task": "flash-board-review14/conditional-wrap-producer-closeout",
+  "recordedAt": "2026-10-03T00:36:39.320550+00:00",
+  "externalResources": [],
+  "outputs": [
+    "command-argv-supplement.json",
+    "final-lifecycle-receipt.json",
+    "final-artifact-index.json"
+  ],
+  "scope": "scratch-only producer index and final absence checks; no solve/tests/build/canonical mutation"
+}

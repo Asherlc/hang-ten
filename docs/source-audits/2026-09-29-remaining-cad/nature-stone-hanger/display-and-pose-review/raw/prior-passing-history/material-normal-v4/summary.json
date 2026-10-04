@@ -1,0 +1,48 @@
+{
+  "status": "one-lead-feasibility-only",
+  "sourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+  "helperSHA256": "827a12d93a2cffc75e5175d853063857eff04bda401bd7602e4097801301362c",
+  "contactEnvelope": {
+    "radiusM": 0.0015,
+    "proposalMarginM": 2e-05,
+    "numericalContactAllowanceM": 1e-05
+  },
+  "closestFeatureTieAllowanceM": 1e-05,
+  "materialNormalConeResidualLimit": 1e-05,
+  "reactionResidualLimit": 1e-05,
+  "reports": [
+    {
+      "pathReport": "offset-anchor-probe.json",
+      "report": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/notch-guide-implementation/material-normal-v4/offset-anchor-probe-reactions.json",
+      "sha256": "8e8f8d5a6283a5022a971c9435e71a8caa573c15b7db134fdf207ab6d07dedba",
+      "status": "pass",
+      "maxNodalResidual": 1.0385185452638061e-16,
+      "maxClosestFeatureTieGap": 6.823388943213125e-06,
+      "maxMaterialConeResidual": 2.88911544987286e-14
+    },
+    {
+      "pathReport": "native-seed-no-free-knee-probe.json",
+      "report": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/notch-guide-implementation/material-normal-v4/native-seed-no-free-knee-probe-reactions.json",
+      "sha256": "7a9ed63da10172daa94120f2c2e68576c047dfe4f27699d01bc06acd79f53f24",
+      "status": "pass",
+      "maxNodalResidual": 5.659161465206931e-17,
+      "maxClosestFeatureTieGap": 9.165162807121732e-06,
+      "maxMaterialConeResidual": 5.580240982766863e-06
+    }
+  ],
+  "reviewerFalseTangentialDirections": [
+    {
+      "oldContact": 0,
+      "residual": 0.04739799405406032,
+      "rejected": true
+    },
+    {
+      "oldContact": 1,
+      "residual": 0.18261455080551856,
+      "rejected": true
+    }
+  ],
+  "emptyConeResidual": 1.0,
+  "canonicalMutation": false,
+  "allPoseLengthTubeCachePending": true
+}

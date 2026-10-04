@@ -1,0 +1,36 @@
+diff --git a/Tools/HangboardPackages/tests/test_trango_mirrored_halves.py b/Tools/HangboardPackages/tests/test_trango_mirrored_halves.py
+index 8351ae314..e22f3c56b 100644
+--- a/Tools/HangboardPackages/tests/test_trango_mirrored_halves.py
++++ b/Tools/HangboardPackages/tests/test_trango_mirrored_halves.py
+@@ -54,7 +54,8 @@ def test_native_forge_full_pair_maps_every_physical_contact_and_mirrored_frame()
+     package = ROOT / 'trango-rock-prodigy-forge'
+     board = load_board(package / 'trango-rock-prodigy-forge.FCStd')
+     assert not (package / 'board.json').exists()
+-    assert board['equipmentObjects'] == [{'id': 'primary'}]
++    # The full paired asset still represents two physical pieces of equipment.
++    assert board['equipmentObjects'] == [{'id': 'left-half'}, {'id': 'right-half'}]
+     assert len(board['presentations']) == 1
+     media = board['presentations'][0]['media']
+     assert 'instances' not in media
+@@ -67,7 +68,6 @@ def test_native_forge_full_pair_maps_every_physical_contact_and_mirrored_frame()
+     contacts = {contact['id']: contact for contact in board['contacts']}
+     assert len(board['contacts']) == len(contacts) == 20
+     assert set(contacts) == set(descriptor['contacts']) == expected
+-    assert all(contact['equipmentObjectID'] == 'primary' for contact in contacts.values())
+     nodes = {node['nodeID']: node for node in descriptor['nodes']}
+     assert len(nodes) == len(descriptor['nodes']) == 21
+     assert [node for node in nodes.values() if node['role'] == 'body'] == [
+@@ -87,8 +87,11 @@ def test_native_forge_full_pair_maps_every_physical_contact_and_mirrored_frame()
+     assert bounds['min'][0] == pytest.approx(-bounds['max'][0], abs=1e-9)
+     for stem in FORGE_CONTACT_STEMS:
+         left_id, right_id = f'{stem}-left', f'{stem}-right'
+-        assert {key: value for key, value in contacts[left_id].items() if key not in ('id', 'name')} == {
+-            key: value for key, value in contacts[right_id].items() if key not in ('id', 'name')
++        assert contacts[left_id]['equipmentObjectID'] == 'left-half'
++        assert contacts[right_id]['equipmentObjectID'] == 'right-half'
++        identity_fields = ('id', 'name', 'equipmentObjectID')
++        assert {key: value for key, value in contacts[left_id].items() if key not in identity_fields} == {
++            key: value for key, value in contacts[right_id].items() if key not in identity_fields
+         }
+         left, right = descriptor['contacts'][left_id], descriptor['contacts'][right_id]
+         left_bounds, right_bounds = left['facePlaneAABB'], right['facePlaneAABB']

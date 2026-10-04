@@ -1,0 +1,25 @@
+{
+  "head": "667048d6fd5e8ee639494c825cbe1ccc30198495",
+  "files": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "a250e682072933af27187215451da6ee46981d44b9ef2946c3609d48baedcaa7"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "90f5c896efd321e31560f54e1b6aab0880bd51cfb4301a4f9db3aca9757b0292"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2"
+    }
+  ]
+}

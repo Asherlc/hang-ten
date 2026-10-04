@@ -1,0 +1,221 @@
+{
+  "proofs": [
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/controller.command.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/controller.command.json",
+      "sha256": "67e90813256c3a0989b4ca1926e9c852cacb9def7731f9f3b91002befd477573",
+      "bytes": 184
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/controller.exit.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/controller.exit.json",
+      "sha256": "dcc8988ba7f4893a0790a317400c69c38a2f8a58f903e935312b0725f2dc3e8f",
+      "bytes": 134
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/controller.stderr",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/controller.stdout",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/controller.stdout",
+      "sha256": "e5f583acf689f5b93d95a84d3706918977b14efead65b3b362c6335bdd0eb8be",
+      "bytes": 189
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/device.command.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/device.command.json",
+      "sha256": "12479d679f4fe9d96895a7ede76a8669d00ff4c4bc9101b19714c54265830747",
+      "bytes": 189
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/device.exit.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/device.exit.json",
+      "sha256": "71b57343edac0b3c80e5c4af05d6ac9f888ee037c6504aa3f5ca213ba8d63584",
+      "bytes": 132
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/device.stderr",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/device.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/device.stdout",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/device.stdout",
+      "sha256": "4df9a007bc0ae26cb563ae1e6f798e680e4e44d6c79633486127d452fd28749a",
+      "bytes": 56774
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/tests-placid-badger-cad-second-half-boundary-audit-green.xcresult.archive.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/tests-placid-badger-cad-second-half-boundary-audit-green.xcresult.archive.json",
+      "sha256": "abc5647ee352d863a9655334352551dbc809d10ccc452cd43dda4ba5e7fff496",
+      "bytes": 20493
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/tests-placid-badger-cad-second-half-boundary-audit-green.xcresult.deletion.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/tests-placid-badger-cad-second-half-boundary-audit-green.xcresult.deletion.json",
+      "sha256": "4bb406128c471e413ff8e4584f2caa30212ea6dc635b838aa72a5b7f7c657b12",
+      "bytes": 257
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/tests-placid-badger-cad-second-half-boundary-audit-green.xcresult.zip",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/tests-placid-badger-cad-second-half-boundary-audit-green.xcresult.zip",
+      "sha256": "a804b5e8a6abdc4fe87d9fa1594d8c636230de5db41111267e18e46dcd8d1027",
+      "bytes": 55144
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/tests.command.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/tests.command.json",
+      "sha256": "1f3d8662b8e3a20852014bd53334e2c4101bebabb3f73892a3e5a7b942fbcf68",
+      "bytes": 1041
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/tests.exit.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/tests.exit.json",
+      "sha256": "3e4012e986cc7ee5e077eb80d49550054fcca89ca4defb5e83d9908bbd9ec19f",
+      "bytes": 132
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/tests.stderr",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/tests.stderr",
+      "sha256": "7ab417eaf0b6828d6fde5de5337a58b4afc1519893ac1906b74aecf741641321",
+      "bytes": 368
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-audit-green/tests.stdout",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/tests.stdout",
+      "sha256": "4468c29b411bcdc2fcc289a0a23e1ee8dd2b60f3613c9b94ea4211a88a9302b8",
+      "bytes": 8283
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-migration-correction/BoardSourceBoundaryAudit.swift.original",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-migration-correction/BoardSourceBoundaryAudit.swift.original",
+      "sha256": "5ca9a30b1b73a51faf44316f5d995f3a678ca82ca981b63c361484c79b0efb03",
+      "bytes": 8797
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-migration-correction/BoardSourceBoundaryTests.swift.original",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-migration-correction/BoardSourceBoundaryTests.swift.original",
+      "sha256": "6a4ae7a63ee9488186b4548196ff6be3c30b83b62367e86d9d4028e8edc5b295",
+      "bytes": 43763
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-migration-correction/CustomRoutineStore.swift.original",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-migration-correction/CustomRoutineStore.swift.original",
+      "sha256": "119ab754ad1a79c091fbc5d3cc4e8ec1a0f23747b2067b7ee49ad16f4fe236af",
+      "bytes": 29520
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-migration-correction/before.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-migration-correction/before.json",
+      "sha256": "559cc6c3b638d3563b5cdcf29cfe0746e4a6e099509616d9690546f92fa9f303",
+      "bytes": 350
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-migration-correction/change-audit.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-migration-correction/change-audit.json",
+      "sha256": "a9581f22cb549df985839c54216821341df568877e712e26a10fb4b862c5290b",
+      "bytes": 2705
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/boundary-migration-correction/change.diff",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-migration-correction/change.diff",
+      "sha256": "873887cbe3a9df7b1c36e4f1839177bcd60b57f746d206093eec899a7de2a759",
+      "bytes": 8755
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/controller.command.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/controller.command.json",
+      "sha256": "9bf016925058c9d9c8af7ad66fec024835f8a4167a9aa49c6220cfc0a0dd3cd5",
+      "bytes": 184
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/controller.exit.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/controller.exit.json",
+      "sha256": "f445846920e8cfe02d3db36d1d44af6b73b75e4d3b47da35b910b1f2d86f9578",
+      "bytes": 134
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/controller.stderr",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/controller.stdout",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/controller.stdout",
+      "sha256": "e5f583acf689f5b93d95a84d3706918977b14efead65b3b362c6335bdd0eb8be",
+      "bytes": 189
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/device.command.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/device.command.json",
+      "sha256": "72a777127036da802f01e246cec89f234f90d9ec4e78a3fad50991aff951f2ab",
+      "bytes": 189
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/device.exit.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/device.exit.json",
+      "sha256": "76d1700e3cb7a7d7734cd69095d0a7502515771e792ea23ec258c62fac4f5470",
+      "bytes": 133
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/device.stderr",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/device.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/device.stdout",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/device.stdout",
+      "sha256": "9588f99ff1066674f068a41f1c11154dccadff68d1733f14ba9153ca7beebe5e",
+      "bytes": 57400
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/tests-placid-badger-cad-second-half-board-ui-clean-modal-setup.xcresult.archive.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/tests-placid-badger-cad-second-half-board-ui-clean-modal-setup.xcresult.archive.json",
+      "sha256": "c8d44f25084dd8c3316d39137013175fca23cc34258abeef0a3096f08542184f",
+      "bytes": 17599
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/tests-placid-badger-cad-second-half-board-ui-clean-modal-setup.xcresult.deletion.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/tests-placid-badger-cad-second-half-board-ui-clean-modal-setup.xcresult.deletion.json",
+      "sha256": "f1161931a93b830318ac257a6c2d6fdd33f6111e42c9d87d875cf8b0e52196cd",
+      "bytes": 263
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/tests-placid-badger-cad-second-half-board-ui-clean-modal-setup.xcresult.zip",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/tests-placid-badger-cad-second-half-board-ui-clean-modal-setup.xcresult.zip",
+      "sha256": "6795d6760acfa2eba24d02f7ff44bb19c3c756c12a0c168b74cd91fb06fea200",
+      "bytes": 4936771
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/tests.command.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/tests.command.json",
+      "sha256": "6b375e9d5937a94187c96ef1c3976fbb98558866161420382206259272d5da3a",
+      "bytes": 1065
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/tests.exit.json",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/tests.exit.json",
+      "sha256": "8826dc5acdd5b2bf2ea8a428221ccffaf714f8d9820a358c47b194f9010aa0b6",
+      "bytes": 132
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/tests.stderr",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/tests.stderr",
+      "sha256": "1b09af1da8092ed109c7f0b73756f736f7744e7e13e6888e379ffbd327df029b",
+      "bytes": 1829
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/board-ui-clean-modal-setup/tests.stdout",
+      "destination": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/tests.stdout",
+      "sha256": "cd3c3323d822b6583dca3cd88f17962ce6601d58e268f211a10468b3f32c091e",
+      "bytes": 30956
+    }
+  ],
+  "exactRawBytesPreserved": true
+}

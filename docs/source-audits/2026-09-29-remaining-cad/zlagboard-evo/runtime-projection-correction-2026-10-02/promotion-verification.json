@@ -1,0 +1,11 @@
+{
+  "createdUTC": "2026-10-02T20:11:31.820303+00:00",
+  "copiedRawFileCount": 217,
+  "allRetainedRawHashesMatch": true,
+  "historicalPacketFilesCheckedUnchanged": 1048,
+  "manifestSHA256": "84dc615ba9b8ceff5b369d40c63697d3a95bfd64f2efaee73e944ad057eca09f",
+  "threeFilePatchSHA256": "c7418d84666141975528797cf4402b785de9227b28c240e6846a5f127f124ddf",
+  "runCount": 3,
+  "allWorkflowsFailed": true,
+  "sourceIndexCommitDeviceMutation": false
+}

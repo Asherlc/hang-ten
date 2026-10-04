@@ -1,0 +1,103 @@
+{
+  "owner": "placid-badger",
+  "status": "scratch candidate verified; awaiting root review and promotion",
+  "assets": {
+    "source": {
+      "path": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/candidate/nature-stone-hanger-mini.FCStd",
+      "sha256": "725ee0bf37ae8d2599435cf7869fb4ade794f087d6742003582593abb6d1fc38"
+    },
+    "model": {
+      "path": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile1/assets/primary.usdz",
+      "sha256": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83"
+    },
+    "descriptor": {
+      "path": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile1/assets/primary.model.json",
+      "sha256": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6"
+    },
+    "collider": {
+      "path": ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/candidate-native-collider.json",
+      "sha256": "458dc6a72d71a1cecc25c4989e59a285f864748e1568b71e741f840914077b22"
+    }
+  },
+  "sharedJugFaces": [
+    30,
+    43,
+    69
+  ],
+  "jugOnlyEndFaces": [
+    28,
+    29,
+    41,
+    42,
+    59,
+    65
+  ],
+  "factualContactsAndManifestUnchanged": true,
+  "bodyAndAll28842TrianglePositionsUnchanged": true,
+  "pinchLogicalNativeAndTriangleUnionUnchanged": true,
+  "noMaterialsTexturesShadersOrDuplicates": true,
+  "deterministicExport": {
+    "primary.usdz": {
+      "first": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
+      "second": "c6d16ee88e8ce6cc3049426f7ce77f979be7288f30e818b6790186e988fdba83",
+      "bytesEqual": true
+    },
+    "primary.model.json": {
+      "first": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
+      "second": "80d293f799a102c8bc41cb61742468b517b61f977d882904895a2660302657f6",
+      "bytesEqual": true
+    }
+  },
+  "proofs": [
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/recommendation.json",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/authoring-notes.md",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/native-author-proof.json",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/native-reopen-proof.json",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/collider-proof.json",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile1-report.json",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile2-report.json",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/deterministic-export.json",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/reimport-proof.json",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/preview-provenance.json",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/final-cleanup.json"
+  ],
+  "previews": [
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-neutral-front-oblique.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-neutral-front.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-neutral-reverse-oblique.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-neutral-side.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-neutral-top.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pinch-60-front-oblique.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pinch-60-front.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pinch-60-reverse-oblique.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pinch-60-side.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pinch-60-top.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pull-up-jug-front-oblique.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pull-up-jug-front.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pull-up-jug-reverse-oblique.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pull-up-jug-side.png",
+    ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/comparison-pull-up-jug-top.png"
+  ],
+  "visualReview": {
+    "views": [
+      "front",
+      "side",
+      "top",
+      "front-oblique",
+      "reverse-oblique"
+    ],
+    "observations": "Whole actual imported prior/candidate assets at matching scales show a continuous rounded crown on front/top/back and both upper ends. Lower body, upright panels and recessed groove walls are not jug.",
+    "appAppearanceVerified": false
+  },
+  "rootNextSteps": [
+    "Review candidate previews",
+    "Promote approved source/USDZ/descriptor",
+    "Update only suspension model binding hash and run existing cord solver/check against supplied source-bound collider",
+    "Refresh delivery lock, stage/package validation and immutable dated source audit",
+    "Present review to user before completion"
+  ],
+  "notes": [
+    "Initial verification runner attempt failed because inspection script was named inspect.py and shadowed standard library inspect; renamed to inspect-native.py and reruns passed.",
+    "No shared/runtime/schema code edited; no reserved files read; no simulator, server, git operation or canonical package mutation by this worker."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "owner": "placid-badger",
+  "verifiedAtUTC": "2026-10-03T13:32:52.518573+00:00",
+  "status": "pass",
+  "canonical4": {
+    "nature-stone-hanger-mini-karma8a.FCStd": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+    "assets/primary.usdz": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+    "assets/primary.model.json": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+    "suspension.json": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf"
+  },
+  "canonical4MatchesCurrentPacketHumanAndQueue11": true,
+  "canonical4Unchanged": true,
+  "queueEqualityScope": "Only review queue entry #11; no full queue baseline equality asserted",
+  "retainedComparisonHashesChecked": 13,
+  "currentFrameHashesChecked": {
+    "karma11-granite-edge-15-granite-front-canonical.png": "c52405e7239f0f8c7915dba71b2a0b8ffb86b8483c075bacddfc1e4a1d9e6920",
+    "karma11-granite-edge-15-granite-front-oblique.png": "fa3a53633c99e65972058d969a9a88dfba304717ba3d58dfcd6743c595cb0262",
+    "karma11-wood-edge-15-wood-inverted-canonical.png": "580380086c329f73c3ff2c3776c961c23b5a64b905168478ee7341d23259674a",
+    "karma11-wood-edge-15-wood-inverted-oblique.png": "7cc8f25289a6292a7ba91f65ecd652d8a2c8dafb683f045d71edcad2f5d191c0",
+    "karma11-pinch-60-pinch-side-canonical.png": "39dad1a11b8b09a0fad0cd1d445f7e04786ce09b3508f87d76c7c73fb9c583f6",
+    "karma11-pinch-60-pinch-side-oblique.png": "2f6022da0bab7f85338e79264906a9eaf3905bf419b23daba337714947d37bbb",
+    "karma11-all-three-contacts-whole-selection.png": "a8b4538bd6db6528283947d6e47663d664faa76ae35ac8a01430fc2cedd85826",
+    "karma11-three-contacts-whole-oblique-selection.png": "f451504dcd8366af1be7dc075c6a387d5dea40c34b5ce7f93300536c0bb18aed"
+  },
+  "currentWholeFrames": 6,
+  "wholeFrameDimensions": [
+    1000,
+    710
+  ],
+  "bothSheetCompositionsPixelIdenticalToWholeFrames": true,
+  "descriptorSelectedNodesMatch": true,
+  "savedPoseAndRouteCacheMatchCurrentSidecar": true,
+  "allTwelveRenderedRouteCenterlinesMatchSavedCacheAndRetainedLengthCertificate": true,
+  "fixedAnchorMatch": true,
+  "helperAndRendererHashesMatch": true,
+  "visualInspectionSHA256": "19490c40a61107d35f9d0439e61a88a66e7633d1f22d17bbc1f6163de7bcb3ea",
+  "ownedRenderAndShellProcessesStopped": true,
+  "ownedTemporaryDirectoryDeleted": true,
+  "remainingExternalResources": 0,
+  "canonicalPackageMutations": 0,
+  "runtimeVerified": false,
+  "simulatorUsed": false,
+  "sourceGeometryRegenerated": false,
+  "routeSolverRerun": false,
+  "limitations": [
+    "These are orthographic CPU diagnostics, not screenshots from the app",
+    "Current runtime finishes, contact interactions, workout selection and orbit behavior remain unverified",
+    "Pinch-side and granite-front intentionally share the exact current rigid pose",
+    "Cord leads, radii, support offset, settled height and unknown fit details remain display estimates",
+    "No separate jug contact is sourced or present"
+  ]
+}

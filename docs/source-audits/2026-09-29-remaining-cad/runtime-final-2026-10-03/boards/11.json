@@ -1,0 +1,183 @@
+{
+  "owner": "placid-badger",
+  "date": "2026-10-03",
+  "number": 11,
+  "boardID": "nature.stone-hanger-mini-karma8a",
+  "package": "nature-stone-hanger-mini-karma8a",
+  "status": "bounded appearance/pick/touch evidence; fresh app human acceptance pending",
+  "appWorkflowPassed": false,
+  "currentAppHumanAcceptance": "pending",
+  "acceptedGeometry": {
+    "humanReview": "Shown #11 CAD shape and corrected pinch finger-contact wrap accepted; current app appearance and interaction remain unverified.",
+    "acceptedScope": "Corrected pinch-60 highlight across the upper and lower exterior wooden finger-contact rails, wrapping onto their front/back faces and rounded end shoulders, shown in the whole front/back preview and prior/current front/side/top comparison.",
+    "acceptedDate": "2026-10-03",
+    "reviewAnswer": "Y",
+    "geometryHumanAcceptance": "accepted",
+    "humanReviewRecord": "nature-stone-hanger-mini-karma8a/human-review.json",
+    "reviewPage": "nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/index.html",
+    "unchangedAcceptedGeometry": true,
+    "newHumanAppAcceptance": "pending"
+  },
+  "immutablePackageSHA256": {
+    "Hangboards/nature-stone-hanger-mini-karma8a/nature-stone-hanger-mini-karma8a.FCStd": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+    "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.usdz": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+    "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.model.json": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+    "Hangboards/nature-stone-hanger-mini-karma8a/suspension.json": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc"
+  },
+  "installedAppProvenance": {
+    "path": "installed-app-provenance.json",
+    "sha256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+    "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca"
+  },
+  "representativeContactCoverage": "All 3 logical contacts: wood edge, granite edge and pinch.",
+  "selectedContactIDsCaptured": [
+    "granite-edge-15",
+    "pinch-60",
+    "wood-edge-15"
+  ],
+  "wholeFrameVisualAudit": {
+    "status": "supplied audit complete",
+    "path": "visual-audits/11-visual-audit.json",
+    "sha256": "103570bfd9af5a64f26170e9dc83676cbb4e13e3fd5a7b9525f3f56f2cc2ee38",
+    "findingStatuses": [
+      {
+        "check": "wood and granite materials",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": "The three-frame addendum below now covers the supplied same-scene wood/granite restoration sequence. Pinch restoration and full deselection are not claimed.",
+        "frames": [
+          "app-captures/11-live-hold-wood-edge-15.png",
+          "app-captures/11-live-hold-pinch-60.png",
+          "app-captures/11-live-unselected-train.png"
+        ]
+      },
+      {
+        "check": "wood contact coverage",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": null,
+        "frames": [
+          "app-captures/11-live-hold-wood-edge-15.png"
+        ]
+      },
+      {
+        "check": "granite contact coverage",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": null,
+        "frames": [
+          "app-captures/11-live-front.png",
+          "app-captures/11-live-hold-granite-edge-15.png",
+          "app-captures/11-live-normal-lens.png",
+          "app-captures/11-live-landscape.png"
+        ]
+      },
+      {
+        "check": "opposing pinch contact coverage",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": "The complete bottom underside is not exposed by these camera views.",
+        "frames": [
+          "app-captures/11-live-hold-pinch-60.png",
+          "app-captures/11-live-top-oblique.png",
+          "app-captures/11-live-horizontal-orbit-1.png",
+          "app-captures/11-live-horizontal-orbit-2.png",
+          "app-captures/11-live-horizontal-orbit-3.png"
+        ]
+      },
+      {
+        "check": "native cord seating",
+        "status": "PASS_VISIBLE_ROUTE",
+        "limitation": "This visual audit does not recertify hidden passage clearance or prove transform invariance numerically.",
+        "frames": [
+          "app-captures/11-live-front.png",
+          "app-captures/11-live-top-oblique.png",
+          "app-captures/11-live-horizontal-orbit-1.png",
+          "app-captures/11-live-horizontal-orbit-2.png",
+          "app-captures/11-live-horizontal-orbit-3.png"
+        ]
+      },
+      {
+        "check": "ordinary touch camera orbit",
+        "status": "PASS_SUPPLIED_SETTLED_VIEWS",
+        "limitation": "These are separate captured states; no claim is made about unseen intermediate animation frames or reset behavior.",
+        "frames": [
+          "app-captures/11-live-horizontal-orbit-1.png",
+          "app-captures/11-live-horizontal-orbit-2.png",
+          "app-captures/11-live-horizontal-orbit-3.png"
+        ]
+      },
+      {
+        "check": "selected hold UI",
+        "status": "PASS_SUPPLIED_PORTRAIT_CARDS",
+        "limitation": "The hold-map chips are partly behind the floating tab bar in these scroll positions. One direct granite mesh pick is covered by the addendum; scrolling and chip interaction were not audited.",
+        "frames": [
+          "app-captures/11-live-hold-wood-edge-15.png",
+          "app-captures/11-live-hold-granite-edge-15.png",
+          "app-captures/11-live-hold-pinch-60.png"
+        ]
+      },
+      {
+        "check": "landscape map fit",
+        "status": "PASS_BOARD_AND_CORD_FIT",
+        "limitation": "The selected hold card begins below the captured viewport; its full landscape layout is not shown.",
+        "frames": [
+          "app-captures/11-live-landscape.png"
+        ]
+      },
+      {
+        "check": "unselected Train and normal lens",
+        "status": "PASS_VISIBLE_RENDERING",
+        "limitation": null,
+        "frames": [
+          "app-captures/11-live-unselected-train.png",
+          "app-captures/11-live-normal-lens.png"
+        ]
+      }
+    ]
+  },
+  "physicalMeshPick": {
+    "status": "pass one supplied physical mesh tap",
+    "pickedContactID": "granite-edge-15",
+    "receipt": "app-captures/11-granite-physical-mesh-pick-receipt.json",
+    "receiptSHA256": "3197bbe9242ee2132b6dde7de219fab1dba1ac559be872c4084d1881a2add413",
+    "frame": "app-captures/11-granite-physical-mesh-pick.png",
+    "imageSHA256": "6fb58c371ff14beeeaa268393f7e510eda8db7e339fd8c4078b6bc4286d22dc3",
+    "before": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=",
+    "after": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=1;pickedContact=granite-edge-15"
+  },
+  "representativeFrames": [
+    "app-captures/11-live-front.png",
+    "app-captures/11-granite-physical-mesh-pick.png",
+    "app-captures/11-live-hold-granite-edge-15.png",
+    "app-captures/11-live-hold-pinch-60.png",
+    "app-captures/11-live-hold-wood-edge-15.png"
+  ],
+  "touchEvidence": {
+    "status": "settled ordinary touch capture sequence; scope limited to supplied states",
+    "frames": [
+      "app-captures/11-live-horizontal-orbit-1.png",
+      "app-captures/11-live-horizontal-orbit-2.png",
+      "app-captures/11-live-horizontal-orbit-3.png"
+    ],
+    "visualAuditPending": false
+  },
+  "limitations": [
+    "Complete bottom underside, pinch restoration and physical picking of every contact are not established."
+  ],
+  "workout": {
+    "passed": false,
+    "status": "not executed after common #10 workout gate failed",
+    "commonGateEvidence": "capture-traces/10-workout-observation.json",
+    "trace": "capture-traces/workout-multi.json",
+    "workFrame": "app-captures/10-workout-landscape-work-highlight.png",
+    "restFrame": "app-captures/10-workout-landscape-rest-preview.png"
+  },
+  "focusedVerification": {
+    "path": "validation/final-strong-summary.json",
+    "sha256": "6c5f8e87f5a23babe0dbf11b7150c5e1b0a24ce41a3bfeb5fb622aa03cf0d8be",
+    "passed": 455,
+    "failed": 0,
+    "skipped": 1,
+    "fullSuitePassed": false,
+    "refinement": "validation/final-test-refinement.json"
+  },
+  "productionGeometryChanged": false,
+  "newManufacturerFactsOrRoutineChanges": false
+}

@@ -1,0 +1,15 @@
+{
+  "status": "PROSPECTIVE_V8_ADAPTER_NOT_RUN",
+  "sourceSchemaPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/v5-neutral-ibl/event-schema.json",
+  "sourceSchemaSHA256": "67f947eeed4bb423d6d6d10a08eb31dce2c8811dac67e50b557a27f83cf47e88",
+  "pythonASTPass": true,
+  "captureByteIdenticalToV7": true,
+  "scope": "Only async neutral-environment events/resource metadata validation and schema binding; no readiness from environment completion, no altered capture bounds or color/camera checks. Setup-start revision remains distinct from latest request revision.",
+  "files": {
+    "capture.py": "3351ba3cc9e05f360779f766e17f9bbf62dd4a102cfdf6e2711f79ce663ee6e4",
+    "event-schema.json": "67f947eeed4bb423d6d6d10a08eb31dce2c8811dac67e50b557a27f83cf47e88",
+    "protocol.md": "6d032264d53eadb22a90695ac0ce73892e48c3e367d8533eb2a140c4eaeaac71",
+    "prototype_schema.py": "90a51d6a15937152be3fc94d1e5fde7ddf693a2c7cf10af67d3107899a8c7a46",
+    "v7-to-v8-adapter.patch": "cce0ddcf1c45097b1d2294a2a89a0b9fbb63447f0b2184d816a5ed30fb08a736"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 10,
+    "boardID": "nature.stone-hanger-mini",
+    "package": "nature-stone-hanger-mini",
+    "contactID": null,
+    "planID": "research.abrahangs",
+    "flags": {
+      "BOARD_ID": "nature.stone-hanger-mini",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "PLAN_ID": "research.abrahangs",
+      "STEP": "9",
+      "AUTOSTART": "1"
+    },
+    "launchedAt": 1791054659.315594
+  },
+  "image": "10-workout-first-readiness-failure.png",
+  "imageSHA256": "ce5f4ff418a537acde3db6006ba6f02e475af81992211f2cb7cbef0bac16082c",
+  "accessibilitySHA256": "c7998927fd5b9ad48d7b76b5cde13c1133482766fb76352c0ce7711c3c02cf75",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": null,
+  "visualInspection": "Pending whole-frame inspection",
+  "rawFailureCapture": true
+}

@@ -1,0 +1,34 @@
+{
+  "status": "pass",
+  "scope": "Native UV exact-owner regression and finite192-corner supplemental disposition; no compiler code changes",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "blockingFindings": [],
+  "regression": "Real native cylinder facet plus nearby native plane through its centroid. Legacy-only mutation fails actual-owner-normal assertion; unchanged opt-in passes. Fixture uses no canonical or scratch source.",
+  "testResults": {
+    "nativeCasesPassed": 10,
+    "pythonCommandExitCode": 0,
+    "pythonLog": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/owner-regression-python-tests.log",
+    "pythonTestsPassed": 68
+  },
+  "resources": "All native owned process groups reaped/killed and owned temporary directories removed, per retained ownership reports. Initial incorrect FreeCAD .app CLI path exited immediately and was corrected to wrapper pinned default; setup failure retained separately.",
+  "limits": [
+    "Finite192-corner witness only; not universal legacy equality or all-corner normal alignment.",
+    "Raw legacy comparison remains review-required; supplement explicitly resolves one adjacent-face ownership difference using exact actual-facet evidence.",
+    "Actual b722 export validation still pending frozen asset pair."
+  ],
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/actual-owner-normal-supplement-b722.json": "a216a909ef9705ff6db7bc286866e7efe2d3663612188aa6297b4ea3e7254e13",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/uv-normal-b722-diagnosis.json": "cd40edadf90e6df49e960da3a087ce5f39c967d22b73371ac1cc09c759cf6e7f",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/owner-regression-red-native.log": "094fd2614042e54c85f18a42b7ddb3937fb648a609bb531d96cda8c41bb501f1",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/owner-regression-red-native-ownership.json": "36d5c4773e81029f05a2e1a0b4b6ac24a7ae0275297b4c6ba4312e43609821bc",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/owner-regression-green-native.log": "bf0818ff0f21bb51aeaac0a583faa66f900f9c8e2436252e973726276fbc2deb",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/owner-regression-green-native-ownership.json": "5e4d01a6e70521a46c2083a42563912c71b98b09e19528f6af36392158cbb459",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/owner-regression-python-tests.log": "b0c147c8bb3bdaca2d6741da03d7bbe32be973fb23657096468a068b93295596",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/owner-regression-python-tests.json": "f531b3269199ded274b7ceada1bc34cebf143a45ec24bf31b8ac927a28de9f49",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/actual-owner-normal-supplement-b722-ownership.json": "65e580294e6e6a751ebc3c71535fee477a41f5fabf0f87fa004343859902b19f",
+    "Tools/HangboardCAD/tests/uv_node_normal_checks.py": "684998bb8ca409e7ee07a46f572865a40d5bb1cd7fc86fe49da0419e0e38a8e7",
+    "Tools/HangboardCAD/README.md": "fe80fe6bed25f97ac900141d799e45af49402c9e4c848a43c0f05fd8576b5ed3",
+    "Tools/HangboardCAD/compile_board.py": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d"
+  }
+}

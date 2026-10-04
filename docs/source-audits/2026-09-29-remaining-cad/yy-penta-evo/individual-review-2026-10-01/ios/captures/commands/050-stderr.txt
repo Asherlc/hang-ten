@@ -1,0 +1,3 @@
+Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: FCC9FD77-E110-48AF-9A04-1FB19EAF82B9 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-20-right-penta-orbit.png

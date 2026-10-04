@@ -1,0 +1,354 @@
+--- a/HangTen/Views/RootView.swift
++++ b/HangTen/Views/RootView.swift
+@@ -2215,6 +2215,11 @@
+ 			)
+ 		}
+ 		.onAppear {
++            #if DEBUG
++            if BoardHighlightDiagnostic.recordsStartupObservation {
++                BoardHighlightDiagnostic.shared.startupContextAppeared(startupObservationContext)
++            }
++            #endif
+ 			UIApplication.shared.isIdleTimerDisabled = true
+ 			configureRecorder()
+ 			if planNeedsHandChoice {
+@@ -2266,6 +2271,9 @@
+ 			pauseForInterruption()
+ 		}
+ 		.onChange(of: audioCoach.countdownPreparationState) { _, state in
++            #if DEBUG
++            recordStartupObservation("startup-audio-preparation-change", countdown: pendingCountdownStart)
++            #endif
+ 			guard let pendingCountdownStart else { return }
+ 			switch WorkoutSessionPolicy.consumePendingCountdown(
+ 				&self.pendingCountdownStart,
+@@ -2274,8 +2282,22 @@
+ 			case .none:
+ 				return
+ 			case .beginVisibly:
++                #if DEBUG
++                let startupContext = startupObservationContext
++                let startupDeferredID = BoardHighlightDiagnostic.shared.startupTakeDeferred(startupContext)
++                BoardHighlightDiagnostic.shared.startupPushAttempt(startupContext, attempt: startupDeferredID)
++                defer { BoardHighlightDiagnostic.shared.startupPopAttempt(startupContext, attempt: startupDeferredID) }
++                recordStartupObservation("startup-deferred-dispatch", countdown: pendingCountdownStart, attemptID: startupDeferredID)
++                #endif
+ 				beginVisibleCountdown(pendingCountdownStart, at: WorkoutClock.monotonicTime)
+ 			case .requestAudioCountdown:
++                #if DEBUG
++                let startupContext = startupObservationContext
++                let startupDeferredID = BoardHighlightDiagnostic.shared.startupTakeDeferred(startupContext)
++                BoardHighlightDiagnostic.shared.startupPushAttempt(startupContext, attempt: startupDeferredID)
++                defer { BoardHighlightDiagnostic.shared.startupPopAttempt(startupContext, attempt: startupDeferredID) }
++                recordStartupObservation("startup-deferred-dispatch", countdown: pendingCountdownStart, attemptID: startupDeferredID)
++                #endif
+ 				requestCountdownStart(pendingCountdownStart)
+ 			}
+ 		}
+@@ -2292,6 +2314,9 @@
+ 			interruptRecorderForSensorLoss()
+ 		}
+ 		.onDisappear {
++			#if DEBUG
++			BoardHighlightDiagnostic.shared.startupCancellationRequested(startupObservationContext, taskPresent: countdownArmTask != nil, pendingPresent: pendingCountdownStart != nil, site: "existing-cancel-1")
++			#endif
+ 			countdownArmTask?.cancel()
+ 			countdownArmTask = nil
+ 			pendingCountdownStart = nil
+@@ -3139,6 +3164,9 @@
+ 		}
+ 		let monotonicTime = WorkoutClock.monotonicTime
+ 		if pendingCountdownStart != nil || countdownArmTask != nil {
++			#if DEBUG
++			BoardHighlightDiagnostic.shared.startupCancellationRequested(startupObservationContext, taskPresent: countdownArmTask != nil, pendingPresent: pendingCountdownStart != nil, site: "existing-cancel-2")
++			#endif
+ 			countdownArmTask?.cancel()
+ 			countdownArmTask = nil
+ 			pendingCountdownStart = nil
+@@ -3172,7 +3200,46 @@
+ 		}
+     }
+ 
++    #if DEBUG
++    private var startupObservationContext: String {
++        "\(ObjectIdentifier(audioCoach))|\(plan.id)"
++    }
++
++    private func recordStartupObservation(_ event: String,
++                                          countdown: PendingCountdownStart? = nil,
++                                          armUptime: TimeInterval? = nil,
++                                          attemptID: String? = nil) {
++        guard BoardHighlightDiagnostic.recordsStartupObservation else { return }
++        let context = startupObservationContext
++        let resolvedAttempt = attemptID ?? BoardHighlightDiagnostic.shared.startupCurrentAttempt(context)
++        BoardHighlightDiagnostic.shared.startupObservation(event, fields: [
++            "contextID": context,
++            "attemptID": resolvedAttempt.map { $0 as Any } ?? NSNull(),
++            "parentAttemptID": resolvedAttempt.flatMap { BoardHighlightDiagnostic.shared.startupParentAttempt($0) }.map { $0 as Any } ?? NSNull(),
++            "associationValid": BoardHighlightDiagnostic.shared.startupAssociationValid(context),
++            "planID": plan.id,
++            "countdown": countdown.map { String(describing: $0) } ?? "nil",
++            "audioEnabled": audioCuesEnabled,
++            "audioPreparation": String(describing: audioCoach.countdownPreparationState),
++            "pendingRequestPresent": pendingCountdownStart != nil,
++            "armTaskPresent": countdownArmTask != nil,
++            "routineStartedIsNil": sessionState.routineStartedAt == nil,
++            "activeStartUptime": sessionState.activeStartUptime.map { $0 as Any } ?? NSNull(),
++            "armUptime": armUptime.map { $0 as Any } ?? NSNull(),
++            "countdownKind": sessionState.countdownKind.map { String(describing: $0) } ?? "nil",
++            "pausedElapsed": sessionState.pausedElapsed,
++            "taskCancelled": Task.isCancelled
++        ])
++    }
++    #endif
++
+ 	private func requestCountdownStart(_ countdown: PendingCountdownStart) {
++        #if DEBUG
++        let startupContext = startupObservationContext
++        let startupAttemptID = BoardHighlightDiagnostic.shared.startupBeginRequest(startupContext)
++        defer { BoardHighlightDiagnostic.shared.startupPopAttempt(startupContext, attempt: startupAttemptID) }
++        recordStartupObservation("startup-request-entry", countdown: countdown, attemptID: startupAttemptID)
++        #endif
+ 		if audioCuesEnabled,
+ 		   WorkoutSessionPolicy.shouldPrepareCountdownAudio(
+ 			preparationState: audioCoach.countdownPreparationState
+@@ -3185,6 +3252,10 @@
+ 			preparationState: audioCoach.countdownPreparationState
+ 		   ) {
+ 			pendingCountdownStart = countdown
++            #if DEBUG
++            BoardHighlightDiagnostic.shared.startupDeferRequest(startupContext, attempt: startupAttemptID)
++            recordStartupObservation("startup-request-deferred", countdown: countdown, attemptID: startupAttemptID)
++            #endif
+ 			return
+ 		}
+ 
+@@ -3212,16 +3283,42 @@
+ 				),
+ 				startingAt: 3
+ 			)
++        #if DEBUG
++        recordStartupObservation("startup-audio-arm-before", countdown: countdown, armUptime: armUptime)
++        #endif
+ 		_ = audioCoach.startCountdown(schedule, startUptime: armUptime)
++        #if DEBUG
++        recordStartupObservation("startup-audio-arm-after", countdown: countdown, armUptime: armUptime)
++        #endif
++		#if DEBUG
++		BoardHighlightDiagnostic.shared.startupCancellationRequested(startupObservationContext, taskPresent: countdownArmTask != nil, pendingPresent: pendingCountdownStart != nil, site: "existing-cancel-3")
++		#endif
+ 		countdownArmTask?.cancel()
++        #if DEBUG
++        BoardHighlightDiagnostic.shared.startupArmRequest(startupContext, attempt: startupAttemptID)
++        #endif
+ 		countdownArmTask = Task { @MainActor in
++            #if DEBUG
++            recordStartupObservation("startup-arm-task-enter", countdown: countdown, armUptime: armUptime, attemptID: startupAttemptID)
++            #endif
+ 			do {
+ 				try await Task.sleep(for: .seconds(max(0, armUptime - WorkoutClock.monotonicTime)))
+ 			} catch {
++                #if DEBUG
++                recordStartupObservation("startup-arm-task-cancelled", countdown: countdown, armUptime: armUptime, attemptID: startupAttemptID)
++                #endif
+ 				return
+ 			}
++            #if DEBUG
++            recordStartupObservation("startup-arm-task-resumed", countdown: countdown, armUptime: armUptime, attemptID: startupAttemptID)
++            #endif
+ 			guard !Task.isCancelled else { return }
+ 			countdownArmTask = nil
++            #if DEBUG
++            BoardHighlightDiagnostic.shared.startupArmCompleted(startupContext, attempt: startupAttemptID)
++            BoardHighlightDiagnostic.shared.startupPushAttempt(startupContext, attempt: startupAttemptID)
++            defer { BoardHighlightDiagnostic.shared.startupPopAttempt(startupContext, attempt: startupAttemptID) }
++            #endif
+ 			beginVisibleCountdown(countdown, at: armUptime)
+ 		}
+ 	}
+@@ -3230,12 +3327,18 @@
+ 		_ countdown: PendingCountdownStart,
+ 		at armUptime: TimeInterval
+ 	) {
++        #if DEBUG
++        recordStartupObservation("startup-visible-countdown-before", countdown: countdown, armUptime: armUptime)
++        #endif
+ 		switch countdown {
+ 		case .initial:
+ 			sessionState.toggleRunning(uptime: armUptime, now: Date())
+ 		case .skip(let targetElapsed):
+ 			sessionState.startSkipCountdown(to: targetElapsed, at: armUptime)
+ 		}
++        #if DEBUG
++        recordStartupObservation("startup-visible-countdown-after", countdown: countdown, armUptime: armUptime)
++        #endif
+ 	}
+ 
+     private func cancelCountdown() {
+@@ -3278,6 +3381,9 @@
+ 	}
+ 
+ 	private func cancelPendingCountdownArm() {
++		#if DEBUG
++		BoardHighlightDiagnostic.shared.startupCancellationRequested(startupObservationContext, taskPresent: countdownArmTask != nil, pendingPresent: pendingCountdownStart != nil, site: "existing-cancel-4")
++		#endif
+ 		countdownArmTask?.cancel()
+ 		countdownArmTask = nil
+ 		pendingCountdownStart = nil
+--- a/HangTen/Views/BoardModelView.swift
++++ b/HangTen/Views/BoardModelView.swift
+@@ -113,15 +113,46 @@
+                 return
+             }
+             result = .loading
++            #if DEBUG
++            let startupLoadAttempt = BoardHighlightDiagnostic.recordsStartupObservation ? UUID().uuidString : nil
++            if let startupLoadAttempt {
++                BoardHighlightDiagnostic.shared.startupObservation("startup-board-load-call", fields: [
++                    "loadAttempt": startupLoadAttempt, "boardID": board.id,
++                    "presentationID": presentation.id, "taskCancelled": Task.isCancelled
++                ])
++            }
++            #endif
+             do {
+                 let model = try await BoardModelRealityLoader.load(
+                     board: board,
+                     presentation: presentation,
+                     store: BoardCatalog.packageStore
+                 )
++                #if DEBUG
++                if let startupLoadAttempt {
++                    BoardHighlightDiagnostic.shared.startupObservation("startup-board-load-return", fields: [
++                        "loadAttempt": startupLoadAttempt, "taskCancelled": Task.isCancelled
++                    ])
++                }
++                #endif
+                 guard !Task.isCancelled else { return }
+                 result = .ready(model)
++                #if DEBUG
++                if let startupLoadAttempt {
++                    BoardHighlightDiagnostic.shared.startupObservation("startup-board-ready-published", fields: [
++                        "loadAttempt": startupLoadAttempt
++                    ])
++                }
++                #endif
+             } catch {
++                #if DEBUG
++                if let startupLoadAttempt {
++                    BoardHighlightDiagnostic.shared.startupObservation("startup-board-load-error", fields: [
++                        "loadAttempt": startupLoadAttempt, "taskCancelled": Task.isCancelled,
++                        "errorType": String(describing: type(of: error))
++                    ])
++                }
++                #endif
+                 guard !Task.isCancelled else { return }
+                 #if DEBUG
+                 print("[BoardModelSurface] RealityKit model load failed: \(error)")
+--- a/HangTen/Models/BoardModelRealityTypes.swift
++++ b/HangTen/Models/BoardModelRealityTypes.swift
+@@ -2041,6 +2041,105 @@
+               "viewportPoints": [Double(viewport.width), Double(viewport.height)]])
+     }
+ 
++    static let recordsStartupObservation = isEnabled
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STARTUP_OBSERVATION"] == "1"
++
++    // Scalar diagnostic association only; never retain coach, task, view, or scene.
++    private var startupAppearances: [String: Int] = [:]
++    private var startupAmbiguous: Set<String> = []
++    private var startupScopes: [String: [String]] = [:]
++    private var startupParents: [String: String] = [:]
++    private var startupPending: [String: String] = [:]
++    private var startupArmed: [String: String] = [:]
++
++    func startupContextAppeared(_ context: String) {
++        guard Self.recordsStartupObservation else { return }
++        startupAppearances[context, default: 0] += 1
++        if startupAppearances[context] != 1 || startupAppearances.count != 1 {
++            startupAssociationIssue(context, reason: "multiple-workout-appearances-or-contexts")
++        }
++        startupObservation("startup-context-appear", fields: ["contextID": context,
++            "appearanceCount": startupAppearances[context] ?? 0])
++    }
++    private func startupAssociationIssue(_ context: String, reason: String) {
++        startupAmbiguous.insert(context)
++        startupObservation("startup-association-ambiguous", fields: ["contextID": context, "reason": reason])
++    }
++    func startupAssociationValid(_ context: String) -> Bool {
++        startupAppearances[context] == 1 && startupAppearances.count == 1 && !startupAmbiguous.contains(context)
++    }
++    func startupCurrentAttempt(_ context: String) -> String? { startupScopes[context]?.last }
++    func startupParentAttempt(_ attempt: String) -> String? { startupParents[attempt] }
++    func startupBeginRequest(_ context: String) -> String? {
++        guard Self.recordsStartupObservation else { return nil }
++        let attempt = UUID().uuidString
++        if let pending = startupPending[context], startupCurrentAttempt(context) != pending {
++            startupAssociationIssue(context, reason: "request-overlaps-unconsumed-deferred-request")
++        }
++        if let parent = startupCurrentAttempt(context) { startupParents[attempt] = parent }
++        startupPushAttempt(context, attempt: attempt)
++        return attempt
++    }
++    func startupPushAttempt(_ context: String, attempt: String?) {
++        guard Self.recordsStartupObservation, let attempt else { return }
++        startupScopes[context, default: []].append(attempt)
++    }
++    func startupPopAttempt(_ context: String, attempt: String?) {
++        guard Self.recordsStartupObservation, let attempt else { return }
++        guard startupScopes[context]?.last == attempt else {
++            startupAssociationIssue(context, reason: "synchronous-attempt-scope-mismatch"); return
++        }
++        startupScopes[context]?.removeLast()
++    }
++    func startupDeferRequest(_ context: String, attempt: String?) {
++        guard Self.recordsStartupObservation, let attempt else { return }
++        if let old = startupPending[context], old != attempt {
++            startupAssociationIssue(context, reason: "deferred-request-overwrite")
++        }
++        startupPending[context] = attempt
++    }
++    func startupTakeDeferred(_ context: String) -> String? {
++        guard Self.recordsStartupObservation else { return nil }
++        let attempt = startupPending.removeValue(forKey: context)
++        guard let attempt, startupAssociationValid(context) else {
++            startupAssociationIssue(context, reason: "missing-or-ambiguous-deferred-association"); return nil
++        }
++        return attempt
++    }
++    func startupArmRequest(_ context: String, attempt: String?) {
++        guard Self.recordsStartupObservation, let attempt else { return }
++        if startupArmed[context] != nil { startupAssociationIssue(context, reason: "armed-request-overwrite") }
++        startupArmed[context] = attempt
++    }
++    func startupArmCompleted(_ context: String, attempt: String?) {
++        guard Self.recordsStartupObservation, let attempt else { return }
++        guard startupArmed[context] == attempt else {
++            startupAssociationIssue(context, reason: "old-task-completed-after-arm-association-changed"); return
++        }
++        startupArmed.removeValue(forKey: context)
++    }
++    func startupCancellationRequested(_ context: String, taskPresent: Bool, pendingPresent: Bool, site: String) {
++        guard Self.recordsStartupObservation else { return }
++        if (taskPresent && startupArmed[context] == nil) || (pendingPresent && startupPending[context] == nil) {
++            startupAssociationIssue(context, reason: "cancellation-target-association-missing")
++        }
++        startupObservation("startup-cancellation-requested", fields: ["contextID": context,
++            "site": site, "taskPresent": taskPresent, "pendingPresent": pendingPresent,
++            "armedAttemptID": startupArmed[context].map { $0 as Any } ?? NSNull(),
++            "deferredAttemptID": startupPending[context].map { $0 as Any } ?? NSNull(),
++            "associationValid": startupAssociationValid(context)])
++        startupArmed.removeValue(forKey: context)
++        startupPending.removeValue(forKey: context)
++    }
++
++    // Scalar-only startup markers: no UIKit census, entity access, or new scheduling.
++    func startupObservation(_ event: String, fields: [String: Any]) {
++        guard Self.recordsStartupObservation else { return }
++        var row = fields
++        row["event"] = event
++        emit(row)
++    }
++
+     func harnessEvent(_ event: String, state: String, viewport: CGSize) {
+         guard enabled else { return }
+         emit(["event": event, "state": state,

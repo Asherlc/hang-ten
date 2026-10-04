@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "label": "hardware-corrected-package-validation",
+  "command": [
+    "scripts/hangboard-packages.sh",
+    "validate",
+    "--root",
+    "Hangboards",
+    "--final-inventory"
+  ],
+  "timeoutSeconds": 120.0,
+  "ownedProcessGroup": 85961,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 5.167843750008615
+}

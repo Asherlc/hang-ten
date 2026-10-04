@@ -1,0 +1,18 @@
+{
+  "createdUTC": "2026-10-02T20:08:05.518141+00:00",
+  "supersedesInferenceIn": [
+    "hand-host-probe-correction.json",
+    "any later statement that OFF full workflow passed or that a second host is necessary"
+  ],
+  "error": "Earlier review corrected OFF next-active to red but incorrectly generalized that one phase to an OFF pass. Historical settled-rest image is visibly RED at Rest02:56. Root identified this; independent single-image reinspection confirms it.",
+  "historicalRestImage": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-off-a-landscape/following-rest-settled.png",
+  "historicalRestSHA256": "4540ff67ccf2fbe2ee689fc7826c0226a0243ea0170d192d37bd0a30e6b2f9d2",
+  "historicalRestVisibleColor": "red",
+  "expectedRestColor": "blue",
+  "newOFFRestImage": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/projection-off-a-landscape/following-rest-settled.png",
+  "newOFFRestSHA256": "4540ff67ccf2fbe2ee689fc7826c0226a0243ea0170d192d37bd0a30e6b2f9d2",
+  "sameExactImageBytes": true,
+  "preservedFact": "Historical OFF next-active was correctly red. It does not negate the failed rest phase.",
+  "correctedConclusion": "Historical OFF full sequence failed at rest; current OFF fails rest and next-active. Second-host presence is not necessary. Multi-host-only inference withdrawn.",
+  "rawHistoricalReportsPreserved": true
+}

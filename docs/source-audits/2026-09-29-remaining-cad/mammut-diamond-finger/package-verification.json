@@ -1,0 +1,31 @@
+{
+  "slug": "mammut-diamond-finger",
+  "triangleCount": 66799,
+  "nodeCount": 17,
+  "modelBoundsNativeMm": {
+    "min": [
+      -425.00001192092896,
+      -78.00000160932541,
+      -96.00000083446503
+    ],
+    "max": [
+      425.00001192092896,
+      2.099520714024533e-14,
+      100.00000149011612
+    ]
+  },
+  "materialCount": 0,
+  "shaderCount": 0,
+  "contactCount": 16,
+  "hashes": {
+    "mammut-diamond-finger.FCStd": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
+    "primary.usdz": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+    "primary.model.json": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46"
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top"
+  ],
+  "reviewRenderer": "Tools/HangboardCAD/preview.py::_render, same 1100x650 size and neutral Lambert shading for both assets"
+}

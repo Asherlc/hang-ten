@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "passed": true,
+  "ownedSimulator": "D7168911-6A46-4FED-9019-968CCEFEB9DB",
+  "simulatorDeleted": true,
+  "derivedDataRemoved": true,
+  "externalTemporaryArtifacts": [
+    {
+      "path": "/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-314",
+      "removed": true
+    }
+  ],
+  "HTTPServersStarted": 0,
+  "scope": "Only exact resources recorded as owned by this workspace were removed; shared and unknown resources were retained."
+}

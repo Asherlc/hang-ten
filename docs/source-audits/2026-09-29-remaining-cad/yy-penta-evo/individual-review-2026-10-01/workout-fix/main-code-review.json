@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "reviewer": "workspace main agent",
+  "files": {
+    "HangTen/Models/WorkoutActivityRecording.swift": "3ccf1cb1678c2bfdb2b2963aef5d7a18ac5fb5f4dbba6c712c47d30cb7cbe924",
+    "HangTenTests/BoardTargetSubstitutionTests.swift": "b11d6fea355add7aff252966831f7ed1734959182cc43716e259ee41268ef9dc"
+  },
+  "findings": [
+    "Branch restricted to exactly two reusable instances and two candidates.",
+    "Distinct object/contact IDs and unique corresponding slot mappings required.",
+    "Contact kind,shape,depth and capacities must match.",
+    "Invalid eligible pairs fail closed; existing spatial selection code unchanged.",
+    "Real Penta routine/pose regression plus same-instance, different-slot and unequal-fact rejection cover observed boundary."
+  ],
+  "validation": "Red reproduced observed failure; green fresh build/workout pending."
+}

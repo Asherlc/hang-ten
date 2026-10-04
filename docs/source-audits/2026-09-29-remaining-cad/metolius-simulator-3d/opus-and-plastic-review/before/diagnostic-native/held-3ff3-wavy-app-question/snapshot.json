@@ -1,0 +1,843 @@
+{
+  "owner": "placid-badger",
+  "recordedAtUTC": "2026-10-01T18:02:50.538952+00:00",
+  "status": "held technical checkpoint; actual-app waviness diagnosis and human review pending",
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+  "humanAcceptance": "pending review #8",
+  "reason": "Root relayed user question why does it look kind of... wavy? Technical native/export/repro passes remain valid; source/app fidelity diagnosis is unresolved. This checkpoint does not label geometry rejected or visually accepted.",
+  "technicalGates": "Native strict facts/contact/edit-restore; scoped compiler/export/image/hash closure pass",
+  "appOrHumanAcceptance": false,
+  "excludedMutableInputs": "Active iOS/app captures/tests/cleanup, active waviness diagnosis, and all temporary resource directories",
+  "rawCopies": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/assets/primary.model.json",
+      "retained": "candidate/assets/primary.model.json",
+      "sha256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+      "bytes": 13956
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/assets/primary.usdz",
+      "retained": "candidate/assets/primary.usdz",
+      "sha256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+      "bytes": 2142945
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/metolius-simulator-3d.FCStd",
+      "retained": "candidate/metolius-simulator-3d.FCStd",
+      "sha256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+      "bytes": 8294771
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/README.md",
+      "retained": "preparation/README.md",
+      "sha256": "5d029d6e14f9ec4bbd76aab4f7743fbd2bcea49c348cc4c905297c96ed37f048",
+      "bytes": 12030
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/held-3ff3-export-preparation-check.json",
+      "retained": "preparation/held-3ff3-export-preparation-check.json",
+      "sha256": "8450a1bf4d893d0b9d2580f6b574023f01041c836bda88d4469dda502ae7c1f7",
+      "bytes": 5315
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/packet-config.json",
+      "retained": "preparation/packet-config.json",
+      "sha256": "e0d9c26406ac94b59f02db9d701a5de4ecab33a2f149ead6b51535c2adcb26cb",
+      "bytes": 41093
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/review-preparation/prepare_simulator_packet.py",
+      "retained": "preparation/prepare_simulator_packet.py",
+      "sha256": "a6f8d4f371c01deb3ebc428569fda575b5ad87f8814ec3f98b16677767b7aa0e",
+      "bytes": 79530
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-disposition.md",
+      "retained": "proof/author-disposition.md",
+      "sha256": "f60298520c0dd513c9eedd587b3b1ca601042e429f629df1dca8cf5ae5635ead",
+      "bytes": 4810
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/author-report.json",
+      "retained": "proof/author-report.json",
+      "sha256": "4d52a00ffe51bbb0feb73cfcd51ca92b975584e2d8080cfd2c6a939eabc4741a",
+      "bytes": 9690
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/authored-design.json",
+      "retained": "proof/authored-design.json",
+      "sha256": "0b0f96ef2d7aaeb14254b92673927b27af60cb400012259f695c5e02b4f54a0a",
+      "bytes": 20405
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/bounded_compile.py",
+      "retained": "proof/bounded_compile.py",
+      "sha256": "87d2674bba703cc7ae2dba609599df2768a5b00dab31a0aa0c76951d2b57e105",
+      "bytes": 1857
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/assets/primary.model.json",
+      "retained": "proof/candidate/assets/primary.model.json",
+      "sha256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+      "bytes": 13956
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/assets/primary.usdz",
+      "retained": "proof/candidate/assets/primary.usdz",
+      "sha256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+      "bytes": 2142945
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/metolius-simulator-3d.FCStd",
+      "retained": "proof/candidate/metolius-simulator-3d.FCStd",
+      "sha256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+      "bytes": 8294771
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/cleanup.json",
+      "retained": "proof/cleanup.json",
+      "sha256": "5816b6d97a451181e703f3f8527043c82783f4974c79e6afaf23c8fce4a95b19",
+      "bytes": 1380
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile-check-ownership.json",
+      "retained": "proof/compile-check-ownership.json",
+      "sha256": "eabef38417a6fe9acd46c37d979ec34f466168e67457049c840c653dd431d54b",
+      "bytes": 796
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile-check.json",
+      "retained": "proof/compile-check.json",
+      "sha256": "20c208c3b66178f29a3595ea4de948895dda261ae383c283210d7b14deb54a63",
+      "bytes": 3338
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile-check.log",
+      "retained": "proof/compile-check.log",
+      "sha256": "5c0f353ee1a22f624f98b60d23131534c4d47a3a3cb7696b7398525e49e4e14a",
+      "bytes": 5626
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile-ownership.json",
+      "retained": "proof/compile-ownership.json",
+      "sha256": "e25363b1399a56bc49d1e9146d99a6f1e118f3735b9b40b7e25bd8b24ecf3cf3",
+      "bytes": 779
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile.json",
+      "retained": "proof/compile.json",
+      "sha256": "372403a75f2579e20747eb4862430f79f104b16233e538a3e71db7f8f5d66ca5",
+      "bytes": 3539
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/compile.log",
+      "retained": "proof/compile.log",
+      "sha256": "eee6c9f5d3936c5c1c9e4527cd98039455f07d79cf370d80f959490cad6f7958",
+      "bytes": 5833
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/candidate-grasp-sections.png",
+      "retained": "proof/diagnostic-export-grasp-body-only/candidate-grasp-sections.png",
+      "sha256": "49cc8febbd712bd8f41a98f7bcccfa759649cd7d04c62d4a85688e471ac50449",
+      "bytes": 54346
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/candidate-high-front.png",
+      "retained": "proof/diagnostic-export-grasp-body-only/candidate-high-front.png",
+      "sha256": "c8167e7950743c65f7e2f55f859f23ba396c374212d6f11f712208525752590f",
+      "bytes": 25734
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/candidate-rear-center.png",
+      "retained": "proof/diagnostic-export-grasp-body-only/candidate-rear-center.png",
+      "sha256": "465948139ae77cc1a01b6c278f4e449b8738b7f982cd68c087fa2f77ff5c3420",
+      "bytes": 20642
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/candidate-rear-oblique.png",
+      "retained": "proof/diagnostic-export-grasp-body-only/candidate-rear-oblique.png",
+      "sha256": "88925d404438935e4d3ac9e28d9bcdb31fcad485fbc1424650674e2cd9253831",
+      "bytes": 26400
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/comparison-grasp-sections.png",
+      "retained": "proof/diagnostic-export-grasp-body-only/comparison-grasp-sections.png",
+      "sha256": "c1dcc4a0087db77fc10c41e8b69eb455718db2a4cdc95478bce3668d1f393c2f",
+      "bytes": 81271
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/comparison-high-front.png",
+      "retained": "proof/diagnostic-export-grasp-body-only/comparison-high-front.png",
+      "sha256": "52a11338471fb81692bfbdd5891a8b9156eaf1d7ea42f1d4cba383e4771b4862",
+      "bytes": 51782
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/comparison-rear-center.png",
+      "retained": "proof/diagnostic-export-grasp-body-only/comparison-rear-center.png",
+      "sha256": "1da9e038ba7d6bdc19b9b6bb72929e8c1aa918844238bc052b010fe6abab8130",
+      "bytes": 40352
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/comparison-rear-oblique.png",
+      "retained": "proof/diagnostic-export-grasp-body-only/comparison-rear-oblique.png",
+      "sha256": "d82541686bfb079b86a872c2651152093122eecd2d50ed425493ee535ab8fb91",
+      "bytes": 51282
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/export-grasp-provenance.json",
+      "retained": "proof/diagnostic-export-grasp-body-only/export-grasp-provenance.json",
+      "sha256": "439344288046a72b12f1d984c722db7d5a1d4d2ab866c563b7b978bd47531375",
+      "bytes": 2378
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/original-9449-grasp-sections.png",
+      "retained": "proof/diagnostic-export-grasp-body-only/original-9449-grasp-sections.png",
+      "sha256": "f535ea4a296018ad2c4bc410bb20406423631c7d8c12691d7269795859c3fd9e",
+      "bytes": 54471
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/original-9449-high-front.png",
+      "retained": "proof/diagnostic-export-grasp-body-only/original-9449-high-front.png",
+      "sha256": "b0552c9a9375cc5668501bae0c9eeb4078f66f2538f552fad20c23d39460a246",
+      "bytes": 23186
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/original-9449-rear-center.png",
+      "retained": "proof/diagnostic-export-grasp-body-only/original-9449-rear-center.png",
+      "sha256": "7a5df48503d6fca59bd2aca7b69ac37443d3fca9779110c1374e2dea41fdae06",
+      "bytes": 18713
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/original-9449-rear-oblique.png",
+      "retained": "proof/diagnostic-export-grasp-body-only/original-9449-rear-oblique.png",
+      "sha256": "4355212132b94f6c321e70aa27820b6811e5b18309dbb4e639e8e2dd588acd03",
+      "bytes": 23127
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/diagnostic-export-grasp-body-only/render_export_grasp.py",
+      "retained": "proof/diagnostic-export-grasp-body-only/render_export_grasp.py",
+      "sha256": "64633bac15e7f414fc0eb7fb2396d5d89c4cf8aa590e1b506d5a71f11c26ec1c",
+      "bytes": 4658
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-provenance.json",
+      "retained": "proof/export-grasp-provenance.json",
+      "sha256": "8f935f866d4b0d4116c4c14dbfbb3dcde5cd8c88dd47ad53eff7cba78f19b6ba",
+      "bytes": 2929
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/candidate-grasp-sections.png",
+      "retained": "proof/export-grasp-review/candidate-grasp-sections.png",
+      "sha256": "cc00f448a4b12e67e5d8678af5c7fef1bf1343025f8a357c8e789544189a6730",
+      "bytes": 54647
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/candidate-high-front.png",
+      "retained": "proof/export-grasp-review/candidate-high-front.png",
+      "sha256": "29893a561fb3864ca4533ad07256c01c0cef2b4ee2eff03e40c49caa3f7ffb74",
+      "bytes": 69894
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/candidate-rear-center.png",
+      "retained": "proof/export-grasp-review/candidate-rear-center.png",
+      "sha256": "ad6c59fc95f8bd39708b25d77126a4398ee8b77bff0d42000dadc4cb99f9a0d1",
+      "bytes": 39478
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/candidate-rear-oblique.png",
+      "retained": "proof/export-grasp-review/candidate-rear-oblique.png",
+      "sha256": "c036f30953ac8d43607ee2be7b8f24ce0e50f57aed4da735831a2b2d55c2b8c8",
+      "bytes": 49180
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/comparison-grasp-sections.png",
+      "retained": "proof/export-grasp-review/comparison-grasp-sections.png",
+      "sha256": "389222b2a6b3892a5248178e93de05a3731277daf36431370b5bb77e54b4a0fb",
+      "bytes": 81749
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/comparison-high-front.png",
+      "retained": "proof/export-grasp-review/comparison-high-front.png",
+      "sha256": "5deac2f657eeed960f5d2a96f1151726c2f155a309cd334286c91ed65b3adb9f",
+      "bytes": 129050
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/comparison-rear-center.png",
+      "retained": "proof/export-grasp-review/comparison-rear-center.png",
+      "sha256": "5d3ed21bdf117c6fea8cd72b27737f656f5b0414832b475c9cbd623bb313f196",
+      "bytes": 66733
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/comparison-rear-oblique.png",
+      "retained": "proof/export-grasp-review/comparison-rear-oblique.png",
+      "sha256": "1f2341b45348d03cb52ee1153edd174cdf62ac0d554a8e748229139d1553671f",
+      "bytes": 86602
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/original-9449-grasp-sections.png",
+      "retained": "proof/export-grasp-review/original-9449-grasp-sections.png",
+      "sha256": "61d71e9cf5119a983810f6a99b1d7c33cc4475e9d7b860638b0ff9239fef37ef",
+      "bytes": 54713
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/original-9449-high-front.png",
+      "retained": "proof/export-grasp-review/original-9449-high-front.png",
+      "sha256": "28d6a49d26f222fe9db7cd238a2a2defa86378f989e0ff89654d22e874e38bce",
+      "bytes": 56320
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/original-9449-rear-center.png",
+      "retained": "proof/export-grasp-review/original-9449-rear-center.png",
+      "sha256": "7ca66fdce731d344c74a3cb0882bd7a4cb373ef5b453912a7ec97d11250261bf",
+      "bytes": 27024
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-grasp-review/original-9449-rear-oblique.png",
+      "retained": "proof/export-grasp-review/original-9449-rear-oblique.png",
+      "sha256": "d12ff98ab64d6c9f55e8506f785e6d13d592778c9aa688ae86ffac9bcf7ac1ad",
+      "bytes": 35029
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/candidate-front.png",
+      "retained": "proof/export-review/candidate-front.png",
+      "sha256": "1e952c3a45d8409d37f19d45cdfef846c5922c2694ca068e548524d731eef35a",
+      "bytes": 83006
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/candidate-oblique.png",
+      "retained": "proof/export-review/candidate-oblique.png",
+      "sha256": "070fa690b0c062a82457493b1806131c3a552c09fb0aea4653bca5b107d06afe",
+      "bytes": 71585
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/candidate-raking.png",
+      "retained": "proof/export-review/candidate-raking.png",
+      "sha256": "767148c4e4cae73b6d178f65666249504ae2f6ede9993023853eae86d345b033",
+      "bytes": 74654
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/candidate-side.png",
+      "retained": "proof/export-review/candidate-side.png",
+      "sha256": "b9c5788f983fed856c4c2c018e761d2d9020a0b4079db1329b8bf29b03f92136",
+      "bytes": 24845
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/candidate-top.png",
+      "retained": "proof/export-review/candidate-top.png",
+      "sha256": "4ffe16c07c91d5ac7f0f1de10379fd669345d51e5e29db548fc3e854fbc121d2",
+      "bytes": 39049
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/comparison-front.png",
+      "retained": "proof/export-review/comparison-front.png",
+      "sha256": "161c8127559f24ef1191933609770aea22e9d37d399449fa79d52d5759be6036",
+      "bytes": 178188
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/comparison-oblique.png",
+      "retained": "proof/export-review/comparison-oblique.png",
+      "sha256": "45a52eaf0c02f9aba03d16760d4603bfe04ecb3f189d8173d4d7948a236f37b1",
+      "bytes": 190312
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/comparison-raking.png",
+      "retained": "proof/export-review/comparison-raking.png",
+      "sha256": "463492ce4a00af3a5964a0e2f6b5e2bfa881ababbf5a5db0627231b91d8c0834",
+      "bytes": 193399
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/comparison-side.png",
+      "retained": "proof/export-review/comparison-side.png",
+      "sha256": "e9ef7361cb4ca0cf242012866f031ad7f13654cd66523a9763f6e0beeef37ab4",
+      "bytes": 57830
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/comparison-top.png",
+      "retained": "proof/export-review/comparison-top.png",
+      "sha256": "aaadc1358316ca8061d26db9b3bb80f5c7b66044b426c514ccba4b0ff8443333",
+      "bytes": 97434
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/intermediate-21ca3-front.png",
+      "retained": "proof/export-review/intermediate-21ca3-front.png",
+      "sha256": "961e63e968a74c723fb9131d86619d6377816b20c2c4e5eb183de2c57b31fd4e",
+      "bytes": 85903
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/intermediate-21ca3-oblique.png",
+      "retained": "proof/export-review/intermediate-21ca3-oblique.png",
+      "sha256": "277921f0bb11032f916f4e83f9411891ec741be71206f0a9974f8dbe9706e8d8",
+      "bytes": 82442
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/intermediate-21ca3-raking.png",
+      "retained": "proof/export-review/intermediate-21ca3-raking.png",
+      "sha256": "64434fc19db3df0df14ea7d3b732c632783f306e6f9661532f8695a1d5ae968b",
+      "bytes": 85072
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/intermediate-21ca3-side.png",
+      "retained": "proof/export-review/intermediate-21ca3-side.png",
+      "sha256": "28a8fb60a2350867ea0969ec309285ed766e8cff331cbb23aba33e159e35252f",
+      "bytes": 21944
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/intermediate-21ca3-top.png",
+      "retained": "proof/export-review/intermediate-21ca3-top.png",
+      "sha256": "84dfc238e18b07497a123421b318b8846dbc37da53fe82af107460ae08efe59d",
+      "bytes": 42241
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/original-9449-front.png",
+      "retained": "proof/export-review/original-9449-front.png",
+      "sha256": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+      "bytes": 73310
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/original-9449-oblique.png",
+      "retained": "proof/export-review/original-9449-oblique.png",
+      "sha256": "0195e673d789e0fd38e1b58f86e3ef7e8cbb5e908125187d47e293e3d739aeaf",
+      "bytes": 63766
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/original-9449-raking.png",
+      "retained": "proof/export-review/original-9449-raking.png",
+      "sha256": "efe3cf3b36bdf265a10b5747938de73719c2ab27212e7e7d0ceafa363402f7ae",
+      "bytes": 66617
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/original-9449-side.png",
+      "retained": "proof/export-review/original-9449-side.png",
+      "sha256": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+      "bytes": 18619
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/export-review/original-9449-top.png",
+      "retained": "proof/export-review/original-9449-top.png",
+      "sha256": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860",
+      "bytes": 23610
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-native-body-mesh.json",
+      "retained": "proof/final-native-body-mesh.json",
+      "sha256": "7b302b692526a61fe0a6a88711a2d0f05fe1f55daecb4c32e551c0bc8e671c2b",
+      "bytes": 4372240
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/final-normal-comparison.json",
+      "retained": "proof/final-normal-comparison.json",
+      "sha256": "64b2394c3640d5b1caa230ce260031f34bfa902c3171dc03557c9171bf853ea9",
+      "bytes": 25151
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/grasp-review/extract_sections.py",
+      "retained": "proof/grasp-review/extract_sections.py",
+      "sha256": "197763b5f15b43904fd0f49750ac7a8a3ed487eb0249060ba9b8059c8075fc8f",
+      "bytes": 1721
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/grasp-review/high-front.png",
+      "retained": "proof/grasp-review/high-front.png",
+      "sha256": "844a304c41696c67addd6108c6693e840fa074610c7245d3b7725245cc566420",
+      "bytes": 69256
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/grasp-review/native-grasp-sections.png",
+      "retained": "proof/grasp-review/native-grasp-sections.png",
+      "sha256": "e99670b51b3563e6b8ebb133cffff68417016bce23086507d1c21928967cb3be",
+      "bytes": 53655
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/grasp-review/native-sections.json",
+      "retained": "proof/grasp-review/native-sections.json",
+      "sha256": "4f88ca366288597f47d498c748552e4eb48fbc22389e61f2999960a3c5c29534",
+      "bytes": 4937662
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/grasp-review/provenance.json",
+      "retained": "proof/grasp-review/provenance.json",
+      "sha256": "a71d653e905928666e6a2785e8da5ea0c9173508630f43ee3f7df94b3f3c130a",
+      "bytes": 1044
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/grasp-review/rear-center.png",
+      "retained": "proof/grasp-review/rear-center.png",
+      "sha256": "077e9d7ba044a9cd87d4e89126adec3591fb30f64143e5a1e1f43cf013ee5506",
+      "bytes": 38386
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/grasp-review/rear-oblique.png",
+      "retained": "proof/grasp-review/rear-oblique.png",
+      "sha256": "3fb442401bba99776de9d8451717da88db12dcd52373261e6769084e05a55409",
+      "bytes": 47713
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/grasp-review/render_sections.py",
+      "retained": "proof/grasp-review/render_sections.py",
+      "sha256": "7cfb1a9bab628aa51c2deeda2d33a5396bd679995aa9de73279a382fc3efe725",
+      "bytes": 2226
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/baseline-export-seams.json",
+      "retained": "proof/independent-validation/baseline-export-seams.json",
+      "sha256": "126123ac8ffd0ba8554b4930a172fe918d70e2c1371c19b7f76f20ed46000e45",
+      "bytes": 21005
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/baseline-export-topology.json",
+      "retained": "proof/independent-validation/baseline-export-topology.json",
+      "sha256": "3a238fc5bf8177e912117563ab259f176be9579971d48d2cfc43893e13445a15",
+      "bytes": 8715
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/check_functional_sections.py",
+      "retained": "proof/independent-validation/check_functional_sections.py",
+      "sha256": "2f5230cd633496b0018b4f3b3826afd33fb908c34d29376415dc334448698196",
+      "bytes": 4208
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/check_local_contact_and_joins.py",
+      "retained": "proof/independent-validation/check_local_contact_and_joins.py",
+      "sha256": "daceb649a41fb27ed1193594694074a0ad1e6c835ab98e0c94aa7a7a79d91aec",
+      "bytes": 5828
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/check_native_candidate.py",
+      "retained": "proof/independent-validation/check_native_candidate.py",
+      "sha256": "ef8634bbd8b9fe9ea1b0a78e391051cd9682ce74928276546cc2275ed6f3e086",
+      "bytes": 5783
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-contract-3ff3.json",
+      "retained": "proof/independent-validation/export-contract-3ff3.json",
+      "sha256": "08aeb955d52e88ee727a545703950a5c22580cc055aada9acfdb5c29f212d5fc",
+      "bytes": 4821
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-coverage-3ff3.json",
+      "retained": "proof/independent-validation/export-coverage-3ff3.json",
+      "sha256": "fe409da51a6dc86fa3b47f0816622f066428dcba79b3bb215d05ba130f9508e1",
+      "bytes": 23635
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-facts-3ff3-v2.json",
+      "retained": "proof/independent-validation/export-facts-3ff3-v2.json",
+      "sha256": "04014b1769232693c464faed9b58db0ce09042ab66588ad06a85f050a6cea60a",
+      "bytes": 8222
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-facts-3ff3.json",
+      "retained": "proof/independent-validation/export-facts-3ff3.json",
+      "sha256": "45a321e4f9c1989283df7c97341f3d7e662d1c7dc9e86aca0ea21032c6fdb01e",
+      "bytes": 9935
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-functional-3ff3.json",
+      "retained": "proof/independent-validation/export-functional-3ff3.json",
+      "sha256": "c43a0b5a36cd0c972e58690c8b97d4d3ac53ac40299a7c57ac060c5912b5b498",
+      "bytes": 13225
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-normal-slivers-3ff3.json",
+      "retained": "proof/independent-validation/export-normal-slivers-3ff3.json",
+      "sha256": "ca73a07ad3766036570f7a4b00ee118ccec75540e15aa3cb74d32e7117d73890",
+      "bytes": 808811
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-topology-3ff3.json",
+      "retained": "proof/independent-validation/export-topology-3ff3.json",
+      "sha256": "a897ece542c38f54839613fe1128983db846119752dd6a144e78146fa74946ef",
+      "bytes": 21504
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/export-upper-roll-euclidean-3ff3.json",
+      "retained": "proof/independent-validation/export-upper-roll-euclidean-3ff3.json",
+      "sha256": "3a2ba176b3b17bd0fc5386f7d564137db7c7e3152f04f51623122382ba72bbc8",
+      "bytes": 5157
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/final-independent-export-review-3ff3.json",
+      "retained": "proof/independent-validation/final-independent-export-review-3ff3.json",
+      "sha256": "d8cfd5544aa3a37514d312ae2a0cb39516d11d87e04a07884174426ddf89a359",
+      "bytes": 10330
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/final-independent-export-review-3ff3.md",
+      "retained": "proof/independent-validation/final-independent-export-review-3ff3.md",
+      "sha256": "bc8ff76296c492e9eca71dd65c214c6cbce592a50d5c04b897f8b65b488c2c94",
+      "bytes": 1621
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/functional-sections-3ff3-ownership.json",
+      "retained": "proof/independent-validation/functional-sections-3ff3-ownership.json",
+      "sha256": "9e29c7c1fda29961c1f4afb9dff662d297dfa2f7d7ce8d8a8ae70ebe375e448b",
+      "bytes": 628
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/functional-sections-3ff3.json",
+      "retained": "proof/independent-validation/functional-sections-3ff3.json",
+      "sha256": "3071cf33a5fec611b69f3533d34116c45dfb1144539cab746d660965a11c5bcc",
+      "bytes": 13709
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins-3ff3-ownership.json",
+      "retained": "proof/independent-validation/local-contact-joins-3ff3-ownership.json",
+      "sha256": "704ea5dffb9f084554f1922710b572c662682151b0428766d8c948197c8e6b51",
+      "bytes": 632
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins-3ff3.json",
+      "retained": "proof/independent-validation/local-contact-joins-3ff3.json",
+      "sha256": "a46cc5e397af5714eb08b5a2df24812df28deb36257ecc7b8b4221b454c9f817",
+      "bytes": 36691
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-check-3ff3-ownership.json",
+      "retained": "proof/independent-validation/native-check-3ff3-ownership.json",
+      "sha256": "b5abd41e71ed1100dde84bd89e2650d2437f3f1d627a94c86a527f44f5df9df1",
+      "bytes": 611
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-check-3ff3.json",
+      "retained": "proof/independent-validation/native-check-3ff3.json",
+      "sha256": "094f051ddf77a64f4960c40fd86c99bdc719fcbd69753a08d3c84ad6acd59394",
+      "bytes": 6203
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-review-3ff3.json",
+      "retained": "proof/independent-validation/native-review-3ff3.json",
+      "sha256": "66a0fa39e932cd03fefc35fe2137630815d01a0976479cc5285fec40c22b388c",
+      "bytes": 4285
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/native-tessellation-3ff3.json",
+      "retained": "proof/independent-validation/native-tessellation-3ff3.json",
+      "sha256": "3a79091052813b4f0f0ec4b3ddc17687b72b283eb995763e38ff180c2c3250f9",
+      "bytes": 552
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/native-preview-provenance.json",
+      "retained": "proof/native-preview-provenance.json",
+      "sha256": "bae94192212a62f7a9f1a898d4b4f4bb443c7ef0d9a8865de0b555e18a3b2d8f",
+      "bytes": 3417
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/native-stage-cleanup.json",
+      "retained": "proof/native-stage-cleanup.json",
+      "sha256": "a0881da159c7d2a20b0a63e524be125e72afe7955ae2f0326431fb8475b68a3f",
+      "bytes": 11444
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/nose-seam-check.json",
+      "retained": "proof/nose-seam-check.json",
+      "sha256": "5648d728d77dbc3d829453eacf6abb694c3ff6d8b4ee13cc2d9faa52b88318c6",
+      "bytes": 3935
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/package-verification.json",
+      "retained": "proof/package-verification.json",
+      "sha256": "fee9402d868ca559cc9d099621e67311df0642a819877659fd5a28071cf8eaf9",
+      "bytes": 5029
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/render_export_comparisons.py",
+      "retained": "proof/render_export_comparisons.py",
+      "sha256": "5b9f6522c8143848ba6f5036989a6a6fd9e0899ad7b63efb61e112ae08ef8c6f",
+      "bytes": 3074
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/render_native_comparisons.py",
+      "retained": "proof/render_native_comparisons.py",
+      "sha256": "1ea8f44f7093d64143a5bde741fb947bd925e4a593f36b34401c9d0eda91b344",
+      "bytes": 2942
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/repaired-root-final-check.json",
+      "retained": "proof/repaired-root-final-check.json",
+      "sha256": "f1f89ac520d51982eec091b60883342e1dd3f95a3b1fcffa815e0b8447b28a3a",
+      "bytes": 813
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproduce-assets/primary.model.json",
+      "retained": "proof/reproduce-assets/primary.model.json",
+      "sha256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+      "bytes": 13956
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproduce-assets/primary.usdz",
+      "retained": "proof/reproduce-assets/primary.usdz",
+      "sha256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+      "bytes": 2142945
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproduce-ownership.json",
+      "retained": "proof/reproduce-ownership.json",
+      "sha256": "13df685e85a7d8fda943d2c1e2ae44aa124eae27c117a73454ed1c06f652379f",
+      "bytes": 781
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproduce.json",
+      "retained": "proof/reproduce.json",
+      "sha256": "195faef2e30fff76f36eaf4d3d12dfa2f3bb0ab7f91c9e2e2dc7f0f54bfe2bfd",
+      "bytes": 3539
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproduce.log",
+      "retained": "proof/reproduce.log",
+      "sha256": "b88fce2d5e86b2faee1225ccbf8f9e9867282969bf0bfd6f3dfe15235fb81e8f",
+      "bytes": 5833
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/reproducibility.json",
+      "retained": "proof/reproducibility.json",
+      "sha256": "a5eb794179150b324ee87cffe7c1f6f738edd118f9ae7f1732c7fbf16316d08e",
+      "bytes": 2372
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/comparison-front.png",
+      "retained": "proof/review/comparison-front.png",
+      "sha256": "05ee8c78b8d380b195925923f4bf46cf27f154fb71815331f7ab594b30ce03ac",
+      "bytes": 178357
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/comparison-oblique.png",
+      "retained": "proof/review/comparison-oblique.png",
+      "sha256": "24b7e1acee0214e1a89752a1e375e64330683f397f770d1725db1b52ba2802a7",
+      "bytes": 195285
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/comparison-raking.png",
+      "retained": "proof/review/comparison-raking.png",
+      "sha256": "85264fc66d514965254189202adaea761e8a055e6985b257889b90d380147950",
+      "bytes": 197020
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/comparison-side.png",
+      "retained": "proof/review/comparison-side.png",
+      "sha256": "5868d4c35bf507534b54f304e9afa069b7bd646608638cd484f0a50f2ef7a773",
+      "bytes": 60182
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/comparison-top.png",
+      "retained": "proof/review/comparison-top.png",
+      "sha256": "215369ca7eb3a06c8c970b349d4954b5238128fcfc874c1de7f67039bf116946",
+      "bytes": 101035
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/intermediate-21ca3-front.png",
+      "retained": "proof/review/intermediate-21ca3-front.png",
+      "sha256": "961e63e968a74c723fb9131d86619d6377816b20c2c4e5eb183de2c57b31fd4e",
+      "bytes": 85903
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/intermediate-21ca3-oblique.png",
+      "retained": "proof/review/intermediate-21ca3-oblique.png",
+      "sha256": "277921f0bb11032f916f4e83f9411891ec741be71206f0a9974f8dbe9706e8d8",
+      "bytes": 82442
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/intermediate-21ca3-raking.png",
+      "retained": "proof/review/intermediate-21ca3-raking.png",
+      "sha256": "64434fc19db3df0df14ea7d3b732c632783f306e6f9661532f8695a1d5ae968b",
+      "bytes": 85072
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/intermediate-21ca3-side.png",
+      "retained": "proof/review/intermediate-21ca3-side.png",
+      "sha256": "28a8fb60a2350867ea0969ec309285ed766e8cff331cbb23aba33e159e35252f",
+      "bytes": 21944
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/intermediate-21ca3-top.png",
+      "retained": "proof/review/intermediate-21ca3-top.png",
+      "sha256": "84dfc238e18b07497a123421b318b8846dbc37da53fe82af107460ae08efe59d",
+      "bytes": 42241
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/native-correction-front.png",
+      "retained": "proof/review/native-correction-front.png",
+      "sha256": "8504759f4271095e2e348b23b80e72328ddfdb79fb4ebae38061fe8b5b3a6332",
+      "bytes": 82917
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/native-correction-oblique.png",
+      "retained": "proof/review/native-correction-oblique.png",
+      "sha256": "2947238c08bf484406af6149f52e04311d6692aca7f28014125b422a788300f6",
+      "bytes": 71656
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/native-correction-raking.png",
+      "retained": "proof/review/native-correction-raking.png",
+      "sha256": "c8d684dd47d82b23bdf4f06fb9a6deeb08d0d52e334d0d825c234b08a74b1eb4",
+      "bytes": 75184
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/native-correction-side.png",
+      "retained": "proof/review/native-correction-side.png",
+      "sha256": "c4c17164aaee737a145e26261efb3593ce8ca4d15f3be4cbf77c6a83dd498da7",
+      "bytes": 24214
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/native-correction-top.png",
+      "retained": "proof/review/native-correction-top.png",
+      "sha256": "548afc224fc012b1aa99ef0b271b518b7346dfbd1500addbf09eb5403db0bb3f",
+      "bytes": 38359
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/original-9449-front.png",
+      "retained": "proof/review/original-9449-front.png",
+      "sha256": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+      "bytes": 73310
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/original-9449-oblique.png",
+      "retained": "proof/review/original-9449-oblique.png",
+      "sha256": "0195e673d789e0fd38e1b58f86e3ef7e8cbb5e908125187d47e293e3d739aeaf",
+      "bytes": 63766
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/original-9449-raking.png",
+      "retained": "proof/review/original-9449-raking.png",
+      "sha256": "efe3cf3b36bdf265a10b5747938de73719c2ab27212e7e7d0ceafa363402f7ae",
+      "bytes": 66617
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/original-9449-side.png",
+      "retained": "proof/review/original-9449-side.png",
+      "sha256": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+      "bytes": 18619
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/review/original-9449-top.png",
+      "retained": "proof/review/original-9449-top.png",
+      "sha256": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860",
+      "bytes": 23610
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/source-audit.json",
+      "retained": "proof/source-audit.json",
+      "sha256": "2b58ee14e26bcc5c76b72d3c1559b655e2bf8583460017cc1fabe88db823db4b",
+      "bytes": 2405
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/source-freeze.json",
+      "retained": "proof/source-freeze.json",
+      "sha256": "603b29dfe346cc329cd9ed5fab373f7a4d0cfb3ef7b6307dd3f8df98e39f9eef",
+      "bytes": 776
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-plastic-review/opus-local-native-review.md",
+      "retained": "workspace-proof/.context/placid-badger/metolius-simulator-3d-plastic-review/opus-local-native-review.md",
+      "sha256": "bc872bab8a59edc1ce108206539dab651aa2686a815677df210a3a745509da1b",
+      "bytes": 4208
+    },
+    {
+      "source": "Tools/HangboardCAD/compile_board.py",
+      "retained": "workspace-proof/Tools/HangboardCAD/compile_board.py",
+      "sha256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+      "bytes": 57110
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-30",
+  "reviewer": "asherlc",
+  "number": 1,
+  "package": "aelith-cyclops-011",
+  "boardID": "aelith.cyclops-011",
+  "status": "reviewed; shorter display cord accepted",
+  "feedback": "cord is way too long",
+  "question": "Does this length look right now?",
+  "answer": "Y",
+  "acceptedScope": "Revised display cord length shown in app-review/default.png, with a vertical support-to-eye span of 56.478332 mm.",
+  "approvalLimit": "The reply accepts the displayed cord length; it does not establish manufacturer cord dimensions or a separate approval of every geometric detail.",
+  "revisionCommit": "18ae0726da2072442f0b9001704c263f95c6624d",
+  "sourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+  "presentations": {
+    "primary": {
+      "descriptorSHA256": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7",
+      "modelSHA256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d"
+    }
+  },
+  "suspensionSHA256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+  "appImage": "app-review/default.png",
+  "revisionReview": "cord-shortening-review.md"
+}

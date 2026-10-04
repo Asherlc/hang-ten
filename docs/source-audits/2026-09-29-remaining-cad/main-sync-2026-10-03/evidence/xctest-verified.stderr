@@ -1,0 +1,13 @@
+Testing failed:
+	Cannot find 'media' in scope
+	Cannot find 'media' in scope
+	Testing cancelled because the build failed.
+
+** TEST FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ CustomRoutineDraftTests.swift,\ BoardPackageStoreTests.swift,\ SuspendedBoardPresentationTests.swift,\ BoardSourceBoundaryTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/CustomRoutineDraftTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/BoardPackageStoreTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/SuspendedBoardPresentationTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/BoardSourceBoundaryTests.swift (in target 'HangTenTests' from project 'HangTen')
+	SwiftCompile normal arm64 /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/BoardSourceBoundaryTests.swift (in target 'HangTenTests' from project 'HangTen')
+	Testing project HangTen with scheme HangTen
+(3 failures)

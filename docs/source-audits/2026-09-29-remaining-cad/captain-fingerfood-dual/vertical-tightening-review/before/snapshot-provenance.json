@@ -1,0 +1,233 @@
+{
+  "owner": "placid-badger",
+  "purpose": "Exact before state for independent vertical bottom-lead tightening review",
+  "sidecarSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+  "gitHEAD": "6ebf1fc0ab3b28794b8507e8d41c4af645632fba",
+  "immutablePackageFiles": {
+    "captain-fingerfood-dual.FCStd": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+    "assets/primary.usdz": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+    "assets/primary.model.json": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699"
+  },
+  "retainedFiles": [
+    {
+      "sourcePath": "Hangboards/captain-fingerfood-dual/suspension.json",
+      "retainedPath": "before/suspension.json",
+      "sha256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+      "bytes": 11837
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/native-route-report.json",
+      "retainedPath": "before/native-route-report.json",
+      "sha256": "552769af7d7d680d6f59c404816cd830b0b7c97ec746a9a7eb5ab82fdba90cb8",
+      "bytes": 22306
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/native-route-check.json",
+      "retainedPath": "before/native-route-check.json",
+      "sha256": "552769af7d7d680d6f59c404816cd830b0b7c97ec746a9a7eb5ab82fdba90cb8",
+      "bytes": 22306
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/continuous-cord-clearance.json",
+      "retainedPath": "before/continuous-cord-clearance.json",
+      "sha256": "f85f2ad21aa95719e3b660b27127d15281305235b0693944789c255fa4aaf411",
+      "bytes": 1216
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/cord-authoring-review.json",
+      "retainedPath": "before/cord-authoring-review.json",
+      "sha256": "ed6867b085d4698c2d8a9ed9ba86b49efad53a394e414e77c72587178c2a77e4",
+      "bytes": 4359
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/final-hash-closure.json",
+      "retainedPath": "before/final-hash-closure.json",
+      "sha256": "acaea8801fca3bf36dfe3fab007af454e2412204684856f893f4df2cce571750",
+      "bytes": 1941
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/cord-entry-verification.json",
+      "retainedPath": "before/cord-entry-verification.json",
+      "sha256": "54d2f5b03f2f678608f05edb0613bc4788e9541851116dbe553aa88a5e5a419a",
+      "bytes": 3610
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/cord-entry-runtime-validation.json",
+      "retainedPath": "before/cord-entry-runtime-validation.json",
+      "sha256": "c4f6dc3c50d85a4cef59b57d80d5e3327bf5a56fa27ccd1dd7ac4520409188db",
+      "bytes": 6308
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/final-solver-independent-review.json",
+      "retainedPath": "before/final-solver-independent-review.json",
+      "sha256": "963b9c524aa3d67c984a6432d6d51e957de67a697c4638d3986f58811e452242",
+      "bytes": 9312
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/geometry-authoring-notes.md",
+      "retainedPath": "before/geometry-authoring-notes.md",
+      "sha256": "6f7d1d1ae5efff6a073815108904a06552bb9af47c2bda66bc4f8d299d279ab1",
+      "bytes": 2562
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/README.md",
+      "retainedPath": "before/README.md",
+      "sha256": "6b67ed645695bec32543d3baa659e1651636a0976117ab301b7ad93494a39ac5",
+      "bytes": 3366
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/contact-selection-accessibility.json",
+      "retainedPath": "before/app-review/contact-selection-accessibility.json",
+      "sha256": "fb8d01b273f8afd2021ea3de4840daad55d81e0e20e4976a3511579f36ac4e9c",
+      "bytes": 10375
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/contact-selection.png",
+      "retainedPath": "before/app-review/contact-selection.png",
+      "sha256": "660de2eb946921a8bfb96ca06195abdad656dda46c9495b5fcd454f7599c85fa",
+      "bytes": 411454
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/curved-lip-front-front-accessibility.json",
+      "retainedPath": "before/app-review/curved-lip-front-front-accessibility.json",
+      "sha256": "4b1fa7ade548e7b03781e63471cb1141fce1c38bf98bfe3c18ee7f0c6326ecf1",
+      "bytes": 10794
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/curved-lip-front-front.png",
+      "retainedPath": "before/app-review/curved-lip-front-front.png",
+      "sha256": "097952f708e0a77d8e8e6c8ef77d33722ba232adb56f2743ceb3f2bd938a6dec",
+      "bytes": 444089
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/default-accessibility.json",
+      "retainedPath": "before/app-review/default-accessibility.json",
+      "sha256": "db11fbfd45112aa79bb1f9f207569e9c1de00b26ca3502c94a9f7ac8b9786f68",
+      "bytes": 10828
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/default.png",
+      "retainedPath": "before/app-review/default.png",
+      "sha256": "8c04fa79a5a8848fc854a72f813434a7d026920afe41de8e36a07b293e25d2f4",
+      "bytes": 443431
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/exterior-jug-back-front-accessibility.json",
+      "retainedPath": "before/app-review/exterior-jug-back-front-accessibility.json",
+      "sha256": "fb8d01b273f8afd2021ea3de4840daad55d81e0e20e4976a3511579f36ac4e9c",
+      "bytes": 10375
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/exterior-jug-back-front.png",
+      "retainedPath": "before/app-review/exterior-jug-back-front.png",
+      "sha256": "660de2eb946921a8bfb96ca06195abdad656dda46c9495b5fcd454f7599c85fa",
+      "bytes": 411454
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/index.html",
+      "retainedPath": "before/app-review/index.html",
+      "sha256": "0927af98db83a138a70ed2e8e66c89a8806b8da02d76d068e103f731e92d8428",
+      "bytes": 1324
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/index.md",
+      "retainedPath": "before/app-review/index.md",
+      "sha256": "96b059724e57681fca237fea8fc6fa308a4c7f424ee8f893b523a3fc40137f91",
+      "bytes": 402
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/left-pocket-vertical-front-accessibility.json",
+      "retainedPath": "before/app-review/left-pocket-vertical-front-accessibility.json",
+      "sha256": "931d627181e01fef906f62df0ad6cf5aae317d904074a6a632dbf074b0821c5f",
+      "bytes": 9155
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/left-pocket-vertical-front.png",
+      "retainedPath": "before/app-review/left-pocket-vertical-front.png",
+      "sha256": "60d274f91329734597daa7ccee6e7600036f7908ab8d890b3f9555aa116c3cd5",
+      "bytes": 409801
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/orbit-readonly-diagnosis.json",
+      "retainedPath": "before/app-review/orbit-readonly-diagnosis.json",
+      "sha256": "a5ba7d395f1078cf009c9e79c1f5410dd9d4fe53ac3d17fc9477d004ba0b1ab2",
+      "bytes": 2424
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/physical-orbit-probes.json",
+      "retainedPath": "before/app-review/physical-orbit-probes.json",
+      "sha256": "6e7090d33fdc64f40f16e646799242f63670a5e8399b5ed72f1e1a9dad476cc9",
+      "bytes": 1693
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/straight-lip-inverted-front-accessibility.json",
+      "retainedPath": "before/app-review/straight-lip-inverted-front-accessibility.json",
+      "sha256": "db11fbfd45112aa79bb1f9f207569e9c1de00b26ca3502c94a9f7ac8b9786f68",
+      "bytes": 10828
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/straight-lip-inverted-front.png",
+      "retainedPath": "before/app-review/straight-lip-inverted-front.png",
+      "sha256": "8c04fa79a5a8848fc854a72f813434a7d026920afe41de8e36a07b293e25d2f4",
+      "bytes": 443431
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/validation.json",
+      "retainedPath": "before/app-review/validation.json",
+      "sha256": "5dbcf703a446f2829afbcb92f8d89d5295660f67f69f53be7dcc6af35a9425a2",
+      "bytes": 3713
+    }
+  ],
+  "appCaptureProvenance": "Existing app-review images and their validation files retained byte-for-byte as found; no new app captures or claims of orbit made by this lane.",
+  "oldFrontMouthReviewSHA256": {
+    "exterior-jug-back-side-full.png": "7c554e0699439542b6063a94e329febdc2389051ed8921a968d8d7cbaa1d807f",
+    "curved-lip-front-front-detail.png": "9c8b89c058e364ce8df94b97bc90bd4234834fa69590e5d0359b1d927b39c2f4",
+    "before-direction-regression.log": "6de5cd69d19d694fd743c0e379207d8a07c44681b2535eefffd82db483c6d520",
+    "index.html": "ead207ecada89f5eee9274dcd27c768d51f5e10b3a1f01db9777ed32ad03cd5f",
+    "exterior-jug-back-top-detail.png": "f1609fa04b0be9380c85740d16af0b5fcabddcd4d68454ff6a70cd049d57f403",
+    "straight-lip-inverted-side-detail.png": "10c87af1ad64652830a813fe1afc6bbe51e2a909e005f557953aab7e54c1e03a",
+    "exterior-jug-back-front-full.png": "e921c37048880843962f4a11a44d87782a112f0f9f19a1dbc17d7e2449aa3bc1",
+    "straight-lip-inverted-front-detail.png": "aea4a44a46388945d94c0227d799c1e6e158acbc0ee8c54ed7fc63ab5f5d0b86",
+    "orientation-wrapper-tests.log": "71dc9cec7acf36b2e962d0ecd7e07ecf5a9a17ebe60802f530e16104ad8bf50c",
+    "curved-lip-front-top-full.png": "af3ab652a5f3ea949becce11a78f7e829d815e5dd332b50abc8871d0c26abe60",
+    "baguette-preserved-hashes.json": "8bde96e7fbe265e1c5a5dadcdab866533abe4f15138a6d5e42dcf3889912c86e",
+    "straight-lip-inverted-front-full.png": "088e5c35735f28d2749285d8c82a873d175ce736eabebcfe683597cca8ee1c55",
+    "straight-lip-inverted-top-detail.png": "8960899564c0f071e8f9f0429d72d5db340a8bfc1673b71a14f896928c175670",
+    "failed-tube-analysis.json": "9966f41d092c30cf3d16327b52430ccc820a70ae7189e28b816437af6df29e47",
+    "left-pocket-vertical-front-full.png": "7167075663bc35740ea9f8bc26083fdd296d86a50997c212d245000f79079d00",
+    "straight-lip-inverted-side-full.png": "1fe0e8c990fcbf570e87c55de3e2e4a05c2f33167305397334fde827e42e33c9",
+    "baguette-final-unchanged-check.json": "99e6080a46cb4bf4ba9de87a56ba186e22f2b8165e00c05773a2e090fe985245",
+    "occupied-integration.log": "36819534009af0a9cbeb2ba31bef29ecc14f2b404589bd5cf32537a9d4a8bc13",
+    "exterior-jug-back-top-full.png": "ffc65c02049b5fbdfdb0cba1a403d83b8de59085bef15c350bf607e691a1498a",
+    "left-pocket-vertical-side-detail.png": "2ccf40ee592bd860dd374af9a5d0259f167ca5bd6aa7d597cd963ad57554348d",
+    "before-occupied-regression.log": "aa423e162e6f0bb17126b6e9389f2549474f936f66a5c5857e58504729d36f4a",
+    "left-pocket-vertical-top-detail.png": "f13114ac42cfe339d156e223b3353439693aafca28464ec1aaf4af1a97abd228",
+    "straight-lip-inverted-top-full.png": "50d6c61161790d4d5f35f27105fb0eab171c701c30efac140a51010783f789cc",
+    "curved-lip-front-side-full.png": "56451095dd3806f0fffea84b4478a712fdd0fe8fd73a1ae646aa3537ca6d95a7",
+    "failed-occupied-analysis.json": "5064d2cc7ec8c504a1e2c8507a14b6d04b20c21f044ea11a8e042e307087741c",
+    "left-pocket-vertical-front-detail.png": "7793e85736f0a5ea173dc70957771f9ee5aab1ad96561f88f58c8abd9594bb6c",
+    "full-python.log": "a0abfbe55c6e060fcb1f3b4f7017a7bbc58ef75990a0db879d2174c26fda45d8",
+    "exterior-jug-back-side-detail.png": "80e33ee57baab45201809594e01e3f75a6a742e2fd4d16f7a9f0b19a73c4b649",
+    "exterior-jug-back-front-detail.png": "78937ae8ad88e7e3f5146688ab7b98c58acc559d82c8fe18f8e31f358f468c16",
+    "curved-lip-front-side-detail.png": "9c519d2833a77bc3a4ca420450409772a2f565a802796f8104c4d00d8f410741",
+    "curved-lip-front-front-full.png": "badf45dff6de8bbad07adab70e91c765b6acba65752dd50522d7e9c545a076ff",
+    "left-pocket-vertical-top-full.png": "514cc9f3f2123f02bf8590720bd84b2a632d73e7efbdc9c28dffa7bd6c2610bc",
+    "curved-lip-front-top-detail.png": "02ad04ba20f02f11f836c990e743985e86c96e7d51182fe2b4f8e6735ab82564",
+    "left-pocket-vertical-side-full.png": "8d1ffbeb688f00c9d182885c8f28fc3dca8419882826d3158b05de27b8501068",
+    "before/suspension.json": "8f6de683212d1083583a9795852f6b3458d8a4db63e11ce6de44d10d6b64a8da",
+    "before/README.md": "026635b8601b1e03a84a570c9516b843260552464a303847afd9224134aebd92",
+    "before/native-route-check.json": "95875c33d83cb0d013393114fdbd5a1737322a03111c5f235e1fbfb10bd4fa33",
+    "before/native-route-report.json": "95875c33d83cb0d013393114fdbd5a1737322a03111c5f235e1fbfb10bd4fa33",
+    "before/continuous-cord-clearance.json": "46d2ae15e177377c71c5254b0d43e5f68c52c7f52d28c9b9bbe2386416bba0ba",
+    "before/final-hash-closure.json": "178206ce23086f721c318e08cd20222af7ef984b32ac95509d567d71233fc7bb",
+    "before/cord-authoring-review.json": "f71ba2482e574f7c139861ba1e8bcaf42afed34194ae00dcf965733dfca5cc3b",
+    "before/app-review/index.html": "79d7c083f74fc25bc13b2d23af03d13459440d5b79e15d9e6709abf928fc2fa2",
+    "before/app-review/contact-selection.png": "060f549fe693c643a765c913917ce5f1a44f6d95e100f190bd09f29e20bb4439",
+    "before/app-review/default-accessibility.json": "8d08aebbb3810ef05586eb07dbf9ed5008569a689b7b729ad1c95b31fbc59175",
+    "before/app-review/contact-selection-accessibility.json": "4593b51d54e5398dcab39872470e87b415a6f08daa8495d8199158e0d83ed8ae",
+    "before/app-review/index.md": "a043af3b6b1f8561173ff7ab57f9b3f2090382bc1068bb55a39e8bd2d37af699",
+    "before/app-review/validation.json": "1029ef5b5d9061c5f56f748c6413dacc188b107dd9279f0d150eb3080d3db204",
+    "before/app-review/default.png": "4b1db8e9d64f0adc26644f158183673b648cb7e5c0aa6f50e998a5305d40fca4"
+  },
+  "newCandidateStatus": "Not supplied or rendered; waiting for root/native candidate approval."
+}

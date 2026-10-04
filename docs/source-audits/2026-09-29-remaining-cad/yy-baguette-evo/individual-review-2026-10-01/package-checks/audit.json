@@ -1,0 +1,198 @@
+{
+  "timestampUTC": "2026-10-01T21:14:06.778798+00:00",
+  "files": {
+    "Hangboards/yy-baguette-evo/assets/primary.model.json": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921",
+    "Hangboards/yy-baguette-evo/assets/primary.usdz": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+    "Hangboards/yy-baguette-evo/suspension.json": "a8268c4df7ce4eced116b692ad92276394d064aa858b83e5c00b84fd43f75678",
+    "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8"
+  },
+  "archivePassed": true,
+  "schemaPassed": true,
+  "noCanonicalBoardJSON": true,
+  "sourceEvidence": [
+    {
+      "path": "evidence/yy-baguette.html",
+      "match": true,
+      "actualSHA256": "23ea747dda552429fe9bb1606e47812113ae062b0457941634a37831eeff3af1"
+    },
+    {
+      "path": "evidence/yy-baguette-evo-image.webp",
+      "match": true,
+      "actualSHA256": "c42f96ebed2b58d1a287f5b125fd3607cc9244a651a92e2731fe4b589e80ea3e"
+    },
+    {
+      "path": "evidence/YY_BAGUETTE_EVO_07_FG.webp",
+      "match": true,
+      "actualSHA256": "4e06a28092af6e4d2f8f37e244ea2d39816c37182cf6a78375d68ba126851983"
+    },
+    {
+      "path": "evidence/YY_BAGUETTE_EVO_03_FG.webp",
+      "match": true,
+      "actualSHA256": "5e73306d55787af679e3423f98bf7a0e673bc5bc1a7d83a7cd3381c8d56d0c54"
+    },
+    {
+      "path": "evidence/YY_BAGUETTE_EVO_10_FG.webp",
+      "match": true,
+      "actualSHA256": "4444b62d227c185ad62cfe355bf88b9f2feb367acce0b3095756e36ff03c8de0"
+    },
+    {
+      "path": "evidence/yy-vertical-escalade-agres-nomade-entrainement-nomadic-tool-gear-equipment-training-baguette-evo-utilisation-22.webp",
+      "match": true,
+      "actualSHA256": "694b540679dee86021a8567a273ba2d5d0fa23430a2893bf12a07057ff69d646"
+    }
+  ],
+  "historicalProofIdentity": {
+    "sourceMatches": true,
+    "modelMatches": true,
+    "descriptorMatches": true,
+    "sidecarMatches": true
+  },
+  "initialMigrationPreserved": {
+    "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd": true,
+    "Hangboards/yy-baguette-evo/suspension.json": true,
+    "Hangboards/yy-baguette-evo/assets/primary.usdz": true,
+    "Hangboards/yy-baguette-evo/assets/primary.model.json": true
+  },
+  "usd": {
+    "meshes": [
+      {
+        "name": "body_mesh_001",
+        "faces": 22466
+      },
+      {
+        "name": "hold_edge_10mm_left_mesh_001",
+        "faces": 6
+      },
+      {
+        "name": "hold_edge_20mm_left_mesh_001",
+        "faces": 10
+      },
+      {
+        "name": "hold_edge_15mm_left_mesh_001",
+        "faces": 9
+      },
+      {
+        "name": "hold_edge_25mm_left_mesh_001",
+        "faces": 9
+      },
+      {
+        "name": "hold_edge_06mm_left_mesh_001",
+        "faces": 8
+      },
+      {
+        "name": "hold_edge_12mm_left_mesh_001",
+        "faces": 4
+      },
+      {
+        "name": "hold_edge_08mm_left_mesh_001",
+        "faces": 4
+      },
+      {
+        "name": "hold_rounded_left_mesh_001",
+        "faces": 84
+      },
+      {
+        "name": "hold_edge_10mm_right_mesh_001",
+        "faces": 6
+      },
+      {
+        "name": "hold_edge_20mm_right_mesh_001",
+        "faces": 10
+      },
+      {
+        "name": "hold_edge_15mm_right_mesh_001",
+        "faces": 9
+      },
+      {
+        "name": "hold_edge_25mm_right_mesh_001",
+        "faces": 9
+      },
+      {
+        "name": "hold_edge_06mm_right_mesh_001",
+        "faces": 8
+      },
+      {
+        "name": "hold_edge_12mm_right_mesh_001",
+        "faces": 4
+      },
+      {
+        "name": "hold_edge_08mm_right_mesh_001",
+        "faces": 4
+      },
+      {
+        "name": "hold_rounded_right_mesh_001",
+        "faces": 84
+      },
+      {
+        "name": "hold_central_20mm_mesh_001",
+        "faces": 10
+      },
+      {
+        "name": "hold_central_06mm_mesh_001",
+        "faces": 4
+      },
+      {
+        "name": "hold_central_30mm_mesh_001",
+        "faces": 6
+      },
+      {
+        "name": "hold_central_25mm_mesh_001",
+        "faces": 6
+      }
+    ],
+    "materialsOrShaders": [],
+    "materialBindings": [],
+    "members": [
+      "stage.usdc"
+    ],
+    "exactDescriptorNodes": true,
+    "hashMatches": true
+  },
+  "display": {
+    "camera": {
+      "type": "orthographic",
+      "viewDirection": [
+        0,
+        0,
+        -1
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ],
+      "fitPadding": 0.08
+    }
+  },
+  "contactCount": 19,
+  "positionIDs": [
+    "paired-25-20-15-10",
+    "paired-12-8-6",
+    "central-30-25",
+    "central-20-6",
+    "rounded-tray"
+  ],
+  "rawHistoricalReports": {
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/plane-route-diagnostics.json": "80d63ea9a1981b36edb0ffec14af7c35fc799d0fab8680464f9a470684d62a7b",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/source-register.json": "709e29b6176400af799423afad006ce524a2d4e13f9726793707971b4a084b0b",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/metadata-preservation.json": "ad31652944b047994347b459d15a469b3d60756d38c11815e899e60f0e468238",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/native-authoring-geometry.json": "b3ae1b3de7341ce976909eacb8dc3e04472578e7ec3175f5b1efca861381c335",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/native-validation.json": "65688668a8dc6c1805e79fe382f11e16437c449fd5290e570812e88bdc03baed",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/compile-validation.json": "1f43558bfaf6950ff4096ad6b829189ddb611310bda617dcc6ff25c05fed29af",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/compile-final-check.json": "6df79c8bd4992357f51aaa0b612659d2a1f4ffeaf3cd62287d4c61019aada43b",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/cord-radius-audit.json": "8b82acf4e879e3a7ba1cead981925c62c2f06d7545563ecf8d0db2226f4f9992",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/native-cord-solve.json": "99e6080a46cb4bf4ba9de87a56ba186e22f2b8165e00c05773a2e090fe985245",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/geometry-visual-review.json": "38e7ccfc1692d41110afab1d9036a185545b18517f4a83c3cf7beb1ac5861132",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/metadata-diff.json": "195b18c85f557800230d24977d0baf3adcb34de5d00f2d6f2651882b8d15ac68",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/continuous-cord-clearance.json": "aba86d0838fc3767383ab2bf847c417206829e89742ef0a8d00f4a4c90449787",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/depth-witnesses.json": "6a1728ac4a3a8f4c0b31a08eb6d760d01bfdd3a7e3129d73bbc4cb7920df5f0a",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/native-cord-check.json": "99e6080a46cb4bf4ba9de87a56ba186e22f2b8165e00c05773a2e090fe985245",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/final-hash-closure.json": "0252ebd8152545e58df2fe24cdd244a220182b087f87e5d9287448d5c8347633",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/retained-evidence-check.json": "eb0acd408fe7c9ac53238c4c7776128512dcbc3ac720579604cba75ea8693d82",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/native-channel-measurements.json": "ff100b2bb5aac94bfc9dcfdd78d226032ff89b3e309001c130c05458034590fe",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/cord-authoring-review.json": "a0a2ae019874ed1b2c33b2d43a24e38c4bea63b4213d2268875a2b5bf59fbeee",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/app-review/default-accessibility.json": "69f7d24815fde34ce0f34e0d8f47d35e1b33f920d1beab15cf5133a060f63d88",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/app-review/contact-selection-accessibility.json": "48cabe0e7af21349866c77b267b6919403f9a78762a15dd0aeb3cea1358be806",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/app-review/validation.json": "ad85d65749286cd1de0a5fb82441665491d21b9fdda2f4c6bfb0280c3fb756f8"
+  }
+}

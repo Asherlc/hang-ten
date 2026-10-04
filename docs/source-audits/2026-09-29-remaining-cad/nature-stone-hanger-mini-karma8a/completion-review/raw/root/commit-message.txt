@@ -1,0 +1,5 @@
+Refine KARMA8A Mini granite seat and cord poses
+
+Fit the unchanged granite insert into the native wood seat, assign all exposed stone to the existing runtime granite finish, and validate the sourced 60 mm pinch on its native Z span. Preserve three factual contacts and all three positions; solve compact estimated cords against the current CAD solid.
+
+Retain exact prior/current whole geometry and solved-cord views, scoped delivery locks and the bounded Mini runtime retry. Native/export checks, 284 Python tests, 64 package validation and Android staging pass. Generic iOS app/test compilation and staged bytes pass; actual iOS tests and app appearance remain unverified, with human acceptance pending.

@@ -1,0 +1,239 @@
+{
+  "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-contact-pinch-rails/native-author/candidate/metolius-contact.FCStd",
+  "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+  "construction": "Native analytic right-rail Sketcher loft, intersected with original CAD silhouette envelope, exactly mirrored, fused with the original already-pocketed solid; original non-pinch native contact construction is unchanged; loft-surface native boolean contacts on the final-solid boundary",
+  "rightRailBezierSpansXZ": [
+    [
+      [
+        273,
+        78
+      ],
+      [
+        282,
+        77
+      ],
+      [
+        293,
+        60
+      ],
+      [
+        304,
+        43
+      ]
+    ],
+    [
+      [
+        304,
+        43
+      ],
+      [
+        320,
+        19
+      ],
+      [
+        329,
+        -3
+      ],
+      [
+        332,
+        -24
+      ]
+    ],
+    [
+      [
+        332,
+        -24
+      ],
+      [
+        337,
+        -48
+      ],
+      [
+        334,
+        -82
+      ],
+      [
+        335,
+        -104
+      ]
+    ],
+    [
+      [
+        335,
+        -104
+      ],
+      [
+        337,
+        -122
+      ],
+      [
+        363,
+        -133
+      ],
+      [
+        382,
+        -133
+      ]
+    ],
+    [
+      [
+        382,
+        -133
+      ],
+      [
+        401,
+        -133
+      ],
+      [
+        408,
+        -119
+      ],
+      [
+        405,
+        -105
+      ]
+    ],
+    [
+      [
+        405,
+        -105
+      ],
+      [
+        392,
+        -70
+      ],
+      [
+        365,
+        -25
+      ],
+      [
+        348,
+        5
+      ]
+    ],
+    [
+      [
+        348,
+        5
+      ],
+      [
+        329,
+        39
+      ],
+      [
+        301,
+        75
+      ],
+      [
+        279,
+        80
+      ]
+    ],
+    [
+      [
+        279,
+        80
+      ],
+      [
+        276,
+        81
+      ],
+      [
+        273,
+        81
+      ],
+      [
+        273,
+        78
+      ]
+    ]
+  ],
+  "railSectionsYAndScale": [
+    [
+      -6,
+      1.02
+    ],
+    [
+      -59,
+      1.02
+    ],
+    [
+      -63,
+      1.0
+    ],
+    [
+      -66,
+      0.96
+    ],
+    [
+      -67,
+      0.92
+    ]
+  ],
+  "scaleCenterXZ": [
+    345,
+    -25
+  ],
+  "publishedEnvelopeMm": [
+    826,
+    279,
+    67
+  ],
+  "allNewRailNumbers": "Operator-selected display estimates; not manufacturer measurements",
+  "manufacturerSources": [
+    "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Contact-Hangboard-black-white.jpg?v=1759459002",
+    "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/con-num-dep_341f2901-a11e-4256-a4c3-0531110c730e.jpg?v=1762201170"
+  ],
+  "pinchContactFaceIDs": {
+    "rightLoftSkin": [
+      "Face1",
+      "Face2",
+      "Face3",
+      "Face4",
+      "Face5",
+      "Face6",
+      "Face7",
+      "Face8",
+      "Face9",
+      "Face10",
+      "Face11",
+      "Face12",
+      "Face13",
+      "Face14",
+      "Face15",
+      "Face16",
+      "Face17",
+      "Face18",
+      "Face19",
+      "Face20",
+      "Face21",
+      "Face22",
+      "Face23",
+      "Face24",
+      "Face25",
+      "Face26",
+      "Face27",
+      "Face28",
+      "Face29",
+      "Face30",
+      "Face31",
+      "Face32",
+      "Face33",
+      "Face34"
+    ]
+  },
+  "finalSolidObject": "BodyWithPinchRails",
+  "nonPinchContactsUnchanged": true,
+  "contactCount": 33,
+  "fullyConstrainedSketchCount": 140,
+  "manifestByteIdentical": true
+}
+
+								
+								
+								
+								
+								
+								
+								
+								

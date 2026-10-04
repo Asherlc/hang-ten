@@ -1,0 +1,70 @@
+{
+  "status": "PASS_READ_ONLY_DIRECT_O2_STRUCTURAL_CAMERA_AND_CPU_AUDIT",
+  "scope": "Frozen direct O2 only; no active normal-route outputs read",
+  "rawRecords": 151,
+  "hostCoverage": {
+    "allRawQualifiedCensuses": 131,
+    "preAttachmentSequences": [
+      8,
+      9,
+      10
+    ],
+    "postAttachmentCensuses": 128,
+    "explicitReportExactlyReconstructed": true,
+    "noDroppedPostAttachmentObservation": true,
+    "oneActualPublicARViewSameIdentitySceneAndVisible": true
+  },
+  "actualHands": {
+    "projection": "orthographic",
+    "singleConstructorAndMake": [
+      0,
+      0
+    ],
+    "pairConstructorAndMake": [
+      2,
+      2
+    ],
+    "distinctConfiguredPairCameras": 2,
+    "cameraRecords": 4,
+    "rawLifecycleCountsRecomputedEveryRecord": true,
+    "singlePathRuntimeExercised": false
+  },
+  "cpu": {
+    "fullCaptures": 12,
+    "everyBeforeAfterMatchesRawTrace": true,
+    "everyTimestampBracketAndExpectedModeIDsActualRGBAValid": true
+  },
+  "visualScope": "Worker retained all12 whole-image observations as correct. This audit verifies record/hash attribution, not a fresh independent image interpretation.",
+  "conclusion": "O2 orthographic control also passes. O1 failure followed by P1/P2/O2 passes does not establish replicated projection-only contrast or a production fix.",
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o2-landscape/events-19503AE4-ADA4-4784-AD09-0CE600BF2783.jsonl",
+      "sha256": "dd6f10fb4ffbb424ef710410a8663c81d74e39e0e8e45269ea059943ecc008f5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o2-landscape/explicit-host-completeness.json",
+      "sha256": "da2e81a6b1f0bc172c686f4239b76f6be504ee148b49cd82a8bfbcc1fd1a0160"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o2-landscape/structural-correspondence.json",
+      "sha256": "de85ef1e82f3de323cecaab43bc3f16344ecc764fe0979d49bdbe7a3597b2aa2"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o2-landscape/hand-camera-validation.json",
+      "sha256": "82f74cb4183a62d52e0eca6c83fec350aa8e702ba9b62c4c6a71f6d2480988e4"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o2-landscape/hand-lifetime-validation.json",
+      "sha256": "6c3258c3cf4ec7613b1ee1951d0bb461153d579099d5b24fa03f5da328bfdd1d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o2-landscape/visual-review.json",
+      "sha256": "1f391382ee2b3367c53a67d6f2a6b40220e1051f62fb67b56dab5d5d857fa103"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-findings.json",
+      "sha256": "b065d25a86e45e823ce4699f71c3a5e47ae5831efb0158d8eee10a1ec368e155"
+    }
+  ],
+  "preservation": "No inputs changed; new audit outside frozen packet only."
+}

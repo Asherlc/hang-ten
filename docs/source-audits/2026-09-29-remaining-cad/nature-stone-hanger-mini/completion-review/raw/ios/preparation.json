@@ -1,0 +1,110 @@
+{
+  "owner": "placid-badger",
+  "lane": ".context/placid-badger/nature-stone-mini-review10/completion/ios",
+  "status": "ready-awaiting-root-freeze",
+  "rootFinalHashReady": false,
+  "resourceActionsPerformed": false,
+  "wrapperPrecedent": ".context/placid-badger/nature-stone-review9/granite-seat-correction/ios",
+  "copiedWrapperSHA256": {
+    "preflight.py": "7856cc9d05d84315246eddcb8dfd1e0985266f9e05756f00e164740891033e4f",
+    "ios-session.zsh": "5a505e297c9aabd878a1c1c91afefbb45f2a26db43fb41ec58d54fdd0364680f",
+    "build_ios.py": "564e41dd97b8fedbaef32bc697099955e21441c1bc8ff1ff5b95ce2ecfb57570",
+    "run_xcode.py": "a76f574322a73592815a74e6b29494196976c0a2953f4177275f2eb908101c61",
+    "install_app.py": "b60bd702ae04d0e9e817815211fe5b2cdfa2d36916ddefd699acc1400ee627e2"
+  },
+  "contactInventory": [
+    "pull-up-jug",
+    "wood-edge-15-incut",
+    "granite-edge-15",
+    "pinch-60"
+  ],
+  "poseInventoryAuthority": "Final installed generated manifest; old three poses may gain a separate jug pose.",
+  "expectedTestClasses": [
+    "BoardModelTests",
+    "BoardModelRealityTests",
+    "BoardPackageStoreTests",
+    "SuspendedBoardPresentationTests"
+  ],
+  "testCounts": "Derive current source method counts and actual xcresult summary; do not reuse prior results.",
+  "currentSourceTestMethodCounts": {
+    "BoardModelTests": 8,
+    "BoardModelRealityTests": 22,
+    "BoardPackageStoreTests": 161,
+    "SuspendedBoardPresentationTests": 68
+  },
+  "wrapperSyntaxVerified": true,
+  "wrapperSHA256": {
+    "build_ios.py": "564e41dd97b8fedbaef32bc697099955e21441c1bc8ff1ff5b95ce2ecfb57570",
+    "capture_review.py": "2732dc578fd2641fb28ddcb579f53a5189201c8c7270b2d7510eebf78dcd9cd8",
+    "finalize_runtime.py": "0724f6ea52c46a4490ef34a7e43fc930303ee1c6f7a5bb1f0d212e13924f79bb",
+    "install_app.py": "80215fa9637975473e6c71aa26930667508dbd71408fb87f6edaadf2a1d52d10",
+    "ios-session.zsh": "d55b780f9e5325bc013c15e4cf9584535289f1a49ac26faa076282b168f810d6",
+    "preflight.py": "6574ecb5fafa00c901c9caad63b1de96df77796af7a5b6dfc1cb3f9f248f0486",
+    "run_xcode.py": "7d7e3676fe8c0f238558cf65266dabe46a5fce7d2b4cb787feffa1a6f33ab80f"
+  },
+  "capturePlan": {
+    "contacts": "all four exact contacts",
+    "poses": "all positions in frozen generated manifest",
+    "perPoseViews": [
+      "front",
+      "left oblique",
+      "left side oblique",
+      "right oblique",
+      "right side oblique"
+    ],
+    "actualDragActions": "four per final pose, plus two restoration/reset drags",
+    "sameInstanceRestoration": "granite to wood to granite",
+    "cameraReset": "physical rendered granite contact tap after orbit with projected centers restored",
+    "unselectedFrame": "Train",
+    "relaunchFrame": "granite",
+    "workout": "existing Metolius entry first jug task only"
+  },
+  "plannedSessionCommand": "rtk proxy zsh .context/placid-badger/nature-stone-mini-review10/completion/ios/ios-session.zsh",
+  "readPreparationInputsSHA256": {
+    ".agents/skills/validate-hang-ten-ios/SKILL.md": "dfaad9463fb453f2da744eba2247598d2f7e0ee0303c1ff1fbd1ab7218c665a8",
+    ".agents/skills/audit-3d-hangboard-suspension/SKILL.md": "00bc6755b83ab52aa208b466d556f88a7d76d284c2be5984df34191f006e10c9",
+    "docs/IOS_SIMULATOR_VALIDATION.md": "0c015737bb2ec282cb5fceaf8122e19da86ecab5870a2d8fbbabeead5f39ba2f",
+    "docs/IOS_RUNTIME_SERVICES.md": "9523b805abc964ae9317714f1fd58a49f2f4f260ee5901977a23c727a7d96a3a",
+    "docs/3D_SUSPENSION_AND_ODR.md": "808bbcbb7e3cfdd2e8e3ac420fc81142514406eae5e10baf93c3780b37ac056b",
+    "docs/HANGBOARD_CORD_AUTHORING.md": "85df120f1b298e28b3028b5eb63920170ee789f469318eaf90547828e62df354",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/native-authoring.md": "f5fc5b8c879295d2e61ffa3615442dd44d6064b72ff4e4b30ce8fd434b7d9e50",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/sources.json": "fed7cb858dfeef3e9ce841f84cc8b96e65625b5309ce7a0551abdba92c8a3740",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/contact-contract.json": "73008839aecd3576a55400df9276d1db6a3f6c2acc379ba4790e35820b613712",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/native-cord-evidence.json": "5508fbc069403a636edcb91556c37c6b3f31bf955ed3f041de0e1be7707a14f8",
+    "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/cord-primary-check.json": "2b4a612b03c0c34d5ff10dc9190ed8296a031f52d15387ebedffdbf7c28404e9"
+  },
+  "wholeManufacturerPhotosPhysicallyViewed": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/front-original.jpg",
+      "sha256": "3aae064c37d7eef11e7874acaabbaca0194a1caa357e2bff1bbfb83faf093ff7",
+      "wholeImage": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/oblique-original.jpg",
+      "sha256": "383cdd3665f1e30a0dc8443959d7442e65780dbd27b71bc597efc9a1b924f685",
+      "wholeImage": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/reverse-original.jpg",
+      "sha256": "09a4926269b291354b171fdac6e20365a6c9c66528bb4275b8cb56b20b8f1eae",
+      "wholeImage": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/in-use-original.jpg",
+      "sha256": "f17ceb9007a1f00ad19859c6fdf4bbd0c8a48b5f8d1cdbf169c6de46ffeb076e",
+      "wholeImage": true
+    }
+  ],
+  "workoutRouteEvidence": {
+    "planID": "metolius.generic-ten-minute.entry",
+    "blockID": "metolius.generic-ten-minute.entry.warm-up",
+    "stepID": "entry.minute-1.task-1",
+    "exactRequirement": {
+      "kind": "jug",
+      "selection": "single"
+    },
+    "planLibrarySHA256": "b203917f19e792e2d39abf15bbac96a6119ca0a7aa5384618fd1bb3978de2c6b",
+    "scope": "Existing first jug task only; no new content or whole-plan compatibility claim."
+  },
+  "cleanupScope": "Only the exact run simulator, newly created .context/DerivedData, owned lane tmp and xcresult; final whole frames remain."
+}

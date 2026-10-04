@@ -1,0 +1,96 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "method": "Byte/archive identity verification only; not execution-result validation.",
+  "archives": [
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build/build-placid-badger-cad-second-half.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/build/build-placid-badger-cad-second-half.xcresult.zip",
+      "archiveSHA256": "4b927456f36311b68b031a1e320eaad7be5e50912d9871b49bfc09dca019240c",
+      "archiveBytes": 107099,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build/build-placid-badger-cad-second-half.xcresult.archive.json",
+      "verifiedMemberCount": 8,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-retry/build-placid-badger-cad-second-half-retry.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/build-retry/build-placid-badger-cad-second-half-retry.xcresult.zip",
+      "archiveSHA256": "52d0b5462a305d54532d7e89fbb81d97a15e0cee3bbfcce3554889d5f2ce0e58",
+      "archiveBytes": 46589,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-retry/build-placid-badger-cad-second-half-retry.xcresult.archive.json",
+      "verifiedMemberCount": 8,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-ci/build-placid-badger-cad-second-half-ci.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/build-ci/build-placid-badger-cad-second-half-ci.xcresult.zip",
+      "archiveSHA256": "28a9f3b19447771131235895f6d2d0b2b208e3b92dbb510f9f51e56195c885ff",
+      "archiveBytes": 36950,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-ci/build-placid-badger-cad-second-half-ci.xcresult.archive.json",
+      "verifiedMemberCount": 8,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-terminal-red/build-placid-badger-cad-second-half-terminal-red.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/build-terminal-red/build-placid-badger-cad-second-half-terminal-red.xcresult.zip",
+      "archiveSHA256": "5c8e2a4edf368701d06fca81c2e868dd46ba553fb30987be9a949ff804b56c69",
+      "archiveBytes": 71028,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-terminal-red/build-placid-badger-cad-second-half-terminal-red.xcresult.archive.json",
+      "verifiedMemberCount": 8,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-terminal-green/build-placid-badger-cad-second-half-terminal-green.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/build-terminal-green/build-placid-badger-cad-second-half-terminal-green.xcresult.zip",
+      "archiveSHA256": "b43fc56c617894fab99b101ad1448a7053d2e3c62d63eec5bad29ff9b4835e3b",
+      "archiveBytes": 41221,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-terminal-green/build-placid-badger-cad-second-half-terminal-green.xcresult.archive.json",
+      "verifiedMemberCount": 8,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/focused-pause/tests-placid-badger-cad-second-half-focused-pause.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/focused-pause/tests-placid-badger-cad-second-half-focused-pause.xcresult.zip",
+      "archiveSHA256": "8600427df1c8843c8f092b94297c73feb171494e60aa6b9b5c43e81e2a119dcb",
+      "archiveBytes": 165865793,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/focused-pause/tests-placid-badger-cad-second-half-focused-pause.xcresult.archive.json",
+      "verifiedMemberCount": 737,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/pause-timing-controller/tests-placid-badger-cad-second-half-pause-timing-controller.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/pause-timing-controller/tests-placid-badger-cad-second-half-pause-timing-controller.xcresult.zip",
+      "archiveSHA256": "59b447868394d0ba020814cbad424e48a14beaf515a27d771b805554b46d3233",
+      "archiveBytes": 172185407,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/pause-timing-controller/tests-placid-badger-cad-second-half-pause-timing-controller.xcresult.archive.json",
+      "verifiedMemberCount": 726,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/pause-timing-optimized/tests-placid-badger-cad-second-half-pause-timing-optimized.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/tests-placid-badger-cad-second-half-pause-timing-optimized.xcresult.zip",
+      "archiveSHA256": "67b00e16a7daad3d7cdbf2555de0ff3043db5465a32338ddd8f4f6cfbd56e09c",
+      "archiveBytes": 34946,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/pause-timing-optimized/tests-placid-badger-cad-second-half-pause-timing-optimized.xcresult.archive.json",
+      "verifiedMemberCount": 32,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-ci-recipe/tests-placid-badger-cad-second-half-full-unit-ci-recipe.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/full-unit-ci-recipe/tests-placid-badger-cad-second-half-full-unit-ci-recipe.xcresult.zip",
+      "archiveSHA256": "1fbbea7fca7e9733b0b4ac84838d4511e9a007a590309a9349f403ab85a3d7b6",
+      "archiveBytes": 191742518,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-ci-recipe/tests-placid-badger-cad-second-half-full-unit-ci-recipe.xcresult.archive.json",
+      "verifiedMemberCount": 3736,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    }
+  ]
+}

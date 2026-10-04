@@ -1,0 +1,8 @@
+{
+  "sameBinary": true,
+  "onlyHandSuppressionAndRunIDEnvironmentDifference": true,
+  "sameNormalFrameEndpoints": true,
+  "sameResolvedWorkoutInputs": true,
+  "sameRootCameraTransformSets": true,
+  "sameConstructorAndMakeCounts": true
+}

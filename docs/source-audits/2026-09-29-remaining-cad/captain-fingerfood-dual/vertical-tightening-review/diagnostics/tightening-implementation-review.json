@@ -1,0 +1,92 @@
+{
+  "reviewedAt": "2026-09-30T17:12:13.901292+00:00",
+  "reviewer": "cad_wall_boards",
+  "status": "Blocked for publication: first native probe retains significant certifiable free-space corners and fails rounded clearance",
+  "remainingCodeBlockers": [],
+  "resolvedFindings": [
+    {
+      "finding": "Fixed eight-level relative backtracking falsely reported convergence despite a smaller certified motion.",
+      "independentReproduction": "false-convergence-probe.json: unchanged route, zero accepted moves; valid50 micrometre vertex displacement improves length14.821955 micrometres.",
+      "resolution": "24-level bounded backtracking; regression now passes."
+    },
+    {
+      "finding": "Dense native sampling split meaningful free-space bow shortening into per-vertex gains below threshold.",
+      "independentReproduction": "initial-independent-tightening-tests.log: dense clear seed failed direct-path equality.",
+      "resolution": "Deterministic longest-gap-first certified chord shortcuts; regression now passes."
+    },
+    {
+      "finding": "Current-result occupiedCollarsReserved would misdescribe a relaxed path.",
+      "resolution": "Retained only as initialOccupiedCollarsReserved seed provenance."
+    }
+  ],
+  "implementationReview": {
+    "sourceEntry": "Actual mouth remains fixed. Previous point is free or removable; final positive-axis half-space plus complete native-solid clearance replaces artificial collar pin.",
+    "objective": "Every accepted move decreases fixed-height visible polyline length by more than0.1 micrometre. Other paths remain active collision constraints.",
+    "boundedness": "Shortcut loop strictly reduces vertex count.48outer sweeps,24 backtracking levels per direction,16 height-settle iterations and40bisection steps. Exhaustion raises.",
+    "coupling": "Every move uses unchanged full self/interstrand tube gate, with continuous native-solid certification for all changed segments.",
+    "settling": "Fixed-world support is transformed anew with each body height; moved support segments are fully rechecked before further shortening. Final length ratios are checked on rounded runtime caches.",
+    "legacyIsolation": "Absent ropeSolver.tightening delegates to unchanged seed generator. Optional method rejects unsupported topologies and unknown selectors. Seed generation does not use authored wrappedRoutes.",
+    "reproducibility": "Stable strand-ID/vertex ordering, deterministic candidate sequence and bounded loops; independent insertion-order test passes.",
+    "limitations": "Coordinate descent is a bounded local search, not proof of global minimum, complete surface stationarity or physical equilibrium. Actual native result still requires a free-space-corner quality probe and visual comparison."
+  },
+  "independentTests": {
+    "result": ".........                                                                [100%]\n9 passed in 1.15s",
+    "cases": 9,
+    "coverage": [
+      "Open-space oblique front entry removes artificial collar",
+      "Native obstacle and other occupied cord remain clear",
+      "Rear entry shortcut rejected",
+      "Determinism under mapping insertion order",
+      "Generated seed and re-settled height; hostile authored cache ignored",
+      "Sweep exhaustion rejects",
+      "Absent option exact result identity and invalid option rejects",
+      "Dense sample clear bow removed",
+      "Small certified bearing displacement found"
+    ]
+  },
+  "nativeAcceptancePending": [
+    "Actual DUAL tightening converges within bounded budgets.",
+    "Before/after matched-height objective and lateral bow measurements; unsupported exterior knee removed without a replacement artificial knee.",
+    "Every exact rounded path retains front mouth entry, full-solid and full tube clearance, fixed support and declared lengths.",
+    "Current-code apply/check equality; unchanged source/model/descriptor and every unrelated cache.",
+    "Changed front/side/top and native app visuals reviewed."
+  ],
+  "scope": "Only scratch reports/tests logs from reviewer; no production edits or heavy native job.",
+  "fileSHA256": {
+    "Tools/HangboardCAD/native_cord_routes.py": "527acf3240a5523dcb4a3681d8087fbeb4a2d932e758423e46bb11be35d8a850",
+    "Tools/HangboardCAD/tests/test_native_cord_tightening.py": "31bae43d96d27ab00cc90cc8052827b169afb4f28185b0fe5b1c897d23327053",
+    "Tools/HangboardCAD/tests/test_native_cord_routes.py": "3517ccefd0db22167057fa64cd38073d8dddb7093ac55981353ab3d2f3fd5efd",
+    "Tools/HangboardPackages/src/hangboard_packages/cord_paths.py": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250",
+    "Hangboards/captain-fingerfood-dual/suspension.json": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+    ".context/placid-badger/dual-vertical-review/false-convergence-probe.json": "bc8768724d4fa3dc0271e74d53ddcb3ea360d5987a4d64e3add82cf8d38f40b2",
+    ".context/placid-badger/dual-vertical-review/revised-independent-tightening-tests.log": "cf4a86beda174ef3aa5e60990bd6952cd514a613d1dc54b6e29a1d56445cb646",
+    ".context/placid-badger/dual-vertical-review/tightening-acceptance-review.json": "e60467848b9455c9d2832ce0fe470615edfdd4fa141979765414a0dab1c45aea"
+  },
+  "updatedAt": "2026-09-30T17:18:38.179915+00:00",
+  "nativeFindings": [
+    {
+      "priority": "P1",
+      "summary": "Converged local vertex search still retains unsupported83-degree elbows; corner cuts improve each lead by more than0.5 mm with strict clearance/tube checks passing.",
+      "evidence": ".context/placid-badger/dual-vertical-review/native-probe-independent-corner-cuts.json",
+      "requiredChange": "Add bounded corner-cut insertion or equivalent flexible path updates, and reject convergence when significant certified free-space corner cuts remain."
+    },
+    {
+      "priority": "P1",
+      "summary": "Author reported final rounded clearance failure at unchanged1.990 mm acceptance boundary; no output was published.",
+      "requiredChange": "Use stricter candidate-only working clearance margin or another conservative precision reserve, then recheck exact rounded output with unchanged production gate."
+    }
+  ],
+  "schemaAndSelectorReview": {
+    "status": "passed",
+    "scope": "Closed optional coupled3D selector, absent-vs-present-null API parity, anchor/front-lead topology restrictions, authoring-only serialization.",
+    "independentTestLog": "......................................                                   [100%]\n38 passed in 2.73s"
+  },
+  "latestReviewedFileSHA256": {
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "31a4896a3e423f23199907fabd8d63481d1890beca90307394e28c1cfac20661",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py": "31d1262891ed33ad28fa1cf5fb459015701044b03a9a77ea3344deb29a63a2c7",
+    "Tools/HangboardCAD/native_cord_routes.py": "bb48d8d2b06237554ea870487c83c36f41b745db8003aba44e097a7820370dd6",
+    "Tools/HangboardCAD/tests/test_native_cord_tightening.py": "e6d22057c35d9f91b63019ee2c58b4f838112cc30f979d1f2fdc6e25796f9fe9",
+    ".context/placid-badger/dual-vertical-review/native-probe-independent-corner-cuts.json": "64de37404e9721a34081b92a07c6a0a9f539ae3c361d4fa67c0eefa13c6de09d",
+    ".context/placid-badger/dual-vertical-review/schema-selector-independent-tests.log": "660a20dceb470df13ea83412308c9ae7d56770a9700decb637f117fadfc30c21"
+  }
+}

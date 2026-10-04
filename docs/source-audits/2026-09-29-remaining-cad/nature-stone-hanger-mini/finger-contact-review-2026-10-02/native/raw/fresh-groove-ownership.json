@@ -1,0 +1,24 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/placid-badger-fresh-groove-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/placid-badger-fresh-groove-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/placid-badger-fresh-groove-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 75364,
+      "pgid": 75364,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+        "--user-cfg",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/placid-badger-fresh-groove-config/user.cfg",
+        "--system-cfg",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/placid-badger-fresh-groove-config/system.cfg",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/fresh-groove-bootstrap.py"
+      ]
+    }
+  ]
+}

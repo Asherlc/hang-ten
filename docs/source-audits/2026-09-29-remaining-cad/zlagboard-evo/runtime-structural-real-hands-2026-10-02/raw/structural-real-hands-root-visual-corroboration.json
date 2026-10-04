@@ -1,0 +1,34 @@
+{
+  "scope": "Root independently viewed these three whole images only; worker reviewed all twelve. No pixel measurement.",
+  "observations": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-landscape/phase-1-preview-plus-5.png",
+      "sha256": "1b8c132a0747c3d2957526c45e978c1ccb96da2aed37dea1d4d351171b9eaca5",
+      "wholeImageDirectlyViewed": true,
+      "boardColor": "red",
+      "timer": "02:55",
+      "boardPhaseColorCorrect": false,
+      "bothHandsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-landscape/phase-2-active-plus-3.png",
+      "sha256": "78cc44814e9a19de371155545e687dab82f19b59ecd8b13e9d9979ca00fca0fb",
+      "wholeImageDirectlyViewed": true,
+      "boardColor": "blue",
+      "timer": "00:04",
+      "boardPhaseColorCorrect": false,
+      "bothHandsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-landscape/phase-2-active-plus-5.png",
+      "sha256": "d8cd7fbe91ba2779911ddf1ff0d99ffa599b30f7b97bfb25eb9cec12f31db02d",
+      "wholeImageDirectlyViewed": true,
+      "boardColor": "red",
+      "timer": "00:02",
+      "boardPhaseColorCorrect": true,
+      "bothHandsVisible": true
+    }
+  ],
+  "conclusion": "Rest and early following Hang remain visually stale; the final sample recovers. Full sequence fails.",
+  "manufacturingOrHardwareClaim": false
+}

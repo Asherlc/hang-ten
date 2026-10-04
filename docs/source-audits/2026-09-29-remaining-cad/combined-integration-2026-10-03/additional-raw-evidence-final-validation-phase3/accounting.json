@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "sourceProofFileCount": 47,
+  "sourceProofBytes": 10763347,
+  "uniqueRetainedFiles": 33,
+  "newCopiedFiles": 26,
+  "newCopiedBytes": 10025063,
+  "reusedProofMappings": 21,
+  "totalDistinctArchiveBytes": 7585389,
+  "archiveCount": 1,
+  "externalResourcesCreated": [],
+  "scope": "Preparation only. Recorded run statuses, interrupted collector results, failures, and additive corrections remain unchanged; no new test/build/runtime PASS, PR, human acceptance, or cleanup claim."
+}

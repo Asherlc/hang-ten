@@ -1,0 +1,20 @@
+{
+  "owner": "placid-badger",
+  "jobName": "placid-badger-plateau13-android-staging",
+  "resources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-android-staging-TMP",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-android-stage",
+      "absent": true
+    }
+  ],
+  "errors": [],
+  "remainingProcesses": [],
+  "processGroupAbsent": true,
+  "allResourcesAbsent": true,
+  "passed": true,
+  "finishedUTC": "2026-10-02T19:12:47.082873+00:00"
+}

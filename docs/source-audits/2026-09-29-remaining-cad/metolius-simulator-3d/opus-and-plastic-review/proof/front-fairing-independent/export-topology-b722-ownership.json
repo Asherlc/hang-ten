@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "export-topology-b722",
+  "timeoutSeconds": 180,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_export_mesh_topology.py",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/assets/primary.usdz",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/export-topology-b722.json"
+  ],
+  "ownedProcessGroup": 22973,
+  "exitCode": 0,
+  "elapsedSeconds": 1.2887426660163328,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

@@ -1,0 +1,8 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "reason": "Hosted readiness test already failed its20-second expectation; stop only automatically spawned600-second diagnose child to finalize exact result bundle.",
+  "pid": 15458,
+  "ppid": 15004,
+  "command": "15004 /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl diagnose -l -b --timeout=600 --log-option=--last --log-option=2m --output=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/tests-placid-badger-cad-second-half.xcresult/Staging/1_Test/Diagnostics/simctl_diagnostics --no-archive --udid=E0AC7F37-369F-414E-B407-353435A0BE03",
+  "epoch": 1791054872.7878
+}

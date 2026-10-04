@@ -1,0 +1,22 @@
+{
+  "consoleOwner": {
+    "exitCode": 0,
+    "stdout": "asherlc\n",
+    "stderr": ""
+  },
+  "hostTimeUTC": {
+    "exitCode": 0,
+    "stdout": "2026-10-02T05:17:25Z\n",
+    "stderr": ""
+  },
+  "macOS": {
+    "exitCode": 0,
+    "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434\n",
+    "stderr": ""
+  },
+  "developerDirectory": {
+    "exitCode": 0,
+    "stdout": "/Applications/Xcode.app/Contents/Developer\n",
+    "stderr": ""
+  }
+}

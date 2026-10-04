@@ -14,10 +14,22 @@ struct WorkoutView: View {
         }
     }
 
+    private struct RendererPreparationContent: Equatable {
+        let presentationID: String
+        let contactIDs: Set<String>
+        let taskIndex: Int
+        let selectedSide: WorkoutSide?
+        let pose: GripHandPose
+        let viewport: CGSize
+        let isLandscape: Bool
+    }
+
     private enum LandscapeLayout {
         static let sideCueSlotWidth: CGFloat = 142
         static let boardMaxHeight: CGFloat = 132
         static let normalCueRowHeight: CGFloat = 149
+        // A segmented selector plus its spacing must not consume the board viewport.
+        static let presentationSelectorHeight: CGFloat = 40
         static let previewLabelHeight: CGFloat = 13
     }
 
@@ -63,6 +75,7 @@ struct WorkoutView: View {
 	    @State private var liftCompletion = WorkoutLiftCompletion()
 	    @State private var pendingCountdownStart: PendingCountdownStart?
 	    @State private var countdownArmTask: Task<Void, Never>?
+        @State private var rendererStartGate = WorkoutRendererStartGate()
 	    @State private var handPreference: WorkoutSessionHandPreference?
 	    /// Preference-expanded steps; source of truth for timeline once set.
 	    @State private var sessionSteps: [WorkoutStep]?
@@ -132,7 +145,13 @@ struct WorkoutView: View {
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
-				let activeHold = board.contacts.first { highlightedHoldIDs.contains($0.id) }
+				let activeHold = resolvedHighlightedStep.flatMap {
+					WorkoutHighlightResolver.contacts(for: $0, on: board,
+						taskIndex: highlightedTaskIndex,
+						selectedHandSide: highlightedSelectedHandSide).first {
+							highlightedHoldIDs.contains($0.id)
+						}
+				}
 				let holdCue = WorkoutHoldCuePolicy.resolve(
 					step: resolvedHighlightedStep,
 					hold: activeHold,
@@ -140,7 +159,34 @@ struct WorkoutView: View {
 					taskIndex: highlightedTaskIndex,
 					selectedHandSide: highlightedSelectedHandSide
 				)
+                let preparationSelection = BoardMapPresentationSelection(
+                    board: board,
+                    requestedPresentationID: WorkoutHighlightResolver.presentationID(
+                        for: resolvedHighlightedStep, on: board,
+                        taskIndex: highlightedTaskIndex,
+                        selectedHandSide: highlightedSelectedHandSide),
+                    activeHoldID: holdCue?.hold?.id,
+                    highlightedHoldIDs: highlightedHoldIDs)
 				let isLandscape = geometry.size.width > geometry.size.height && !dynamicTypeSize.isAccessibilitySize
+                let requiresPreparedHands = holdCue != nil && (
+                    (!isLandscape && holdCue?.hold != nil)
+                    || WorkoutHoldCueVisibilityPolicy.showsCue(
+                        for: .left, step: resolvedHighlightedStep,
+                        taskIndex: highlightedTaskIndex,
+                        selectedHandSide: highlightedSelectedHandSide)
+                    || WorkoutHoldCueVisibilityPolicy.showsCue(
+                        for: .right, step: resolvedHighlightedStep,
+                        taskIndex: highlightedTaskIndex,
+                        selectedHandSide: highlightedSelectedHandSide))
+                let preparationContent = RendererPreparationContent(
+                    presentationID: preparationSelection.presentationID,
+                    contactIDs: highlightedHoldIDs,
+                    taskIndex: highlightedTaskIndex,
+                    selectedSide: highlightedSelectedHandSide,
+                    pose: GripHandPose(posture: holdCue?.gripType,
+                                      fingerConfiguration: holdCue?.fingerConfiguration),
+                    viewport: geometry.size,
+                    isLandscape: isLandscape)
 				let audioMoment = audioMoment(
 					step: step,
 					stepElapsed: stepElapsed,
@@ -200,6 +246,20 @@ struct WorkoutView: View {
 				}
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
 				.background(Color.hangBackground)
+                .environment(\.workoutRendererPreparationID, rendererStartGate.requestID)
+                .onPreferenceChange(WorkoutRendererReadinessKey.self) { readiness in
+                    guard scenePhase == .active,
+                          rendererStartGate.consume(readiness, requiresBoard: true,
+                                                    requiresHands: requiresPreparedHands) else { return }
+                    requestCountdownStart(.initial)
+                }
+                .onChange(of: preparationContent) { _, _ in
+                    guard sessionState.routineStartedAt == nil,
+                          rendererStartGate.requestID != nil else { return }
+                    cancelPendingCountdownArm()
+                    audioCoach.stop()
+                    requestCountdownStart(.initial)
+                }
 				.onChange(of: isComplete) { _, routineComplete in
 					guard routineComplete else { return }
 					finalizeRoutine()
@@ -404,7 +464,8 @@ struct WorkoutView: View {
 			      state != .streaming else { return }
 			interruptRecorderForSensorLoss()
 		}
-		.onDisappear {
+        .onDisappear {
+            rendererStartGate.cancel()
 			countdownArmTask?.cancel()
 			countdownArmTask = nil
 			pendingCountdownStart = nil
@@ -453,6 +514,9 @@ struct WorkoutView: View {
                         board: board,
                         highlightedHoldIDs: highlightedHoldIDs,
                         highlightMode: highlightMode,
+                        selectedPresentationID: WorkoutHighlightResolver.presentationID(
+                            for: cueStep, on: board, taskIndex: highlightedTaskIndex,
+                            selectedHandSide: highlightedSelectedHandSide),
                         activeHoldID: holdCue?.hold?.id
                     )
                     .padding(.horizontal, 2)
@@ -460,10 +524,11 @@ struct WorkoutView: View {
                 }
 				if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
 					holdCue: holdCue,
-					countdown: countdown,
+					countdown: mountedCueCountdown(countdown),
 					isComplete: isComplete,
 					isSkipCountdown: isSkipCountdown
 				) {
+                    Group {
 					if let hold = holdCue.hold {
 						GripDiagramView(
 							hold: hold,
@@ -479,6 +544,10 @@ struct WorkoutView: View {
 							selectedHandSide: highlightedSelectedHandSide
 						)
 					}
+                    }
+                    .opacity(isInitialCountdown && countdown > 0 ? 0 : 1)
+                    .allowsHitTesting(!(isInitialCountdown && countdown > 0))
+                    .accessibilityHidden(isInitialCountdown && countdown > 0)
 				}
 				if let cueCardRows = WorkoutPresentationContent.cueCardRows(
 					step: step,
@@ -553,6 +622,13 @@ struct WorkoutView: View {
 			}
 		}
 	}
+
+    private var isInitialCountdown: Bool { sessionState.countdownKind == .initial }
+
+    private func mountedCueCountdown(_ countdown: Int) -> Int {
+        isInitialCountdown ? 0 : countdown
+    }
+
 
 	@ViewBuilder
 	private func portraitHandCueCards(
@@ -638,6 +714,9 @@ struct WorkoutView: View {
                                 board: board,
                                 highlightedHoldIDs: highlightedHoldIDs,
                                 highlightMode: highlightMode,
+                                selectedPresentationID: WorkoutHighlightResolver.presentationID(
+                                    for: cueStep, on: board, taskIndex: highlightedTaskIndex,
+                                    selectedHandSide: highlightedSelectedHandSide),
                                 activeHoldID: holdCue?.hold?.id,
                                 maximumMapHeight: LandscapeLayout.boardMaxHeight
                             )
@@ -657,7 +736,8 @@ struct WorkoutView: View {
                             side: .right
                         )
                     }
-                    .frame(maxHeight: LandscapeLayout.normalCueRowHeight)
+                    .frame(maxHeight: LandscapeLayout.normalCueRowHeight
+                        + (board.presentations.count > 1 ? LandscapeLayout.presentationSelectorHeight : 0))
                 }
 
                 if isComplete {
@@ -729,7 +809,7 @@ struct WorkoutView: View {
 				for: side == .left ? .left : .right,
 				holdCue: holdCue,
 				cueStep: cueStep,
-				countdown: countdown,
+				countdown: mountedCueCountdown(countdown),
 				isComplete: isComplete,
 				isSkipCountdown: isSkipCountdown,
 				taskIndex: taskIndex,
@@ -741,6 +821,9 @@ struct WorkoutView: View {
 					side: side,
 					usesSharedPairPreview: usesSharedPairPreview
 				)
+                .opacity(isInitialCountdown && countdown > 0 ? 0 : 1)
+                .allowsHitTesting(!(isInitialCountdown && countdown > 0))
+                    .accessibilityHidden(isInitialCountdown && countdown > 0)
 			}
 		}
 		.frame(width: LandscapeLayout.sideCueSlotWidth)
@@ -859,8 +942,8 @@ struct WorkoutView: View {
 
     @ViewBuilder
     private func phaseIndicator(step: WorkoutStep, countdown: Int, isResting: Bool) -> some View {
-        let title = countdown > 0 ? "Ready" : isResting ? "Rest" : intervalLabel(for: step)
-        if countdown > 0 || step.title.caseInsensitiveCompare(title) != .orderedSame {
+        let title = rendererStartGate.isPending ? "Preparing" : countdown > 0 ? "Ready" : isResting ? "Rest" : intervalLabel(for: step)
+        if rendererStartGate.isPending || countdown > 0 || step.title.caseInsensitiveCompare(title) != .orderedSame {
             Pill(
                 title: title,
                 tint: countdown > 0 ? Color.hangInk : isResting ? WorkoutPhase.rest.textTint : step.phase.textTint,
@@ -896,6 +979,11 @@ struct WorkoutView: View {
                 .foregroundStyle(Color.hangInk)
 
             if !isComplete {
+                if rendererStartGate.isPending {
+                    Text("Preparing 3D views…")
+                        .font(.subheadline)
+                        .accessibilityIdentifier("workout.preparingRenderers")
+                }
                 if !step.isRestStep {
                     let labels = WorkoutStepFormatting.labels(
                         for: step,
@@ -1043,7 +1131,23 @@ struct WorkoutView: View {
         )
     }
 
+    @ViewBuilder
     private func controlButton(isComplete: Bool, countdown: Int) -> some View {
+        if rendererStartGate.isPending {
+            Button {
+                cancelPendingCountdownArm()
+                audioCoach.stop()
+            } label: {
+                Label("Cancel preparation", systemImage: "xmark")
+                    .frame(maxWidth: .infinity)
+                    .font(.system(.callout, design: .rounded, weight: .bold))
+                    .foregroundStyle(Color.hangInk)
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 16)
+                    .background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 17))
+            }
+            .buttonStyle(.plain)
+        } else {
         WorkoutPrimaryControl(
             isComplete: isComplete,
             countdown: countdown,
@@ -1057,6 +1161,7 @@ struct WorkoutView: View {
             } else {
                 toggleRunning()
             }
+        }
         }
     }
 
@@ -1166,7 +1271,7 @@ struct WorkoutView: View {
 			)
 		}
 		let monotonicTime = WorkoutClock.monotonicTime
-		if pendingCountdownStart != nil || countdownArmTask != nil {
+		if rendererStartGate.isPending || pendingCountdownStart != nil || countdownArmTask != nil {
             let shouldPause = WorkoutSessionPolicy.shouldPauseAfterCancellingPendingCountdown(
                 kind: pendingCountdownStart?.kind,
                 isRunning: sessionState.activeStartUptime != nil
@@ -1174,6 +1279,7 @@ struct WorkoutView: View {
 			countdownArmTask?.cancel()
 			countdownArmTask = nil
 			pendingCountdownStart = nil
+            rendererStartGate.cancel()
 			audioCoach.stop()
             guard shouldPause else { return }
 		}
@@ -1205,6 +1311,7 @@ struct WorkoutView: View {
     }
 
 	private func requestCountdownStart(_ countdown: PendingCountdownStart) {
+        if countdown == .initial, !rendererStartGate.requestFirstStart() { return }
 		if audioCuesEnabled,
 		   WorkoutSessionPolicy.shouldPrepareCountdownAudio(
 			preparationState: audioCoach.countdownPreparationState
@@ -1266,6 +1373,7 @@ struct WorkoutView: View {
 	) {
 		switch countdown {
 		case .initial:
+            rendererStartGate.finishPreparation()
 			sessionState.toggleRunning(uptime: armUptime, now: Date())
 		case .skip(let targetElapsed):
 			sessionState.startSkipCountdown(to: targetElapsed, at: armUptime)
@@ -1273,6 +1381,7 @@ struct WorkoutView: View {
 	}
 
     private func cancelCountdown() {
+        rendererStartGate.cancel()
 		let monotonicTime = WorkoutClock.monotonicTime
 		sessionState.cancelCountdown(at: monotonicTime)
 		audioCoach.stop()
@@ -1312,6 +1421,7 @@ struct WorkoutView: View {
 	}
 
 	private func cancelPendingCountdownArm() {
+        rendererStartGate.cancel()
 		countdownArmTask?.cancel()
 		countdownArmTask = nil
 		pendingCountdownStart = nil
@@ -1740,4 +1850,103 @@ struct WorkoutView: View {
 			- sessionState.pausedElapsed
 			- TimeInterval(remaining)
 	}
+}
+
+
+/// Current mounted hosts, not cached resources or proof of a displayed frame.
+struct WorkoutRendererReadiness: Equatable {
+    enum Kind: Equatable { case board, hand }
+    struct Renderer: Equatable {
+        enum Status: Equatable { case loading, ready, unavailable }
+        let kind: Kind
+        let status: Status
+        let preparationID: UUID?
+        var isReady: Bool { status == .ready }
+
+        init(kind: Kind, isReady: Bool, preparationID: UUID? = nil) {
+            self.init(kind: kind, status: isReady ? .ready : .loading, preparationID: preparationID)
+        }
+
+        init(kind: Kind, status: Status, preparationID: UUID? = nil) {
+            self.kind = kind
+            self.status = status
+            self.preparationID = preparationID
+        }
+    }
+    var renderers: [UUID: Renderer] = [:]
+    func isReady(requiresBoard: Bool, requiresHands: Bool) -> Bool {
+        (!requiresBoard || renderers.values.contains { $0.kind == .board })
+            && (!requiresHands || renderers.values.contains { $0.kind == .hand })
+            && renderers.values.allSatisfy(\.isReady)
+    }
+
+    /// Terminal load failures use the existing unavailable fallback. They
+    /// finish preparation without certifying successful renderer setup.
+    func isResolved(requiresBoard: Bool, requiresHands: Bool) -> Bool {
+        (!requiresBoard || renderers.values.contains { $0.kind == .board })
+            && (!requiresHands || renderers.values.contains { $0.kind == .hand })
+            && renderers.values.allSatisfy { $0.status != .loading }
+    }
+}
+
+
+struct WorkoutRendererReadinessKey: PreferenceKey {
+    static var defaultValue: WorkoutRendererReadiness { .init() }
+    static func reduce(value: inout WorkoutRendererReadiness,
+                       nextValue: () -> WorkoutRendererReadiness) {
+        value.renderers.merge(nextValue().renderers) { _, current in current }
+    }
+}
+
+private struct WorkoutRendererPreparationIDKey: EnvironmentKey {
+    static let defaultValue: UUID? = nil
+}
+
+extension EnvironmentValues {
+    /// A new start intent requires fresh synchronization of the mounted hosts.
+    /// Nil leaves non-workout renderers outside the preparation protocol.
+    var workoutRendererPreparationID: UUID? {
+        get { self[WorkoutRendererPreparationIDKey.self] }
+        set { self[WorkoutRendererPreparationIDKey.self] = newValue }
+    }
+}
+
+
+/// First-start intent is consumed once. Late host changes cannot restart a
+/// cancelled preparation, and resume/Skip never enter this policy.
+struct WorkoutRendererStartGate {
+    private(set) var requestID: UUID?
+    private(set) var isPending = false
+    private var isReleased = false
+
+    mutating func requestFirstStart() -> Bool {
+        if isReleased { return true }
+        if !isPending { requestID = UUID() }
+        isPending = true
+        return false
+    }
+
+    mutating func consume(_ readiness: WorkoutRendererReadiness,
+                          requiresBoard: Bool, requiresHands: Bool) -> Bool {
+        guard isPending,
+              readiness.renderers.values.allSatisfy({ $0.preparationID == requestID }),
+              readiness.isResolved(requiresBoard: requiresBoard,
+                                   requiresHands: requiresHands) else { return false }
+        isPending = false
+        isReleased = true
+        return true
+    }
+
+    mutating func finishPreparation() {
+        // Once the initial countdown starts, later phase/camera changes use
+        // the normal renderer path without preparation-driven invalidations.
+        requestID = nil
+        isPending = false
+    }
+
+    mutating func cancel() {
+        requestID = nil
+        isPending = false
+        isReleased = false
+    }
 }

@@ -1,0 +1,11 @@
+{
+  "atUTC": "2026-10-02T06:13:46.073162+00:00",
+  "evidence": "Scene-only trace shows same attached scene material blue while02:56 rest screenshot remains red. This establishes correct selection/material state with stale displayed color for that capture; missed-callback/stale-installed-code hypotheses insufficient.",
+  "design": "Outer selection observer assigns @State synchronizedSelection. RealityView make/update explicitly read the state and apply selection there, guarded by scene identity. Framing and pose/unavailable handling retained.",
+  "productionPatchSHA256": "758c00c5fe25e27933dfd9bfe2f269baa22ca3a085f9974cd4c5d56191b506c6",
+  "diagnosticReversion": {
+    "HangTen/Models/BoardModelRealityTypes.swift": true,
+    "HangTen/Views/RootView.swift": true
+  },
+  "testAndRuntime": "pending worker actual verification; not yet claimed fixed"
+}

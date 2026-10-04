@@ -1,0 +1,55 @@
+{
+  "reviewer": "baguette_review_prep",
+  "createdUTC": "2026-10-03T14:33:42.528383+00:00",
+  "scope": [
+    "HangTen/Models/BoardModelRealityTypes.swift",
+    "HangTenTests/BoardModelRealityTests.swift"
+  ],
+  "resolution": [
+    "Keep Main baked mesh reflection helpers, material face culling, animated contact-aware selection camera, live ropes and lifecycle.",
+    "Use branch instance-relative path-aware finish lookup/inheritance while retaining Main finish factories.",
+    "Keep branch shared-contact primary picking and union highlighting after Main selection camera logic.",
+    "Keep native cadRoutedCord solver case. Native routes return no generic rigid-pivot pose: exact solved body/cord preserved under camera orbit; Main authored single/paired/twoBranch pivot behavior unchanged.",
+    "Combine both conflicting test groups, retain every test name from both parents, keep four experimental cache cases; add focused native CAD orbit placement regression."
+  ],
+  "inputs": {
+    "HEAD": "e1cc8ff270ba1a0b16b621582f2fc8296b5dd64e",
+    "MERGE_HEAD": "d53c019c43319a70b32e6dc654814de29e87ab89"
+  },
+  "files": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "a8ddd62b3962870a6d42b7d5de15756f7ec0f7d38cd49e95141f5cd91204b00e"
+    },
+    {
+      "path": "HangTenTests/BoardModelRealityTests.swift",
+      "sha256": "e720fe71b08bf5d0e4d25a916c5e4fd36b7876a827f1ae5468260b6cb9cc0e10"
+    }
+  ],
+  "testInventory": {
+    "HEAD": {
+      "originalTestCount": 26,
+      "missingTests": []
+    },
+    "MERGE_HEAD": {
+      "originalTestCount": 61,
+      "missingTests": []
+    }
+  },
+  "combinedTests": 72,
+  "duplicates": [],
+  "additionalRegression": "testNativeCADRouteOrbitPreservesSolvedBodyAndCord",
+  "verification": {
+    "swiftFrontendParse": "PASS on final assigned file bytes",
+    "assignedFileDiffCheck": "PASS",
+    "testsExecuted": false,
+    "buildExecuted": false,
+    "indexChanged": false
+  },
+  "limits": [
+    "Actual typecheck and focused tests require root integration with remaining schema/view conflicts. Parse alone is not build or behavior validation.",
+    "Existing Main paired-lead/twoBranch fixture expectations retained exactly; package selection in remaining merge must preserve their canonical source intent.",
+    "Experimental completed-frame coordinator remains disabled by default and requires separate validation against Main animated-camera/live-motion semantics.",
+    "No native geometry, solver extension, out-of-scope package or evidence acceptance changes."
+  ]
+}

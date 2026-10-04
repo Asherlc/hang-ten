@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "recordedUTC": "2026-10-03T01:45:48.095135+00:00",
+  "status": "holding_canonical_install",
+  "canonicalSourceSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+  "rejectedScratchSourceSHA256": "3befc7e58894d76f7f7f70bdab82c33f3bf9901bf61512b4aa555b495bf862a4",
+  "diagnosticReport": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/native-check.json",
+  "diagnosticReportSHA256": "b4bfdac2f79bf3b8a01b0668dbb2d8a995d9dde5137b8c5cec31d385536b990b",
+  "finding": "After reopen/recompute sloper-30-left loses original broad face; zero missing body coverage but reverse baseline preservation misses 6821.1770017157505 mm2. No export or canonical install. Native author owns binding correction; exact coverage/preservation tolerance stays unchanged.",
+  "canonicalMutation": false,
+  "exportsCompleted": 0,
+  "resourcesCreated": []
+}

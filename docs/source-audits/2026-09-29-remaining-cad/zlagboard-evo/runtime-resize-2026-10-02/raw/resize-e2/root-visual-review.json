@@ -1,0 +1,129 @@
+{
+  "captures": [
+    {
+      "file": "phase-0-clear-plus-0.25.png",
+      "sha256": "f16814219e626fa8896c668cbf4020f46fdcb995a0b3e652ee44f7e64a88114a",
+      "matchesPriorRootViewedSameCapture": false,
+      "differentImageRootOpened": true
+    },
+    {
+      "file": "phase-0-clear-plus-1.png",
+      "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-0-clear-plus-3.png",
+      "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-0-clear-plus-7.png",
+      "sha256": "529cb65d5ee241a4f9d0b0351adcc133ee9c96c0f9c04e984fe62452b775817c",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-1-active-plus-0.25.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-1-active-plus-1.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-1-active-plus-3.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-1-active-plus-7.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-2-preview-plus-0.25.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-2-preview-plus-1.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-2-preview-plus-3.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-2-preview-plus-7.png",
+      "sha256": "7d35b71fe116d74a7ce3188c327d803b9f56a8f0b971dc287d2737ff4ad87687",
+      "matchesPriorRootViewedSameCapture": false,
+      "differentImageRootOpened": true
+    },
+    {
+      "file": "phase-3-active-plus-0.25.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-3-active-plus-1.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-3-active-plus-3.png",
+      "sha256": "ff94b47347846fb7a8c3c963a9885a18aeec5d5b00d9fb51f11165035eda4c00",
+      "matchesPriorRootViewedSameCapture": false,
+      "differentImageRootOpened": true
+    },
+    {
+      "file": "phase-3-active-plus-7.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-4-preview-plus-0.25.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-4-preview-plus-1.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-4-preview-plus-3.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    },
+    {
+      "file": "phase-4-preview-plus-7.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "matchesPriorRootViewedSameCapture": true,
+      "differentImageRootOpened": false
+    }
+  ],
+  "visualVerdict": "All board states correct; 17 whole files match root-reviewed caption-E captures. Three differing whole images individually opened: respectively clear, blue, red board states with far-left black rounded capsule.",
+  "limits": [
+    "Artifact origin unproven; do not infer a user action or normalize raw images.",
+    "Fixed-size isolated control only; no workout repair."
+  ]
+}

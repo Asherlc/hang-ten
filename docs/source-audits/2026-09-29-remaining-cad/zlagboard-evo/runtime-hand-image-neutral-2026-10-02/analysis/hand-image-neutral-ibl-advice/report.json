@@ -1,0 +1,51 @@
+{
+  "scope": "Read-only conditional design advice, no implementation or runtime",
+  "condition": "Only if corrected orientation still fails visibility and actual submitted resource-presence is nil; nil alone does not prove absence of undocumented fallback.",
+  "recommendation": {
+    "purpose": "Explicit controlled cue appearance adaptation, not matching or recovering private system lighting",
+    "steps": [
+      "Create one analytic constant achromatic CGImage with declared color space, alpha and fixed source radiance; no source image, texture sampling, histogram or pixel tuning. A unit linear-neutral value is a transparent design choice, not a measured lighting fact.",
+      "Generate an EnvironmentResource once per image coordinator with the public async init(equirectangular:withName:). No private resource names or bundled unknown studio asset.",
+      "Assign renderer.lighting.resource and explicitly intensityExponent=0. Preserve directional lights, CustomMaterial, camera, tone mapping, texture format and CI color conversion.",
+      "Prepare this resource before submitting any GPU frame; retain it with renderer/frame. Coalesce pending semantic requests during async preparation and publish only current revision. Fail closed on generation error.",
+      "Evaluate one fixed static image against retained live cues for visible pose/finger membership/clipping, while explicitly allowing declared shading adaptation. Do not tune a scalar until screenshots look alike."
+    ],
+    "expectedBenefit": "Adds known omnidirectional diffuse/specular illumination, reducing dependence on unspecified host environment defaults. Visibility must still be demonstrated, not promised.",
+    "limits": [
+      "Unit white and exponent0 are chosen design values, not documented Apple default or factory/physical illumination.",
+      "May flatten shading or produce overly bright/specular cues; failed whole-view result is a failure, not permission for an unbounded search.",
+      "Generation latency and MainActor conversion remain prototype costs; no sustained energy claim.",
+      "No evidence yet that this addresses workout color staleness."
+    ]
+  },
+  "strongerAlternative": {
+    "description": "Use the same explicit public ImageBasedLightComponent and ImageBasedLightReceiverComponent on the same hand entities for both live and offscreen rendering.",
+    "tradeoff": "Better controls environment-resource identity but changes live reference and adds receiver authoring. This is a separate boundary/appearance decision, unnecessary before first minimal offscreen visibility trial."
+  },
+  "apiEvidence": [
+    {
+      "url": "https://developer.apple.com/documentation/realitykit/environmentresource/init(equirectangular:withname:)",
+      "claim": "Public MainActor async throwing resource generation from a CGImage; available iOS18 in current SDK."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/realitykit/realityrenderer/imagebasedlight/intensityexponent",
+      "claim": "Exponent0 uses supplied intensities unchanged; other values multiply by powers of2."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/realitykit/realityrenderer/imagebasedlight/resource",
+      "claim": "Public optional EnvironmentResource assignment."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/realitykit/imagebasedlightcomponent",
+      "claim": "Public explicit IBL component alternative."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/realitykit/imagebasedlightreceivercomponent",
+      "claim": "Public component associating receiver with light entity."
+    }
+  ],
+  "sdkQualification": "Current equirectangular:withName: initializer supports deployment18. New equirectangular:options: is iOS27+, so do not use it unguarded on owned26.4 runtime.",
+  "sourceChanged": false,
+  "runtimeTouched": false,
+  "rawPrimaryDocs": "Research scratch only; publish links/paraphrase rather than full copyright text."
+}

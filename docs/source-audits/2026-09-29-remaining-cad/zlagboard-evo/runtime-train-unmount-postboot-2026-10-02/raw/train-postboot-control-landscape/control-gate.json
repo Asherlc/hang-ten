@@ -1,0 +1,85 @@
+{
+  "valid": true,
+  "visualFailure": true,
+  "validatorChecks": {
+    "train-navigation-validation.json": {
+      "readinessPassedWithinBound": true,
+      "readinessEvidenceInCompleteTrace": true,
+      "readinessBeforeOpenURL": true,
+      "initialTrainConstructorAndMakeBeforeOpenURL": true,
+      "exactlyInitialFalseThenTrue": true,
+      "initialBoardMapBeforeOpenURL": true,
+      "navigationTrueAfterOpenURLBeforeFirstHang": true,
+      "requestedBranchMatchesAction": true,
+      "expectedBoardPlanPresentation": true,
+      "navFlagsCorrect": true,
+      "sameReadyPredecessorIsDetached": true,
+      "distinctWorkoutExactlyOne": true
+    },
+    "normal-host-frame-validation.json": {
+      "workoutSceneFromCountdown": true,
+      "hostObserved": true,
+      "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+      "sameHost": true,
+      "sameActualScene": true,
+      "rootCameraActiveSameScene": true,
+      "hostVisible": true,
+      "sampledFramesOnMonotoneOwnEndpointPath": true,
+      "allPostFirstCaptureCensusesFinal": true
+    },
+    "hand-lifetime-validation.json": {
+      "completeOpeningStream": true,
+      "instrumentationVersion": true,
+      "suppressionFlagCorrect": true,
+      "allFourCountsOnEveryRecord": true,
+      "openingCountsZero": true,
+      "countsMonotonic": true,
+      "finalMarkerAfterLastCapture": true,
+      "noRecorderErrorOrCap": true,
+      "strictOFFZeroAllFourLifetimeCounts": true
+    },
+    "guarded-detach-validation.json": {
+      "commonTrial": true,
+      "normalTrainPresentHandsOff": true,
+      "exactTwoConstructorsAndMakes": true,
+      "oneBeforeAfterTrainOnly": true,
+      "actionFlagCorrect": true,
+      "allHostsRetainedCurrentValid": true,
+      "tagMatchesExactPredecessor": true,
+      "oneStableOwnerPerHost": true,
+      "beforeOwnershipObserved": true,
+      "actionBeforeFirstHang": true,
+      "commonDetachEnabledBothArms": true,
+      "structuralFlagMatchesArm": true,
+      "exactEnvironmentAllowlist": true,
+      "postActionEveryTrialHasPredecessor": true,
+      "bothHostsPresentFromFirstHang": true,
+      "workoutAttachedUnmarkedUnchanged": true,
+      "expectedPredecessorAttachmentThroughout": true,
+      "weakPredecessorAliveEveryPostObservation": true,
+      "weakMembershipMatchesAction": true,
+      "weakEntityIDsPreserved": true,
+      "observationsThroughTail": true
+    },
+    "strict-absence-validation.json": {
+      "strictFlagEnabled": true,
+      "perspectiveFlagAbsent": true,
+      "openingStrictEnabled": true,
+      "allFourCountsZeroThroughout": true,
+      "noHandLifecycleEvents": true,
+      "noHandCameraEvents": true
+    },
+    "train-constructor-validation.json": {
+      "completeContiguous": true,
+      "openingBeforeConstructors": true,
+      "uniqueConstructorTokens": true,
+      "exactlyOneWorkoutConstructor": true,
+      "exactlyOneWorkoutMake": true,
+      "allSceneRecordsHaveConstructor": true,
+      "markerGateMatches": true,
+      "strictHandsEnabled": true,
+      "observedPredecessorConstruction": true
+    }
+  },
+  "conditionalSingleUnmountAuthorized": true
+}

@@ -1,0 +1,49 @@
+{
+  "scope": "Independent read-only Python lane review; no suite/native compile/simulator/solve execution",
+  "reviewedFilesSHA256": {
+    "Tools/HangboardModels/contact_model_descriptor.py": "56d898f05b2eb0c60c7978f34d6d3e1c093d64e41fc7a8dac298bcc68f168c4a",
+    "Tools/HangboardCAD/compile_board.py": "1bc0dae7b345311dbf71b6feb9d5cf5d82f2643e7609ad2df41f931a0f48f3d3",
+    "Tools/HangboardCAD/contract.py": "e92e39ed8eb802d7f0d33645aade64c274ff5f1b2769e3621fedd462933ed102",
+    "Tools/HangboardPackages/src/hangboard_packages/board_catalog.py": "34395b1937d00163a69ac5468ef94f9b77a07e67449b28c2a8acbaaa1f8888d4",
+    "Tools/HangboardCAD/tests/test_shared_contact_membership_cad.py": "41af387478f9362cd7a7982f09dd54a477de420f4b45ea16802cc04be4053929",
+    "Tools/HangboardModels/tests/test_shared_contact_membership.py": "f1522bbf5736b13c07d4d8c00ed9d1fd4bac23453cee9ce4dad600549946e7e8",
+    "Tools/HangboardPackages/tests/test_shared_contact_membership_package.py": "43d0a17c4b93ec522fdb3488094b619de8c753ea282ae142307953cc228180e8"
+  },
+  "findings": [
+    {
+      "id": "SHARED-DEPTH-UNRELATED-AGGREGATION",
+      "severity": "P2",
+      "path": "Tools/HangboardCAD/compile_board.py",
+      "line": 600,
+      "status": "resolved",
+      "problem": "When any source contact has AdditionalContactIDs, _depth_regions groups every contact by primary ID, relaxing existing per-node published-depth checks for unrelated contacts.",
+      "reproduction": "Two edge components each Z20 positioned at [-30,-10] and [10,30], published edge60: fail without sharing; pass once unrelated jug/pinch shared pair added.",
+      "recommendedFix": "Use logical membership union only for IDs present in additionalContactIDs; preserve per-node measurements for IDs that receive no additional membership.",
+      "evidence": "unrelated-depth-probe.json",
+      "resolvedCompilerSHA256": "34b0a92874d739c70b6bb48c63e8730297b6fda6f610f34c90ccb895c23fe167",
+      "resolution": "Only IDs explicitly targeted by additionalContactIDs use union grouping. Others retain legacy per-node checks, independently confirmed by actual-function probe."
+    }
+  ],
+  "checked": [
+    "Native property type/format matches exact authored metadata",
+    "v1-only native/descriptor/package support and v2 closed-key rejection",
+    "nonempty/sorted/unique membership and primary repetition validation",
+    "unknown identity rejected by manifest/descriptor membership inventory checks",
+    "body and attachment extras rejected",
+    "exact nodeIDs union derivation and parser validation",
+    "shared recipient outline rejected in compile/read/package layers",
+    "shared logical depth follows primary axis and primary witnesses",
+    "conflicting primary metadata and missing primary rejected",
+    "one mesh export loop unchanged; membership affects descriptor only",
+    "nonsharing descriptor serialization omits added field",
+    "tests cover membership malformed inputs, union bounds, stale node inventory, old outline, axis conflict and missing primary"
+  ],
+  "limitations": [
+    "Did not execute full test suite or inspect compiled output; root owns those checks.",
+    "Runtime Swift lane not included in this review.",
+    "Current NUG has unique primaries, so unrelated-depth finding affects generic mixed-source validation rather than current NUG result."
+  ],
+  "closureEvidence": "unrelated-depth-probe-fixed.json",
+  "finalReviewedCompilerSHA256": "34b0a92874d739c70b6bb48c63e8730297b6fda6f610f34c90ccb895c23fe167",
+  "openFindings": []
+}

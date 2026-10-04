@@ -1,0 +1,74 @@
+223:     init(descriptor: BoardModelDescriptor, display: BoardModelDisplay, suspension: BoardModelSuspension?, orientation: BoardModelOrientation?, allowedPositionIDs: Set<String>, instances: [BoardModelInstance]? = nil, resourceLease: BoardModelRealityResourceLease) {
+224:         self.descriptor = descriptor
+225:         self.display = display
+226:         self.suspension = suspension
+227:         self.orientation = orientation
+228:         self.allowedPositionIDs = allowedPositionIDs
+229:         self.instances = instances
+230:         self.resourceLease = resourceLease
+231:         let woodNodes = Set(display.woodNodeIDs)
+232:         let plasticNodes = Set(display.plasticNodeIDs)
+233:         let graniteNodes = Set(display.graniteNodeIDs)
+234:         self.finishByNodeID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map {
+235:             ($0.nodeID, $0.role == .attachment ? .neutral
+236:                 : woodNodes.contains($0.nodeID) ? .wood
+237:                 : plasticNodes.contains($0.nodeID) ? .plastic
+238:                 : graniteNodes.contains($0.nodeID) ? .granite : display.surfaceFinish)
+239:         })
+240:     }
+
+1340: final class BoardModelRealityLoader {
+1341:     static func load(
+1342:         board: BoardRevision,
+1343:         presentation: BoardPresentation,
+1344:         store: BoardPackageStore = BoardCatalog.packageStore,
+1345:         resourceAccess: BoardModelResourceAccess = .live
+1346:     ) async throws -> BoardModelRealityScene {
+1347:         guard case .model(let media) = presentation.media else {
+1348:             throw BoardModelRealityError.presentationNotModel
+1349:         }
+1350: 
+1351:         guard await BoardModelRealityLoadGate.acquire() else {
+1352:             throw BoardModelRealityError.loadGateCancelled
+1353:         }
+1354:         defer { BoardModelRealityLoadGate.release() }
+1355: 
+1356:         let key = BoardModelRealityKey(
+1357:             boardID: board.id,
+1358:             presentationID: presentation.id,
+1359:             modelSHA256: media.descriptor.modelSHA256
+1360:         )
+1361: 
+1362:         guard let source = try await BoardModelRealityCache.source(
+1363:             for: key,
+1364:             media: media,
+1365:             board: board,
+1366:             presentationID: presentation.id,
+1367:             store: store,
+1368:             resourceAccess: resourceAccess
+1369:         ), !Task.isCancelled else {
+1370:             if Task.isCancelled { throw CancellationError() }
+1371:             throw BoardModelRealityError.resourceUnavailable
+1372:         }
+1373: 
+1374:         let scene = BoardModelRealityScene(
+1375:             descriptor: media.descriptor,
+1376:             display: media.display,
+1377:             suspension: media.suspension,
+1378:             orientation: media.orientation,
+1379:             allowedPositionIDs: Set(board.positions.filter {
+1380:                 $0.presentationID == presentation.id
+1381:             }.map(\.id)),
+1382:             instances: media.instances,
+1383:             resourceLease: source.resourceLease
+1384:         )
+1385: 
+1386:         // Load the USDZ model via ModelIO
+1387:         try await scene.load(usdzURL: source.resourceLease.url)
+1388: 
+1389:         // The resource lease is now owned by the scene and will be released
+1390:         // when the scene is deallocated (after async texture streaming completes).
+1391:         // Do NOT release it here.
+1392: 
+1393:         return scene
+1394:     }

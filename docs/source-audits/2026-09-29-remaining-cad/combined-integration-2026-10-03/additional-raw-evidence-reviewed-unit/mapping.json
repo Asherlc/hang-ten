@@ -1,0 +1,431 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "preparedUTC": "2026-10-04T00:00:06Z",
+  "sourceScopes": [
+    "full-unit-reviewed-corrections",
+    "build-reviewed-corrections"
+  ],
+  "explicitlyExcluded": "Active board-ui-reviewed-corrections, DerivedData/apps, unarchived current active results, tmp fixtures, canonical packages, queues, and historical records.",
+  "preservationMethod": "Exact byte copy or exact SHA-256 identity reuse; source/retained paths identify every requested proof even when repeated images or empty logs share one stored copy.",
+  "statuses": "Original recorded statuses are preserved in their unchanged raw files; packaging does not reinterpret or upgrade them.",
+  "files": [
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/controller.command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/controller.command.json",
+      "sha256": "bcc0a74bd54c5ab693cc5a439171ffb8d323ead1ff28f660213c96bbef800cb2",
+      "bytes": 184,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/controller.exit.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/controller.exit.json",
+      "sha256": "3ec4ec744e766c97a75c05108271b7911da4aae1070f276e3feded7864bd09b2",
+      "bytes": 134,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/controller.stderr",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/controller.stdout",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stdout",
+      "sha256": "e5f583acf689f5b93d95a84d3706918977b14efead65b3b362c6335bdd0eb8be",
+      "bytes": 189,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/device.command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/device.command.json",
+      "sha256": "15982672001facb0c28c49f5b0801a56ce59a1d76be060e8bc66f29b9f303562",
+      "bytes": 189,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/device.exit.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/device.exit.json",
+      "sha256": "c21b8fd783f6ffc6eda45f67404dc8e5836c1eaf1faf7b0ce2556902ef4ecd4d",
+      "bytes": 132,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/device.stderr",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/device.stdout",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/device.stdout",
+      "sha256": "17257059dc6785c3a4840ee3cf6e4401ca8eb3e1cc675869adc38c5e5814d6ed",
+      "bytes": 56779,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/post-tests-owned-process-census.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/post-tests-owned-process-census.json",
+      "sha256": "99815c019d6d8f73f178a2be5043f04b6e972fa6c52df454f15b96a7ead30d54",
+      "bytes": 2735,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult.archive.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult.archive.json",
+      "sha256": "8809b24c0bd6a5f7aa6c8cadbaf9b5a4e68fa6faec8a589cb4d5988fad0aa5aa",
+      "bytes": 1311506,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult.deletion.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult.deletion.json",
+      "sha256": "2546c3068767ad87a463208970d00736c6eec9d676afc215c47f3d6807418427",
+      "bytes": 267,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult.zip",
+      "sha256": "e1dd6ebd817de1d0bdc80f56b89623c5e5d3fad6037503a45ec30e26a42ac520",
+      "bytes": 50327156,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/tests.command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/tests.command.json",
+      "sha256": "bdb9e76bff573978c77159d2e838f6b3f0f6555eeefe44bd130b9fffa9c2b34f",
+      "bytes": 981,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/tests.exit.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/tests.exit.json",
+      "sha256": "df8f0c69c25a38f0c90bdd43a1dfa3274c52e73774d53bb8c84e2dd012c3bdfc",
+      "bytes": 131,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/tests.stderr",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/tests.stderr",
+      "sha256": "f8c14cd3b6e0ecdb660ce7f9472c81d9a84034162532de03440339da6405e9d6",
+      "bytes": 585,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/tests.stdout",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/tests.stdout",
+      "sha256": "fc6835960667ee56ddb2f2c7fcbd94e9579a13a0a28b912cf2f016846a2e2f97",
+      "bytes": 747493,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/build-placid-badger-cad-second-half-reviewed-corrections.xcresult.archive.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/build-placid-badger-cad-second-half-reviewed-corrections.xcresult.archive.json",
+      "sha256": "7f9e41aadc54b2b600f63175d5711fbf7ce53a92297ae5cf0377a83d1e6ce87d",
+      "bytes": 2789,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/build-placid-badger-cad-second-half-reviewed-corrections.xcresult.deletion.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/build-placid-badger-cad-second-half-reviewed-corrections.xcresult.deletion.json",
+      "sha256": "7738c433e40ae34244d91192115152525c96a2364dded903b19fb1c07711043d",
+      "bytes": 257,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/build-placid-badger-cad-second-half-reviewed-corrections.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/build-placid-badger-cad-second-half-reviewed-corrections.xcresult.zip",
+      "sha256": "90991050c0b1bd5bceb002b080f8c5d16690526d659ac2537538b8371eeb3bb8",
+      "bytes": 34283,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/build.command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/build.command.json",
+      "sha256": "beef11589a823ef614e6568dc8ce0f31ddfccb6deaa6e7495037d6907087277c",
+      "bytes": 918,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/build.exit.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/build.exit.json",
+      "sha256": "70c8e24d4a4a68f90295c38059f2d524ec711b42e313e4f090572364eada3d27",
+      "bytes": 131,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/build.stderr",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/build.stdout",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/build.stdout",
+      "sha256": "e4565f808e6b2cb7d270634bf43249b976de3005e8186f51419fc456faa2a8d9",
+      "bytes": 308150,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/canonical-preservation-preflight.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/build/canonical-preservation-preflight.json",
+      "sha256": "b8a82df381dcec7a03bae1162f5d4dd85cec9f6afa78509a90c61d8169c67ef1",
+      "bytes": 29539,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/container.command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/container.command.json",
+      "sha256": "d1d1fa3b848a1f0d90e2e682f13ea1192ddf78e035a7e140603f4032b165e97b",
+      "bytes": 256,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/container.exit.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/container.exit.json",
+      "sha256": "37227be6f9449cf176338287bbaf2d6f10e3cf0c1c1da10429a4be355b871cd6",
+      "bytes": 133,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/container.stderr",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/container.stdout",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/container.stdout",
+      "sha256": "0da9165c65267684e904b93e1e921189f2909561b47f3628c28ae2d840fe6f87",
+      "bytes": 176,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/controller.command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/controller.command.json",
+      "sha256": "4c60fffa6b35aba0c92ca0e7969d70f85f0e8addc191e6a49ed517f94e267cd4",
+      "bytes": 184,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/controller.exit.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/controller.exit.json",
+      "sha256": "63a990bdf6a94344d5c22cf85f2385574715fd43cb9dd2f8ea2a69bb164501e9",
+      "bytes": 134,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/controller.stderr",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/controller.stdout",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stdout",
+      "sha256": "e5f583acf689f5b93d95a84d3706918977b14efead65b3b362c6335bdd0eb8be",
+      "bytes": 189,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/device.command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/device.command.json",
+      "sha256": "1a36d13a2e0b910e76e552e870dfeee5e67bc5e482b3ad794e7dc5512ade0ba6",
+      "bytes": 189,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/device.exit.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/device.exit.json",
+      "sha256": "a57f0396e17a0e266ebebecc1f21a9191079a895a5f60580b6a92d14e18733d5",
+      "bytes": 132,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/device.stderr",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/device.stdout",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/device.stdout",
+      "sha256": "2116a44d0af2b6d7d3310f387083532ff872b4d161629554571a7282b7d1208b",
+      "bytes": 56779,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/install.command.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/install.command.json",
+      "sha256": "e58c9178b75dc2d778e4422169d2c36482cb62709df0301e6e81fb82dc540619",
+      "bytes": 451,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/install.exit.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/install.exit.json",
+      "sha256": "534aba8be3ee9a3a319f7775ab83e36938fad53649ffe8081f6a3c4faff0fc2f",
+      "bytes": 132,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/install.stderr",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/install.stdout",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/controller.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "action": "reused-exact-existing-durable-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/installed-app-ownership.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/installed-app-ownership.json",
+      "sha256": "55f77833b37543e1d4f4df35467ff3b42a630bb60a8db1c1ee7b33cf907e7f29",
+      "bytes": 627,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/parity.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/parity.json",
+      "sha256": "6d6da581e903ef78cc3e0df7c3c067a0da5c8aa52edd6326aa5cd9e168580ce0",
+      "bytes": 234872,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/source-reference.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/source-reference.json",
+      "sha256": "eb5c4802d911db9182efaaf68336ce1b72dd5298758f3cf3501a457e7c9001be",
+      "bytes": 96774,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/execution-state-history-before-full-reviewed.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/execution-state-history-before-full-reviewed.json",
+      "sha256": "d2983651e6da28686116f1368bb6d19c13d721905671bb5418d3c9a02ba858f0",
+      "bytes": 2283,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-diagnostics-collection-recipe.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/ui-diagnostics-collection-recipe.json",
+      "sha256": "2c306b035acdc032181cbb43552d8853d0f10a8bc0f1ddface825a487f50cb5a",
+      "bytes": 438,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/xcodebuild-help-diagnostic-options.txt",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/xcodebuild-help-diagnostic-options.txt",
+      "sha256": "4c0f1d25c362f0cdd828783321605d0d2ced90629fc66560286284b82182dc4b",
+      "bytes": 24847,
+      "action": "copied-exact-source-bytes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/prep/runtime/capture.py",
+      "sha256": "5f641c85ba71027e860cb621d9517bfd44cdf291e08133e1bee5659d6b02c3fe",
+      "bytes": 18112,
+      "action": "copied-exact-source-bytes",
+      "artifactScope": "Prepared helper/protocol/schedule or retained preparation history; execution is not established by preservation."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/prepare-release.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/prep/runtime/prepare-release.py",
+      "sha256": "1ef03c7c1b85748132d102561202389c98ac38b2915abdc436eb79cf48a5f18b",
+      "bytes": 7434,
+      "action": "copied-exact-source-bytes",
+      "artifactScope": "Prepared helper/protocol/schedule or retained preparation history; execution is not established by preservation."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/schedule.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/prep/runtime/schedule.json",
+      "sha256": "f44a8a6b4d28911cea2b6c7301a7748c2806f0e7733aa466f1ce34bd8149fb9d",
+      "bytes": 1581,
+      "action": "copied-exact-source-bytes",
+      "artifactScope": "Prepared helper/protocol/schedule or retained preparation history; execution is not established by preservation."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/same-launch-protocol-change.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/prep/runtime/same-launch-protocol-change.json",
+      "sha256": "4864b082bd1ba818ddb40e2ffb69cebcd9c7ccc7d7ad679a8337d4ea1c224a07",
+      "bytes": 1318,
+      "action": "copied-exact-source-bytes",
+      "artifactScope": "Prepared helper/protocol/schedule or retained preparation history; execution is not established by preservation."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/README.md",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/prep/runtime/README.md",
+      "sha256": "bdb36607573aef1cc8002cd09ab9a480b878f490245562c8c513327fe81d78c1",
+      "bytes": 4219,
+      "action": "copied-exact-source-bytes",
+      "artifactScope": "Prepared helper/protocol/schedule or retained preparation history; execution is not established by preservation."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/history-same-launch-confirmation-v1/capture.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/prep/runtime/history-same-launch-confirmation-v1/capture.py",
+      "sha256": "0df3b50206b6da6f03474fa3d1802f98fca8a7ee25c8ffdaa0b654c1fae2351d",
+      "bytes": 16631,
+      "action": "copied-exact-source-bytes",
+      "artifactScope": "Prepared helper/protocol/schedule or retained preparation history; execution is not established by preservation."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/history-same-launch-confirmation-v1/schedule.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/runtime-evo/schedule.json",
+      "sha256": "f7575614479464f5776fb8f938957e28270aeb99fa95ba6d43721c94658f97b7",
+      "bytes": 1292,
+      "action": "reused-exact-existing-durable-bytes",
+      "artifactScope": "Prepared helper/protocol/schedule or retained preparation history; execution is not established by preservation."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/history-same-launch-confirmation-v1/README.md",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/prep/runtime/history-same-launch-confirmation-v1/README.md",
+      "sha256": "f122f742b826d15df15c148094d265eb8f1a101e299e18508a7d5b33472f2fcc",
+      "bytes": 3809,
+      "action": "copied-exact-source-bytes",
+      "artifactScope": "Prepared helper/protocol/schedule or retained preparation history; execution is not established by preservation."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/install-runtime-proof.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/prep/install-runtime-proof.py",
+      "sha256": "636e63d5ba48972496146a0bb9d297aceecab42a098b5ebb7272385c6672a793",
+      "bytes": 3377,
+      "action": "copied-exact-source-bytes",
+      "artifactScope": "Prepared helper/protocol/schedule or retained preparation history; execution is not established by preservation."
+    }
+  ],
+  "accounting": {
+    "owner": "placid-badger-cad-second-half",
+    "sourceProofFileCount": 55,
+    "sourceProofBytes": 53300897,
+    "uniqueRetainedFiles": 47,
+    "newCopiedFiles": 43,
+    "newCopiedBytes": 53269688,
+    "reusedProofMappings": 12,
+    "totalDistinctArchiveBytes": 50361439,
+    "archiveCount": 2,
+    "externalResourcesCreated": [],
+    "scope": "Preparation only. Recorded run statuses, interrupted collector results, failures, and additive corrections remain unchanged; no new test/build/runtime PASS, PR, human acceptance, or cleanup claim."
+  },
+  "explicitPreparedArtifactPaths": [
+    "prep/runtime/capture.py",
+    "prep/runtime/prepare-release.py",
+    "prep/runtime/schedule.json",
+    "prep/runtime/same-launch-protocol-change.json",
+    "prep/runtime/README.md",
+    "prep/runtime/history-same-launch-confirmation-v1/capture.py",
+    "prep/runtime/history-same-launch-confirmation-v1/schedule.json",
+    "prep/runtime/history-same-launch-confirmation-v1/README.md",
+    "prep/install-runtime-proof.py"
+  ]
+}

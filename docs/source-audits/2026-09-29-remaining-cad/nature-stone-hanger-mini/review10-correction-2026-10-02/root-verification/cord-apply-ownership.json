@@ -1,0 +1,27 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-cord-apply-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-cord-apply-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-cord-apply-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 55635,
+      "pgid": 55635,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/solve_threaded_rope.py",
+        "--package",
+        "nature-stone-hanger-mini",
+        "--solid",
+        ".context/placid-badger/mini-review10-correction/native-author/cord-collider/native-collider.json",
+        "--apply",
+        "--report",
+        ".context/placid-badger/mini-review10-correction/root/native-route-final-apply.json"
+      ]
+    }
+  ]
+}

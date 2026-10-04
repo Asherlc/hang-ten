@@ -1,0 +1,74 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=055BDCE2-3263-470D-89DF-04B967EF7790" -derivedDataPath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/DerivedData-placid-badger-cad-second-half -resultBundlePath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/tests-placid-badger-cad-second-half-boundary-audit-green.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never -maximum-concurrent-test-simulator-destinations 1 "-only-testing:HangTenTests/BoardSourceBoundaryTests" test-without-building
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  Amplitude-Swift: https://github.com/amplitude/Amplitude-Swift @ 1.18.8
+  analytics-connector-ios: https://github.com/amplitude/analytics-connector-ios.git @ 1.3.2
+  Sentry: https://github.com/getsentry/sentry-cocoa.git @ 8.58.4
+  AmplitudeCore: https://github.com/amplitude/AmplitudeCore-Swift.git @ 1.5.0
+
+Writing result bundle at path:
+	/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/tests-placid-badger-cad-second-half-boundary-audit-green.xcresult
+
+[Sentry] [error] [1791073127.004449] [SentryOptions:251] Could not parse the DSN: Error Domain=SentryErrorDomain Code=100 "Host component of DSN is missing" UserInfo={NSLocalizedDescription=Host component of DSN is missing}.
+[Sentry] [fatal] [1791073127.0083141] [SentryFileManager:162] No DSN provided, using base path for envelopes: /Users/asherlc/Library/Developer/CoreSimulator/Devices/055BDCE2-3263-470D-89DF-04B967EF7790/data/Containers/Data/Application/05E45F04-4F90-40A2-87AD-0165FB689775/Library/Caches/io.sentry
+[Sentry] [fatal] [1791073127.012432] [SentryFileManager:162] No DSN provided, using base path for envelopes: /Users/asherlc/Library/Developer/CoreSimulator/Devices/055BDCE2-3263-470D-89DF-04B967EF7790/data/Containers/Data/Application/05E45F04-4F90-40A2-87AD-0165FB689775/Library/Caches/io.sentry
+Test Suite 'Selected tests' started at 2026-10-03 17:18:47.499.
+Test Suite 'HangTenTests.xctest' started at 2026-10-03 17:18:47.499.
+Test Suite 'BoardSourceBoundaryTests' started at 2026-10-03 17:18:47.499.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds]' passed (0.010 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoardMapUsesOnePhysicalPathForHighlightingAndHitTesting]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoardMapUsesOnePhysicalPathForHighlightingAndHitTesting]' passed (0.009 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsCanonicalPresentationVocabularyInGenericOwners]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsCanonicalPresentationVocabularyInGenericOwners]' passed (0.002 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsFactualPlanRequirements]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsFactualPlanRequirements]' passed (0.001 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsOnlyScopedDisplayModelBindings]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsOnlyScopedDisplayModelBindings]' passed (0.001 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsOnlyScopedLegacyPlateauPersistenceIDs]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsOnlyScopedLegacyPlateauPersistenceIDs]' passed (0.004 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsOnlyTheScopedCatalogDefaultBoardBinding]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsOnlyTheScopedCatalogDefaultBoardBinding]' passed (0.001 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditIgnoresUntrackedAppScratchFiles]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditIgnoresUntrackedAppScratchFiles]' passed (0.003 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditPreservesQuotedSubstringMatching]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditPreservesQuotedSubstringMatching]' passed (0.003 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditRejectsAssetLiteralsInsideDisplayModelIdentity]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditRejectsAssetLiteralsInsideDisplayModelIdentity]' passed (0.001 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditStillRejectsArtifactsInsideLegacyPlateauMigration]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditStillRejectsArtifactsInsideLegacyPlateauMigration]' passed (0.001 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBundledBoardContentUsesSchemaVersionThree]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testBundledBoardContentUsesSchemaVersionThree]' passed (0.028 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testCatalogContainsExactlyRegisteredPackageBoards]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testCatalogContainsExactlyRegisteredPackageBoards]' passed (0.001 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testCompactUsesPackageModelNotStandaloneResource]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testCompactUsesPackageModelNotStandaloneResource]' passed (0.001 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testEveryBuiltInPlanTargetResolvesOnItsPackageBoard]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testEveryBuiltInPlanTargetResolvesOnItsPackageBoard]' passed (0.070 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testEveryCatalogBoardUsesItsDefaultPackagePresentationAsset]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testEveryCatalogBoardUsesItsDefaultPackagePresentationAsset]' passed (0.079 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testEveryCatalogPackageMatchesTypedMediaBoundary]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testEveryCatalogPackageMatchesTypedMediaBoundary]' passed (0.433 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts]' passed (12.030 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testLegacyBoardDeliveryArtifactsAreAbsent]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testLegacyBoardDeliveryArtifactsAreAbsent]' passed (0.024 seconds).
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testPackageAssetBoundaryEnumerationPreservesNestedPathsAndEqualBasenames]' started.
+Test Case '-[HangTenTests.BoardSourceBoundaryTests testPackageAssetBoundaryEnumerationPreservesNestedPathsAndEqualBasenames]' passed (0.002 seconds).
+Test Suite 'BoardSourceBoundaryTests' passed at 2026-10-03 17:19:00.208.
+	 Executed 20 tests, with 0 failures (0 unexpected) in 12.702 (12.708) seconds
+Test Suite 'HangTenTests.xctest' passed at 2026-10-03 17:19:00.208.
+	 Executed 20 tests, with 0 failures (0 unexpected) in 12.702 (12.709) seconds
+Test Suite 'Selected tests' passed at 2026-10-03 17:19:00.208.
+	 Executed 20 tests, with 0 failures (0 unexpected) in 12.702 (12.709) seconds
+
+Test session results, code coverage, and logs:
+	/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/tests-placid-badger-cad-second-half-boundary-audit-green.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

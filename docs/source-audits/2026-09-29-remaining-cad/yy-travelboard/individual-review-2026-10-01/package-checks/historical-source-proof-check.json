@@ -1,0 +1,224 @@
+{
+  "sourceSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+  "descriptorSHA256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+  "sidecarSHA256": "4dc0a687d4f7bd336cf40985bace19f09e92c80b5eb3753037125e0f0bce701b",
+  "sourceBytes": 223580,
+  "realFCStdZIP": true,
+  "archiveMembers": 86,
+  "nativeObjectTypeCounts": {
+    "Part::Cut": 11,
+    "Part::Cylinder": 4,
+    "Part::Extrusion": 8,
+    "Part::Fillet": 2,
+    "PartDesign::SubShapeBinder": 6,
+    "Sketcher::SketchObject": 8
+  },
+  "allPackageFilesExactInitialMigration": {
+    "Hangboards/yy-travelboard/suspension.json": true,
+    "Hangboards/yy-travelboard/yy-travelboard.FCStd": true,
+    "Hangboards/yy-travelboard/assets/primary.usdz": true,
+    "Hangboards/yy-travelboard/assets/primary.model.json": true
+  },
+  "historicalProofCoverage": {
+    "compileSource": true,
+    "compileModel": true,
+    "nativeReopenMeaningfulEdit": true,
+    "reproductionSource": true,
+    "reproductionModel": true,
+    "validationSourceAndSidecar": true
+  },
+  "retainedSources": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/evidence/yy-vertical-agres-nomades-travelboard-3.webp",
+      "matchesSnapshotHash": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/evidence/yy-vertical-agres-nomades-travelboard-2.webp",
+      "matchesSnapshotHash": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/evidence/yy-vertical-agres-nomades-travelboard-1.webp",
+      "matchesSnapshotHash": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/evidence/yy-vertical-agres-nomades-travelboard-4.webp",
+      "matchesSnapshotHash": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/evidence/product.html",
+      "matchesSnapshotHash": true
+    }
+  ],
+  "historicalProofKeys": {
+    "compile.json": [
+      "asset",
+      "assetBytes",
+      "assetSHA256",
+      "board",
+      "contacts",
+      "descriptor",
+      "measuredRegionDepthsMM",
+      "modelSHA256",
+      "nodes",
+      "package",
+      "presentationID",
+      "published",
+      "schemaVersion",
+      "source",
+      "sourceKind",
+      "sourceSHA256",
+      "sourceUnchanged",
+      "tessellationDeflectionMM",
+      "triangles"
+    ],
+    "native-checks.json": [
+      "package",
+      "sourceSHA256",
+      "editedFeature",
+      "reopenRecompute",
+      "fullyConstrainedSketches",
+      "validBoundShapes",
+      "contactVerticesOnActualBodySurface",
+      "dimensionalEditChangesSolid",
+      "dimensionalEditChangesContacts",
+      "bodyVolumeBeforeMM3",
+      "bodyVolumeAfterMM3",
+      "sourceBytesUnchanged",
+      "note"
+    ],
+    "reproducibility.json": [
+      "verification",
+      "sourceSHA256Before",
+      "sourceSHA256After",
+      "sourceUnchanged",
+      "command",
+      "verifierSHA256",
+      "result"
+    ],
+    "validation.json": [
+      "package",
+      "currentSourceSHA256",
+      "nativeReopenEditSourceSHA256",
+      "modelSHA256ByPresentation",
+      "fullPackageSchemaPassed",
+      "nativeCordCacheCheckPassed",
+      "minimumNativeCordClearanceMM",
+      "metadataOnlyCompileRebindings",
+      "humanCADReview",
+      "externalResourcesCreated",
+      "continuousRoundedRuntimeCordClearancePassed",
+      "minimumCertifiedRuntimeCordClearanceMM",
+      "continuousClearanceReport",
+      "sidecarSHA256",
+      "cameraOnlyRebindingProof"
+    ],
+    "camera-correction-proof.json": [
+      "package",
+      "beforeSidecarSHA256",
+      "afterSidecarSHA256",
+      "changes",
+      "allNonCameraSidecarValuesIdentical",
+      "immutableNativeAndModelFilesSHA256",
+      "reason",
+      "unchangedNumericRoutesSHA256"
+    ],
+    "cord-primary-check.json": [
+      "package",
+      "presentationID",
+      "modelSHA256",
+      "sourceSHA256",
+      "method",
+      "poses"
+    ],
+    "cord-continuous-clearance.json": [
+      "package",
+      "sourceSHA256",
+      "sidecarSHA256",
+      "algorithm",
+      "algorithmSHA256",
+      "method",
+      "numericalToleranceMM",
+      "runtimeSupportReconstructed",
+      "presentations",
+      "minimumCertifiedClearanceMM",
+      "certifiedSidecarSHA256",
+      "cameraOnlyRebindingProof"
+    ],
+    "contact-contract.json": [
+      "baselineCommit",
+      "retainedContactFieldsUnchanged",
+      "contactFieldCorrections",
+      "retainedContactIDs",
+      "removedContactIDs",
+      "positions",
+      "metadataDecision"
+    ]
+  },
+  "contactFacts": [
+    {
+      "id": "tray",
+      "equipmentObjectID": "primary",
+      "name": "Wide tray",
+      "kind": "jug",
+      "gripTypes": []
+    },
+    {
+      "id": "edge-25",
+      "equipmentObjectID": "primary",
+      "name": "25 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15",
+      "equipmentObjectID": "primary",
+      "name": "15 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "mono-left",
+      "equipmentObjectID": "primary",
+      "name": "Left mono-finger opening",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "mono-right",
+      "equipmentObjectID": "primary",
+      "name": "Right mono-finger opening",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10",
+      "equipmentObjectID": "primary",
+      "name": "10 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "gripTypes": []
+    }
+  ],
+  "finishNeedsCorrection": true,
+  "note": "Manufacturer reverse image viewed whole: wood grain supports renderer wood finish; no image measurements or hidden connections inferred. Existing exact hash-bound native edit/export/reproduction proofs reused, no expensive re-export."
+}

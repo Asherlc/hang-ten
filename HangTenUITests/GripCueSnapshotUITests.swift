@@ -1,6 +1,32 @@
 import XCTest
 
 final class DefaultGripFingersUITests: XCTestCase {
+    func testPortraitWorkoutExposesOneCombinedGripCue() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "tension.honestone",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
+        ]
+        defer { app.terminate() }
+        app.launch()
+        XCTAssertTrue(app.otherElements["train.board"].waitForExistence(timeout: 30))
+        app.open(URL(string: "hangten://plan/research.max-hangs/workout")!)
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 30))
+        pause.tap()
+        let cues = app.descendants(matching: .any).matching(identifier: "workout.gripCue.both")
+        XCTAssertTrue(cues.firstMatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(cues.count, 1, cues.debugDescription)
+        XCTAssertTrue(cues.firstMatch.label.contains("both hands"))
+        XCTAssertTrue(cues.firstMatch.label.contains("Exact fingers: index, middle, ring, and pinky"))
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "Portrait combined grip accessibility cue"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
     func testUnspecifiedFingersRenderAssumedFourFingerHands() throws {
         let app = XCUIApplication()
         app.launchEnvironment = [
@@ -57,9 +83,8 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         app.launch()
         waitForTrainShellReady(timeout: 20)
         app.open(URL(string: "hangten://plan/metolius.contact.entry/workout")!)
-        if app.buttons["Start"].waitForExistence(timeout: 5) {
-            app.buttons["Start"].tap()
-        }
+        // This route auto-starts after renderer preparation and its countdown.
+        // A transient Start button can disappear before XCTest delivers a tap.
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
         let next = app.buttons["workout.nextHold"]
         XCTAssertTrue(next.waitForExistence(timeout: 10))
@@ -99,6 +124,9 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         app.launch()
         waitForTrainShellReady(timeout: 20)
         app.open(URL(string: "hangten://plan/metolius.contact.intermediate/workout")!)
+        // Hand/task controls are also mounted during renderer preparation, then
+        // hidden for the initial countdown. Choose the side once work is running.
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
         let rightHand = app.buttons["workout.taskHand.right"]
         XCTAssertTrue(rightHand.waitForExistence(timeout: 20))
         rightHand.tap()
@@ -115,6 +143,11 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         XCTAssertFalse(app.segmentedControls["workout.initialWeight.sourcePicker"].exists)
         XCTAssertFalse(app.buttons["Start"].exists)
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
+
+        let skip = app.buttons["workout.skipStep"]
+        XCTAssertTrue(skip.isHittable)
+        XCTAssertLessThanOrEqual(skip.frame.maxY, app.frame.maxY,
+                                 "The landscape hand previews must leave Skip fully onscreen")
 
         let leftHandCue = app.otherElements["workout.gripCue.left"]
         XCTAssertTrue(leftHandCue.waitForExistence(timeout: 10))

@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-opus-corrections/author-probe-debug-tmp/hangten-freecad-a1dnc1eb/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-opus-corrections/author_correction_probe.py", line 56, in <module>
+    assert rear_count>=1 and floor_start<len(ge) and rear_count<floor_start,(label,j,'semantic profile',rear_count,floor_start,[(str(type(g)),str(g.StartPoint),str(g.EndPoint)) for g in ge])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('CenterShoulder', 2, 'semantic profile', 0, 3, [("<class 'Part.BSplineCurve'>", 'Vector (0.0, 145.0, 0.0)', 'Vector (0.0, 186.76237623762376, 0.0)'), ("<class 'Part.BSplineCurve'>", 'Vector (0.0, 186.76237623762378, 0.0)', 'Vector (-65.0, 169.76237623762378, 0.0)'), ("<class 'Part.BSplineCurve'>", 'Vector (-65.0, 169.76237623762376, 0.0)', 'Vector (-80.0, 145.0, 0.0)'), ("<class 'Part.LineSegment'>", 'Vector (-80.0, 145.0, 0.0)', 'Vector (-75.85985185185186, 145.0, 0.0)'), ("<class 'Part.LineSegment'>", 'Vector (-75.85985185185186, 145.0, 0.0)', 'Vector (0.0, 145.0, 0.0)')])
+
+
+								
+								
+								
+								
+								
+								

@@ -1,0 +1,20 @@
+{
+  "simulator": "87CE3964-139D-4FAE-B121-AB12237401DB",
+  "maximumBootSeconds": 900,
+  "elapsedSeconds": 900.0147610409986,
+  "uninterruptedDeviceBoot": true,
+  "rebootsPerformed": 0,
+  "readyForVisualApproval": false,
+  "bootstatusCommand": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "bootstatus",
+    "87CE3964-139D-4FAE-B121-AB12237401DB",
+    "-b"
+  ],
+  "bootstatusExitBeforeMonitorStop": null,
+  "bootstatusExitAfterMonitorStop": -15,
+  "note": "Only the monitoring subprocess is stopped after success/deadline; the device is never rebooted. Build requires separate whole-screen visual approval."
+}

@@ -1,0 +1,202 @@
+{
+  "owner": "placid-badger",
+  "purpose": "Exact UNLEVEL pre-front-entry-correction snapshot",
+  "sidecarSHA256": "d689a72a606c7e429ff3050da9f4daa3d57ba02c55f9a100c56d71f019ddde18",
+  "sourceCommit": "3c770899547dbe2824db7f0c7e578481a95ecfa5",
+  "sidecarMatchesSpecifiedCommit": true,
+  "sidecarSourcePath": ".context/placid-badger/unlevel-review/native-cord/HEAD-suspension.json",
+  "immutablePackageFiles": {
+    "captain-fingerfood-unlevel.FCStd": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+    "assets/primary.usdz": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+    "assets/primary.model.json": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89"
+  },
+  "retainedFiles": [
+    {
+      "sourcePath": ".context/placid-badger/unlevel-review/native-cord/HEAD-suspension.json",
+      "retainedPath": "before/suspension.json",
+      "sha256": "d689a72a606c7e429ff3050da9f4daa3d57ba02c55f9a100c56d71f019ddde18",
+      "bytes": 6143
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/native-route-report.json",
+      "retainedPath": "before/native-route-report.json",
+      "sha256": "6019a9ae5589ab1a689acdc224c67b1ec02d1c2f91e5b79df480618c177f8808",
+      "bytes": 7197
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/native-route-check.json",
+      "retainedPath": "before/native-route-check.json",
+      "sha256": "6019a9ae5589ab1a689acdc224c67b1ec02d1c2f91e5b79df480618c177f8808",
+      "bytes": 7197
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/continuous-cord-clearance.json",
+      "retainedPath": "before/continuous-cord-clearance.json",
+      "sha256": "afafcfd2d1d9db1c46aacb3783219527265ae11da4d195ffc429dd8b4a0492bd",
+      "bytes": 1194
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/cord-authoring-review.json",
+      "retainedPath": "before/cord-authoring-review.json",
+      "sha256": "469028c602e9dfb2739590b3de3586c3a90096507bb7eb7fe1e6377d99e4e02f",
+      "bytes": 2507
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/final-hash-closure.json",
+      "retainedPath": "before/final-hash-closure.json",
+      "sha256": "aa955222503c3f4f883e93056b7093be5bfcd72eaadd85cc683c9ee6798dd2a3",
+      "bytes": 1380
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/compile-final-check.json",
+      "retainedPath": "before/compile-final-check.json",
+      "sha256": "1addec1829ba7aad3974aa6b70224d541845124562b4ca95feabb8d5a78c93ef",
+      "bytes": 1248
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/native-validation.json",
+      "retainedPath": "before/native-validation.json",
+      "sha256": "3de8f33e86b225275e2ae78c7ceb05f033befed5e4a6b3944c643f3362b7062b",
+      "bytes": 503
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/geometry-authoring-notes.md",
+      "retainedPath": "before/geometry-authoring-notes.md",
+      "sha256": "9df63d3cbd29360e56e306025f50ac642b3fcacf697a4f0a7aaa0fc47e4a20ae",
+      "bytes": 2700
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/geometry-visual-review.json",
+      "retainedPath": "before/geometry-visual-review.json",
+      "sha256": "2c0a3023d091641f1b33555222b515a7f6444ccd7fcf5d10bf618df114b177ac",
+      "bytes": 586
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/native-authoring-geometry.json",
+      "retainedPath": "before/native-authoring-geometry.json",
+      "sha256": "bdcac43244927336da99ac8c0fa723264090729c1e1522c7939d05dfd1da41e7",
+      "bytes": 318
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/native-channel-measurements.json",
+      "retainedPath": "before/native-channel-measurements.json",
+      "sha256": "4864dab965c09e70040656bcca2fdeafbec3484d098832a088d9c21fcc9a7d01",
+      "bytes": 578
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/README.md",
+      "retainedPath": "before/README.md",
+      "sha256": "985f785555103cc9566c7d9385f3b0e86fd5b031c6c265cbf3218dbf9053e9a7",
+      "bytes": 2894
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/comparison-sheet.png",
+      "retainedPath": "before/comparison-sheet.png",
+      "sha256": "924563559976a188eadb1ba6cc741aa42d677a01e72f4c6aefb245410f357aa8",
+      "bytes": 39058
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/geometry-review.html",
+      "retainedPath": "before/geometry-review.html",
+      "sha256": "261b6c8997d2a309638d5e6ade856e2e7d2e22551b60c1a9afde07dfc075003a",
+      "bytes": 1883
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/captain-fingerfood-unlevel-front.png",
+      "retainedPath": "before/captain-fingerfood-unlevel-front.png",
+      "sha256": "c69f29408213d5414182a1e6f0d1aed9cd013fcb71a9d45d5f63798df5c6f019",
+      "bytes": 12101
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/captain-fingerfood-unlevel-side.png",
+      "retainedPath": "before/captain-fingerfood-unlevel-side.png",
+      "sha256": "ed872133eaf1d473610a127633adc92996bae719f0ea7c1bf561fd57e61a6e8c",
+      "bytes": 5526
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/captain-fingerfood-unlevel-top.png",
+      "retainedPath": "before/captain-fingerfood-unlevel-top.png",
+      "sha256": "7be45f79b0bafb65e34d2b21f6df77dd87c6d983b3cb3d608741a98c28936971",
+      "bytes": 4272
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/captain-fingerfood-unlevel-ref-front.png",
+      "retainedPath": "before/captain-fingerfood-unlevel-ref-front.png",
+      "sha256": "4e750e7b653e873228dcb6de8c29fc1d77c29b0e05c4f787c003a2f0161137ab",
+      "bytes": 32217
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/captain-fingerfood-unlevel-ref-side.png",
+      "retainedPath": "before/captain-fingerfood-unlevel-ref-side.png",
+      "sha256": "9841fd2c321585914522d1d85dda8732d8681732ed733c2e73c9e7fdd8cd6902",
+      "bytes": 5879
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/captain-fingerfood-unlevel-ref-top.png",
+      "retainedPath": "before/captain-fingerfood-unlevel-ref-top.png",
+      "sha256": "9945c1a355f16635051995136667154fabf660a448d0840d1431d989a84d5ef2",
+      "bytes": 4161
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/contact-selection-accessibility.json",
+      "retainedPath": "before/app-review/contact-selection-accessibility.json",
+      "sha256": "9c29022803d2ef7121e445f69f409ebaca7e3baab1f83674c2b50f384cfcc7cf",
+      "bytes": 9622
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/contact-selection.png",
+      "retainedPath": "before/app-review/contact-selection.png",
+      "sha256": "a8913c6252f7efe3efffde7fa2d32e153298a68e826180e69557e82c0d002aff",
+      "bytes": 441992
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/default-accessibility.json",
+      "retainedPath": "before/app-review/default-accessibility.json",
+      "sha256": "1ad751d15d790f524a362f3f3984a0c6b1ad34cc30c923fa3e2c0e0460b490b3",
+      "bytes": 10804
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/default.png",
+      "retainedPath": "before/app-review/default.png",
+      "sha256": "06cd98cef3f5eec444de6f2e449e3cf07958860fbd7f2dfd6f681eb841154350",
+      "bytes": 437727
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/index.html",
+      "retainedPath": "before/app-review/index.html",
+      "sha256": "e1b2fde618b10452954ad72b176a8e00106ffabaea1c3656e9ff7c29a10efff4",
+      "bytes": 702
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/index.md",
+      "retainedPath": "before/app-review/index.md",
+      "sha256": "b920228dfde8a5c99ba0fd4ed52c28c7c9a8cf91aae7812de0fb23736a47527b",
+      "bytes": 383
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/validation.json",
+      "retainedPath": "before/app-review/validation.json",
+      "sha256": "08a5c662cbd4586118a58ba315e9527b08bb837a8914e2a7abd7b5b661aeef70",
+      "bytes": 1137
+    }
+  ],
+  "existingGeometryAndAppSHA256": {
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/comparison-sheet.png": "924563559976a188eadb1ba6cc741aa42d677a01e72f4c6aefb245410f357aa8",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/geometry-review.html": "261b6c8997d2a309638d5e6ade856e2e7d2e22551b60c1a9afde07dfc075003a",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/captain-fingerfood-unlevel-front.png": "c69f29408213d5414182a1e6f0d1aed9cd013fcb71a9d45d5f63798df5c6f019",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/captain-fingerfood-unlevel-side.png": "ed872133eaf1d473610a127633adc92996bae719f0ea7c1bf561fd57e61a6e8c",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/captain-fingerfood-unlevel-top.png": "7be45f79b0bafb65e34d2b21f6df77dd87c6d983b3cb3d608741a98c28936971",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/captain-fingerfood-unlevel-ref-front.png": "4e750e7b653e873228dcb6de8c29fc1d77c29b0e05c4f787c003a2f0161137ab",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/captain-fingerfood-unlevel-ref-side.png": "9841fd2c321585914522d1d85dda8732d8681732ed733c2e73c9e7fdd8cd6902",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/captain-fingerfood-unlevel-ref-top.png": "9945c1a355f16635051995136667154fabf660a448d0840d1431d989a84d5ef2",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/index.html": "e1b2fde618b10452954ad72b176a8e00106ffabaea1c3656e9ff7c29a10efff4",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/contact-selection.png": "a8913c6252f7efe3efffde7fa2d32e153298a68e826180e69557e82c0d002aff",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/default-accessibility.json": "1ad751d15d790f524a362f3f3984a0c6b1ad34cc30c923fa3e2c0e0460b490b3",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/contact-selection-accessibility.json": "9c29022803d2ef7121e445f69f409ebaca7e3baab1f83674c2b50f384cfcc7cf",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/index.md": "b920228dfde8a5c99ba0fd4ed52c28c7c9a8cf91aae7812de0fb23736a47527b",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/validation.json": "08a5c662cbd4586118a58ba315e9527b08bb837a8914e2a7abd7b5b661aeef70",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/default.png": "06cd98cef3f5eec444de6f2e449e3cf07958860fbd7f2dfd6f681eb841154350"
+  },
+  "appCaptureProvenance": "Prior retained app-review captures copied as found with their original validation; no new capture or current-binary assertion.",
+  "candidateStatus": "Awaiting root-approved fresh all-pose native apply and exact after SHA; no candidate rendered."
+}

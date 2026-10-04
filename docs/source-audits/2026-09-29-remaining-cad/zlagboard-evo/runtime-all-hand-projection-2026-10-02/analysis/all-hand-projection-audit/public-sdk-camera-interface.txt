@@ -1,0 +1,27 @@
+11144: @available(visionOS 2.0, iOS 18.0, macCatalyst 18.0, macOS 15.0, tvOS 26.0, *)
+11145: public struct OrthographicCameraComponent : RealityFoundation::Component, Swift::Equatable {
+11146:   public var near: Swift::Float
+11147:   public var far: Swift::Float
+11148:   public var scale: Swift::Float
+11149:   public var scaleDirection: RealityFoundation::CameraFieldOfViewOrientation
+11150:   public init()
+11151:   public static func __fromCore(_ coreComponent: RealityFoundation::__ComponentRef) -> RealityFoundation::OrthographicCameraComponent
+11152:   public func __toCore(_ coreComponent: RealityFoundation::__ComponentRef)
+11153:   public static var __coreComponentType: RealityFoundation::__ComponentTypeRef {
+11154:     get
+11155:   }
+11156:   public static func == (a: RealityFoundation::OrthographicCameraComponent, b: RealityFoundation::OrthographicCameraComponent) -> Swift::Bool
+14592: @available(macOS 10.15, iOS 13.0, macCatalyst 13.0, tvOS 26.0, *)
+14593: @_originallyDefinedIn(module: "RealityKit", macOS 12.0)
+14594: @_originallyDefinedIn(module: "RealityKit", iOS 15.0)
+14595: @_originallyDefinedIn(module: "RealityKit", macCatalyst 15.0)
+14596: public struct PerspectiveCameraComponent : RealityFoundation::Component, Swift::Equatable {
+14597:   public var near: Swift::Float
+14598:   public var far: Swift::Float
+14599:   public var fieldOfViewInDegrees: Swift::Float
+14600:   @available(visionOS 2.0, iOS 18.0, macCatalyst 18.0, macOS 15.0, *)
+14601:   public var fieldOfViewOrientation: RealityFoundation::CameraFieldOfViewOrientation
+14602:   public init(near: Swift::Float = 0.01, far: Swift::Float = .infinity, fieldOfViewInDegrees: Swift::Float = 60.0)
+14603:   @available(visionOS 2.0, iOS 18.0, macCatalyst 18.0, macOS 15.0, *)
+14604:   public init(near: Swift::Float = 0.01, far: Swift::Float = .infinity, fieldOfViewInDegrees: Swift::Float = 60.0, fieldOfViewOrientation: RealityFoundation::CameraFieldOfViewOrientation = .vertical)
+14605:   public static func == (a: RealityFoundation::PerspectiveCameraComponent, b: RealityFoundation::PerspectiveCameraComponent) -> Swift::Bool

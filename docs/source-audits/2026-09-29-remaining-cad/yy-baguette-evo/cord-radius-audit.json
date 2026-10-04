@@ -1,0 +1,26 @@
+{
+  "minimumClearance": 0.001975138444244885,
+  "point": [
+    -0.2466106033075524,
+    0.0013350859240883737,
+    0.026582974665350655
+  ],
+  "nearestSurface": [
+    -0.24716152649222442,
+    0.0022133636276885694,
+    0.02490181917168455
+  ],
+  "faceIndex": 456,
+  "faceNormal": [
+    -5.479001489152261e-05,
+    0.08820564089862051,
+    0.9961022848642191
+  ],
+  "radius": 0.002,
+  "pose": "central-20-6",
+  "strand": "mouth-1-lead",
+  "coordinateFrame": "runtime metres (x,z,-y from native mm)",
+  "locationInterpretation": "Near outer left front through-bore lip; sample is 1.583 mm in front of the mouth plane and near the 2.5 mm radius bore rim. No penetration elsewhere is implied by this diagnostic.",
+  "correction": "Original 2 mm display radius retained. Source-backed mouthAxis [0,0,1] drives a solver-derived exterior exit segment from the actual native solid support plane. Strict continuous radius/tube gate remains active. Native geometry, actual mouths, rest lengths and graph unchanged.",
+  "sourceSupport": "Retained YY product page supplies cords but no diameter. The existing 2 mm radius remains an explicit display estimate. The outward axis is the measured native straight-bore axis; primary images 03/07 show the corresponding front mouth exits."
+}

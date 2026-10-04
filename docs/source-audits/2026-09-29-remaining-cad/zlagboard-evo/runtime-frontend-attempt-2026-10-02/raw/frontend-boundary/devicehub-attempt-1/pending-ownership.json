@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "marker": "placid-badger-cad-second-half-devicehub-frontend-boundary-2026-10-02",
+  "controllerPID": 40249,
+  "deviceUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "argv": [
+    "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DeviceHub",
+    "-PaseoWorkspaceOwner",
+    "placid-badger-cad-second-half-devicehub-frontend-boundary-2026-10-02"
+  ],
+  "registeredBeforeLaunchEpoch": 1790986753.849601,
+  "deviceCleanupOwner": "Main controller90373; frontend controller must never shut down/delete device or DD"
+}

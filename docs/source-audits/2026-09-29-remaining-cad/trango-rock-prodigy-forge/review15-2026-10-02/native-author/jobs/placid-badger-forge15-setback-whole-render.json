@@ -1,0 +1,10 @@
+{
+  "name": "placid-badger-forge15-setback-whole-render",
+  "command": [
+    ".context/placid-badger/venv/bin/python",
+    ".context/placid-badger/forge-review15/native-author/setback-correction/whole-depth-render.py",
+    "--out",
+    ".context/placid-badger/forge-review15/native-author/setback-correction/native-whole-views"
+  ],
+  "timeoutSeconds": 300
+}

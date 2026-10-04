@@ -1,0 +1,38 @@
+{
+  "asset": "Hangboards/captain-fingerfood-unlevel/assets/primary.usdz",
+  "assetBytes": 438993,
+  "assetSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+  "board": "Hangboards/captain-fingerfood-unlevel/captain-fingerfood-unlevel.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "curved-edge-20",
+    "curved-edge-25",
+    "outer-jug",
+    "pocket-end-wall-20-25"
+  ],
+  "descriptor": "Hangboards/captain-fingerfood-unlevel/assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "curved-edge-20": 20.082,
+    "curved-edge-25": 25.0,
+    "outer-jug": 24.0,
+    "pocket-end-wall-20-25": 24.057
+  },
+  "modelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+  "nodes": [
+    "Body_EditableSkin_001",
+    "Hold_Curved20_EditableSkin_001",
+    "Hold_Curved25_EditableSkin_001",
+    "Hold_EndPocket_EditableSkin_001",
+    "Hold_OuterJug_EditableSkin_001"
+  ],
+  "package": "captain-fingerfood-unlevel",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": "Hangboards/captain-fingerfood-unlevel/captain-fingerfood-unlevel.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "91ab62c56129069bf3e5dccf0e62916f7198508c5d85ec5cbf39a6cf1f830048",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 21508,
+  "reportStatus": "superseded initial publication; use compile-final-check.json for final source hash closure"
+}

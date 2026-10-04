@@ -1,0 +1,14 @@
+{
+  "sourceBeforeSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+  "sourceAfterSHA256": "4fb7a667d4bccea4edb2bb3eebfd4fa44bb463fa9b2c68ba9e169a0359cd4f06",
+  "changedArchiveMembers": [
+    "Document.xml"
+  ],
+  "geometryMembersBytePreserved": true,
+  "change": "presentation media.display.surfaceFinish=wood only",
+  "assetHashes": {
+    "Hangboards/yy-baguette-evo/assets/primary.usdz": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+    "Hangboards/yy-baguette-evo/assets/primary.model.json": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921",
+    "Hangboards/yy-baguette-evo/suspension.json": "a8268c4df7ce4eced116b692ad92276394d064aa858b83e5c00b84fd43f75678"
+  }
+}

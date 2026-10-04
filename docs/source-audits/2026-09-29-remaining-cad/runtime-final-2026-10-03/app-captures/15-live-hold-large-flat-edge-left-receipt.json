@@ -1,0 +1,29 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 15,
+    "boardID": "trango.rock-prodigy-forge",
+    "package": "trango-rock-prodigy-forge",
+    "contactID": "large-flat-edge-left",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "trango.rock-prodigy-forge",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "large-flat-edge-left",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791056404.9779258
+  },
+  "image": "15-live-hold-large-flat-edge-left.png",
+  "imageSHA256": "aa2d7dc8a3d765746902e93fd328d5d3ae9d5dcc50c5db2ec55f03a70b49c13e",
+  "accessibilitySHA256": "1adfc87c546f1ee6f57eb68e35309e716dcfb6a19d0b4c3a4a6a6bec71152d41",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=11;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.34906584;cameraPitch=0.34906587;cameraSettled=true;selection=large-flat-edge-left;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "rawFailureCapture": false
+}

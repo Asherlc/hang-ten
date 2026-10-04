@@ -1,0 +1,110 @@
+{
+  "owner": "placid-badger",
+  "removed": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/placid-badger-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/placid-badger-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/placid-badger-tmp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/placid-badger-xcode-stage",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/placid-badger-android-stage",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T172636/placid-badger-flash14-ios-DD"
+  ],
+  "absenceVerified": true,
+  "stoppedExactOwnedProcessGroups": [],
+  "activeChildAbsent": true,
+  "everyRecordedGroupChecked": true,
+  "processGroupReceipts": [
+    {
+      "phase": "git-head",
+      "processGroup": 46792,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "package-validation",
+      "processGroup": 46796,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "delivery-validation",
+      "processGroup": 46970,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "xcode-staging",
+      "processGroup": 46980,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "android-staging",
+      "processGroup": 46993,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "focused-python-tests",
+      "processGroup": 47077,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "build-time-git-head",
+      "processGroup": 47091,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "build-time-git-status",
+      "processGroup": 47107,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "build-time-git-binary-diff",
+      "processGroup": 47111,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    },
+    {
+      "phase": "generic-ios-build",
+      "processGroup": 47126,
+      "exactOwnedIdentityAbsent": true,
+      "numericGroupAbsentAtCleanup": true,
+      "stopActions": [],
+      "unknownReusedGroupPreserved": [],
+      "survivingOwnedMembers": []
+    }
+  ],
+  "allExactOwnedProcessGroupsAbsent": true,
+  "externalResources": [],
+  "sharedDependenciesPreserved": true
+}

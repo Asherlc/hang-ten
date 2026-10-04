@@ -1,0 +1,19 @@
+{
+  "beforeSHA256": "e33608bee0580b78496c3b92fd1ba21247d90faac64c074bbfa1b8f0420bd005",
+  "afterSHA256": "acd84833c02faabf0af0fa0584d12b9d27c701d7192258bd690a30cebf80cd89",
+  "patchSHA256": "d44287965b705909a311d1af0f618382366ddc061d8980f573a330d8fe584b3f",
+  "scope": "Only loaded BoardModelRealityView child .id under DEBUG flag; Surface result/loadIdentity/loader/lease and material cache untouched",
+  "identityFields": [
+    "ObjectIdentifier(scene)",
+    "Set<String>contactIDs",
+    "BoardHighlightMode",
+    "optional positionID"
+  ],
+  "excludedIdentityFields": [
+    "timer",
+    "cameraRevision",
+    "viewport tick",
+    "UUID"
+  ],
+  "authorization": "Root semantic child identity diagnostic gate after PBR comparison"
+}

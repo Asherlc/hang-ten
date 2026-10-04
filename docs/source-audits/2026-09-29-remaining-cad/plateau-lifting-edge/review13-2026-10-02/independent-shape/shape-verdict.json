@@ -1,0 +1,351 @@
+{
+  "owner": "placid-badger",
+  "reviewer": "plateau_final_shape_gate",
+  "status": "pass",
+  "verdict": "Technical physical shape/contact/cord ready for human review",
+  "blockers": [],
+  "candidatePackage": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final/Hangboards/plateau-lifting-edge",
+  "files": {
+    "assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+    "assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+    "assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+    "assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+    "assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+    "assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+    "plateau-lifting-edge.FCStd": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+    "suspension.json": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+  },
+  "viewedRenderFiles": [
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/before-cord-depth-18mm-front.png",
+      "sha256": "0094a0c7c25c322c0adfb6e7ae19b5cab3dbdcd84afcac0def51bff8c0730eb6"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/before-cord-depth-18mm-side.png",
+      "sha256": "59fd7990d1b4627171c2dd81fd19ca5f12d3dd41614403be0a882120280b4ff4"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/before-cord-depth-18mm-top.png",
+      "sha256": "4ca8fd681cec35c0732acc22383a40dfc98d1022fc94554f384fe42e2478d0e8"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/before-cord-depth-18mm-oblique.png",
+      "sha256": "838b27078332446b770d065cf8e87d412882b307f3f086adccc9c0830b1d761f"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/before-cord-depth-15mm-front.png",
+      "sha256": "0094a0c7c25c322c0adfb6e7ae19b5cab3dbdcd84afcac0def51bff8c0730eb6"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/before-cord-depth-15mm-side.png",
+      "sha256": "8ebbe8381d8fcf30a5cdd9a7e6dde63ebe61b6ffe8d68b388ffd1b2d125ac897"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/before-cord-depth-15mm-top.png",
+      "sha256": "4ca8fd681cec35c0732acc22383a40dfc98d1022fc94554f384fe42e2478d0e8"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/before-cord-depth-15mm-oblique.png",
+      "sha256": "1fce9e15562f4c45f41716f050f5efebfef57ac2f7772fb6dedca991e7ee3b96"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/before-cord-depth-10mm-front.png",
+      "sha256": "0094a0c7c25c322c0adfb6e7ae19b5cab3dbdcd84afcac0def51bff8c0730eb6"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/before-cord-depth-10mm-side.png",
+      "sha256": "d638e1ca89a2e9655217ffe7c4e924dc91824f31c6f96a0d3547752a341e3fdc"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/before-cord-depth-10mm-top.png",
+      "sha256": "4ca8fd681cec35c0732acc22383a40dfc98d1022fc94554f384fe42e2478d0e8"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/before-cord-depth-10mm-oblique.png",
+      "sha256": "5c5bc0d1c012d5373e223b30118ef1cd1513ec191b05819f580513ca182fedbb"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-cord-depth-18mm-front.png",
+      "sha256": "9459caa35367595e84dd80c3b29df2add8a1d1ec117665274f119e6744e13677"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-cord-depth-18mm-side.png",
+      "sha256": "8eb50ec7fec48a119b35d9c91c2e19ee26e6320d459f9f59eb80cf7075f30d4a"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-cord-depth-18mm-top.png",
+      "sha256": "fb882210378af4f15ba2b74e30051cffcf6f0697cd200d459d136193416680e7"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-cord-depth-18mm-oblique.png",
+      "sha256": "ad2a47c1794cb881ed00f60c301619128cbf2126270537d6848c335e5be2d417"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-cord-depth-15mm-front.png",
+      "sha256": "9459caa35367595e84dd80c3b29df2add8a1d1ec117665274f119e6744e13677"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-cord-depth-15mm-side.png",
+      "sha256": "5af85deb45f966a0552293b354ac472a69b34661b05ab8f7af4a11428ed8b914"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-cord-depth-15mm-top.png",
+      "sha256": "fb882210378af4f15ba2b74e30051cffcf6f0697cd200d459d136193416680e7"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-cord-depth-15mm-oblique.png",
+      "sha256": "9fa5505578019b296825e869987e87ea44bcbf8e605c051334bfb6a3a76b2a78"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-cord-depth-10mm-front.png",
+      "sha256": "9459caa35367595e84dd80c3b29df2add8a1d1ec117665274f119e6744e13677"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-cord-depth-10mm-side.png",
+      "sha256": "7d97595adcda3abc40a9be507205b6e982b92f4013895507279a379cced4dc4b"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-cord-depth-10mm-top.png",
+      "sha256": "fb882210378af4f15ba2b74e30051cffcf6f0697cd200d459d136193416680e7"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-cord-depth-10mm-oblique.png",
+      "sha256": "75b858417bc5a32c2ad3f7e24a68f4d5e271939ebae45b3df1b57c0f03ecdba4"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-board-primary-under-oblique.png",
+      "sha256": "4b44fbf1ac5a5a557b65e03ccc04f5d2e85e2a590ae25edf107c2af5fe8aeb79"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-board-depth-15mm-under-oblique.png",
+      "sha256": "744b8e50f7018c56399d773262fcc263921ca68af0fe7d43efab4b6ad2c80721"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-board-depth-10mm-under-oblique.png",
+      "sha256": "aed45c77325175a89477c40349aef3f17c8ffadf559fd5e55af474e1c064337f"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/current-primary-front.png",
+      "sha256": "c323689b1e243d602bf3c5388f42612639176926d9db1196c727c46b06bbcba5"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/current-primary-side.png",
+      "sha256": "1d5ad2811c296a3f5e8ccd36c41fc3b7c8beb1b30ff5dfb77a7be676eaecdadc"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/current-primary-top.png",
+      "sha256": "721e81265227c7db92c16cf9c76e1efd9b1190cfa10a8c3179f78de670386e7f"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/current-depth-15mm-under-oblique.png",
+      "sha256": "a5fe2c85e3b0493e82814abf08cf3ca0b76c5250f894781c4e63a694b5954070"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/current-depth-10mm-under-oblique.png",
+      "sha256": "2a6d58b1274f9adbae36fc979cd958ed127c1e19f7deedb359dd717713982884"
+    }
+  ],
+  "sourceImages": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/front.png",
+      "sha256": "7a854f73c876dffdff07251e4ab4cd5128014c3f51a3d31e14ecf00ac36fe7a7",
+      "ref": "PL-2",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1171.png?v=1773212075&width=3840"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/oblique.png",
+      "sha256": "bb12d65453f77a917e048eb7ed09582c0ee4d96d6cf265973748f99cfc39191d",
+      "ref": "PL-3",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1166.png?v=1773212075&width=3840"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/blocker-15.png",
+      "sha256": "4e666f921ffebdb287f383eb1330d5eb8aafab591cea5cfc488667368ee312b0",
+      "ref": "PL-4",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1168.png?v=1773212075&width=3840"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/blocker-10.png",
+      "sha256": "b2a474441847de209fa85307383d0822f462801650f1f188bd0b1d8d8d49e243",
+      "ref": "PL-5",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1161.png?v=1773212075&width=3840"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/oak-blocker-in-use.jpg",
+      "sha256": "a4a037eccdd1de212333f3f4482fab309ff385720768bb60c61606a9fb209e75",
+      "ref": "PL-6",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/45_edited.jpg?v=1773212075&width=3840"
+    }
+  ],
+  "sourceHTML": {
+    "ref": "PL-1",
+    "url": "https://www.plateauclimbing.com/products/plateau-lifting-edge",
+    "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/product-page-current.html",
+    "sha256": "8638b5d9ede3bc42bc06e693e2586674253c39a766f5a2213cde71f4b483a3a7",
+    "reviewedWholeImage": false,
+    "approvedVisualHash": false,
+    "authorization": {
+      "approved": false,
+      "researchAuthorized": true,
+      "authorizationDate": "2026-09-29",
+      "notes": "Exact September20 HTML bytes were unavailable; this current primary HTML snapshot differs from the approved historical SHA. User expressly authorized additional primary research on September29. Approval of the exact unchanged visual sources is separate."
+    }
+  },
+  "facts": {
+    "materials": "Maker PL-1: aluminium body; oak or pine edge; 3D printed blocker with polymer unspecified. Approved photographs depict oak.",
+    "contact": "One physical edge-18; same underside and rounded lip, 18/15/10 mm position-scoped exposed depth.",
+    "cord": "Maker PL-1: 6 mm Edelrid PES cord. Approved full photos: continuous open-curl route and below-board loading. No closed passage/internalLoop inferred."
+  },
+  "sourceAuthoredDimensionEstimates": {
+    "bodyWidthMM": 100,
+    "backPlateHeightMM": 62,
+    "backPlateThicknessMM": 3,
+    "railHeightMM": 20,
+    "railFrontRoundMM": 3,
+    "curlOuterRadiusMM": 9,
+    "curlInnerRadiusMM": 6,
+    "loopRestLengthM": 0.42,
+    "solverClearanceMM": 0.2,
+    "supportAndPose": "Display estimates; depth aligned to native bearing plane and height generated by existing nativeRoutes.",
+    "publishedDimensionsOnly": "18/15/10 mm effective depth and 6 mm cord diameter; other geometry dimensions remain display estimates."
+  },
+  "findings": {
+    "physicalShape": "No canonical solid or contact shape changes: independent archive comparison preserves 75 native payloads and 47 existing object definitions; actual USDZ oriented triangle multisets and exact contact triangles preserved in all three exports. Whole views preserve open C curl and blocker coverage.",
+    "partition": "Residual plateau_body is oak exterior and plateau_edge_18 is the sole contact. Metal/blocker are descriptor attachment roles with no contact IDs; all USDZ meshes unbound and no Material/Shader prims. Runtime picking remains an unperformed app check.",
+    "cord": "Original meaningful shoulder bends had 4.5 mm surface gaps. Final whole paths bear at metal end lips and inner floor within declared .2 mm clearance. Final native proof has no unsupported meaningful bends; support and complete route share runtime Z=.012 m. No invented closed channel.",
+    "loading": "Wood grip above metal curl, support below, source-consistent loading direction. Point support is a display estimate, not a modeled supplied carabiner or knot."
+  },
+  "metrics": [
+    {
+      "presentation": "depth-18mm",
+      "sourceModelSidecarCacheBinding": "pass",
+      "actualReconstructedPathLengthMM": 420.0000061739696,
+      "nativeSupportPointM": [
+        0.0,
+        -0.18234233299999997,
+        0.012
+      ],
+      "routeSupportCoplanar": true,
+      "minimumExactNativeCenterlineDistanceMM": 3.184591174966126,
+      "maximumMeaningfulBendSurfaceGapMM": 0.2000004644990283,
+      "continuousConservativeDistanceMM": 2.9990054448831573,
+      "radiusMM": 3,
+      "existingNumericalClearanceToleranceMM": 0.01,
+      "unboundMeshCount": 3
+    },
+    {
+      "presentation": "depth-15mm",
+      "sourceModelSidecarCacheBinding": "pass",
+      "actualReconstructedPathLengthMM": 420.0000061739696,
+      "nativeSupportPointM": [
+        0.0,
+        -0.18234233299999997,
+        0.012
+      ],
+      "routeSupportCoplanar": true,
+      "minimumExactNativeCenterlineDistanceMM": 3.184591174966126,
+      "maximumMeaningfulBendSurfaceGapMM": 0.2000004644990283,
+      "continuousConservativeDistanceMM": 2.9990054448831573,
+      "radiusMM": 3,
+      "existingNumericalClearanceToleranceMM": 0.01,
+      "unboundMeshCount": 4
+    },
+    {
+      "presentation": "depth-10mm",
+      "sourceModelSidecarCacheBinding": "pass",
+      "actualReconstructedPathLengthMM": 420.0000061739696,
+      "nativeSupportPointM": [
+        0.0,
+        -0.18234233299999997,
+        0.012
+      ],
+      "routeSupportCoplanar": true,
+      "minimumExactNativeCenterlineDistanceMM": 3.184591174966126,
+      "maximumMeaningfulBendSurfaceGapMM": 0.2000004644990283,
+      "continuousConservativeDistanceMM": 2.9990054448831573,
+      "radiusMM": 3,
+      "existingNumericalClearanceToleranceMM": 0.01,
+      "unboundMeshCount": 4
+    }
+  ],
+  "proofFiles": [
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-candidate-handoff.json",
+      "sha256": "b9537dd235edec635248a031f19f56b65b91608a70e68bcc884f55160242a334"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-native-seating-inspection.json",
+      "sha256": "cd530b2b823c26bfd67ac22fa8a05414677eda0fe67cdcc1269dc3cb5e542d35"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-native-liveness.json",
+      "sha256": "7549ae6bef5506d0fc4e3d59266e671280bbab6f87814d12dbdff2f091dded1a"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-native-derived-stations-base.json",
+      "sha256": "d4112501be9dc66b1f559808f652e37eb3e1c544b80b69f10b9cf4e99867d5f0"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/render_final_cord_comparisons.py",
+      "sha256": "1bc97e13a4417396cde10df6338a66a6ed1c5df50f7453bb4c3746f497fbed35"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/render_final_usdz.py",
+      "sha256": "85353f933b5b76424fad1c2e5f0c91e7694851654b444a9f568cb560f44cdaed"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/render_cord_comparisons.py",
+      "sha256": "0f7d4aea7a3b2cc3d1c586e1ff1c1229b2ba11eaa53389c19be569bc34181785"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/render_current_usdz.py",
+      "sha256": "88f09375a178a25ebfab13851d14973c7f235850c99324b004d38672a5acf29e"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-18-check-report.json",
+      "sha256": "b4fba74782bc8cd593842dedd0e0d164f624076fb4ab79ade8f183e62fb125e6"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-15-check-report.json",
+      "sha256": "7bec9501a3495e83e6ce5ddcb86e59f280f33492c5f7bc5d34dab513f36d3f72"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-10-check-report.json",
+      "sha256": "45d9ba1848940a448ee74853b4e6c58ca388a73d2afc6de6d125f7d0676a9355"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-collider-18.json",
+      "sha256": "71fac7bddd024cff0f61f29148fa6d4d4d623952b43d8e6b4f64a316550bcb4e"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-collider-15.json",
+      "sha256": "b989c6d88c2aa9aa9e75fabf892596e606d4a19ff753fefe934d79877124db63"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/native-shape-2026-10-02/final-collider-10.json",
+      "sha256": "3928fe230ee404db88e9a302f2eb7a7c34a8fd7f5be576de2f30f2f002051d39"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/final-shape-gate-2026-10-02/independent-native-archive.json",
+      "sha256": "727a0792f8a08148eac4e5e5bb391c4e7da6e9751e0fa61661cf686e6dd54000"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/final-shape-gate-2026-10-02/independent-material-transport.json",
+      "sha256": "31c5ca1c51817966ac77694835932c9afc9fe5329dd29c776e4d48fb7176522b"
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/final-shape-gate-2026-10-02/independent-final-binding.json",
+      "sha256": "cb56dd581709199c8f92d5a7436023e9afe10bd8f31920d21ac06e925e30d7c0"
+    }
+  ],
+  "renderProvenance": "Whole diagnostic orthographic/oblique renders read exact actual USDZ triangles; tan/orange are ownership/contact tints, not shipped materials or app shader evidence. Cord tubes visualize exact final metadata routes. No crop, tracing, registration, pixel measurement or geometry inference used.",
+  "appFrames": 0,
+  "humanAcceptance": "pending",
+  "limitations": [
+    "This pass is technical source/shape/contact/cord review of the exact eight-file candidate.",
+    "Current-source app finish, hit testing, selection/reappear/orbit/reset/workout behavior require app review; none claimed.",
+    "Numerical native-route clearance/seating is a display-model certificate, not physical safety or dynamics proof."
+  ],
+  "externalResources": [],
+  "cleanup": "No external resource, HTTP server, Simulator, detached workspace, or canonical package mutation used in this review."
+}

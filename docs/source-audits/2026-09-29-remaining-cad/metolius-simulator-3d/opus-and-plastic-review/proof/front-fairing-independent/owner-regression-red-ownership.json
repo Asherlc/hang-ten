@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "name": "owner-regression-red",
+  "timeoutSeconds": 120,
+  "command": [
+    "--freecad",
+    "/Applications/FreeCAD.app",
+    "--extra-python-path",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/run_owner_regression_red.py"
+  ],
+  "ownedProcessGroup": 12954,
+  "exitCode": 2,
+  "elapsedSeconds": 0.07803383300779387,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

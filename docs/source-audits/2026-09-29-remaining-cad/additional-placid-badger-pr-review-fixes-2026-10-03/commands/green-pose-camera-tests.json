@@ -1,0 +1,24 @@
+{
+  "owner": "placid-badger",
+  "label": "green-pose-camera-tests",
+  "command": [
+    "env",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "TMPDIR=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pr-review-fixes-2026-10-03/tmp",
+    "python3",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "Tools/HangboardPackages/tests/test_pose_camera_facing.py",
+    "--junitxml=.context/placid-badger/pr-review-fixes-2026-10-03/pose-camera-junit.xml"
+  ],
+  "timeoutSeconds": 180.0,
+  "ownedProcessGroup": 90955,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 13.627732833992923
+}

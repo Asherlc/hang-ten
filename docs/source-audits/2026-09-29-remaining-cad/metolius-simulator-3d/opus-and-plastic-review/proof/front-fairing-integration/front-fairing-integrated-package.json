@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "package": "metolius-simulator-3d",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+  "surfaceFinish": "plastic",
+  "manifestBytesUnchangedFromPlasticIntermediate": true,
+  "contactsUnchanged": 30,
+  "allOtherPackageFilesUnchanged": 203,
+  "priorDeliveryDigest": "ec620b346bf520d2f32f2069e02b07ad5d2f9fd6dc8c8ed6063b2d68f5ff38c7",
+  "deliveryDigest": "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42",
+  "priorAssetCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890",
+  "revisionBaseCommit": "b097aa5ba34d55e69b9cdac73122b06774947a16",
+  "humanGeometryAcceptance": "pending smoothed-face corrected review #8",
+  "revision": "forward-grasp-fair-face-and-plastic"
+}

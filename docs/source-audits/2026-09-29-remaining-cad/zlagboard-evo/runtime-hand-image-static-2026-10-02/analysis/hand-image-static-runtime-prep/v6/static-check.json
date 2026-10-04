@@ -1,0 +1,35 @@
+{
+  "status": "PROSPECTIVE_HELPERS_ONLY_NOT_RUN",
+  "sourceSchemaPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/v3-viewport-readiness/event-schema.json",
+  "sourceSchemaSHA256": "f80ca24971a12232bc78991201be4b583b1e48729ffdcae0340999d608072a7c",
+  "pythonASTPass": true,
+  "rejectedPrototypeV1NotProvenance": true,
+  "runtimeAuthorizedByThisPreparation": false,
+  "revision": "v6 adapter for v3 viewport-readiness schema",
+  "checksImplemented": [
+    "Explicit same owned Simulator/controller and role/release/code/package binding.",
+    "30s readiness,2s settle,one screenshot,3s idle,40s postlaunch cap.",
+    "Image publication requires matching current request/submission/callback/eager conversion; orthographic pair, actual texture metadata, zero live hand makes/public ARViews.",
+    "At most one in-flight submission derived from actual event sequence; no continued image events during static idle.",
+    "Same current publication or live pair spans screenshot.",
+    "Exact registered artifact directory and hash/size validation; no pixel processing.",
+    "Cleanup failure/nonzero preserves original failure; final retained raw newline/completeness/contiguity/time/hash checks after copy.",
+    "Every actual complete publication row PNG retained in finally even after idle/other failure; unsafe paths rejected, hash mismatch retains actual bytes plus failure."
+  ],
+  "limits": [
+    "Static recipe not executed or validated on device. No source/build edits by preparer.",
+    "Prototype remains unapplied pending root/worker approval; no frozen installed binary exists in this helper.",
+    "GPU command-buffer status unavailable in schema; do not claim status success from callback alone.",
+    "Cream-only backing and whole-image visual review do not prove every transparency/composition/gesture/workout requirement."
+  ],
+  "files": {
+    "capture.py": "3351ba3cc9e05f360779f766e17f9bbf62dd4a102cfdf6e2711f79ce663ee6e4",
+    "event-schema.json": "f80ca24971a12232bc78991201be4b583b1e48729ffdcae0340999d608072a7c",
+    "protocol.md": "045005d3d427d748aca9f754582430eea92e9dd10499c0e5b32375c2fe32c5a4",
+    "prototype_schema.py": "a550193c374e8b204dc4f2a450ee7665d12854cf1c6417370943fb2e73ebaed3",
+    "v5-to-v6-adapter.patch": "4d198225364d51e51c8150ed8775cd4461f0e08dd42125f6cee55c253d6295ea"
+  },
+  "captureByteIdenticalToV5": true,
+  "oldFailureEvidenceUntouched": true,
+  "excludedCopiedCache": "inherited-v5-noninputs contains untouched copied v5 release files/cache; these are NOT v6 authorization/provenance."
+}

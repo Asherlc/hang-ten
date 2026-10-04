@@ -1,0 +1,20 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-final-checks2-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-final-checks2-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-final-checks2-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 12720,
+      "pgid": 12720,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/run-final-checks.py"
+      ]
+    }
+  ]
+}

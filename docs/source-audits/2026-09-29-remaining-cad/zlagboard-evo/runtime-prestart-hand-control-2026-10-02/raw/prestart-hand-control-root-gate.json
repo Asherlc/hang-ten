@@ -1,0 +1,38 @@
+{
+  "originalProspectiveCheckPassed": false,
+  "supplementalTimingCheckPassed": true,
+  "incompleteFirstOwnershipBracket": true,
+  "remainingEvidencePassed": true,
+  "visualResult": "FAIL",
+  "startupFirstHandHistoryReproduced": true,
+  "binarySHA256": "f98a07f4383af14396d8442581a330f4d3523d0c9854436420b67bf14b681d97",
+  "actionAuthorized": true,
+  "proofs": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-supplemental-timing.json",
+      "sha256": "f624a2e8b2a9f81f0651aa645d47613546a70fde3e5c4bb60ee527f6e5587440"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-control-bracket-audit/report.json",
+      "sha256": "2691fc62321d15c8a33ed7be7383f589694959893c8add8232bec776c4f245b7"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-comparison.json",
+      "sha256": "a9ee750cf309b546fdd440f3fdda1f9efb6b1fc3604a3af8dd67f57bcf740006"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-findings.json",
+      "sha256": "bc20a2b844da85378c0a07ea4892ef99bfbe452857832b4a6a6f883c9610e84d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-root-visual-corroboration.json",
+      "sha256": "5111d0804c5600331adef8ca37e75ae3b19fdfccb7868b479c60c1fa0778d6ff"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-frozen-manifest.json",
+      "sha256": "625345549e35d3231fdbb9f8222d7a46d6cc0b9b54f02e976e6ac61106e8b1eb"
+    }
+  ],
+  "limitation": "Original prospective check remains failed. Supplement establishes actual construction before capture and23 other ownership points; it does not supply missing first-before attachment proof. Same amended criterion required for action.",
+  "scope": "One action only; no reversal or production change authorized by this record"
+}

@@ -1,0 +1,49 @@
+{
+  "slug": "metolius-simulator-3d",
+  "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+  "validSolidCount": 1,
+  "fullyConstrainedSketchCount": 128,
+  "contactCount": 30,
+  "publishedDepthsMm": {
+    "pocket-4-left": 30.000000000000014,
+    "edge-5-left": 24.999999999999993,
+    "edge-6-left": 19.0,
+    "edge-7-left": 36.0,
+    "pocket-8-left": 15.0,
+    "pocket-9-left": 35.0,
+    "pocket-10-left": 17.0,
+    "edge-11-left": 13.999999999999996,
+    "pocket-12-left": 30.0,
+    "pocket-13-left": 14.000000000000004,
+    "pocket-15-center": 50.000000100000015,
+    "pocket-16-center": 36.99999999999999,
+    "pocket-17-center": 27.999999999999996,
+    "pocket-18-center": 32.00000000000001,
+    "pocket-13-right": 13.999999999999996,
+    "pocket-12-right": 30.0,
+    "edge-11-right": 14.000000000000004,
+    "pocket-10-right": 17.000000000000007,
+    "pocket-9-right": 35.0,
+    "pocket-8-right": 15.000000000000014,
+    "edge-7-right": 35.99999999999999,
+    "edge-6-right": 18.999999999999993,
+    "edge-5-right": 25.0,
+    "pocket-4-right": 29.999999999999993
+  },
+  "nativeEdit": {
+    "parameter": "Depth_edge_11_left",
+    "before": 14.0,
+    "after": 16.0,
+    "changedContacts": [
+      "edge-11-left"
+    ],
+    "bodyVolumeChanged": true,
+    "restored": true
+  },
+  "allContactsOnBody": true,
+  "noRearContactFaces": true,
+  "noContactSurfaceOverlap": true,
+  "potentialOverlapPairsChecked": 11,
+  "allObjectsRecomputed": true,
+  "savedSourceUnchanged": true
+}

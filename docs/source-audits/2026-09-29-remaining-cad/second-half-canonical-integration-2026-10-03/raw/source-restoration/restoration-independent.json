@@ -1,0 +1,114 @@
+{
+  "review": "Independent byte verification only; no tests, build, install, Simulator, or source changes performed.",
+  "createdUTC": "2026-10-03T10:06:47.028899+00:00",
+  "baseline": "7a6867151307170dd0993a6d6492500d3fd46467",
+  "head": "405a4530ab3a26496cf4e44fb59917e5befd7af8",
+  "sourceCount": 5,
+  "criticalTestCount": 6,
+  "files": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "kind": "restoredSource",
+      "currentSHA256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+      "baselineSHA256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+      "headSHA256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+      "exactBaseline": true,
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "kind": "restoredSource",
+      "currentSHA256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+      "baselineSHA256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+      "headSHA256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+      "exactBaseline": true,
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "kind": "restoredSource",
+      "currentSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "baselineSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "headSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "exactBaseline": true,
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "kind": "restoredSource",
+      "currentSHA256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+      "baselineSHA256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+      "headSHA256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+      "exactBaseline": true,
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "kind": "restoredSource",
+      "currentSHA256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+      "baselineSHA256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+      "headSHA256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+      "exactBaseline": true,
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTenTests/BoardModelRealityTests.swift",
+      "kind": "criticalTest",
+      "currentSHA256": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+      "baselineSHA256": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+      "headSHA256": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+      "exactBaseline": true,
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTenTests/BoardModelTests.swift",
+      "kind": "criticalTest",
+      "currentSHA256": "74dfab4632f744e10f74f85216b77d3b073d0e84858d750a4ba8fd118d1c4601",
+      "baselineSHA256": "74dfab4632f744e10f74f85216b77d3b073d0e84858d750a4ba8fd118d1c4601",
+      "headSHA256": "74dfab4632f744e10f74f85216b77d3b073d0e84858d750a4ba8fd118d1c4601",
+      "exactBaseline": true,
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTenTests/GripHandCueCardTests.swift",
+      "kind": "criticalTest",
+      "currentSHA256": "c9054950e8b3d6687a36406cc00113a2789ee94297a96ec88ef53ff2955919e9",
+      "baselineSHA256": "c9054950e8b3d6687a36406cc00113a2789ee94297a96ec88ef53ff2955919e9",
+      "headSHA256": "c9054950e8b3d6687a36406cc00113a2789ee94297a96ec88ef53ff2955919e9",
+      "exactBaseline": true,
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTenTests/GripHandOrbitTests.swift",
+      "kind": "criticalTest",
+      "currentSHA256": "80ae86c0d092d87d5699d8ea76f723a8c4241a6054ea49cafbfedb2938bc62fe",
+      "baselineSHA256": "80ae86c0d092d87d5699d8ea76f723a8c4241a6054ea49cafbfedb2938bc62fe",
+      "headSHA256": "80ae86c0d092d87d5699d8ea76f723a8c4241a6054ea49cafbfedb2938bc62fe",
+      "exactBaseline": true,
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTenTests/WorkoutStopwatchTests.swift",
+      "kind": "criticalTest",
+      "currentSHA256": "a17833da9eef86ddd56006d3aa1894a52a6d059faa17b10df17423793ee7e252",
+      "baselineSHA256": "a17833da9eef86ddd56006d3aa1894a52a6d059faa17b10df17423793ee7e252",
+      "headSHA256": "a17833da9eef86ddd56006d3aa1894a52a6d059faa17b10df17423793ee7e252",
+      "exactBaseline": true,
+      "exactHEAD": true
+    },
+    {
+      "path": "HangTenTests/WorkoutTimelineTests.swift",
+      "kind": "criticalTest",
+      "currentSHA256": "1e6f080570a0f99cd8c749af28d0fc2887625d728bf16344a7b6c13b1ed4bb5e",
+      "baselineSHA256": "1e6f080570a0f99cd8c749af28d0fc2887625d728bf16344a7b6c13b1ed4bb5e",
+      "headSHA256": "1e6f080570a0f99cd8c749af28d0fc2887625d728bf16344a7b6c13b1ed4bb5e",
+      "exactBaseline": true,
+      "exactHEAD": true
+    }
+  ],
+  "passed": true,
+  "limitations": [
+    "This verifies file preservation, not runtime behavior or test execution.",
+    "Runtime validation remains scoped to the muted, awake workflow."
+  ]
+}

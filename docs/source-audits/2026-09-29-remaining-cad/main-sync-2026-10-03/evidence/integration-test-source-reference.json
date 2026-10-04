@@ -1,0 +1,13 @@
+{
+  "sourceFiles": [
+    {
+      "path": "Tools/HangboardPackages/tests/test_pose_camera_facing.py",
+      "sha256": "347eec40906f59ab5b74c97b85294b18807259e677b19ca6e739476cd98f7aad"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_trango_mirrored_halves.py",
+      "sha256": "4b03e08910c99b7cfb39bacf2916fe37033b291efbed088137de2e2355442480"
+    }
+  ],
+  "purpose": "Preserve exact narrow integration assertions tested; accepted native board bytes untouched."
+}

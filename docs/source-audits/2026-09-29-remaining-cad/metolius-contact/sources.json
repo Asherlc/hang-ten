@@ -1,0 +1,46 @@
+{
+  "approvalStatus": "approved",
+  "revisionNotes": "Manufacturer photograph and independent numbered depth diagram establish curved symmetric shell, 11 pocket pairs, four central edges, outer jugs, variable pinches, flat center sloper and paired round slopers. Published envelope 32.5 x 11 x 2.625 in. Diagram depths match existing pocket and central-edge facts. Preserve existing IDs and handCapacity fields; another active PR #516 concerns handCapacity only.",
+  "sources": [
+    {
+      "slug": "metolius-contact",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-01.jpg",
+      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Contact-Hangboard-black-white.jpg?v=1759459002",
+      "publisher": "Metolius",
+      "sha256": "b9cf153d82f0072ae2e4b0064821dee1d666ff1d8b34ba21fed1fcfd6944c055",
+      "bytes": 275273,
+      "support": "Manufacturer product gallery",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer"
+    },
+    {
+      "slug": "metolius-contact",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-02.jpg",
+      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/con-num-dep_341f2901-a11e-4256-a4c3-0531110c730e.jpg?v=1762201170",
+      "publisher": "Metolius",
+      "sha256": "6c824af42552a9ed12f7e336dac47d9a2c61441b6f90515d196f3484ad0a1202",
+      "bytes": 128201,
+      "support": "Manufacturer product gallery",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer"
+    },
+    {
+      "slug": "metolius-contact",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/sources/product-page.html",
+      "url": "https://www.metoliusclimbing.com/products/contact-training-board",
+      "publisher": "Metolius",
+      "sha256": "042c7ff4df1a18634567594cecb82f4e62273a617a3a7145316d34fe85b55983",
+      "bytes": 217261,
+      "support": "Manufacturer product identity and published overall dimensions",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer supplementary fact source"
+    }
+  ],
+  "approval": {
+    "reviewer": "asherlc",
+    "date": "2026-09-29",
+    "method": "direct conversation",
+    "quote": "those are fine, feel free to use more searches for individual boards as needed",
+    "consolidatedReview": ".context/placid-badger/source-review.json"
+  }
+}

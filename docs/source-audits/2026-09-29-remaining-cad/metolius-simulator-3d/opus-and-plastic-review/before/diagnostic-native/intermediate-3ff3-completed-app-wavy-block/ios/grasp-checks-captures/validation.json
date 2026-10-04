@@ -1,0 +1,386 @@
+{
+  "owner": "placid-badger",
+  "date": "2026-10-01",
+  "phase": "grasp-checks",
+  "simulator": "72312582-DB46-44A7-9C61-D8C0E9F75876",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS26.5",
+  "boardID": "metolius.simulator-3d",
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+  "builtBinarySHA256": "afb082de5c7b86d611136c0805afa82bc2e28f8e7051d243e0b0a15086829d29",
+  "surfaceFinish": "plastic",
+  "checks": [
+    {
+      "contactID": "jug-14-center",
+      "image": "center-jug.png",
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30
+    },
+    {
+      "contactID": "jug-14-center",
+      "image": "center-jug-high-front.png",
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "jug-14-center",
+      "image": "center-jug-end-on.png",
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "jug-14-center",
+      "image": "center-jug-rear-leaning.png",
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    }
+  ],
+  "commands": [
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-plastic-review/ios/grasp-checks-captures/center-jug.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "201.00000000000006",
+      "--start-y",
+      "413.41666666666663",
+      "--end-x",
+      "201.00000000000006",
+      "--end-y",
+      "282.3333333333333",
+      "--duration",
+      "1.0",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-plastic-review/ios/grasp-checks-captures/center-jug-high-front.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "107.48000000000006",
+      "--start-y",
+      "342.8333333333333",
+      "--end-x",
+      "327.9200000000001",
+      "--end-y",
+      "342.8333333333333",
+      "--duration",
+      "1.0",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "107.48000000000006",
+      "--start-y",
+      "342.8333333333333",
+      "--end-x",
+      "327.9200000000001",
+      "--end-y",
+      "342.8333333333333",
+      "--duration",
+      "1.0",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "107.48000000000006",
+      "--start-y",
+      "342.8333333333333",
+      "--end-x",
+      "327.9200000000001",
+      "--end-y",
+      "342.8333333333333",
+      "--duration",
+      "1.0",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-plastic-review/ios/grasp-checks-captures/center-jug-end-on.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "107.48000000000006",
+      "--start-y",
+      "342.8333333333333",
+      "--end-x",
+      "327.9200000000001",
+      "--end-y",
+      "342.8333333333333",
+      "--duration",
+      "1.0",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "107.48000000000006",
+      "--start-y",
+      "342.8333333333333",
+      "--end-x",
+      "327.9200000000001",
+      "--end-y",
+      "342.8333333333333",
+      "--duration",
+      "1.0",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "72312582-DB46-44A7-9C61-D8C0E9F75876",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-plastic-review/ios/grasp-checks-captures/center-jug-rear-leaning.png"
+    ]
+  ],
+  "humanGeometryAcceptance": "pending revised review #8",
+  "actualDragChecks": [
+    {
+      "contactID": "jug-14-center",
+      "index": 1,
+      "startFraction": [
+        0.5,
+        0.85
+      ],
+      "endFraction": [
+        0.5,
+        0.2
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "jug-14-center",
+      "index": 2,
+      "startFraction": [
+        0.22,
+        0.5
+      ],
+      "endFraction": [
+        0.88,
+        0.5
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "jug-14-center",
+      "index": 3,
+      "startFraction": [
+        0.22,
+        0.5
+      ],
+      "endFraction": [
+        0.88,
+        0.5
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "jug-14-center",
+      "index": 4,
+      "startFraction": [
+        0.22,
+        0.5
+      ],
+      "endFraction": [
+        0.88,
+        0.5
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "jug-14-center",
+      "index": 5,
+      "startFraction": [
+        0.22,
+        0.5
+      ],
+      "endFraction": [
+        0.88,
+        0.5
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    },
+    {
+      "contactID": "jug-14-center",
+      "index": 6,
+      "startFraction": [
+        0.22,
+        0.5
+      ],
+      "endFraction": [
+        0.88,
+        0.5
+      ],
+      "selectionAXConfirmed": true,
+      "contactsAvailable": 30,
+      "actualDragOrbit": true,
+      "projectedContactFramesChanged": true
+    }
+  ],
+  "limits": "Full-frame app captures and AX selection; representative contacts and actual drags, not an all-contact visual sweep or manufacturer accuracy certification. Color-only phase is intermediate geometry and does not satisfy final corrected geometry review."
+}

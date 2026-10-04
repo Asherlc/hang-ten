@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/scripts/verify-model-delivery.py", line 143, in <module>
+    main()
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/scripts/verify-model-delivery.py", line 134, in main
+    result = verify(root, lock)
+             ^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/scripts/verify-model-delivery.py", line 115, in verify
+    raise ValueError("model/descriptor/metadata checksum mismatch")
+ValueError: model/descriptor/metadata checksum mismatch

@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "presentationID": "primary",
+  "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+  "suspension": {
+    "type": "cadRoutedCord",
+    "bodyNodeID": "flash_board_body_008",
+    "strands": [
+      {
+        "id": "mouth-1-lead",
+        "kind": "lead",
+        "restLength": 0.42,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Conditional display reconstruction from retained maker whole photographs/video and Opus advisory. Hidden continuity and contact order remain unverified. The four native through-bores and cord radius are inherited authored display estimates, not approved manufacturer threading. Support and visible length allowances are display estimates, not full cord lengths. The existing native solver generates all visible paths and height."
+      },
+      {
+        "id": "mouth-2-lead",
+        "kind": "lead",
+        "restLength": 0.42,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Conditional display reconstruction from retained maker whole photographs/video and Opus advisory. Hidden continuity and contact order remain unverified. The four native through-bores and cord radius are inherited authored display estimates, not approved manufacturer threading. Support and visible length allowances are display estimates, not full cord lengths. The existing native solver generates all visible paths and height."
+      },
+      {
+        "id": "mouth-3-lead",
+        "kind": "lead",
+        "restLength": 0.42,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Conditional display reconstruction from retained maker whole photographs/video and Opus advisory. Hidden continuity and contact order remain unverified. The four native through-bores and cord radius are inherited authored display estimates, not approved manufacturer threading. Support and visible length allowances are display estimates, not full cord lengths. The existing native solver generates all visible paths and height."
+      },
+      {
+        "id": "mouth-4-lead",
+        "kind": "lead",
+        "restLength": 0.42,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Conditional display reconstruction from retained maker whole photographs/video and Opus advisory. Hidden continuity and contact order remain unverified. The four native through-bores and cord radius are inherited authored display estimates, not approved manufacturer threading. Support and visible length allowances are display estimates, not full cord lengths. The existing native solver generates all visible paths and height."
+      },
+      {
+        "id": "left-barrel-wrap",
+        "kind": "segment",
+        "restLength": 0.109,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Conditional display reconstruction from retained maker whole photographs/video and Opus advisory. Hidden continuity and contact order remain unverified. The four native through-bores and cord radius are inherited authored display estimates, not approved manufacturer threading. Support and visible length allowances are display estimates, not full cord lengths. The existing native solver generates all visible paths and height."
+      },
+      {
+        "id": "right-barrel-wrap",
+        "kind": "segment",
+        "restLength": 0.109,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Conditional display reconstruction from retained maker whole photographs/video and Opus advisory. Hidden continuity and contact order remain unverified. The four native through-bores and cord radius are inherited authored display estimates, not approved manufacturer threading. Support and visible length allowances are display estimates, not full cord lengths. The existing native solver generates all visible paths and height."
+      }
+    ],
+    "anchor": {
+      "offsetFromBoardBounds": [
+        0,
+        0.2,
+        0
+      ],
+      "visibility": "invisible",
+      "provenance": "display estimate; invisible overhead convergence selected for free-span clearance"
+    },
+    "canonicalPoses": {
+      "three-edge-upright": {
+        "rotation": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          -0.021394925,
+          0.075999998
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "three-edge-inverted": {
+        "rotation": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "translation": [
+          0.5,
+          -0.021396058,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "two-edge-upright": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          -0.11890548,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "two-edge-inverted": {
+        "rotation": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "translation": [
+          0.5,
+          -0.118904441,
+          0.075999998
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            1
+          ],
+          "fitPadding": 0.1
+        }
+      }
+    }
+  },
+  "ropeSolver": {
+    "method": "nativeRoutes",
+    "clearance": 0.0002,
+    "supportDirection": 1,
+    "terminalsByStrandID": {
+      "mouth-1-lead": {
+        "points": [
+          [
+            0.017,
+            0.048,
+            0.0013393944404
+          ]
+        ],
+        "planeNormal": [
+          1,
+          0,
+          0
+        ]
+      },
+      "mouth-2-lead": {
+        "points": [
+          [
+            0.031,
+            0.048,
+            0.0746606055596
+          ]
+        ],
+        "planeNormal": [
+          1,
+          0,
+          0
+        ]
+      },
+      "mouth-3-lead": {
+        "points": [
+          [
+            0.469,
+            0.048,
+            0.0746606055596
+          ]
+        ],
+        "planeNormal": [
+          1,
+          0,
+          0
+        ]
+      },
+      "mouth-4-lead": {
+        "points": [
+          [
+            0.483,
+            0.048,
+            0.0013393944404
+          ]
+        ],
+        "planeNormal": [
+          1,
+          0,
+          0
+        ]
+      },
+      "left-barrel-wrap": {
+        "points": [
+          [
+            0.017,
+            0.048,
+            0.0746606055596
+          ],
+          [
+            0.031,
+            0.048,
+            0.0013393944404
+          ]
+        ],
+        "planeNormal": [
+          0.9822546108840255,
+          0,
+          0.18755233775421576
+        ]
+      },
+      "right-barrel-wrap": {
+        "points": [
+          [
+            0.483,
+            0.048,
+            0.0746606055596
+          ],
+          [
+            0.469,
+            0.048,
+            0.0013393944404
+          ]
+        ],
+        "planeNormal": [
+          0.9822546108840255,
+          0,
+          -0.18755233775421593
+        ]
+      }
+    },
+    "sectionPlane": "anchor",
+    "pathSearch": "aStar"
+  }
+}

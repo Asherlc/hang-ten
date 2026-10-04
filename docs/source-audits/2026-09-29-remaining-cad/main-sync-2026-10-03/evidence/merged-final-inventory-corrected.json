@@ -1,0 +1,17 @@
+{
+  "command": [
+    ".context/placid-badger-cad-second-half/yy-baguette/venv/bin/python",
+    "-c",
+    "from hangboard_packages.cli import main; raise SystemExit(main())",
+    "validate",
+    "--root",
+    "Hangboards",
+    "--final-inventory"
+  ],
+  "environment": {
+    "PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardPackages/src"
+  },
+  "exitCode": 0,
+  "duration": 3.622065782546997,
+  "correction": "Package lacks __main__; invoke documented cli.main directly. Original invocation failure retained."
+}

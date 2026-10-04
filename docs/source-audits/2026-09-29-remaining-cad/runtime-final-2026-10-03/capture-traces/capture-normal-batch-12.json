@@ -1,0 +1,266 @@
+{
+  "owner": "placid-badger",
+  "number": 12,
+  "steps": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "12",
+        "face-a-left-outer-slot",
+        "--telephoto"
+      ],
+      "startedAt": 1791055472.754359,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"owl-climb.poker\", \"contact\": \"face-a-left-outer-slot\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-a-left-outer-slot;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.74003005027771
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "12-live-front"
+      ],
+      "startedAt": 1791055483.494829,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/12-live-front.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-a-left-outer-slot;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 2.321125030517578
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "12",
+        "face-a-left-outer-slot",
+        "--telephoto"
+      ],
+      "startedAt": 1791055485.8163898,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"owl-climb.poker\", \"contact\": \"face-a-left-outer-slot\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-a-left-outer-slot;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.625729084014893
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "12-live-hold-face-a-left-outer-slot"
+      ],
+      "startedAt": 1791055496.442791,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/12-live-hold-face-a-left-outer-slot.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-a-left-outer-slot;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 2.2012579441070557
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "12",
+        "face-b-left-deep-sloper",
+        "--telephoto"
+      ],
+      "startedAt": 1791055498.644438,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"owl-climb.poker\", \"contact\": \"face-b-left-deep-sloper\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-b-left-deep-sloper;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.783499002456665
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "12-live-hold-face-b-left-deep-sloper"
+      ],
+      "startedAt": 1791055509.428355,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/12-live-hold-face-b-left-deep-sloper.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-b-left-deep-sloper;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 2.313453197479248
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "12",
+        "face-c-left-shallow-half-round",
+        "--telephoto"
+      ],
+      "startedAt": 1791055511.74229,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"owl-climb.poker\", \"contact\": \"face-c-left-shallow-half-round\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-c-left-shallow-half-round;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.607556104660034
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "12-live-hold-face-c-left-shallow-half-round"
+      ],
+      "startedAt": 1791055522.350253,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/12-live-hold-face-c-left-shallow-half-round.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-c-left-shallow-half-round;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 2.2175920009613037
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "12",
+        "face-d-left-deep-rounded-recess",
+        "--telephoto"
+      ],
+      "startedAt": 1791055524.568338,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"owl-climb.poker\", \"contact\": \"face-d-left-deep-rounded-recess\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-d-left-deep-rounded-recess;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.719492197036743
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "capture",
+        "12-live-hold-face-d-left-deep-rounded-recess"
+      ],
+      "startedAt": 1791055535.2882292,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/12-live-hold-face-d-left-deep-rounded-recess.png\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-d-left-deep-rounded-recess;tapRevision=0;pickedContact=\", \"rawFailureCapture\": false}\n",
+      "stderr": "",
+      "elapsedSeconds": 2.2148847579956055
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "12",
+        "face-b-left-deep-sloper",
+        "--telephoto"
+      ],
+      "startedAt": 1791055537.503615,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"owl-climb.poker\", \"contact\": \"face-b-left-deep-sloper\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-b-left-deep-sloper;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.657352924346924
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "orbit",
+        "12-live-horizontal-orbit-1"
+      ],
+      "startedAt": 1791055548.161433,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/12-live-horizontal-orbit-1.png\", \"rendererDiagnostic\": \"revision=5;rootActive=true;cameraActive=true;sameScene=true;azimuth=-0.54071856;elevation=0.09847304;cameraPitch=0.09847306;cameraSettled=true;selection=face-b-left-deep-sloper;tapRevision=0;pickedContact=\", \"actualPhysicalOrbit\": true, \"projectedBefore\": {\"boardModel.contact.face-c-left-single-pocket\": [0.13273453093812373, 0.16447368421052608], \"boardModel.contact.face-b-left-outer-slot\": [0.17065868263473055, 0.38157894736842096], \"boardModel.contact.face-c-left-outer-slot\": [0.18562874251497005, 0.16447368421052608], \"boardModel.contact.face-c-left-dual-pocket\": [0.20259481037924149, 0.16447368421052608], \"boardModel.contact.face-b-left-single-pocket\": [0.12674650698602793, 0.6644736842105261], \"boardModel.contact.face-d-left-single-pocket\": [0.15069860279441116, 0.3486842105263153], \"boardModel.contact.face-a-left-single-pocket\": [0.14471057884231536, 0.8223684210526314], \"boardModel.contact.face-a-left-outer-slot\": [0.17864271457085826, 0.80921052631579], \"boardModel.contact.face-b-left-dual-pocket\": [0.19660678642714569, 0.6644736842105261], \"boardModel.contact.face-a-left-dual-pocket\": [0.2115768463073852, 0.8223684210526314], \"boardModel.contact.face-b-left-deep-sloper\": [0.33932135728542906, 0.5526315789473688], \"boardModel.contact.face-c-left-shallow-half-round\": [0.344311377245509, 0.15131578947368413], \"boardModel.contact.face-c-center-pull-up-slot\": [0.5, 0.1578947368421054], \"boardModel.contact.face-c-right-shallow-half-round\": [0.655688622754491, 0.15131578947368413], \"boardModel.contact.face-b-center-pull-up-slot\": [0.5, 0.7039473684210524], \"boardModel.contact.face-a-center-pull-up-slot\": [0.5, 0.8223684210526314], \"boardModel.contact.face-b-right-deep-sloper\": [0.6606786427145708, 0.5526315789473688], \"boardModel.contact.face-c-right-single-pocket\": [0.779441117764471, 0.16447368421052608], \"boardModel.contact.face-c-right-outer-slot\": [0.8143712574850299, 0.16447368421052608], \"boardModel.contact.face-a-right-single-pocket\": [0.7704590818363273, 0.8223684210526314], \"boardModel.contact.face-b-right-single-pocket\": [0.7844311377245509, 0.6644736842105261], \"boardModel.contact.face-a-right-outer-slot\": [0.8213572854291417, 0.80921052631579], \"boardModel.contact.face-b-right-outer-slot\": [0.8293413173652695, 0.38157894736842096], \"boardModel.contact.face-c-right-dual-pocket\": [0.8493013972055887, 0.16447368421052608], \"boardModel.contact.face-d-left-outer-slot\": [0.19361277445109779, 0.6052631578947365], \"boardModel.contact.face-d-left-dual-pocket\": [0.21656686626746502, 0.3486842105263153], \"boardModel.contact.face-d-left-deep-rounded-recess\": [0.3463073852295409, 0.4144736842105266], \"boardModel.contact.face-d-center-pull-up-slot\": [0.5, 0.30921052631578894], \"boardModel.contact.face-d-right-deep-rounded-recess\": [0.653692614770459, 0.4144736842105266], \"boardModel.contact.face-d-right-single-pocket\": [0.7654690618762474, 0.3486842105263153], \"boardModel.contact.face-d-right-outer-slot\": [0.8063872255489022, 0.6052631578947365], \"boardModel.contact.face-d-right-dual-pocket\": [0.8323353293413174, 0.3486842105263153], \"boardModel.contact.face-a-right-dual-pocket\": [0.8373253493013971, 0.8223684210526314], \"boardModel.contact.face-b-right-dual-pocket\": [0.8552894211576845, 0.6644736842105261]}, \"projectedAfter\": {\"boardModel.contact.face-d-left-single-pocket\": [0.2704590818363273, 0.453947368421053], \"boardModel.contact.face-c-left-single-pocket\": [0.2894211576846307, 0.3618421052631578], \"boardModel.contact.face-a-left-single-pocket\": [0.27744510978043907, 0.7960526315789476], \"boardModel.contact.face-d-left-outer-slot\": [0.2974051896207584, 0.6249999999999997], \"boardModel.contact.face-b-left-single-pocket\": [0.2974051896207584, 0.7171052631578949], \"boardModel.contact.face-c-left-outer-slot\": [0.30638722554890213, 0.33552631578947395], \"boardModel.contact.face-d-left-dual-pocket\": [0.3133732534930139, 0.4407894736842105], \"boardModel.contact.face-a-left-outer-slot\": [0.31636726546906185, 0.7960526315789476], \"boardModel.contact.face-a-left-dual-pocket\": [0.32135728542914166, 0.7763157894736844], \"boardModel.contact.face-b-left-outer-slot\": [0.3253493013972056, 0.5131578947368425], \"boardModel.contact.face-c-left-dual-pocket\": [0.33433133732534925, 0.3486842105263153], \"boardModel.contact.face-b-left-dual-pocket\": [0.3413173652694611, 0.6973684210526317], \"boardModel.contact.face-d-left-deep-rounded-recess\": [0.39620758483033924, 0.4605263157894737], \"boardModel.contact.face-c-left-shallow-half-round\": [0.40119760479041916, 0.29605263157894757], \"boardModel.contact.face-b-left-deep-sloper\": [0.4151696606786427, 0.5789473684210527], \"boardModel.contact.face-d-center-pull-up-slot\": [0.4840319361277445, 0.3552631578947371], \"boardModel.contact.face-a-center-pull-up-slot\": [0.4900199600798403, 0.6973684210526317], \"boardModel.contact.face-c-center-pull-up-slot\": [0.5099800399201596, 0.29605263157894757], \"boardModel.contact.face-b-center-pull-up-slot\": [0.5159680638722555, 0.6447368421052629], \"boardModel.contact.face-d-right-deep-rounded-recess\": [0.5688622754491018, 0.4013157894736841], \"boardModel.contact.face-c-right-shallow-half-round\": [0.5748502994011976, 0.24342105263157876], \"boardModel.contact.face-b-right-deep-sloper\": [0.590818363273453, 0.5065789473684207], \"boardModel.contact.face-d-right-single-pocket\": [0.6247504990019959, 0.33552631578947395], \"boardModel.contact.face-a-right-single-pocket\": [0.6337325349301396, 0.6315789473684216], \"boardModel.contact.face-d-right-outer-slot\": [0.6437125748502994, 0.4868421052631575], \"boardModel.contact.face-c-right-single-pocket\": [0.651696606786427, 0.25], \"boardModel.contact.face-c-right-outer-slot\": [0.6576846307385228, 0.23026315789473684], \"boardModel.contact.face-d-right-dual-pocket\": [0.6576846307385228, 0.32236842105263147], \"boardModel.contact.face-b-right-single-pocket\": [0.6596806387225548, 0.5592105263157895], \"boardModel.contact.face-a-right-dual-pocket\": [0.6656686626746506, 0.618421052631579], \"boardModel.contact.face-a-right-outer-slot\": [0.6686626746506985, 0.6249999999999997], \"boardModel.contact.face-b-right-outer-slot\": [0.6816367265469061, 0.38157894736842096], \"boardModel.contact.face-c-right-dual-pocket\": [0.684630738522954, 0.23684210526315808], \"boardModel.contact.face-b-right-dual-pocket\": [0.6926147704590818, 0.5394736842105263]}}\n",
+      "stderr": "",
+      "elapsedSeconds": 5.894975185394287
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "orbit",
+        "12-live-horizontal-orbit-2"
+      ],
+      "startedAt": 1791055554.056958,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/12-live-horizontal-orbit-2.png\", \"rendererDiagnostic\": \"revision=9;rootActive=true;cameraActive=true;sameScene=true;azimuth=-1.0814371;elevation=0.19694608;cameraPitch=0.19694607;cameraSettled=true;selection=face-b-left-deep-sloper;tapRevision=0;pickedContact=\", \"actualPhysicalOrbit\": true, \"projectedBefore\": {\"boardModel.contact.face-d-left-single-pocket\": [0.2704590818363273, 0.453947368421053], \"boardModel.contact.face-c-left-single-pocket\": [0.2894211576846307, 0.3618421052631578], \"boardModel.contact.face-a-left-single-pocket\": [0.27744510978043907, 0.7960526315789476], \"boardModel.contact.face-d-left-outer-slot\": [0.2974051896207584, 0.6249999999999997], \"boardModel.contact.face-b-left-single-pocket\": [0.2974051896207584, 0.7171052631578949], \"boardModel.contact.face-c-left-outer-slot\": [0.30638722554890213, 0.33552631578947395], \"boardModel.contact.face-d-left-dual-pocket\": [0.3133732534930139, 0.4407894736842105], \"boardModel.contact.face-a-left-outer-slot\": [0.31636726546906185, 0.7960526315789476], \"boardModel.contact.face-a-left-dual-pocket\": [0.32135728542914166, 0.7763157894736844], \"boardModel.contact.face-b-left-outer-slot\": [0.3253493013972056, 0.5131578947368425], \"boardModel.contact.face-c-left-dual-pocket\": [0.33433133732534925, 0.3486842105263153], \"boardModel.contact.face-b-left-dual-pocket\": [0.3413173652694611, 0.6973684210526317], \"boardModel.contact.face-d-left-deep-rounded-recess\": [0.39620758483033924, 0.4605263157894737], \"boardModel.contact.face-c-left-shallow-half-round\": [0.40119760479041916, 0.29605263157894757], \"boardModel.contact.face-b-left-deep-sloper\": [0.4151696606786427, 0.5789473684210527], \"boardModel.contact.face-d-center-pull-up-slot\": [0.4840319361277445, 0.3552631578947371], \"boardModel.contact.face-a-center-pull-up-slot\": [0.4900199600798403, 0.6973684210526317], \"boardModel.contact.face-c-center-pull-up-slot\": [0.5099800399201596, 0.29605263157894757], \"boardModel.contact.face-b-center-pull-up-slot\": [0.5159680638722555, 0.6447368421052629], \"boardModel.contact.face-d-right-deep-rounded-recess\": [0.5688622754491018, 0.4013157894736841], \"boardModel.contact.face-c-right-shallow-half-round\": [0.5748502994011976, 0.24342105263157876], \"boardModel.contact.face-b-right-deep-sloper\": [0.590818363273453, 0.5065789473684207], \"boardModel.contact.face-d-right-single-pocket\": [0.6247504990019959, 0.33552631578947395], \"boardModel.contact.face-a-right-single-pocket\": [0.6337325349301396, 0.6315789473684216], \"boardModel.contact.face-d-right-outer-slot\": [0.6437125748502994, 0.4868421052631575], \"boardModel.contact.face-c-right-single-pocket\": [0.651696606786427, 0.25], \"boardModel.contact.face-c-right-outer-slot\": [0.6576846307385228, 0.23026315789473684], \"boardModel.contact.face-d-right-dual-pocket\": [0.6576846307385228, 0.32236842105263147], \"boardModel.contact.face-b-right-single-pocket\": [0.6596806387225548, 0.5592105263157895], \"boardModel.contact.face-a-right-dual-pocket\": [0.6656686626746506, 0.618421052631579], \"boardModel.contact.face-a-right-outer-slot\": [0.6686626746506985, 0.6249999999999997], \"boardModel.contact.face-b-right-outer-slot\": [0.6816367265469061, 0.38157894736842096], \"boardModel.contact.face-c-right-dual-pocket\": [0.684630738522954, 0.23684210526315808], \"boardModel.contact.face-b-right-dual-pocket\": [0.6926147704590818, 0.5394736842105263]}, \"projectedAfter\": {\"boardModel.contact.face-d-left-single-pocket\": [0.4041916167664671, 0.5986842105263158], \"boardModel.contact.face-a-left-single-pocket\": [0.4141716566866267, 0.8223684210526314], \"boardModel.contact.face-c-left-outer-slot\": [0.4261477045908183, 0.5065789473684207], \"boardModel.contact.face-a-left-dual-pocket\": [0.4301397205588822, 0.7828947368421051], \"boardModel.contact.face-c-left-single-pocket\": [0.4321357285429141, 0.546052631578947], \"boardModel.contact.face-a-left-outer-slot\": [0.44011976047904194, 0.8026315789473683], \"boardModel.contact.face-b-left-single-pocket\": [0.4421157684630738, 0.7697368421052637], \"boardModel.contact.face-c-left-dual-pocket\": [0.4481037924151696, 0.5065789473684207], \"boardModel.contact.face-b-left-outer-slot\": [0.45209580838323354, 0.6249999999999997], \"boardModel.contact.face-b-left-dual-pocket\": [0.45708582834331335, 0.7302631578947374], \"boardModel.contact.face-c-left-shallow-half-round\": [0.45808383233532934, 0.4210526315789473], \"boardModel.contact.face-b-left-deep-sloper\": [0.47504990019960075, 0.6052631578947365], \"boardModel.contact.face-a-center-pull-up-slot\": [0.4890219560878243, 0.6249999999999997], \"boardModel.contact.face-c-center-pull-up-slot\": [0.5109780439121756, 0.3684210526315785], \"boardModel.contact.face-b-center-pull-up-slot\": [0.5179640718562875, 0.5921052631578951], \"boardModel.contact.face-c-right-shallow-half-round\": [0.5199600798403193, 0.2828947368421051], \"boardModel.contact.face-b-right-deep-sloper\": [0.5359281437125748, 0.453947368421053], \"boardModel.contact.face-a-right-single-pocket\": [0.5419161676646707, 0.5], \"boardModel.contact.face-c-right-outer-slot\": [0.5518962075848303, 0.23026315789473684], \"boardModel.contact.face-a-right-dual-pocket\": [0.5528942115768463, 0.46710526315789436], \"boardModel.contact.face-c-right-single-pocket\": [0.5588822355289421, 0.25657894736842124], \"boardModel.contact.face-a-right-outer-slot\": [0.562874251497006, 0.48026315789473684], \"boardModel.contact.face-b-right-single-pocket\": [0.5668662674650699, 0.4473684210526312], \"boardModel.contact.face-c-right-dual-pocket\": [0.5698602794411177, 0.23026315789473684], \"boardModel.contact.face-d-left-outer-slot\": [0.41217564870259477, 0.6973684210526317], \"boardModel.contact.face-d-left-dual-pocket\": [0.4201596806387225, 0.5657894736842102], \"boardModel.contact.face-d-left-deep-rounded-recess\": [0.45109780439121755, 0.5263157894736838], \"boardModel.contact.face-d-center-pull-up-slot\": [0.4820359281437126, 0.4078947368421048], \"boardModel.contact.face-d-right-deep-rounded-recess\": [0.5139720558882235, 0.38157894736842096], \"boardModel.contact.face-d-right-single-pocket\": [0.5329341317365269, 0.30921052631578894], \"boardModel.contact.face-d-right-outer-slot\": [0.5389221556886228, 0.38815789473684165], \"boardModel.contact.face-d-right-dual-pocket\": [0.5449101796407185, 0.2828947368421051], \"boardModel.contact.face-b-right-outer-slot\": [0.5748502994011976, 0.32894736842105216], \"boardModel.contact.face-b-right-dual-pocket\": [0.5778443113772455, 0.4210526315789473]}}\n",
+      "stderr": "",
+      "elapsedSeconds": 5.971233129501343
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "orbit",
+        "12-live-horizontal-orbit-3"
+      ],
+      "startedAt": 1791055560.0290759,
+      "exitCode": 0,
+      "stdout": "{\"frame\": \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app-captures/12-live-horizontal-orbit-3.png\", \"rendererDiagnostic\": \"revision=13;rootActive=true;cameraActive=true;sameScene=true;azimuth=-1.6221557;elevation=0.29541913;cameraPitch=0.2954192;cameraSettled=true;selection=face-b-left-deep-sloper;tapRevision=0;pickedContact=\", \"actualPhysicalOrbit\": true, \"projectedBefore\": {\"boardModel.contact.face-d-left-single-pocket\": [0.4041916167664671, 0.5986842105263158], \"boardModel.contact.face-a-left-single-pocket\": [0.4141716566866267, 0.8223684210526314], \"boardModel.contact.face-c-left-outer-slot\": [0.4261477045908183, 0.5065789473684207], \"boardModel.contact.face-a-left-dual-pocket\": [0.4301397205588822, 0.7828947368421051], \"boardModel.contact.face-c-left-single-pocket\": [0.4321357285429141, 0.546052631578947], \"boardModel.contact.face-a-left-outer-slot\": [0.44011976047904194, 0.8026315789473683], \"boardModel.contact.face-b-left-single-pocket\": [0.4421157684630738, 0.7697368421052637], \"boardModel.contact.face-c-left-dual-pocket\": [0.4481037924151696, 0.5065789473684207], \"boardModel.contact.face-b-left-outer-slot\": [0.45209580838323354, 0.6249999999999997], \"boardModel.contact.face-b-left-dual-pocket\": [0.45708582834331335, 0.7302631578947374], \"boardModel.contact.face-c-left-shallow-half-round\": [0.45808383233532934, 0.4210526315789473], \"boardModel.contact.face-b-left-deep-sloper\": [0.47504990019960075, 0.6052631578947365], \"boardModel.contact.face-a-center-pull-up-slot\": [0.4890219560878243, 0.6249999999999997], \"boardModel.contact.face-c-center-pull-up-slot\": [0.5109780439121756, 0.3684210526315785], \"boardModel.contact.face-b-center-pull-up-slot\": [0.5179640718562875, 0.5921052631578951], \"boardModel.contact.face-c-right-shallow-half-round\": [0.5199600798403193, 0.2828947368421051], \"boardModel.contact.face-b-right-deep-sloper\": [0.5359281437125748, 0.453947368421053], \"boardModel.contact.face-a-right-single-pocket\": [0.5419161676646707, 0.5], \"boardModel.contact.face-c-right-outer-slot\": [0.5518962075848303, 0.23026315789473684], \"boardModel.contact.face-a-right-dual-pocket\": [0.5528942115768463, 0.46710526315789436], \"boardModel.contact.face-c-right-single-pocket\": [0.5588822355289421, 0.25657894736842124], \"boardModel.contact.face-a-right-outer-slot\": [0.562874251497006, 0.48026315789473684], \"boardModel.contact.face-b-right-single-pocket\": [0.5668662674650699, 0.4473684210526312], \"boardModel.contact.face-c-right-dual-pocket\": [0.5698602794411177, 0.23026315789473684], \"boardModel.contact.face-d-left-outer-slot\": [0.41217564870259477, 0.6973684210526317], \"boardModel.contact.face-d-left-dual-pocket\": [0.4201596806387225, 0.5657894736842102], \"boardModel.contact.face-d-left-deep-rounded-recess\": [0.45109780439121755, 0.5263157894736838], \"boardModel.contact.face-d-center-pull-up-slot\": [0.4820359281437126, 0.4078947368421048], \"boardModel.contact.face-d-right-deep-rounded-recess\": [0.5139720558882235, 0.38157894736842096], \"boardModel.contact.face-d-right-single-pocket\": [0.5329341317365269, 0.30921052631578894], \"boardModel.contact.face-d-right-outer-slot\": [0.5389221556886228, 0.38815789473684165], \"boardModel.contact.face-d-right-dual-pocket\": [0.5449101796407185, 0.2828947368421051], \"boardModel.contact.face-b-right-outer-slot\": [0.5748502994011976, 0.32894736842105216], \"boardModel.contact.face-b-right-dual-pocket\": [0.5778443113772455, 0.4210526315789473]}, \"projectedAfter\": {\"boardModel.contact.face-d-right-outer-slot\": [0.47904191616766467, 0.3486842105263153], \"boardModel.contact.face-d-right-dual-pocket\": [0.48003992015968056, 0.25657894736842124], \"boardModel.contact.face-d-right-single-pocket\": [0.4810379241516966, 0.2894736842105258], \"boardModel.contact.face-d-right-deep-rounded-recess\": [0.4830339321357285, 0.38157894736842096], \"boardModel.contact.face-d-center-pull-up-slot\": [0.4840319361277445, 0.4407894736842105], \"boardModel.contact.face-a-right-dual-pocket\": [0.4870259481037924, 0.39473684210526344], \"boardModel.contact.face-a-right-single-pocket\": [0.4880239520958084, 0.4342105263157898], \"boardModel.contact.face-c-right-shallow-half-round\": [0.4890219560878243, 0.29605263157894757], \"boardModel.contact.face-c-right-outer-slot\": [0.4900199600798403, 0.2171052631578949], \"boardModel.contact.face-a-center-pull-up-slot\": [0.4900199600798403, 0.6052631578947365], \"boardModel.contact.face-c-left-shallow-half-round\": [0.4940119760479042, 0.4868421052631575], \"boardModel.contact.face-a-left-dual-pocket\": [0.49700598802395207, 0.8026315789473683], \"boardModel.contact.face-a-right-outer-slot\": [0.5, 0.4013157894736841], \"boardModel.contact.face-b-right-deep-sloper\": [0.5029940119760479, 0.4210526315789473], \"boardModel.contact.face-b-right-dual-pocket\": [0.5089820359281437, 0.34210526315789463], \"boardModel.contact.face-a-left-single-pocket\": [0.498003992015968, 0.8552631578947371], \"boardModel.contact.face-c-left-outer-slot\": [0.5, 0.5986842105263158], \"boardModel.contact.face-c-right-dual-pocket\": [0.5019960079840319, 0.2039473684210524], \"boardModel.contact.face-c-right-single-pocket\": [0.5029940119760479, 0.23684210526315808], \"boardModel.contact.face-b-left-deep-sloper\": [0.5089820359281437, 0.618421052631579], \"boardModel.contact.face-b-right-outer-slot\": [0.5099800399201596, 0.2828947368421051], \"boardModel.contact.face-d-left-outer-slot\": [0.4870259481037924, 0.7500000000000006], \"boardModel.contact.face-d-left-deep-rounded-recess\": [0.4880239520958084, 0.5789473684210527], \"boardModel.contact.face-d-left-dual-pocket\": [0.4880239520958084, 0.6447368421052629], \"boardModel.contact.face-d-left-single-pocket\": [0.4890219560878243, 0.6907894736842111], \"boardModel.contact.face-c-center-pull-up-slot\": [0.5099800399201596, 0.39473684210526344], \"boardModel.contact.face-b-right-single-pocket\": [0.5109780439121756, 0.38157894736842096], \"boardModel.contact.face-a-left-outer-slot\": [0.5119760479041916, 0.8157894736842107], \"boardModel.contact.face-c-left-dual-pocket\": [0.5139720558882235, 0.5855263157894733], \"boardModel.contact.face-c-left-single-pocket\": [0.5149700598802395, 0.6315789473684216], \"boardModel.contact.face-b-center-pull-up-slot\": [0.5159680638722555, 0.5592105263157895], \"boardModel.contact.face-b-left-dual-pocket\": [0.5219560878243512, 0.7434210526315788], \"boardModel.contact.face-b-left-outer-slot\": [0.5229540918163672, 0.6710526315789479], \"boardModel.contact.face-b-left-single-pocket\": [0.5239520958083832, 0.7960526315789476]}}\n",
+      "stderr": "",
+      "elapsedSeconds": 5.834054946899414
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "launch",
+        "12",
+        "face-b-left-deep-sloper",
+        "--telephoto"
+      ],
+      "startedAt": 1791055565.863627,
+      "exitCode": 0,
+      "stdout": "{\"launched\": \"owl-climb.poker\", \"contact\": \"face-b-left-deep-sloper\", \"rendererDiagnostic\": \"revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=face-b-left-deep-sloper;tapRevision=0;pickedContact=\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 10.625508069992065
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "python3",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py",
+        "orbit",
+        "12-live-top-oblique",
+        "--start",
+        ".5",
+        ".72",
+        "--end",
+        ".5",
+        ".22"
+      ],
+      "startedAt": 1791055576.489732,
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/runtime-final-2026-10-03/app_review.py\", line 227, in <module>\n    assert projection(before) != projection(after), 'Physical orbit did not move projected contact frames'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Physical orbit did not move projected contact frames\n",
+      "elapsedSeconds": 4.783341884613037
+    }
+  ]
+}

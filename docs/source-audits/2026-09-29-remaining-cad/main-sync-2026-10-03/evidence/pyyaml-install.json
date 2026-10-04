@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/venv/bin/python",
+    "-m",
+    "pip",
+    "install",
+    "--no-deps",
+    "--target",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/main-sync-2026-10-03/python-deps",
+    "--report",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/main-sync-2026-10-03/pyyaml-install-report.json",
+    "PyYAML"
+  ],
+  "exitCode": 0,
+  "duration": 0.5413918495178223
+}

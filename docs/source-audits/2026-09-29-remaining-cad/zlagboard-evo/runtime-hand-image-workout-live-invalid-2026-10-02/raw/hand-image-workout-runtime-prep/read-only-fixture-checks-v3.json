@@ -1,0 +1,33 @@
+{
+  "checks": [
+    {
+      "check": "AST",
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-runtime-prep/branch_schema.py",
+      "passed": true
+    },
+    {
+      "check": "AST",
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-runtime-prep/capture.py",
+      "passed": true
+    },
+    {
+      "check": "retained-fixture-protocol-and-prefixes",
+      "fixture": "hand-image-static-image-d",
+      "passed": true,
+      "traceSHA256": [
+        "fbaaade1a68a4eea3f3da772354d911f124b6934154f7699346c00616405d486"
+      ]
+    },
+    {
+      "check": "retained-fixture-protocol-and-prefixes",
+      "fixture": "startup-full-color-control-landscape",
+      "passed": true,
+      "traceSHA256": [
+        "5987710aae1a7c33171a2e6c122db1d62aa1141056ea4d8e226bfe3b625b7bc7"
+      ]
+    }
+  ],
+  "scope": "Read-only frozen traces, no runtime/device/source execution",
+  "captureSHA256": "d582299ee0fe605c4d2f0febbad63137ab477aa39770f6518f9e36231cbfd24e",
+  "schemaSHA256": "87eb845d31e1dda2a23b5df847dab02454b2057e625d9ead35d0135cd9585aea"
+}

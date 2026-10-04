@@ -91,14 +91,20 @@ the only Apple On-Demand Resource; suspension is bundled package metadata and
 renders as transient, non-pickable geometry. Current retained source facts and
 evidence govern representation decisions, not superseded design assumptions.
 
-A corded CAD board's cord uses the standard method in
-[`docs/HANGBOARD_CORD_AUTHORING.md`](docs/HANGBOARD_CORD_AUTHORING.md): the
-hidden passage is a void in the FCStd, the topology is a `twoBranchCord` with
-`internalLoop` in `suspension.json`, the channel length comes from
-`measure_channel_spines.py`, and the routes and hanging height are solved
-against the CAD solid with `solve_threaded_rope.py`. Do not hand-author cord
-routes or keep a `pairedLeadCord` on a board that moves to CAD; extend the
-solver with evidence and tests when a board does not fit it.
+For a corded CAD board, preserve the evidenced connection graph and follow
+[`docs/HANGBOARD_CORD_AUTHORING.md`](docs/HANGBOARD_CORD_AUTHORING.md). For
+connected internal mouth pairs, the standard method models the hidden passage
+as an FCStd void, uses `twoBranchCord` (or `threadedLoopCord`) with
+`internalLoop` in `suspension.json`, and measures its channel length with
+`measure_channel_spines.py`. For source-backed independent visible leads,
+exterior wraps, or mouths whose hidden connection is unknown, use the
+`cadRoutedCord` topology and authoring `ropeSolver.method: "nativeRoutes"`;
+never invent a hidden join to fit the connected-passage method. Generate every
+canonical pose against the actual CAD solid with `solve_threaded_rope.py
+--apply`, reproduce it with `--check`, and retain native-solid clearance,
+length, tube and topology checks. Do not hand-author cord routes or keep a
+`pairedLeadCord` when a board moves to CAD; extend the solver with evidence and
+tests when the supported native methods do not fit.
 
 ## CodeGraph
 

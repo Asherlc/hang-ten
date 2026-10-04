@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "native-check",
+  "timeoutSeconds": 300,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/check_native_candidate.py",
+    ".context/placid-badger/metolius-simulator-3d-functional-correction/candidate/metolius-simulator-3d.FCStd",
+    ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/native-check.json"
+  ],
+  "ownedProcessGroup": 92472,
+  "exitCode": 0,
+  "elapsedSeconds": 77.62324337504106,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

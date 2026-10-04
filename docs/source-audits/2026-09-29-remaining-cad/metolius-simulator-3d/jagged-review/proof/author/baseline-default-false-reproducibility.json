@@ -1,0 +1,19 @@
+{
+  "status": "pass",
+  "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "UVNodeSurfaceNormals": false,
+  "elapsedSeconds": 132.8159752089996,
+  "files": {
+    "primary.usdz": {
+      "sha256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+      "bytes": 994933,
+      "exactBaselineBytes": true
+    },
+    "primary.model.json": {
+      "sha256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e",
+      "bytes": 13956,
+      "exactBaselineBytes": true
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "owner": "placid-badger",
+  "label": "natural-workflow-ui-build",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-xcconfig",
+    ".context/placid-badger/combined-runtime-final-2026-10-03/ci-debug-optimized.xcconfig",
+    "-destination",
+    "platform=iOS Simulator,id=FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "-parallel-testing-enabled",
+    "NO",
+    "-collect-test-diagnostics",
+    "never",
+    "build-for-testing"
+  ],
+  "timeoutSeconds": 400.0,
+  "ownedProcessGroup": 78013,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 31.588442582986318
+}

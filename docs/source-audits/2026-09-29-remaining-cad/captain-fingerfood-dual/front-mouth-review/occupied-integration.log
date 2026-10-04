@@ -1,0 +1,114 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_occupied_front_collar_blocks_the_other_native_through_bore ________
+
+    def test_occupied_front_collar_blocks_the_other_native_through_bore():
+        from shapely.geometry import Point, box
+        from shapely.ops import triangulate
+        from native_cord_routes import NativeSection, checked_clearance, solve_native_routes
+        from hangboard_packages.cord_paths import validate_cord_paths
+        # A closed analytic plate with two independent cylindrical daylight holes.
+        profile = box(-.06, -.03, .06, .03)
+        for x in [-.026, .026]:
+            profile = profile.difference(Point(x, 0).buffer(.003, quad_segs=12))
+        vertices, faces = [], []
+        for triangle in triangulate(profile):
+            if profile.covers(triangle):
+                face = []
+                for point in list(triangle.exterior.coords)[:3]:
+                    if point not in vertices:
+                        vertices.append(point)
+                    face.append(vertices.index(point))
+                faces.append(face)
+        mesh = trimesh.creation.extrude_triangulation(vertices, faces, .01)
+        mesh.apply_translation([0, 0, -.005])
+        assert mesh.is_watertight and mesh.is_winding_consistent
+        support, finish = [.10, 0, -.03], [-.026, 0, .0072]
+        collar = np.array([[.026, 0, .005], [.026, 0, .0072]])
+        section = NativeSection(mesh, finish, [0, 1, 0], .002, .0002)
+        shortcut = section.route(support, finish)
+        assert checked_clearance(mesh, shortcut, .002) >= .002 - 1e-5
+        with pytest.raises(ValueError, match="tubes intersect"):
+            validate_cord_paths({"lead": shortcut, "occupied": collar}, {"lead": .002, "occupied": .002})
+        section.reserve_tube(*collar, .0042)
+        route = section.route(support, finish)
+        assert checked_clearance(mesh, route, .002) >= .002 - 1e-5
+        validate_cord_paths({"lead": route, "occupied": collar}, {"lead": .002, "occupied": .002})
+        # Offset the mouths from the support's body-space Y coordinate, as on
+        # DUAL, so the two free-lead planes are distinct rather than retracing.
+        mesh.apply_translation([0, .005, 0])
+        data = {"suspension": {
+            "strands": [{"id": identifier, "kind": "lead", "restLength": .25, "radius": .002}
+                        for identifier in ["left", "right"]],
+            "anchor": {"offsetFromBoardBounds": [0, .1, -.03]},
+            "canonicalPoses": {"vertical": {"rotation": [0, 0, np.sqrt(.5), np.sqrt(.5)], "translation": [0, 0, 0]}}},
+            "ropeSolver": {"sectionPlane": "anchor", "clearance": .0002, "terminalsByStrandID": {
+                identifier: {"points": [[x, .005, .005]], "mouthAxis": [0, 0, 1],
+                             "planeNormal": [0, 1, 0], "planeAxis": [0, 0, 1]}
+                for identifier, x in [("left", -.026), ("right", .026)]}}}
+        descriptor = {"modelBounds": {"min": mesh.bounds[0].tolist(), "max": mesh.bounds[1].tolist()}}
+>       result = solve_native_routes(mesh, data, descriptor)["vertical"]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Tools/HangboardCAD/tests/test_native_cord_routes.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardCAD/native_cord_routes.py:377: in solve_native_routes
+    paths,ratios,minimums=evaluate(height,True)
+                          ^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardCAD/native_cord_routes.py:331: in evaluate
+    validate_cord_paths(full_paths, {strand["id"]: strand["radius"] for strand in strands})
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+paths = {'left': array([[ 2.16994584e-01, -2.77555756e-17, -3.00000000e-02],
+       [ 6.04291080e-02,  3.22158400e-03,  7.1577...     [ 2.60000000e-02,  5.00000000e-03,  7.20000000e-03],
+       [ 2.60000000e-02,  5.00000000e-03,  5.00000000e-03]])}
+radii = {'left': 0.002, 'right': 0.002}, tolerance = 1e-06
+
+    def validate_cord_paths(paths, radii=None, tolerance=1e-6):
+        """Reject crossings, retracing and nonlocal tube intersections.
+    
+        Shared support or mouth endpoints may join different strands. Within one
+        strand only adjacent joins and its intentional first/last closure may meet.
+        Radius checks exclude the immediate neighborhood of an ordinary bend.
+        """
+        segments = []
+        for identifier, points in paths.items():
+            if len(points) < 2 or any(len(p) != 3 or not all(math.isfinite(v) for v in p) for p in points):
+                raise ValueError("native cord paths must be finite 3D polylines")
+            arc = 0.0
+            for index, (start,end) in enumerate(zip(points,points[1:])):
+                span = _distance(start,end)
+                if span <= 1e-7:
+                    raise ValueError("native cord path contains a duplicate point")
+                segments.append((identifier,index,start,end,arc,arc+span,len(points)-2))
+                arc += span
+        for i, first in enumerate(segments):
+            aid, ai, a, b, astart, aend, afinal = first
+            for bid, bi, c, d, bstart, bend, bfinal in segments[i+1:]:
+                same = aid == bid
+                radius = radii[aid]+radii[bid] if radii is not None else tolerance
+                if any(max(a[k],b[k])+radius < min(c[k],d[k]) or max(c[k],d[k])+radius < min(a[k],b[k]) for k in range(3)):
+                    continue
+                distance, s, t, overlap = _closest(a,b,c,d)
+                if overlap > tolerance:
+                    raise ValueError(f"native cord paths retrace: {aid}/{ai}, {bid}/{bi}")
+                if same and bi == ai+1:
+                    continue
+                closure = same and ai == 0 and bi == afinal and _distance(a,d) <= tolerance
+                a_endpoint = (ai == 0 and s <= 1e-8) or (ai == afinal and s >= 1-1e-8)
+                b_endpoint = (bi == 0 and t <= 1e-8) or (bi == bfinal and t >= 1-1e-8)
+                shared = distance <= tolerance and a_endpoint and b_endpoint
+                if shared and (not same or closure):
+                    continue
+                if distance <= tolerance:
+                    raise ValueError(f"native cord paths intersect: {aid}/{ai}, {bid}/{bi}")
+                if radii is not None and distance < radius-1e-8:
+                    separation = abs((astart+s*(aend-astart))-(bstart+t*(bend-bstart))) if same else float("inf")
+                    if separation > 2*radius:
+>                       raise ValueError(f"native cord tubes intersect: {aid}/{ai}, {bid}/{bi}")
+E                       ValueError: native cord tubes intersect: left/0, right/1
+
+Tools/HangboardPackages/src/hangboard_packages/cord_paths.py:85: ValueError
+=========================== short test summary info ============================
+FAILED Tools/HangboardCAD/tests/test_native_cord_routes.py::test_occupied_front_collar_blocks_the_other_native_through_bore
+1 failed, 16 deselected in 5.68s

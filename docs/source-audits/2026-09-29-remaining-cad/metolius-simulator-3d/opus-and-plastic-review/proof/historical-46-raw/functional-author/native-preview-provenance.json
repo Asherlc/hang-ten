@@ -1,0 +1,63 @@
+{
+  "original-9449": {
+    "triangleCount": 34634,
+    "nodeCount": 31
+  },
+  "intermediate-21ca3": {
+    "triangleCount": 252466,
+    "nodeCount": 31
+  },
+  "native-correction": {
+    "triangleCount": 115460,
+    "nodeCount": 1
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top",
+    "oblique",
+    "raking"
+  ],
+  "renderer": "Shared preview.py Lambert triangle-face rendering at matching view and size; oblique applies fixed orthographic rotation.",
+  "sourcePath": ".context/placid-badger/metolius-simulator-3d-functional-correction/candidate/metolius-simulator-3d.FCStd",
+  "sourceSHA256": "46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264",
+  "nativeBodyMeshSHA256": "8bebebb08be3d9f901ff5c2dfb99b366f1d1a0c451b70fb8bcb384f519609257",
+  "afterGeometry": "Actual final BodySolid from immutable contact-complete source; 0.28 mm native tessellation. No material changes. CPU triangle-face shading is diagnostic only.",
+  "images": {
+    "review/comparison-front.png": "ce8461f4f8a58c7d199c42c0d2fa0b67109f9d5ab19c239c8568bc47da040413",
+    "review/comparison-oblique.png": "ef795f5c9c85daf6c13cc608db45e1d40d2b9fb28e6824764c53e89cb6726989",
+    "review/comparison-raking.png": "4c6050d6ad94ea97354b64214c200050a65c2da483737ee0420673004ea0f33d",
+    "review/comparison-side.png": "7cd436013c7577af0cc3dfd4afc199b6d3972644c447912645c656699b25ebe7",
+    "review/comparison-top.png": "9549c6de0de88e2d6996b495efe04ccaae9de0c47b52a94b9d342537d3e21856",
+    "review/intermediate-21ca3-front.png": "961e63e968a74c723fb9131d86619d6377816b20c2c4e5eb183de2c57b31fd4e",
+    "review/intermediate-21ca3-oblique.png": "277921f0bb11032f916f4e83f9411891ec741be71206f0a9974f8dbe9706e8d8",
+    "review/intermediate-21ca3-raking.png": "64434fc19db3df0df14ea7d3b732c632783f306e6f9661532f8695a1d5ae968b",
+    "review/intermediate-21ca3-side.png": "28a8fb60a2350867ea0969ec309285ed766e8cff331cbb23aba33e159e35252f",
+    "review/intermediate-21ca3-top.png": "84dfc238e18b07497a123421b318b8846dbc37da53fe82af107460ae08efe59d",
+    "review/native-correction-front.png": "ff781bf385b6cb17736c18dc72113c875bd3c4fe285d093ee6c3299348dde82d",
+    "review/native-correction-oblique.png": "7d5ecebbaae207fe5e5b5fdd006f998a64056a90058e5204e030e02c0fbfe14f",
+    "review/native-correction-raking.png": "c8e45cc0efa8fafe131364e8c16219ce76aa56155c161bd50f9383dc93052099",
+    "review/native-correction-side.png": "681339f27b1e9ea17e37cb6bd8444485a2c164723cf793ac0314862f8fc1120b",
+    "review/native-correction-top.png": "af7cc76cf6ec87d5d283c1e4f2c30d28c835fccdcc49c06aeca2dc88183962b5",
+    "review/original-9449-front.png": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+    "review/original-9449-oblique.png": "0195e673d789e0fd38e1b58f86e3ef7e8cbb5e908125187d47e293e3d739aeaf",
+    "review/original-9449-raking.png": "efe3cf3b36bdf265a10b5747938de73719c2ab27212e7e7d0ceafa363402f7ae",
+    "review/original-9449-side.png": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+    "review/original-9449-top.png": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860"
+  },
+  "inputIdentities": {
+    "original-9449": "Original committed source 9449, model a1d2",
+    "intermediate-21ca3": "Rejected functional intermediate source 21ca3, model c3b3; not 8fa",
+    "native-correction": "Final functional source 46df0c native BodySolid"
+  },
+  "historicalMisnamedAliases": {
+    "paths": [
+      ".context/placid-badger/metolius-simulator-3d-functional-correction/historical-misnamed-aliases/rejected-8fa-front.png",
+      ".context/placid-badger/metolius-simulator-3d-functional-correction/historical-misnamed-aliases/rejected-8fa-raking.png",
+      ".context/placid-badger/metolius-simulator-3d-functional-correction/historical-misnamed-aliases/rejected-8fa-oblique.png",
+      ".context/placid-badger/metolius-simulator-3d-functional-correction/historical-misnamed-aliases/rejected-8fa-side.png",
+      ".context/placid-badger/metolius-simulator-3d-functional-correction/historical-misnamed-aliases/rejected-8fa-top.png"
+    ],
+    "disposition": "Raw history only; mislabeled 8fa aliases actually contain 21ca3. Excluded from review evidence."
+  }
+}

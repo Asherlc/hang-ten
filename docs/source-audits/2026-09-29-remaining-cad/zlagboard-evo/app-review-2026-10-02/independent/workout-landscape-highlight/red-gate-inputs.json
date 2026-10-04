@@ -1,0 +1,9 @@
+{
+  "atUTC": "2026-10-02T05:42:53.880760+00:00",
+  "test": "HangTenTests/BoardModelRealityTests/testHostedModelUpdatesHighlightModeWithoutChangingContactsOrLayout",
+  "productionSourceSHA256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+  "productionDiffEmpty": true,
+  "testDiffSHA256": "c31b521379f458841f834a253149d31e9797d158896f62804d92462b12a4901e",
+  "hypothesis": "Mode-only change on stable retained RealityView does not synchronize highlight via its update closure. Hosted test must reproduce before production fix.",
+  "simulatorOwner": "baguette_review_prep; no simulator commands from this worker"
+}

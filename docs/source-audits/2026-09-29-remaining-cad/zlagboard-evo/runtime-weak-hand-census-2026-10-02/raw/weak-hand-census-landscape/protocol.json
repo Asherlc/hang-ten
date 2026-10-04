@@ -1,0 +1,20 @@
+{
+  "hardBoundSeconds": 300,
+  "plannedPhases": [
+    "active",
+    "preview",
+    "active"
+  ],
+  "captureOffsetsAfterActualMutation": [
+    0.25,
+    1,
+    3,
+    5
+  ],
+  "afterLaunchUIAccess": "screenshots only; no AX queries/taps/Skip",
+  "externalTracePollingSeconds": 0.03,
+  "routineUnchanged": true,
+  "samplerLimit": "Existing120-iteration sampler remains; new identical both-arm boundary census on actual highlight-before/after supplies sparse late-phase app/window/placement evidence, not every capture instant",
+  "arm": "weak-hand-census",
+  "startup": "Exactly one observational weak-hand census reproduction in a newly SHA-bound diagnostic binary. Prior real-hands transfer failed visually; no passing reference is assumed. Normal Train initially constructs and attaches before bounded20s readiness allows original workout deep link. UNMOUNT and weak observation remain enabled; no intentional model retention or explicit detach. Only HAND_LIFETIME_CENSUS and fresh run ID differ from prior real-hands environment; source additionally adds gated weak census bookkeeping. Existing30ms trace polling, passive7/180/7 and12captures+tail unchanged. No camera/projection/standalone/direct-root flags. Board colors and actual hand visibility/pose are independent whole-image judgments; no additional run selected."
+}

@@ -1,0 +1,29 @@
+{
+  "originalHelpers": [
+    {
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/history-same-launch-confirmation-v1/capture.py",
+      "sha256": "0df3b50206b6da6f03474fa3d1802f98fca8a7ee25c8ffdaa0b654c1fae2351d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/history-same-launch-confirmation-v1/schedule.json",
+      "sha256": "f7575614479464f5776fb8f938957e28270aeb99fa95ba6d43721c94658f97b7"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/history-same-launch-confirmation-v1/README.md",
+      "sha256": "f122f742b826d15df15c148094d265eb8f1a101e299e18508a7d5b33472f2fcc"
+    }
+  ],
+  "changedHelpers": [
+    {
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture.py",
+      "sha256": "5f641c85ba71027e860cb621d9517bfd44cdf291e08133e1bee5659d6b02c3fe"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/schedule.json",
+      "sha256": "f44a8a6b4d28911cea2b6c7301a7748c2806f0e7733aa466f1ce34bd8149fb9d"
+    }
+  ],
+  "actualRoutePreserved": true,
+  "measurementStartsAfterFinalSetup": true,
+  "priorFailureUnmodified": true
+}

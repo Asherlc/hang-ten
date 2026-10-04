@@ -1,0 +1,39 @@
+{
+  "status": "Additional elevated whole-board jug views requested before final crest/corner visual judgment",
+  "humanAcceptance": false,
+  "scope": "Independent whole screenshot shape/highlight inspection; no crops or image measurement",
+  "screenshots": [
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/default.png",
+      "sha256": "f902809a6842c21b3f3ac399809e46877bbfb0804e68fcef08e9bdf61caa1256"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/left-jug-top-oblique-orbit.png",
+      "sha256": "88b357063c86b3a91a63a3076d768df61bb0c6d10e0ddf30c732dab00c5e2bbc"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/right-jug-top-oblique-orbit.png",
+      "sha256": "ab2fdfc82d0656131d3b0bb9acd269ea08b3b026b31fc64bf830cbbce126e26d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/top-sloper-oblique-orbit.png",
+      "sha256": "2dc0e4b9990f0e2fb6cb8fe19f1c9953260550f77fe54dce08a928566eb3e178"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/upper-pocket-oblique-orbit.png",
+      "sha256": "c634266f333c6c47520658acd6199461678db1ceb7b0f052b32315ca72c0ec4c"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/lower-pocket-oblique-orbit.png",
+      "sha256": "ccb77cae7b76192976e3503633317eb994346b40290705117f49fd1d5a8bd262"
+    }
+  ],
+  "observations": [
+    "Wood appearance and seven-top/two-pocket-row layout are visible.",
+    "Left and right jug selections highlight the correct ends without obvious spill onto adjacent slopers.",
+    "Left32degree sloper, central35mm cavity and lower-left20mm cavity highlights align with their selected physical regions.",
+    "Existing jug orbit angles remain shallow: flat crest depth and outer rounded-corner coverage cannot yet be judged confidently from their narrow visible strips."
+  ],
+  "requestedView": "Each jug selected in clearly elevated whole-board top-oblique view, with gentle outward yaw revealing selected end corner.",
+  "geometryJudgment": "No new native geometry or package defect demonstrated by these captures. Independent native/finalUSDZ crest binding proofs already pass; clearer app viewpoint still needed for visual completion."
+}

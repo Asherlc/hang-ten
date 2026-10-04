@@ -1,0 +1,1424 @@
+{
+  "scope": "Two structural-unmount arms with/without combined retention+detach",
+  "originalFrozenFileCount": 235,
+  "rawFiles": 236,
+  "rawBytes": 13044443,
+  "entries": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-app-termination-verification.json",
+      "retained": "raw/structural-dependency-app-termination-verification.json",
+      "bytes": 310,
+      "sha256": "072fdd825acc9ad3918092c2b3cd9dd3a1e41f73418dbb959823b3a4da5fe222"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/check-parity.py",
+      "retained": "raw/structural-dependency-applied/check-parity.py",
+      "bytes": 1224,
+      "sha256": "14280192072a286dceb60572af21db3c947b1de7cc14b2440391119289615643"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/independent-helper-review.json",
+      "retained": "raw/structural-dependency-applied/independent-helper-review.json",
+      "bytes": 791,
+      "sha256": "1f8fb9988957e3355d5f6506a5827b8e43446682d6855d19abd85ebd75830783"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/observation-separation.patch",
+      "retained": "raw/structural-dependency-applied/observation-separation.patch",
+      "bytes": 8632,
+      "sha256": "38d52bfb7b88330e83d80463b77030444a6ee3536fb03dc614b98c6af8325faf"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/reference-runtime-release.json",
+      "retained": "raw/structural-dependency-applied/reference-runtime-release.json",
+      "bytes": 689,
+      "sha256": "02f9a2ce8aee0f4bbc8d3366dd5985303300234a4d643d782641dacd1acaf072"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/root-application.json",
+      "retained": "raw/structural-dependency-applied/root-application.json",
+      "bytes": 1251,
+      "sha256": "22f7531dbe4f1b655d6dea94a9e595e81b3e4607931496f0cd66982136ca7d65"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/PROTOCOL.md",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/PROTOCOL.md",
+      "bytes": 5390,
+      "sha256": "af8ff1c42434625cf31883f69064cbbfc0a4acd2654e9dd5cbefc033146be1e0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/PROTOCOL.md.before-teardown-order-review",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/PROTOCOL.md.before-teardown-order-review",
+      "bytes": 4920,
+      "sha256": "708291d7a8a6715297a344fb1aec33c6fcc19b3f30440230664bbec61951c7d0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/capture-helper.patch",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/capture-helper.patch",
+      "bytes": 6041,
+      "sha256": "d29ff68afd6e3d4215c989fa72a14c2fa2fff45d98b21fda4570298b3f4439f6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/check-constructors.py",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/check-constructors.py",
+      "bytes": 2827,
+      "sha256": "8c671fee30985971a5db26847fd625a725f54829875b9fc688a5dbdfc29532c0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/check-cpu-semantics.py",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/check-cpu-semantics.py",
+      "bytes": 3958,
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/check-frames.py",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/check-frames.py",
+      "bytes": 3729,
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/check-hands.py",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/check-hands.py",
+      "bytes": 1152,
+      "sha256": "9c0395c040a4cb62c79eca1c57b8127e6579b02a738f7483f54e29f802aa1ec6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/check-navigation.py",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/check-navigation.py",
+      "bytes": 4472,
+      "sha256": "8c9d187da93971ef15967f237478d0df40d9f9c9153bbc5306ec15e5e7c1b90c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/check-ownership.py",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/check-ownership.py",
+      "bytes": 9959,
+      "sha256": "409edc4fe86d2cc3387f86193add1d0efb52bbcfd0b64af023077408c9220bea"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/check-ownership.py.before-teardown-order-review",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/check-ownership.py.before-teardown-order-review",
+      "bytes": 7535,
+      "sha256": "8f1b6c7792a55f44c8e2ed5181ee6b023a52cdd142816f4b6204a66bd4396fde"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/compare-arms.py",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/compare-arms.py",
+      "bytes": 2956,
+      "sha256": "180a5b725bb2c63c7257636d352e11687a12aae8f07f1fb5ed0c0707e6b1a2ab"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/report.json",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/report.json",
+      "bytes": 5316,
+      "sha256": "7f8093261f59e43c611cabf3d68fab11ec3bb2d4db08a4ce64148b3908284b8f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/report.json.before-teardown-order-review",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/report.json.before-teardown-order-review",
+      "bytes": 4834,
+      "sha256": "fca6a22c738dee2cb34d5f64696983ac8fbbbcc10bc7e314080fe5048e2fbb8b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/static-check.json",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/static-check.json",
+      "bytes": 2799,
+      "sha256": "9dc5d4d7d67bdc188e0237ad76ef0a084cf05f175244906ba0247c6294e9431a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/static-check.json.before-teardown-order-review",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/static-check.json.before-teardown-order-review",
+      "bytes": 2747,
+      "sha256": "1eae529fc7a4ccf3d9e3c79043b6b68173962c82b62c001e3de157db27b7ad44"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/unchanged-validator-copies.json",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/unchanged-validator-copies.json",
+      "bytes": 1525,
+      "sha256": "3cc5d828c814c96c7f1bf8e42dbc65c16e8396548a9ca3efdfc43291b45ea669"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/runtime-helpers/workout-structural-dependency.py",
+      "retained": "raw/structural-dependency-applied/runtime-helpers/workout-structural-dependency.py",
+      "bytes": 12673,
+      "sha256": "010179a029a5595850238e6ad1872c5ee05956a171f34a9e998d002faacdac5e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "retained": "raw/structural-dependency-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 100128,
+      "sha256": "a250e682072933af27187215451da6ee46981d44b9ef2946c3609d48baedcaa7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/source/HangTen/Views/BoardModelView.swift",
+      "retained": "raw/structural-dependency-applied/source/HangTen/Views/BoardModelView.swift",
+      "bytes": 22888,
+      "sha256": "90f5c896efd321e31560f54e1b6aab0880bd51cfb4301a4f9db3aca9757b0292"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/source/HangTen/Views/GripHandModelView.swift",
+      "retained": "raw/structural-dependency-applied/source/HangTen/Views/GripHandModelView.swift",
+      "bytes": 47424,
+      "sha256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/source/HangTen/Views/RootView.swift",
+      "retained": "raw/structural-dependency-applied/source/HangTen/Views/RootView.swift",
+      "bytes": 149223,
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/source/HangTen/Views/TrainView.swift",
+      "retained": "raw/structural-dependency-applied/source/HangTen/Views/TrainView.swift",
+      "bytes": 27742,
+      "sha256": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/source-freeze.json",
+      "retained": "raw/structural-dependency-applied/source-freeze.json",
+      "bytes": 815,
+      "sha256": "e2a50b1f77fd39ad93b733e4d869596dee8420ef2a861832ab21e70529cdd66d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-applied/validate.py",
+      "retained": "raw/structural-dependency-applied/validate.py",
+      "bytes": 785,
+      "sha256": "1d5678c01ae830e16358c9297d9e98b3b685b96f9f17ca4add6c4d9cb7735b48"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-arm-comparison.json",
+      "retained": "raw/structural-dependency-arm-comparison.json",
+      "bytes": 5325,
+      "sha256": "95745fe12561193f63fc3fa141651014a457d933ab628ce42df37d3f455102be"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-before-parity.json",
+      "retained": "raw/structural-dependency-before-parity.json",
+      "bytes": 12855,
+      "sha256": "16951668967afa0195b9d7d34ee211d1a4c005fd71af02a073ebf7988d36216e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-build-command.json",
+      "retained": "raw/structural-dependency-build-command.json",
+      "bytes": 533,
+      "sha256": "0b56de8d0cc51af9c2cb291c5f77a6726ebbb6576582ad10af3152ae54e16312"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-build-command.stderr",
+      "retained": "raw/structural-dependency-build-command.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-build-command.stdout",
+      "retained": "raw/structural-dependency-build-command.stdout",
+      "bytes": 321183,
+      "sha256": "1aaa007656cb551ff7adc1fedbc1677a8d184ca41b297df547ece16cc88a53b3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-code-parity/installed-container.txt",
+      "retained": "raw/structural-dependency-code-parity/installed-container.txt",
+      "bytes": 176,
+      "sha256": "90731506a97d571f5bc2da91db1574bb5d12230613add8509cc5f30d2c378946"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-code-parity/mach-o-parity.json",
+      "retained": "raw/structural-dependency-code-parity/mach-o-parity.json",
+      "bytes": 2030,
+      "sha256": "03d61a729169553c0cf8ea2dc88998bb0558e9770527cde7861cb6305c86e36f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-final-parity.json",
+      "retained": "raw/structural-dependency-final-parity.json",
+      "bytes": 12855,
+      "sha256": "16951668967afa0195b9d7d34ee211d1a4c005fd71af02a073ebf7988d36216e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-findings.json",
+      "retained": "raw/structural-dependency-findings.json",
+      "bytes": 13265,
+      "sha256": "9dfba459a12efa9ee3ea715eb12ee7890f2feb759319f4566db624d8be765fa7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-frozen-manifest.json",
+      "retained": "raw/structural-dependency-frozen-manifest.json",
+      "bytes": 64379,
+      "sha256": "84270ea4cea1ccdb57853bebc565a5ef0ef1b9f76de46bfaf7d1f94f98990e2d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-install-command.json",
+      "retained": "raw/structural-dependency-install-command.json",
+      "bytes": 447,
+      "sha256": "d2aaa8ad68c404f231d2b990030345204d883ab08249b1fd62e59aab212c9829"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-install-command.stderr",
+      "retained": "raw/structural-dependency-install-command.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-install-command.stdout",
+      "retained": "raw/structural-dependency-install-command.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/000-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/000-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/000-stdout.txt",
+      "bytes": 176,
+      "sha256": "90731506a97d571f5bc2da91db1574bb5d12230613add8509cc5f30d2c378946"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/001-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/001-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/001-stdout.txt",
+      "bytes": 162,
+      "sha256": "21d799e24556f34a6eeff9932436da09f6f178927306e2664ff57ff9084af76c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/002-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/002-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/002-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/002-stdout.txt",
+      "bytes": 28,
+      "sha256": "cf68e4ea0504de91eaae22a0ca3d45dbed6c060458c856b2314dd3ccc65e6262"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/003-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/003-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/003-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/004-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/004-stderr.txt",
+      "bytes": 378,
+      "sha256": "ac6b89e617dd4a7504728b162cd9a37c7c06f6439f1c64ab2212253a6fc9f9f5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/004-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/005-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/005-stderr.txt",
+      "bytes": 388,
+      "sha256": "fe5b08147bb76f8ecf9678f7d4864c51edea784a17074655e45cbdb515c9b7e8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/005-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/006-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/006-stderr.txt",
+      "bytes": 385,
+      "sha256": "b77ad47f1d546cb92497a455a9f12e97b687170cce3f678ca2c474bc7178b66c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/006-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/007-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/007-stderr.txt",
+      "bytes": 385,
+      "sha256": "b58b3c55ba3bb354fd5e149dd5ebf46a2314249a076f1f70a71b38c9de24bf68"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/007-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/008-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/008-stderr.txt",
+      "bytes": 385,
+      "sha256": "94c2c06406c6e2c1e72af10a12f04c0229d47911ffa446b4fcee17e3fdd0ab35"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/008-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/008-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/009-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/009-stderr.txt",
+      "bytes": 389,
+      "sha256": "ec3ab69dd8aea8a3bb5af776011a8667ca491542bc583f8049d5092b5390a87a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/009-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/009-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/010-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/010-stderr.txt",
+      "bytes": 386,
+      "sha256": "12c86d3e3928d854f2ea67050fd1d1baebe3188c33aa9bd68a1b38707fea473b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/010-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/010-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/011-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/011-stderr.txt",
+      "bytes": 386,
+      "sha256": "e13dce969f79063e0f456932633059d4ae0586d93ae1a4ab04fe949fa9aec443"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/011-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/011-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/012-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/012-stderr.txt",
+      "bytes": 386,
+      "sha256": "b388055786de31cbe0f5b2d05b2989a6eba88e1627fa4fd0b096e3dbdb79cea5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/012-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/012-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/013-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/013-stderr.txt",
+      "bytes": 388,
+      "sha256": "235fc9c96b1d786dbd79704b37395b862ac0e6379dadbe5729cc1004279d1506"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/013-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/013-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/014-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/014-stderr.txt",
+      "bytes": 385,
+      "sha256": "73a7bc1a8fa4c33fefda700b5ec587516b32d7925873ae1ab16e0be091959a81"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/014-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/014-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/015-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/015-stderr.txt",
+      "bytes": 385,
+      "sha256": "d70b21bee73c3c9d5a9dc311fea670a854a6767624b33e82c8148c5879e3d585"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/015-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/015-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/016-stderr.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/016-stderr.txt",
+      "bytes": 385,
+      "sha256": "5799a95a548fddb8f2bff67085e61f0debe80b4ee6dba81da3829dab6419d03c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/016-stdout.txt",
+      "retained": "raw/structural-dependency-ordinary-landscape/016-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/capture-process-status.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/capture-process-status.json",
+      "bytes": 83,
+      "sha256": "1daaceb2f35048b925849e02d778cf0255b8a23c3cf77a9fa665017f855a990a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/captures.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/captures.json",
+      "bytes": 8001,
+      "sha256": "2dabf1902b2b1974bccd136507c84dc5d617e0d826ce349af7d817210c9d5811"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/check-constructors.py.stderr",
+      "retained": "raw/structural-dependency-ordinary-landscape/check-constructors.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/check-constructors.py.stdout",
+      "retained": "raw/structural-dependency-ordinary-landscape/check-constructors.py.stdout",
+      "bytes": 419,
+      "sha256": "942bdc44eac42d471552984b476c0c6be934f8dce674a2850b8493e2f13b2599"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/check-cpu-semantics.py.stderr",
+      "retained": "raw/structural-dependency-ordinary-landscape/check-cpu-semantics.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/check-cpu-semantics.py.stdout",
+      "retained": "raw/structural-dependency-ordinary-landscape/check-cpu-semantics.py.stdout",
+      "bytes": 447,
+      "sha256": "47e82823bdba9a3f0bd92ad1d76b7aa068243f73fb79c1e6a317bdbc1dae0332"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/check-frames.py.stderr",
+      "retained": "raw/structural-dependency-ordinary-landscape/check-frames.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/check-frames.py.stdout",
+      "retained": "raw/structural-dependency-ordinary-landscape/check-frames.py.stdout",
+      "bytes": 594,
+      "sha256": "25617d0e01596108e0a69256d94341cca9b3b314e5897abf08880697fe18398d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/check-hands.py.stderr",
+      "retained": "raw/structural-dependency-ordinary-landscape/check-hands.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/check-hands.py.stdout",
+      "retained": "raw/structural-dependency-ordinary-landscape/check-hands.py.stdout",
+      "bytes": 199,
+      "sha256": "2b6c358c45742b998a9321d00a0a0430795c975410e834909ab35938c871ef4d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/check-navigation.py.stderr",
+      "retained": "raw/structural-dependency-ordinary-landscape/check-navigation.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/check-navigation.py.stdout",
+      "retained": "raw/structural-dependency-ordinary-landscape/check-navigation.py.stdout",
+      "bytes": 627,
+      "sha256": "024b507109b6d9f74081ddb4294db78b2ba8c70b31cd881572b1154800a9a82a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/check-ownership.py.stderr",
+      "retained": "raw/structural-dependency-ordinary-landscape/check-ownership.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/check-ownership.py.stdout",
+      "retained": "raw/structural-dependency-ordinary-landscape/check-ownership.py.stdout",
+      "bytes": 998,
+      "sha256": "71c06012c25073345b627590c6cf52bc7b5445dfdbbd17f029d9270d32ce0a90"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/commands.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/commands.json",
+      "bytes": 6566,
+      "sha256": "84b7dc010204194ec8122ae9e872d059b1c645d5880fe34852c9ae4488792795"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/events-F7855391-6C47-407C-9150-AC038E7C142A.jsonl",
+      "retained": "raw/structural-dependency-ordinary-landscape/events-F7855391-6C47-407C-9150-AC038E7C142A.jsonl",
+      "bytes": 924416,
+      "sha256": "d45980233ab62968cf75699eaf9090d042c8a70b74f06593bf2f2764e28ed1fa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/first-eight-visual-review.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/first-eight-visual-review.json",
+      "bytes": 3946,
+      "sha256": "d5187e513e3293ed838a06dfaa4389c046656b79edfeefc6e45928c42f8509ad"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/following-preview-tail.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/following-preview-tail.json",
+      "bytes": 10611,
+      "sha256": "3ba6687d92eb41322ac9f89193300c273af36aad77735c566e8a437c47ba0e7c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/installed-binary-gate.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/installed-binary-gate.json",
+      "bytes": 374,
+      "sha256": "7a156d68ba1066633a3900733df23d28741eeb1a72866bc54e1c5b45f7419eae"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/launch-initial-capture.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/launch-initial-capture.json",
+      "bytes": 153,
+      "sha256": "e1816dd746040e08a8fe4d687e8b636bd0fd8f2728e541f3aacace48aa5813c8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/launch-initial.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/launch-initial.png",
+      "bytes": 466854,
+      "sha256": "427c314f010c3ab9ef6a75c288061892f45dcc72b0e78d01e633b3b6f1368676"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/launch-review-environment.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/launch-review-environment.json",
+      "bytes": 531,
+      "sha256": "ecf14458742ececd2d430997faba99a42804c39fbd9f4e6d5f0476724f1f0cd5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/normal-host-frame-validation.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/normal-host-frame-validation.json",
+      "bytes": 358356,
+      "sha256": "0b532bd842322d13ca1847d8fc050e1c73ac668c5819c5159b7d5107435b15a2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-0-active-plus-0.25.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 278020,
+      "sha256": "b172e9119615b50d4c0be1440266dd08aa87d708b2209cbba491dd25fe44ac3c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-0-active-plus-1.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/phase-0-active-plus-1.png",
+      "bytes": 279681,
+      "sha256": "99d58d47cadb9fcffa632cea9ebd86c4f056f5e47d7c974a1e0888aed85cdea3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-0-active-plus-3.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/phase-0-active-plus-3.png",
+      "bytes": 278327,
+      "sha256": "ea4f6b04a92acc4747d0460a44277ab265165f4eaf086d2893e59ff947b205e5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-0-active-plus-5.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/phase-0-active-plus-5.png",
+      "bytes": 278689,
+      "sha256": "46508c2c745492ddca17a3b51de8576fd4cdaee5f311c30bba580d5cc960aca3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-1-preview-plus-0.25.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/phase-1-preview-plus-0.25.png",
+      "bytes": 244902,
+      "sha256": "06ae95d70ad7f07acc65b7244dafc0bc4c24074bebd886d153a187dc79f13172"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-1-preview-plus-1.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/phase-1-preview-plus-1.png",
+      "bytes": 248978,
+      "sha256": "51d2a14985efff42d9dc32dbff63700e7f582a813f1adb168eeca3b987e08477"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-1-preview-plus-3.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/phase-1-preview-plus-3.png",
+      "bytes": 247415,
+      "sha256": "7abb75b1a66839f84be694e8167cee4e706f71fd388067b00cb3233b5c443b41"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-1-preview-plus-5.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/phase-1-preview-plus-5.png",
+      "bytes": 246210,
+      "sha256": "960e8624279761069e2f81989cd8413b973d8dcc64413743a5e02ee9a114c39c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-2-active-plus-0.25.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/phase-2-active-plus-0.25.png",
+      "bytes": 279485,
+      "sha256": "4841352df29a71adf8646ee93462683b596ece2b587475fa01d6e4e72707f9f3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-2-active-plus-1.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/phase-2-active-plus-1.png",
+      "bytes": 281119,
+      "sha256": "f595d9c8f0b2e2237831b617b0e19a43865d2380c83528f2207691036eb44d68"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-2-active-plus-3.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/phase-2-active-plus-3.png",
+      "bytes": 279780,
+      "sha256": "fbdaff00505bbdad6c69e6fbcf81526c952caabc18abbf1b6d4463292ec08aac"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/phase-2-active-plus-5.png",
+      "retained": "raw/structural-dependency-ordinary-landscape/phase-2-active-plus-5.png",
+      "bytes": 280089,
+      "sha256": "26e003b8320d2f39151c4a622291d8ea7261ddf0105af6312c8a6d114d4baedc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/protocol.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/protocol.json",
+      "bytes": 1389,
+      "sha256": "3fa0c6571fc657042e6d2a6be91b1f98df7c1d6df9d2a6c0f52387d4ba7989f0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/runtime-release.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/runtime-release.json",
+      "bytes": 917,
+      "sha256": "23f0c33d4c4d31d519538a41fa258caacf7cc1c87bd86f06ba1104f819276310"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/strict-absence-validation.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/strict-absence-validation.json",
+      "bytes": 389,
+      "sha256": "f365bcadab6873aec5cc5f798959540d95d7c1a94319bed90879ae29a16036f5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/structural-correspondence.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/structural-correspondence.json",
+      "bytes": 296698,
+      "sha256": "c53de23cfcfd06b147693e8f151e2519f2e639128fab7cb05b09eb73897ad089"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/structural-dependency-navigation.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/structural-dependency-navigation.json",
+      "bytes": 52069,
+      "sha256": "ee4999ca9518fcce72454cc1b78e7803b4cb24e26bd3bcf4157638f08b975221"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/structural-dependency-ownership.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/structural-dependency-ownership.json",
+      "bytes": 227184,
+      "sha256": "d2af4c0ce6daaeb766438918abe8f2cf70755fd773c148df71ab8055c5c34fe2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/trace-copy.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/trace-copy.json",
+      "bytes": 736,
+      "sha256": "e23f197c97095b86cd7ca9b634ac00b66b5d234d63e91807c538803c782bc9b5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/train-constructor-validation.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/train-constructor-validation.json",
+      "bytes": 176861,
+      "sha256": "6bfb2afc7211c8dabdcaaa23fa548382081b35e24a29db46b92c6d2851769eaa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/train-startup-readiness.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/train-startup-readiness.json",
+      "bytes": 14180,
+      "sha256": "88be7fa5dc97085584cf54e0b08f26f9fc38f5dc15fdf26f98e6ce9b993287ac"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/transition-observations.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/transition-observations.json",
+      "bytes": 33991,
+      "sha256": "17d502ab3070087ce84a24408c5b4efe13a81cd62cf89b8bbcd7062ae172fc49"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/visual-review.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/visual-review.json",
+      "bytes": 5939,
+      "sha256": "39fdb8c92e7b82ee1a0a4d7eed590e93b0c3bd648104391561ec7b31e915074d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-landscape/workout-openurl-timing.json",
+      "retained": "raw/structural-dependency-ordinary-landscape/workout-openurl-timing.json",
+      "bytes": 153,
+      "sha256": "c0951ea83cfbdd0e1dab60436cb6a174535f49ea841632c674bc94ea4edf6ef8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-root-corroboration.json",
+      "retained": "raw/structural-dependency-ordinary-root-corroboration.json",
+      "bytes": 1442,
+      "sha256": "f93df5d955f14c0bb99270e354b30d049972f95f5a35a93f506fe2d6a57454f4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-runtime-release.json",
+      "retained": "raw/structural-dependency-ordinary-runtime-release.json",
+      "bytes": 917,
+      "sha256": "23f0c33d4c4d31d519538a41fa258caacf7cc1c87bd86f06ba1104f819276310"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-package-parity.json",
+      "retained": "raw/structural-dependency-package-parity.json",
+      "bytes": 7405,
+      "sha256": "a9436fdb1e6520f42b295b4962d1a85699ba796d17c1e99ee852fd46feaff794"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-prior-preservation.json",
+      "retained": "raw/structural-dependency-prior-preservation.json",
+      "bytes": 595,
+      "sha256": "38978e1d6c11702be39234fdecc65201385d0979b0c7841454b6a0a3c7aa169a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-reference-frozen-manifest.json",
+      "retained": "raw/structural-dependency-reference-frozen-manifest.json",
+      "bytes": 33891,
+      "sha256": "299f3e396c1dd57ed8666e823685a4d80c2af85f461acb1d30bb2121d512228b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-reference-parity.json",
+      "retained": "raw/structural-dependency-reference-parity.json",
+      "bytes": 12855,
+      "sha256": "16951668967afa0195b9d7d34ee211d1a4c005fd71af02a073ebf7988d36216e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-reference-proof-index-first-failure.json",
+      "retained": "raw/structural-dependency-reference-proof-index-first-failure.json",
+      "bytes": 340,
+      "sha256": "6066ca26f951527e91752b7282cb96e4f8854604f20eee42ae9e089a6af15b4c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-reference-proof-index.json",
+      "retained": "raw/structural-dependency-reference-proof-index.json",
+      "bytes": 2429,
+      "sha256": "c3ead2616f910e23230622f3a263cd2453f7d24ab50f66c25a4e1e357940da78"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-reference-root-corroboration.json",
+      "retained": "raw/structural-dependency-reference-root-corroboration.json",
+      "bytes": 1118,
+      "sha256": "114439b5f0c5b9632554b77409afaba63c37e927ff77dd4cb49ad960897cd3f1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-reference-root-gate.json",
+      "retained": "raw/structural-dependency-reference-root-gate.json",
+      "bytes": 3242,
+      "sha256": "4b068c8c2f4b4e8739b7ae89d554f82f4e67b516b405e60e1c2936de93352a2d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/000-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/000-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/000-stdout.txt",
+      "bytes": 176,
+      "sha256": "90731506a97d571f5bc2da91db1574bb5d12230613add8509cc5f30d2c378946"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/001-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/001-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/001-stdout.txt",
+      "bytes": 162,
+      "sha256": "21d799e24556f34a6eeff9932436da09f6f178927306e2664ff57ff9084af76c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/002-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/002-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/002-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/002-stdout.txt",
+      "bytes": 28,
+      "sha256": "2845a0aac54e28f5f03536c3f4daa6d7948e0e3233fbd8c19a1b007edfd1ee36"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/003-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/003-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/003-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/004-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/004-stderr.txt",
+      "bytes": 385,
+      "sha256": "e1fb240fe6d4375964e35eda17b4063f8e011571dabc878a10fd571afdd0b3f0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/004-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/005-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/005-stderr.txt",
+      "bytes": 395,
+      "sha256": "47540b19391e25f93c1bf562a1f588868655eefad4a4af614251aa23164011b5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/005-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/006-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/006-stderr.txt",
+      "bytes": 392,
+      "sha256": "4e403c8707dae306445c45ef33ab10d2cff8eb4c8f4977a187af59a25926f296"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/006-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/007-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/007-stderr.txt",
+      "bytes": 392,
+      "sha256": "30ee6541cea7ccae870379eba9fe483125f45e26f94bbeb8c559e00b254c2781"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/007-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/008-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/008-stderr.txt",
+      "bytes": 392,
+      "sha256": "4016f4770f35b8c1e003bcf03cf08c154b25b40fcd45f54e8ea8e262841a468e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/008-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/008-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/009-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/009-stderr.txt",
+      "bytes": 396,
+      "sha256": "2ed2ac33d1835f5da33c36c0677ec313aef0d113a7e11eed9f52846cb10e9035"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/009-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/009-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/010-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/010-stderr.txt",
+      "bytes": 393,
+      "sha256": "722c9ff9aa79ac1b03d3275b07cd7efd67ca5b90a81309b9d63086c9e76b949d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/010-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/010-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/011-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/011-stderr.txt",
+      "bytes": 393,
+      "sha256": "1df901d10cbda2116ab4ee1212957115a4350ba97b465cb7d0d8a018daf950a2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/011-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/011-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/012-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/012-stderr.txt",
+      "bytes": 393,
+      "sha256": "22e7bf6aa83f1c539319be55b9c1f01743574476767b7a34ac03785c27fd528b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/012-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/012-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/013-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/013-stderr.txt",
+      "bytes": 395,
+      "sha256": "35ad92b68221e9198e894d9ed3141315c010f4bedb4372575fef295db71a9fea"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/013-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/013-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/014-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/014-stderr.txt",
+      "bytes": 392,
+      "sha256": "73d5215c3e29fe1a4997bc347160745588446244e9797223455b6c70e35780b7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/014-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/014-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/015-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/015-stderr.txt",
+      "bytes": 392,
+      "sha256": "d5e3b26829391229360eae98bdb78ca60a586515dbb2c33fff10520b439ddaba"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/015-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/015-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/016-stderr.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/016-stderr.txt",
+      "bytes": 392,
+      "sha256": "167d82008a1023b629db21a56ad61c894d19b299533c26770f9159208bd04bfc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/016-stdout.txt",
+      "retained": "raw/structural-dependency-retained-detach-landscape/016-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/capture-process-status.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/capture-process-status.json",
+      "bytes": 84,
+      "sha256": "a4b984121e784c0a7868aab2ca51721f45bf4c8a7681cc62a306525d5eeeadf7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/captures.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/captures.json",
+      "bytes": 8087,
+      "sha256": "9d12bb6223c0c64dd9bb59f46c4f1c666eb3f14fbf66af280f4180cd162162cf"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/check-constructors.py.stderr",
+      "retained": "raw/structural-dependency-retained-detach-landscape/check-constructors.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/check-constructors.py.stdout",
+      "retained": "raw/structural-dependency-retained-detach-landscape/check-constructors.py.stdout",
+      "bytes": 419,
+      "sha256": "942bdc44eac42d471552984b476c0c6be934f8dce674a2850b8493e2f13b2599"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/check-cpu-semantics.py.stderr",
+      "retained": "raw/structural-dependency-retained-detach-landscape/check-cpu-semantics.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/check-cpu-semantics.py.stdout",
+      "retained": "raw/structural-dependency-retained-detach-landscape/check-cpu-semantics.py.stdout",
+      "bytes": 448,
+      "sha256": "4f6effbbd4507d2d01b6d9072a811e6bbed4436022909047f3936e9393bcc7c3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/check-frames.py.stderr",
+      "retained": "raw/structural-dependency-retained-detach-landscape/check-frames.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/check-frames.py.stdout",
+      "retained": "raw/structural-dependency-retained-detach-landscape/check-frames.py.stdout",
+      "bytes": 594,
+      "sha256": "82bc2fe6bbb29dfa3c84cde36473e57d10d8c37dbdcd025a593fb83214c599ab"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/check-hands.py.stderr",
+      "retained": "raw/structural-dependency-retained-detach-landscape/check-hands.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/check-hands.py.stdout",
+      "retained": "raw/structural-dependency-retained-detach-landscape/check-hands.py.stdout",
+      "bytes": 199,
+      "sha256": "2b6c358c45742b998a9321d00a0a0430795c975410e834909ab35938c871ef4d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/check-navigation.py.stderr",
+      "retained": "raw/structural-dependency-retained-detach-landscape/check-navigation.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/check-navigation.py.stdout",
+      "retained": "raw/structural-dependency-retained-detach-landscape/check-navigation.py.stdout",
+      "bytes": 627,
+      "sha256": "024b507109b6d9f74081ddb4294db78b2ba8c70b31cd881572b1154800a9a82a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/check-ownership.py.stderr",
+      "retained": "raw/structural-dependency-retained-detach-landscape/check-ownership.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/check-ownership.py.stdout",
+      "retained": "raw/structural-dependency-retained-detach-landscape/check-ownership.py.stdout",
+      "bytes": 897,
+      "sha256": "90f03dc3bb9e0cd6eb550e322e1383d6e939efccdeaba56c48feefeb4656ca32"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/commands.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/commands.json",
+      "bytes": 6655,
+      "sha256": "5badcab56b78b2672c9b15edd3555f59ce8302933a32e6208dc4b7df1ae3e7ae"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/events-FA8D3D3E-CB95-4CED-8BF9-3456DE0B8E69.jsonl",
+      "retained": "raw/structural-dependency-retained-detach-landscape/events-FA8D3D3E-CB95-4CED-8BF9-3456DE0B8E69.jsonl",
+      "bytes": 957047,
+      "sha256": "12f46620132517b0769c1faa3597b0af774a17cf9db0ae58033d605e601ef120"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/first-eight-visual-review.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/first-eight-visual-review.json",
+      "bytes": 4054,
+      "sha256": "18d52364222a99450fc2e1e568cfc91c54ad29af5930f408c4d4c1803802ae2d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/following-preview-tail.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/following-preview-tail.json",
+      "bytes": 10976,
+      "sha256": "6320a3ad9ada96caefca68fdcb3ae8a6c2c6304cc95601c1b626064984052f9d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/installed-binary-gate.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/installed-binary-gate.json",
+      "bytes": 374,
+      "sha256": "7a156d68ba1066633a3900733df23d28741eeb1a72866bc54e1c5b45f7419eae"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/launch-initial-capture.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/launch-initial-capture.json",
+      "bytes": 153,
+      "sha256": "8531c17793dd88f7e6b81cb95f7aae908ef16d0963f32ab31a5f144fe369ac5f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/launch-initial.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/launch-initial.png",
+      "bytes": 366589,
+      "sha256": "dcce5fc78e255102fe75e11045b2c9f2922fda8d2b09fcf243757586a34a2d72"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/launch-review-environment.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/launch-review-environment.json",
+      "bytes": 638,
+      "sha256": "511632bd9001359e792897a581977f99676965015a12d00f94b2843dd64f596b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/normal-host-frame-validation.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/normal-host-frame-validation.json",
+      "bytes": 357678,
+      "sha256": "9dee09ce687d11e2156cd5c7ab07aa4be5339e71db0808669ad5ea8c5251c877"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/phase-0-active-plus-0.25.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 278020,
+      "sha256": "b172e9119615b50d4c0be1440266dd08aa87d708b2209cbba491dd25fe44ac3c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/phase-0-active-plus-1.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/phase-0-active-plus-1.png",
+      "bytes": 279681,
+      "sha256": "99d58d47cadb9fcffa632cea9ebd86c4f056f5e47d7c974a1e0888aed85cdea3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/phase-0-active-plus-3.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/phase-0-active-plus-3.png",
+      "bytes": 278327,
+      "sha256": "ea4f6b04a92acc4747d0460a44277ab265165f4eaf086d2893e59ff947b205e5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/phase-0-active-plus-5.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/phase-0-active-plus-5.png",
+      "bytes": 282521,
+      "sha256": "72280db51950b43540d1a1275b80d46ab5127bd1b15eac7f0eb8379ae77c1755"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/phase-1-preview-plus-0.25.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/phase-1-preview-plus-0.25.png",
+      "bytes": 244902,
+      "sha256": "06ae95d70ad7f07acc65b7244dafc0bc4c24074bebd886d153a187dc79f13172"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/phase-1-preview-plus-1.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/phase-1-preview-plus-1.png",
+      "bytes": 248978,
+      "sha256": "51d2a14985efff42d9dc32dbff63700e7f582a813f1adb168eeca3b987e08477"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/phase-1-preview-plus-3.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/phase-1-preview-plus-3.png",
+      "bytes": 247415,
+      "sha256": "7abb75b1a66839f84be694e8167cee4e706f71fd388067b00cb3233b5c443b41"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/phase-1-preview-plus-5.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/phase-1-preview-plus-5.png",
+      "bytes": 246210,
+      "sha256": "960e8624279761069e2f81989cd8413b973d8dcc64413743a5e02ee9a114c39c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/phase-2-active-plus-0.25.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/phase-2-active-plus-0.25.png",
+      "bytes": 279485,
+      "sha256": "4841352df29a71adf8646ee93462683b596ece2b587475fa01d6e4e72707f9f3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/phase-2-active-plus-1.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/phase-2-active-plus-1.png",
+      "bytes": 281119,
+      "sha256": "f595d9c8f0b2e2237831b617b0e19a43865d2380c83528f2207691036eb44d68"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/phase-2-active-plus-3.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/phase-2-active-plus-3.png",
+      "bytes": 279780,
+      "sha256": "fbdaff00505bbdad6c69e6fbcf81526c952caabc18abbf1b6d4463292ec08aac"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/phase-2-active-plus-5.png",
+      "retained": "raw/structural-dependency-retained-detach-landscape/phase-2-active-plus-5.png",
+      "bytes": 280089,
+      "sha256": "26e003b8320d2f39151c4a622291d8ea7261ddf0105af6312c8a6d114d4baedc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/protocol.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/protocol.json",
+      "bytes": 1396,
+      "sha256": "87f5b628adbc6ba85b74f4b281e7d0ff405078f23b65b95a446480558a3ee42b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/runtime-release.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/runtime-release.json",
+      "bytes": 689,
+      "sha256": "02f9a2ce8aee0f4bbc8d3366dd5985303300234a4d643d782641dacd1acaf072"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/strict-absence-validation.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/strict-absence-validation.json",
+      "bytes": 389,
+      "sha256": "f365bcadab6873aec5cc5f798959540d95d7c1a94319bed90879ae29a16036f5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/structural-correspondence.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/structural-correspondence.json",
+      "bytes": 303973,
+      "sha256": "edc54690a696604bab79e97628d755a6bb570d53d69b1f109aff841a0fc79263"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/structural-dependency-navigation.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/structural-dependency-navigation.json",
+      "bytes": 51927,
+      "sha256": "06ab5e0d54f7ca1dd43c041a236dbbf86e5b3ee2caecb786306b78d9d217f11d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/structural-dependency-ownership.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/structural-dependency-ownership.json",
+      "bytes": 278988,
+      "sha256": "5e8fa24dd7ac0dbd3959efc4f7137bfadbcaafa6fc46c640cec397c98b84a8ed"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/trace-copy.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/trace-copy.json",
+      "bytes": 749,
+      "sha256": "2659a51daf852ffea16431f46b8770fbdb40b2d6059674cf051ea9cd71de1aa1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/train-constructor-validation.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/train-constructor-validation.json",
+      "bytes": 177237,
+      "sha256": "c8702618ccb1d2a0a9a51584a61a1a8730dae7d298975f03587934b03e59472d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/train-startup-readiness.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/train-startup-readiness.json",
+      "bytes": 14174,
+      "sha256": "5d11d49a4c4376cb6f12428816442e334131e0a8669f2db2e37e50bf6813cbe5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/transition-observations.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/transition-observations.json",
+      "bytes": 35141,
+      "sha256": "94e26903ed0b0029b1b18383191338cbb7baa63e168386825a278d6fcc6eaf25"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/visual-review.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/visual-review.json",
+      "bytes": 6067,
+      "sha256": "326e6238e06139ad612a279002b2e926a994f1da95f80754fbf13e1187ca92d3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/workout-openurl-timing.json",
+      "retained": "raw/structural-dependency-retained-detach-landscape/workout-openurl-timing.json",
+      "bytes": 153,
+      "sha256": "39b4b83d56ce3873fe3e7ae536f3a4c8e473026235fd90bf662195dd369274e6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-terminate-command.json",
+      "retained": "raw/structural-dependency-terminate-command.json",
+      "bytes": 298,
+      "sha256": "a691294ccfed537c4b60151ad364192469d2b6cc7db00105e0a1afb1361053c2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-terminate-command.stderr",
+      "retained": "raw/structural-dependency-terminate-command.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-terminate-command.stdout",
+      "retained": "raw/structural-dependency-terminate-command.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-weak-lifetimes.json",
+      "retained": "raw/structural-dependency-weak-lifetimes.json",
+      "bytes": 101066,
+      "sha256": "3ec19041f347c2760e6555b1878451892ef3b9554f5a796aa489547d6f569276"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/before/HangTen/Models/BoardModelRealityTypes.swift",
+      "retained": "analysis/structural-observation-separation-proposal/before/HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 99337,
+      "sha256": "d1780cf3c9e8b8966b5273db4944e6116993b7569a966d8fb87b59c38773557a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/before/HangTen/Views/BoardModelView.swift",
+      "retained": "analysis/structural-observation-separation-proposal/before/HangTen/Views/BoardModelView.swift",
+      "bytes": 22886,
+      "sha256": "305cd09b7a45b7179c513a4e78be2e772293fe6127514ca0fb7bcf98537adc90"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/before/HangTen/Views/TrainView.swift",
+      "retained": "analysis/structural-observation-separation-proposal/before/HangTen/Views/TrainView.swift",
+      "bytes": 27736,
+      "sha256": "ca5b573e45908edaa6cd3921a5f255df32804d3e0b562872961cd0cfab31cf08"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/design.initial.md",
+      "retained": "analysis/structural-observation-separation-proposal/design.initial.md",
+      "bytes": 3882,
+      "sha256": "35e59c63f17ff4a470617c22cdcc78c98534ea224f98ce4dc0e11eb4276f71a8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/design.md",
+      "retained": "analysis/structural-observation-separation-proposal/design.md",
+      "bytes": 3975,
+      "sha256": "a82c7167cb5c9ca0bbeea37aa08929fed21d9f1746820b5be5e7974cdc2c5950"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/observation-separation.patch",
+      "retained": "analysis/structural-observation-separation-proposal/observation-separation.patch",
+      "bytes": 8632,
+      "sha256": "38d52bfb7b88330e83d80463b77030444a6ee3536fb03dc614b98c6af8325faf"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/proposal.json",
+      "retained": "analysis/structural-observation-separation-proposal/proposal.json",
+      "bytes": 1827,
+      "sha256": "f4bfc9791402aca4e84c47f78c5dec81a0cfcd144deebae0f2c20957ff73c68c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/proposed/HangTen/Models/BoardModelRealityTypes.swift",
+      "retained": "analysis/structural-observation-separation-proposal/proposed/HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 100128,
+      "sha256": "a250e682072933af27187215451da6ee46981d44b9ef2946c3609d48baedcaa7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/proposed/HangTen/Views/BoardModelView.swift",
+      "retained": "analysis/structural-observation-separation-proposal/proposed/HangTen/Views/BoardModelView.swift",
+      "bytes": 22888,
+      "sha256": "90f5c896efd321e31560f54e1b6aab0880bd51cfb4301a4f9db3aca9757b0292"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/proposed/HangTen/Views/TrainView.swift",
+      "retained": "analysis/structural-observation-separation-proposal/proposed/HangTen/Views/TrainView.swift",
+      "bytes": 27742,
+      "sha256": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/read-only-source-base.json",
+      "retained": "analysis/structural-observation-separation-proposal/read-only-source-base.json",
+      "bytes": 600,
+      "sha256": "25c542fb3ac185cae67cbf9626202cc35f0eb1d34df377cab708803fd7368024"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/readiness-helper.before.py",
+      "retained": "analysis/structural-observation-separation-proposal/readiness-helper.before.py",
+      "bytes": 11414,
+      "sha256": "bdaa3530021d126ff5fde61d8e083c47190c77917a1818d1cc10e1a29fa0f304"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/readiness-helper.initial.py",
+      "retained": "analysis/structural-observation-separation-proposal/readiness-helper.initial.py",
+      "bytes": 11731,
+      "sha256": "b101c513d57d0a76f62e1656282d55e6a88cdc7d9660cf5c6650f918e0a98bf7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/readiness-helper.proposed.py",
+      "retained": "analysis/structural-observation-separation-proposal/readiness-helper.proposed.py",
+      "bytes": 11722,
+      "sha256": "2749ce5d95545a8ccfa1c2dbedb625146008f198523b2e09351644fd1e385b57"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/readiness-only.patch",
+      "retained": "analysis/structural-observation-separation-proposal/readiness-only.patch",
+      "bytes": 4399,
+      "sha256": "08f1cc13fd4c504d6b00772bc669af0ee71e02d12d6c5930e3bbc81df04031b5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/root-application.json",
+      "retained": "analysis/structural-observation-separation-proposal/root-application.json",
+      "bytes": 1251,
+      "sha256": "22f7531dbe4f1b655d6dea94a9e595e81b3e4607931496f0cd66982136ca7d65"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-observation-separation-proposal/static-review.json",
+      "retained": "analysis/structural-observation-separation-proposal/static-review.json",
+      "bytes": 762,
+      "sha256": "52ca25f1a436c15e9ce4f8eb7eeedac38de2880e94c983759f6daa5a9bffe57a"
+    }
+  ]
+}

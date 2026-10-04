@@ -1,0 +1,60 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "20358DD7-A124-4108-ADEA-E9B07EA3DA09",
+        "deviceName" : "Hang Ten Paseo placid-badger NUG pinch Review",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 1,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "HangTen · Built with macOS 27.0",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1790807882.228,
+  "passedTests" : 1,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1790807868.106,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTUnwrap failed: threw error \"invalidPackage(boardID: \"fixture.board\", reason: \"model descriptor is missing or malformed: assets/primary.model.json\")\"",
+      "targetName" : "HangTenTests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "BoardPackageStoreTests/testSharedContactMembershipBuildsBothContactInventories()",
+      "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenTests/BoardPackageStoreTests/testSharedContactMembershipBuildsBothContactInventories",
+      "testName" : "testSharedContactMembershipBuildsBothContactInventories()"
+    },
+    {
+      "failureText" : "XCTUnwrap failed: expected non-nil value of type \"Array<ModelEntity>\"",
+      "targetName" : "HangTenTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "BoardModelRealityTests/testSharedContactMeshUsesPrimaryPickingAndUnionHighlight()",
+      "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenTests/BoardModelRealityTests/testSharedContactMeshUsesPrimaryPickingAndUnionHighlight",
+      "testName" : "testSharedContactMeshUsesPrimaryPickingAndUnionHighlight()"
+    }
+  ],
+  "title" : "Test - HangTen",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 3
+}

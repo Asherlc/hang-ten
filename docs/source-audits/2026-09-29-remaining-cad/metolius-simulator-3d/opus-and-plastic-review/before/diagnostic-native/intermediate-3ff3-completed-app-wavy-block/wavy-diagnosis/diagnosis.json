@@ -1,0 +1,70 @@
+{
+  "status": "diagnosis-complete-read-only",
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "profileExactEqualToOriginal9449": true,
+  "cause": "True full-width native slope corrugation in ContinuousFrontRelief, visually amplified by plastic shading. Lower profile depth is monotonic, but its slope repeatedly resets to zero at each station.",
+  "nativeEvidence": {
+    "profile": "ContinuousFrontRelief",
+    "feature": "ReliefPrism",
+    "extrusionWidthMM": 1200.0,
+    "stationsYZMM": [
+      [
+        -15.0,
+        222.0
+      ],
+      [
+        -87.0,
+        191.0
+      ],
+      [
+        -94.0,
+        170.0
+      ],
+      [
+        -76.0,
+        147.0
+      ],
+      [
+        -65.0,
+        117.0
+      ],
+      [
+        -55.0,
+        87.0
+      ],
+      [
+        -44.0,
+        59.0
+      ],
+      [
+        -32.0,
+        29.0
+      ],
+      [
+        -18.0,
+        -4.0
+      ]
+    ],
+    "lowerRowNormalTiltDegrees": "0 to 26.565\u201332.471 then back to 0 at every span; upper Z170\u2192147 span reaches49.574 degrees",
+    "rawReport": "native-relief-diagnosis.json"
+  },
+  "primaryImageAssessment": "Complete manufacturer product-01 and product-03 show rounded local hold rims and broad smooth face regions. They do not justify a uniform full-width periodic S-roll at every row. This is a qualitative direct visual comparison, not image measurement.",
+  "smallestRecommendedCorrection": "Fair only the lower ContinuousFrontRelief native profile with shared nonzero tangents across existing depth stations, preserving overall taper, published face dimensions, top-grip fixes and plastic finish. Keep exact station anchors where feasible; remeasure physical cavity spans and rebuild final-surface contact links so all27 depth facts/30IDs remain strict. Treat altered front curvature as a display estimate. No renderer/normal-policy change.",
+  "secondaryArtifacts": "Localized previously documented semantic seam/normal slivers may create small streaks, but cannot explain the broad repeated bands that exist in native geometry.",
+  "sourceOrExportModified": false,
+  "awaitingParentBeforeEditing": true,
+  "completeImagesViewed": {
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/finish-checks-captures/unselected-train.png": "b237182a8414ad24e9a07b10b610cd83dc02dc2bdb579df662caa0a829d677ec",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/finish-checks-captures/jug-to-flat-restored-mint.png": "663a15f9deaab5234644a6a06be2cb48f70d7c59f57b647bec98e0460436d3bf",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/ios/after-captures/round-center-orbit.png": "b4f637be1b64520526e1491f53d27579269cced201c53ee532519e7c667af392",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-01.jpg": "5ac1677d6280dc90242cb1dcef47691647fd3f5a9adc3c465838e930075f58a9",
+    "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-03.jpg": "e9561ab3fb6d3a85014097dcbdb0bc3d9c4079f9cb0954bd87965d180329932a"
+  },
+  "evidenceSHA256": {
+    "native-relief-diagnosis.json": "3dffd2fe2d2ea723a469b79a650d0e027628907e27b24c07c954b4e8dd5867a5",
+    "native-relief-sections.png": "1a4c1f02530e9e575046e3f5e87ee97f2f5ee1a7f30f0bc3ce8dec23946a2b0e",
+    "native-relief-ownership.json": "2a8f7186a763cc9f273568a7b7b7bc7e17538fe7dc9ff57e03fbdf61e618dfb0",
+    "cleanup.json": "fd075c9ed6c048d85e72a1ad34ea4677472c81488ea6defd7cf3621aca680f9a"
+  }
+}

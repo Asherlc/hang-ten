@@ -1,0 +1,29 @@
+{
+  "preparedOnly": true,
+  "releaseWritten": false,
+  "runtimeExecuted": false,
+  "sourceCapturePath": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/prep/capture.py",
+  "sourceCaptureSHA256": "d7313afabf58a21383e3cb591664271bdd0b3113ff1a6c9fc074749b83f62603",
+  "helperSHA256": "096935661e78d0a0067debfdb14a727d7936431098f034d269e72f9096720112",
+  "scheduleSHA256": "ff127eaff7f068357ef74833075ef12b1e6ad6c21254c0cedd4a118ca437d40a",
+  "pythonASTPassed": true,
+  "releaseContract": {
+    "arm": "appearance",
+    "runID": "placid-badger-cad-second-half-board-frame-appearance",
+    "appearanceOnly": true,
+    "otherFields": "Same owner/UUID/controller/ownership/source-reference/28parity/binary/output/auth fields; root supplies exact new hashes. No priorReview needed."
+  },
+  "preserved": [
+    "exact launched app/awake cleanup",
+    "source and installed binary pre/post hashes",
+    "strict single fresh output directory",
+    "18 fixed screenshot deadlines with no AX/input after openurl",
+    "mute arguments and owned direct awake assertion",
+    "clock drift check"
+  ],
+  "limits": [
+    "60s total run bound excluding bounded cleanup",
+    "Appearance/initialmode only; cannot assess second Hang or long Rest",
+    "No prior-control contrast or completed repair claim"
+  ]
+}

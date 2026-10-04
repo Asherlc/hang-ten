@@ -1,0 +1,31 @@
+{
+  "owner": "placid-badger",
+  "simulator": "5BC58E20-EDC3-4846-818D-94823B3186CA",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS 26.5",
+  "boardID": "aelith.cyclops-011",
+  "sourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+  "presentations": {
+    "primary": {
+      "modelSHA256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+      "descriptorSHA256": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7"
+    }
+  },
+  "checks": [
+    {
+      "contactID": "mono-20",
+      "selection": "DEBUG initial hold",
+      "image": "default.png",
+      "accessibility": "default-accessibility.json"
+    }
+  ],
+  "humanGeometryAcceptance": "pending one-by-one user review",
+  "limits": "DEBUG hold-review screenshots and accessibility selection checks supplement RealityKit contact/cord tests; they do not certify manufacturer geometric accuracy.",
+  "suspensionSHA256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+  "reviewFeedback": "cord is way too long",
+  "displayCordRevision": {
+    "date": "2026-09-30",
+    "supportToEyeSpanMM": 56.478332000000236,
+    "displayEstimate": true
+  }
+}

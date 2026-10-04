@@ -1,0 +1,29 @@
+{
+  "approvedCandidateSHA256": "0a03a478d96ad7690cabd91c13cd3e4978434c964bc13442e4407e5a9e27994b",
+  "finalSourceSHA256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+  "changedArchiveMembers": [
+    "Document.xml"
+  ],
+  "metadataChanges": {
+    "presentations[0].media.display.surfaceFinish": {
+      "before": null,
+      "after": "wood",
+      "evidence": "Retained whole manufacturer product-01.png"
+    },
+    "presentations[0].media.display.camera.viewDirection": {
+      "before": [
+        0,
+        0,
+        -1
+      ],
+      "after": [
+        0,
+        -0.35,
+        -1
+      ],
+      "status": "display adaptation, approximately19.3degrees downward"
+    }
+  },
+  "geometryMembersByteIdentical": true,
+  "humanAccepted": false
+}

@@ -1,0 +1,44 @@
+{
+  "status": "PREPARATION_ONLY_NO_RUNTIME_RELEASE",
+  "sequence": [
+    "present-a",
+    "suppressed only after present-a valid visual failure",
+    "present-b only after suppressed valid visual pass"
+  ],
+  "stopRules": [
+    "Stop immediately if present-a passes visually or any arm has invalid setup/evidence.",
+    "Stop if suppressed fails visually.",
+    "After one present-b reversal stop regardless of result; no third condition, retries or fallback."
+  ],
+  "hands": "Strict all-hand suppression enabled in all arms. All four single/pair constructor and make counts must remain zero from opening through final tail.",
+  "trainFlag": "HANGTEN_REVIEW_SUPPRESS_TRAIN_BOARD_HOST=1 only in suppressed arm; absent in both present arms.",
+  "binary": "One future reviewed binary for all arms, with explicit Train slot gate and complete constructor marker. Existing eef5 binary is insufficient for this proposed evidence gate. No binary hash guessed.",
+  "recipe": "Normal launch then unchanged workout deep link; production autostart, no explicit AUTOSTART; natural 7s/180s/7s, screenshots at actual semantic mutation +0.25/+1/+3/+5; following-preview CPU tail. Hard bound300s.",
+  "instrumentation": "Existing established diagnostic sampler/boundary/lifecycle policy retained. No counter or other probe; no frontend actions. New Train constructor marker must be complete from recorder opening; marker schema and readiness require source reviewer confirmation before release.",
+  "evidenceGates": [
+    "Complete newline JSONL opening through tail and monotonic contiguous record IDs.",
+    "Actual Train constructor marker count positive for present control, zero for suppressed. Retain constructor records and all board scene/make/host histories.",
+    "Suppressed: exactly one intended workout board scene/make; no predecessor board construction anywhere in complete stream, not merely zero extra hosts at sparse censuses.",
+    "Every other renderer/host recorded and classified; no inferred concurrent lifetimes from constructor counts alone.",
+    "All12 actual CPU brackets and late tail; real countdown-to-running active gate; actual normal selection/presentation/position and root/camera scene membership.",
+    "Actual normal endpoint/path, activation and input correspondence recorded without frame compensation. Any differences surfaced before causal interpretation.",
+    "Sparse postattachment census exactly one intended board RealityKit.ARView with active root/camera in same scene; preserve other host rows rather than flattening or dropping them.",
+    "Source/build/installed executable and package parity before and after; installed binary equality also checked before launch by helper.",
+    "Whole12 images visually reviewed; no hand or Train appearance inferred from CPU state."
+  ],
+  "resources": {
+    "UUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "controller": 90373,
+    "DerivedData": "Existing registered ios-diagnosis/DerivedData-placid-badger-cad-second-half",
+    "newExternalResources": false
+  },
+  "frontend": "No desktop/Sky/frontend query or mutation; unknown DeviceHub remains untouched; no headless claim.",
+  "helper": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-proposal/workout-train-host.py",
+    "sha256": "d55f5f555f4f823e055a8ec4112d4b70d923c61dc1ca07a849fd4869040c31cb",
+    "basePath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/workout-normal-strict-hands.py",
+    "baseSHA256": "65057a3556e19fb191a189efaa27f8c700d813e1cbc2ed20425fcc990d0f6b72",
+    "astParsePassed": true
+  },
+  "release": "Parent supplies per-arm JSON matching helper hash, binary hash, runtimeAuthorized, constructorMarkerAuditReady, previousArmGatePassed, and arm. No valid release record is created by this preparation."
+}

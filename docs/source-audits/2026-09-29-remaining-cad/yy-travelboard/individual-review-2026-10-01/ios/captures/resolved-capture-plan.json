@@ -1,0 +1,14 @@
+{
+  "resolvedPositionByContact": {
+    "tray": "front-25-15",
+    "edge-25": "front-25-15",
+    "edge-15": "front-25-15",
+    "mono-left": "front-25-15",
+    "mono-right": "front-25-15",
+    "edge-10": "reverse-10"
+  },
+  "orbitRepresentatives": {
+    "tray": "front-25-15-primary",
+    "edge-10": "reverse-10-primary"
+  }
+}

@@ -1,0 +1,262 @@
+{
+  "beforeSHA256": "7f1a6c34c92984b7f8ac89007051ce49ed3cd358290293018cdb8cb2ec8d69a7",
+  "candidateSHA256": "7f1a6c34c92984b7f8ac89007051ce49ed3cd358290293018cdb8cb2ec8d69a7",
+  "oneValidSolid": true,
+  "volumeBefore": 745437.6023551619,
+  "volumeAfter": 745437.6023551619,
+  "boundsUnchanged": true,
+  "manifestUnchanged": true,
+  "positionIDs": [
+    "paired-25-20-15-10",
+    "paired-10-15",
+    "paired-12-8-6",
+    "paired-8-6",
+    "central-30-25",
+    "central-25",
+    "central-20-6",
+    "central-6",
+    "rounded-tray"
+  ],
+  "contactInventoryUnchanged": true,
+  "logicalContacts": 19,
+  "contactNodes": 20,
+  "contacts": [
+    {
+      "name": "Region_hold_edge_10mm_left_mesh_001",
+      "contactID": "edge-10-left",
+      "valid": true,
+      "areaMM2": 1736.7878707749144,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 10.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_20mm_left_mesh_001",
+      "contactID": "edge-20-left",
+      "valid": true,
+      "areaMM2": 2556.7878707749132,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 20.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_15mm_left_mesh_001",
+      "contactID": "edge-15-left",
+      "valid": true,
+      "areaMM2": 2015.8861713374195,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 15.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_25mm_left_mesh_001",
+      "contactID": "edge-25-left",
+      "valid": true,
+      "areaMM2": 2785.8861713374185,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 25.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_06mm_left_mesh_001",
+      "contactID": "edge-6-upper",
+      "valid": true,
+      "areaMM2": 2310.0000000000027,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 6.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_12mm_left_mesh_001",
+      "contactID": "edge-12-left",
+      "valid": true,
+      "areaMM2": 1633.9049232115553,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 12.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_08mm_left_mesh_001",
+      "contactID": "edge-8-left",
+      "valid": true,
+      "areaMM2": 1325.904923211555,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 8.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_rounded_left_mesh_001",
+      "contactID": "rounded-tray",
+      "valid": true,
+      "areaMM2": 7775.441612558548,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0
+    },
+    {
+      "name": "Region_hold_edge_10mm_right_mesh_001",
+      "contactID": "edge-10-right",
+      "valid": true,
+      "areaMM2": 1736.7878707749144,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 10.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_20mm_right_mesh_001",
+      "contactID": "edge-20-right",
+      "valid": true,
+      "areaMM2": 2556.7878707749132,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 20.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_15mm_right_mesh_001",
+      "contactID": "edge-15-right",
+      "valid": true,
+      "areaMM2": 2015.8861713374195,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 15.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_25mm_right_mesh_001",
+      "contactID": "edge-25-right",
+      "valid": true,
+      "areaMM2": 2785.8861713374185,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 25.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_06mm_right_mesh_001",
+      "contactID": "edge-6-lower",
+      "valid": true,
+      "areaMM2": 2310.000000000015,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 6.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_12mm_right_mesh_001",
+      "contactID": "edge-12-right",
+      "valid": true,
+      "areaMM2": 1633.9049232115585,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 12.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_08mm_right_mesh_001",
+      "contactID": "edge-8-right",
+      "valid": true,
+      "areaMM2": 1325.904923211558,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 8.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_rounded_right_mesh_001",
+      "contactID": "rounded-tray",
+      "valid": true,
+      "areaMM2": 7775.441612558531,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0
+    },
+    {
+      "name": "Region_hold_central_20mm_mesh_001",
+      "contactID": "edge-central-20",
+      "valid": true,
+      "areaMM2": 2759.8206536855278,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 20.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_central_06mm_mesh_001",
+      "contactID": "edge-central-6",
+      "valid": true,
+      "areaMM2": 1639.8206536855246,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 6.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_central_30mm_mesh_001",
+      "contactID": "edge-central-30",
+      "valid": true,
+      "areaMM2": 3224.621125123532,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 30.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_central_25mm_mesh_001",
+      "contactID": "edge-central-25",
+      "valid": true,
+      "areaMM2": 2824.6211251235322,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 25.0,
+      "midpointSurfaceDistanceMM": 0.0
+    }
+  ],
+  "bores": {
+    "LeftOuterBore": {
+      "parametersUnchanged": true,
+      "symmetricDifferenceMM3": 0.0
+    },
+    "LeftInnerBore": {
+      "parametersUnchanged": true,
+      "symmetricDifferenceMM3": 0.0
+    },
+    "RightInnerBore": {
+      "parametersUnchanged": true,
+      "symmetricDifferenceMM3": 0.0
+    },
+    "RightOuterBore": {
+      "parametersUnchanged": true,
+      "symmetricDifferenceMM3": 0.0
+    }
+  },
+  "allSketchesFullyConstrained": true,
+  "materialsAbsent": true,
+  "nativeErrors": [],
+  "sourceBytesUnchanged": true,
+  "candidateBytesUnchanged": true
+}

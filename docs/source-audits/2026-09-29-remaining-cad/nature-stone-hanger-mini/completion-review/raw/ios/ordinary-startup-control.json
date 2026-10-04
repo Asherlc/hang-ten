@@ -1,0 +1,72 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "CEC83800-5035-404E-B5A2-E40B826FE00E",
+  "control": "existing raster board; ordinary Train route; review detail/hold/FOV/plan variables cleared",
+  "reviewEnvironment": {
+    "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "metolius.wood-grips-compact-ii"
+  },
+  "commands": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "launch",
+        "--terminate-running-process",
+        "CEC83800-5035-404E-B5A2-E40B826FE00E",
+        "com.hangten.training"
+      ],
+      "timeoutSeconds": 30,
+      "exitCode": 149,
+      "stdout": "",
+      "stderr": "An error was encountered processing the command (domain=com.apple.CoreSimulator.SimError, code=405):\nUnable to lookup in current state: Shutdown\n",
+      "elapsedSeconds": 0.16130645800149068
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "CEC83800-5035-404E-B5A2-E40B826FE00E"
+      ],
+      "attempt": 0,
+      "timeoutSeconds": 6,
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot run accessibility commands against CEC83800-5035-404E-B5A2-E40B826FE00E | Hang Ten Paseo placid-badger Review Mini Completion Retry1 | Shutdown | iPhone 17 Pro | OS 'iOS 26.5'  as it is not booted\n"
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "CEC83800-5035-404E-B5A2-E40B826FE00E"
+      ],
+      "attempt": 1,
+      "timeoutSeconds": 6,
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot run accessibility commands against CEC83800-5035-404E-B5A2-E40B826FE00E | Hang Ten Paseo placid-badger Review Mini Completion Retry1 | Shutdown | iPhone 17 Pro | OS 'iOS 26.5'  as it is not booted\n"
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "CEC83800-5035-404E-B5A2-E40B826FE00E"
+      ],
+      "attempt": 2,
+      "timeoutSeconds": 6,
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot run accessibility commands against CEC83800-5035-404E-B5A2-E40B826FE00E | Hang Ten Paseo placid-badger Review Mini Completion Retry1 | Shutdown | iPhone 17 Pro | OS 'iOS 26.5'  as it is not booted\n"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "scope": "Only launched app on exact preowned Simulator; controller retains Simulator/DD ownership",
+  "pidQueryExitStatus": 1,
+  "recordedAppPIDAbsent": true,
+  "directChildReaped": true,
+  "passed": true
+}

@@ -1,0 +1,20 @@
+{
+  "scope": "Queue15 current metadata fields; append-only Forge source audit and metadata README; new Forge preservation documents",
+  "queueChangedRows": [
+    15
+  ],
+  "queueOtherRowsAndTopLevelBytesUnchanged": true,
+  "queue8UnchangedDuringThisStep": true,
+  "sourceAuditAppendOnly": true,
+  "metadataReadmeAppendOnly": true,
+  "frozenInitialAuditUnchanged": true,
+  "protectedSourceModelDescriptorHumanReviewAndPlanUnchanged": true,
+  "afterSHA256": {
+    "queue": "05c11fbd32f8da17ca0c3bd45c844e09559eb336a0c6190629b1527c8d04034a",
+    "sourceAudit": "e254c9350cc55568b49763696866598cce9ae9aa8a3e4814f9e0882a929fa186",
+    "metadataReadme": "0e47644d5bb5c8be1687af370c45e6f6a4c5be5f418cedb652150251e50a437e",
+    "forgeReadme": "5ac30d9fa152a1fdff9739666ff085f0809a3b866b05fa88141d5db9bbc08575"
+  },
+  "resourcesStarted": [],
+  "commitsMade": false
+}

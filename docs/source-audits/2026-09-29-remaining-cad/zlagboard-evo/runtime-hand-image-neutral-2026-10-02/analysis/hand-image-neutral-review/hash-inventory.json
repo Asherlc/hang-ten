@@ -1,0 +1,124 @@
+{
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-live-d/whole-app.png",
+      "bytes": 880013,
+      "sha256": "27fa4949a12fdddd90774dfcb1e06e3673d9490f10447c290b73a9d4d81290a1"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-d/whole-app.png",
+      "bytes": 526097,
+      "sha256": "536b4c970eac820a9547d43fd7e79b3edae991ac7a32d86ad5336baece36e0e8"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-d/generated-hand.png",
+      "bytes": 436999,
+      "sha256": "049b78e0e891219e4d03439247179113b071cd5f7f7e81f845a4acfaa8a1919d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-c/whole-app.png",
+      "bytes": 538857,
+      "sha256": "45ea32ab480e14768360bab818a6cbde066d5b6ed2358ffec1930ee13b6b5e7a"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-c/generated-hand.png",
+      "bytes": 476976,
+      "sha256": "39a7c47c37955c768abfd83e2c023804434ed9416c57c8d730543bdf67823c61"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-live-d/completion.json",
+      "bytes": 77,
+      "sha256": "fa58b342ddd239c5c0123fcb2621bb8f0142bb617c3da50d56944dc64a2ffe95"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-live-d/app-cleanup.json",
+      "bytes": 212,
+      "sha256": "255bd5a571aee798a55cbd326816365f345ce5cd8ef156ff41f4b6e9bdc91d7f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-live-d/retained-trace-validation.json",
+      "bytes": 7455,
+      "sha256": "f36e335b2cf31887256cc69d558ee7c94a719afac4da7b24b3ee159c8c187236"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-live-d/idle-observation.json",
+      "bytes": 5594,
+      "sha256": "f0ff157e14b94fa60f3b6b8232c25aff1f2c4cbc3391a9ac07bda13c3ded4c3e"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-live-d/runtime-release.json",
+      "bytes": 10210,
+      "sha256": "f8f96e8a48696df2e9dde8a554898780158e268b502ef2c13b3aa578dd2f81e1"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-live-d/events-8E5E915A-0215-4B1A-9C02-8ABE5D7A5815.jsonl",
+      "bytes": 4238,
+      "sha256": "20963b6a944d32d8def286194d86a316347ad387c78adceecdb04ff53af8a924"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-d/completion.json",
+      "bytes": 77,
+      "sha256": "fa58b342ddd239c5c0123fcb2621bb8f0142bb617c3da50d56944dc64a2ffe95"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-d/app-cleanup.json",
+      "bytes": 212,
+      "sha256": "255bd5a571aee798a55cbd326816365f345ce5cd8ef156ff41f4b6e9bdc91d7f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-d/retained-trace-validation.json",
+      "bytes": 7622,
+      "sha256": "d7773f4b9c617733c93286cfe88746de225c3e9c7629d6422c26be1905172a50"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-d/idle-observation.json",
+      "bytes": 3998,
+      "sha256": "897be96dbed82c3b330527ec9efd8327b066f21ef0665a1ef848b81193428331"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-d/runtime-release.json",
+      "bytes": 10243,
+      "sha256": "078671de7ac94d4a1de757a863e44d043da5d563b4ef524de54c9a88fe7c731c"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-d/events-C5F6CD3D-DAE1-49CF-A359-A4242318BD0C.jsonl",
+      "bytes": 8944,
+      "sha256": "fbaaade1a68a4eea3f3da772354d911f124b6934154f7699346c00616405d486"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-c/completion.json",
+      "bytes": 77,
+      "sha256": "fa58b342ddd239c5c0123fcb2621bb8f0142bb617c3da50d56944dc64a2ffe95"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-c/app-cleanup.json",
+      "bytes": 212,
+      "sha256": "255bd5a571aee798a55cbd326816365f345ce5cd8ef156ff41f4b6e9bdc91d7f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-c/retained-trace-validation.json",
+      "bytes": 7622,
+      "sha256": "950c4643155a50727904e5750f272cb253828b50841666e3cdc5387ee45729b5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-c/idle-observation.json",
+      "bytes": 4000,
+      "sha256": "e170a51433bb989d1e5b5a89aeb2e66392197f88ed83462294459769762eed07"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-c/runtime-release.json",
+      "bytes": 10245,
+      "sha256": "dba780e0237b21685ed6276a391e90550bc96d05defe06b3f377f1dce0ae9f23"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-c/events-600F6FC5-B711-4D2E-B97E-70B598227668.jsonl",
+      "bytes": 7458,
+      "sha256": "b03180ad43708166a9e29f8ae9869bd5e185203608dde94e4540e2a42e9f4df9"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-neutral-review/findings.json",
+      "bytes": 4905,
+      "sha256": "3d3bcf049785c235cd7823d9b455c375757fd87855a7540afc524b20b1825669"
+    }
+  ]
+}

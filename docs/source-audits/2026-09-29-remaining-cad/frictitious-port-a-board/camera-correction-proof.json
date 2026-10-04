@@ -1,0 +1,57 @@
+{
+  "package": "frictitious-port-a-board",
+  "beforeSidecarSHA256": "16810c102bda8932b0d378adeb87dd551ef5080193e2f33f6a4b759ecaa83da6",
+  "afterSidecarSHA256": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
+  "changes": [
+    {
+      "presentationID": "primary",
+      "positionID": "front-inverted",
+      "beforeViewDirection": [
+        0,
+        -0.3,
+        -1
+      ],
+      "afterViewDirection": [
+        0,
+        0.3,
+        -1
+      ]
+    },
+    {
+      "presentationID": "primary",
+      "positionID": "reverse-upright",
+      "beforeViewDirection": [
+        0,
+        -0.3,
+        -1
+      ],
+      "afterViewDirection": [
+        0,
+        -0.3,
+        1
+      ]
+    },
+    {
+      "presentationID": "primary",
+      "positionID": "reverse-inverted",
+      "beforeViewDirection": [
+        0,
+        -0.3,
+        -1
+      ],
+      "afterViewDirection": [
+        0,
+        0.3,
+        1
+      ]
+    }
+  ],
+  "allNonCameraSidecarValuesIdentical": true,
+  "immutableNativeAndModelFilesSHA256": {
+    "frictitious-port-a-board.FCStd": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+    "assets/primary.usdz": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+    "assets/primary.model.json": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1"
+  },
+  "reason": "Canonical camera directions are native-local and rotate with the board. Front/rear mouth selection and underside visibility must be expressed before the pose rotation.",
+  "unchangedNumericRoutesSHA256": "e91d47db48fe6816bbe10b011f1819e66f98d3da0780e756ca77421f8a6bb2c8"
+}

@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "freshApplyExitCode": 0,
+  "freshCheckExitCode": 0,
+  "applyReportSHA256": "79977e53fccaad059af8ca003b99e0e866fce608f669011e127679100df27194",
+  "checkReportSHA256": "79977e53fccaad059af8ca003b99e0e866fce608f669011e127679100df27194",
+  "reportsByteIdentical": true,
+  "poses": [
+    "front-25",
+    "front-inverted-20",
+    "reverse-13",
+    "reverse-inverted-8",
+    "outer-upper",
+    "outer-lower"
+  ],
+  "sidecarSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+  "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "nativeSolidSHA256": "447aaa29326167bbed749643fbc1d454707f84eb8fb29d79b2d6de391986365e",
+  "inputPolicy": "Fresh from the retained source-hash-bound native CAD collision solid and current authoring metadata for both runs; no retained route report used as solve input. No tightening or topology changes."
+}

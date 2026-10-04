@@ -1,0 +1,62 @@
+{
+  "status": "pass",
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+  "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+  "sidecarSHA256": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
+  "colliderSHA256": "9f1c7afee52db277aaef76ea3c92fcc8ceae8223b95fd43847314a9545466d77",
+  "codeFreezeSHA256": "cef46c7b031eba55bdbcde889fc27d505eedeba137dbee0abb1d3aa74a789012",
+  "helperSHA256": "2001cb8f4eb141d50146a2f426aa0cc086e729e0e737b4224e7f9dcf0a6fa191",
+  "matches": {
+    "native-route-report.json": true,
+    "suspension.json": true
+  },
+  "fileSHA256": {
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-apply/native-route-report.json": "591083175d543a198cdfe2207e0bc81be7337934041349b2272fb11eeb23c3e7",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-apply/suspension.json": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-apply/completion.json": "a1a1346cce129ea8ab4cb35ab59d841ad33195527af2d97dd44ae8d697245e5a",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-check/native-route-report.json": "591083175d543a198cdfe2207e0bc81be7337934041349b2272fb11eeb23c3e7",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-check/suspension.json": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-check/completion.json": "dded13b1c18f3f17f2f16f0bac5316169af2a48f07afc36c55bf8ce39488f2fd"
+  },
+  "counts": {
+    "outputPoses": 8,
+    "branches": 16,
+    "presentationFrames": 4,
+    "freshPhysicsFrames": 2
+  },
+  "runs": {
+    "apply": {
+      "workspaceOwner": "placid-badger",
+      "name": "placid-badger-final-apply-v2",
+      "mode": "apply",
+      "timeoutSeconds": 1800,
+      "startedUTC": "2026-10-01T23:44:05.372759+00:00",
+      "ownedTmp": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/vertical-groove-correction/placid-badger-final-apply-v2-tmp",
+      "state": "closed",
+      "ownedProcessGroup": 57063,
+      "exitCode": 0,
+      "ownedProcessGroupAbsent": true,
+      "ownedTmpAbsent": true,
+      "elapsedSeconds": 950.1926067080349
+    },
+    "check": {
+      "workspaceOwner": "placid-badger",
+      "name": "placid-badger-final-check-v2",
+      "mode": "check",
+      "timeoutSeconds": 1800,
+      "startedUTC": "2026-10-01T23:46:43.816431+00:00",
+      "ownedTmp": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/vertical-groove-correction/placid-badger-final-check-v2-tmp",
+      "state": "closed",
+      "ownedProcessGroup": 62142,
+      "exitCode": 0,
+      "ownedProcessGroupAbsent": true,
+      "ownedTmpAbsent": true,
+      "elapsedSeconds": 1031.4435172920348
+    }
+  },
+  "inputBytesUnchanged": true,
+  "allOwnedProcessGroupsAndTmpAbsent": true,
+  "canonicalPromotion": "pending independent audit",
+  "method": "Two separate processes import the identical immutable code snapshot and regenerate from unchanged native metadata/collider; no authored or first-output route cache seeds either invocation. Every output independently recertified."
+}

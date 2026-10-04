@@ -1,0 +1,24 @@
+{
+  "status": "Invalid startup; no renderer conclusion",
+  "recordsRetained": 69,
+  "earlierMessageCorrection": "An interim message mistakenly said34 records; the actual retained prefix is69.",
+  "wholeImagesViewed": [
+    "launch-initial.png",
+    "phase-0-active-plus-0.25.png",
+    "phase-0-active-plus-1.png",
+    "phase-0-active-plus-3.png",
+    "phase-0-active-plus-5.png"
+  ],
+  "visible": "Launch image blank portrait; all four selected-board images landscape with Start and unchanged Hang00:07, not an actual running Hang.",
+  "environmentMismatch": "Added HANGTEN_REVIEW_AUTOSTART=1 absent in prior passive normal baseline.",
+  "sourceExplanation": "Supported code possibility: DEBUG toggleRunning may create pending countdown/arm without activeStart; subsequent production shouldAutoStart calls toggleRunning again, cancelling pending work. Startup inactive scene could also interrupt; trace does not identify unique cause.",
+  "handChoice": "All Max Hangs block steps handUse double/side both; Evo does not author handCapacity1, so needsHandChoice false and production auto-start branch is applicable.",
+  "sourceLines": [
+    "RootView.swift:2227",
+    "RootView.swift:2234",
+    "RootView.swift:3121",
+    "WorkoutTimeline.swift:43",
+    "TrainingModels.swift:1324"
+  ],
+  "noFixOrUIInput": true
+}

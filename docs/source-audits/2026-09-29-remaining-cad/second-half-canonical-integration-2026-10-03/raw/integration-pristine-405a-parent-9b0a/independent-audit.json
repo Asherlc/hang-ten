@@ -1,0 +1,278 @@
+{
+  "status": "PASS_EXACT_SCRATCH_PREVIEW_ONLY_NOT_INTEGRATED",
+  "refs": {
+    "base": "9399160729fcc418cedf47344b41163d244b5d96",
+    "own": "405a4530ab3a26496cf4e44fb59917e5befd7af8",
+    "parent": "9b0a371f72216ab7746d876c141f834f815ffc34"
+  },
+  "resolverPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/resolve_snapshot.py",
+  "resolverSHA256": "060734406bce70c1f83b95018f0f1f22071cd1552c4d321d5a0d6ce1ebcdc292",
+  "resolvedPreviewReportSHA256": "25e3d2158e6718c93b54264473cd2c4ffe2dbe755fe0a599a340163ba98005a1",
+  "resolvedFiles": {
+    "docs/HANGBOARD_CORD_AUTHORING.md": "219d470b7a261157338d4f931a2fad1538ce05faf5bb8a9bcb9f1a2812d4a4cb",
+    "docs/model-delivery-lock.json": "13b6c10ca896808a9dec26d7d0e584a155652f41a39a86424eae8df383b3cece",
+    "Tools/HangboardCAD/native_cord_routes.py": "a7285ef5dfaa8fa358ff956010e613ab891ad8536090455dc024ccdb08e90f18",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "2cb13d2ee37217b6836262c1c3c5f8273f37b0709b549ad2060ad966510df9dd",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json": "b3754546593b44043460c67a45218442f4774a153d696ce07f5130997530133e"
+  },
+  "checks": {
+    "all21FullQueueRowsFromCorrectOwner": true,
+    "accepted1to8ExactBaseline": true,
+    "all57MigratedRecordsFromCorrectOwner": true,
+    "allOwnAndParentReviewRevisionRecordsRetained": true,
+    "allParentMini4AssetIdentitiesExactInLock": true,
+    "allParentMini3AggregateRowsExact": true,
+    "all87OverlayFilesExactPriorTestedBytes": true,
+    "resolvedSolverParserDocsExactPriorTestedBytes": true,
+    "trackedWorktreeAndHEADUnchanged": true
+  },
+  "queueRows": [
+    {
+      "number": 1,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "1cf81b1034be791f95824b6e07130adfd82f98c7b685529ec412ce0ccf314cdd"
+    },
+    {
+      "number": 2,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "ccd711cde1d2e98d25f09048935eaaaaff39aae31143b8332f0fe5c7da346c06"
+    },
+    {
+      "number": 3,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "3ecd573359119f7f1b6539aadbb240317f93b84b9273fe3aceca44aaaf2aa0c9"
+    },
+    {
+      "number": 4,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "1e932dd8350b80bd3321061a1fffd639af4a9e3d2dee19e54628ac713b231441"
+    },
+    {
+      "number": 5,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "150a67603e0d30ce22f4e69c7fb335d8b1b619d81311f7f589c53d5313ff5c95"
+    },
+    {
+      "number": 6,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "07eff6c9a57e4f2da2aa0c430b1874c3ec168b81d0c9d8045459308da6cef179"
+    },
+    {
+      "number": 7,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "864e7d75ed341a140e3da7e743426099e56798fa1d2dcb3ba9a1375bd5130dce"
+    },
+    {
+      "number": 8,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "19fd9c96b53033f3fd29be558fdfc5753f66440da5e6ceb29cfe5dd4f135c324"
+    },
+    {
+      "number": 9,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "f28d83a0f2fd9c28f6822a82a53fc82b5699b6f7d61b49bafb2ef49f97bb89f8"
+    },
+    {
+      "number": 10,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "a0d60d616cc6dc41c87646dc3205b3562e56cd3f54187f1772cd9a8f835e2a94"
+    },
+    {
+      "number": 11,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "8200793cccffb8d4551106ee1e4038c67e81c1cbed193c70e5acaacfdabac76f"
+    },
+    {
+      "number": 12,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "6490c77ad0a8c742cd7fd45ad28c4fe62957f81706d9ab6847cde16b85749d9d"
+    },
+    {
+      "number": 13,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "f3e769e306733542a5efe0732fcae4b8e40a6fddb9a257773228990e6089ca43"
+    },
+    {
+      "number": 14,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "fa452857bcc8302e23fec8a744fa810b33682409bb2cdcae58f9e6283907f870"
+    },
+    {
+      "number": 15,
+      "owner": "parent",
+      "fullRecordExact": true,
+      "sha256": "9a0f4f793633ad4900c449c01462cd1d5c414b2cb4916c7f5451a6744f501c57"
+    },
+    {
+      "number": 16,
+      "owner": "own",
+      "fullRecordExact": true,
+      "sha256": "80c03093a1ecc8b2dd4cd41f248264decb431864f457f35ceb208536f83b388e"
+    },
+    {
+      "number": 17,
+      "owner": "own",
+      "fullRecordExact": true,
+      "sha256": "5ba2c708d1adce37cb67d9af647abf81974c4088d7ab738c6fdbba81f47e3a14"
+    },
+    {
+      "number": 18,
+      "owner": "own",
+      "fullRecordExact": true,
+      "sha256": "75369eb88ed5d5ba5a4fbbe332884d3a3552aa3795144730772a23fc0b61e9f4"
+    },
+    {
+      "number": 19,
+      "owner": "own",
+      "fullRecordExact": true,
+      "sha256": "31599a00a9c2c7a5065a4dcfc9e6d2af5dd940c29a55cb428a5206cf6f11fad7"
+    },
+    {
+      "number": 20,
+      "owner": "own",
+      "fullRecordExact": true,
+      "sha256": "c1ae51640f6e5c385aa06f5de8d0cf5bf74ebf3fbf22b1a0d601b5e159ce23ba"
+    },
+    {
+      "number": 21,
+      "owner": "own",
+      "fullRecordExact": true,
+      "sha256": "c80f97b5ca433cea3bcf787baf8db46c2b7455a4dabd2a763c5a456d1c4c5ebb"
+    }
+  ],
+  "latestParentMiniAuthoritativeAssetIdentities": {
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+    "Hangboards/nature-stone-hanger-mini/suspension.json": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
+  },
+  "latestParentMiniAggregateRows": {
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+    "Hangboards/nature-stone-hanger-mini/suspension.json": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f"
+  },
+  "combinedManifestSHA256": "2061b24381bc1d193d9eb90aa04bdc20ac045325024426b2006b605d00ce1527",
+  "revisionHistoryCount": 30,
+  "focusedTests": {
+    "rerun": false,
+    "reason": "All87 test/source/fixture overlay files and resolved solver/parser/docs exactly match prior tested overlay. No new code inputs.",
+    "previous84TestProof": {
+      "rerun": false,
+      "reason": "All87 Python source/test/fixture overlay files byte-identical to previously passing integration snapshot; source inputs unchanged on both sides.",
+      "previousPassed": 84,
+      "resultPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/focused-tests-final.json",
+      "resultSHA256": "296caeb0dd6eb31966ae69dd6286650e60436104c70f9258336feca688db80db",
+      "rawLogSHA256": "ff62d481e44fba103257314095effa541c7808f91558ab872990b6e61a1b0bfd"
+    }
+  },
+  "overlayHashes": {
+    "Tools/HangboardCAD/export_rope_collision_solid.py": "b0ccac8584d701c645befb8d049c8e0202326a43e906a603f0ddba8f0bda3152",
+    "Tools/HangboardCAD/set_board_manifest.py": "fb3fcab44cf4ecf0aeec7df2ac6c3a1f6c0dd2931971e17928394aa733b81287",
+    "Tools/HangboardCAD/presentation_targets.py": "25a3136d0bc1c5d8651d1ad60b99e804e576bdb1668192719102e0f36f856f15",
+    "Tools/HangboardCAD/preview.py": "f6e47c2d6d68f595bada962fd048ba47e7dcbd0cbd4099d1576dc76bff8b0a14",
+    "Tools/HangboardCAD/native_cord_guides.py": "2001cb8f4eb141d50146a2f426aa0cc086e729e0e737b4224e7f9dcf0a6fa191",
+    "Tools/HangboardCAD/prepare_assets.py": "ed2f8e2b8eede2321ca7fc2c9cbbf404a7a31fa02f524320772ded39e5616251",
+    "Tools/HangboardCAD/use_hangboard_packages.py": "897951984c2b741e48e115c6b4c7e14620d14f37aa41744c2b9cd34bc9a41738",
+    "Tools/HangboardCAD/native_cord_features.py": "dbf57a10bef757087ee263fef7b883ec660c5d2e45655dab1f98e40e8b4971c4",
+    "Tools/HangboardCAD/board_manifest.py": "8dc5b35e61231d21d36a719c13b0609f829332b9aa26e42fe0829efc0269fbfe",
+    "Tools/HangboardCAD/run_freecad.py": "b5c030eec4b3f22e1e2ecc93c21e18880b1bdcdb66e1eaaa24cdb1f167816350",
+    "Tools/HangboardCAD/usdz_writer.py": "1d222c1b5483e94288587e4fbb13e8773b00cdaab715a39dac7cf6d69ee4f1af",
+    "Tools/HangboardCAD/photo_grid.py": "dc342d879ebe077862987a8a9ab18e25c0871f55d48c2232e412c40fdef20b3a",
+    "Tools/HangboardCAD/compile_board.py": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+    "Tools/HangboardCAD/verify_reproducible.py": "5dba947d12ad284d286e7c87682d7d09010ae41c4b66e8f96755574b6033690a",
+    "Tools/HangboardCAD/reference.py": "a2566255ebab2658478cfe85d75b210af5fad496a5f7b9c38e1610884dc35a44",
+    "Tools/HangboardCAD/solve_threaded_rope.py": "bcd7531950cc198ce8e5ad146d999dca3b11e7901076a8af2d08b5b1bf638f71",
+    "Tools/HangboardCAD/contract.py": "e92e39ed8eb802d7f0d33645aade64c274ff5f1b2769e3621fedd462933ed102",
+    "Tools/HangboardCAD/measure_channel_spines.py": "05cc1c99e4c47fa995304cc65c2d8788af4747482a72cc420742cd69afaefa1f",
+    "Tools/HangboardCAD/native_cord_routes.py": "a7285ef5dfaa8fa358ff956010e613ab891ad8536090455dc024ccdb08e90f18",
+    "Tools/HangboardPackages/tests/test_board_geometry.py": "defa71d372e91798944ebf3e41b546d46c9c05ba93d664d4d71c533f9f5a89aa",
+    "Tools/HangboardPackages/tests/test_cord_paths.py": "9f22e39dae3f8fcb9e6f4efe2bc6e9ba605449b8b8e6fe56456068210d2e1f4a",
+    "Tools/HangboardPackages/tests/conftest.py": "a44c828d34bc0ffa57e2e4cba0cad8d57565990aa6fe4dfd72d579a16b1ba14c",
+    "Tools/HangboardPackages/tests/_board_package_helpers.py": "993afcc8b218feb94268ed1e601c7419be55182fc07d08bf404d34e081d2fb05",
+    "Tools/HangboardPackages/tests/test_cord_audit_reusable_instances.py": "cfd0aea588ffbbd479fa84661daa895ec8936c40880973e1801d2a42c7e5e029",
+    "Tools/HangboardPackages/tests/test_trango_rock_prodigy_training_center_board_package.py": "c37eae3756ef4134d7bdeb7f03609239cfcf63ecdd231a2ab4d06e848ec4c436",
+    "Tools/HangboardPackages/tests/test_model_delivery_lock.py": "eae8e80ffeac3c35518634d129bba6ed7c1872a333ca9f26d7e38ac8c5d0d9aa",
+    "Tools/HangboardPackages/tests/test_model_first_packages.py": "5784e35ecc4116a925bf6971e8b8c09dea093cb6f7c8ea4dbf6ed9cab9b76d10",
+    "Tools/HangboardPackages/tests/test_ci_xctest_contract.py": "6e6f08d39e743a38774a6095ac4157105fa4cdf7033868e4a8ed7798714a800f",
+    "Tools/HangboardPackages/tests/test_shared_contact_membership_package.py": "43d0a17c4b93ec522fdb3488094b619de8c753ea282ae142307953cc228180e8",
+    "Tools/HangboardPackages/tests/test_board_package_staging.py": "94fc0cc37523d012112ef55108d35b02d872bd758cd9b936845179374a1e9056",
+    "Tools/HangboardPackages/tests/test_cad_routed_cord.py": "fbf01b3c3a5cf2140222307414c2a07b78da2dc4b9fad7a314716d23636a0e78",
+    "Tools/HangboardPackages/tests/test_cord_audit_source_tiers.py": "2869c900b33ebe512051f0410a35266776dc3f3657ba7c5ecc5fc2b4b4ab0699",
+    "Tools/HangboardPackages/tests/test_configured_depths.py": "9fd42c7032d0b319922e97d098c62697a511d0645f812b65396e2abdb3270a9b",
+    "Tools/HangboardPackages/tests/presentation_remediation_helpers.py": "633615be0846aa7c7cc693a650b075b7330d0d031567988cc22d4056fa446767",
+    "Tools/HangboardPackages/tests/test_pose_camera_facing.py": "2883c115b0a73a22eda80bb6e5596ac4606256346b81b5966df5bb967a9b4191",
+    "Tools/HangboardPackages/tests/test_board_geometry_schema.py": "2024ea1e131141eb5594f0503bab0b3f1bb02522668e2f90508e0d2897346420",
+    "Tools/HangboardPackages/tests/test_board_catalog.py": "551012d7cf8e1c7cbe0b6cc56d8f37fb06c9716eb7960be556f047fe2e25e118",
+    "Tools/HangboardPackages/tests/test_cli.py": "7f3cb4aecc4baba31c212ee9963795d860bf96d96dfd86593f4c48033521f282",
+    "Tools/HangboardPackages/tests/test_remove_primary_backdrops.py": "268f8e5098e9b21b820c39519029b2878996cdfea56982bcceb92d42318c9b19",
+    "Tools/HangboardPackages/tests/test_complete_catalog_source_audit.py": "093a90e823443ac8f26cf9ca4a6aab53db9b818a1b9b277508c82763a328f615",
+    "Tools/HangboardPackages/tests/test_coderabbit_mirrored_geometry.py": "4bb8c11126f0649de6fc7cb90b50c9bb34e901c669a31f77ee1e7b170c8ffd34",
+    "Tools/HangboardPackages/tests/test_moon_armstrong_geometry_repair.py": "185ff45ae1519eff23a40b2e17268a57ee8f250e11855d7b4d38a52740d1bb8c",
+    "Tools/HangboardPackages/scripts/remove_primary_backdrops.py": "35237694c4ef8c10bbc6c7068ba69f02f8c4709bc28a062dc67665f0472001ee",
+    "Tools/HangboardPackages/src/hangboard_packages/geometry_cleanup.py": "ca4245827b502a163b13d05f940c26b7300558b4124ea38a8d4a41e35c506671",
+    "Tools/HangboardPackages/src/hangboard_packages/board_geometry_schema.py": "254d46bfc24a2da427f6fd3f0a4cdd4f6c829f6baab00920e4cb484e8a363582",
+    "Tools/HangboardPackages/src/hangboard_packages/metadata_audit.py": "feed34d015aa2fdab44767198ceab0a1c45a78ff2af8416ed2f2ec01a0792501",
+    "Tools/HangboardPackages/src/hangboard_packages/usd_mesh_chain.py": "ebf68d38861dcd289e4a81f2d2db5ced2c660739aa3a9a3bd8ec5e92337eb736",
+    "Tools/HangboardPackages/src/hangboard_packages/presentation_remediation_audit.py": "716d55aa68e1c91ebdb7d267e9f2df2bfb1d901ba40bad3fb2bfcba04997661a",
+    "Tools/HangboardPackages/src/hangboard_packages/cli.py": "70630ea53b766457b3ffd66f0e08075f676d34c1afce36bad45f8575db24e2d6",
+    "Tools/HangboardPackages/src/hangboard_packages/cord_paths.py": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250",
+    "Tools/HangboardPackages/src/hangboard_packages/cord_audit.py": "c84365ff292584467a0df31c827c6c73dc787358319014492e294004ed32b189",
+    "Tools/HangboardPackages/src/hangboard_packages/board_geometry.py": "e1dbb6738094e8c0faa63b24bfe68253020b11b36029d150bdb12057d0620a09",
+    "Tools/HangboardPackages/src/hangboard_packages/board_catalog.py": "54af5c45627f76128e7629c601822d37903c57f4260ee81fdc668bf922140172",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "2cb13d2ee37217b6836262c1c3c5f8273f37b0709b549ad2060ad966510df9dd",
+    "Tools/HangboardCAD/tests/whetstone_native_source_checks.py": "fead62badda706b0ec87672eaed643a256d9f2f7c86ccd54377f737fcbd786b6",
+    "Tools/HangboardCAD/tests/native_source_checks.py": "391f49a390a47fcbff9828b9e030c80f49920e072640668099bd2d1f02a0e3d3",
+    "Tools/HangboardCAD/tests/test_usdz_writer.py": "b8eeddd9197404250d22a5fe1dc7ea4c4fd7dd45473daadf265cf1891f2cd0e3",
+    "Tools/HangboardCAD/tests/test_shared_contact_membership_cad.py": "896b26f48dc2b11cb092320d64bb54b10e157022f253598a16931ac858726015",
+    "Tools/HangboardCAD/tests/test_native_cord_routes.py": "8e7890dcb013f06fc3e9d1844459b1c952955bf8405d7dcfe951aa5a1ac26c36",
+    "Tools/HangboardCAD/tests/test_native_pose_terminals.py": "c2bd4c3a0d5849d6845a6aef0fcc4c4dd9c76bae01a80fcd8c84a43572c86761",
+    "Tools/HangboardCAD/tests/test_foundry_native.py": "6fd234f5634ceeb4a4f0b482ef73313b185c85ba9f99aba464d39b264ae64840",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py": "f757edde7afff4a987009fc3fe54916d75bb4023e152378a126193b7f249ea2b",
+    "Tools/HangboardCAD/tests/test_native_cord_feature_extraction.py": "0c8e7f829e6ffb1ad93ac41738776b0857f642c2d0bf946b1375a3ef421591b9",
+    "Tools/HangboardCAD/tests/test_presentations.py": "9e43d1b269f6972a5e7c7898aa37cf2d0ade031ca80aec57a2313c70dbff527b",
+    "Tools/HangboardCAD/tests/test_native_path_search.py": "9900386900a1fa6ef0409b2dbe54605ee2c2b21b2a436ac56b454836d1dcd87d",
+    "Tools/HangboardCAD/tests/test_native_cord_tightening.py": "362679227649f45dbfab39a7eda39a7c648de4e928d3904e93750e51f2ab60e7",
+    "Tools/HangboardCAD/tests/test_native_clearance_budget.py": "8ca5f987ddaaabe4b0b9e4012da4907ae983c4b58833046c90518f2d38142fff",
+    "Tools/HangboardCAD/tests/compare_exports.py": "8096775d94291967514a8bfb5c4116f94e39336606a2fecfae3f42fb04154a6b",
+    "Tools/HangboardCAD/tests/test_prime_rib_native.py": "815b4c641169e1f4d858e255a9bd5176bb6e09227c4524af61f478fcf86763b0",
+    "Tools/HangboardCAD/tests/native_cord_feature_checks.py": "50c360624c021da6b55001a8ac4aa5dca2cef801160e6265228201f020ea4743",
+    "Tools/HangboardCAD/tests/test_compile_v2_depths.py": "f449b9e2fa1aebc5ce82e4d961f378c6c6ad3a76b183e7d36d0b7eeb8a7d69e6",
+    "Tools/HangboardCAD/tests/foundry_native_source_checks.py": "1686e7904b7767a0306d97a691fb28e638ffd35ba4e6a287ad2fc0d80eb7d601",
+    "Tools/HangboardCAD/tests/test_contract.py": "b20d377127fc4b9190b7a0aedc8d8986ab2efb1d1795a6ec2e82186f2c018b4c",
+    "Tools/HangboardCAD/tests/test_board_manifest.py": "7c70dc34e22c425e25eb3e5cf3f135debd9cb82a499577605e9d996812a0a1df",
+    "Tools/HangboardCAD/tests/test_uv_node_normals.py": "829e79fc508ac55c28ab17c859ffaca4fa92c29438533f699f96cc308fd05f2f",
+    "Tools/HangboardCAD/tests/prime_rib_native_source_checks.py": "2bf343d8435b6e24a1abf08b6cbc10d9c0492b6cb73e93c0ea670898cbc3dcd3",
+    "Tools/HangboardCAD/tests/test_metolius_native.py": "bafaf0a7fd36377b2c690281fc8cad10ce469bf823bcee95b96435b25d3799f1",
+    "Tools/HangboardCAD/tests/test_native_cord_guides.py": "88c708aa16e459a4fec701535da5f2d1d9fa51df18d340c8815a3d610d534341",
+    "Tools/HangboardCAD/tests/native_broken_source_check.py": "cff516b3db124f94c0209aeb6097a0463511cfd29e063f0adc2c1f47bf572c74",
+    "Tools/HangboardCAD/tests/test_integration_dispatch.py": "53e5f8fdd40b5226c1a1c65534df4bf8757b84d9ef772478499259e089aa9fd6",
+    "Tools/HangboardCAD/tests/test_pilot_native.py": "35375ad3456eddffdcfccf5571f46fe26a181a69b94599d843490421bf5da811",
+    "Tools/HangboardCAD/tests/metolius_native_source_checks.py": "423d6ff41d730b6d6307c3d54ea228adbacfd2faf7a82673c955852b52386895",
+    "Tools/HangboardCAD/tests/test_whetstone_package.py": "e47a78a63d4a49f87fec05ec140e4677e5f2ae13c3af6a2a4176887ee969ef86",
+    "Tools/HangboardCAD/tests/test_cli_guards.py": "984bf28a436f8e0f75d2e23fa6e56039d93d4f98d84a8ff29adc800a3bd187ed",
+    "Tools/HangboardCAD/tests/uv_node_normal_checks.py": "684998bb8ca409e7ee07a46f572865a40d5bb1cd7fc86fe49da0419e0e38a8e7",
+    "Tools/HangboardCAD/migration/author_soill_iron_palm_2.py": "f8120f87d91e0921e757ca394d61339f14b7b9e9b3124bb72cfeef0103bbc880",
+    "Tools/HangboardCAD/tests/fixtures/native_groove_material_normals.json": "caa316ef2e7c35b3091f87c47a63644061b3a64b1b9f82d8941d4497ca60055c"
+  },
+  "auditCorrection": "First independent attempt incorrectly expected4 aggregate rows. Established delivery digest excludes USDZ itself and includes native/descriptor/suspension; model identity remains in lock/descriptor. First assertion failure retained; no resolver/format or raw evidence changed. Final checks verify both all3 aggregate rows and all4 parent identities.",
+  "limits": [
+    "Only scratch files created; no branch merge, fetch, index update or canonical change.",
+    "This supplies exact-ref resolution artifacts, not an integrated branch or PR-readiness claim.",
+    "Actual integration must also incorporate all parent-only package/proof changes listed by resolver; applying only shared-file patch is insufficient.",
+    "Runtime, human-review and final cleanup boundaries remain as separately recorded."
+  ]
+}

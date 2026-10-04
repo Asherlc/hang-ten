@@ -1,0 +1,8 @@
+{
+  "imagePath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-action-landscape/launch-initial.png",
+  "sha256": "159ce67de800b7d621fce93c34a248096aff7eb7dd06cf452ea3e5cab01aa4e7",
+  "wholeImageReviewed": true,
+  "observation": "Train screen with Zlagboard.Evo card and blank board slot during navigation. No workout phase or hand cue visible.",
+  "supportsWorkoutColorVerdict": false,
+  "limits": "Initial screenshot only; no crop, pixel measurement or phase appearance inference."
+}

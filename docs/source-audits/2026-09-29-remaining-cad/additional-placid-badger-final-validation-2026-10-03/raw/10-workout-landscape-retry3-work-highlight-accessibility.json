@@ -1,0 +1,374 @@
+[
+  {
+    "type": "Application",
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 402,
+      "y": 0,
+      "x": 0,
+      "width": 874
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "Session",
+    "AXValue": null,
+    "frame": {
+      "height": 54,
+      "x": 0,
+      "y": 24,
+      "width": 874
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Plan",
+    "AXUniqueId": "BackButton",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 44,
+      "x": 38,
+      "y": 24
+    }
+  },
+  {
+    "type": "Heading",
+    "AXLabel": "Session",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 20.666666666666664,
+      "width": 62.333333333333314,
+      "y": 35.666666666666664,
+      "x": 405.6666666666667
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Turn off spoken cues",
+    "AXUniqueId": "speaker.wave.2.fill",
+    "AXValue": null,
+    "frame": {
+      "height": 36,
+      "x": 673,
+      "y": 28,
+      "width": 45
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Turn off spoken cues",
+    "AXUniqueId": "speaker.wave.2.fill",
+    "AXValue": null,
+    "frame": {
+      "height": 36,
+      "width": 45,
+      "y": 28,
+      "x": 673
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "workout.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "height": 36,
+      "x": 734,
+      "y": 28,
+      "width": 43.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "workout.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "height": 36,
+      "width": 43.66666666666663,
+      "y": 28,
+      "x": 734
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "End",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 36,
+      "width": 38.33333333333337,
+      "y": 28,
+      "x": 793.6666666666667
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "End",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 36,
+      "x": 793.6666666666667,
+      "width": 38.33333333333337,
+      "y": 28
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "STEP 17 OF 20",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 13.333333333333329,
+      "x": 78,
+      "y": 88,
+      "width": 98.66666666666666
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Abrahang \u00b7 Middle-two crimp \u00b7 rep 1 of 1",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 26.33333333333333,
+      "width": 408,
+      "x": 78,
+      "y": 104.33333333333333
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Hang",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333343,
+      "width": 30.66666666666663,
+      "y": 102.16666666666666,
+      "x": 571
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "00:05",
+    "AXUniqueId": "workout.timer",
+    "AXValue": null,
+    "frame": {
+      "height": 40.66666666666666,
+      "width": 103,
+      "y": 89,
+      "x": 627.6666666666666
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Routine, current step 17: Abrahang \u00b7 Middle-two crimp \u00b7 rep 1 of 1",
+    "AXUniqueId": "workout.routinePicker",
+    "AXValue": null,
+    "frame": {
+      "height": 15.333333333333343,
+      "x": 746.6666666666666,
+      "y": 101.66666666666666,
+      "width": 49.33333333333337
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Grip not specified, Exact fingers: middle and ring",
+    "AXUniqueId": "workout.gripCue.left",
+    "AXValue": null,
+    "frame": {
+      "height": 27.000015258789062,
+      "width": 143,
+      "y": 248.8333282470703,
+      "x": 77.5
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Grip not specified",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 12,
+      "width": 90.66666666666664,
+      "y": 256.16666666666663,
+      "x": 103.66666666666667
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": "Stone Hanger Mini hangboard",
+    "AXUniqueId": "boardModel.3d",
+    "AXValue": "15 mm granite edge",
+    "frame": {
+      "height": 42,
+      "y": 240,
+      "x": 416,
+      "width": 42
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": "Board renderer diagnostic",
+    "AXUniqueId": "boardModel.renderDiagnostic",
+    "AXValue": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=",
+    "frame": {
+      "height": 1,
+      "y": 240,
+      "x": 416,
+      "width": 1
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Grip not specified, Exact fingers: middle and ring",
+    "AXUniqueId": "workout.gripCue.right",
+    "AXValue": null,
+    "frame": {
+      "height": 27.000015258789062,
+      "y": 248.8333282470703,
+      "x": 653.5,
+      "width": 143
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Grip not specified",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 12,
+      "y": 256.16666666666663,
+      "x": 679.6666666666666,
+      "width": 90.66666666666663
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Use two boards, one hand on each.",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666629,
+      "y": 286,
+      "x": 232,
+      "width": 212
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "INSTRUCTIONS",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 13.333333333333371,
+      "y": 322.66666666666663,
+      "x": 90,
+      "width": 103
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Keep your feet on the ground. Use 30\u201340% of the effort needed to lift off on the middle-two crimp. Load for 10 seconds, then rest for 50 seconds. Stretch your pinky fingers during the rest.",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 58,
+      "y": 341,
+      "x": 90,
+      "width": 456
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Resume",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 51.33331298828125,
+      "y": 320.3333435058594,
+      "x": 572,
+      "width": 224
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "Play",
+    "AXUniqueId": "play.fill",
+    "AXValue": null,
+    "frame": {
+      "height": 14.666666984558105,
+      "y": 338.66666666666663,
+      "x": 643.6666666666666,
+      "width": 13
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Resume",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 19.333333333333314,
+      "y": 336.3333333333333,
+      "x": 664.8333333333334,
+      "width": 61.66666666666663
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Feet supported \u00b7 10s work \u00b7 50s rest \u00b7 30\u201340%",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 13.333333333333314,
+      "y": 404,
+      "x": 90,
+      "width": 254.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Skip step 17: Abrahang \u00b7 Middle-two crimp \u00b7 rep 1 of 1",
+    "AXUniqueId": "workout.skipStep",
+    "AXValue": null,
+    "frame": {
+      "height": 38,
+      "y": 381.66666666666663,
+      "x": 572,
+      "width": 224
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "Forward",
+    "AXUniqueId": "forward.fill",
+    "AXValue": null,
+    "frame": {
+      "height": 12.333333969116211,
+      "y": 394.66666666666663,
+      "x": 636,
+      "width": 22
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Skip step",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 18,
+      "y": 391.6666564941406,
+      "x": 636,
+      "width": 97.83331298828125
+    }
+  }
+]

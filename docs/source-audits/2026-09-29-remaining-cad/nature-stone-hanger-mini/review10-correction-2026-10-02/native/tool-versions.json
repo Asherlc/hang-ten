@@ -1,0 +1,19 @@
+{
+  "FreeCAD": [
+    "1",
+    "1",
+    "3",
+    "20260725 (Git shallow)",
+    "Unknown",
+    "2026/07/25 04:52:02",
+    "grafted,grafted",
+    "145529fe741292ff0b3977a01195bf0247425794"
+  ],
+  "OCCT": "7.8.1",
+  "Python": "3.11.14 | packaged by conda-forge | (main, Oct 13 2025, 14:32:40) [Clang 19.1.7 ]",
+  "OpenUSD": [
+    0,
+    26,
+    8
+  ]
+}

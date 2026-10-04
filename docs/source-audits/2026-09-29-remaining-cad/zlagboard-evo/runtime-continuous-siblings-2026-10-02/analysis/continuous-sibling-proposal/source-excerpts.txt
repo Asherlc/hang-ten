@@ -1,0 +1,207 @@
+1950:     var body: some View {
+1951: 		GeometryReader { geometry in
+1952: 			TimelineView(.periodic(from: .now, by: 0.25)) { context in
+1953: 				let monotonicTime = WorkoutClock.monotonicTime
+1954: 				let elapsed = currentElapsed(at: monotonicTime)
+1955: 				let step = step(at: elapsed)
+1956: 				// Session steps are already preference-materialized / alternate-expanded.
+1957: 				let presentedStep = step
+1958: 				let stepElapsed = elapsedInStep(at: elapsed)
+1959: 				let countdown = countdownRemaining(at: monotonicTime)
+1960: 				let canNavigate = canNavigate(at: monotonicTime)
+1961: 				let isComplete = elapsed >= sessionDuration
+1962: 				let isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)
+1963: 				let boardCue = timeline.boardCue(
+1964: 					currentStep: step,
+1965: 					stepElapsed: stepElapsed,
+1966: 					countdown: countdown,
+1967: 					isComplete: isComplete,
+1968: 					isSkipCountdown: sessionState.countdownKind == .skip
+1969: 				)
+1970: 				let isResting = boardCue.isResting
+1971: 				let highlightedStep = boardCue.step
+1972: 				let resolvedHighlightedStep = highlightedStep
+1973: 				let previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
+1974: 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
+1975: 				let highlightMode = boardCue.mode
+1976: 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
+1977: 				let activeHold = resolvedHighlightedStep.flatMap { WorkoutHighlightResolver.contacts(for: $0, on: board).first }
+1978: 				let holdCue = WorkoutHoldCuePolicy.resolve(step: resolvedHighlightedStep, hold: activeHold, on: board)
+
+2370: 			landscapeHeader(
+2371: 				step: step,
+2372: 				stepElapsed: stepElapsed,
+2373: 				countdown: countdown,
+2374: 				canNavigate: canNavigate,
+2375: 				isResting: isResting,
+2376: 				isComplete: isComplete
+2377: 			)
+2378: 
+2379: 			ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
+2380: 				.tint(Color.hangGreenDark)
+
+2516: 	private func landscapeHeader(
+2517: 		step: WorkoutStep,
+2518: 		stepElapsed: TimeInterval,
+2519: 		countdown: Int,
+2520: 		canNavigate: Bool,
+2521: 		isResting: Bool,
+2522: 		isComplete: Bool
+2523: 	) -> some View {
+2524: 		HStack(alignment: .center, spacing: 16) {
+2525: 			VStack(alignment: .leading, spacing: 3) {
+2526: 				SectionLabel(
+2527: 					title: isComplete
+2528: 						? "Session complete"
+2529: 						: countdown > 0
+2530: 							? "Get ready"
+2531: 							: "Step \(step.number) of \(activeSteps.count)"
+2532: 				)
+2533: 				Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
+2534: 					.font(.system(size: 22, weight: .bold, design: .rounded))
+2535: 					.foregroundStyle(Color.hangInk)
+2536: 					.lineLimit(1)
+2537: 			}
+2538: 
+2539: 			Spacer(minLength: 12)
+2540: 
+2541: 			Pill(
+2542: 				title: isComplete ? "Done" : countdown > 0 ? "Ready" : isResting ? "Rest" : intervalLabel(for: step),
+2543: 				tint: isComplete ? Color.hangGreenDark : countdown > 0 ? Color.hangInk : isResting ? WorkoutPhase.rest.textTint : step.phase.textTint,
+2544: 				fill: (isComplete ? Color.hangGreen : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.18)
+2545: 			)
+2546: 
+2547: 			Text(
+2548: 				timeLabel(
+2549: 					isComplete
+2550: 						? 0
+2551: 						: countdown > 0
+2552: 							? TimeInterval(countdown)
+2553: 							: intervalRemaining(step: step, stepElapsed: stepElapsed)
+2554: 				)
+2555: 			)
+2556: 			.font(.system(size: 34, weight: .heavy, design: .rounded).monospacedDigit())
+2557: 			.foregroundStyle(Color.hangInk)
+2558: 
+2559: 			Button("Routine") {
+2560: 				showsStepPicker = true
+2561: 			}
+2562: 			.font(.system(size: 13, weight: .bold, design: .rounded))
+2563: 			.foregroundStyle(Color.hangGreenDark)
+2564: 			.disabled(!canNavigate)
+2565: 			.accessibilityLabel("Routine, current step \(step.number): \(step.title)")
+2566: 			.accessibilityIdentifier("workout.routinePicker")
+2567: 
+2568: 			if planNeedsHandChoice {
+2569: 				handPreferenceMenu()
+2570: 			}
+2571: 		}
+2572: 	}
+
+2702:             portraitTimerLabel(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete)
+2703: 
+2704:             ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
+2705:                 .tint(Color.hangGreenDark)
+2706:         }
+2707:     }
+2708: 
+2709:     private func portraitTimerLabel(
+2710:         step: WorkoutStep,
+2711:         stepElapsed: TimeInterval,
+2712:         countdown: Int,
+2713:         isComplete: Bool
+2714:     ) -> some View {
+2715:         HStack(alignment: .firstTextBaseline, spacing: 7) {
+2716:             Text(
+2717:                 timeLabel(
+2718:                     isComplete
+2719:                         ? 0
+2720:                         : countdown > 0
+2721:                             ? TimeInterval(countdown)
+2722:                             : intervalRemaining(step: step, stepElapsed: stepElapsed)
+2723:                 )
+2724:             )
+2725:             .font(.system(size: 46, weight: .heavy, design: .rounded).monospacedDigit())
+2726:             .foregroundStyle(Color.hangInk)
+2727:             .lineLimit(WorkoutPresentationContent.portraitTimerLineLimit)
+2728:             .fixedSize(horizontal: true, vertical: false)
+2729:             .layoutPriority(2)
+
+3549:     private func isRestInterval(step: WorkoutStep, stepElapsed: TimeInterval) -> Bool {
+3550:         step.phase == .rest || (step.hasRestInterval && stepElapsed >= step.activeDuration)
+3551:     }
+3552: 
+3553:     private func intervalRemaining(step: WorkoutStep, stepElapsed: TimeInterval) -> TimeInterval {
+3554:         if isRestInterval(step: step, stepElapsed: stepElapsed) {
+3555:             return max(0, step.duration - stepElapsed)
+3556:         }
+3557:         return max(0, step.activeDuration - stepElapsed)
+
+3579:     private func timeLabel(_ value: TimeInterval) -> String {
+3580:         let seconds = max(0, Int(value.rounded(.up)))
+3581:         return String(format: "%02d:%02d", seconds / 60, seconds % 60)
+3582:     }
+
+3817:     @ViewBuilder
+3818:     private var driverContent: some View {
+3819:         if driver == "A" {
+3820:             fixedContent(phase: selection)
+3821:         } else {
+3822:             TimelineView(.periodic(from: .now, by: 0.25)) { _ in
+3823:                 // Production also reads monotonic uptime rather than context.date.
+3824:                 let phase = ["C", "D", "E", "F", "G"].contains(driver) ? derivedPhase(at: ProcessInfo.processInfo.systemUptime) : selection
+3825:                 fixedContent(phase: phase)
+3826:             }
+3827:         }
+
+3840:     private func fixedContent(phase: Selection) -> some View {
+3841:         let renderViewport = viewport(for: phase)
+3842:         return VStack(spacing: 24) {
+3843:             Text(["D", "E", "F", "G"].contains(driver) ? "Standalone board" : "Standalone board: \(phase.rawValue)")
+3844:                 .accessibilityIdentifier("standalone.state")
+3845:             if let board = BoardCatalog.all.first(where: { $0.id == "zlagboard.evo" }) {
+3846:                 let semantic = SemanticSelection(
+3847:                     ids: phase == .clear ? [] : ["edge-20-left", "edge-20-right"],
+3848:                     mode: phase == .preview ? .preview : .active,
+3849:                     positionID: board.position(presentationID: board.defaultPresentation.id,
+3850:                                                containingContactID: "edge-20-left")?.id)
+3851:                 Group {
+3852:                     if ["E", "F", "G"].contains(driver) {
+3853:                         // Controlled workout-equivalent inputs; verify actual Surface resolution.
+3854:                         BoardMapView(board: board,
+3855:                             highlightedHoldIDs: semantic.ids, highlightMode: semantic.mode,
+3856:                             selectedPresentationID: board.defaultPresentation.id,
+3857:                             activeHoldID: phase == .clear ? nil : "edge-20-left")
+3858:                     } else {
+3859:                         BoardModelSurface(board: board, presentation: board.defaultPresentation,
+3860:                             positionID: semantic.positionID,
+3861:                             highlightedContactIDs: semantic.ids,
+3862:                             highlightMode: semantic.mode,
+3863:                             onContactTap: nil, isDisplayOnly: false)
+3864:                     }
+3865:                 }
+3866:                     .frame(width: renderViewport.width, height: renderViewport.height)
+3867:                     // Experimental resize arms; this is not a production repair.
+3868:                     .animation(driver == "G" ? .easeInOut(duration: 0.18) : nil,
+3869:                                value: renderViewport)
+3870:                     .transaction { transaction in
+3871:                         if driver == "F" {
+3872:                             transaction.animation = nil
+3873:                             transaction.disablesAnimations = true
+3874:                         }
+3875:                     }
+3876:                     .onChange(of: semantic, initial: true) { _, observed in
+3877:                         BoardHighlightDiagnostic.shared.harnessObservedSelection(
+3878:                             state: observed.ids.isEmpty ? "clear" : (observed.mode == .preview ? "preview" : "active"),
+3879:                             ids: observed.ids, mode: observed.mode, positionID: observed.positionID,
+3880:                             viewport: renderViewport)
+3881:                     }
+3882:             } else {
+3883:                 Text("Missing Evo catalog entry")
+3884:             }
+3885:             HStack {
+3886:                 control("Active", .active)
+3887:                 control("Preview", .preview)
+3888:                 control("Clear", .clear)
+3889:             }
+3890:         }

@@ -1,0 +1,902 @@
+{
+  "owner": "placid-badger",
+  "status": "read-only diagnosis; current selected jug and cord presentation rejected by human; no corrective authoring authorized in this lane",
+  "primaryEvidence": {
+    "NS-1": {
+      "url": "https://natureclimbing.com/products/stone-hanger-mini-oak",
+      "retained": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/product-page-current.html",
+        "sha256": "ca6e311904f1777aa26fa685acc664af2010e852b5258fd92a094bf011cccae1"
+      },
+      "supportClaimAsPreviouslyRecorded": "Exact Oak identity and four uses: 15 mm granite edge, 15 mm incut wood edge, 60 mm pinch, and smooth pull-up jug."
+    },
+    "NS-2": {
+      "url": "https://natureclimbing.com/cdn/shop/files/Oakminihanger1.jpg?v=1774539696",
+      "retained": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/front-original.jpg",
+        "sha256": "3aae064c37d7eef11e7874acaabbaca0194a1caa357e2bff1bbfb83faf093ff7"
+      },
+      "supportClaimAsPreviouslyRecorded": "Exact front geometry, stone insert, wooden recess/jug cavity, 15 mm marking, and side cord exits."
+    },
+    "NS-3": {
+      "url": "https://natureclimbing.com/cdn/shop/files/Oakminihanger2.jpg?v=1774539697",
+      "retained": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/reverse-original.jpg",
+        "sha256": "09a4926269b291354b171fdac6e20365a6c9c66528bb4275b8cb56b20b8f1eae"
+      },
+      "supportClaimAsPreviouslyRecorded": "Solid reverse, exact branding/revision, rounded outer body, and both cord exits."
+    },
+    "NS-4": {
+      "url": "https://natureclimbing.com/cdn/shop/files/Oakminihanger3.jpg?v=1774539696",
+      "retained": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/oblique-original.jpg",
+        "sha256": "383cdd3665f1e30a0dc8443959d7442e65780dbd27b71bc597efc9a1b924f685"
+      },
+      "supportClaimAsPreviouslyRecorded": "Board thickness and open side-groove routing for paired cord leads."
+    },
+    "NS-5": {
+      "url": "https://natureclimbing.com/cdn/shop/files/MiniHanger-environment-11.jpg?v=1774539799",
+      "retained": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/in-use-original.jpg",
+        "sha256": "f17ceb9007a1f00ad19859c6fdf4bbd0c8a48b5f8d1cdbf169c6de46ffeb076e"
+      },
+      "supportClaimAsPreviouslyRecorded": "Front/recess geometry from a distinct oblique view and portable cord context."
+    }
+  },
+  "factsAndLimits": {
+    "manufacturerFacts": [
+      "Retained Mini maker page names 15 mm granite edge, 15 mm incut wood edge, 60 mm pinch and smooth pull-up jug, and rope-adjusted slopy/vertical/incut angles.",
+      "Whole front/reverse Mini images show an exterior rope arch with a visible tied joining region. They do not expose concealed continuation.",
+      "Whole Mini side image shows two longitudinal side groove tracks and a transverse midheight track; one exposed lead descends a longitudinal track and turns toward the dark other-track opening.",
+      "The retained context photo shows the board against rock, not a hand using the jug or a loaded opening-up pose."
+    ],
+    "exactCurrentRepresentation": [
+      "nature_jug binds only FinalSolid.Face6. Its actual exported node is a single-depth recess back plane, not the top rim or an upper-edge pressure surface.",
+      "The -90 degree model-X jug-open-up pose rotates that plane into an upward-facing floor. That proves orientation of the authored selection, not identification of the maker jug.",
+      "Two 110 mm lead estimates connect to the same invisible metadata anchor. Each ends at its front-track station; a separate 12.5 mm exterior cross segment stops at the rear-track station. The 40 mm value is allowance, not rendered segment length.",
+      "The opening-up cache takes the left lead over former lower/front corner and the right lead over former upper/front corner. Their first local points have opposite height signs. The source whole photos do not demonstrate this bearing setup."
+    ],
+    "userConfirmations": {
+      "Mini": {
+        "overallShape": "Earlier Lgtm applied to the prior displayed silhouette/hold layout; it does not establish the final selected wall, opening-up pose or new cords.",
+        "currentRejection": [
+          "those cords dont look right",
+          "and the jug isnt the right part"
+        ],
+        "currentJugSurfaceConfirmation": "Root relayed the human confirmation: Mini jug is the rounded outside top/back rail, not the recess wall.",
+        "physicalJugRegionConfirmed": true,
+        "specificThreadingConfirmed": false,
+        "exactReplacementNativeFaceSelectionNotAuthoredInThisLane": true
+      },
+      "StoneHangerReview9Only": {
+        "boardID": "nature.stone-hanger",
+        "answer": "Enters side holes; notches guide it",
+        "additionalFeedback": "there is 1 vertical groove on either side that the cord nestles into",
+        "hiddenConnectionStillUnspecified": true,
+        "notTransferableToMiniAsConfirmation": true,
+        "references": [
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/human-review-proposal.json",
+            "sha256": "561220ea60e2314a39740d3197a0970d56a3fc4d946653a79fecfaddbd9f01cf"
+          },
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/raw/vertical-source-evidence/human-feedback-extension.json",
+            "sha256": "74e6ad10a999a9aabac0a1d7aeca0a4d4697109ea76531e90009197de0bc1fb7"
+          }
+        ]
+      }
+    },
+    "conditionalInferences": [
+      "The side-image dark opening can indicate cord entry inward from the side, but it does not reveal passage shape, terminal depth, concealed pairing or contact order.",
+      "The existing vertical groove plus transverse open groove can represent the visible seated turn without adding a hidden bore. Exact contact order and complete hidden connection still require source-specific evidence."
+    ],
+    "unsupportedClaimsToWithdraw": [
+      "The old audit phrase broad interior pull-up jug and source claim recess/jug cavity overstate what the maker text labels. They are prior author interpretations.",
+      "Turning an arbitrary wall upward and obtaining clearance/tautness is insufficient to establish a manufacturer jug presentation.",
+      "No full hidden Mini passage or exact internal cord connection is supported by the retained whole views or a Mini-specific user confirmation.",
+      "A passing continuous radius/length certificate is not source-topology or equilibrium approval. It does not validate the unconfirmed opposite-corner jug setup."
+    ]
+  },
+  "currentCanonical4": {
+    "nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+    "assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+    "suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+  },
+  "currentNativeMetadataBindings": {
+    "FinalSolid": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"GraniteFittedSeat\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"nature_body\" />\n                </Property>\n                ",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>\n                "
+    },
+    "nature_wood": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"wood-edge-15-incut\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"nature_wood\" />\n                </Property>\n                ",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>\n                ",
+      "Support": "<Property name=\"Support\" type=\"App::PropertyXLinkSubList\" status=\"4\">\n                    <XLinkSubList count=\"1\">\n                        <XLink file=\"\" stamp=\"\" name=\"FinalSolid\" count=\"6\">\n                            <Sub value=\"Face7\" shadow=\";#9e4:1;:M;FUS;:H1207:7,F.Face7\" />\n                            <Sub value=\"Face15\" shadow=\";#987:3;:H1207,F.Face15\" />\n                            <Sub value=\"Face17\" shadow=\";#988:1;:H1207,F.Face17\" />\n                            <Sub value=\"Face20\" shadow=\";#98a:1;:H1207,F.Face20\" />\n                            <Sub value=\"Face21\" shadow=\";#98b:1;:H1207,F.Face21\" />\n                            <Sub value=\"Face22\" shadow=\";#9ec:1;:M;FUS;:H1207:7,F.Face22\" />\n                        </XLink>\n                    </XLinkSubList>\n                </Property>\n                "
+    },
+    "nature_stone": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"granite-edge-15\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"nature_stone\" />\n                </Property>\n                ",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>\n                ",
+      "Support": "<Property name=\"Support\" type=\"App::PropertyXLinkSubList\" status=\"4\">\n                    <XLinkSubList count=\"1\">\n                        <XLink file=\"\" stamp=\"\" name=\"FinalSolid\" count=\"4\">\n                            <Sub value=\"Face1\" shadow=\";#62d:6;:M;FUS;:H11ff:7,F.Face1\" />\n                            <Sub value=\"Face4\" shadow=\";#62d:3;:M;FUS;:H11ff:7,F.Face4\" />\n                            <Sub value=\"Face5\" shadow=\";#62b:1;:M;FUS;:H11ff:7,F.Face5\" />\n                            <Sub value=\"Face10\" shadow=\";#62d:7;:M;FUS;:H11ff:7,F.Face10\" />\n                        </XLink>\n                    </XLinkSubList>\n                </Property>\n                "
+    },
+    "nature_pinch": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pinch-60\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"nature_pinch\" />\n                </Property>\n                ",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>\n                ",
+      "Support": "<Property name=\"Support\" type=\"App::PropertyXLinkSubList\" status=\"4\">\n                    <XLinkSubList count=\"1\">\n                        <XLink file=\"\" stamp=\"\" name=\"FinalSolid\" count=\"6\">\n                            <Sub value=\"Face23\" shadow=\";#98c:1;:H1207,F.Face23\" />\n                            <Sub value=\"Face30\" shadow=\";#98c:3;:H1207,F.Face30\" />\n                            <Sub value=\"Face31\" shadow=\";#98f:1;:H1207,F.Face31\" />\n                            <Sub value=\"Face43\" shadow=\";#98f:3;:H1207,F.Face43\" />\n                            <Sub value=\"Face44\" shadow=\";#999:1;:H1207,F.Face44\" />\n                            <Sub value=\"Face69\" shadow=\";#999:3;:H1207,F.Face69\" />\n                        </XLink>\n                    </XLinkSubList>\n                </Property>\n                "
+    },
+    "nature_jug": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"pull-up-jug\" />\n                </Property>\n                ",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"nature_jug\" />\n                </Property>\n                ",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>\n                ",
+      "Support": "<Property name=\"Support\" type=\"App::PropertyXLinkSubList\" status=\"4\">\n                    <XLinkSubList count=\"1\">\n                        <XLink file=\"\" stamp=\"\" name=\"FinalSolid\" sub=\"Face6\" shadow=\";#9e3:1;:M;FUS;:H1207:7,F.Face6\" />\n                    </XLinkSubList>\n                </Property>\n                "
+    }
+  },
+  "currentDescriptorJugBinding": {
+    "nodeIDs": [
+      "nature_jug"
+    ],
+    "facePlaneAABB": {
+      "min": [
+        0.109999998,
+        0.333333333
+      ],
+      "max": [
+        0.890000002,
+        0.833333333
+      ]
+    },
+    "center": [
+      0.5,
+      0.583333333
+    ]
+  },
+  "actualUSDZJugBoundsRuntimeMeters": {
+    "min": [
+      -0.039000000804662704,
+      -0.009999999776482582,
+      -0.0024999999441206477
+    ],
+    "max": [
+      0.039000000804662704,
+      0.019999999552965164,
+      -0.002499999944120641
+    ]
+  },
+  "actualUSDZJugNormalDirections": [
+    [
+      0.0,
+      -0.0,
+      1.0
+    ]
+  ],
+  "nativeCoordinateMapping": "runtime meters = [nativeX,nativeZ,-nativeY]/1000",
+  "actualExistingNativeGrooveCutters": {
+    "LeftFrontOpenGroove": {
+      "nativeObjectType": "Part::Cylinder",
+      "radiusMM": 1.7,
+      "cutterHeightMM": 62.0,
+      "angleDeg": 360.0,
+      "nativeBaseMM": [
+        -50.0,
+        -6.25,
+        -31.0
+      ],
+      "quaternionXYZW": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeAxis": [
+        0,
+        0,
+        1
+      ],
+      "runtimeAxis": [
+        0,
+        1,
+        0
+      ],
+      "classification": "open side-groove cutter; not a separately evidenced native bore"
+    },
+    "LeftBackOpenGroove": {
+      "nativeObjectType": "Part::Cylinder",
+      "radiusMM": 1.7,
+      "cutterHeightMM": 62.0,
+      "angleDeg": 360.0,
+      "nativeBaseMM": [
+        -50.0,
+        6.25,
+        -31.0
+      ],
+      "quaternionXYZW": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeAxis": [
+        0,
+        0,
+        1
+      ],
+      "runtimeAxis": [
+        0,
+        1,
+        0
+      ],
+      "classification": "open side-groove cutter; not a separately evidenced native bore"
+    },
+    "LeftTransverseOpenGroove": {
+      "nativeObjectType": "Part::Cylinder",
+      "radiusMM": 1.7,
+      "cutterHeightMM": 27.0,
+      "angleDeg": 360.0,
+      "nativeBaseMM": [
+        -50.0,
+        -13.5,
+        0.0
+      ],
+      "quaternionXYZW": [
+        0.7071067811865476,
+        0.0,
+        0.0,
+        -0.7071067811865475
+      ],
+      "nativeAxis": [
+        0,
+        1,
+        0
+      ],
+      "runtimeAxis": [
+        0,
+        0,
+        -1
+      ],
+      "classification": "open side-groove cutter; not a separately evidenced native bore"
+    },
+    "RightFrontOpenGroove": {
+      "nativeObjectType": "Part::Cylinder",
+      "radiusMM": 1.7,
+      "cutterHeightMM": 62.0,
+      "angleDeg": 360.0,
+      "nativeBaseMM": [
+        50.0,
+        -6.25,
+        -31.0
+      ],
+      "quaternionXYZW": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeAxis": [
+        0,
+        0,
+        1
+      ],
+      "runtimeAxis": [
+        0,
+        1,
+        0
+      ],
+      "classification": "open side-groove cutter; not a separately evidenced native bore"
+    },
+    "RightBackOpenGroove": {
+      "nativeObjectType": "Part::Cylinder",
+      "radiusMM": 1.7,
+      "cutterHeightMM": 62.0,
+      "angleDeg": 360.0,
+      "nativeBaseMM": [
+        50.0,
+        6.25,
+        -31.0
+      ],
+      "quaternionXYZW": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "nativeAxis": [
+        0,
+        0,
+        1
+      ],
+      "runtimeAxis": [
+        0,
+        1,
+        0
+      ],
+      "classification": "open side-groove cutter; not a separately evidenced native bore"
+    },
+    "RightTransverseOpenGroove": {
+      "nativeObjectType": "Part::Cylinder",
+      "radiusMM": 1.7,
+      "cutterHeightMM": 27.0,
+      "angleDeg": 360.0,
+      "nativeBaseMM": [
+        50.0,
+        -13.5,
+        0.0
+      ],
+      "quaternionXYZW": [
+        0.7071067811865476,
+        0.0,
+        0.0,
+        -0.7071067811865475
+      ],
+      "nativeAxis": [
+        0,
+        1,
+        0
+      ],
+      "runtimeAxis": [
+        0,
+        0,
+        -1
+      ],
+      "classification": "open side-groove cutter; not a separately evidenced native bore"
+    }
+  },
+  "actualExistingNativeGrooveCutChain": {
+    "LeftFrontGrooveCut": {
+      "nativeObjectType": "Part::Cut",
+      "base": "CavityMouthRound",
+      "tool": "LeftFrontOpenGroove"
+    },
+    "LeftBackGrooveCut": {
+      "nativeObjectType": "Part::Cut",
+      "base": "LeftFrontGrooveCut",
+      "tool": "LeftBackOpenGroove"
+    },
+    "LeftCrossGrooveCut": {
+      "nativeObjectType": "Part::Cut",
+      "base": "LeftBackGrooveCut",
+      "tool": "LeftTransverseOpenGroove"
+    },
+    "RightFrontGrooveCut": {
+      "nativeObjectType": "Part::Cut",
+      "base": "LeftCrossGrooveCut",
+      "tool": "RightFrontOpenGroove"
+    },
+    "RightBackGrooveCut": {
+      "nativeObjectType": "Part::Cut",
+      "base": "RightFrontGrooveCut",
+      "tool": "RightBackOpenGroove"
+    },
+    "RightCrossGrooveCut": {
+      "nativeObjectType": "Part::Cut",
+      "base": "RightBackGrooveCut",
+      "tool": "RightTransverseOpenGroove"
+    }
+  },
+  "nativeGuideCompatibilityAndBoundedProposal": {
+    "mode": "read-only compatibility assessment; no implementation or solve authorized",
+    "sourceTools": [
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/native_cord_features.py",
+        "sha256": "dbf57a10bef757087ee263fef7b883ec660c5d2e45655dab1f98e40e8b4971c4"
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/export_rope_collision_solid.py",
+        "sha256": "b0ccac8584d701c645befb8d049c8e0202326a43e906a603f0ddba8f0bda3152"
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/native_cord_guides.py",
+        "sha256": "2001cb8f4eb141d50146a2f426aa0cc086e729e0e737b4224e7f9dcf0a6fa191"
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/native_cord_routes.py",
+        "sha256": "307a4db1b44c80396f2e42638f0fbc0ff6ea588d9b96829bebce9c014da45e5a"
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/solve_threaded_rope.py",
+        "sha256": "bcd7531950cc198ce8e5ad146d999dca3b11e7901076a8af2d08b5b1bf638f71"
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardPackages/src/hangboard_packages/cad_source.py",
+        "sha256": "fe7b137ffd758f70240689ef2c260c30ac4db6174aa06c579263a79dcf370637"
+      }
+    ],
+    "existingReuse": [
+      "native_cord_features.extract_native_cord_features accepts groove_names with an empty bore_names list. The six existing Part::Cylinder tools can be selected as grooves without inventing holes.",
+      "The extractor derives finite axialBounds from actual matched final-body cylindrical wall faces, with geometry-only bounds. Cutter heights include extension beyond the board and are not substitute terminal stations.",
+      "export_rope_collision_solid.py already calls that extractor when either groove names or bore names are selected.",
+      "native_cord_guides.certify_groove_traversal proves finite inner traversal; actual material reaction and continuous full-radius collision gates remain useful without a bore.",
+      "native_cord_routes already has native segment route solving for both exact terminals; this is reusable for the two transverse segments without converting them to leads."
+    ],
+    "actualCurrentBlockers": [
+      {
+        "location": "Tools/HangboardPackages/src/hangboard_packages/cad_source.py:440",
+        "fact": "grooveGuides accepts only independent anchor-plane leads; requires every strand in each pose and exact feature/boreFeature/exitSign keys plus mouthAxis."
+      },
+      {
+        "location": "Tools/HangboardCAD/native_cord_guides.py:22",
+        "fact": "validate_guide_bindings requires each groove selection to name a separate native bore with actual wallFaces."
+      },
+      {
+        "location": "Tools/HangboardCAD/native_cord_guides.py:209",
+        "fact": "certify_bore_entry checks a finite inset and approach into a bore mouth; Mini has only the open transverse groove, so a fake boreFeature would misstate geometry."
+      },
+      {
+        "location": "Tools/HangboardCAD/native_cord_guides.py:299",
+        "fact": "lead optimization requires a mouth axis. A guide-only path needs a sourced groove approach/traversal condition, rather than asserting a bore-entry direction."
+      },
+      {
+        "location": "Tools/HangboardCAD/native_cord_guides.py:383",
+        "fact": "guided solver treats every strand as an anchor-to-first-terminal lead and uses all rest lengths for initial height. Mini has two leads and two segments, whose second terminal and feasibility-only allowance must stay distinct."
+      }
+    ],
+    "smallestProposedExtensionNotImplemented": [
+      "Add an explicit source-bound guide-only selection, making boreFeature/bore-entry certification conditional. Select the existing vertical and transverse open grooves as their actual kind; do not rename a transverse groove as a bore.",
+      "Allow a lead subset for guide optimization and lead-driven settling; keep segment routes on existing native two-terminal solving, with segment lengths as feasibility allowances.",
+      "For guide-only leads retain finite axial/radial traversal and correct sourced exit/approach direction, actual-material reaction gates, and continuous rounded-cache signed-solid/interstrand full-radius checks.",
+      "Bind all selected cutters and derived wall/axial witnesses to the final source hash and each canonical pose. Preserve exact native terminal evidence; do not introduce route waypoints, collars, hidden passages, station nudges, new radii or relaxed tolerances."
+    ],
+    "notYetProven": [
+      "No fresh native wall-face extraction or guided solve was run in this diagnosis. Exact finite wall bounds and feasibility must be verified against the final source if later authorized.",
+      "The visible downward-to-transverse groove path is sourced; the concealed continuation, rear terminal pairing and complete tied loop remain unverified for Mini.",
+      "A guide-only implementation must retain physical material support tests rather than accepting virtual guide forces or clearance alone."
+    ]
+  },
+  "ropeAuthoring": {
+    "method": "nativeRoutes",
+    "clearance": 0.0006,
+    "terminalsByStrandID": {
+      "left-lead": {
+        "points": [
+          [
+            -0.05,
+            0.0,
+            0.00625
+          ]
+        ],
+        "planeNormal": [
+          0,
+          0,
+          1
+        ],
+        "planeAxis": [
+          0,
+          1,
+          0
+        ]
+      },
+      "left-cross-return": {
+        "points": [
+          [
+            -0.05,
+            0.0,
+            0.00625
+          ],
+          [
+            -0.05,
+            0.0,
+            -0.00625
+          ]
+        ],
+        "planeNormal": [
+          0,
+          1,
+          0
+        ]
+      },
+      "right-lead": {
+        "points": [
+          [
+            0.05,
+            0.0,
+            0.00625
+          ]
+        ],
+        "planeNormal": [
+          0,
+          0,
+          1
+        ],
+        "planeAxis": [
+          0,
+          1,
+          0
+        ]
+      },
+      "right-cross-return": {
+        "points": [
+          [
+            0.05,
+            0.0,
+            0.00625
+          ],
+          [
+            0.05,
+            0.0,
+            -0.00625
+          ]
+        ],
+        "planeNormal": [
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "supportDirection": 1,
+    "sectionPlane": "anchor",
+    "pathSearch": "aStar"
+  },
+  "strandMetadata": [
+    {
+      "id": "left-lead",
+      "kind": "lead",
+      "restLength": 0.11,
+      "radius": 0.001,
+      "material": "matteCord",
+      "provenance": "Retained side view shows one exposed vertical lead seated in this end groove. Length and radius are display estimates; route and settled height come from native CAD collision solving. Visible lead length shortened to 110 mm as an operator-selected display estimate for the source-visible compact loop; not a manufacturer measurement."
+    },
+    {
+      "id": "left-cross-return",
+      "kind": "segment",
+      "restLength": 0.04,
+      "radius": 0.001,
+      "material": "matteCord",
+      "provenance": "Retained side view shows the transverse exterior return between the two cross-groove intersections. The route stops there; no concealed connection is asserted. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+    },
+    {
+      "id": "right-lead",
+      "kind": "lead",
+      "restLength": 0.11,
+      "radius": 0.001,
+      "material": "matteCord",
+      "provenance": "Retained side view shows one exposed vertical lead seated in this end groove. Length and radius are display estimates; route and settled height come from native CAD collision solving. Visible lead length shortened to 110 mm as an operator-selected display estimate for the source-visible compact loop; not a manufacturer measurement."
+    },
+    {
+      "id": "right-cross-return",
+      "kind": "segment",
+      "restLength": 0.04,
+      "radius": 0.001,
+      "material": "matteCord",
+      "provenance": "Retained side view shows the transverse exterior return between the two cross-groove intersections. The route stops there; no concealed connection is asserted. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+    }
+  ],
+  "anchorMetadata": {
+    "offsetFromBoardBounds": [
+      0,
+      0.015,
+      0
+    ],
+    "visibility": "invisible",
+    "provenance": "Display support location only. Source-visible route graph retained; native solver derives clearance and settled height. Starting offset shortened coherently with 110 mm leads; final height remains solver-generated."
+  },
+  "poseAndCacheEndpoints": {
+    "front-upright": {
+      "quaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "translationM": [
+        0,
+        -0.047963698,
+        0
+      ],
+      "cache": {
+        "left-lead": {
+          "firstBoardLocalPoint": [
+            -0.049561089,
+            0.027902768,
+            0.006195136
+          ],
+          "lastBoardLocalPoint": [
+            -0.05,
+            0.0,
+            0.00625
+          ],
+          "cachedPointCount": 5
+        },
+        "left-cross-return": {
+          "firstBoardLocalPoint": [
+            -0.05,
+            0.0,
+            0.00625
+          ],
+          "lastBoardLocalPoint": [
+            -0.05,
+            0.0,
+            -0.00625
+          ],
+          "cachedPointCount": 3
+        },
+        "right-lead": {
+          "firstBoardLocalPoint": [
+            0.049562693,
+            0.027900705,
+            0.006195337
+          ],
+          "lastBoardLocalPoint": [
+            0.05,
+            0.0,
+            0.00625
+          ],
+          "cachedPointCount": 5
+        },
+        "right-cross-return": {
+          "firstBoardLocalPoint": [
+            0.05,
+            0.0,
+            0.00625
+          ],
+          "lastBoardLocalPoint": [
+            0.05,
+            0.0,
+            -0.00625
+          ],
+          "cachedPointCount": 3
+        }
+      }
+    },
+    "wood-inverted": {
+      "quaternionXYZW": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "translationM": [
+        0,
+        -0.047963707,
+        0
+      ],
+      "cache": {
+        "left-lead": {
+          "firstBoardLocalPoint": [
+            -0.049561859,
+            -0.027901777,
+            0.006195232
+          ],
+          "lastBoardLocalPoint": [
+            -0.05,
+            0.0,
+            0.00625
+          ],
+          "cachedPointCount": 5
+        },
+        "left-cross-return": {
+          "firstBoardLocalPoint": [
+            -0.05,
+            0.0,
+            0.00625
+          ],
+          "lastBoardLocalPoint": [
+            -0.05,
+            0.0,
+            -0.00625
+          ],
+          "cachedPointCount": 3
+        },
+        "right-lead": {
+          "firstBoardLocalPoint": [
+            0.049561905,
+            -0.027901717,
+            0.006195238
+          ],
+          "lastBoardLocalPoint": [
+            0.05,
+            0.0,
+            0.00625
+          ],
+          "cachedPointCount": 5
+        },
+        "right-cross-return": {
+          "firstBoardLocalPoint": [
+            0.05,
+            0.0,
+            0.00625
+          ],
+          "lastBoardLocalPoint": [
+            0.05,
+            0.0,
+            -0.00625
+          ],
+          "cachedPointCount": 3
+        }
+      }
+    },
+    "pinch-side": {
+      "quaternionXYZW": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "translationM": [
+        0,
+        -0.047963698,
+        0
+      ],
+      "cache": {
+        "left-lead": {
+          "firstBoardLocalPoint": [
+            -0.049561089,
+            0.027902768,
+            0.006195136
+          ],
+          "lastBoardLocalPoint": [
+            -0.05,
+            0.0,
+            0.00625
+          ],
+          "cachedPointCount": 5
+        },
+        "left-cross-return": {
+          "firstBoardLocalPoint": [
+            -0.05,
+            0.0,
+            0.00625
+          ],
+          "lastBoardLocalPoint": [
+            -0.05,
+            0.0,
+            -0.00625
+          ],
+          "cachedPointCount": 3
+        },
+        "right-lead": {
+          "firstBoardLocalPoint": [
+            0.049562693,
+            0.027900705,
+            0.006195337
+          ],
+          "lastBoardLocalPoint": [
+            0.05,
+            0.0,
+            0.00625
+          ],
+          "cachedPointCount": 5
+        },
+        "right-cross-return": {
+          "firstBoardLocalPoint": [
+            0.05,
+            0.0,
+            0.00625
+          ],
+          "lastBoardLocalPoint": [
+            0.05,
+            0.0,
+            -0.00625
+          ],
+          "cachedPointCount": 3
+        }
+      }
+    },
+    "jug-open-up": {
+      "quaternionXYZW": [
+        -0.7071067811865476,
+        0,
+        0,
+        0.7071067811865476
+      ],
+      "translationM": [
+        0,
+        -0.018312883,
+        0
+      ],
+      "cache": {
+        "left-lead": {
+          "firstBoardLocalPoint": [
+            -0.044794765,
+            -0.030044581,
+            0.012190514
+          ],
+          "lastBoardLocalPoint": [
+            -0.05,
+            0.0,
+            0.00625
+          ],
+          "cachedPointCount": 125
+        },
+        "left-cross-return": {
+          "firstBoardLocalPoint": [
+            -0.05,
+            0.0,
+            0.00625
+          ],
+          "lastBoardLocalPoint": [
+            -0.05,
+            0.0,
+            -0.00625
+          ],
+          "cachedPointCount": 3
+        },
+        "right-lead": {
+          "firstBoardLocalPoint": [
+            0.044794765,
+            0.030044581,
+            0.012190514
+          ],
+          "lastBoardLocalPoint": [
+            0.05,
+            0.0,
+            0.00625
+          ],
+          "cachedPointCount": 125
+        },
+        "right-cross-return": {
+          "firstBoardLocalPoint": [
+            0.05,
+            0.0,
+            0.00625
+          ],
+          "lastBoardLocalPoint": [
+            0.05,
+            0.0,
+            -0.00625
+          ],
+          "cachedPointCount": 3
+        }
+      }
+    }
+  },
+  "priorRejectedWholePreviews": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/mini-current-upright-granite-selection.png",
+      "sha256": "d424805aee1f86a020a15c3e2a948149d6795554324c7c1e5f10f7a03d976304"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/mini-current-jug-open-up-selection.png",
+      "sha256": "960ca0a83b500518cdb397dee3f27ab85beac09a9cebd1e3e7d813924dda7a94"
+    }
+  ],
+  "priorPreviewProvenance": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/preview-provenance.json",
+    "sha256": "95572426fab88065873533aba08be1ece53bed435626649bc8f39a72360da029"
+  },
+  "retainedNativeAndSourceInterpretations": {
+    "native-authoring.md": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/native-authoring.md",
+      "sha256": "72ca801159bc8e1205bc5102c1b75ed78a60e3df54c21772511cdc3c9d13fc78"
+    },
+    "native-cord-evidence.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/native-cord-evidence.json",
+      "sha256": "5508fbc069403a636edcb91556c37c6b3f31bf955ed3f041de0e1be7707a14f8"
+    },
+    "contact-contract.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/contact-contract.json",
+      "sha256": "73008839aecd3576a55400df9276d1db6a3f6c2acc379ba4790e35820b613712"
+    },
+    "completion-review/source-mapping.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/source-mapping.json",
+      "sha256": "a92143489987b2864fc5c0dd84e0ddb41b50337265673849c08bd47929a05db3"
+    },
+    "completion-review/independent-native-check.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/independent-native-check.json",
+      "sha256": "aa1970e333f8bb865b7023241c0e499d34fd24aca35845d2b728a93fc589fa22"
+    },
+    "completion-review/continuous-cached-route-certificate.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/continuous-cached-route-certificate.json",
+      "sha256": "90b558bbe314862d5321da5a87bcf9c23128220ae63dc1fae357124f7d27f2fa"
+    },
+    "completion-review/overall-shape-human-approval.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/overall-shape-human-approval.json",
+      "sha256": "db0eb3cf0dd85a2ba82639a05c9932a4343fce7284d0234a9fb06982ad472d38"
+    }
+  },
+  "visualMethod": "direct whole manufacturer-image and current-preview judgment; no crop, tracing, pixel measurement or image registration",
+  "recommendedNextStep": "Root owns rebinding to the human-confirmed rounded outside top/back rail and restoring the upright pose. Any later cord work should reuse actual open-groove tools with source-bound guide-only support, preserving Mini-specific topology limits and native physical gates. This lane has not authored or solved that proposal.",
+  "script": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/diagnostic-worker/retain-diagnosis.py",
+    "sha256": "4b5a3e89b79df4ed2d779cc55e91d6e98e102b629e738a4d6b052793beabf291"
+  },
+  "USDZReader": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Tools/HangboardCAD/usdz_writer.py",
+    "sha256": "1d222c1b5483e94288587e4fbb13e8773b00cdaab715a39dac7cf6d69ee4f1af"
+  },
+  "runtimeVerified": false,
+  "humanAcceptance": false,
+  "nativeAppSolveAuthoringTestsBuildSimulatorServerGitOrSharedReads": false
+}

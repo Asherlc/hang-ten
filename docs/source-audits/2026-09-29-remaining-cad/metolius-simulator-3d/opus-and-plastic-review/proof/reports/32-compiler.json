@@ -1,0 +1,19 @@
+{
+  "status": "pass",
+  "jobs": [
+    {
+      "name": "export-previews",
+      "processGroup": 22857,
+      "processGroupAbsent": true,
+      "tempDirectoryDeleted": ".context/placid-badger/metolius-simulator-3d-front-fairing/export-previews-tmp",
+      "ownershipSHA256": "0214ebf88029f47b17397022259d96f217a79ca42b8415d16b377bb60c075496"
+    },
+    {
+      "name": "export-grasp",
+      "processGroup": 22883,
+      "processGroupAbsent": true,
+      "tempDirectoryDeleted": ".context/placid-badger/metolius-simulator-3d-front-fairing/export-grasp-tmp",
+      "ownershipSHA256": "9fce9c2fafc9b8885c932fdc5272b51472284765e34ab56ee65c47b51c51785e"
+    }
+  ]
+}

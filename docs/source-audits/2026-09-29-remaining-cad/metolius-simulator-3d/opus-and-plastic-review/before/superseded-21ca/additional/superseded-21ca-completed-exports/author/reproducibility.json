@@ -1,0 +1,18 @@
+{
+  "status": "deterministic compilation passed; geometry superseded by user grasp feedback",
+  "humanAcceptance": false,
+  "promote": false,
+  "sourceSHA256": "21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d",
+  "modelSHA256": "c3b3e1f928cbfd56fd9ab8b81701957fe2ccd1046bf7d58a7fdf78dba9731dba",
+  "descriptorSHA256": "d02cb51501188cb004eb18609f6b08722c4b2aec2df5ae44bb57f8d1669a7520",
+  "modelBytes": 5682929,
+  "triangles": 252466,
+  "twoNormalExportsByteIdentical": true,
+  "checkMatchesExports": true,
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "sourceUnchanged": true,
+  "limits": [
+    "User rejects rear center jug and forward sloper extent; do not promote.",
+    "Restore Volume scalar differs despite empty bidirectional solid cuts; raw investigation retained."
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "scope": "Root directly viewed these three whole images only; worker reviewed all twelve.",
+  "observations": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-3.png",
+      "sha256": "99f6a8878ad3c88637582bc8325efb139d4edbbe1826657e50afa9e2263ef786",
+      "wholeImageDirectlyViewed": true,
+      "boardColor": "red",
+      "timer": "02:57",
+      "boardPhaseColorCorrect": false,
+      "bothHandsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-5.png",
+      "sha256": "21852d9f24c1bc4ec66838d9f6e45d7f9f7660acda129c0c0bfd5190f9a6db7e",
+      "wholeImageDirectlyViewed": true,
+      "boardColor": "blue",
+      "timer": "02:55",
+      "boardPhaseColorCorrect": true,
+      "bothHandsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-5.png",
+      "sha256": "70057ad71fc0677088b8b144a7c4e432e755e919485d2ab54b18d226f11b4a6c",
+      "wholeImageDirectlyViewed": true,
+      "boardColor": "blue",
+      "timer": "00:02",
+      "boardPhaseColorCorrect": false,
+      "bothHandsVisible": true
+    }
+  ],
+  "conclusion": "Perspective full-sequence visual failure. Both hands visible with foreshortening; no exact pose or manufacturing accuracy established. No pixel measurement or hardware claim."
+}

@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "scope": "Native authoring complete; independent/Opus/export/app/human gates pending",
+  "sourceSHA256": "31bec0595a7f05a3ea761dc1f7202547be47f90262062026cb16dd7d56d10030",
+  "sourceBytes": 8783738,
+  "rawPlasticManifestExact": true,
+  "normalFlagsPreserved": true,
+  "frozenPriorSourceSHA256": "46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264",
+  "nativeVisualGate": "pending",
+  "exportGate": "pending",
+  "actualAppGate": "pending",
+  "humanAcceptance": "pending"
+}

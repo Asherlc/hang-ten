@@ -1,0 +1,27 @@
+{
+  "scope": "Only these two whole images directly inspected by root in this report",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o1-landscape/phase-1-preview-plus-1.png",
+      "sha256": "591d9af43bbf843d345bf3d0d831c4101e170fabd27289a9834acf5699bae426",
+      "wholeImageDirectlyViewed": true,
+      "observedSelectedPockets": "red",
+      "expected": "blue",
+      "result": "FAIL",
+      "boardAndHandsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o1-landscape/phase-2-active-plus-1.png",
+      "sha256": "364cd276f2559ce7a3ec9f42575e0b3c2e6435e799ea79ea4a93f47128217b98",
+      "wholeImageDirectlyViewed": true,
+      "observedSelectedPockets": "blue",
+      "expected": "red",
+      "result": "FAIL",
+      "boardAndHandsVisible": true
+    }
+  ],
+  "limits": [
+    "No pixel processing",
+    "No private framework cause asserted"
+  ]
+}

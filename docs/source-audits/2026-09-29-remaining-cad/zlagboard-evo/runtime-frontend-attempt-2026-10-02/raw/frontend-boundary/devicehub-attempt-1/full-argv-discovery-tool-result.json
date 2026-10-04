@@ -1,0 +1,18 @@
+{
+  "evidenceType": "Transcribed tool-returned text, not a contemporaneously captured raw ps file",
+  "toolChunkID": "884405",
+  "command": "rtk proxy python3 (ps -axww -o pid=,ppid=,args=; filter DeviceHub/Simulator executable argv prefixes)",
+  "observedRows": [
+    {
+      "pid": 40262,
+      "ppid": 1,
+      "argv": "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DeviceHub -PaseoWorkspaceOwner placid-badger-cad-second-half-devicehub-frontend-boundary-2026-10-02"
+    },
+    {
+      "pid": 89674,
+      "ppid": 1,
+      "argv": "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DeviceHub"
+    }
+  ],
+  "correction": "Darwin comm column truncated executable paths; empty filtered preflight did not establish no other frontend. Unknown89674 must remain untouched."
+}

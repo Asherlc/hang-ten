@@ -1,0 +1,31 @@
+{
+  "assetMatches": true,
+  "bytes": 1565763,
+  "committedAssetSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+  "descriptorBindsCommittedAsset": true,
+  "descriptorMatches": true,
+  "package": "mammut-diamond-finger",
+  "presentations": [
+    {
+      "assetMatches": true,
+      "bytes": 1565763,
+      "committedAssetSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+      "descriptorBindsCommittedAsset": true,
+      "descriptorMatches": true,
+      "presentationID": "primary",
+      "rebuiltAssetSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+      "committedDescriptorSHA256": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46",
+      "rebuiltDescriptorSHA256": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46",
+      "descriptorBytesMatch": true
+    }
+  ],
+  "rebuiltAssetSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+  "checkedAt": "2026-09-30T02:15:51.456832+00:00",
+  "sourceSHA256Before": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
+  "sourceSHA256After": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
+  "sourceUnchanged": true,
+  "verifier": "Tools/HangboardCAD/verify_reproducible.py",
+  "freecad": "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+  "sourceMutationAllowed": false,
+  "method": "Fresh FreeCAD process, source-native build, byte-exact USDZ comparison and complete descriptor equality."
+}

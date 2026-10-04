@@ -1,0 +1,100 @@
+{
+  "actualViewportPoints": [
+    210,
+    36
+  ],
+  "applicationCensus": {
+    "applicationState": 0,
+    "standaloneGate": true,
+    "windowScenes": [
+      {
+        "activationState": 0,
+        "interfaceOrientation": 3,
+        "sceneID": "ObjectIdentifier(0x0000000107572e00)",
+        "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+        "windows": [
+          {
+            "alpha": 1,
+            "bounds": [
+              874,
+              402
+            ],
+            "hidden": false,
+            "key": true,
+            "rendererNamedViewClasses": {
+              "RealityKit.ARRenderView": 1,
+              "RealityKit.ARView": 1,
+              "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>": 1
+            },
+            "rendererPlacements": [
+              {
+                "alpha": 1,
+                "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+                "frameInWindow": [
+                  332,
+                  166,
+                  210,
+                  36
+                ],
+                "hidden": false,
+                "viewID": "ObjectIdentifier(0x0000000107d2ea00)"
+              },
+              {
+                "alpha": 1,
+                "class": "RealityKit.ARView",
+                "frameInWindow": [
+                  332,
+                  166,
+                  210,
+                  36
+                ],
+                "hidden": false,
+                "realitySceneID": "ObjectIdentifier(0x000000014a43ca00)",
+                "viewID": "ObjectIdentifier(0x0000000105f60000)"
+              },
+              {
+                "alpha": 1,
+                "class": "RealityKit.ARRenderView",
+                "frameInWindow": [
+                  332,
+                  166,
+                  210,
+                  36
+                ],
+                "hidden": false,
+                "viewID": "ObjectIdentifier(0x000000010752e300)"
+              }
+            ],
+            "windowID": "ObjectIdentifier(0x0000000105f54800)"
+          }
+        ]
+      }
+    ]
+  },
+  "baseEpoch": 1790978052.2776296,
+  "baseUptime": 61126.75279983334,
+  "captureOffsets": [
+    0.25,
+    1,
+    3,
+    7
+  ],
+  "complete": true,
+  "configuredViewportPoints": [
+    210,
+    36
+  ],
+  "driver": "H1",
+  "epoch": 1790978050.2789931,
+  "event": "standalone-schedule",
+  "phases": [
+    "clear",
+    "active",
+    "preview",
+    "active",
+    "preview"
+  ],
+  "phaseSeconds": 8,
+  "sequence": 8,
+  "uptime": 61124.754162958336
+}

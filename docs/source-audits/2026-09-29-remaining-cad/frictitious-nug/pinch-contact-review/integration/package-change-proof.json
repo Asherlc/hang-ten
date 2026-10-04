@@ -1,0 +1,29 @@
+{
+  "baselineCommit": "b3b5fe2b588c74bcb3ddd2d7b43478308f5a5ffb",
+  "changedPackageFiles": [
+    "Hangboards/frictitious-nug/assets/primary.model.json",
+    "Hangboards/frictitious-nug/assets/primary.usdz",
+    "Hangboards/frictitious-nug/frictitious-nug.FCStd",
+    "Hangboards/frictitious-nug/suspension.json"
+  ],
+  "changedLockedFiles": [
+    "Hangboards/frictitious-nug/assets/primary.model.json",
+    "Hangboards/frictitious-nug/frictitious-nug.FCStd",
+    "Hangboards/frictitious-nug/suspension.json"
+  ],
+  "preservedPackageFiles": 202,
+  "sha256Manifest": "f9f84417bfde7f8689920ac28724ccff4fa6f6a4592cac75a86cd54d84b4d23c",
+  "beforeSHA256": {
+    "Hangboards/frictitious-nug/assets/primary.model.json": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+    "Hangboards/frictitious-nug/assets/primary.usdz": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+    "Hangboards/frictitious-nug/frictitious-nug.FCStd": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+    "Hangboards/frictitious-nug/suspension.json": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3"
+  },
+  "afterSHA256": {
+    "Hangboards/frictitious-nug/assets/primary.model.json": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+    "Hangboards/frictitious-nug/assets/primary.usdz": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+    "Hangboards/frictitious-nug/frictitious-nug.FCStd": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+    "Hangboards/frictitious-nug/suspension.json": "8a3fdf291c1ef34588425a4a7a73524fab33abdbb5a561456d571ecdd86642fc"
+  },
+  "scope": "Native upper/lower contact bands with four editable planar returns, matching native face seams, depth witnesses and shared jug membership; contact partition and descriptor regenerated. Physical wood solid, jug/edge regions, manifest, cord routes/radii/poses and all other packages unchanged. Sidecar changes only the model SHA binding."
+}

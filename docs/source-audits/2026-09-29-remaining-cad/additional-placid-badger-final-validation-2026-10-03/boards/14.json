@@ -1,0 +1,46 @@
+{
+  "owner": "placid-badger",
+  "number": 14,
+  "boardID": "tension.flash-board",
+  "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+  "presentations": {
+    "primary": {
+      "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+      "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
+    }
+  },
+  "sourcePlanID": "research.abrahangs",
+  "workStep": 17,
+  "naturalRestStep": 18,
+  "routineDurationsOrTasksChanged": false,
+  "technicalCapturedWorkflowPassed": true,
+  "automationResult": "Captured Hang/Rest passed; later driver command failed and is retained.",
+  "frames": [
+    {
+      "image": "screenshots/14-landscape-hang.png",
+      "sourceArtifact": "app-captures/14-workout-landscape-natural-work-highlight.png",
+      "sha256": "6cab5c20fcfaf4a624403eda632f9a6fa4ba639fc49dbbfd848e917e82804ffd",
+      "orientation": "landscape",
+      "observedHighlight": "red",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": true
+    },
+    {
+      "image": "screenshots/14-landscape-rest.png",
+      "sourceArtifact": "app-captures/14-workout-landscape-natural-rest-live.png",
+      "sha256": "e3035ed7cfb1c119fcb47e42539bc72e139f5c8c1dd5b2fe55472a5507556adb",
+      "orientation": "landscape",
+      "observedHighlight": "blue",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": true
+    }
+  ],
+  "geometryAndSuspensionUnchanged": true,
+  "bodyHumanApprovalUnchanged": true,
+  "currentAppHumanAcceptance": "pending",
+  "limits": "Hang and natural Rest whole frames pass. The subsequent physical Rest Pause command failed because AXe could not query the rotated Simulator orientation. No successful paused-Rest command is claimed. No continuous or hardware GPU timing claim.",
+  "priorTouchAndContactCoverage": "All 7 logical contacts; left/right semantic naming remains unresolved.",
+  "priorTouchRecord": "runtime-final-2026-10-03/boards/14.json"
+}

@@ -1,0 +1,953 @@
+{
+  "candidateSHA256": "0a03a478d96ad7690cabd91c13cd3e4978434c964bc13442e4407e5a9e27994b",
+  "reopenRecomputeValid": true,
+  "fullyConstrainedSketchCount": 113,
+  "contacts": [
+    {
+      "contactID": "edge-30-left",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 30.000000000000004,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 116.32698135858276,
+          "nativeNormal": [
+            0.0,
+            -0.38285184984484294,
+            0.9238097537211771
+          ],
+          "upDot": 0.9238097537211771,
+          "tiltDegrees": 22.510445057869045
+        },
+        {
+          "areaMM2": 116.32698135858267,
+          "nativeNormal": [
+            0.0,
+            -0.9238097537211771,
+            0.38285184984484294
+          ],
+          "upDot": 0.38285184984484294,
+          "tiltDegrees": 67.48955494213095
+        },
+        {
+          "areaMM2": 2127.9999999999995,
+          "nativeNormal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "upDot": 1.0,
+          "tiltDegrees": 0.0
+        }
+      ]
+    },
+    {
+      "contactID": "sloper-edge-30-left",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 30.000000000001066,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 80.10933578851478,
+          "nativeNormal": [
+            0.0,
+            -0.5312069877349902,
+            0.8472420764937952
+          ],
+          "upDot": 0.8472420764937952,
+          "tiltDegrees": 32.0870424530649
+        },
+        {
+          "areaMM2": 1374.0257594985994,
+          "nativeNormal": [
+            0.0,
+            -0.20791169081775943,
+            0.9781476007338057
+          ],
+          "upDot": 0.9781476007338057,
+          "tiltDegrees": 11.999999999999988
+        },
+        {
+          "areaMM2": 79.02609512306967,
+          "nativeNormal": [
+            0.0,
+            -0.9345114528516717,
+            0.3559330618094613
+          ],
+          "upDot": 0.3559330618094613,
+          "tiltDegrees": 69.14935958278217
+        }
+      ]
+    },
+    {
+      "contactID": "sloper-edge-25-left",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 25.000000000001542,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 43.392556885445494,
+          "nativeNormal": [
+            0.0,
+            -0.5312069877349902,
+            0.8472420764937952
+          ],
+          "upDot": 0.8472420764937952,
+          "tiltDegrees": 32.0870424530649
+        },
+        {
+          "areaMM2": 611.3596757292878,
+          "nativeNormal": [
+            0.0,
+            -0.2079116908177593,
+            0.9781476007338057
+          ],
+          "upDot": 0.9781476007338057,
+          "tiltDegrees": 11.999999999999988
+        },
+        {
+          "areaMM2": 42.80580152499614,
+          "nativeNormal": [
+            0.0,
+            -0.9345114528516717,
+            0.3559330618094613
+          ],
+          "upDot": 0.3559330618094613,
+          "tiltDegrees": 69.14935958278217
+        }
+      ]
+    },
+    {
+      "contactID": "edge-35-center",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 35.0,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 110.20450865549935,
+          "nativeNormal": [
+            0.0,
+            -0.9238097537211771,
+            0.38285184984484294
+          ],
+          "upDot": 0.38285184984484294,
+          "tiltDegrees": 67.48955494213095
+        },
+        {
+          "areaMM2": 110.20450865549921,
+          "nativeNormal": [
+            0.0,
+            -0.38285184984484294,
+            0.9238097537211771
+          ],
+          "upDot": 0.9238097537211771,
+          "tiltDegrees": 22.510445057869045
+        },
+        {
+          "areaMM2": 2376.0,
+          "nativeNormal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "upDot": 1.0,
+          "tiltDegrees": 0.0
+        }
+      ]
+    },
+    {
+      "contactID": "sloper-edge-25-right",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 25.000000000001542,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 42.80580152499614,
+          "nativeNormal": [
+            0.0,
+            -0.9345114528516717,
+            0.3559330618094613
+          ],
+          "upDot": 0.3559330618094613,
+          "tiltDegrees": 69.14935958278217
+        },
+        {
+          "areaMM2": 43.39255688544548,
+          "nativeNormal": [
+            0.0,
+            -0.5312069877349902,
+            0.8472420764937952
+          ],
+          "upDot": 0.8472420764937952,
+          "tiltDegrees": 32.0870424530649
+        },
+        {
+          "areaMM2": 611.3596757292875,
+          "nativeNormal": [
+            0.0,
+            -0.2079116908177593,
+            0.9781476007338057
+          ],
+          "upDot": 0.9781476007338057,
+          "tiltDegrees": 11.999999999999988
+        }
+      ]
+    },
+    {
+      "contactID": "sloper-edge-30-right",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 30.000000000001066,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 79.02609512306967,
+          "nativeNormal": [
+            0.0,
+            -0.9345114528516717,
+            0.3559330618094613
+          ],
+          "upDot": 0.3559330618094613,
+          "tiltDegrees": 69.14935958278217
+        },
+        {
+          "areaMM2": 80.10933578851478,
+          "nativeNormal": [
+            0.0,
+            -0.5312069877349902,
+            0.8472420764937952
+          ],
+          "upDot": 0.8472420764937952,
+          "tiltDegrees": 32.0870424530649
+        },
+        {
+          "areaMM2": 1374.0257594985994,
+          "nativeNormal": [
+            0.0,
+            -0.20791169081775943,
+            0.9781476007338057
+          ],
+          "upDot": 0.9781476007338057,
+          "tiltDegrees": 11.999999999999988
+        }
+      ]
+    },
+    {
+      "contactID": "edge-30-right",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 30.000000000000004,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 116.32698135858267,
+          "nativeNormal": [
+            0.0,
+            -0.9238097537211771,
+            0.38285184984484294
+          ],
+          "upDot": 0.38285184984484294,
+          "tiltDegrees": 67.48955494213095
+        },
+        {
+          "areaMM2": 116.32698135858276,
+          "nativeNormal": [
+            0.0,
+            -0.38285184984484294,
+            0.9238097537211771
+          ],
+          "upDot": 0.9238097537211771,
+          "tiltDegrees": 22.510445057869045
+        },
+        {
+          "areaMM2": 2127.9999999999995,
+          "nativeNormal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "upDot": 1.0,
+          "tiltDegrees": 0.0
+        }
+      ]
+    },
+    {
+      "contactID": "edge-20-left",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 20.000000000000004,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 116.32698135858223,
+          "nativeNormal": [
+            0.0,
+            -0.38285184984484294,
+            0.9238097537211771
+          ],
+          "upDot": 0.9238097537211771,
+          "tiltDegrees": 22.510445057869045
+        },
+        {
+          "areaMM2": 1367.9999999999995,
+          "nativeNormal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "upDot": 1.0,
+          "tiltDegrees": 0.0
+        },
+        {
+          "areaMM2": 116.32698135858223,
+          "nativeNormal": [
+            0.0,
+            -0.9238097537211771,
+            0.38285184984484294
+          ],
+          "upDot": 0.38285184984484294,
+          "tiltDegrees": 67.48955494213095
+        }
+      ]
+    },
+    {
+      "contactID": "sloper-edge-25-lower-left",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 25.00000000000143,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 80.10933578851495,
+          "nativeNormal": [
+            0.0,
+            -0.5312069877349902,
+            0.8472420764937952
+          ],
+          "upDot": 0.8472420764937952,
+          "tiltDegrees": 32.0870424530649
+        },
+        {
+          "areaMM2": 1128.6640167309924,
+          "nativeNormal": [
+            0.0,
+            -0.20791169081775943,
+            0.9781476007338057
+          ],
+          "upDot": 0.9781476007338057,
+          "tiltDegrees": 11.999999999999988
+        },
+        {
+          "areaMM2": 79.02609512306935,
+          "nativeNormal": [
+            0.0,
+            -0.9345114528516717,
+            0.3559330618094613
+          ],
+          "upDot": 0.3559330618094613,
+          "tiltDegrees": 69.14935958278217
+        }
+      ]
+    },
+    {
+      "contactID": "edge-30-inner-left",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 30.000000000000004,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 39.7960725700413,
+          "nativeNormal": [
+            0.0,
+            -0.38285184984484294,
+            0.9238097537211771
+          ],
+          "upDot": 0.9238097537211771,
+          "tiltDegrees": 22.510445057869045
+        },
+        {
+          "areaMM2": 727.9999999999999,
+          "nativeNormal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "upDot": 1.0,
+          "tiltDegrees": 0.0
+        },
+        {
+          "areaMM2": 39.7960725700413,
+          "nativeNormal": [
+            0.0,
+            -0.9238097537211771,
+            0.38285184984484294
+          ],
+          "upDot": 0.38285184984484294,
+          "tiltDegrees": 67.48955494213095
+        }
+      ]
+    },
+    {
+      "contactID": "sloper-edge-30-center",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 30.00000000000309,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 118.53914268460454,
+          "nativeNormal": [
+            0.0,
+            -0.9345114528516717,
+            0.3559330618094613
+          ],
+          "upDot": 0.3559330618094613,
+          "tiltDegrees": 69.14935958278217
+        },
+        {
+          "areaMM2": 120.16400368277243,
+          "nativeNormal": [
+            0.0,
+            -0.5312069877349902,
+            0.8472420764937952
+          ],
+          "upDot": 0.8472420764937952,
+          "tiltDegrees": 32.0870424530649
+        },
+        {
+          "areaMM2": 2061.038639247899,
+          "nativeNormal": [
+            0.0,
+            -0.20791169081775943,
+            0.9781476007338057
+          ],
+          "upDot": 0.9781476007338057,
+          "tiltDegrees": 11.999999999999988
+        }
+      ]
+    },
+    {
+      "contactID": "edge-30-inner-right",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 30.000000000000004,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 39.7960725700413,
+          "nativeNormal": [
+            0.0,
+            -0.9238097537211771,
+            0.38285184984484294
+          ],
+          "upDot": 0.38285184984484294,
+          "tiltDegrees": 67.48955494213095
+        },
+        {
+          "areaMM2": 39.7960725700413,
+          "nativeNormal": [
+            0.0,
+            -0.38285184984484294,
+            0.9238097537211771
+          ],
+          "upDot": 0.9238097537211771,
+          "tiltDegrees": 22.510445057869045
+        },
+        {
+          "areaMM2": 727.9999999999999,
+          "nativeNormal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "upDot": 1.0,
+          "tiltDegrees": 0.0
+        }
+      ]
+    },
+    {
+      "contactID": "sloper-edge-25-lower-right",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 25.00000000000143,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 79.02609512306935,
+          "nativeNormal": [
+            0.0,
+            -0.9345114528516717,
+            0.3559330618094613
+          ],
+          "upDot": 0.3559330618094613,
+          "tiltDegrees": 69.14935958278217
+        },
+        {
+          "areaMM2": 80.10933578851495,
+          "nativeNormal": [
+            0.0,
+            -0.5312069877349902,
+            0.8472420764937952
+          ],
+          "upDot": 0.8472420764937952,
+          "tiltDegrees": 32.0870424530649
+        },
+        {
+          "areaMM2": 1128.6640167309924,
+          "nativeNormal": [
+            0.0,
+            -0.20791169081775943,
+            0.9781476007338057
+          ],
+          "upDot": 0.9781476007338057,
+          "tiltDegrees": 11.999999999999988
+        }
+      ]
+    },
+    {
+      "contactID": "edge-20-right",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 20.000000000000004,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 116.32698135858223,
+          "nativeNormal": [
+            0.0,
+            -0.9238097537211771,
+            0.38285184984484294
+          ],
+          "upDot": 0.38285184984484294,
+          "tiltDegrees": 67.48955494213095
+        },
+        {
+          "areaMM2": 116.32698135858223,
+          "nativeNormal": [
+            0.0,
+            -0.38285184984484294,
+            0.9238097537211771
+          ],
+          "upDot": 0.9238097537211771,
+          "tiltDegrees": 22.510445057869045
+        },
+        {
+          "areaMM2": 1367.9999999999995,
+          "nativeNormal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "upDot": 1.0,
+          "tiltDegrees": 0.0
+        }
+      ]
+    },
+    {
+      "contactID": "edge-incut-15-left",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 15.000000000003144,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 111.94094241274044,
+          "nativeNormal": [
+            0.0,
+            -0.27997870369513056,
+            0.9600062111659458
+          ],
+          "upDot": 0.9600062111659458,
+          "tiltDegrees": 16.258933682852653
+        },
+        {
+          "areaMM2": 995.4197075533431,
+          "nativeNormal": [
+            -0.0,
+            0.12186934340514764,
+            0.9925461516413221
+          ],
+          "upDot": 0.9925461516413221,
+          "tiltDegrees": 6.9999999999999725
+        },
+        {
+          "areaMM2": 111.29497446463908,
+          "nativeNormal": [
+            0.0,
+            -0.9164444961352138,
+            0.4001618241455249
+          ],
+          "upDot": 0.4001618241455249,
+          "tiltDegrees": 66.41170472450474
+        }
+      ]
+    },
+    {
+      "contactID": "edge-15-left",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 15.000000000000004,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 73.46967243699964,
+          "nativeNormal": [
+            0.0,
+            -0.38285184984484294,
+            0.9238097537211771
+          ],
+          "upDot": 0.9238097537211771,
+          "tiltDegrees": 22.510445057869045
+        },
+        {
+          "areaMM2": 623.9999999999998,
+          "nativeNormal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "upDot": 1.0,
+          "tiltDegrees": 0.0
+        },
+        {
+          "areaMM2": 73.46967243699964,
+          "nativeNormal": [
+            0.0,
+            -0.9238097537211771,
+            0.38285184984484294
+          ],
+          "upDot": 0.38285184984484294,
+          "tiltDegrees": 67.48955494213095
+        }
+      ]
+    },
+    {
+      "contactID": "edge-incut-30-left",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 30.000000000001133,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 38.29558556225327,
+          "nativeNormal": [
+            0.0,
+            -0.27997870369513056,
+            0.9600062111659458
+          ],
+          "upDot": 0.9600062111659458,
+          "tiltDegrees": 16.258933682852653
+        },
+        {
+          "areaMM2": 733.4671529340424,
+          "nativeNormal": [
+            -0.0,
+            0.12186934340514757,
+            0.9925461516413221
+          ],
+          "upDot": 0.9925461516413221,
+          "tiltDegrees": 6.9999999999999725
+        },
+        {
+          "areaMM2": 38.07459652737649,
+          "nativeNormal": [
+            0.0,
+            -0.9164444961352138,
+            0.4001618241455249
+          ],
+          "upDot": 0.4001618241455249,
+          "tiltDegrees": 66.41170472450474
+        }
+      ]
+    },
+    {
+      "contactID": "edge-incut-10-center",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 10.000000000003542,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 105.43734422965906,
+          "nativeNormal": [
+            0.0,
+            -0.9164444961352138,
+            0.4001618241455249
+          ],
+          "upDot": 0.4001618241455249,
+          "tiltDegrees": 66.41170472450474
+        },
+        {
+          "areaMM2": 106.04931386470139,
+          "nativeNormal": [
+            0.0,
+            -0.27997870369513056,
+            0.9600062111659458
+          ],
+          "upDot": 0.9600062111659458,
+          "tiltDegrees": 16.258933682852653
+        },
+        {
+          "areaMM2": 580.3256594642968,
+          "nativeNormal": [
+            -0.0,
+            0.12186934340514768,
+            0.992546151641322
+          ],
+          "upDot": 0.992546151641322,
+          "tiltDegrees": 7.000000000000025
+        }
+      ]
+    },
+    {
+      "contactID": "edge-incut-30-right",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 30.000000000001133,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 38.07459652737649,
+          "nativeNormal": [
+            0.0,
+            -0.9164444961352138,
+            0.4001618241455249
+          ],
+          "upDot": 0.4001618241455249,
+          "tiltDegrees": 66.41170472450474
+        },
+        {
+          "areaMM2": 38.295585562253265,
+          "nativeNormal": [
+            0.0,
+            -0.27997870369513056,
+            0.9600062111659458
+          ],
+          "upDot": 0.9600062111659458,
+          "tiltDegrees": 16.258933682852653
+        },
+        {
+          "areaMM2": 733.4671529340419,
+          "nativeNormal": [
+            -0.0,
+            0.12186934340514757,
+            0.9925461516413221
+          ],
+          "upDot": 0.9925461516413221,
+          "tiltDegrees": 6.9999999999999725
+        }
+      ]
+    },
+    {
+      "contactID": "edge-15-right",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 15.000000000000004,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 73.46967243699964,
+          "nativeNormal": [
+            0.0,
+            -0.9238097537211771,
+            0.38285184984484294
+          ],
+          "upDot": 0.38285184984484294,
+          "tiltDegrees": 67.48955494213095
+        },
+        {
+          "areaMM2": 73.46967243699964,
+          "nativeNormal": [
+            0.0,
+            -0.38285184984484294,
+            0.9238097537211771
+          ],
+          "upDot": 0.9238097537211771,
+          "tiltDegrees": 22.510445057869045
+        },
+        {
+          "areaMM2": 623.9999999999998,
+          "nativeNormal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "upDot": 1.0,
+          "tiltDegrees": 0.0
+        }
+      ]
+    },
+    {
+      "contactID": "edge-incut-15-right",
+      "nativeFaceCount": 25,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 15.000000000003144,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 111.29497446463904,
+          "nativeNormal": [
+            0.0,
+            -0.9164444961352138,
+            0.4001618241455249
+          ],
+          "upDot": 0.4001618241455249,
+          "tiltDegrees": 66.41170472450474
+        },
+        {
+          "areaMM2": 111.94094241274034,
+          "nativeNormal": [
+            0.0,
+            -0.27997870369513056,
+            0.9600062111659458
+          ],
+          "upDot": 0.9600062111659458,
+          "tiltDegrees": 16.258933682852653
+        },
+        {
+          "areaMM2": 995.4197075533419,
+          "nativeNormal": [
+            -0.0,
+            0.12186934340514764,
+            0.9925461516413221
+          ],
+          "upDot": 0.9925461516413221,
+          "tiltDegrees": 6.9999999999999725
+        }
+      ]
+    },
+    {
+      "contactID": "top-jug-left",
+      "nativeFaceCount": 7,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 42.00000000000026,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 1053.3701986844032,
+          "nativeNormal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "upDot": 1.0,
+          "tiltDegrees": 0.0
+        }
+      ]
+    },
+    {
+      "contactID": "top-sloper-32-left",
+      "nativeFaceCount": 7,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 42.5897577926997,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 4214.424162108911,
+          "nativeNormal": [
+            0.0,
+            -0.529919264233205,
+            0.8480480961564261
+          ],
+          "upDot": 0.8480480961564261,
+          "tiltDegrees": 31.999999999999993
+        }
+      ]
+    },
+    {
+      "contactID": "top-sloper-20-left",
+      "nativeFaceCount": 4,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 42.02606042997702,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 3435.7516798434995,
+          "nativeNormal": [
+            0.0,
+            -0.34202014332566877,
+            0.9396926207859084
+          ],
+          "upDot": 0.9396926207859084,
+          "tiltDegrees": 19.999999999999993
+        }
+      ]
+    },
+    {
+      "contactID": "top-sloper-jug-center",
+      "nativeFaceCount": 2,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 42.0,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 7953.5603942957505,
+          "nativeNormal": [
+            0.0,
+            -0.17364817766693022,
+            0.9848077530122081
+          ],
+          "upDot": 0.9848077530122081,
+          "tiltDegrees": 9.999999999999975
+        }
+      ]
+    },
+    {
+      "contactID": "top-sloper-20-right",
+      "nativeFaceCount": 4,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 42.02606042997702,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 3435.7516798434995,
+          "nativeNormal": [
+            0.0,
+            -0.34202014332566877,
+            0.9396926207859084
+          ],
+          "upDot": 0.9396926207859084,
+          "tiltDegrees": 19.999999999999993
+        }
+      ]
+    },
+    {
+      "contactID": "top-sloper-32-right",
+      "nativeFaceCount": 7,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 42.5897577926997,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 4214.424699487049,
+          "nativeNormal": [
+            0.0,
+            -0.529919264233205,
+            0.8480480961564261
+          ],
+          "upDot": 0.8480480961564261,
+          "tiltDegrees": 31.999999999999993
+        }
+      ]
+    },
+    {
+      "contactID": "top-jug-right",
+      "nativeFaceCount": 7,
+      "exactFinalSkinBinding": true,
+      "nativeYDepthMM": 42.00000000000093,
+      "usablePlanarBearings": [
+        {
+          "areaMM2": 1053.370198684423,
+          "nativeNormal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "upDot": 1.0,
+          "tiltDegrees": 0.0
+        }
+      ]
+    }
+  ],
+  "all28Present": true,
+  "noSharedFaces": true,
+  "radiusEdit": {
+    "feature": "TopTroughRounds",
+    "beforeMM": 2,
+    "editedMM": 2.2,
+    "valid": true,
+    "beforeVolumeMM3": 3443455.753733399,
+    "editedVolumeMM3": 3443503.5570678916,
+    "changedContacts": [
+      "top-jug-left",
+      "top-sloper-32-left",
+      "top-sloper-20-left",
+      "top-sloper-jug-center",
+      "top-sloper-20-right",
+      "top-sloper-32-right",
+      "top-jug-right"
+    ],
+    "restoredVolumeMM3": 3443455.753733399,
+    "maximumRestoredContactAreaErrorMM2": 0.0
+  },
+  "sourceBytesUnchanged": true
+}

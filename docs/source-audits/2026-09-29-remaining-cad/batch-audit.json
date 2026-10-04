@@ -1,0 +1,128 @@
+{
+  "owner": "placid-badger",
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineCounts": {
+    "packages": 64,
+    "already_cad": 36,
+    "remaining_without_cad": 28,
+    "excluded_active_cad_migrations": 7,
+    "selected_targets": 21
+  },
+  "counts": {
+    "packages": 64,
+    "nativeCAD": 57,
+    "modelPackages": 58,
+    "modelAssets": 60,
+    "migrated": 21,
+    "skippedActive": 7
+  },
+  "targets": [
+    "aelith-cyclops-011",
+    "captain-fingerfood-dual",
+    "captain-fingerfood-unlevel",
+    "frictitious-nug",
+    "frictitious-port-a-board",
+    "mammut-diamond-finger",
+    "metolius-contact",
+    "metolius-simulator-3d",
+    "nature-stone-hanger",
+    "nature-stone-hanger-mini",
+    "nature-stone-hanger-mini-karma8a",
+    "owl-climb-poker",
+    "plateau-lifting-edge",
+    "tension-flash-board",
+    "trango-rock-prodigy-forge",
+    "yy-baguette",
+    "yy-baguette-evo",
+    "yy-penta-evo",
+    "yy-travelboard",
+    "zlagboard-evo",
+    "zlagboard-pro"
+  ],
+  "sourceAuthorization": {
+    "reviewer": "asherlc",
+    "date": "2026-09-29",
+    "quote": "those are fine, feel free to use more searches for individual boards as needed",
+    "scope": "manufacturer references and supplemental individual-board source research"
+  },
+  "geometryAcceptance": "pending requested one-by-one user review",
+  "excluded": [
+    {
+      "slug": "tension-grindstone-original",
+      "reason": "active native CAD migration",
+      "pr": 525,
+      "pr_url": "https://github.com/Asherlc/hang-ten/pull/525",
+      "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/supreme-zebra-next-cad",
+      "branch": "migrate/next-three-hangboards-cad",
+      "head_at_audit": "b2f19456a4",
+      "package_evidence": "Hangboards/tension-grindstone-original/tension-grindstone-original.FCStd added and board.json removed in branch diff; same slug appears in open PR files",
+      "context_evidence": ".context/supreme-zebra-next-cad-grindstone/author.py"
+    },
+    {
+      "slug": "tension-honestone",
+      "reason": "active native CAD migration",
+      "pr": 525,
+      "pr_url": "https://github.com/Asherlc/hang-ten/pull/525",
+      "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/supreme-zebra-next-cad",
+      "branch": "migrate/next-three-hangboards-cad",
+      "head_at_audit": "b2f19456a4",
+      "package_evidence": "Hangboards/tension-honestone/tension-honestone.FCStd added and board.json removed in branch diff; same slug appears in open PR files",
+      "context_evidence": ".context/supreme-zebra-next-cad-honestone/author.py"
+    },
+    {
+      "slug": "trango-rock-prodigy-natural",
+      "reason": "active native CAD migration",
+      "pr": 521,
+      "pr_url": "https://github.com/Asherlc/hang-ten/pull/521",
+      "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/gray-bedbug",
+      "branch": "migrate-hangboard-to-cad-3",
+      "head_at_audit": "6a5696740d",
+      "package_evidence": "Hangboards/trango-rock-prodigy-natural/trango-rock-prodigy-natural.FCStd added and board.json removed in branch diff; same slug appears in open PR files",
+      "context_evidence": ".context/gray-bedbug/work/author_natural.py"
+    },
+    {
+      "slug": "yy-verticalboard-evo",
+      "reason": "active native CAD migration",
+      "pr": 525,
+      "pr_url": "https://github.com/Asherlc/hang-ten/pull/525",
+      "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/supreme-zebra-next-cad",
+      "branch": "migrate/next-three-hangboards-cad",
+      "head_at_audit": "b2f19456a4",
+      "package_evidence": "Hangboards/yy-verticalboard-evo/yy-verticalboard-evo.FCStd added and board.json removed in branch diff; same slug appears in open PR files",
+      "context_evidence": ".context/supreme-zebra-next-cad-evo/author_evo.py"
+    },
+    {
+      "slug": "yy-verticalboard-first",
+      "reason": "active native CAD migration",
+      "pr": 524,
+      "pr_url": "https://github.com/Asherlc/hang-ten/pull/524",
+      "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/supreme-zebra",
+      "branch": "migrate/3-hangboards-cad",
+      "head_at_audit": "01ace3578a",
+      "package_evidence": "Hangboards/yy-verticalboard-first/yy-verticalboard-first.FCStd added and board.json removed in branch diff; same slug appears in open PR files",
+      "context_evidence": ".context/supreme-zebra-first-cad/author.py"
+    },
+    {
+      "slug": "yy-verticalboard-light",
+      "reason": "active native CAD migration",
+      "pr": 524,
+      "pr_url": "https://github.com/Asherlc/hang-ten/pull/524",
+      "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/supreme-zebra",
+      "branch": "migrate/3-hangboards-cad",
+      "head_at_audit": "01ace3578a",
+      "package_evidence": "Hangboards/yy-verticalboard-light/yy-verticalboard-light.FCStd added and board.json removed in branch diff; same slug appears in open PR files",
+      "context_evidence": ".context/supreme-zebra-light-cad/author.py"
+    },
+    {
+      "slug": "yy-verticalboard-one",
+      "reason": "active native CAD migration",
+      "pr": 524,
+      "pr_url": "https://github.com/Asherlc/hang-ten/pull/524",
+      "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/supreme-zebra",
+      "branch": "migrate/3-hangboards-cad",
+      "head_at_audit": "01ace3578a",
+      "package_evidence": "Hangboards/yy-verticalboard-one/yy-verticalboard-one.FCStd added and board.json removed in branch diff; same slug appears in open PR files",
+      "context_evidence": ".context/supreme-zebra-one-cad/author.py"
+    }
+  ]
+}

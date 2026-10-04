@@ -1,0 +1,981 @@
+{
+  "reviewedAt": "2026-09-30T02:28:58.873904+00:00",
+  "baseline": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "deliveryLock": {
+    "result": {
+      "passed": true,
+      "models": 58,
+      "files": 135,
+      "sourceBacked": [
+        "aelith-cyclops-011",
+        "beastmaker-1000",
+        "beastmaker-2000",
+        "captain-fingerfood-dual",
+        "captain-fingerfood-pocket",
+        "captain-fingerfood-unlevel",
+        "clavellium-training-block",
+        "crimptonite-helium-mobile",
+        "dewoodstok-woodbord",
+        "escape-beta-22",
+        "escape-unlimited",
+        "evolv-kilter-basic-long",
+        "frictitious-doormount-pro-7",
+        "frictitious-megalith",
+        "frictitious-nug",
+        "frictitious-port-a-board",
+        "j-bryant-ftg-32",
+        "lattice-mini-bar",
+        "lattice-mxedge-lift-large",
+        "lattice-mxedge-lift-small",
+        "lattice-triple-rung",
+        "mammut-diamond-finger",
+        "metolius-climbers-edge",
+        "metolius-contact",
+        "metolius-foundry",
+        "metolius-light-rail-2",
+        "metolius-prime-rib",
+        "metolius-project",
+        "metolius-rock-rings-3d",
+        "metolius-simulator-3d",
+        "metolius-wood-grips-compact-ii",
+        "metolius-wood-grips-deluxe-ii",
+        "moon-armstrong",
+        "nature-stoak-board-iii",
+        "nature-stone-hanger",
+        "nature-stone-hanger-mini",
+        "nature-stone-hanger-mini-karma8a",
+        "owl-climb-poker",
+        "plateau-lifting-edge",
+        "soill-iron-palm-2",
+        "soill-split-palm",
+        "soill-training-tiles",
+        "target10a-linebreaker-base",
+        "tension-flash-board",
+        "tension-grindstone",
+        "tension-grindstone-pro",
+        "tension-whetstone",
+        "the-hangboard",
+        "trango-rock-prodigy-forge",
+        "trango-rock-prodigy-pivot",
+        "trango-rock-prodigy-training-center",
+        "yy-baguette",
+        "yy-baguette-evo",
+        "yy-penta-evo",
+        "yy-travelboard",
+        "zlagboard-evo",
+        "zlagboard-pro"
+      ],
+      "sha256Manifest": "4991d2dca213f7f0846c79781a32123f10116323740d498f0323d8738fcc0420",
+      "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
+      "scope": "exact-file identity for committed files; a source-backed board pins its compiled asset through descriptor modelSHA256 and its build-time board.json through the locked FCStd and optional suspension sidecar"
+    },
+    "lockSHA256": "bf3e296e17a77f951ebf4f1588849265cba70f7aecaabb87b4d36c68848af4b2",
+    "previousMigrationEntries": 36,
+    "allPreviousMigrationEntriesPreserved": true,
+    "durableValidationMatches": true,
+    "durableChecksumsMatch": true
+  },
+  "targetCount": 21,
+  "modelCount": 23,
+  "excludedCount": 43,
+  "excludedPackagesUnchanged": true,
+  "excludedPackages": [
+    "beastmaker-1000",
+    "beastmaker-2000",
+    "captain-fingerfood-pocket",
+    "clavellium-training-block",
+    "crimptonite-helium-mobile",
+    "dewoodstok-woodbord",
+    "escape-beta-22",
+    "escape-unlimited",
+    "evolv-kilter-basic-long",
+    "frictitious-doormount-pro-7",
+    "frictitious-megalith",
+    "j-bryant-ftg-32",
+    "lattice-mini-bar",
+    "lattice-mxedge-lift-large",
+    "lattice-mxedge-lift-small",
+    "lattice-triple-rung",
+    "metolius-climbers-edge",
+    "metolius-foundry",
+    "metolius-light-rail-2",
+    "metolius-prime-rib",
+    "metolius-project",
+    "metolius-rock-rings-3d",
+    "metolius-wood-grips-compact-ii",
+    "metolius-wood-grips-deluxe-ii",
+    "moon-armstrong",
+    "nature-stoak-board-iii",
+    "soill-iron-palm-2",
+    "soill-split-palm",
+    "soill-training-tiles",
+    "target10a-linebreaker-base",
+    "tension-grindstone",
+    "tension-grindstone-original",
+    "tension-grindstone-pro",
+    "tension-honestone",
+    "tension-whetstone",
+    "the-hangboard",
+    "trango-rock-prodigy-natural",
+    "trango-rock-prodigy-pivot",
+    "trango-rock-prodigy-training-center",
+    "yy-verticalboard-evo",
+    "yy-verticalboard-first",
+    "yy-verticalboard-light",
+    "yy-verticalboard-one"
+  ],
+  "allTargetGeneratedManifestsIgnored": true,
+  "unintendedOutputCandidates": [],
+  "packages": [
+    {
+      "package": "aelith-cyclops-011",
+      "sourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Cut",
+        "Part::Cylinder",
+        "Part::Loft",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/aelith-cyclops-011/assets/primary.usdz",
+          "assetSHA256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+          "descriptorSHA256": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "19c51a321555a387beeb5ad735987ff0bae6a9a45d2a12f72e0f94432267a53e",
+      "sidecarEntries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/aelith-cyclops-011/reproducibility.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "captain-fingerfood-dual",
+      "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Box",
+        "Part::Common",
+        "Part::Cut",
+        "Part::Cylinder",
+        "Part::Extrusion",
+        "Part::Feature",
+        "Part::Fillet",
+        "Part::Loft",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/captain-fingerfood-dual/assets/primary.usdz",
+          "assetSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+          "descriptorSHA256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "8f6de683212d1083583a9795852f6b3458d8a4db63e11ce6de44d10d6b64a8da",
+      "sidecarEntries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/final-hash-closure.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "captain-fingerfood-unlevel",
+      "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Box",
+        "Part::Common",
+        "Part::Cut",
+        "Part::Cylinder",
+        "Part::Extrusion",
+        "Part::Feature",
+        "Part::Fillet",
+        "Part::Loft",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/captain-fingerfood-unlevel/assets/primary.usdz",
+          "assetSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+          "descriptorSHA256": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "d689a72a606c7e429ff3050da9f4daa3d57ba02c55f9a100c56d71f019ddde18",
+      "sidecarEntries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/final-hash-closure.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "frictitious-nug",
+      "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Box",
+        "Part::Common",
+        "Part::Cut",
+        "Part::Cylinder",
+        "Part::Extrusion",
+        "Part::Fillet",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/frictitious-nug/assets/primary.usdz",
+          "assetSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+          "descriptorSHA256": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088",
+      "sidecarEntries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/reproducibility.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "frictitious-port-a-board",
+      "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Box",
+        "Part::Common",
+        "Part::Cut",
+        "Part::Cylinder",
+        "Part::Extrusion",
+        "Part::Fillet",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/frictitious-port-a-board/assets/primary.usdz",
+          "assetSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+          "descriptorSHA256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
+      "sidecarEntries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/reproducibility.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "mammut-diamond-finger",
+      "sourceSHA256": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Box",
+        "Part::Common",
+        "Part::Compound",
+        "Part::Cut",
+        "Part::Extrusion",
+        "Part::Loft",
+        "PartDesign::Feature",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/mammut-diamond-finger/assets/primary.usdz",
+          "assetSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+          "descriptorSHA256": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": null,
+      "sidecarEntries": [],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/reproducibility-final.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "metolius-contact",
+      "sourceSHA256": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Box",
+        "Part::Common",
+        "Part::Compound",
+        "Part::Cut",
+        "Part::Extrusion",
+        "Part::Loft",
+        "Part::MultiFuse",
+        "PartDesign::Feature",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/metolius-contact/assets/primary.usdz",
+          "assetSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+          "descriptorSHA256": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": null,
+      "sidecarEntries": [],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/reproducibility-final.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "metolius-simulator-3d",
+      "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Box",
+        "Part::Common",
+        "Part::Compound",
+        "Part::Cut",
+        "Part::Extrusion",
+        "Part::Loft",
+        "Part::Mirroring",
+        "Part::MultiFuse",
+        "PartDesign::Feature",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/metolius-simulator-3d/assets/primary.usdz",
+          "assetSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+          "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": null,
+      "sidecarEntries": [],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/reproducibility-final.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "nature-stone-hanger",
+      "sourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Box",
+        "Part::Common",
+        "Part::Compound",
+        "Part::Cut",
+        "Part::Cylinder",
+        "Part::Extrusion",
+        "Part::Face",
+        "Part::Feature",
+        "Part::Fillet",
+        "Part::Fuse",
+        "Part::Loft",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/nature-stone-hanger/assets/primary.usdz",
+          "assetSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+          "descriptorSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "4e9bea938cafe3f4a7f100ff53bf58daa133a1b80926b106672d432e3a70d1a8",
+      "sidecarEntries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/final-hash-closure.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "nature-stone-hanger-mini",
+      "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Cut",
+        "Part::Cylinder",
+        "Part::Extrusion",
+        "Part::Fillet",
+        "Part::Fuse",
+        "Part::Loft",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+          "assetSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+          "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "3ededde32246c2b90cbf89dbb28ec26f362f387ae60f5f3f22dff2c76f115325",
+      "sidecarEntries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/reproducibility.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "nature-stone-hanger-mini-karma8a",
+      "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Cut",
+        "Part::Cylinder",
+        "Part::Extrusion",
+        "Part::Fillet",
+        "Part::Fuse",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.usdz",
+          "assetSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46",
+          "descriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "8f3b0cefd2f926409e8311d7a5c333d0ef17272c062233c32d7f695fccc6717e",
+      "sidecarEntries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/reproducibility.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "owl-climb-poker",
+      "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Common",
+        "Part::Compound",
+        "Part::Cut",
+        "Part::Extrusion",
+        "Part::Face",
+        "Part::Feature",
+        "Part::Loft",
+        "Part::Reverse",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/owl-climb-poker/assets/primary.usdz",
+          "assetSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+          "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": null,
+      "sidecarEntries": [],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/final-hash-closure.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "plateau-lifting-edge",
+      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Box",
+        "Part::Cut",
+        "Part::Cylinder",
+        "Part::Fillet",
+        "Part::Fuse",
+        "PartDesign::SubShapeBinder"
+      ],
+      "models": [
+        {
+          "presentationID": "depth-18mm",
+          "asset": "Hangboards/plateau-lifting-edge/assets/primary.usdz",
+          "assetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+          "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        },
+        {
+          "presentationID": "depth-15mm",
+          "asset": "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz",
+          "assetSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+          "descriptorSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        },
+        {
+          "presentationID": "depth-10mm",
+          "asset": "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz",
+          "assetSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+          "descriptorSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "accd4b12ac09f4de1213c06b783de736117fd44e94b12918b38c86467dd2aa9f",
+      "sidecarEntries": [
+        {
+          "presentationID": "depth-18mm",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        },
+        {
+          "presentationID": "depth-15mm",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        },
+        {
+          "presentationID": "depth-10mm",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/reproducibility.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "tension-flash-board",
+      "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Common",
+        "Part::Compound",
+        "Part::Cut",
+        "Part::Cylinder",
+        "Part::Face",
+        "Part::Feature",
+        "Part::Loft",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/tension-flash-board/assets/primary.usdz",
+          "assetSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+          "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "25830bef1ac6409ec5f1d7ac5e13317de974f96f1fa1037947554d64cbf5fc0b",
+      "sidecarEntries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/tension-flash-board/final-hash-closure.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "trango-rock-prodigy-forge",
+      "sourceSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Box",
+        "Part::Common",
+        "Part::Compound",
+        "Part::Cut",
+        "Part::Extrusion",
+        "Part::Loft",
+        "Part::Mirroring",
+        "Part::MultiFuse",
+        "PartDesign::Feature",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+          "assetSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+          "descriptorSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": null,
+      "sidecarEntries": [],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/reproducibility-final.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "yy-baguette",
+      "sourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Box",
+        "Part::Common",
+        "Part::Cut",
+        "Part::Extrusion",
+        "Part::Fillet",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/yy-baguette/assets/primary.usdz",
+          "assetSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+          "descriptorSHA256": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "7765417f4b49ff1efeded274a70a5c69907a3126aeb73f4a7d12d2fec14c688b",
+      "sidecarEntries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/reproducibility.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "yy-baguette-evo",
+      "sourceSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Box",
+        "Part::Common",
+        "Part::Cut",
+        "Part::Cylinder",
+        "Part::Extrusion",
+        "Part::Feature",
+        "Part::Fillet",
+        "Part::Fuse",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/yy-baguette-evo/assets/primary.usdz",
+          "assetSHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+          "descriptorSHA256": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "a8268c4df7ce4eced116b692ad92276394d064aa858b83e5c00b84fd43f75678",
+      "sidecarEntries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/final-hash-closure.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "yy-penta-evo",
+      "sourceSHA256": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Common",
+        "Part::Compound",
+        "Part::Cut",
+        "Part::Extrusion",
+        "Part::Face",
+        "Part::Feature",
+        "Part::Fillet",
+        "Part::Loft",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "front-pair",
+          "asset": "Hangboards/yy-penta-evo/assets/primary.usdz",
+          "assetSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+          "descriptorSHA256": "b0cd578994a9290d8bd52441ac615c3d8b20b059144b2dadcb85b733c566d764",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "e419f73232d56bdf29b609f94316cf8b6fc1db215c0423a6348841ddd9714c8f",
+      "sidecarEntries": [
+        {
+          "presentationID": "front-pair",
+          "equipmentObjectID": "left-penta",
+          "bindsAsset": true
+        },
+        {
+          "presentationID": "front-pair",
+          "equipmentObjectID": "right-penta",
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/final-hash-closure.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "yy-travelboard",
+      "sourceSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Cut",
+        "Part::Cylinder",
+        "Part::Extrusion",
+        "Part::Fillet",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/yy-travelboard/assets/primary.usdz",
+          "assetSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+          "descriptorSHA256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": "4dc0a687d4f7bd336cf40985bace19f09e92c80b5eb3753037125e0f0bce701b",
+      "sidecarEntries": [
+        {
+          "presentationID": "primary",
+          "equipmentObjectID": null,
+          "bindsAsset": true
+        }
+      ],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/reproducibility.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "zlagboard-evo",
+      "sourceSHA256": "8a8e4957b044d01c76c49ee1b0c07f88f388bac05cff36b31d655c0e6d4ae8fb",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Common",
+        "Part::Compound",
+        "Part::Cut",
+        "Part::Extrusion",
+        "Part::Loft",
+        "Part::MultiFuse",
+        "PartDesign::Feature",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/zlagboard-evo/assets/primary.usdz",
+          "assetSHA256": "92e0e754d888a5ab6976f22197b11f9f55353309ef6648a9307c45c404d4dabe",
+          "descriptorSHA256": "54a24c155967b3349be34fb3918e1c22be8acc8f7117772a15b347e251d99383",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": null,
+      "sidecarEntries": [],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/reproducibility-final.json",
+        "matches": true
+      }
+    },
+    {
+      "package": "zlagboard-pro",
+      "sourceSHA256": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+      "nativeArchiveValidated": true,
+      "objectTypes": [
+        "Part::Common",
+        "Part::Compound",
+        "Part::Cut",
+        "Part::Extrusion",
+        "Part::Loft",
+        "Part::MultiFuse",
+        "PartDesign::Feature",
+        "PartDesign::SubShapeBinder",
+        "Sketcher::SketchObject"
+      ],
+      "models": [
+        {
+          "presentationID": "primary",
+          "asset": "Hangboards/zlagboard-pro/assets/primary.usdz",
+          "assetSHA256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+          "descriptorSHA256": "5e3ea9a135173ec6730b0d5e145cc098a8b2e6a54f1cf50bc9df982248711b82",
+          "descriptorBindsAsset": true,
+          "materials": 0,
+          "shaders": 0,
+          "bindings": 0
+        }
+      ],
+      "sidecarSHA256": null,
+      "sidecarEntries": [],
+      "finalProof": {
+        "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/reproducibility-final.json",
+        "matches": true
+      }
+    }
+  ],
+  "findings": [],
+  "passed": true,
+  "reviewMethods": [
+    "Inspect all 21 FCStd archive contracts and generate merged manifests in memory without writing board.json.",
+    "Compare every declared model USDZ byte SHA-256 to descriptor and suspension sidecar entries; inspect USD stages for materials, shaders and bindings.",
+    "Bind each final source/rebuild proof and aggregate export-contract record to current source, asset and descriptor hashes.",
+    "Compare all excluded package tracked trees against baseline with git diff and inspect nonignored untracked paths.",
+    "Recompute delivery checksums and verify current lock; compare all 36 prior migration entries with baseline JSON."
+  ],
+  "observations": [
+    {
+      "priority": "P3",
+      "blocking": false,
+      "kind": "historical-compile-source-hashes",
+      "paths": [
+        "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/compile.json",
+        "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/compile.json",
+        "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/compile.json",
+        "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/compile-10.json",
+        "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/compile-15.json",
+        "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/compile-18.json"
+      ],
+      "detail": "These initial compile reports retain earlier source hashes after metadata-only edits. Their asset hashes remain current, and each package has a fresh final reproducibility.json bound to its current source. No final runtime/source closure failure.",
+      "recommendation": "Label initial compile reports as superseded or explicitly link them to the final reproducibility proof."
+    }
+  ]
+}

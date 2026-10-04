@@ -1,0 +1,46 @@
+{
+  "asset": "Hangboards/tension-flash-board/assets/primary.usdz",
+  "assetBytes": 287093,
+  "assetSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+  "board": "Hangboards/tension-flash-board/tension-flash-board.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "small-crimp-left",
+    "small-crimp-right",
+    "three-edge-center",
+    "three-edge-left",
+    "three-edge-right",
+    "two-edge-left",
+    "two-edge-right"
+  ],
+  "descriptor": "Hangboards/tension-flash-board/assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "small-crimp-left": 9.867,
+    "small-crimp-right": 9.867,
+    "three-edge-center": 21.998,
+    "three-edge-left": 21.998,
+    "three-edge-right": 21.998,
+    "two-edge-left": 24.0,
+    "two-edge-right": 24.0
+  },
+  "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+  "nodes": [
+    "flash_board_body_008",
+    "flash_board_body_009",
+    "flash_board_body_010",
+    "flash_board_body_011",
+    "flash_board_body_012",
+    "flash_board_body_013",
+    "flash_board_body_014",
+    "flash_board_body_015"
+  ],
+  "package": "tension-flash-board",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": "Hangboards/tension-flash-board/tension-flash-board.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 8418
+}

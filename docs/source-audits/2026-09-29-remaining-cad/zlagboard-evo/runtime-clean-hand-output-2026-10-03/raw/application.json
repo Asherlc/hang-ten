@@ -1,0 +1,10 @@
+{
+  "temporaryDEBUGOnly": true,
+  "sourcePaths": [
+    "HangTen/Views/TrainView.swift",
+    "HangTen/Views/GripHandModelView.swift"
+  ],
+  "noOtherAppOrAssetEdits": true,
+  "priorTrainResult": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/action-review.json",
+  "rootReviewedCandidate": true
+}

@@ -1,0 +1,68 @@
+<TopoShape> TopoShapeExpansion.cpp(922): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+
+{
+  "status": "pass",
+  "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+  "allThreeFactualContactsUnchanged": true,
+  "positionsUnchanged": true,
+  "nativeBodiesValid": true,
+  "woodStoneOverlapMM3": 0.0,
+  "graniteWoodSurfaceOverlapMM2": 0.0,
+  "pinchDepthAxis": "Z",
+  "pinchOppositionSpanMM": 60.0,
+  "woodDepthMM": 15.0,
+  "graniteDepthMM": 15.000000000000002,
+  "contacts": {
+    "wood-edge-15": {
+      "areaMM2": 4168.152596645971,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 0.0
+    },
+    "pinch-60": {
+      "areaMM2": 5848.008730847458,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 0.0
+    },
+    "granite-edge-15": {
+      "areaMM2": 2111.6471076205385,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 926.6471076205387
+    }
+  },
+  "unchangedGrooveFeatures": {
+    "LeftFrontOpenGroove": {
+      "oldMinusNewMM3": 0.0,
+      "newMinusOldMM3": 0.0
+    },
+    "LeftBackOpenGroove": {
+      "oldMinusNewMM3": 0.0,
+      "newMinusOldMM3": 0.0
+    },
+    "LeftTransverseOpenGroove": {
+      "oldMinusNewMM3": 0.0,
+      "newMinusOldMM3": 0.0
+    },
+    "RightFrontOpenGroove": {
+      "oldMinusNewMM3": 0.0,
+      "newMinusOldMM3": 0.0
+    },
+    "RightBackOpenGroove": {
+      "oldMinusNewMM3": 0.0,
+      "newMinusOldMM3": 0.0
+    },
+    "RightTransverseOpenGroove": {
+      "oldMinusNewMM3": 0.0,
+      "newMinusOldMM3": 0.0
+    }
+  },
+  "allSketchesFullyConstrained": true,
+  "noMaterials": true
+}
+
+								
+								
+								
+								
+								
+								

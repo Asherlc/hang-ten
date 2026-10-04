@@ -1,0 +1,11 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "unmount",
+  "helperSHA256": "ca4aa2aaf55b43977644bb028aab563b6274834b4f61a0fc530dfe2ab45ab816",
+  "constructorMarkerAuditReady": true,
+  "structuralNavEventAuditReady": true,
+  "rootSourceRuntimeRelease": true,
+  "previousArmGatePassed": true,
+  "binarySHA256": "9855fc146d9bf381797b8a982a70f96e7f001c9838e5fd49df2d590e8d6d2242",
+  "authorization": "Parent: one postboot control, conditional one unmount only if valid control failure; boot changes environment epoch, not original reversal."
+}

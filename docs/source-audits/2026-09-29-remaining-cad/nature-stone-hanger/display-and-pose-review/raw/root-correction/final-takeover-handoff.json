@@ -1,0 +1,65 @@
+{
+  "status": "pass-technical-routing-and-promotion",
+  "blockingFindings": [],
+  "packageSHA256": {
+    "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+    "Hangboards/nature-stone-hanger/assets/primary.usdz": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+    "Hangboards/nature-stone-hanger/assets/primary.model.json": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+    "Hangboards/nature-stone-hanger/suspension.json": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae"
+  },
+  "colliderSHA256": "9f1c7afee52db277aaef76ea3c92fcc8ceae8223b95fd43847314a9545466d77",
+  "helperSHA256": "2001cb8f4eb141d50146a2f426aa0cc086e729e0e737b4224e7f9dcf0a6fa191",
+  "fileSHA256": {
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-promotion.json": "e8fc9bdcaf29014150a3d133079e12924d35b2d44bcb0b51c2c71ccb05f824e9",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-canonical-package-validation.json": "dc7d5bcec6ce95914fa4030d96c6dbffa540f842ef82b53ab4822c85751d08bc",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-package-validation.json": "9529b7317c966fd845a6a0401ef58494b1e05edca4fa84daa1a127e74a45e172",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-reproducibility.json": "fb9e54e6c389d6e4b4ebfbc853759bcb63ffa3635214da565f70adbd482850e8",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/takeover-implementation-review.json": "3f09dfeed6e011233123cffc79d8266cf0dcc9c663086b5324490501391e965e",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/takeover-diagnostic-cleanup.json": "b4550c989dd9d4bdbff7fa8f724dce6a7a8f45131c60c3700750a6ec9c3e9130",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-code-freeze/freeze.json": "cef46c7b031eba55bdbcde889fc27d505eedeba137dbee0abb1d3aa74a789012",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-apply/audit-certificates.json": "4d07606bfaca561a56a518d8e4646a243c3d9cf6afcad4e2bf35225ff1f4f750",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-apply/native-route-report.json": "591083175d543a198cdfe2207e0bc81be7337934041349b2272fb11eeb23c3e7",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-apply/suspension.json": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/placid-badger-final-apply-v2-ownership.json": "5342778c6b728adcaccee984b603191fa7d3cc2fe1c4edcdd265841592142a39",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/placid-badger-final-check-v2-ownership.json": "811dc5986567c1653b2c033075ecc040465d4329feb296b48aadb18d6bd8d6ee",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/placid-badger-final-apply-ownership.json": "39e272fd9e17ec5bbe8d2196a17abfa784b5bacbc2b7c6609a53f578f290044a",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-correction/placid-badger-final-apply.log": "70bd32646158ffa8c9dd26c9b307b50ee94eafd3e9f87633e9dae645f296f30e",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/sixteen-vertical-candidate-audit.json": "e5c09868c3352ea831792799f59db88c97bf0ccb772d029adad37b2cf90b85d2",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/native-bearing/final-sidecar-native-bearing.json": "7ce9e1ff9d3d4c3a4546c249fce1c5e2197d42de3075b8c754aed4dbfc7c67d9",
+    ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/implementation-review-2001cb8f.json": "f618e02a20802c6e85b490416d3186d785683156294433f0bc0db75a723e21b9"
+  },
+  "counts": {
+    "poses": 8,
+    "branches": 16,
+    "presentationFrames": 4,
+    "freshPhysicsFrames": 2,
+    "independentPositiveFacetWitnesses": 560,
+    "focusedTestsPassed": 81,
+    "outsidePackageFilesUnchanged": 202
+  },
+  "numericalResults": {
+    "minimumConservativeContinuousClearanceLowerBoundM": 0.0014904817466512008,
+    "existingClearanceGateM": 0.00149,
+    "nominalRadiusM": 0.0015,
+    "restLengthM": 0.12,
+    "maximumActualFacetNodalResidual": 9.711652694668035e-07,
+    "maximumWeightedConeErrorBound": 5.369277780569035e-07,
+    "unchangedForceAndConeLimit": 1e-05
+  },
+  "regeneration": "Separate fresh processes produce byte-identical complete reports and sidecars; no saved cache seeds either solve. All output IDs independently recertified.",
+  "cleanup": "Inherited diagnostic exact group/TMP removed; initial wrapper failure and both final groups/TMP absent; raw receipts retained. No new simulators or services.",
+  "implementationScope": [
+    "Tools/HangboardCAD/native_cord_guides.py",
+    "Tools/HangboardCAD/tests/test_native_cord_guides.py"
+  ],
+  "limits": [
+    "Discrete frictionless numerical material-contact feasibility; no global equilibrium/minimum, continuum rope or safety certification.",
+    "At most five generated corrections, each <=10 micrometres; not a 10 micrometre total-displacement claim.",
+    "Visible rope length/radius/groove and anchor dimensions remain labeled display estimates; hidden connection unspecified.",
+    "Native source/model/descriptor were authored and previously validated by the author lane; this takeover preserves their exact bytes and verifies new routes against their pinned collider.",
+    "Runtime tests, fresh app images, global delivery records and human acceptance remain root responsibilities."
+  ],
+  "humanAcceptance": "pending",
+  "newCommits": false,
+  "globalRecordMutation": false
+}

@@ -1,0 +1,31 @@
+{
+  "package": "yy-baguette",
+  "currentSourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+  "nativeReopenEditSourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+  "modelSHA256ByPresentation": {
+    "primary": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2"
+  },
+  "fullPackageSchemaPassed": true,
+  "nativeCordCacheCheckPassed": true,
+  "minimumNativeCordClearanceMM": 1.2497222399354642,
+  "metadataOnlyCompileRebindings": [
+    {
+      "presentationID": "primary",
+      "compiledSourceSHA256": "da56d0479db356ff7da5c08ab01a20c9b2b5b7624e8f756fd29e9702bb663572",
+      "currentSourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+      "compiledAssetSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+      "changesSinceCompile": [
+        "media.display orthographic camera metadata"
+      ],
+      "geometryUnchangedEvidence": "Supported set_board_manifest.py changes only the HangTenBoardManifest XML value and asserts all other archive members remain byte-identical. Native body/region features, export flags, placements, tessellation and contact/depth contracts were unchanged. Current source separately passes native reopen/edit validation and full package validation. Raw compile report is retained with its actual executed source hash.",
+      "additionalArchiveProof": null
+    }
+  ],
+  "humanCADReview": "pending requested one-at-a-time review after whole batch",
+  "externalResourcesCreated": false,
+  "continuousRoundedRuntimeCordClearancePassed": true,
+  "minimumCertifiedRuntimeCordClearanceMM": 1.1906236293901842,
+  "continuousClearanceReport": "cord-continuous-clearance.json",
+  "sidecarSHA256": "7765417f4b49ff1efeded274a70a5c69907a3126aeb73f4a7d12d2fec14c688b",
+  "cameraOnlyRebindingProof": "camera-correction-proof.json"
+}

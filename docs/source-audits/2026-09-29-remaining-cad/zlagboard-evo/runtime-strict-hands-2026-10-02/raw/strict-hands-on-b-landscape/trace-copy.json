@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/D7079527-F5AD-415E-AB7D-DF923D127F43/Documents/HighlightDiagnostic-placid-badger-cad-second-half-strict-hands-b-on/events-EDC34F74-E904-4EF3-B08B-4DED96DC9C4A.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/events-EDC34F74-E904-4EF3-B08B-4DED96DC9C4A.jsonl",
+      "sha256": "c05a19107cb591c10207d92a1b3ef80428593030cc19a9d351e3f324c28c6db2"
+    }
+  ],
+  "records": 147,
+  "completeContiguous": true,
+  "copiedEpoch": 1790983057.329161,
+  "includesSamplerEnd": true
+}

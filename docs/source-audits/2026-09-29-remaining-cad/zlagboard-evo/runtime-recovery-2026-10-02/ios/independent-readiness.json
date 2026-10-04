@@ -1,0 +1,31 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "spawn",
+      "71029F02-AF9E-46C2-920B-394C8837ECF2",
+      "launchctl",
+      "print",
+      "system"
+    ],
+    "exitStatus": 0,
+    "rawPrefix": "launch-services"
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "71029F02-AF9E-46C2-920B-394C8837ECF2",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/zlagboard-evo/ios-after-service-restart/readiness-screen.png"
+    ],
+    "exitStatus": 0,
+    "rawPrefix": "boot-screen"
+  }
+]

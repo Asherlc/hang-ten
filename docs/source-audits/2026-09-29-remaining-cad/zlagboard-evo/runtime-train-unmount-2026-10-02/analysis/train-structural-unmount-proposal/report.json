@@ -1,0 +1,47 @@
+{
+  "status": "Scratch-only prospective diagnostic; no application/build/runtime",
+  "patchSHA256": "57d251e33eb42d4ac224a9ce69e85c770aa7bcaab0f4923b653d0c98bd101bbe",
+  "scope": [
+    "HangTen/Views/TrainView.swift",
+    "HangTen/Models/BoardModelRealityTypes.swift"
+  ],
+  "hypothesisBoundary": "Request structural removal of the predecessor Train BoardMap after the actual existing workout navigation state becomes true, while preserving common entity detach, retained model/lease, weak census and all-hand suppression. No teardown fix claim.",
+  "actualNavigationSource": "TrainView pendingWorkoutPlanID onChange validates/selects plan and board, sets deepLinkedWorkoutPlan then showsDeepLinkedWorkout=true; that same state binds navigationDestination(isPresented:). No new navigation state or scheduling adaptation.",
+  "sourceGate": "Exact Evo/single presentation/diagnostic gate. Existing SUPPRESS_TRAIN_BOARD_HOST branch remains equivalent. New UNMOUNT_TRAIN_FOR_WORKOUT flag additionally requires common boardDetachTrial and showsDeepLinkedWorkout=true. False navigation state preserves initial BoardMap construction; true state requests the identical existing clear slot.",
+  "events": "One sparse onChange(of: showsDeepLinkedWorkout, initial:true) hook records actual changed navigation value and the shared source predicate branch request. It writes no navigation state, logs nothing from body, and adds no timer. Initial false and transition true must both be retained. Event records requested branch, not committed backing-view removal.",
+  "commonArms": [
+    "Same newly built binary; natural production deep-link route and timing",
+    "HANGTEN_REVIEW_BOARD_DETACH_TRIAL=1 retains models/lease in both",
+    "HANGTEN_REVIEW_DETACH_DISAPPEARING_BOARD_HOST=1 acts in both",
+    "Existing weak census enabled in both",
+    "HANGTEN_REVIEW_SUPPRESS_ALL_HAND_HOSTS=1 in both; zero hand constructors/makes for complete process",
+    "HANGTEN_REVIEW_SUPPRESS_TRAIN_BOARD_HOST absent/0 in both",
+    "Only HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT differs between control and structural arm"
+  ],
+  "requiredEvidence": [
+    "New common control must reproduce failure; earlier detach control is historical and insufficient for this binary",
+    "Complete stream from opening through final observation; no inherited unrelated flags",
+    "Initial navigation-state event false/source branch board-map, valid Evo/single presentation; after openurl, true with expected plan.",
+    "Both-arm bounded external readiness requires first tagged Train constructor/make plus attached root/camera before openurl. Retain timestamps/sequence proof. If readiness fails, invalidate/stop rather than alter in-app scheduling.",
+    "Control after-navigation true still requests board-map; action true requests clear-slot",
+    "Exactly expected predecessor/workout constructors; no unexplained replacement host",
+    "Common detach ownership gates all pass: exact Train entities parent+Scene nil before first Hang through tail, workout untouched, no reattachment",
+    "Models/root/camera remain alive in both; compare existing weak recordedParentID/recordedActualSceneID becoming nil or surviving after structural request",
+    "Actual workout frame/camera/selection/timing correspondence and all CPU/image brackets remain required"
+  ],
+  "lifetimeLimits": [
+    "Existing TrialHost.parent/actualScene weak references suffice for point-in-time parent/Scene liveness; no new UIKit traversal, weak backing-view map or polling is added.",
+    "Nonnil weak parent/Scene IDs indicate those objects remain alive. Nil indicates gone by observation, not exact deallocation time.",
+    "Neither result establishes backing UIView deallocation or active renderer lifetime.",
+    "Structural request may remain pending or navigation may retain surrounding view state; sparse source event is not proof that UIKit destroyed a host.",
+    "Initial constructor/make proves constructed/attached content, not a rendered visible Train image; do not claim stronger history without separate evidence."
+  ],
+  "checks": {
+    "textualApplyCheckExitCode": 0,
+    "SwiftTypecheckPerformed": false,
+    "runtimePerformed": false
+  },
+  "unchanged": "No BoardMap, RootView, workout content, phase durations, geometry, materials, loader, timer, onDisappear state, callback scheduling or new entity-retention changes.",
+  "startupRecipeAdaptation": "BOTH arms externally wait, bounded, for existing tagged Train view-make plus attached root/camera evidence BEFORE openurl. Runtime worker owns this helper. No in-app delay/timer or onDisappear state is added. This changes startup history from earlier trials, so the new common control must reproduce failure; otherwise STOP, without compensation.",
+  "revision": "Root requested common external readiness and one actual-state onChange hook. Initial callback-based patch/report/provenance preserved with .initial suffix. No readiness implementation supplied; runtime worker owns it."
+}

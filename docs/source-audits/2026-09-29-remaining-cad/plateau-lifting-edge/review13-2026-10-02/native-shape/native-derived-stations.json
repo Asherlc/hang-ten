@@ -1,0 +1,221 @@
+{
+  "18": {
+    "derivation": "At both ends, inset from actual curl X bound by cord radius plus clearance. Native inner-void lowest Z and native cylinder-axis Y give floor bearing; shift upward by radius plus clearance. Stations constrain threading on an actual inner metal bearing surface; solver draws all routes.",
+    "radiusMM": 3.0,
+    "clearanceMM": 0.2,
+    "pointsRuntimeM": [
+      [
+        -0.046799999999999994,
+        -0.0338,
+        0.012
+      ],
+      [
+        0.046799999999999994,
+        -0.0338,
+        0.012
+      ]
+    ],
+    "checks": [
+      {
+        "nativeBearingMM": [
+          -46.8,
+          -12.0,
+          -37.0
+        ],
+        "bearingDistanceToSolidMM": 1.7763568394002505e-15,
+        "derivedStationMM": [
+          -46.8,
+          -12.0,
+          -33.8
+        ],
+        "stationDistanceToSolidMM": 3.200000000000003
+      },
+      {
+        "nativeBearingMM": [
+          46.8,
+          -12.0,
+          -37.0
+        ],
+        "bearingDistanceToSolidMM": 1.7763568394002505e-15,
+        "derivedStationMM": [
+          46.8,
+          -12.0,
+          -33.8
+        ],
+        "stationDistanceToSolidMM": 3.200000000000003
+      }
+    ],
+    "exactCADOffsetPointsRuntimeM": [
+      [
+        -0.046799999999999994,
+        -0.0338,
+        0.012
+      ],
+      [
+        0.046799999999999994,
+        -0.0338,
+        0.012
+      ]
+    ],
+    "finalPointsRuntimeM": [
+      [
+        -0.046799999999999994,
+        -0.033799999,
+        0.012
+      ],
+      [
+        0.046799999999999994,
+        -0.033799999,
+        0.012
+      ]
+    ],
+    "numericalOutwardAdjustmentM": 1e-09,
+    "numericalAdjustmentRationale": "Exact analytic radius+clearance boundary produced 1.88495e-17 m floating inclusion in section polygon. One nanometre outward avoids ambiguous boundary inclusion without changing existing clearance gates."
+  },
+  "15": {
+    "derivation": "At both ends, inset from actual curl X bound by cord radius plus clearance. Native inner-void lowest Z and native cylinder-axis Y give floor bearing; shift upward by radius plus clearance. Stations constrain threading on an actual inner metal bearing surface; solver draws all routes.",
+    "radiusMM": 3.0,
+    "clearanceMM": 0.2,
+    "pointsRuntimeM": [
+      [
+        -0.046799999999999994,
+        -0.0338,
+        0.012
+      ],
+      [
+        0.046799999999999994,
+        -0.0338,
+        0.012
+      ]
+    ],
+    "checks": [
+      {
+        "nativeBearingMM": [
+          -46.8,
+          -12.0,
+          -37.0
+        ],
+        "bearingDistanceToSolidMM": 1.7763568394002505e-15,
+        "derivedStationMM": [
+          -46.8,
+          -12.0,
+          -33.8
+        ],
+        "stationDistanceToSolidMM": 3.200000000000003
+      },
+      {
+        "nativeBearingMM": [
+          46.8,
+          -12.0,
+          -37.0
+        ],
+        "bearingDistanceToSolidMM": 1.7763568394002505e-15,
+        "derivedStationMM": [
+          46.8,
+          -12.0,
+          -33.8
+        ],
+        "stationDistanceToSolidMM": 3.200000000000003
+      }
+    ],
+    "exactCADOffsetPointsRuntimeM": [
+      [
+        -0.046799999999999994,
+        -0.0338,
+        0.012
+      ],
+      [
+        0.046799999999999994,
+        -0.0338,
+        0.012
+      ]
+    ],
+    "finalPointsRuntimeM": [
+      [
+        -0.046799999999999994,
+        -0.033799999,
+        0.012
+      ],
+      [
+        0.046799999999999994,
+        -0.033799999,
+        0.012
+      ]
+    ],
+    "numericalOutwardAdjustmentM": 1e-09,
+    "numericalAdjustmentRationale": "Exact analytic radius+clearance boundary produced 1.88495e-17 m floating inclusion in section polygon. One nanometre outward avoids ambiguous boundary inclusion without changing existing clearance gates."
+  },
+  "10": {
+    "derivation": "At both ends, inset from actual curl X bound by cord radius plus clearance. Native inner-void lowest Z and native cylinder-axis Y give floor bearing; shift upward by radius plus clearance. Stations constrain threading on an actual inner metal bearing surface; solver draws all routes.",
+    "radiusMM": 3.0,
+    "clearanceMM": 0.2,
+    "pointsRuntimeM": [
+      [
+        -0.046799999999999994,
+        -0.0338,
+        0.012
+      ],
+      [
+        0.046799999999999994,
+        -0.0338,
+        0.012
+      ]
+    ],
+    "checks": [
+      {
+        "nativeBearingMM": [
+          -46.8,
+          -12.0,
+          -37.0
+        ],
+        "bearingDistanceToSolidMM": 1.7763568394002505e-15,
+        "derivedStationMM": [
+          -46.8,
+          -12.0,
+          -33.8
+        ],
+        "stationDistanceToSolidMM": 3.200000000000003
+      },
+      {
+        "nativeBearingMM": [
+          46.8,
+          -12.0,
+          -37.0
+        ],
+        "bearingDistanceToSolidMM": 1.7763568394002505e-15,
+        "derivedStationMM": [
+          46.8,
+          -12.0,
+          -33.8
+        ],
+        "stationDistanceToSolidMM": 3.200000000000003
+      }
+    ],
+    "exactCADOffsetPointsRuntimeM": [
+      [
+        -0.046799999999999994,
+        -0.0338,
+        0.012
+      ],
+      [
+        0.046799999999999994,
+        -0.0338,
+        0.012
+      ]
+    ],
+    "finalPointsRuntimeM": [
+      [
+        -0.046799999999999994,
+        -0.033799999,
+        0.012
+      ],
+      [
+        0.046799999999999994,
+        -0.033799999,
+        0.012
+      ]
+    ],
+    "numericalOutwardAdjustmentM": 1e-09,
+    "numericalAdjustmentRationale": "Exact analytic radius+clearance boundary produced 1.88495e-17 m floating inclusion in section polygon. One nanometre outward avoids ambiguous boundary inclusion without changing existing clearance gates."
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "scriptSHA256": "b112e5973538ff082bef4e25b129250a16d3f0a33310704377b7c5fa6031683f",
+  "sequence": [
+    "orthographic-a",
+    "perspective-a",
+    "off-a",
+    "off-b",
+    "perspective-b",
+    "orthographic-b"
+  ],
+  "maximumLaunches": 6,
+  "environment": "All inherited SIMCTL_CHILD_HANGTEN_REVIEW_* stripped, exact per-run allowlist retained",
+  "stop": "If first orthographic run does not reproduce, report inconclusive and do not tune"
+}

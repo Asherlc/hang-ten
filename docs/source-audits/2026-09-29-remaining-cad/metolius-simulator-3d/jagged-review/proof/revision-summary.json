@@ -1,0 +1,31 @@
+{
+  "revision": {
+    "package": "metolius-simulator-3d",
+    "date": "2026-10-01",
+    "revision": "rounded-outline-and-shoulder-transitions",
+    "feedback": "Jagged",
+    "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+    "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+    "descriptorSHA256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d",
+    "report": "metolius-simulator-3d/jagged-review/runtime-validation.json",
+    "postIntegrationTests": {
+      "iOSPassed": 1278,
+      "iOSSkipped": 3,
+      "pythonPassed": 706,
+      "pythonSkipped": 11,
+      "separateNativeCompilerRegressionCases": 9,
+      "failures": 0
+    },
+    "allOtherPackageFilesUnchanged": 203,
+    "boardFactsAndContactIDsUnchanged": true,
+    "geometryAcceptance": "pending revised human review #8",
+    "humanReviewRecord": "metolius-simulator-3d/human-review.json",
+    "limits": "Rounded outline and positionally continuous shoulder joins; thickness94.1183246265mm is estimated and residual roof-normal changes reach6.77degrees. Representative app review only."
+  },
+  "installedCounts": {
+    "bundledPackages": 64,
+    "modelPackages": 58,
+    "ODRModelAssets": 60
+  },
+  "deliveryDigest": "c24ef14e8b83e68824313e7350f9aaf4420ba07f12477483196f7b16883cd3b1"
+}

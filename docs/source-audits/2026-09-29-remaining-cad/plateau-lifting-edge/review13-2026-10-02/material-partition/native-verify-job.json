@@ -1,0 +1,10 @@
+{
+  "name": "placid-badger-plateau13-material-native-verify",
+  "timeoutSeconds": 120,
+  "command": [
+    "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+    "--user-cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-native-verify-tmp/placid-badger-FreeCAD-user.cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-verify-restored-native.py"
+  ]
+}

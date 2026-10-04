@@ -1,0 +1,475 @@
+{
+  "candidateHashes": {
+    "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+    "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+    "descriptorSHA256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d"
+  },
+  "revisionBaseCommit": "b097aa5ba34d55e69b9cdac73122b06774947a16",
+  "summary": "Rounded outline joins and blended shoulder transitions; actual-app inspection confirms smoother corners and continuous shoulders, with representative highlights preserved. Published face and hold-depth facts and all 30 logical contacts are unchanged. Revised human acceptance remains pending.",
+  "measurements": {
+    "nativeReport": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/native-check.json",
+    "continuityReport": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/continuity-disposition.json",
+    "measuredThicknessMM": 94.11832462653064,
+    "maximumResidualRoofNormalAngleDegrees": 6.769760661326405
+  },
+  "limits": [
+    "Measurements cover finite native probes and defined outline joins; they do not certify global roof G1/C1 continuity or factory shape accuracy.",
+    "Exact original raw failed native thickness and grazing-boundary continuity checks remain visible beside their dispositions.",
+    "Final reported thickness, loft widths, guards and control poles are display estimates. The published 711 \u00d7 222 mm face envelope and 27 hold-depth checks retain their strict original gates.",
+    "Eight fresh app frames show five representative selected contact IDs and three actual drag orbits; they do not constitute an all-contact visual sweep.",
+    "Test results and counts are retained verbatim from final reports, with no assumed passing totals. Simulator #8 remains pending human acceptance."
+  ],
+  "packageBaseline": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/all-hangboards-baseline.json",
+  "beforeApp": ".context/placid-badger/metolius-simulator-3d-jagged/ios/before-captures/validation.json",
+  "afterApp": ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-captures/validation.json",
+  "beforeInstalled": ".context/placid-badger/metolius-simulator-3d-jagged/ios/before-proof/installed-app-provenance.json",
+  "cleanupDevices": ".context/placid-badger/metolius-simulator-3d-jagged/ios/devices-fresh-deletion-verification.json",
+  "dispositions": [
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/native-check-disposition.json",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/continuity-disposition.json"
+  ],
+  "reports": [
+    {
+      "role": "author",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/uv-source-preservation.json",
+      "equals": {
+        "/status": "pass",
+        "/sourceSHA256": "@sourceSHA256",
+        "/allBrepEntriesByteIdentical": true,
+        "/brepEntryCount": 387,
+        "/allNonDocumentMembersByteIdentical": true,
+        "/geometryChanged": false,
+        "/rawManifestExact": true,
+        "/reopenRecomputeClean": true,
+        "/analyticSurfaceNormals": true,
+        "/tessellationDeflectionMM": 0.28
+      }
+    },
+    {
+      "role": "independent",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/native-check-disposition.json",
+      "equals": {
+        "/sourceSHA256": "@sourceSHA256",
+        "/status": "pass-with-documented-estimate-exception",
+        "/blockingFindings": []
+      }
+    },
+    {
+      "role": "independent",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/continuity-disposition.json",
+      "equals": {
+        "/sourceSHA256": "@sourceSHA256",
+        "/status": "pass-with-explicit-surface-continuity-limits",
+        "/blockingFindings": []
+      }
+    },
+    {
+      "role": "independent",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/export-check.json",
+      "equals": {
+        "/status": "pass",
+        "/blockingFindings": [],
+        "/contactCount": 30,
+        "/forbiddenMaterialPrimsOrBindings": [],
+        "/unrelatedPackageChanges": []
+      }
+    },
+    {
+      "role": "compiler",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/handoff.json",
+      "equals": {
+        "/status": "pass",
+        "/sourceFrozen": true,
+        "/modelByteReproducibility": true,
+        "/contacts": 30,
+        "/tessellationDeflectionMM": 0.28,
+        "/files/candidate~1metolius-simulator-3d.FCStd/sha256": "@sourceSHA256",
+        "/files/candidate~1assets~1primary.usdz/sha256": "@modelSHA256",
+        "/files/candidate~1assets~1primary.model.json/sha256": "@descriptorSHA256",
+        "/compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+        "/descriptorByteReproducibility": true,
+        "/twoNormalExportsByteIdentical": true
+      }
+    },
+    {
+      "role": "ios-tests",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/ios-summary.json",
+      "equals": {
+        "/result": "Passed",
+        "/failedTests": 0
+      }
+    },
+    {
+      "role": "python-tests",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/python-test-report.json",
+      "equals": {
+        "/exitCode": 0
+      }
+    },
+    {
+      "role": "package",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/integrated-package.json",
+      "equals": {
+        "/sourceSHA256": "@sourceSHA256",
+        "/modelSHA256": "@modelSHA256",
+        "/descriptorSHA256": "@descriptorSHA256",
+        "/manifestBytesUnchanged": true,
+        "/contactsUnchanged": 30,
+        "/allOtherPackageFilesUnchanged": 203
+      }
+    },
+    {
+      "role": "staging",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/delivery-parity.json",
+      "equals": {
+        "/status": "passed",
+        "/packageValidation/boards": 64,
+        "/packageValidation/drafts": 0
+      }
+    },
+    {
+      "role": "build",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/ios-build-command.json",
+      "equals": {
+        "/exitCode": 0
+      }
+    },
+    {
+      "role": "installed",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/installed-app-provenance.json",
+      "equals": {
+        "/nativeSourceSHA256": "@sourceSHA256",
+        "/binaryBytesMatch": true
+      }
+    },
+    {
+      "role": "cleanup",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/verified-cleanup.json",
+      "equals": {
+        "/cleanupStatus": 0,
+        "/derivedDataRemoved": true,
+        "/xcresultRemoved": true,
+        "/exactSimulatorAbsent": true,
+        "/owner": "placid-badger"
+      }
+    },
+    {
+      "role": "independent",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/final-independent-review.json",
+      "equals": {
+        "/status": "technical-checks-passed-with-explicit-limits",
+        "/blockingFindings": [],
+        "/compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+        "/preservation/logicalContacts": 30,
+        "/preservation/nativeDepthChecks": 27,
+        "/preservation/unrelatedPackageFilesUnchanged": 203,
+        "/preservation/flagOnlyPreserves387BRepMembers": true,
+        "/actualExport/finiteUnitVertexNormals": true,
+        "/actualExport/materialsShadersBindings": false
+      },
+      "validateLinkedHashes": true
+    },
+    {
+      "role": "independent",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/export-continuity-disposition.json",
+      "equals": {
+        "/status": "pass-with-retained-grazing-probe-disposition",
+        "/blockingFindings": [],
+        "/sourceSHA256": "@sourceSHA256",
+        "/modelSHA256": "@modelSHA256",
+        "/unchangedTessellationDeflectionMM": 0.28
+      }
+    },
+    {
+      "role": "independent",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/independent-flag-source-preservation.json",
+      "equals": {
+        "/status": "pass",
+        "/sourceSHA256": "@sourceSHA256",
+        "/allNonDocumentMembersExact": true,
+        "/brepMemberCount": 387,
+        "/normalizedDocumentWithoutNewPropertyEqual": true
+      }
+    },
+    {
+      "role": "installed",
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-visual-review.json",
+      "equals": {
+        "/sourceSHA256": "@sourceSHA256",
+        "/modelSHA256": "@modelSHA256",
+        "/descriptorSHA256": "@descriptorSHA256",
+        "/status": "ready for revised human review #8"
+      },
+      "validateLinkedHashes": true
+    },
+    {
+      "role": "staging",
+      "source": "docs/source-audits/2026-09-29-remaining-cad/installed-delivery-validation.json",
+      "equals": {
+        "/passed": true
+      }
+    }
+  ],
+  "rawGroups": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/review-preparation/superseded-40e42",
+      "destination": "proof/superseded-40e42",
+      "suffixes": [
+        ".FCStd",
+        ".json",
+        ".log",
+        ".md",
+        ".txt",
+        ".py"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/native-author",
+      "destination": "proof/author",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".md",
+        ".txt",
+        ".py"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation",
+      "destination": "proof/independent",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".md",
+        ".txt",
+        ".py"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/before-proof",
+      "destination": "proof/before-build",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".md",
+        ".txt"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios",
+      "destination": "proof/ios",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".md",
+        ".txt",
+        ".py",
+        ".zsh"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/compiler-optimization",
+      "destination": "proof/compiler-optimization",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/historical-40e42",
+      "destination": "proof/historical-40e42",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/superseded-compiler-runs",
+      "destination": "proof/author/superseded-compiler-runs",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt",
+        ".FCStd"
+      ]
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/superseded-uv-boundary",
+      "destination": "proof/author/superseded-uv-boundary",
+      "suffixes": [
+        ".json",
+        ".log",
+        ".py",
+        ".md",
+        ".txt"
+      ]
+    }
+  ],
+  "rawFiles": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-capture-command-output.log",
+      "destination": "proof/ios/after-capture-command-output.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/cleanup-command-output.log",
+      "destination": "proof/ios/cleanup-command-output.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/author.log",
+      "destination": "proof/author/author.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/compile-check.log",
+      "destination": "proof/author/compile-check.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/compile.log",
+      "destination": "proof/author/compile.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/native-check.json",
+      "destination": "proof/independent/native-check.json"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/native-check.log",
+      "destination": "proof/independent/native-check.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/continuity-check.json",
+      "destination": "proof/independent/continuity-check.json"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/continuity-check.log",
+      "destination": "proof/independent/continuity-check.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/continuity-interior.json",
+      "destination": "proof/independent/continuity-interior.json"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/continuity-interior.log",
+      "destination": "proof/independent/continuity-interior.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/export-check.log",
+      "destination": "proof/independent/final-export.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/ios-tests.log",
+      "destination": "proof/ios/ios-tests.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/ios-test-command.json",
+      "destination": "proof/ios/ios-test-command.json"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/python-tests.log",
+      "destination": "proof/ios/python-tests.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/staging.log",
+      "destination": "proof/ios/staging.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/package-validation.log",
+      "destination": "proof/ios/package-validation.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/ios-build.log",
+      "destination": "proof/ios/ios-build.log"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/devices-after-cleanup.json",
+      "destination": "proof/ios/devices-after-cleanup.json"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/delivery-validation.json",
+      "destination": "proof/delivery-validation.json"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/pre-integration-package-hashes.json",
+      "destination": "proof/pre-integration-package-hashes.json"
+    },
+    {
+      "source": "Tools/HangboardCAD/compile_board.py",
+      "destination": "proof/compiler/compile_board.py",
+      "sha256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d"
+    },
+    {
+      "source": "Tools/HangboardCAD/README.md",
+      "destination": "proof/compiler/README.md",
+      "sha256": "7f8532019f23e2aceee349f5ef798ad007a6bfc19782c11fc5ec6385a80d85d7"
+    },
+    {
+      "source": "Tools/HangboardCAD/tests/test_uv_node_normals.py",
+      "destination": "proof/compiler/tests/test_uv_node_normals.py",
+      "sha256": "829e79fc508ac55c28ab17c859ffaca4fa92c29438533f699f96cc308fd05f2f"
+    },
+    {
+      "source": "Tools/HangboardCAD/tests/uv_node_normal_checks.py",
+      "destination": "proof/compiler/tests/uv_node_normal_checks.py",
+      "sha256": "f43f4019875fc92af8782f4b05bbfd16e65f81aa51a79bf9ae47591989d31756"
+    },
+    {
+      "source": "Tools/HangboardCAD/run_freecad.py",
+      "destination": "proof/compiler/run_freecad.py",
+      "sha256": "b5c030eec4b3f22e1e2ecc93c21e18880b1bdcdb66e1eaaa24cdb1f167816350"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/review-preparation/compiler-review.json",
+      "destination": "proof/compiler-review.json",
+      "sha256": "038070a8f843df92c902904eddfd4bccfc642679f5c626919caf4dd964bdb4b0"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/review-preparation/compiler-review.md",
+      "destination": "proof/compiler-review.md",
+      "sha256": "c0dbdce295cb8b196a5d8c1dbf83fb56bcf8298d2a545fd5b09f0cebf66b326b"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/review-preparation/compiler-review-disposition.json",
+      "destination": "proof/compiler-review-disposition.json"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/after-visual-review.json",
+      "destination": "proof/ios/after-visual-review.json"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/verified-cleanup.json",
+      "destination": "proof/ios/verified-cleanup.json"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/devices-fresh-deletion-verification.json",
+      "destination": "proof/ios/devices-fresh-deletion-verification.json"
+    },
+    {
+      "source": "docs/source-audits/2026-09-29-remaining-cad/installed-delivery-validation.json",
+      "destination": "proof/installed-delivery-validation.json"
+    }
+  ],
+  "cadPairs": {
+    "front": {
+      "before": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/review/before-front.png",
+      "after": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/review/candidate-front.png"
+    },
+    "side": {
+      "before": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/review/before-side.png",
+      "after": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/review/candidate-side.png"
+    },
+    "top": {
+      "before": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/review/before-top.png",
+      "after": ".context/placid-badger/metolius-simulator-3d-jagged/native-author/review/candidate-top.png"
+    }
+  },
+  "appPairs": [
+    "jug-left-orbit"
+  ],
+  "cleanupLogProvenance": "cleanup-command-output.log contains the exact fresh read-only cleanup-verification stdout after the registered EXIT trap completed teardown. It is not the original trap stdout; verified-cleanup.json and the fresh device-list bytes prove the exact reviewed UUID is absent and DerivedData/test bundle were deleted."
+}

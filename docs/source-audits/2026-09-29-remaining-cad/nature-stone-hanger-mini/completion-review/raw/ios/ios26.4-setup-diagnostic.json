@@ -1,0 +1,9 @@
+{
+  "status": "setup-failed-before-boot",
+  "resourcePathCollision": "Retiring wrapper and replacement wrapper reused prebuilt-DerivedData path",
+  "nativePackageBytesUnchanged": true,
+  "deviceNeverBooted": true,
+  "exactDeviceDeletedAndVerified": true,
+  "derivedDataDiscardedByExactOwnedCleanup": true,
+  "correction": "Use a fresh simple session with no DerivedData transfer"
+}

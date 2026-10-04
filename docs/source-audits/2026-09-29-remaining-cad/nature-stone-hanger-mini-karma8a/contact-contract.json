@@ -1,0 +1,35 @@
+{
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "retainedContactFieldsUnchanged": true,
+  "contactFieldCorrections": [],
+  "retainedContactIDs": [
+    "wood-edge-15",
+    "granite-edge-15",
+    "pinch-60"
+  ],
+  "removedContactIDs": [],
+  "positions": [
+    {
+      "id": "granite-front",
+      "presentationID": "primary",
+      "contactIDs": [
+        "granite-edge-15"
+      ]
+    },
+    {
+      "id": "wood-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "wood-edge-15"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-60"
+      ]
+    }
+  ],
+  "metadataDecision": "All three contact records preserved. Native wood SubShapeBinder opts into HangTenUseBodyTriangles: independent face tessellation area4168.0554mm\u00b2 differed from classified body4169.3806mm\u00b2;0.03mm deflection did not resolve it. Exact assigned native body triangles now form that contact mesh, preserving native surface classification and depth checks. Default0.15mm tessellation restored."
+}

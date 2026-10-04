@@ -1,0 +1,424 @@
+{
+  "owner": "placid-badger",
+  "checkedUTC": "2026-10-02T19:10:50.593489+00:00",
+  "canonicalWrites": false,
+  "processAbsenceCheck": {
+    "command": [
+      "ps",
+      "-axo",
+      "pid=,pgid=,comm=,args="
+    ],
+    "matchingOwnedNativeSolverRenderProcesses": [],
+    "matchingMethod": "Exact owned script paths, restricted to Python/FreeCAD executable names; shared/unknown resources untouched"
+  },
+  "transientDirectories": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/tmp",
+      "previousEntries": [],
+      "deleted": true,
+      "absenceVerified": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/cache",
+      "previousEntries": [],
+      "deleted": true,
+      "absenceVerified": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/config",
+      "previousEntries": [],
+      "deleted": true,
+      "absenceVerified": true
+    }
+  ],
+  "persistentExternalResourcesRemaining": [],
+  "retainedArtifactsRoot": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02",
+  "scripts": {
+    "inspect_native.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/inspect_native.py",
+      "sha256": "244caf53b0a488026b63cca494fd52c5d7b0a103fae9aa8f4352b9ce622ff9c5"
+    },
+    "export_probe_native.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/export_probe_native.py",
+      "sha256": "738e591ea557107413e9e920a1a35de656d8859b9bba3d78761c248f81ae9629"
+    },
+    "inspect_seating.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/inspect_seating.py",
+      "sha256": "f500aaeade41eab80d64d2462b854b293175c8022d440d555b3fc809c8c8afb6"
+    },
+    "export_final_native.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/export_final_native.py",
+      "sha256": "70f772c81153c4bdc74953039b072c3fde5da64a0bad783053e3e093b3916afb"
+    },
+    "check_native_liveness.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/check_native_liveness.py",
+      "sha256": "c32ac14c3380245b5d4c9ad1864974dad3f3cfd834d5c0ab17cec35a313d89af"
+    },
+    "inspect_final_seating.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/inspect_final_seating.py",
+      "sha256": "55de9b7e87bae7da8fd27fa4edd51f2732e6bc93f5078d0bb4806246feb48adb"
+    },
+    "solve_probe.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/solve_probe.py",
+      "sha256": "156eba503f7efc1e2651031cc3cf6b12c98caed9371eb5f96f6ba29ef8367cc4"
+    },
+    "solve_final.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/solve_final.py",
+      "sha256": "48968adb85bee4ba3989d49d079fb22bcc31235064d50ae79395a685c385c972"
+    },
+    "render_current_usdz.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/render_current_usdz.py",
+      "sha256": "88f09375a178a25ebfab13851d14973c7f235850c99324b004d38672a5acf29e"
+    },
+    "render_cord_comparisons.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/render_cord_comparisons.py",
+      "sha256": "0f7d4aea7a3b2cc3d1c586e1ff1c1229b2ba11eaa53389c19be569bc34181785"
+    },
+    "render_final_usdz.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/render_final_usdz.py",
+      "sha256": "85353f933b5b76424fad1c2e5f0c91e7694851654b444a9f568cb560f44cdaed"
+    },
+    "render_final_cord_comparisons.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/render_final_cord_comparisons.py",
+      "sha256": "1bc97e13a4417396cde10df6338a66a6ed1c5df50f7453bb4c3746f497fbed35"
+    },
+    "plot_native_sections.py": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/plot_native_sections.py",
+      "sha256": "f7717d0b3fa7146a1cf3b5b1045910dc4cbf1ebba3f7364646b992beb99e9f12"
+    }
+  },
+  "jobs": [
+    {
+      "kind": "native",
+      "command": [
+        "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/inspect_native.py"
+      ],
+      "environment": {
+        "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/tmp",
+        "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/cache",
+        "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/config"
+      },
+      "trap": true,
+      "completion": "Tool returned exit0; exact child absence checked before PID file deletion",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "native",
+      "command": [
+        "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/export_probe_native.py"
+      ],
+      "environment": {
+        "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/tmp",
+        "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/cache",
+        "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/config"
+      },
+      "trap": true,
+      "completion": "Tool returned exit0; exact child absence checked before PID file deletion",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "native",
+      "command": [
+        "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/inspect_seating.py"
+      ],
+      "environment": {
+        "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/tmp",
+        "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/cache",
+        "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/config"
+      },
+      "trap": true,
+      "completion": "Tool returned exit0; exact child absence checked before PID file deletion",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "native",
+      "command": [
+        "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/export_final_native.py"
+      ],
+      "environment": {
+        "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/tmp",
+        "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/cache",
+        "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/config"
+      },
+      "trap": true,
+      "completion": "Tool returned exit0; exact child absence checked before PID file deletion",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "native",
+      "command": [
+        "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/check_native_liveness.py"
+      ],
+      "environment": {
+        "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/tmp",
+        "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/cache",
+        "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/config"
+      },
+      "trap": true,
+      "completion": "Tool returned exit0; exact child absence checked before PID file deletion",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "native",
+      "command": [
+        "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/inspect_final_seating.py"
+      ],
+      "environment": {
+        "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/tmp",
+        "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/cache",
+        "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/config"
+      },
+      "trap": true,
+      "completion": "Tool returned exit0; exact child absence checked before PID file deletion",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "solver",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/solve_probe.py",
+        "--package",
+        "plateau-lifting-edge",
+        "--solid",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/probe-collider-18.json",
+        "--presentation",
+        "depth-18mm",
+        "--apply",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/probe-18-report.json"
+      ],
+      "trap": "Successful bounded loop runs used trap; initial probe18 failure was direct",
+      "completion": "All final runs exit0; initial exact-boundary failure retained in probe-first-failure.json",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "solver",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/solve_probe.py",
+        "--package",
+        "plateau-lifting-edge",
+        "--solid",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/probe-collider-15.json",
+        "--presentation",
+        "depth-15mm",
+        "--apply",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/probe-15-report.json"
+      ],
+      "trap": "Successful bounded loop runs used trap; initial probe18 failure was direct",
+      "completion": "All final runs exit0; initial exact-boundary failure retained in probe-first-failure.json",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "solver",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/solve_probe.py",
+        "--package",
+        "plateau-lifting-edge",
+        "--solid",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/probe-collider-10.json",
+        "--presentation",
+        "depth-10mm",
+        "--apply",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/probe-10-report.json"
+      ],
+      "trap": "Successful bounded loop runs used trap; initial probe18 failure was direct",
+      "completion": "All final runs exit0; initial exact-boundary failure retained in probe-first-failure.json",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "solver",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/solve_final.py",
+        "--package",
+        "plateau-lifting-edge",
+        "--solid",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-collider-18.json",
+        "--presentation",
+        "depth-18mm",
+        "--apply",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-18-apply-report.json"
+      ],
+      "trap": "Successful bounded loop runs used trap; initial probe18 failure was direct",
+      "completion": "All final runs exit0; initial exact-boundary failure retained in probe-first-failure.json",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "solver",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/solve_final.py",
+        "--package",
+        "plateau-lifting-edge",
+        "--solid",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-collider-15.json",
+        "--presentation",
+        "depth-15mm",
+        "--apply",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-15-apply-report.json"
+      ],
+      "trap": "Successful bounded loop runs used trap; initial probe18 failure was direct",
+      "completion": "All final runs exit0; initial exact-boundary failure retained in probe-first-failure.json",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "solver",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/solve_final.py",
+        "--package",
+        "plateau-lifting-edge",
+        "--solid",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-collider-10.json",
+        "--presentation",
+        "depth-10mm",
+        "--apply",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-10-apply-report.json"
+      ],
+      "trap": "Successful bounded loop runs used trap; initial probe18 failure was direct",
+      "completion": "All final runs exit0; initial exact-boundary failure retained in probe-first-failure.json",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "solver",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/solve_final.py",
+        "--package",
+        "plateau-lifting-edge",
+        "--solid",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-collider-18.json",
+        "--presentation",
+        "depth-18mm",
+        "--check",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-18-check-report.json"
+      ],
+      "trap": "Successful bounded loop runs used trap; initial probe18 failure was direct",
+      "completion": "All final runs exit0; initial exact-boundary failure retained in probe-first-failure.json",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "solver",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/solve_final.py",
+        "--package",
+        "plateau-lifting-edge",
+        "--solid",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-collider-15.json",
+        "--presentation",
+        "depth-15mm",
+        "--check",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-15-check-report.json"
+      ],
+      "trap": "Successful bounded loop runs used trap; initial probe18 failure was direct",
+      "completion": "All final runs exit0; initial exact-boundary failure retained in probe-first-failure.json",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "solver",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/solve_final.py",
+        "--package",
+        "plateau-lifting-edge",
+        "--solid",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-collider-10.json",
+        "--presentation",
+        "depth-10mm",
+        "--check",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final-10-check-report.json"
+      ],
+      "trap": "Successful bounded loop runs used trap; initial probe18 failure was direct",
+      "completion": "All final runs exit0; initial exact-boundary failure retained in probe-first-failure.json",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "renderer",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/render_current_usdz.py"
+      ],
+      "trap": false,
+      "completion": "exec/write_stdin returned exit0",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "renderer",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/render_cord_comparisons.py"
+      ],
+      "trap": false,
+      "completion": "exec/write_stdin returned exit0",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "renderer",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/render_final_usdz.py"
+      ],
+      "trap": true,
+      "completion": "exec/write_stdin returned exit0",
+      "pid": null,
+      "pgid": null
+    },
+    {
+      "kind": "renderer",
+      "command": [
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/render_final_cord_comparisons.py"
+      ],
+      "trap": true,
+      "completion": "exec/write_stdin returned exit0",
+      "pid": null,
+      "pgid": null
+    }
+  ],
+  "lifecycleLimitations": [
+    "Numeric child PID and process-group history were not retained. Do not interpret tool session IDs as OS PIDs.",
+    "Initial direct Python render/solve jobs completed through exec/write_stdin without a shell cleanup trap; final native/solver/render jobs used the described traps.",
+    "No blanket claim is made about unknown global host files; only exact workspace-owned paths/processes were inspected or deleted."
+  ],
+  "shellTrapPolicy": {
+    "usedFor": "All FreeCAD jobs, trapped loop solver jobs, final render jobs",
+    "text": "child_pid=; cleanup() { if [ -n \"$child_pid\" ] && kill -0 \"$child_pid\" 2>/dev/null; then kill \"$child_pid\"; wait \"$child_pid\" || true; fi; }; trap cleanup EXIT INT TERM",
+    "registration": "printf child_pid immediately to placid-badger-freecad.pid, placid-badger-solver.pid, or placid-badger-render.pid under owned scratch",
+    "successfulExitVerification": "wait child_pid; require kill -0 child_pid fails; remove the exact PID manifest",
+    "currentPidManifests": []
+  }
+}

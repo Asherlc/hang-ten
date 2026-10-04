@@ -1,0 +1,36 @@
+{
+  "runtimeAuthorized": false,
+  "rootSourceRuntimeRelease": false,
+  "owner": "placid-badger-cad-second-half",
+  "role": "live",
+  "arm": "hand-image-muted-workout-live-b",
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "controllerPID": 96137,
+  "helperSHA256": "08b484651e6b9bbbacf570ffffdf6127a2fa80156fdce7d19947dfc65fd5f20d",
+  "schemaSHA256": "74c46aba9d095dbf2bdf65b5d5393cb81e245956c68386924973130a1c7646f3",
+  "eventSchemaSHA256": "67f947eeed4bb423d6d6d10a08eb31dce2c8811dac67e50b557a27f83cf47e88",
+  "binarySHA256": "ROOT_MUST_BIND_FINAL_INSTALLED_BINARY",
+  "codePackageParityPath": "ROOT_MUST_BIND_CURRENT_27_CHECKS",
+  "codePackageParitySHA256": "REQUIRED",
+  "priorFrozenManifestPath": "ROOT_MUST_BIND_IMMUTABLE_PRIOR_PROOFS",
+  "priorFrozenManifestSHA256": "REQUIRED",
+  "sourceAndPackageFiles": [],
+  "retainedDetachIntervention": false,
+  "fixedCueReviewRequired": true,
+  "staticFeasibilityApproved": false,
+  "staticDarkBackingApproved": false,
+  "expectedFixedCue": "halfCrimp/index,middle,ring,pinky/pair",
+  "commonValidatorsRequired": true,
+  "visualReviewRequired": true,
+  "routineSource": {
+    "path": "HangTen/Resources/PlanLibrary.json",
+    "sha256": "b203917f19e792e2d39abf15bbac96a6119ca0a7aa5384618fd1bb3978de2c6b"
+  },
+  "audioMuted": true,
+  "appArguments": [
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "audioSchemaSHA256": "538b6041f788d6903f680c2797f4be59c12278114deaf9cc9166f4a76be02948",
+  "markerSchemaSHA256": "a4a9065f46d9a8f018dfd47ccf5a13c9d9c8eb4b6b22554e701e3fa678d23707"
+}

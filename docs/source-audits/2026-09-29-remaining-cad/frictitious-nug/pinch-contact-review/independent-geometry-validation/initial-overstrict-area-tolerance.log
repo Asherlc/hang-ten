@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-pinch-review/independent-geometry-validation/verify-final-coverage.py", line 60, in <module>
+    assert abs(union.area-.000846)<=areaTolerance,(key,union.area)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('front-upper', 0.000846000109702344)

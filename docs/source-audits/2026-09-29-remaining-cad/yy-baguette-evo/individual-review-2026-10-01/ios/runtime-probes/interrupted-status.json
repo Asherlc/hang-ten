@@ -1,0 +1,5 @@
+{
+  "status": "interrupted-at-start",
+  "reason": "Probe accidentally started before continuation capture process exited; stopped immediately to restore sequential ownership. Raw bytes retained. Final tray capture repeated independently.",
+  "authoritativeEvidence": false
+}

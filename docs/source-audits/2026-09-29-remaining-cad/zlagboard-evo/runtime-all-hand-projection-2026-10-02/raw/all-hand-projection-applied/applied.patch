@@ -1,0 +1,276 @@
+--- a/HangTen/Views/GripHandModelView.swift
++++ b/HangTen/Views/GripHandModelView.swift
+@@ -395,6 +395,32 @@
+     }
+ }
+ 
++#if DEBUG
++/// Diagnostic framing adaptation from the unchanged authored 3D vertices.
++/// The result is fixed until the existing pose/viewport/reset path runs again.
++@MainActor
++private func gripHandDiagnosticFieldOfView(points: [SIMD4<Float>],
++                                           cameraTransform: simd_float4x4,
++                                           aspect: Float) -> Float? {
++    guard !points.isEmpty, aspect.isFinite, aspect > 0 else { return nil }
++    let inverse = simd_inverse(cameraTransform)
++    var tangent: Float = 0
++    for point in points {
++        let projected = inverse * point
++        let depth = -projected.z
++        guard projected.x.isFinite, projected.y.isFinite, depth.isFinite,
++              depth > 0.1, depth < 100 else { return nil }
++        tangent = max(tangent, abs(projected.y) / depth,
++                      abs(projected.x) / (aspect * depth))
++    }
++    tangent *= 1.08
++    let degrees = 2 * atan(tangent) * 180 / Float.pi
++    guard tangent.isFinite, tangent > 0, degrees.isFinite,
++          degrees > 0, degrees < 180 else { return nil }
++    return degrees
++}
++#endif
++
+ @MainActor
+ final class GripHandRealityScene {
+     let root = Entity()
+@@ -423,12 +449,33 @@
+         }
+         #endif
+         root.addChild(hand)
++        #if DEBUG
++        if BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            // Explicit diagnostic placeholder; the first valid reset fits the vertices.
++            camera.components.set(PerspectiveCameraComponent(near: 0.1, far: 100,
++                fieldOfViewInDegrees: 60, fieldOfViewOrientation: .vertical))
++        } else {
++            var orthographicCamera = OrthographicCameraComponent()
++            orthographicCamera.near = 0.1
++            orthographicCamera.far = 100
++            orthographicCamera.scale = 3.2
++            orthographicCamera.scaleDirection = .vertical
++            camera.components.set(orthographicCamera)
++        }
++        #else
+         var orthographicCamera = OrthographicCameraComponent()
+         orthographicCamera.near = 0.1
+         orthographicCamera.far = 100
+         orthographicCamera.scale = 3.2
+         orthographicCamera.scaleDirection = .vertical
+         camera.components.set(orthographicCamera)
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handCamera(kind: "single",
++                event: "configured", camera: camera)
++        }
++        #endif
+         root.addChild(camera)
+ 
+         root.addChild(keyLight)
+@@ -500,10 +547,36 @@
+         guard aspect.isFinite, aspect > 0 else { return }
+         let orthographicScale = max(halfHeight, halfWidth / aspect) * 1.08
+         guard orthographicScale.isFinite, orthographicScale > 0 else { return }
++        #if DEBUG
++        if BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            guard let degrees = gripHandDiagnosticFieldOfView(points: points,
++                    cameraTransform: transform, aspect: aspect),
++                  var component = camera.components[PerspectiveCameraComponent.self] else {
++                BoardHighlightDiagnostic.shared.handCamera(kind: "single",
++                    event: "fit-rejected", camera: camera, points: points)
++                return
++            }
++            camera.transform = Transform(matrix: transform)
++            component.fieldOfViewInDegrees = degrees
++            camera.components.set(component)
++        } else {
++            camera.transform = Transform(matrix: transform)
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = orthographicScale
++            camera.components.set(component)
++        }
++        #else
+         camera.transform = Transform(matrix: transform)
+         var component = camera.components[OrthographicCameraComponent.self]!
+         component.scale = orthographicScale
+         camera.components.set(component)
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handCamera(kind: "single",
++                event: "reset-fitted", camera: camera, points: points)
++        }
++        #endif
+ 
+         canonicalCenter = center
+         canonicalOffset = offset
+@@ -537,9 +610,17 @@
+               let transform = Self.cameraTransform(position: canonicalCenter + rotatedOffset,
+                                                    target: canonicalCenter) else { return }
+         camera.transform = Transform(matrix: transform)
++        #if DEBUG
++        if !BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = canonicalOrthographicScale / nextZoom
++            camera.components.set(component)
++        }
++        #else
+         var component = camera.components[OrthographicCameraComponent.self]!
+         component.scale = canonicalOrthographicScale / nextZoom
+         camera.components.set(component)
++        #endif
+         orbitAzimuth = nextAzimuth
+         orbitElevation = nextElevation
+         orbitZoom = nextZoom
+@@ -617,12 +698,33 @@
+         leftHand.position.x = -slotOffset
+         rightHand.position.x = slotOffset
+         leftHand.scale.x = -1
++        #if DEBUG
++        if BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            // Explicit diagnostic placeholder; the first valid reset fits the vertices.
++            camera.components.set(PerspectiveCameraComponent(near: 0.1, far: 100,
++                fieldOfViewInDegrees: 60, fieldOfViewOrientation: .vertical))
++        } else {
++            var orthographicCamera = OrthographicCameraComponent()
++            orthographicCamera.near = 0.1
++            orthographicCamera.far = 100
++            orthographicCamera.scale = 3.2
++            orthographicCamera.scaleDirection = .vertical
++            camera.components.set(orthographicCamera)
++        }
++        #else
+         var orthographicCamera = OrthographicCameraComponent()
+         orthographicCamera.near = 0.1
+         orthographicCamera.far = 100
+         orthographicCamera.scale = 3.2
+         orthographicCamera.scaleDirection = .vertical
+         camera.components.set(orthographicCamera)
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handCamera(kind: "pair",
++                event: "configured", camera: camera)
++        }
++        #endif
+         root.addChild(camera)
+         root.addChild(keyLight)
+         root.addChild(fillLight)
+@@ -698,10 +800,36 @@
+         guard aspect.isFinite, aspect > 0 else { return }
+         let scale = max(halfHeight, halfWidth / aspect) * 1.08
+         guard scale.isFinite, scale > 0 else { return }
++        #if DEBUG
++        if BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            guard let degrees = gripHandDiagnosticFieldOfView(points: points,
++                    cameraTransform: transform, aspect: aspect),
++                  var component = camera.components[PerspectiveCameraComponent.self] else {
++                BoardHighlightDiagnostic.shared.handCamera(kind: "pair",
++                    event: "fit-rejected", camera: camera, points: points)
++                return
++            }
++            camera.transform = Transform(matrix: transform)
++            component.fieldOfViewInDegrees = degrees
++            camera.components.set(component)
++        } else {
++            camera.transform = Transform(matrix: transform)
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = scale
++            camera.components.set(component)
++        }
++        #else
+         camera.transform = Transform(matrix: transform)
+         var component = camera.components[OrthographicCameraComponent.self]!
+         component.scale = scale
+         camera.components.set(component)
++        #endif
++        #if DEBUG
++        if BoardHighlightDiagnostic.isEnabled {
++            BoardHighlightDiagnostic.shared.handCamera(kind: "pair",
++                event: "reset-fitted", camera: camera, points: points)
++        }
++        #endif
+         canonicalCenter = center
+         canonicalOffset = offset
+         canonicalOrthographicScale = scale
+@@ -728,9 +856,17 @@
+         guard let transform = Self.cameraTransform(position: canonicalCenter + rotatedOffset,
+                                                    target: canonicalCenter) else { return }
+         camera.transform = Transform(matrix: transform)
++        #if DEBUG
++        if !BoardHighlightDiagnostic.usesPerspectiveHandCameras {
++            var component = camera.components[OrthographicCameraComponent.self]!
++            component.scale = canonicalOrthographicScale / nextZoom
++            camera.components.set(component)
++        }
++        #else
+         var component = camera.components[OrthographicCameraComponent.self]!
+         component.scale = canonicalOrthographicScale / nextZoom
+         camera.components.set(component)
++        #endif
+         orbitAzimuth = nextAzimuth
+         orbitElevation = nextElevation
+         orbitZoom = nextZoom
+--- a/HangTen/Models/BoardModelRealityTypes.swift
++++ b/HangTen/Models/BoardModelRealityTypes.swift
+@@ -1411,6 +1411,8 @@
+     // Diagnostic launch constant: never toggled within an app process.
+     static let suppressesAllHandHosts = isEnabled
+         && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_ALL_HAND_HOSTS"] == "1"
++    static let usesPerspectiveHandCameras = isEnabled
++        && ProcessInfo.processInfo.environment["HANGTEN_REVIEW_ALL_HAND_PERSPECTIVE"] == "1"
+     static let shared = BoardHighlightDiagnostic()
+     private var handLifecycleCounts: [String: Int] = [
+         "single.constructor-entry": 0, "single.make-entry": 0,
+@@ -1464,7 +1466,8 @@
+             emit(["event": "recorder-open", "path": url.path,
+                   "processID": ProcessInfo.processInfo.processIdentifier,
+                   "handLifecycleInstrumentationVersion": 1,
+-                  "suppressesAllHandHosts": Self.suppressesAllHandHosts])
++                  "suppressesAllHandHosts": Self.suppressesAllHandHosts,
++                  "usesPerspectiveHandCameras": Self.usesPerspectiveHandCameras])
+         } catch { fail(error) }
+     }
+ 
+@@ -1476,6 +1479,41 @@
+         handLifecycleCounts[key] = previous + 1
+         emit(["event": "hand-lifecycle", "handKind": kind, "lifecycleEvent": event,
+               "handRootID": String(describing: ObjectIdentifier(root))])
++    }
++
++    /// Sparse configuration/reset evidence; never called from body or per frame.
++    func handCamera(kind: String, event: String, camera: Entity,
++                    points: [SIMD4<Float>]? = nil) {
++        guard enabled else { return }
++        let perspective = camera.components[PerspectiveCameraComponent.self]
++        let orthographic = camera.components[OrthographicCameraComponent.self]
++        var value: [String: Any] = ["event": "hand-camera", "handKind": kind,
++            "cameraEvent": event, "handCameraID": String(describing: ObjectIdentifier(camera)),
++            "cameraTransform": matrix(camera),
++            "perspectivePresent": perspective != nil, "orthographicPresent": orthographic != nil]
++        if let perspective {
++            value["near"] = perspective.near
++            value["far"] = perspective.far
++            value["fieldOfViewInDegrees"] = perspective.fieldOfViewInDegrees
++            value["fieldOfViewOrientation"] = String(describing: perspective.fieldOfViewOrientation)
++        }
++        if let orthographic {
++            value["near"] = orthographic.near
++            value["far"] = orthographic.far
++            value["orthographicScale"] = orthographic.scale
++        }
++        if let points {
++            let inverse = simd_inverse(camera.transform.matrix)
++            let depths = points.map { -(inverse * $0).z }
++            value["framingVertexCount"] = points.count
++            value["allDepthsFinite"] = depths.allSatisfy(\.isFinite)
++            if !depths.isEmpty, depths.allSatisfy(\.isFinite) {
++                value["minimumDepth"] = depths.min()!
++                value["maximumDepth"] = depths.max()!
++                value["allDepthsInsideUnchangedClips"] = depths.allSatisfy { $0 > 0.1 && $0 < 100 }
++            }
++        }
++        emit(value)
+     }
+ 
+     private func fail(_ error: Error) {

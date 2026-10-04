@@ -1,0 +1,115 @@
+{
+  "owner": "placid-badger",
+  "mode": "read-only; no source or scratch geometry changed",
+  "toolchain": {
+    "FreeCAD": [
+      "1",
+      "1",
+      "3"
+    ],
+    "OCCT": "7.8.1",
+    "OpenUSD": [
+      0,
+      26,
+      8
+    ]
+  },
+  "coordinates": "millimeters; x width; y negative front and positive back; z positive up",
+  "currentJug": [
+    43,
+    69
+  ],
+  "currentJugAreaMm2": 2009.8672286269282,
+  "minimalCentralWrap": {
+    "faces": [
+      30,
+      43,
+      69
+    ],
+    "areaMm2": 2339.7344572538564,
+    "extent": "central x=-42..42; full thickness y=-12.5..12.5; crown z=27.5..30",
+    "implementation": "Move Face30 from nature_pinch to nature_jug with the existing pinch-60 additional contact membership. Face44 is bottom-back and must stay pinch-only.",
+    "sufficiency": "Completes central front/top/back round. Does not wrap the two upper end shoulders."
+  },
+  "recommendedRoundedCrown": {
+    "faces": [
+      28,
+      29,
+      30,
+      41,
+      42,
+      43,
+      59,
+      65,
+      69
+    ],
+    "areaMm2": 2954.4300695553466,
+    "sharedWithPinch": [
+      30,
+      43,
+      69
+    ],
+    "jugOnlyEndShoulders": [
+      28,
+      29,
+      41,
+      42,
+      59,
+      65
+    ],
+    "extent": "Existing upper outer rounds through their natural native tangent boundaries at z=22; cord-groove cutouts remain cutouts, their recessed walls remain body.",
+    "implementation": "Keep shared crown faces30/43/69 in nature_jug. Use a separate native jug-only binder/node for upper end rounds28/29/41/42/59/65, so these new jug-only surfaces do not expand the logical pinch union.",
+    "reason": "Covers the complete continuous pre-existing rounded crown with no guessed grip-height boundary or native split. Manufacturer whole front/reverse views show these rounded upper shoulders; contact assignment is a display interpretation of the user-identified upper rail."
+  },
+  "uprightBands": {
+    "frontFace": 18,
+    "backFace": 70,
+    "warning": "Neither entire face is an upper rail: front18 includes side/lower frame and back70 is the entire rear panel. Never select either whole face.",
+    "needPartition": true,
+    "possibleNativeBoundary": "If a deeper front/back upright wrap is explicitly requested, split these surfaces at z=22 (the existing upper shoulder tangent elevation). Their upper bands then meet the whole upper crown, leaving the lower frame/rear body unselected. This 8mm top-band depth would be an operator-selected display estimate, not a manufacturer grip depth.",
+    "recommendation": "Do not add upright bands in the minimal correction unless clarified scope requires deeper wrap. Existing actual central front rail extends to the recessed-mouth lip at z19.824; selecting the whole rail would also require deliberate treatment of curved end joins and shared wood lip surfaces."
+  },
+  "preservation": {
+    "body": "unchanged",
+    "sourceSHA256": "c0fbe85264ba8183fa356f7c1309daf71d76898df51c12b80a1b40a0961737c5",
+    "logicalPinchOriginalFaceUnion": [
+      23,
+      30,
+      31,
+      43,
+      44,
+      69
+    ],
+    "logicalPinchAreaMm2": 4679.468914507713,
+    "cords": "out of scope; untouched",
+    "factualDepthsMm": [
+      15,
+      15,
+      60
+    ]
+  },
+  "cleanup": {
+    "owner": "placid-badger",
+    "processGroups": [
+      {
+        "pgid": 67377,
+        "absent": true
+      }
+    ],
+    "resources": [
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-jug-wrap-2026-10-02/native-author/placid-badger-inspect-config",
+        "absent": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-jug-wrap-2026-10-02/native-author/placid-badger-inspect-cache",
+        "absent": true
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-jug-wrap-2026-10-02/native-author/placid-badger-inspect-tmp",
+        "absent": true
+      }
+    ],
+    "exitCode": 0
+  }
+}

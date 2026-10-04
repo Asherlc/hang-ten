@@ -1,0 +1,128 @@
+{
+  "compositionMethod": "Complete retained images uniformly fitted into labeled overview cells without cropping, registration, tracing, contour extraction or geometry inference. Original bytes remain unchanged. Cord comparison pairs uniformly half-scaled.",
+  "rendererSourceSHA256": "ca8a28c2316e6d12409bfc1d979ff7d98d4eb85d60bc7f6a0e7b251c94e0b45c",
+  "outputs": [
+    {
+      "image": "six-pose-overview.png",
+      "sha256": "5f3cae930c25f1b3315ba858887b740a9a8c47ef9dc83b80429c1ef5609db2c5",
+      "inputs": [
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/front-25-canonical-camera-detail.png",
+          "sha256": "0bc27dad2102c6b1a048d514370e3bbf83704b8b8b08e780e24b27901b53bcdb"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/front-inverted-20-canonical-camera-detail.png",
+          "sha256": "011a51621fd4ea37cbb7468fb1d2bb1549c5c012d60e867d26ebe0d99bc5710b"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/reverse-13-canonical-camera-detail.png",
+          "sha256": "b04f715089989ed2c19ee39a858aeeaff8715d8fb3d1fee61e347d1d28bc97e8"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/reverse-inverted-8-canonical-camera-detail.png",
+          "sha256": "a1578e774dabc6aa1d92e35ef31f8a7fc2a49775c25293622db4f39103b046e4"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/outer-upper-canonical-camera-detail.png",
+          "sha256": "569baf7f7ac6d7f658f8c1feab934b64c3d38c58bb580a01f1a5b2a2a0c88661"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/outer-lower-canonical-camera-detail.png",
+          "sha256": "86f232bed35f57713c43e8741c76c74922bf401a56af554ff5f7f9a09829cf87"
+        }
+      ]
+    },
+    {
+      "image": "default-inverted-three-view-overview.png",
+      "sha256": "1bbdc438840eaeae8153e253361cbc8eadd9171a32e1e0e06e06ea3bfe752d9e",
+      "inputs": [
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/front-25-front-detail.png",
+          "sha256": "908b47dc9e1ffa7fe29cb44ad74be67873ac51aaea2fb28f1f21f0188d5d4e6d"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/front-inverted-20-front-detail.png",
+          "sha256": "29f57ec4703d7fab4e1d0ba20c63120c7821ef5ed917ef37b9a6bce609098ca1"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/front-25-side-detail.png",
+          "sha256": "4399f2d029649992dc84facce76de06342dbe1971cb33e16ec4a421c60babb92"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/front-inverted-20-side-detail.png",
+          "sha256": "5f3d168c029fb76112b112ca61fde29f7e4ad9514ba64ea4eb38c68caa134c97"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/front-25-top-detail.png",
+          "sha256": "9bb368de6c475a6e7db5222d0b4452426d8a16e3ce68aa286cf327515905118e"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-diameter-review/front-inverted-20-top-detail.png",
+          "sha256": "a0bfbfeeeacb4b8bae14cf1385bdef8ac345f5f0851e0f469eb8588390724561"
+        }
+      ]
+    },
+    {
+      "image": "body-prior-raster-overview.png",
+      "sha256": "a2acffc9e3790dda8b50ab46fa64e087fd2853bad9f2a3190f397a5bba23a353",
+      "inputs": [
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/prior-primary.png",
+          "sha256": "77cd06f2a369249020bcf5a6f1ce5917b5d3d6827f191d348e16391cd6382683"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-front.png",
+          "sha256": "7e908f28a80c04600b761d73eab69ca55ed71e18f762a2a57ba220588f13bd38"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-side.png",
+          "sha256": "04f36f22bb3f09cc0c79f7bbfadff0ef873afe603aed0d8305978175a5508780"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/prior-reverse.png",
+          "sha256": "06cd84b284e68b3bbe4ba2af7bec8d0315f84cb11e770ab2f81082fcf16edea3"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-top.png",
+          "sha256": "c0add84559c5a97ade306ff52953969dc05d5cd891d801e0a09875ae8790dd70"
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-oblique.png",
+          "sha256": "bcc9e601a70b5a69cccc8381634f8cf77fe8ca998761843bba3a91e58e2fc63e"
+        }
+      ]
+    }
+  ],
+  "exactSavedCameraAfterViews": [
+    {
+      "poseID": "front-25",
+      "image": "front-25-saved-camera-after.png",
+      "sha256": "9acd676437c60bd975c519b9ac26c7e1b271b07a8c5d35f1575e20a01f0271a4"
+    },
+    {
+      "poseID": "front-inverted-20",
+      "image": "front-inverted-20-saved-camera-after.png",
+      "sha256": "941edeb16a8f8c6dfb27b950c8bdc922a448501d4dd9ab8aec40a4ea4e48ad68"
+    },
+    {
+      "poseID": "reverse-13",
+      "image": "reverse-13-saved-camera-after.png",
+      "sha256": "8e7419fbb9eef803ba15d4216187a4df97f036e638f4f10b4cfd49eadf0c7936"
+    },
+    {
+      "poseID": "reverse-inverted-8",
+      "image": "reverse-inverted-8-saved-camera-after.png",
+      "sha256": "fe357b6a5ea531cb5d3ccc99eead57cc517cf7492aa9f9fb8ee2989ef4b55bb9"
+    },
+    {
+      "poseID": "outer-upper",
+      "image": "outer-upper-saved-camera-after.png",
+      "sha256": "9acd676437c60bd975c519b9ac26c7e1b271b07a8c5d35f1575e20a01f0271a4"
+    },
+    {
+      "poseID": "outer-lower",
+      "image": "outer-lower-saved-camera-after.png",
+      "sha256": "9acd676437c60bd975c519b9ac26c7e1b271b07a8c5d35f1575e20a01f0271a4"
+    }
+  ]
+}

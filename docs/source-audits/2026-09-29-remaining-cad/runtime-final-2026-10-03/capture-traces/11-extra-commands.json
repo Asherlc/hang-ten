@@ -1,0 +1,23 @@
+[
+  [
+    "launch",
+    "11",
+    "granite-edge-15",
+    "--telephoto"
+  ],
+  [
+    "mesh-tap",
+    "granite-edge-15",
+    "11-granite-physical-mesh-pick"
+  ],
+  [
+    "legend",
+    "wood-edge-15",
+    "11-granite-restored-wood-selected-same-scene"
+  ],
+  [
+    "legend",
+    "granite-edge-15",
+    "11-wood-restored-granite-selected-same-scene"
+  ]
+]

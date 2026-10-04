@@ -1,0 +1,70 @@
+{
+  "status": "Scratch-only candidate complete; not promoted, exported or accepted",
+  "candidateSHA256": "0a03a478d96ad7690cabd91c13cd3e4978434c964bc13442e4407e5a9e27994b",
+  "canonicalSHA256": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+  "estimatedRadiiMM": {
+    "trough": 2,
+    "frontLip": 1
+  },
+  "publishedFactsPreserved": "All28IDs,21pocketdepths,20/32degree topplanes and existingincutnormals retained. Unpublished radii and center/pocket slopes remain display estimates.",
+  "nativeChecks": {
+    "candidateSHA256": "0a03a478d96ad7690cabd91c13cd3e4978434c964bc13442e4407e5a9e27994b",
+    "reopenRecomputeValid": true,
+    "fullyConstrainedSketchCount": 113,
+    "all28Present": true,
+    "noSharedFaces": true,
+    "radiusEdit": {
+      "feature": "TopTroughRounds",
+      "beforeMM": 2,
+      "editedMM": 2.2,
+      "valid": true,
+      "beforeVolumeMM3": 3443455.753733399,
+      "editedVolumeMM3": 3443503.5570678916,
+      "changedContacts": [
+        "top-jug-left",
+        "top-sloper-32-left",
+        "top-sloper-20-left",
+        "top-sloper-jug-center",
+        "top-sloper-20-right",
+        "top-sloper-32-right",
+        "top-jug-right"
+      ],
+      "restoredVolumeMM3": 3443455.753733399,
+      "maximumRestoredContactAreaErrorMM2": 0.0
+    },
+    "sourceBytesUnchanged": true
+  },
+  "geometryScope": "Existing native source copied. Two native Part::Fillet features added; all28binders reference finalfaces. Missingjugcrest/corner surfaces included. All21pocketcontact signatures and areas preserved.",
+  "tessellatedBounds": {
+    "native-collider": {
+      "min": [
+        -0.3525,
+        -0.076,
+        -3.6711141882934334e-18
+      ],
+      "max": [
+        0.3525,
+        0.07600000000000001,
+        0.042
+      ]
+    },
+    "candidate-mesh": {
+      "min": [
+        -0.3525,
+        -0.076,
+        -1.4210854715202004e-17
+      ],
+      "max": [
+        0.3525,
+        0.07600000000000001,
+        0.04200000000000001
+      ]
+    }
+  },
+  "wholeViewProof": "before-after-front-side-top.png",
+  "additionalWholeViews": [
+    "native-oblique.png",
+    "rounded-oblique.png"
+  ],
+  "resourceLifecycle": "Native runner temporary wrappers created beneath this owned scratch directory and cleaned on runner completion. All native/render processes exited0. No external server, Simulator or USDZ export created."
+}

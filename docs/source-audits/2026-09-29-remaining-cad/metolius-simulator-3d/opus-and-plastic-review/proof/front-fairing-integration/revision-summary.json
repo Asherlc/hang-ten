@@ -1,0 +1,37 @@
+{
+  "revision": {
+    "package": "metolius-simulator-3d",
+    "date": "2026-10-01",
+    "revision": "forward-grasp-fair-face-and-plastic",
+    "feedback": [
+      "Jagged",
+      "Tag as plastic",
+      "Center jug rear ridge prevents grasp",
+      "Sloper should extend all the way forward",
+      "Why does it look kind of wavy?"
+    ],
+    "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+    "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+    "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+    "report": "metolius-simulator-3d/opus-and-plastic-review/runtime-validation.json",
+    "postIntegrationTests": {
+      "iOSPassed": 1278,
+      "iOSSkipped": 3,
+      "pythonPassed": 706,
+      "pythonSkipped": 11,
+      "failures": 0
+    },
+    "allOtherPackageFilesUnchanged": 203,
+    "boardFactsAndContactIDsUnchanged": true,
+    "surfaceFinish": "plastic",
+    "geometryAcceptance": "pending revised human review #8",
+    "humanReviewRecord": "metolius-simulator-3d/human-review.json",
+    "limits": "Lower face taper, rear jug return, forward anchoring, rolls, thickness and blends are display adaptations; mint is the app palette. Native/export checks and representative app views do not certify manufacturer-exact estimated geometry or a visual sweep of all 30 contacts."
+  },
+  "installedCounts": {
+    "bundledPackages": 64,
+    "modelPackages": 58,
+    "ODRModelAssets": 60
+  },
+  "deliveryDigest": "0d29c8c9c726c134081d7be24a68c8b4e5be536858c0fbed06c8fcaf94e9ad42"
+}

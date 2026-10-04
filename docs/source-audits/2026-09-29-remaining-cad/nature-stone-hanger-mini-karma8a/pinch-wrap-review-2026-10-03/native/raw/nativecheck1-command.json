@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "rtk",
+    "proxy",
+    "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+    "--user-cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-nativecheck1-config/user.cfg",
+    "--system-cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-nativecheck1-config/system.cfg",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/nativecheck1-bootstrap.py"
+  ],
+  "script": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/verify-native.py",
+  "arguments": [],
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-nativecheck1-config",
+    "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-nativecheck1-cache",
+    "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-nativecheck1-tmp",
+    "FREECAD_USER_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-wrap-correction-2026-10-03/native-author/placid-badger-nativecheck1-config",
+    "QT_QPA_PLATFORM": "offscreen",
+    "HANGTEN_CAD_PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311"
+  }
+}

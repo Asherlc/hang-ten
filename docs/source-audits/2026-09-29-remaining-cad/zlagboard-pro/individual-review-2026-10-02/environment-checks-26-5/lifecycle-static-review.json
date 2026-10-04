@@ -1,0 +1,40 @@
+{
+  "timestampUTC": "2026-10-02T14:00:57.233794+00:00",
+  "reviewMode": "Read-only script inspection; no build/Simulator operation or lifecycle edits by reviewer",
+  "files": {
+    "lifecycle-26-5.zsh": {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/prep/lifecycle-26-5.zsh",
+      "snapshot": ".context/placid-badger-cad-second-half/zlagboard-pro/environment-checks-26-5/lifecycle-26-5.zsh",
+      "sha256": "f81bf54a1f20c9f27ad44c8b0cf0b201ac199491a4f5e48e8a574fb8fdefa24e"
+    },
+    "boot-26-5.py": {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/prep/boot-26-5.py",
+      "snapshot": ".context/placid-badger-cad-second-half/zlagboard-pro/environment-checks-26-5/boot-26-5.py",
+      "sha256": "09ffa7e7a175bf8dd6718af75662c091b94702c384f95f71a81534b79e5f5667"
+    },
+    "build-26-5-parity.py": {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-pro/prep/build-26-5-parity.py",
+      "snapshot": ".context/placid-badger-cad-second-half/zlagboard-pro/environment-checks-26-5/build-26-5-parity.py",
+      "sha256": "c9fbc4ddd5820e880ca7d1fc655cf13230fbcca56a9e2bd95e53daa9d04b706a"
+    }
+  },
+  "syntaxPassed": true,
+  "productLifetime": "One lifecycle owns fresh DerivedData and built app until runtime captures finish; no separate preserved-product handoff or early DD deletion. Failure cleans resources honestly.",
+  "checked": [
+    "EXIT/INT/TERM traps installed before Simulator creation or build artifacts",
+    "Exact UUID pending registration precedes owned registration and boot",
+    "Final-ready hash gate checked before generic build",
+    "Build exit and result summary retained on failure",
+    "Actual staged package bytes and Mach-O hashes retained before waiting for boot/install",
+    "Only live owned background job signaled; awaited helper PID cleared after explicit wait",
+    "Boot helper TERM waits15seconds then own process group KILL/wait5",
+    "Trap invokes exact workspace resource archive and verifies UUID/DD/results deletion",
+    "Capture gate keeps app/DD alive until explicit cleanup-requested"
+  ],
+  "reviewFindingsResolved": [
+    "Prior helper stop handler did not await subprocess group termination; bounded wait/escalation added",
+    "Trap previously could signal an already-exited helper PID; live-job gate added"
+  ],
+  "passedStaticLifecycleReview": true,
+  "limits": "Static code review does not prove runtime boot, build, installation, rendering, or eventual cleanup. Worker retains live execution and deletion evidence. No guaranteed startup repair is claimed."
+}

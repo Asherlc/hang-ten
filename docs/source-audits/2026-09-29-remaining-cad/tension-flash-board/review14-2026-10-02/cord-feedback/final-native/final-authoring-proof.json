@@ -1,0 +1,13 @@
+{
+  "inputSidecarSHA256": "a507a805dbeb79792e31dc8408a6e69691cc270e7d73a93ee7aa1f9984724b7b",
+  "sourceModelDescriptorUnchanged": true,
+  "graphStationsPlanesRadiiClearanceAndAllPosesExactToDefaultInput": true,
+  "authorizedChangesAfterDefaultApply": [
+    "pathSearch aStar",
+    "wrap allowance .109 m",
+    "precise conditional estimate provenance",
+    "discarded old generated cache"
+  ],
+  "routesOrTranslationsAuthored": false,
+  "hiddenContinuityAndContactOrderVerified": false
+}

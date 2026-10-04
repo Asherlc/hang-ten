@@ -1,0 +1,96 @@
+{
+  "owner": "placid-badger",
+  "method": "Exact byte copies; historical pre-correction and first-launch observations are explicitly named.",
+  "files": [
+    {
+      "source": ".context/placid-badger/unlevel-review/independent/final-independent-review.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/final-independent-review.json",
+      "sha256": "dd951e246a0c27134160509f671700ef69790d91f729922ee45b7fdd9510af0d"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/independent/final-independent-review.md",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/final-independent-review.md",
+      "sha256": "abe539d23a2c2fe04eb5fe09784a57a2483148d0b864e507ffd98c30ef686ba0"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/native-cord/fresh-reproducibility-result.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/fresh-reproducibility-result.json",
+      "sha256": "c99a09a0dd9d6f9a4113f2745487215e396ae89a7905243778d7371b4d3d77a4"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/native-cord/source-and-pre-fix-entry-regression.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/source-and-pre-fix-entry-regression.json",
+      "sha256": "57e4097b3369823655c9f7bae999d893881a9844f3e93394d9d764f7acb438d4"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/native-cord/fresh-native-apply.log",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/fresh-native-apply.log",
+      "sha256": "c54bf7d79ab1df1ae7b499589b7cf9209de73673e8304c7aba4599b7fa46170f"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/native-cord/fresh-native-check.log",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/fresh-native-check.log",
+      "sha256": "5bb5ef96ad96ca2258823544f79c70813d7b6e0872766016b0b5aa0cc72406b9"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/native-cord/native-mouth-parameters.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/native-mouth-parameters.json",
+      "sha256": "6c1b189e2766d0984b22752464afc3323ad9f40bec7b5a0df57b322c2b04a03b"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/native-cord/authoring-before-generation.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/authoring-before-generation.json",
+      "sha256": "5d585e616e70bd6f0242c378061c40608c3405e5f1dbacacc5199028812f9076"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/native-cord/baseline.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/baseline.json",
+      "sha256": "6365be4f28b07ae549f2f15bcb71256dcd5acdceb229e4367eac9a0f48c08f9e"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/native-cord/all-package-baseline-hashes.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/all-package-baseline-hashes.json",
+      "sha256": "078abb0548ab5fb0d569a72ab5e5bd8071e343de6def02a662e5d701a2a58674"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/native-cord/worker-final-ownership-and-hashes.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/worker-final-ownership-and-hashes.json",
+      "sha256": "c9fa44799769f6d30ca60efc23feeb21383a17871b6b1aa36d7f951fd078577e"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/native-cord/final-route-quality.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/producer-route-quality.json",
+      "sha256": "bb0b1aea50282637ceb5ff7ad1581dad38d2d833399bc37f483ea8f5eaf345e1"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/native-cord/post-apply-native-certificates.log",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/post-apply-native-certificates.log",
+      "sha256": "e540aad4b2a10fb1e98410a847bdd16371ea0b89148f7037b0e87ddf88924936"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/packet-readiness.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/pre-correction-packet-readiness.json",
+      "sha256": "c41a174ad247cb88ed20adb085f3f3f32b6801c5ba09f1af7bdd40f45bbe0459"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/capture-retry.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/capture-retry.json",
+      "sha256": "22e20cf82e74c08d86105c910d74a95b631ac1b915df820e6ae7d0364683c604"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/capture-diagnostic-accessibility.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/capture-diagnostic-accessibility.json",
+      "sha256": "e2e85a293cd45d89fadf1455b221c0d850093d8226883a5e0f79772d09ff3374"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/ios-build.log",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/ios-build.log",
+      "sha256": "d1db8e1b1473e3dba35a556e93ed3902a64a6f292032e9990f73423f534ecc96"
+    },
+    {
+      "source": ".context/placid-badger/unlevel-review/ios-cleanup.json",
+      "durable": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/diagnostics/independent-reviewed-cleanup.json",
+      "sha256": "601f4cbb816cc007e84b77c5a03a92dde98a9f1f57571329b7f9ae9ef8273036"
+    }
+  ]
+}

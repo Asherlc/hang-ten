@@ -1,0 +1,29 @@
+{
+  "package": "yy-travelboard",
+  "beforeSidecarSHA256": "f89e3a193677fc07c092987a65618edd6b5580e352f25c4db9d31906cd1ce2ba",
+  "afterSidecarSHA256": "4dc0a687d4f7bd336cf40985bace19f09e92c80b5eb3753037125e0f0bce701b",
+  "changes": [
+    {
+      "presentationID": "primary",
+      "positionID": "reverse-10",
+      "beforeViewDirection": [
+        0,
+        -0.3,
+        -1
+      ],
+      "afterViewDirection": [
+        0,
+        -0.3,
+        1
+      ]
+    }
+  ],
+  "allNonCameraSidecarValuesIdentical": true,
+  "immutableNativeAndModelFilesSHA256": {
+    "yy-travelboard.FCStd": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+    "assets/primary.usdz": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+    "assets/primary.model.json": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69"
+  },
+  "reason": "Canonical camera directions are native-local and rotate with the board. Front/rear mouth selection and underside visibility must be expressed before the pose rotation.",
+  "unchangedNumericRoutesSHA256": "7d235f4c094e6bdd549dff6b574d6eb6f3ec847d554d1a942613c9e6f6407515"
+}

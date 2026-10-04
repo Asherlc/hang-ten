@@ -1,0 +1,53 @@
+{
+  "checks": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "git",
+        "apply",
+        "--check",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-boardmap-proposal/caption-boardmap.patch"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "swiftc",
+        "-frontend",
+        "-parse",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-boardmap-proposal/after/HangTen/Views/RootView.swift"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "swiftc",
+        "-frontend",
+        "-parse",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-boardmap-proposal/after/HangTen/Views/BoardModelView.swift"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "swiftc",
+        "-frontend",
+        "-parse",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-boardmap-proposal/after/HangTen/Models/BoardModelRealityTypes.swift"
+      ],
+      "returncode": 0
+    }
+  ],
+  "allPassed": true,
+  "scope": "patch applicability and syntax only; no typecheck/build/run"
+}

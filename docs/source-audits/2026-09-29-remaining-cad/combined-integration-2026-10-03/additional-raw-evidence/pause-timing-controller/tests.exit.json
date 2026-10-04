@@ -1,0 +1,7 @@
+{
+  "exitStatus": null,
+  "processExitStatus": -15,
+  "exception": "InterruptedError(15)",
+  "childReaped": true,
+  "elapsedSeconds": 192.33825516700745
+}
