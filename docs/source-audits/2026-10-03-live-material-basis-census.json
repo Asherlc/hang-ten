@@ -1,0 +1,49 @@
+{
+  "owner": "strong-owl-live-physics",
+  "adopted": false,
+  "reducedBackend": false,
+  "stage": "necessary-representability-and-query-work-census",
+  "necessaryRepresentabilityPass": true,
+  "maxUndampedFitMeters": 3.817957197166671e-05,
+  "baseKKTRatioRange": [
+    0.3994614003590664,
+    0.5421903052064632
+  ],
+  "steadyQueryRetentionFractions": [
+    0.9440017386418181,
+    0.9231545161600417
+  ],
+  "workSpeedProof": false,
+  "projectedMeshVerified": false,
+  "currentNativeInstrumentationIdentity": true,
+  "initialPhaseGateInvalid": "every-trial physical gate also rejects unmodified original step3 transient corrections1-7; published-step physical gate corrected before follow-up",
+  "initialWorkCompileError": "Foundation import missing; corrected before work capture",
+  "newExactPrivateGroupsVerifiedAbsent": [
+    37243,
+    37574,
+    79553,
+    81803,
+    82326
+  ],
+  "hashes": {
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-capture/native/result.json": "0b1fde554e1d97ae00a74472b24ce59971bf933099f8680b42f387fdeb9fc6ac",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-capture/native/census.json": "50c252ac9f52a23bdf0a506172affdbe41d385cc79c6e5b84e1368dcfaaf729c",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-capture/native/census-phase-corrected.json": "f65d4273f8a13ef359a3b42b79ac9fe1c9ad561023ee145d57e5348ef8712b19",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-capture/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-capture/native/provenance.json": "980fdbc5d0d0951d9ba61487ebd5c72e721b5c671606819aa3141609fb856a85",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-capture/native/resources.jsonl": "0c2ea382737a8dbd0da71c19b49672757a18527164f376c20a5112de4a8c0735",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-work-capture/native/compile.log": "a6abccf21c91c567f1cf802bdf7e683a928509f3599e984d6a3f6bfd2e44b713",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-work-capture/native/provenance.json": "f7cca2eb39710279128075b41dec70f94e80fd2e4106eef775927aba4f7dd3d5",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-work-capture/native/resources.jsonl": "b9def5b3bbf55b72a81e4134e2f8557c47d2424a080a6cbd2f045a4174f4a4dc",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-work-capture-v2/native/result.json": "006386f3ac772a3fb8c13885a4a82971644bc9032cad951b690d6f6134d21049",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-work-capture-v2/native/census.json": "ec4990e43983bb51b70b16f0aa0fc4198d79071d1842b580ebbdd7ae1bb99a9d",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-work-capture-v2/native/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-work-capture-v2/native/provenance.json": "30afe9b9d95e71be8c8746508bfde47ead6ccb2fcd6724d38429bd7686977d84",
+    ".context/strong-owl-live-physics-armijo-aadd90a47-material-basis-work-capture-v2/native/resources.jsonl": "8e234880e921c72eb0c2444c1f2e952930ff333a71546637d878c5e8c2e268c4",
+    "Tools/HangboardRopePrototype/material_basis_census/census.py": "d29b8b153db6c8c4a42571e5f26ae16be69e846b6d3574f93589bd03c10ec1a8",
+    "Tools/HangboardRopePrototype/material_basis_census/Main.swift.txt": "2da8b85f9c7c099897133402dda8c6c856ee7b61a065ded7cafb5a3bf08c0ed7",
+    "Tools/HangboardRopePrototype/material_basis_census/test_census.py": "dbae62a4c1f1323b5c78ffcd44982d5f4358a620699004ab87ae629c3a1b1f8f",
+    "Tools/HangboardRopePrototype/material_basis_census/Trace.swift": "f8d8423f57c285f2e81d2d98555d1e845ff7eb0a8a14b619ffc8106b17fae1ea",
+    "Tools/HangboardRopePrototype/material_basis_census/snapshot.py": "0e79e532890571d1b55bf7a4a5a07c428aafef77a6426942de29d9e147f3188a"
+  }
+}

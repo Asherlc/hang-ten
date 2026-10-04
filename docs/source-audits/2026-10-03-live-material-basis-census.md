@@ -1,0 +1,11 @@
+# Material-coordinate displacement basis census
+
+Native capture includes every accepted correction of majorizer steps3,109,140 after their original-solver prefixes. Enabled/disabled capture preserves complete accepted checkpoint bytes; original physical checks and zero caps/retries pass. No reduced dynamics backend or app change.
+
+The basis is selected from each correction input only: preserve all candidate contact particles, supports, attachments and both sliding portal endpoints, then split immutable material intervals until chord deviation<=5µm. Exact consistent mass projection reproduces full correction displacements within38.180µm; the retained-equality base KKT count drops to39.9–54.2%. Shared height displacement is held exactly to the measured full correction in this optimistic fit. Four fixtures independently check an unrepresentable negative control, closed-form nonuniform mass projection, fixed attachments and material rather than index interpolation.
+
+The initial every-correction physical gate failed. That gate also rejects the original unmodified transient step3 trials1–7, so it was invalid as a basis falsifier. The original failure is retained; before follow-up, the proposal corrects physical acceptance to each published final step while retaining<=50µm correction-fit checks at every trial. Final reconstructed strain/material gates pass. Projected original-mesh clearance, topology and CCD remain unverified; these are not accepted physical simulation steps.
+
+Actual joined-worker query timing at steady140 retains94.4%/92.3% of link-query work. Assuming removed/coalesced queries cost nothing gives only28/30µs per input batch of optimistic wall saving. Parity, joins, final full fine verification and coalesced-query certificates are excluded. Counts and these optimistic costs do not establish a speed pass; the solver structure/cost screen remains pending. No reduced backend before that decision.
+
+An initial work-capture build lacked Foundation import and failed; corrected before successful capture. Five exact new private groups independently checked absent. JSON pins native evidence and census sources. Product solver, CAD/materials and seated cords are unchanged. No simulator or new normal-speed video.

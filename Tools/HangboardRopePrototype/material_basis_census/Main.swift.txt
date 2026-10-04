@@ -1,0 +1,29 @@
+do {
+    var checkpoints:[[String:Any]]=[]
+    guard initial.state.ropes.count==1 else {throw RopePhysicsError.invalid("census cost binding requires one cord")}
+    for step in 1...140 {
+        if [3,109,140].contains(step) {
+            var control=initial,candidate=initial
+            control.woodMajorizerExperiment=true;candidate.woodMajorizerExperiment=true
+            MaterialBasisTrace.enabled=false
+            _ = try run(&control)
+            MaterialBasisTrace.enabled=true
+            let captured=try run(&candidate)
+            MaterialBasisTrace.enabled=false
+            guard try serialize(control.bundleCheckpoint())==serialize(candidate.bundleCheckpoint()),
+                  candidate.reviewStepCaps==0,candidate.reviewStepRetries==0 else {throw RopePhysicsError.invalid("basis instrumentation identity/cap")}
+            checkpoints.append(["step":step,"corrections":captured.1,"metrics":try check(candidate),"completeInstrumentationIdentity":true])
+        }
+        if step<140 {
+            let record=try run(&initial).1
+            let old=(priorSteps[step-1]["trace"] as! [String:Any])["corrections"] as! [[String:Double]]
+            guard record.count==old.count else {throw RopePhysicsError.invalid("basis prefix count")}
+            for (a,b) in zip(record,old) {for key in ["movement","alpha","strain"] {
+                guard (a[key] as! Double)==b[key] else {throw RopePhysicsError.invalid("basis prefix numerical identity")}
+            }}
+        }
+    }
+    result["checkpoints"]=checkpoints;result["runtimeAlgorithm"]=false;result["reducedBackend"]=false
+    result["capturePass"]=true;try persist(nil)
+    print("PASS material-basis capture3/109/140, complete checkpoint identity")
+} catch {try persist(String(describing:error));print("FAIL material-basis capture",error);exit(2)}

@@ -32,6 +32,7 @@ parser.add_argument('--fresh-active-stop',action='store_true')
 parser.add_argument('--fresh-active-stop-red',action='store_true')
 parser.add_argument('--foreground-qos',action='store_true')
 parser.add_argument('--foreground-qos-red',action='store_true')
+parser.add_argument('--material-basis-census',action='store_true')
 parser.add_argument('--wood-assembly-red',action='store_true')
 parser.add_argument('--wood-checkpoint',type=int,choices=[3,109,140],default=109)
 parser.add_argument('--arrival-checkpoint',type=int,choices=[109,140],default=109)
@@ -64,6 +65,7 @@ if args.fresh_active_stop and (not args.wood_feature_ids or args.wood_feature_id
 if args.fresh_active_stop_red and not args.fresh_active_stop:parser.error('--fresh-active-stop-red requires --fresh-active-stop')
 if args.foreground_qos and (not args.wood_majorizer or args.wood_checkpoint!=140 or args.wood_residual or args.step_rate or args.fixtures_only or args.empty_face_floor):parser.error('--foreground-qos requires isolated majorizer140')
 if args.foreground_qos_red and not args.foreground_qos:parser.error('--foreground-qos-red requires --foreground-qos')
+if args.material_basis_census and (not args.wood_majorizer or args.wood_residual or args.step_rate or args.fixtures_only or args.empty_face_floor or args.foreground_qos):parser.error('--material-basis-census requires isolated majorizer capture')
 if args.wood_residual_diagnostic and (not args.wood_residual or args.wood_residual_red or args.wood_checkpoint!=140):parser.error('--wood-residual-diagnostic requires enabled fixed140')
 if args.wood_residual and (not args.wood_majorizer or args.step_rate or args.fixtures_only):parser.error('--wood-residual requires isolated majorizer checkpoint')
 if args.wood_residual_red and not args.wood_residual:parser.error('--wood-residual-red requires --wood-residual')
@@ -141,6 +143,9 @@ for name in NAMES:
         if args.foreground_qos:
             from foreground_qos.snapshot import collider_source as qos_collider
             text=qos_collider(text)
+        if args.material_basis_census:
+            from material_basis_census.snapshot import collider_source as basis_collider
+            text=basis_collider(text)
     if args.empty_face_floor and name=='RopeTriangleCollider.swift':
         from empty_face_floor.snapshot import collider_source as floor_collider
         text=floor_collider(text)
@@ -164,6 +169,9 @@ for name in NAMES:
             else:
                 from wood_majorizer.snapshot import solver_source as wood_solver
             text=wood_solver(text)
+            if args.material_basis_census:
+                from material_basis_census.snapshot import solver_source as basis_solver
+                text=basis_solver(text)
             if args.fresh_active_stop:
                 from fresh_active_stop.snapshot import solver_source as fresh_solver
                 text=fresh_solver(text)
@@ -256,6 +264,9 @@ for name in ['Math.swift','Trace.swift','main.swift']:
         if args.foreground_qos:
             from foreground_qos.snapshot import driver_source as qos_driver
             text=qos_driver(text,not args.foreground_qos_red)
+        if args.material_basis_census:
+            from material_basis_census.snapshot import driver_source as basis_driver
+            text=basis_driver(text)
         if args.empty_face_floor:
             from empty_face_floor.snapshot import driver_source as floor_driver
             text=floor_driver(text)
@@ -376,6 +387,7 @@ if args.wood_majorizer:
         p.write_text(once(text,'columns[0][indices[a]] += scale*values[a]*height','columns[0][indices[a]] -= scale*values[a]*height'))
 if args.empty_face_floor:(sources/'EmptyFaceFloor.swift').write_bytes((tool/'empty_face_floor/Trace.swift').read_bytes())
 if args.foreground_qos:(sources/'ForegroundQoSTrace.swift').write_bytes((tool/'foreground_qos/Trace.swift').read_bytes())
+if args.material_basis_census:(sources/'MaterialBasisTrace.swift').write_bytes((tool/'material_basis_census/Trace.swift').read_bytes())
 if args.float_face_reject:
     from float_face_reject.snapshot import math_source as float_math,trace_source as float_trace
     (sources/'FloatFaceReject.swift').write_text(float_math((REPO/'HangTen/Models/RopeTriangleCollider.swift').read_text()))
@@ -410,6 +422,7 @@ if args.planar_regions:inputs += [*list((tool/'planar_regions').glob('*.*')),too
 if args.wood_feature_ids:inputs += list((tool/'wood_feature_ids').glob('*.*'))
 if args.fresh_active_stop:inputs += list((tool/'fresh_active_stop').glob('*.*'))
 if args.foreground_qos:inputs += list((tool/'foreground_qos').glob('*.*'))
+if args.material_basis_census:inputs += list((tool/'material_basis_census').glob('*.*'))
 if args.wood_residual:inputs += list((tool/'wood_residual').glob('*.*'))+list((tool/'residual_stop').glob('*.*'))
 if args.wood_majorizer:inputs += list((tool/'wood_majorizer').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
 if args.empty_face_floor:inputs += list((tool/'empty_face_floor').glob('*.*'))
