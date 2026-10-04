@@ -1,0 +1,39 @@
+import Foundation
+import simd
+import Darwin
+let root=URL(fileURLWithPath:CommandLine.arguments[1]),checkpoint=try Data(contentsOf:URL(fileURLWithPath:CommandLine.arguments[2]))
+let data=try Data(contentsOf:URL(fileURLWithPath:"Hangboards/clavellium-training-block/assets/primary.physics.json"))
+let raw=try JSONSerialization.jsonObject(with:data) as! [String:Any]
+let input=try RopePhysicsDescriptor.decode(data).validated(modelSHA256:raw["modelSHA256"] as! String),collider=try RopeTriangleCollider(input:input)
+let target=simd_quatd(angle:Double.pi/6,axis:SIMD3<Double>(0,0,1))
+var reference=try RopeDynamicsSolver.restoreBundle(input:input,collider:collider,data:checkpoint,strict:true)
+var candidate=try RopeDynamicsSolver.restoreBundle(input:input,collider:collider,data:checkpoint,strict:false)
+candidate.composedExperiment=true
+let immutable=candidate.state
+func bytes(_ x:RopeDynamicsSolver)throws->Data {try JSONSerialization.data(withJSONObject:x.composedCheckpoint(),options:.sortedKeys)}
+func difference(_ a:RopeDynamicsSolver,_ b:RopeDynamicsSolver)->Double {max(abs(a.state.boardHeight-b.state.boardHeight),zip(a.state.ropes,b.state.ropes).flatMap{zip($0.positions,$1.positions).map{simd_distance($0,$1)}}.max() ?? 0)}
+func velocities(_ a:RopeDynamicsSolver,_ b:RopeDynamicsSolver)->Double {max(abs(a.state.boardVerticalVelocity-b.state.boardVerticalVelocity),zip(a.state.ropes,b.state.ropes).flatMap{zip($0.velocities,$1.velocities).map{simd_distance($0,$1)}}.max() ?? 0)}
+func tensions(_ x:RopeDynamicsSolver)->[[Double]] {x.foundationCheckpoint()["distanceTension"] as! [[Double]]}
+func reactionVariation(_ a:[[Double]],_ b:[[Double]])->Double {zip(a,b).flatMap{zip($0,$1).map{abs($0-$1)/(RopeComposedStep.h*RopeComposedStep.h)}}.max() ?? 0}
+var result:[String:Any]=["owner":"strong-owl-live-physics","adopted":false,"differentLoadedInitialCondition":true,"unchangedColdFormula":true,"steps":[[String:Any]]()]
+var records:[[String:Any]]=[]
+func save()throws {result["steps"]=records;try JSONSerialization.data(withJSONObject:result,options:[.sortedKeys,.prettyPrinted]).write(to:root.appendingPathComponent("result.json"))}
+func step(_ x:inout RopeDynamicsSolver,_ dt:Double)throws->RopeFrameSnapshot {alarm(10);defer{alarm(0)};let f=try x.step(dt:dt,targetOrientation:target);guard x.reviewStepCaps==0,x.reviewStepRetries==0,f.metrics.geometryAccepted else{throw RopePhysicsError.invalid("loaded composed individual substep physical/cap/retry")};return f}
+do {
+ try composedFixtures(initial:candidate,input:input,collider:collider)
+ for i in 1...3 {
+  result["attemptedStep"]=i;try save()
+  var strict=try RopeDynamicsSolver.restoreComposedReference(input:input,collider:collider,data:bytes(candidate),strict:true)
+  let before=tensions(reference)
+  let r1=try step(&reference,1.0/240),half=tensions(reference),r2=try step(&reference,1.0/240),after=tensions(reference)
+  let referenceCaps=reference.reviewStepCaps,referenceRetries=reference.reviewStepRetries
+  let s1=try step(&strict,1.0/240),s2=try step(&strict,1.0/240)
+  let start=DispatchTime.now().uptimeNanoseconds,f=try step(&candidate,1.0/120),seconds=Double(DispatchTime.now().uptimeNanoseconds-start)/1e9
+  let metrics=try RopeSimulationMetrics.measure(state:candidate.state,input:input,collider:collider,boardHistory:(candidate.foundationCheckpoint()["history"] as! [[Double]]).map{$0[1]})
+  let row:[String:Any]=["step":i,"propagatedDifference":difference(candidate,reference),"strictDifference":difference(candidate,strict),"maximumVelocityDifference":velocities(candidate,reference),"strictVelocityDifference":velocities(candidate,strict),"firstFineReactionChange":reactionVariation(before,half),"secondFineReactionChange":reactionVariation(half,after),"candidateSeconds":seconds,"candidateQPs":candidate.reviewStepCorrections,"candidateCaps":candidate.reviewStepCaps,"candidateRetries":candidate.reviewStepRetries,"uncachedGeometryAccepted":metrics.geometryAccepted,"strain":metrics.maximumLocalStrain,"materialError":metrics.totalLengthError,"clearanceMargin":metrics.minimumClearanceMargin]
+  records.append(row);try save();print(row);fflush(stdout)
+  guard r1.metrics.geometryAccepted,r2.metrics.geometryAccepted,s1.metrics.geometryAccepted,s2.metrics.geometryAccepted,f.metrics.geometryAccepted,metrics.geometryAccepted,referenceCaps==0,referenceRetries==0,[candidate,strict].allSatisfy{$0.reviewStepCaps==0 && $0.reviewStepRetries==0},difference(candidate,reference)<=0.00005,difference(candidate,strict)<=0.00005 else {throw RopePhysicsError.invalid("loaded composed first failure")}
+  for r in candidate.state.ropes.indices {let a=immutable.ropes[r],b=candidate.state.ropes[r];guard a.radius==b.radius,a.restLengths==b.restLengths,a.linearMass==b.linearMass,a.supports==b.supports,a.attachments==b.attachments,a.portals==b.portals else{throw RopePhysicsError.invalid("loaded composed immutable model")}}
+ }
+ result["accuracyPass"]=true;try save();print("PASS loaded composed fixed three")
+} catch {result["accuracyPass"]=false;result["failure"]=String(describing:error);try save();print("FAIL",error);exit(3)}

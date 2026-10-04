@@ -1,0 +1,9 @@
+# Loaded startup: normal-speed live simulator motion
+
+Private optimized WMO DEBUG app, newly created iPhone16Pro/iOS26.3 simulator D6F39BDB-0E85-43CB-AC3E-28E89B852BAE. Original strict upright preparation123steps/608QPs with strict readiness continuation, then restore complete loaded physical state and enable the validated foundation. Post-geometric ready latency1.6551655s includes checkpoint serialization and readiness continuation; seed/geometric preparation precedes it. No history, velocity or tension fabrication. Both outward and return motions are physically simulated240Hz; no trajectory replay/interpolation.
+
+350 acceptedsteps/1.458333simseconds, engine.947441s, first-to-last engine span1.554015s, stepp50.925083ms/p956.676250ms/max16.130875ms, batchp9537.543125ms. Both destinations settled with caps/retries0. Aggregate engine gain is real;4msstep/60fps/device gates remain failed/unmeasured. Native540loaded test passes propagated and every-step strict50um, all192false-settle checks. No product or catalog adoption.
+
+Exact decoded frames confirm upright10.0s, tilted11.0s, returning11.5s,upright11.75s. Four-second passthrough excerpt requested source10s; actual encoded offset9.7966666667s. All256 compressed data buffers match source with one constant timestamp offset; maximumrelativeerror1.78e-15s. Playback not retimed. Built/installed executable digest match; public clip digest equals local. Exact fresh simulator and allnewgroups independentlyabsent;privateDerivedData deleted. Existing release was immutable, so failed upload created no asset; a new separately named owned demonstration release succeeded. JSON binds evidence.
+
+[Normal-speed loaded-start recording](https://github.com/Asherlc/hang-ten/releases/download/strong-owl-live-physics-loaded-20261003/strong-owl-live-physics-loaded-motion.mp4)

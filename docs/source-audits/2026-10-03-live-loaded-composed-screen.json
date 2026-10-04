@@ -1,0 +1,58 @@
+{
+  "owner": "strong-owl-live-physics",
+  "status": "CLOSED: loaded initial condition also fails unchanged composed120 accuracy",
+  "adopted": false,
+  "result": {
+    "accuracyPass": false,
+    "adopted": false,
+    "attemptedStep": 1,
+    "differentLoadedInitialCondition": true,
+    "failure": "invalid(\"loaded composed first failure\")",
+    "owner": "strong-owl-live-physics",
+    "steps": [
+      {
+        "candidateCaps": 0,
+        "candidateQPs": 4,
+        "candidateRetries": 0,
+        "candidateSeconds": 0.014105125,
+        "clearanceMargin": 9.999999778183754e-05,
+        "firstFineReactionChange": 0.12408823756172027,
+        "materialError": 7.027828319294827e-10,
+        "maximumVelocityDifference": 0.02975594610979141,
+        "propagatedDifference": 0.00024581790898640243,
+        "secondFineReactionChange": 0.3402268420418945,
+        "step": 1,
+        "strain": 1.6495997012810903e-08,
+        "strictDifference": 0.00024581790898640243,
+        "strictVelocityDifference": 0.02975594610979141,
+        "uncachedGeometryAccepted": true
+      }
+    ],
+    "unchangedColdFormula": true
+  },
+  "groupsIndependentlyAbsent": [
+    1321,
+    1506
+  ],
+  "evidenceSHA256": {
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/result.json": "777ade4ad51b4e4908ac5fb9cdfae5bfdb135efcc48fcf7c2b8a59e90f9228fb",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/provenance.json": "95f87c1eb7c36e668ea1fc6006ee9fe77e481d3735a7800ade6344ead54c9b2e",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/resources.jsonl": "3f68cd089d6df975e78731888562a37da60ee873729218656fab180570f3ced9",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/run.log": "577bd616b07428410ac4f45a02a829f5b0cd29390da983cd1af2d306233217fc",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/Math.swift": "3e6e3273539c9387f2f2d7308112da3236bf883472be9300e3739160e4adb105",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/ExactCheckpointJSON.swift": "fec607f09b6b06235f80359f91b40704fe08d9aa43a8deb90b50432a3eb4dd02",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/RopePhysicsDescriptor.swift": "4242f86594236d092862dd98dbef9c4cc7e29fb8c20943db862123da9dcb6a08",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/RopeDynamicsSolver.swift": "a372800c56820b54a5aa651dac6183bb92e603f1ad4fc13b9f2b3d486bfbfec6",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/RopeThreadedSeed.swift": "0b63844045915408a1907d94db2dd700b7d3bf411d8fb4825b28baebd088af7a",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/RopeTriangleCollider.swift": "dec7444811a4ee0886a72d0559e341da72a20c3fdf9dd5d0e091d38f5486c5e8",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/ComposedFixtures.swift": "bb71457a4c8568edd0a14d136e8dc391511b8a5fddc87650b3cca76089550f6f",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/ComposedMath.swift": "1ef668e875465d4ae170b6766f1cd8038fdf847a1fee190359e1a8401a588c31",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/RopeSimulationMetrics.swift": "3035185aa2c832169a75c97a7776e9958d9f1a09e43034f4e883792933bcddca",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/RopeContactSystem.swift": "1fb496a391e3e4f890a8fb80c3e5fb577a217f6d213bc39d2884f026a81fc46c",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/RopeBandedSystem.swift": "e2ef0ea920c826d25eac90f2799923b0bae3bba22a168fba798e8332b54077f1",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/Trace.swift": "723d067654e8c662b698f7037846470db0e38fb2c14748d19b400d379711bb6f",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/RopeCordContacts.swift": "6c05954e1f2d953f0feeeaf05b4a0176aae8fa14ddfb21e67a4686c01bb601bd",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/main.swift": "914b13ada588a824e75bca5ea2a6753b50f438ae9153c8b797253cef0220245b",
+    ".context/strong-owl-live-physics-loaded-composed-95de519-first-three-v2/sources/RopeSimulationState.swift": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8"
+  }
+}

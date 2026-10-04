@@ -1,0 +1,25 @@
+import pathlib,sys,argparse,json,hashlib,os,signal
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1]))
+from run_native_contact_screen import REPO,OwnedCommands
+ap=argparse.ArgumentParser();ap.add_argument('--label',required=True);a=ap.parse_args()
+assert REPO.name=='strong-owl-live-physics' and all(c in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in a.label)
+root=REPO/'.context'/f'{REPO.name}-loaded-composed-{a.label}';root.mkdir();sources=root/'sources';sources.mkdir()
+old=REPO/'.context/strong-owl-live-physics-armijo-b56ab390d-composed-authorized/native';loaded=REPO/'.context/strong-owl-live-physics-stationary-residual-e09fc8a-loaded-full-540/loaded-input.json'
+def h(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+oldAudit=json.loads((REPO/'docs/source-audits/2026-10-03-live-composed-predictor-screen.json').read_text());assert oldAudit['evidence'][str((old/'provenance.json').relative_to(REPO))]==h(old/'provenance.json')
+loadedAudit=json.loads((REPO/'docs/source-audits/2026-10-03-live-loaded-start-screen.json').read_text());assert loadedAudit['evidenceSHA256'][str(loaded.relative_to(REPO))]==h(loaded)
+hashes=json.loads((old/'provenance.json').read_text())['hashes']
+for p in (old/'sources').glob('*.swift'):
+ assert hashes[str(p.relative_to(REPO))]==h(p)
+ if p.name!='main.swift':(sources/p.name).write_bytes(p.read_bytes())
+(sources/'main.swift').write_text(pathlib.Path(__file__).with_name('LoadedMain.swift.txt').read_text())
+command=['xcrun','swiftc','-O','-D','DEBUG','-whole-module-optimization','-Xcc','-DACCELERATE_NEW_LAPACK','-module-cache-path',str(root/'module-cache'),*[str(p) for p in sorted(sources.glob('*.swift'))],'-o',str(root/(REPO.name+'-loaded-composed'))]
+(root/'provenance.json').write_text(json.dumps({'owner':REPO.name,'loadedInputSHA256':h(loaded),'command':command,'hashes':{str(p.relative_to(REPO)):h(p) for p in sources.glob('*.swift')}},indent=2))
+c=OwnedCommands(REPO.name,root)
+for sig in [signal.SIGINT,signal.SIGTERM]:signal.signal(sig,c.interrupted)
+try:
+ status=c.run('compile',['perl','-e','alarm 180;exec @ARGV',*command],root/'compile.log',dict(os.environ))
+ if not status:status=c.run('run',['perl','-e','alarm 90;exec @ARGV',str(root/(REPO.name+'-loaded-composed')),str(root),str(loaded)],root/'run.log',dict(os.environ,HANGTEN_REVIEW_PHYSICAL_CONVERGENCE='1'))
+finally:c.cleanup()
+print((root/('run.log' if (root/'run.log').exists() else 'compile.log')).read_text()[-7000:]);raise SystemExit(status)
