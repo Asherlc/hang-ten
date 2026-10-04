@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture-passive-route.py", line 163, in <module>
+    reviewed_tap('mini-hand-selector',out/'mini-before-hand-setup.png','idle workout hand selector')
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture-passive-route.py", line 122, in reviewed_tap
+    r=review_stage(stage,image,control)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture-passive-route.py", line 111, in review_stage
+    assert time.monotonic()<until and time.monotonic()<deadline and awake.poll() is None,'Bounded whole-image setup review missing'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Bounded whole-image setup review missing

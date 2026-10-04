@@ -1,0 +1,9 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "resourceName": "placid-badger-cad-second-half-combined-mini-passive-route-capture",
+  "pid": 48986,
+  "parentPID": 48985,
+  "helper": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture-passive-route.py",
+  "simulatorUUID": "055BDCE2-3263-470D-89DF-04B967EF7790",
+  "registeredBeforeActions": true
+}

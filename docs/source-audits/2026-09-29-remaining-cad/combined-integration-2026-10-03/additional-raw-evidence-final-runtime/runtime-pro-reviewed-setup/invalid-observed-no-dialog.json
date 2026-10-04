@@ -1,0 +1,9 @@
+{
+  "classification": "INVALID_SETUP_PROTOCOL_NO_MEASUREMENT",
+  "wholeImageReviewed": "url-confirmation-setup.png",
+  "observed": "Train showing Pro; no Open or Cancel dialog in this actual setup frame",
+  "physicalOpenCount": 0,
+  "captureCount": 0,
+  "originalTimedOutGateRetained": true,
+  "explanation": "The mandatory-dialog protocol could not safely proceed. A distinct prospective passive normal-route arm captures immediate URL delivery without any guessed consent tap."
+}

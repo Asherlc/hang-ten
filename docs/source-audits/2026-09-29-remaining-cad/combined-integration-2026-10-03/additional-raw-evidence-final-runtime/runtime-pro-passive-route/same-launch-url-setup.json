@@ -1,0 +1,9 @@
+{
+  "physicalOpenCount": 0,
+  "noRetries": true,
+  "AXQueriesUsed": false,
+  "consentHandled": false,
+  "setupProtocol": "passive production route",
+  "requiresWholeImageRouteClassification": true,
+  "allSetupBeforeMeasurement": true
+}

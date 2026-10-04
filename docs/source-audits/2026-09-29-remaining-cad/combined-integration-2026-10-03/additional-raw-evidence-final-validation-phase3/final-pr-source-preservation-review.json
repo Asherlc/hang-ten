@@ -1,0 +1,126 @@
+{
+  "reviewedAtUTC": "2026-10-04T01:17:04.759459+00:00",
+  "scope": "Independent final read-only preservation/readiness audit of immutable published refs and completed workspace-owned proofs only. No staging/source edit, app/test/build/export/device/process/resource action; no peer workspace inspection; active Mini arm and pending tests not queried.",
+  "publishedRefs": {
+    "own": "fa46c015bba7456f887ba46fc4049bdfcf697c24",
+    "parent": "bad7500123243937db712f5b0139ab273e373836"
+  },
+  "productionFindings": [],
+  "conclusion": "No new production or source-preservation blocker found in the reviewed published scope. This is not a completion/PR-readiness claim: active Mini14 capture review, final full unit tests and6 UI tests, final evidence delivery and exact root resource cleanup remain pending parent gates.",
+  "publishedSubtreeIdentity": {
+    "HangTen": true,
+    "HangTenTests": true,
+    "HangTenUITests": true,
+    "Hangboards": true,
+    "Tools": true,
+    "scripts": true,
+    "HangTen.xcodeproj": true,
+    ".github": true
+  },
+  "relativeParentDiff": {
+    "paths": [
+      "docs/source-audits/2026-10-03-placid-badger-integration/published-candidate/diff-check.json",
+      "docs/source-audits/2026-10-03-placid-badger-integration/published-candidate/integration-audit.json",
+      "docs/source-audits/2026-10-03-placid-badger-integration/published-candidate/review.md"
+    ],
+    "scope": "Only three published-candidate documentation/evidence records differ. No independent app/test/asset/tool/CI/project change remains relative to published parentbad750."
+  },
+  "selectedCanonicalPreservation": {
+    "canonicalFileCount": 81,
+    "selectedFCStdCount": 21,
+    "allPreserved": true,
+    "facts": "81 canonical files across21 selected migration packages; not81 CAD packages. Published blobs/content equal authoritative preservation-guidance owner selections."
+  },
+  "globalNativeLFSPreservation": {
+    "count": 66,
+    "allPreserved": true,
+    "validation": "All66 published native FCStd pointers equal parent, retained Git LFS object content SHA equals OID, sizes match and native ZIP contains Document.xml. No export or package build performed."
+  },
+  "computedEvidence": {
+    "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/final-pr-source-preservation-review-computed.json",
+    "sha256": "081b53378d9bf2940bf7b36ad0b0f23adfb79cfc130fef0d167487acdce54092"
+  },
+  "temporaryDiagnosticCheck": {
+    "HANGTEN_PAUSE_DIAGNOSTIC": {
+      "exitStatus": 1,
+      "matches": []
+    },
+    "diagnosticStart": {
+      "exitStatus": 1,
+      "matches": []
+    },
+    "HANGTEN_REVIEW_ROPE_DIAGNOSTIC": {
+      "exitStatus": 1,
+      "matches": []
+    },
+    "BoardFrame": {
+      "exitStatus": 1,
+      "matches": []
+    }
+  },
+  "sourceBinding": {
+    "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/posttests-runtime-install/published-source-binding.json",
+    "sha256": "5585ed98716c5976908459e6184698e8a6d790047876fe4e5678bf1f239a3977",
+    "publishedCommit": "fa46c015bba7456f887ba46fc4049bdfcf697c24",
+    "rawFrozenHEAD": "3497b01405386ce388cb478d60c8e915cafc5dc6",
+    "rawFrozenRecordSHA256Match": true,
+    "frozenPublishedFilesChecked": 577,
+    "allFrozenFilesMatchPublishedRef": false,
+    "qualification": "Raw3497 build reference remains unchanged; independent content hashes verify577 frozen source files in exact fa46 published tree, which is production-byte-identical to parentbad750."
+  },
+  "completedRuntimeProofChecks": [
+    {
+      "directory": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-reviewed-setup",
+      "count": 58,
+      "allCaptureSHA256Match": true,
+      "captureCompleted": true,
+      "rawVisualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+      "cleanupPassed": true,
+      "publishedSourceCommit": "fa46c015bba7456f887ba46fc4049bdfcf697c24",
+      "copiedBindingSHA256MatchesRelease": true
+    },
+    {
+      "directory": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-pro-passive-route",
+      "count": 58,
+      "allCaptureSHA256Match": true,
+      "captureCompleted": true,
+      "rawVisualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+      "cleanupPassed": true,
+      "publishedSourceCommit": "fa46c015bba7456f887ba46fc4049bdfcf697c24",
+      "copiedBindingSHA256MatchesRelease": true
+    }
+  ],
+  "runtimeVisualAssessment": {
+    "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-pro-final-assessment.json",
+    "sha256": "3f47498510ae19fb23be552516e527100e9711288ac1e55c1beeb065712498db",
+    "classification": "PASS_FOR_CAPTURED_SIMULATOR_FRAMES",
+    "reviewedFrames": 116,
+    "basis": "Retained full whole-image reviewer assessment and root spotchecks; this source-preservation audit rechecks artifact hashes, not a new116-image visual review."
+  },
+  "additiveEvoCorrection": {
+    "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-evo-whole-image-review-hand-visibility-correction.json",
+    "sha256": "aa4676bd506097cd9f3d873d3fc6f90e09ec5ce3cb07701883e0e7b7e8fd4158",
+    "originalReportsRetainedSHA256Match": true,
+    "fourOriginalImagesRetainedSHA256Match": true,
+    "offsets": [
+      14,
+      15,
+      204,
+      205
+    ],
+    "meaning": "Incorrect hand-absence reviewer classifications superseded additively. No runtime defect or production hand-gap fix supported by those withdrawn findings; original images/reports/raw completion retained."
+  },
+  "prScopeAndEvidenceNotes": [
+    "User authorized PR; parent owns PR542 to Main. Child branch base is migrate-remaining-hangboards-to-cad. This review does not create/merge/edit PR or refs.",
+    "The three parent-only published-candidate documents record an earlier integration snapshot/compatibility362+1skip and explicitly pending runtime readiness. Preserve them as historical evidence; final PR description should cite final publishedbad750/fa46 and final results rather than treating those older records as current completion.",
+    "Terminal unavailable fallback and strict native task-pair corrections were already independently reviewed and root accepted; published equality preserves them. No new broad matrix requested or invented.",
+    "Current captures certify observed Simulator samples, not continuous visibility, CPU/GPU timing, precise application phase anchors, physical-device behavior or new human geometry acceptance."
+  ],
+  "pendingReadinessGates": [
+    "Finish active Mini14 passive arm and whole-image review, including expected source-task ordering/one-hand behavior and exact helper cleanup.",
+    "Final full integrated unit results and6 affected UI tests under recorded CI recipe.",
+    "Append final source/test/runtime evidence without rewriting historical failures/corrections, publish required handback/PR evidence.",
+    "Root verifies exact owned Simulator/DD/testbundle cleanup before claiming overall completion."
+  ],
+  "appendOnlyRecord": "New review artifact created exclusively. Existing evidence and previous reviews are unmodified."
+}
