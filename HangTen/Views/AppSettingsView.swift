@@ -12,7 +12,6 @@ struct AppSettingsView: View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 21) {
                 VStack(alignment: .leading, spacing: 12) {
-                    SectionLabel(title: "Training sensor")
                     MotherboardCard(
                         service: motherboardBluetoothService,
                         settings: motherboardSettingsStore
@@ -25,10 +24,7 @@ struct AppSettingsView: View {
                     unitsCard
                 }
 
-                VStack(alignment: .leading, spacing: 12) {
-                    SectionLabel(title: "Apple Health")
-                    healthCard
-                }
+                healthCard
             }
             .padding(.horizontal, 20)
             .padding(.top, 18)

@@ -622,6 +622,7 @@ jobs:
           # complete: test_ci_xctest_contract.py audits every method exactly once.
           - shard: purchase-settings-workouts
             only_testing: >-
+              HangTenUITests/CustomRoutineEditorUITests
               HangTenUITests/WorkoutPaywallUITests/testThirdWorkoutLaunchShowsPaywallInsteadOfSession
               HangTenUITests/WorkoutPaywallUITests/testDismissingPaywallDoesNotStartWorkout
               HangTenUITests/WorkoutPaywallUITests/testVerifiedFakePurchaseContinuesIntoSession
@@ -639,12 +640,14 @@ jobs:
               HangTenUITests/WorkoutPaywallUITests/testRestoreFailureUsesRestoreSpecificFeedback
               HangTenUITests/SettingsUITests
               HangTenUITests/PlanFlowUITests
+              HangTenUITests/PendingWorkoutSummaryUITests
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptySessionShowsLogControls
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptyStartsMinimalLogSession
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutResumeAfterCloseAndLastAfterFinish
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutGuidedHangCancelLeavesSetUnchecked
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutStartSheetOpensFromTrain
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout
+              HangTenUITests/FreeWorkoutUITests/testPullUpCompletionCanBeUndoneAfterSkippingRest
     timeout-minutes: 70
 
     steps:
@@ -763,6 +766,7 @@ jobs:
               HangTenUITests/InitialWeightSetupUITests
               HangTenUITests/OneHandedHandChoiceUITests
               HangTenUITests/BeastmakerBoardPickerInteractionUITests
+              HangTenUITests/BoardPickerUITests
     timeout-minutes: 70
 
     steps:
