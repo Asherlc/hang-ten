@@ -10,12 +10,14 @@
   "medianRatio": 0.7850960481773518,
   "medianCandidateSeconds": 0.004483875003643334,
   "host4msPass": false,
-  "fullTrajectoryPass": false,
+  "fullTrajectoryPass": true,
   "groupsIndependentlyAbsent": [
     34622,
     35048,
     36082,
-    36369
+    36369,
+    45695,
+    46154
   ],
   "evidenceSHA256": {
     ".context/strong-owl-live-physics-armijo-8b9521422-preconditioned-stop-red/native/result.json": "40ac03efc8853c57e7677d948b65b7c83763b19ba2f2cc7241277828d9df9e0e",
@@ -60,6 +62,44 @@
     ".context/strong-owl-live-physics-armijo-8b9521422-preconditioned-stop-140/native/sources/RopeCordContacts.swift": "6c05954e1f2d953f0feeeaf05b4a0176aae8fa14ddfb21e67a4686c01bb601bd",
     ".context/strong-owl-live-physics-armijo-8b9521422-preconditioned-stop-140/native/sources/main.swift": "62d61a7d102827128fa315a8360b38bd771e205c45f5f0d4f62d42533114cd16",
     ".context/strong-owl-live-physics-armijo-8b9521422-preconditioned-stop-140/native/sources/RopeSimulationState.swift": "915a55c8422030a3efeb5c449fc9b085b3a24b612d7766a3ba8745e0670514c8",
-    "Tools/HangboardRopePrototype/preconditioned_stop/snapshot.py": "dcb7c8355351f3a039577424f19bce61b27060d22eb158ff48ca44e30fc2f951"
-  }
+    "Tools/HangboardRopePrototype/preconditioned_stop/snapshot.py": "dcb7c8355351f3a039577424f19bce61b27060d22eb158ff48ca44e30fc2f951",
+    ".context/strong-owl-live-physics-armijo-8b9521422-preconditioned-stop-3/native/result.json": "78c2a37cc514b8803204d3bcefebddaec50d12d8927821d4eaf43af75f0e47bf",
+    ".context/strong-owl-live-physics-armijo-8b9521422-preconditioned-stop-3/native/resources.jsonl": "d55d395643114688f0ca505fa67136adf03c77ff0f47634f1dee1a53b8176cb5",
+    ".context/strong-owl-live-physics-armijo-8b9521422-preconditioned-stop-3/native/provenance.json": "7d44beedeee89a15aed416c952046faa12c9466c13ae910aee0094c3097cac48",
+    ".context/strong-owl-live-physics-armijo-b4c2027fc-preconditioned-stop-109/native/result.json": "468d6618106c39e9ddb21473d75708f555e0439b6b8eed1b292a791a4d25132f",
+    ".context/strong-owl-live-physics-armijo-b4c2027fc-preconditioned-stop-109/native/resources.jsonl": "ece0436e761bfc1a230e92e3452c777c871baf2a421121e688a6329012f7cf69",
+    ".context/strong-owl-live-physics-armijo-b4c2027fc-preconditioned-stop-109/native/provenance.json": "3d9271bbe78ae7d9428b48ecf4fc65f2810380b0f6fb2327a0ccaba4d8c6f8b2",
+    ".context/strong-owl-live-physics-armijo-b4c2027fc-preconditioned-stop-540/native/result.json": "0a12f0077278cd2c000d19b51f935c7b0e99c549275163d11c682025b19aa988",
+    ".context/strong-owl-live-physics-armijo-b4c2027fc-preconditioned-stop-540/native/resources.jsonl": "7692076609d65b279b8fc443954e15994ffac8dac7abd59f6f895edbf1871de6",
+    ".context/strong-owl-live-physics-armijo-b4c2027fc-preconditioned-stop-540/native/provenance.json": "0a1a0f04684fc67dc3fa9298f258d5c734d5e9c15eabc34a3b6f272a6d066713"
+  },
+  "fullTrajectory": {
+    "accuracyPass": true,
+    "adopted": false,
+    "armijoEnabled": false,
+    "attemptedSteps": 540,
+    "candidateHz": 240,
+    "controlHz": 240,
+    "engineSeconds": 3.679397374857217,
+    "estimatedP95EngineBatchSeconds": 0.06254891667049378,
+    "fixturesPass": true,
+    "freshInactiveAffineSeparation": true,
+    "freshSelectedAffineCertificate": false,
+    "hostRealtimePass": false,
+    "maxSeconds": 0.04452275001676753,
+    "measuredSteps": 540,
+    "owner": "strong-owl-live-physics",
+    "p50Seconds": 0.005272500013234094,
+    "p95Seconds": 0.014223875012248755,
+    "pendingPhase": 1,
+    "preconditionedResidual": true,
+    "preflight": false,
+    "preflightPass": false,
+    "simulatedSeconds": 2.25,
+    "stageOnePass": true
+  },
+  "trajectoryMaxDifference": 4.5305383979492165e-05,
+  "trajectoryStrictMaxDifference": 1.6543252002025042e-05,
+  "trajectoryQPs": 574,
+  "everySettledContinuationCount": 192
 }

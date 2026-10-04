@@ -30,6 +30,8 @@ def trajectory_source(source):
         'var control=initial,candidate=initial,records:[[String:Any]]=[]\ncandidate.woodMajorizerExperiment=true;candidate.woodResidualExperiment=true;candidate.woodFeatureIdentityExperiment=true;candidate.preconditionedResidualExperiment=true')
     source=once(source,'    ArmijoTrace.collectDerivatives=false;',
         '    ResidualStopTrace.enabled=x.woodResidualExperiment;ResidualStopTrace.eligible=0;ResidualStopTrace.stops=0;ResidualStopTrace.estimates=[]\n    ArmijoTrace.collectDerivatives=false;')
+    source=once(source,'guard candidate.reviewStepCaps==0,candidate.reviewStepRetries==0,difference(control,candidate)<=0.00005 else {',
+        'guard candidate.reviewStepCaps==0,candidate.reviewStepRetries==0,controlCaps==0,controlRetries==0,difference(control,candidate)<=0.00005 else {')
     source=once(source,'        if hz==240 {','        if hz==240 && !candidate.preconditionedResidualExperiment {')
     source=once(source,'if !preflight,measured.2.settled,!settledPhases.contains(phase) {','if !preflight,measured.2.settled {')
     source=once(source,'"controlHz":240,"preflight":preflight,"armijoEnabled":false]',

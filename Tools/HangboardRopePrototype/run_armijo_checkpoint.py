@@ -67,6 +67,7 @@ if args.float_face_verification_only and not args.float_face_reject:parser.error
 if args.wood_feature_ids and (not args.wood_residual or args.wood_residual_red):parser.error('--wood-feature-ids requires isolated residual majorizer')
 if args.wood_feature_ids_red and not args.wood_feature_ids:parser.error('--wood-feature-ids-red requires --wood-feature-ids')
 if args.preconditioned_stop and (not args.wood_feature_ids or args.wood_feature_ids_red or args.wood_residual_diagnostic or args.fresh_active_stop):parser.error('--preconditioned-stop requires isolated canonical residual checkpoint')
+if args.preconditioned_stop_red and args.step_rate:parser.error('--preconditioned-stop-red is a fixed checkpoint negative control')
 if args.preconditioned_stop_red and not args.preconditioned_stop:parser.error('--preconditioned-stop-red requires --preconditioned-stop')
 if args.fresh_active_stop and (not args.wood_feature_ids or args.wood_feature_ids_red or args.wood_residual_diagnostic):parser.error('--fresh-active-stop requires isolated canonical residual checkpoint')
 if args.fresh_active_stop_red and not args.fresh_active_stop:parser.error('--fresh-active-stop-red requires --fresh-active-stop')
@@ -457,6 +458,7 @@ if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
 if args.region_queries or args.planar_rows:inputs += [REPO/'.context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/result.json']
 if args.planar_regions:inputs += [*list((tool/'planar_regions').glob('*.*')),tool/'census_planar_regions.py',stage/'region-topology.json']
 if args.wood_feature_ids:inputs += list((tool/'wood_feature_ids').glob('*.*'))
+if args.preconditioned_stop:inputs += list((tool/'preconditioned_stop').glob('*.*'))
 if args.fresh_active_stop:inputs += list((tool/'fresh_active_stop').glob('*.*'))
 if args.foreground_qos:inputs += list((tool/'foreground_qos').glob('*.*'))
 if args.material_basis_census:inputs += list((tool/'material_basis_census').glob('*.*'))
