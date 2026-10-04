@@ -61,4 +61,5 @@ def driver_source(source,checkpoint=140,enabled=True):
         source=once(source,'candidate.reviewStepCorrections<=2','candidate.reviewStepCorrections<=1')
         source=source.replace('fixed <=2-QP ordinary-step work gate','fixed <=1-QP physical-residual work gate')
         source=once(source,'guard median<=1.10','guard median<=0.80')
+        source=source.replace('fixed median <=1.10 ordinary-step overhead gate','fixed median <=0.80 physical-residual speed gate')
     return source

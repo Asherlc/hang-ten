@@ -1,0 +1,41 @@
+extension RopeDynamicsSolver {
+    private mutating func freshActiveEstimate(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState,
+        ids:[Int],context:ResidualContext)->Double? {
+        let eqCount=context.equalityIDs.count,active=Array(ids.dropFirst(eqCount))
+        let savedTerms=woodTerms
+        defer {woodTerms=savedTerms}
+        let priorForces=Dictionary(uniqueKeysWithValues:active.indices.map{($0,context.multipliers[context.activeIDs[$0]])})
+        woodTerms=buildWoodTerms(rows:rows,weights:weights,contactIDs:active,initial:priorForces)
+        // Rebuild the Jacobian and its factor. Never reuse an old response after J changes.
+        let solved:(factor:RopeBandedFactorization,variables:[[SIMD3<Int>]],rowVariables:[Int:Int],base:[Double],border:[Double],multipliers:[Double])
+        do {solved=try constraintBackbone(rows:ids.map{rows[$0]},weights:weights,prediction:prediction)} catch {return nil}
+        var particles=state.ropes.map{Array(repeating:SIMD3<Double>.zero,count:$0.positions.count)}
+        var maximum=abs(solved.border[0])
+        for r in particles.indices {for i in particles[r].indices where weights[r][i]>0 {
+            let v=solved.variables[r][i]
+            particles[r][i]=SIMD3(solved.base[v.x],solved.base[v.y],solved.base[v.z])
+            maximum=max(maximum,simd_length(particles[r][i]))
+        }}
+        var selected:[Int:Double]=[:]
+        for k in ids.indices {
+            let multiplier=solved.multipliers[k]
+            guard multiplier.isFinite,k<eqCount || multiplier<=0 else{return nil}
+            selected[ids[k]]=multiplier
+        }
+        // The complete original affine separation/equality gates, not a deepest-row subset.
+        for id in rows.indices {
+            let row=rows[id]
+            var value=row.residual+row.boardGradient*solved.border[0]
+            for j in row.particles.indices {value += simd_dot(row.gradients[j],particles[row.ropeIndex(j)][row.particles[j]])}
+            guard value.isFinite else{return nil}
+            if let multiplier=selected[id] {
+                guard abs(value-1e-8*multiplier)<=1e-8 else{return nil}
+            } else {
+                guard row.contact,value>=(-1e-8) else{return nil}
+            }
+        }
+        guard maximum.isFinite else{return nil}
+        ResidualStopTrace.eligible += 1
+        return maximum
+    }
+}

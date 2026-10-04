@@ -19,11 +19,17 @@ parser.add_argument('--quiet-strain',action='store_true')
 parser.add_argument('--fullstep-feasible',action='store_true')
 parser.add_argument('--retained-initializer',action='store_true')
 parser.add_argument('--wood-majorizer',action='store_true')
+parser.add_argument('--empty-face-floor',action='store_true')
+parser.add_argument('--float-face-reject',action='store_true')
+parser.add_argument('--float-face-red',action='store_true')
+parser.add_argument('--float-face-verification-only',action='store_true')
 parser.add_argument('--wood-residual',action='store_true')
 parser.add_argument('--wood-residual-red',action='store_true')
 parser.add_argument('--wood-residual-diagnostic',action='store_true')
 parser.add_argument('--wood-feature-ids',action='store_true')
 parser.add_argument('--wood-feature-ids-red',action='store_true')
+parser.add_argument('--fresh-active-stop',action='store_true')
+parser.add_argument('--fresh-active-stop-red',action='store_true')
 parser.add_argument('--wood-assembly-red',action='store_true')
 parser.add_argument('--wood-checkpoint',type=int,choices=[3,109,140],default=109)
 parser.add_argument('--arrival-checkpoint',type=int,choices=[109,140],default=109)
@@ -46,8 +52,14 @@ parser.add_argument('--geometry-profile',action='store_true')
 parser.add_argument('--spectral-trajectory',action='store_true')
 parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=109)
 parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
-if args.wood_feature_ids and (not args.wood_residual or args.wood_residual_red or args.wood_residual_diagnostic):parser.error('--wood-feature-ids requires isolated residual majorizer')
+if args.empty_face_floor and (not args.wood_majorizer or args.wood_checkpoint!=140 or args.wood_residual or args.step_rate or args.fixtures_only):parser.error('--empty-face-floor requires isolated majorizer fixed140')
+if args.float_face_reject and not args.empty_face_floor:parser.error('--float-face-reject requires empty-face verification screen')
+if args.float_face_red and not args.float_face_reject:parser.error('--float-face-red requires --float-face-reject')
+if args.float_face_verification_only and not args.float_face_reject:parser.error('--float-face-verification-only requires --float-face-reject')
+if args.wood_feature_ids and (not args.wood_residual or args.wood_residual_red):parser.error('--wood-feature-ids requires isolated residual majorizer')
 if args.wood_feature_ids_red and not args.wood_feature_ids:parser.error('--wood-feature-ids-red requires --wood-feature-ids')
+if args.fresh_active_stop and (not args.wood_feature_ids or args.wood_feature_ids_red or args.wood_residual_diagnostic):parser.error('--fresh-active-stop requires isolated canonical residual checkpoint')
+if args.fresh_active_stop_red and not args.fresh_active_stop:parser.error('--fresh-active-stop-red requires --fresh-active-stop')
 if args.wood_residual_diagnostic and (not args.wood_residual or args.wood_residual_red or args.wood_checkpoint!=140):parser.error('--wood-residual-diagnostic requires enabled fixed140')
 if args.wood_residual and (not args.wood_majorizer or args.step_rate or args.fixtures_only):parser.error('--wood-residual requires isolated majorizer checkpoint')
 if args.wood_residual_red and not args.wood_residual:parser.error('--wood-residual-red requires --wood-residual')
@@ -122,6 +134,12 @@ for name in NAMES:
         else:
             from wood_majorizer.snapshot import collider_source as wood_collider
         text=wood_collider(text)
+    if args.empty_face_floor and name=='RopeTriangleCollider.swift':
+        from empty_face_floor.snapshot import collider_source as floor_collider
+        text=floor_collider(text)
+        if args.float_face_reject:
+            from float_face_reject.snapshot import collider_source as float_collider
+            text=float_collider(text)
     if args.wood_residual and name=='RopeContactSystem.swift':
         from wood_residual.snapshot import contact_source as wood_contact
         text=wood_contact(text)
@@ -139,6 +157,15 @@ for name in NAMES:
             else:
                 from wood_majorizer.snapshot import solver_source as wood_solver
             text=wood_solver(text)
+            if args.fresh_active_stop:
+                from fresh_active_stop.snapshot import solver_source as fresh_solver
+                text=fresh_solver(text)
+            if args.empty_face_floor:
+                from empty_face_floor.snapshot import solver_source as floor_solver
+                text=floor_solver(text)
+                if args.float_face_reject:
+                    from float_face_reject.snapshot import solver_source as float_solver
+                    text=float_solver(text)
             if args.wood_residual_diagnostic:
                 from wood_residual.diagnostic import solver_source as diagnose_solver
                 text=diagnose_solver(text)
@@ -214,8 +241,17 @@ for name in ['Math.swift','Trace.swift','main.swift']:
             if args.wood_residual_diagnostic:
                 from wood_residual.diagnostic import driver_source as diagnose_driver
                 text=diagnose_driver(text)
+            if args.fresh_active_stop:
+                from fresh_active_stop.snapshot import driver_source as fresh_driver
+                text=fresh_driver(text,not args.fresh_active_stop_red)
         else:
             text=wood_trajectory(text) if args.step_rate else wood_driver(text,args.wood_checkpoint)
+        if args.empty_face_floor:
+            from empty_face_floor.snapshot import driver_source as floor_driver
+            text=floor_driver(text)
+            if args.float_face_reject:
+                from float_face_reject.snapshot import driver_source as float_driver
+                text=float_driver(text)
     if name=='main.swift' and args.retained_initializer:
         from retained_initializer.snapshot import driver_source as retained_driver
         text=retained_driver(text)
@@ -328,6 +364,14 @@ if args.wood_majorizer:
         p=sources/'WoodMajorizerAssembly.swift';text=p.read_text()
         from armijo.snapshot import once
         p.write_text(once(text,'columns[0][indices[a]] += scale*values[a]*height','columns[0][indices[a]] -= scale*values[a]*height'))
+if args.empty_face_floor:(sources/'EmptyFaceFloor.swift').write_bytes((tool/'empty_face_floor/Trace.swift').read_bytes())
+if args.float_face_reject:
+    from float_face_reject.snapshot import math_source as float_math,trace_source as float_trace
+    (sources/'FloatFaceReject.swift').write_text(float_math((REPO/'HangTen/Models/RopeTriangleCollider.swift').read_text()))
+    (sources/'FloatSeparationCertificate.swift').write_bytes((tool/'geometry_hints/Math.swift').read_bytes())
+    p=sources/'EmptyFaceFloor.swift';p.write_text(float_trace(p.read_text()))
+    if args.float_face_red:
+        p=sources/'FloatFaceReject.swift';p.write_text(p.read_text().replace('return certificate.separates(s,t,radius)','return false'))
 if args.retained_initializer:
     (sources/'RetainedFixtures.swift').write_bytes((tool/'retained_initializer/Fixtures.swift').read_bytes())
     (sources/'RetainedTrace.swift').write_bytes((tool/'retained_initializer/Trace.swift').read_bytes())
@@ -353,8 +397,11 @@ if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
 if args.region_queries or args.planar_rows:inputs += [REPO/'.context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/result.json']
 if args.planar_regions:inputs += [*list((tool/'planar_regions').glob('*.*')),tool/'census_planar_regions.py',stage/'region-topology.json']
 if args.wood_feature_ids:inputs += list((tool/'wood_feature_ids').glob('*.*'))
+if args.fresh_active_stop:inputs += list((tool/'fresh_active_stop').glob('*.*'))
 if args.wood_residual:inputs += list((tool/'wood_residual').glob('*.*'))+list((tool/'residual_stop').glob('*.*'))
 if args.wood_majorizer:inputs += list((tool/'wood_majorizer').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
+if args.empty_face_floor:inputs += list((tool/'empty_face_floor').glob('*.*'))
+if args.float_face_reject:inputs += list((tool/'float_face_reject').glob('*.*'))+[tool/'geometry_hints/Math.swift']
 if args.retained_initializer:inputs += list((tool/'retained_initializer').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
 if args.fullstep_feasible:inputs += list((tool/'fullstep_feasible').glob('*.*'))+list((tool/'quiet_strain').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
 if args.quiet_strain:inputs += list((tool/'quiet_strain').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
@@ -369,7 +416,7 @@ for sig in [signal.SIGINT,signal.SIGTERM]:signal.signal(sig,owner.interrupted)
 env=dict(os.environ);env['HANGTEN_REVIEW_PHYSICAL_CONVERGENCE']='1'
 try:
     status=owner.run('compile',['perl','-e','alarm 150;exec @ARGV',*command],stage/'compile.log',env)
-    if not status:status=owner.run('run',['perl','-e','alarm 300;exec @ARGV' if not args.trajectory else 'alarm 600;exec @ARGV',str(binary),str(stage),str(prior),*(['--fixtures-only'] if args.fixtures_only else []),*(['--candidate-hz',str(args.step_rate or 240)] if args.step_rate or args.spectral_trajectory else []),*(['--preflight'] if args.preflight else [])],stage/'run.log',env)
+    if not status:status=owner.run('run',['perl','-e','alarm 300;exec @ARGV' if not args.trajectory else 'alarm 600;exec @ARGV',str(binary),str(stage),str(prior),*(['--verification-only'] if args.float_face_verification_only else []),*(['--fixtures-only'] if args.fixtures_only else []),*(['--candidate-hz',str(args.step_rate or 240)] if args.step_rate or args.spectral_trajectory else []),*(['--preflight'] if args.preflight else [])],stage/'run.log',env)
     print((stage/('run.log' if (stage/'run.log').exists() else 'compile.log')).read_text())
     if args.plane_reuse and (stage/'plane-unions.json').exists():
         from plane_reuse.proof import validate

@@ -1,0 +1,68 @@
+func schedule(_ trace:[[String:Any]])throws->Data {
+    try serialize(["trace":trace.map { row in
+        Dictionary(uniqueKeysWithValues:["movement","alpha","strain","rows","woodTerms"].map{($0,row[$0]!)})
+    }])
+}
+func median(_ values:[Double])->Double {values.sorted()[values.count/2]}
+do {
+    result["step"]=140;result["runtimeAlgorithm"]=false;result["floatReceiptProof"]=false
+    for step in 1...139 {
+        let record=try run(&initial).1
+        let old=(priorSteps[step-1]["trace"] as! [String:Any])["corrections"] as! [[String:Double]]
+        guard record.count==old.count else {throw RopePhysicsError.invalid("prefix count identity")}
+        for (a,b) in zip(record,old) {for key in ["movement","alpha","strain"] {
+            guard (a[key] as! Double)==b[key] else {throw RopePhysicsError.invalid("prefix numeric identity")}
+        }}
+    }
+    result["prefixIdentitySteps"]=139
+    var expected=initial;expected.woodMajorizerExperiment=true
+    EmptyFaceFloor.start(1)
+    let capture=try run(&expected)
+    let checkpoint=try serialize(expected.bundleCheckpoint()),expectedSchedule=try schedule(capture.1)
+    try checkpoint.write(to:root.appendingPathComponent("candidate-checkpoint.json"))
+    result["candidateTrace"]=capture.1;result["metrics"]=try check(expected)
+    result["batchCount"]=EmptyFaceFloor.records.count
+    result["emptyFaceCount"]=EmptyFaceFloor.records.reduce(0){$0+$1.drops.reduce(0){$0+$1.filter{$0}.count}}
+    guard expected.reviewStepCaps==0,expected.reviewStepRetries==0,expected.reviewStepCorrections==2,
+          (result["emptyFaceCount"] as! Int)>0 else {throw RopePhysicsError.invalid("capture/work/consumption")}
+    // Reject an invalid mask/configuration lookup before any timed work.
+    let saved=EmptyFaceFloor.records[0]
+    guard saved.bits != EmptyFaceFloor.bits([SIMD3<Double>(0,0,0)],0,0),
+          saved.zeros.count==saved.drops.count,
+          saved.zeros.allSatisfy({$0.allSatisfy{!$0}}) else {throw RopePhysicsError.invalid("lookup fixtures")}
+    for iteration in 0..<7 {
+        let orders=[[0,2,3],[3,0,2],[2,3,0]],order=orders[iteration%3]
+        var times:[Int:Double]=[:],queries:[Int:Double]=[:]
+        for mode in order {
+            var candidate=initial;candidate.woodMajorizerExperiment=true
+            EmptyFaceFloor.start(mode)
+            let timed=try run(&candidate)
+            guard try serialize(candidate.bundleCheckpoint())==checkpoint,
+                  try schedule(timed.1)==expectedSchedule,
+                  candidate.reviewStepCaps==0,candidate.reviewStepRetries==0,
+                  mode==0 || EmptyFaceFloor.cursor==EmptyFaceFloor.records.count else {
+                throw RopePhysicsError.invalid("complete checkpoint/schedule identity")
+            }
+            _ = try check(candidate)
+            times[mode]=timed.0;queries[mode]=EmptyFaceFloor.seconds
+        }
+        let overhead=times[2]!-times[0]!
+        pairs.append(["order":order,"unmaskedSeconds":times[0]!,"matchedLookupSeconds":times[2]!,
+            "idealSeconds":times[3]!,"lookupDifferenceSeconds":overhead,
+            "adjustedIdealSeconds":times[3]!-max(0,overhead),
+            "unmaskedQuerySeconds":queries[0]!,"matchedQuerySeconds":queries[2]!,"idealQuerySeconds":queries[3]!])
+    }
+    for key in ["unmaskedSeconds","matchedLookupSeconds","idealSeconds","adjustedIdealSeconds","unmaskedQuerySeconds","idealQuerySeconds"] {
+        result["median"+key.prefix(1).uppercased()+key.dropFirst()]=median(pairs.map{$0[key] as! Double})
+    }
+    result["completeCheckpointAndScheduleIdentity"]=true;result["workAndAccuracyPass"]=true
+    let calibration=median(pairs.map{$0["lookupDifferenceSeconds"] as! Double})
+    let floor=(result["medianIdealSeconds"] as! Double)-calibration
+    result["signedMedianLookupCalibration"]=calibration
+    result["signedCalibratedIdealSeconds"]=floor
+    result["ceilingPass"]=floor<0.004
+    result["positiveOnlyPairAdjustmentBiased"]=true
+    try persist(nil)
+    print("EMPTY FACE CEILING",floor<0.004 ? "PASS":"FAIL","adjusted median",floor,"raw",result["medianIdealSeconds"]!)
+    if floor>=0.004 {exit(3)}
+} catch {try persist(String(describing:error));print("FAIL empty-face correctness",error);exit(2)}
