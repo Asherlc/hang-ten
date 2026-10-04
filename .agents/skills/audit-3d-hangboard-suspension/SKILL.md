@@ -81,7 +81,10 @@ dated DUAL source audit and cord-entry review.
 Captain Fingerfood POCKET is already native CAD, with suspension embedded in
 its `HangTenBoardManifest`. Its retained `pairedLeadCord` and ordered
 `contactPointsInModel` are legacy metadata, not proof of a completed native
-solver migration. Any cord revision must follow the evidence-matched native
+solver migration. Retaining this pre-existing suspension is an intentional,
+POCKET-only legacy exception pending a separate evidence-backed cord revision;
+it does not permit `pairedLeadCord` on newly migrated CAD packages.
+Any cord revision must follow the evidence-matched native
 solver contract above and reproduce every canonical pose; a visible recess
 alone does not establish an additional through-bore or hidden connection.
 Native UNLEVEL uses its current CAD source audit and `nativeRoutes` metadata.
