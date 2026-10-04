@@ -1,0 +1,326 @@
+{
+  "owner": "strong-owl-live-physics",
+  "base": "aa0cd66ff",
+  "adopted": false,
+  "screen": {
+    "adopted": false,
+    "candidateCaps": 0,
+    "candidateMetrics": {
+      "clearanceMargin": 9.999999954215383e-05,
+      "geometryAccepted": true,
+      "lengthError": 4.160302435884944e-09,
+      "speed": 0.00021260473030487178,
+      "strain": 9.732255790151356e-07
+    },
+    "candidateQPs": 2,
+    "candidateResidualEligible": 1,
+    "candidateResidualStops": 1,
+    "candidateRetries": 0,
+    "candidateSeconds": 0.006269708334002644,
+    "candidateSettled": false,
+    "controlSeconds": 0.0051535833335947245,
+    "currentDifferenceMeters": 1.7222249029268318e-06,
+    "failure": "invalid(\"fixed <=1-QP physical-residual work gate\")",
+    "fixturesPass": true,
+    "originalQPs": 2,
+    "owner": "strong-owl-live-physics",
+    "prefixIdentitySteps": 139,
+    "step": 140,
+    "strictConverged": true,
+    "strictDifferenceMeters": 1.3782951670800334e-07,
+    "strictRetries": 0,
+    "woodFeatureIdentity": true,
+    "woodMajorizer": true,
+    "woodResidual": true
+  },
+  "instrumentationCompleteCheckpointIdentity": true,
+  "correspondenceDetails": [
+    {
+      "freshGradients": [
+        [
+          [
+            -0.028728741158179506,
+            0.04975963932346206,
+            0.5417089481026228
+          ],
+          [
+            -0.024008969307144787,
+            0.04158475467733652,
+            0.4527129621444827
+          ]
+        ],
+        [
+          [
+            -0.03142461593683205,
+            0.05430448066708851,
+            0.5911979491969592
+          ],
+          [
+            -0.021432695004774613,
+            0.03703756869678136,
+            0.4032178263708014
+          ]
+        ],
+        [
+          [
+            -0.03169171872733001,
+            0.05489166701491767,
+            0.5975788330167908
+          ],
+          [
+            -0.0210459917379936,
+            0.036452726985879744,
+            0.3968430772303148
+          ]
+        ],
+        [
+          [
+            -0.03200558711347171,
+            0.05548552712853791,
+            0.6040392502035637
+          ],
+          [
+            -0.020684920053500082,
+            0.03585979187668217,
+            0.3903850773097579
+          ]
+        ],
+        [
+          [
+            -0.0346629627413573,
+            0.06003801260889782,
+            0.6536045899593832
+          ],
+          [
+            -0.01807474772396672,
+            0.03130638139190029,
+            0.34081732028772255
+          ]
+        ],
+        [
+          [
+            -0.037274788005894066,
+            0.06459297808515108,
+            0.7031893964761372
+          ],
+          [
+            -0.015437772927413178,
+            0.026751908776148116,
+            0.2912338019480291
+          ]
+        ],
+        [
+          [
+            -0.03763530549801661,
+            0.06518626128094519,
+            0.7096510647856238
+          ],
+          [
+            -0.015102404967304521,
+            0.026158132719853677,
+            0.2847708454614819
+          ]
+        ],
+        [
+          [
+            -0.04018336616522426,
+            0.06973003456205296,
+            0.7591048410804929
+          ],
+          [
+            -0.01245682022793729,
+            0.021616270310849898,
+            0.23532206088996355
+          ]
+        ],
+        [
+          [
+            -0.04060158066215808,
+            0.07032400057446529,
+            0.765583129128503
+          ],
+          [
+            -0.012136129803165176,
+            0.021020393426333408,
+            0.22883878111860256
+          ]
+        ],
+        [
+          [
+            -0.04307157354233124,
+            0.0748456671364173,
+            0.8147857713409105
+          ],
+          [
+            -0.00949646549260843,
+            0.016502050813947892,
+            0.17964481733649018
+          ]
+        ],
+        [
+          [
+            -0.0435546136832498,
+            0.07543880380342331,
+            0.8212654997120161
+          ],
+          [
+            -0.009183096782074266,
+            0.015905590197374895,
+            0.1731564105350895
+          ]
+        ],
+        [
+          [
+            -0.045932595994379335,
+            0.07992757223436926,
+            0.8700982906261823
+          ],
+          [
+            -0.0065637105671153394,
+            0.011421550189386221,
+            0.12433595839675417
+          ]
+        ],
+        [
+          [
+            -0.04648734225324462,
+            0.08051843869146315,
+            0.8765650097036083
+          ],
+          [
+            -0.006250368212079028,
+            0.01082595530933432,
+            0.11785690054349746
+          ]
+        ]
+      ],
+      "freshSources": [
+        "wood-link/0/93/5032/608",
+        "wood-link/0/93/5033/608",
+        "wood-link/0/93/5034/508",
+        "wood-link/0/93/5038/508",
+        "wood-link/0/93/5041/608",
+        "wood-link/0/93/5043/408",
+        "wood-link/0/93/5046/408",
+        "wood-link/0/93/5047/408",
+        "wood-link/0/93/5049/408",
+        "wood-link/0/93/5050/408",
+        "wood-link/0/93/5054/408",
+        "wood-link/0/93/5055/408",
+        "wood-link/0/93/5058/408"
+      ],
+      "oldGradients": [
+        [
+          -0.03450954353624681,
+          0.05977228275079468,
+          0.6527688250815417
+        ],
+        [
+          -0.018063811955369023,
+          0.031287440085071914,
+          0.3416878955299727
+        ]
+      ],
+      "oldSource": "wood-link/0/93/5042/408",
+      "particles": [
+        93,
+        94
+      ],
+      "rope": 0
+    },
+    {
+      "freshGradients": [
+        [
+          [
+            0.28570297711275516,
+            -0.4948520722329808,
+            -0.22324748633849495
+          ],
+          [
+            0.18001408542063116,
+            -0.3117935420265775,
+            -0.14066248970103867
+          ]
+        ],
+        [
+          [
+            -0.38807743113739385,
+            -0.22405660933359303,
+            -0.19262907121784878
+          ],
+          [
+            -0.40755182841084475,
+            -0.23530015784172562,
+            -0.20229553146089274
+          ]
+        ]
+      ],
+      "freshSources": [
+        "wood-link/0/163/5254/408",
+        "wood-link/0/163/5256/608"
+      ],
+      "oldGradients": [
+        [
+          -0.38811043017199925,
+          -0.22407566133510518,
+          -0.1926414082119945
+        ],
+        [
+          -0.40752143340011654,
+          -0.23528260927409936,
+          -0.20227619951357045
+        ]
+      ],
+      "oldSource": "wood-link/0/163/5257/408",
+      "particles": [
+        163,
+        164
+      ],
+      "rope": 0
+    }
+  ],
+  "independentlyAbsentGroups": [
+    79415,
+    81500,
+    85778,
+    86077,
+    89130,
+    92926,
+    15562,
+    15891,
+    16147,
+    17181,
+    14768,
+    15227,
+    15532,
+    15597
+  ],
+  "inputs": {
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-residual-diagnostic/native/result.json": "e9d4b9a03c5338453dca1436540520595f1fe1e125b1e297089ab5f0e6b4a83a",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-residual-diagnostic/native/provenance.json": "545ab662ea650fd349234ff7df0afc8b3debd2dfd44f26dffaa746c9257935c1",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-residual-diagnostic/native/run.log": "eecc2d75657af701a911d406da295516ae16c686494ebe711e8a0d0e70fc7355",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-residual-diagnostic/native/resources.jsonl": "28aee41fb9da50429fafb0b0a8a2af6a93f36836c044ec899193b06efe46db6a",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-residual-correspondence/native/result.json": "6210d6f9f76c34533dc0d419cec963163294d9d19efff6da274d13c9f91e64a9",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-residual-correspondence/native/provenance.json": "56db2eb7aee7dd447d209d9055e6b66920a5c1c6e3b8b2407f3ac2f44f240a5e",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-residual-correspondence/native/run.log": "eecc2d75657af701a911d406da295516ae16c686494ebe711e8a0d0e70fc7355",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-residual-correspondence/native/resources.jsonl": "d6fd77e37792fb08dbd3c44f03177c9575ae1619a7169d5b8cfbc4a7b22003e7",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-residual-correspondence-v2/native/result.json": "2454e64c42fea4f8bc99d2c9331d9a7db1e7ae5e70ed11affb61219b8ab5e39b",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-residual-correspondence-v2/native/provenance.json": "231830496dfcc8dbff3e4659fcc500dd88780570185786db029a36a7e70f644d",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-residual-correspondence-v2/native/run.log": "eecc2d75657af701a911d406da295516ae16c686494ebe711e8a0d0e70fc7355",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-residual-correspondence-v2/native/resources.jsonl": "27c5f90e26fdd74c5e469af783548e0d653fbaea74ab57b8742c92340db0a298",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-feature-ids-red/native/result.json": "3d3b1d0aed79de28ec1cabe0a30389f4513cc124fbf665902b2efefd24098e9c",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-feature-ids-red/native/provenance.json": "31d9a98b6f61f31b80d2c80391a25dc6880fd9d5f95a52589f048ada176a55dd",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-feature-ids-red/native/run.log": "eecc2d75657af701a911d406da295516ae16c686494ebe711e8a0d0e70fc7355",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-feature-ids-red/native/resources.jsonl": "ff9630871ebbfc34727bf8b9338a9f38d5b63ea6f86726a5080394fa8a9ddc65",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-feature-ids-140/native/result.json": "699369849769129cde453470bdf24e9baf991a91a5bc43123696c2de99d67358",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-feature-ids-140/native/provenance.json": "39c9e5f3e97295ccf88ee63e6027d18620bc5a05215f02fd7c964d8c42ebef33",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-feature-ids-140/native/run.log": "eecc2d75657af701a911d406da295516ae16c686494ebe711e8a0d0e70fc7355",
+    ".context/strong-owl-live-physics-armijo-aa0cd66ff-wood-feature-ids-140/native/resources.jsonl": "2e3caf695da5f976181c9bca8f8cec55c14f66fe09ab148520bac9d94341fde1",
+    ".context/strong-owl-live-physics-wood-feature-id-fixtures-aa0cd66ff-red/provenance.json": "b9bc71e07f0daa8e3ec19c3ed1ba21132ae4c1d88b457c0240dd026663490991",
+    ".context/strong-owl-live-physics-wood-feature-id-fixtures-aa0cd66ff-red/run.log": "85bea02b5710adbff70a9641d3e7cbb0dcf1285b6237dd103a42f6d90ddc8d3d",
+    ".context/strong-owl-live-physics-wood-feature-id-fixtures-aa0cd66ff-red/resources.jsonl": "f467a310db8894bfb46fb16808b99468ae25636e16aa66fc881baba858b45a6b",
+    ".context/strong-owl-live-physics-wood-feature-id-fixtures-aa0cd66ff-green/provenance.json": "d01ef539d3d025c782ec7e1154c1618745512eeb266f76efadfa1ced2dbda27a",
+    ".context/strong-owl-live-physics-wood-feature-id-fixtures-aa0cd66ff-green/run.log": "102810658f983139aea6ac9ea0b82d9485a651d24a4b63fea2dea5f2df6602b0",
+    ".context/strong-owl-live-physics-wood-feature-id-fixtures-aa0cd66ff-green/resources.jsonl": "a21125384b2d345fd7363fc74d9a3bbacbd3622633d1e584323eaad51ff0695b"
+  }
+}

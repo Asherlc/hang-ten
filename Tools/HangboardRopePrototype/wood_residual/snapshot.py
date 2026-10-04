@@ -56,7 +56,7 @@ def driver_source(source,checkpoint=140,enabled=True):
         '    ResidualStopTrace.enabled=x.woodResidualExperiment;ResidualStopTrace.eligible=0;ResidualStopTrace.stops=0\n    ArmijoTrace.collectDerivatives=x.armijoExperiment')
     source=once(source,'    result["candidateMetrics"]=try check(candidate)',
         '    result["candidateResidualEligible"]=ResidualStopTrace.eligible;result["candidateResidualStops"]=ResidualStopTrace.stops\n    result["candidateMetrics"]=try check(candidate)')
-    source=once(source,'"woodMajorizer":true','"woodMajorizer":true,"woodResidual":true')
+    source=once(source,'"woodMajorizer":true','"woodMajorizer":true,"woodResidual":'+str(enabled).lower())
     if checkpoint==140:
         source=once(source,'candidate.reviewStepCorrections<=2','candidate.reviewStepCorrections<=1')
         source=source.replace('fixed <=2-QP ordinary-step work gate','fixed <=1-QP physical-residual work gate')

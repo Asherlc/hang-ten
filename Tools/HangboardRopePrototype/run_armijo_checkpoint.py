@@ -21,6 +21,9 @@ parser.add_argument('--retained-initializer',action='store_true')
 parser.add_argument('--wood-majorizer',action='store_true')
 parser.add_argument('--wood-residual',action='store_true')
 parser.add_argument('--wood-residual-red',action='store_true')
+parser.add_argument('--wood-residual-diagnostic',action='store_true')
+parser.add_argument('--wood-feature-ids',action='store_true')
+parser.add_argument('--wood-feature-ids-red',action='store_true')
 parser.add_argument('--wood-assembly-red',action='store_true')
 parser.add_argument('--wood-checkpoint',type=int,choices=[3,109,140],default=109)
 parser.add_argument('--arrival-checkpoint',type=int,choices=[109,140],default=109)
@@ -43,6 +46,9 @@ parser.add_argument('--geometry-profile',action='store_true')
 parser.add_argument('--spectral-trajectory',action='store_true')
 parser.add_argument('--spectral-checkpoint',type=int,choices=[109,140],default=109)
 parser.add_argument('--preflight',action='store_true');args=parser.parse_args()
+if args.wood_feature_ids and (not args.wood_residual or args.wood_residual_red or args.wood_residual_diagnostic):parser.error('--wood-feature-ids requires isolated residual majorizer')
+if args.wood_feature_ids_red and not args.wood_feature_ids:parser.error('--wood-feature-ids-red requires --wood-feature-ids')
+if args.wood_residual_diagnostic and (not args.wood_residual or args.wood_residual_red or args.wood_checkpoint!=140):parser.error('--wood-residual-diagnostic requires enabled fixed140')
 if args.wood_residual and (not args.wood_majorizer or args.step_rate or args.fixtures_only):parser.error('--wood-residual requires isolated majorizer checkpoint')
 if args.wood_residual_red and not args.wood_residual:parser.error('--wood-residual-red requires --wood-residual')
 if args.wood_assembly_red and (not args.wood_majorizer or not args.fixtures_only):parser.error('--wood-assembly-red requires isolated wood fixtures')
@@ -126,11 +132,16 @@ for name in NAMES:
         text=solver_source(text).replace('private extension SIMD4','extension SIMD4')
         text+='\n'+(tool/'stock_chain/CheckpointAdapter.swift').read_text()+'\n'+(tool/'contact_bundle/CheckpointExtras.swift').read_text()
         if args.wood_majorizer:
-            if args.wood_residual:
+            if args.wood_feature_ids:
+                from wood_feature_ids.snapshot import solver_source as wood_solver
+            elif args.wood_residual:
                 from wood_residual.snapshot import solver_source as wood_solver
             else:
                 from wood_majorizer.snapshot import solver_source as wood_solver
             text=wood_solver(text)
+            if args.wood_residual_diagnostic:
+                from wood_residual.diagnostic import solver_source as diagnose_solver
+                text=diagnose_solver(text)
         if args.retained_initializer:
             from retained_initializer.snapshot import solver_source as retained_solver
             text=retained_solver(text)
@@ -195,7 +206,14 @@ for name in ['Math.swift','Trace.swift','main.swift']:
         from wood_majorizer.snapshot import driver_source as wood_driver,trajectory_source as wood_trajectory
         if args.wood_residual:
             from wood_residual.snapshot import driver_source as wood_driver
-            text=wood_driver(text,args.wood_checkpoint,not args.wood_residual_red)
+            if args.wood_feature_ids:
+                from wood_feature_ids.snapshot import driver_source as wood_driver
+                text=wood_driver(text,args.wood_checkpoint,not args.wood_feature_ids_red)
+            else:
+                text=wood_driver(text,args.wood_checkpoint,not args.wood_residual_red)
+            if args.wood_residual_diagnostic:
+                from wood_residual.diagnostic import driver_source as diagnose_driver
+                text=diagnose_driver(text)
         else:
             text=wood_trajectory(text) if args.step_rate else wood_driver(text,args.wood_checkpoint)
     if name=='main.swift' and args.retained_initializer:
@@ -302,6 +320,8 @@ if args.planar_regions:
         (sources/'PlanarProfile.swift').write_text(profile_source())
     (sources/'PlanarMath.swift').write_text(region_math)
     (stage/'region-topology.json').write_text(json.dumps(metadata,indent=2)+'\n')
+if args.wood_feature_ids:
+    for name in ['Math.swift','Fixtures.swift']:(sources/('WoodFeature'+name)).write_bytes((tool/'wood_feature_ids'/name).read_bytes())
 if args.wood_majorizer:
     for name in ['Math.swift','Fixtures.swift','Selected.swift','Assembly.swift']:(sources/('WoodMajorizer'+name)).write_bytes((tool/'wood_majorizer'/name).read_bytes())
     if args.wood_assembly_red:
@@ -332,6 +352,7 @@ if args.spectral_step:inputs += list((tool/'spectral_step').glob('*.*'))
 if args.scaled_merit:inputs += list((tool/'scaled_merit').glob('*.*'))
 if args.region_queries or args.planar_rows:inputs += [REPO/'.context/strong-owl-live-physics-coplanar-query-5a12d1ee2-chronological-corpus/native/result.json']
 if args.planar_regions:inputs += [*list((tool/'planar_regions').glob('*.*')),tool/'census_planar_regions.py',stage/'region-topology.json']
+if args.wood_feature_ids:inputs += list((tool/'wood_feature_ids').glob('*.*'))
 if args.wood_residual:inputs += list((tool/'wood_residual').glob('*.*'))+list((tool/'residual_stop').glob('*.*'))
 if args.wood_majorizer:inputs += list((tool/'wood_majorizer').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
 if args.retained_initializer:inputs += list((tool/'retained_initializer').glob('*.*'))+list((tool/'arrival_stop').glob('*.*'))
