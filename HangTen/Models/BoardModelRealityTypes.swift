@@ -121,29 +121,6 @@ struct BoardModelResourceAccess {
     }
 }
 
-enum BoardModelSolvedSuspension {
-    case single(SuspendedSolvedPresentation)
-    case pairedLead(SuspendedPairedLeadSolvedPresentation)
-    case twoBranch(SuspendedTwoBranchSolvedPresentation)
-
-    var boardTransform: simd_float4x4 {
-        switch self {
-        case .single(let solved): solved.boardTransform
-        case .pairedLead(let solved): solved.boardTransform
-        case .twoBranch(let solved): solved.boardTransform
-        }
-    }
-
-    var cameraFraming: SuspendedCameraFraming {
-        switch self {
-        case .single(let solved): solved.cameraFraming
-        case .pairedLead(let solved): solved.cameraFraming
-        case .twoBranch(let solved): solved.cameraFraming
-        }
-    }
-}
-
-
 /// Errors specific to board model RealityKit loading and caching.
 enum BoardModelRealityError: Error, Equatable {
     case resourceUnavailable

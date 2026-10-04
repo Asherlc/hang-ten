@@ -725,6 +725,24 @@ def _declared_depths(board, version: int, presentation_id: str | None = None) ->
     return declared
 
 
+def _audited_display_depths(source_digest: str, board_id: str, declared: dict) -> dict:
+    """Retain explicitly reviewed display geometry after a factual label edit.
+
+    Each exception is bound to the exact native source and corrected label;
+    changing either requires a new audit. This never changes exported geometry
+    or the board's sourced depth metadata.
+    """
+    audits = json.loads(Path(__file__).with_name("display_depth_audits.json").read_text())
+    audit = audits["boards"].get(board_id)
+    if audit is None:
+        return {}
+    if audit["sourceSHA256"] != source_digest or any(
+        declared.get(key) != value["publishedDepthMM"] for key, value in audit["contacts"].items()
+    ):
+        raise BuildError(f"{board_id}: source or published depth changed; re-audit {audit['audit']}")
+    return {key: value["displayDepthMM"] for key, value in audit["contacts"].items()}
+
+
 def _depth_regions(contact_objects, version):
     """Keep legacy per-node checks; explicitly shared grips measure all members."""
     if not any("AdditionalContactIDs" in obj.PropertiesList for obj in contact_objects):
@@ -763,6 +781,7 @@ def _depth_regions(contact_objects, version):
 def _validate_published_depths(
     contact_objects, declared, version: int, deflection,
     board_depth: float | dict[str, float] | None = None,
+    audited_display_depths: dict | None = None,
 ) -> dict:
     """Check each authored region against the grip depth the board declares.
 
@@ -803,7 +822,7 @@ def _validate_published_depths(
         if key not in declared:
             continue
         tolerance = max(0.25, 3.0 * deflection)
-        expected = declared[key]
+        expected = (audited_display_depths or {}).get(key, declared[key])
         full_depth = board_depth.get(axis) if isinstance(board_depth, dict) else board_depth
         if full_depth is not None and expected > full_depth + tolerance:
             expected = full_depth
@@ -1072,13 +1091,15 @@ def build(
                 f"(measured Y spans: {measured_depths})"
             )
         else:
+            declared_depths = _declared_depths(board, version, presentation_id)
             measured_depths = _validate_published_depths(
                 contact_objects,
-                _declared_depths(board, version, presentation_id),
+                declared_depths,
                 version,
                 deflection,
                 board_depth={axis: float(getattr(body_object.Shape.BoundBox, axis.upper() + "Length"))
                              for axis in ("x", "y", "z")},
+                audited_display_depths=_audited_display_depths(source_digest, board["id"], declared_depths),
             )
 
         print("[6/10] writing the USDZ directly")

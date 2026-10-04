@@ -71,19 +71,26 @@ manufacturer's prescription.
 ## 4. Model intervals according to the source
 
 The app reads runtime plans from the schema-versioned
-`HangTen/Resources/PlanLibrary.json`. Add the audited plan to
+generated, ignored `HangTen/Resources/PlanLibrary.json`. Add the audited plan to
 `LegacyPlanSeedCatalog` in `TrainingModels.swift`, where it acts as the export
-fixture, then run:
+fixture, then build the board resources needed by the exporter's staging step
+and regenerate the library:
 
 ```sh
-scripts/export-plan-library.sh
-scripts/export-plan-library.sh --check
+rtk proxy bash scripts/build-board-assets.sh
+rtk scripts/export-plan-library.sh
+rtk scripts/export-plan-library.sh --check
 ```
 
 `PlanStorage.swift` turns the fixture into reusable block definitions,
 semantic targets, source metadata, and provenance, then validates the bundled
 JSON before the UI can use it. DEBUG builds compare every resolved JSON plan
 against the fixture.
+
+Commit the audited Swift definitions and source mappings. The JSON is rebuilt
+from those sources locally and in CI; it is not a second editable plan source.
+For a complete fresh-checkout app build run `scripts/build-runtime-assets.sh`
+before Xcode. See [generated artifacts](GENERATED_ARTIFACTS.md).
 
 For an unchanged official import, preserve the source's ten-minute task-cycle
 structure exactly and leave `timedWorkDuration` `nil` unless the source

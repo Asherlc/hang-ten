@@ -1,7 +1,0 @@
-<ElementMap> extract_sections.py(3): No hasherRef
-
-{'sourceSHA256': '46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264', 'axis': 'Y=0 rear wall; negative Y forward; Z up', 'topContacts': {'jug-14-center': {'ymin': -94.00000010000035, 'ymax': -0.0009998999999065983}, 'round-sloper-3-center': {'ymin': -94.0000535365335, 'ymax': -28.999999899866253}, 'flat-sloper-2-left': {'ymin': -94.00000010000005, 'ymax': -38.99999989999984}, 'jug-1-left': {'ymin': -94.00000010000004, 'ymax': -0.00099989999999056}, 'flat-sloper-2-right': {'ymin': -94.00000010000005, 'ymax': -38.99999989999984}, 'jug-1-right': {'ymin': -94.00000010000002, 'ymax': -0.00099989999999056}}}
-
-								
-								
-								

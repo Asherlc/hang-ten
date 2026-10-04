@@ -1,4 +1,5 @@
 """Validate the baked surface contract independently of Blender."""
+import argparse
 import json
 import math
 from pathlib import Path
@@ -38,4 +39,6 @@ def validate(data):
     print(f"Validated {count:,} vertices, {len(data['indices'])//3:,} triangles, {len(data['poses'])} evaluated poses")
 
 if __name__ == "__main__":
-    validate(json.loads(PATH.read_text()))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--path", type=Path, default=PATH)
+    validate(json.loads(parser.parse_args().path.read_text()))

@@ -1,1 +1,0 @@
-/opt/homebrew/opt/python@3.12/bin/python3.12: Error while finding module specification for 'hangboard_packages.cli' (ModuleNotFoundError: No module named 'hangboard_packages')

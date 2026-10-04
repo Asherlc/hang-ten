@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/package-checks/final/audit_and_staging.py", line 9, in <module>
-    loaded=load_board_package(p);r['schemaPassed']=True;r['boardID']=loaded.board.id
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py", line 3193, in load_board_package
-    _validate_instance_translation_lexemes(raw_board)
-  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py", line 322, in _validate_instance_translation_lexemes
-    raise ValueError(
-ValueError: reusable instance translations must use exactly nine decimal places

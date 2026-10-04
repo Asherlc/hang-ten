@@ -12,7 +12,14 @@ archive/upload, and App Store Connect hosts and distributes them with the app.
 
 ## Build setup
 
-The `Stage Board Packages` phase first validates the complete canonical source
+Before Xcode, run `rtk proxy bash scripts/build-runtime-assets.sh` from a checkout
+with its Git LFS sources fetched. Native board USDZ, model descriptors, and
+optional physics descriptors are ignored build outputs; `board.json` is
+generated from each retained FCStd manifest and suspension sidecar during
+staging. CI consumers download these runtime files from the producer artifact.
+See [generated artifacts](GENERATED_ARTIFACTS.md).
+
+The `Stage Board Packages` phase first validates the complete compiled
 packages, including the presence, format, and descriptor SHA-256 binding of
 each USDZ. It then produces two build-only trees:
 
@@ -36,7 +43,7 @@ At runtime, `BoardModelResourceAccess` creates a fresh
 `NSBundleResourceRequest` for the package tag, waits for successful access,
 then resolves the model from the main bundle. The request remains retained by
 the loaded model scene and ends when that scene leaves the view/cache
-lifecycle. Request, path, hash, or SceneKit failures all produce the existing
+lifecycle. Request, path, hash, or RealityKit/ModelIO failures all produce the existing
 explicit unavailable state.
 
 Apple references:
@@ -47,7 +54,7 @@ Apple references:
 
 ## Release verification
 
-1. Run the canonical package validator and the focused staging tests. Missing,
+1. Generate the runtime files, then run the canonical package validator and the focused staging tests. Missing,
    malformed, extra, or hash-mismatched source assets must still fail before
    any build resource tree is installed.
 2. Build Debug and inspect `HangTen.app/Hangboards`: descriptors and

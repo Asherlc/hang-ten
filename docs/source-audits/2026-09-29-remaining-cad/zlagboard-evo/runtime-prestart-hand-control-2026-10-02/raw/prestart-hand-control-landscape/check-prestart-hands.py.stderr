@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/control/check-prestart-hands.py", line 57, in <module>
-    out=p/'prestart-hand-validation.json';assert not out.exists();out.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(dict(checks=checks,errors=errors,actualConstructors=len(ctors)),indent=2));assert all(checks.values())
-                                                                                                                                                                                                                      ^^^^^^^^^^^^^^^^^^^^
-AssertionError

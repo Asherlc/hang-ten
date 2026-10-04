@@ -3,16 +3,23 @@
 How to replace a board's compiled runtime model with a self-contained parametric
 FreeCAD source, then rebuild the runtime asset from that source.
 
-Written for an agent or engineer picking this up cold. Everything here was
-executed on this repository; commands are real.
+The native authoring lessons below include historical migration measurements.
+The current catalog retains all 66 FCStd sources and builds ignored runtime
+resources from them. For a fresh checkout, fetch Git LFS and run
+`rtk proxy bash scripts/build-runtime-assets.sh` before validation or Xcode.
+See [the CAD guide](../Tools/HangboardCAD/README.md) and
+[generated artifacts](GENERATED_ARTIFACTS.md) for the maintained build entrypoints.
 
 ## End state for a migrated board
 
 ```
 Hangboards/<package>/<package>.FCStd      the canonical source: geometry + board metadata
 (board.json)                              generated from the FCStd at build time; never committed
-Hangboards/<package>/assets/primary.model.json   descriptor, hash-bound
-Hangboards/<package>/assets/primary.usdz  runtime asset (build output)
+Hangboards/<package>/suspension.json     optional authored cord setup
+Hangboards/<package>/rope-physics.json   optional authored physics configuration
+Hangboards/<package>/assets/*.model.json ignored generated descriptors, hash-bound
+Hangboards/<package>/assets/*.usdz       ignored generated runtime models
+Hangboards/<package>/assets/*.physics.json optional ignored generated physics data
 ```
 
 One shared command reads the FCStd and writes the USDZ and the descriptor. The
@@ -40,10 +47,13 @@ rejects any other name, and rejects unknown entries in a package directory.
 | Python | 3.11.14 | `FreeCAD.app/Contents/Resources/bin/freecadcmd` |
 | OpenUSD | 26.08 | `pip install --target <dir> usd-core==26.8` (that `<dir>` is `PXRPATH` below) |
 
-The host-side Python tools need `pytest`, `usd-core`, `numpy`, and `pillow`:
+The board build script provisions its pinned dependencies in workspace-owned
+scratch. For the host-side diagnostic tools, use a workspace-owned environment
+with `pytest`, `usd-core`, `numpy`, and `pillow`:
 
 ```bash
-python3 -m venv .env && .env/bin/pip install pytest usd-core==26.8 numpy pillow
+rtk python3 -m venv .context/<owner>/venv
+rtk .context/<owner>/venv/bin/pip install pytest usd-core==26.8 numpy pillow
 ```
 
 Nothing in the build path imports FreeCAD from the host interpreter: FreeCAD work
@@ -57,9 +67,10 @@ it links OCCT 7.9.3, not 7.8.1: rebuilding the five sources migrated before
 `metolius-prime-rib` on it gave five byte mismatches (same
 node and triangle counts, different vertex bytes). A USDZ compiled there is
 valid and hash-bound, but it may not reproduce byte-for-byte on the pinned
-macOS toolchain. Rebuild with `Tools/HangboardCAD/prepare_assets.py` on pinned
-FreeCAD 1.1.3 before committing generated assets; it requires the rebuilt
-descriptor and model hash to match the committed pair.
+macOS toolchain. Use `scripts/build-board-assets.sh` with the pinned FreeCAD
+1.1.3/OpenUSD 26.8 toolchain for delivery. It recompiles from the FCStd and
+checks generated hashes against authored sidecars without a committed export
+as an input. Commit source changes and evidence; generated exports are ignored.
 
 Two launcher quirks cost real time. Both are worked around in the existing
 scripts, so reuse them rather than re-deriving:
@@ -99,8 +110,9 @@ Document properties (`App::PropertyString` / `Integer` / `Float`):
 
 Each object you want exported carries `NodeID` (becomes the USD mesh prim name —
 this is what the app binds against), `NodeRole` (`body`/`contact`/`attachment`),
-`ContactID` (v1) or `ContactSlotID` (v2), `MaterialName`, `BaseColor`,
-`Roughness`, `Metallic`, and optionally an embedded `TextureFile`. Objects
+`ContactID` (v1) or `ContactSlotID` (v2). The source contract also recognizes
+legacy material properties, but shipping USDZ meshes must be unbound and carry
+no materials or textures. Objects
 without `NodeID` — sketches, datums, construction features — are never exported.
 `hangboard_packages.cad_source.inspect_archive` enforces a builtin-type allowlist and rejects Python
 objects, external `XLink` references, and missing embedded files, so a document
@@ -251,34 +263,38 @@ approved asset before committing to a board:
 A board whose profile is genuinely organic can still be measured (below), but a
 board that is a swept profile reproduces exactly.
 
-### 2. Read the reference from Git — never from the live path
+### 2. Preserve the prior source's export before editing
 
-The compiler **overwrites** `Hangboards/<package>/assets/primary.usdz`. If your
-migration script reads that path, it will silently compare the board against its
-own output. Resolve the pre-migration bytes from the recorded commit instead:
+The build overwrites ignored `Hangboards/<package>/assets/` outputs. Build the
+unchanged prior FCStd, then copy its model into workspace-owned scratch before
+editing. Record the source revision, FCStd SHA-256, and exported model SHA-256.
+If editing has already begun, export the recorded prior FCStd in a separate
+workspace-owned checkout instead of comparing the changed source with itself.
 
-```python
-from reference import load_reference
-path, digest = load_reference("lattice-triple-rung", "primary.usdz", scratch)
+```sh
+rtk proxy bash scripts/build-board-assets.sh --package <slug>
+rtk mkdir -p .context/<owner>/prior/<slug>/assets
+rtk cp Hangboards/<slug>/assets/primary.usdz .context/<owner>/prior/<slug>/assets/primary.usdz
+rtk proxy shasum -a 256 Hangboards/<slug>/<slug>.FCStd .context/<owner>/prior/<slug>/assets/primary.usdz
 ```
 
-`reference.py` does `git show <commit>:<path>` and pipes it through
-`git lfs smudge`, checking the resolved bytes against the object id the LFS
-pointer declares. Record that commit and digest.
+Historical pre-CAD exports and the one-off tools used to resolve them remain
+available in Git at `769817bcc`. They are provenance for the original migrations,
+not inputs to the maintained source-only build.
 
 ### 3. Web-search and cross-reference product facts
 
-Manufacturer / product web search is a **required cross-reference step**, not
-optional research and not a primary geometry source. After you have the Git
-reference (and before you measure and author), search for the product. Prefer
-primary manufacturer pages; clearly label commerce listings and other secondary
-pages.
+Manufacturer / product research is required primary evidence for product facts
+and deliberate geometry authoring. After preserving the prior export and before
+authoring, inspect manufacturer pages and source images; clearly label commerce
+listings and other secondary sources. An approved display mesh's cross-section
+can supply a measured 3D Sketcher profile under the migration rule in `AGENTS.md`.
 
 Use the search only to cross-check published overall dimensions, grip depths, and
 product identity against:
 
 1. the published facts already in `board.json`;
-2. measurements from the Git-resolved mesh / USDZ (which you still take next).
+2. measurements from the preserved approved display mesh / USDZ.
 
 Do **not** invent geometry from search results, invent unsupported numeric facts
 the pages do not state, override mesh-authored shapes without evidence, or treat
@@ -299,14 +315,13 @@ Keep published facts separate from measurements:
 
 - overall dimensions and grip depths come from the board manifest (published
   facts, with their sources; the build-time `board.json` is generated from it);
-- web search **cross-references** those published facts and product identity
-  against manufacturer (prefer) or clearly labeled secondary sources — it is not
-  a geometry source and must not invent unsupported numbers;
+- primary manufacturer evidence establishes the sourced facts and guides
+  deliberate authoring; unsupported numbers must not be inferred from copy;
 - the outline and hold surfaces are measured from the approved display mesh;
 - conflicts between web, the manifest (`board.json`), and mesh are recorded
   (URL + what it supports + what disagrees), not silently resolved by inventing
   facts;
-- every display choice (UV projection, material) is stated as a choice.
+- every geometric approximation is documented; exported meshes stay unbound.
 
 The result is a measured approximation of a display mesh. It is **not** recovered
 manufacturing geometry, and nothing here supports a product-accuracy or
@@ -318,29 +333,28 @@ length expression on the pad. Do not bind to the pad's faces — see traps.
 
 ### 3b. Embed the board metadata
 
-Once the document is saved, move the package's reviewed `board.json` into it,
-then delete the file and ignore it. From then on the FCStd owns the metadata and
-`board.json` is generated at build time:
+The FCStd owns metadata through `HangTenBoardManifest`. For an existing native
+board, dump that manifest to scratch, edit the sourced fields, and embed it:
 
 ```bash
-python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> Hangboards/<slug>/board.json
-python3 Tools/HangboardCAD/board_manifest.py --package <slug> | cmp - Hangboards/<slug>/board.json  # byte check
-git rm Hangboards/<slug>/board.json
-echo '/Hangboards/<slug>/board.json' >> .gitignore   # next to the other CAD packages
-scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+rtk python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug> > .context/<owner>/manifest.json
+# Edit the scratch manifest, preserving number spellings and source mappings.
+rtk python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> .context/<owner>/manifest.json
+rtk proxy bash scripts/build-board-assets.sh --package <slug>
+rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 ```
 
-`cmp` only proves byte identity; if the hand-authored layout differed (inline
-arrays, `\u00d7` escapes) compare values, key order, and number spellings
-instead, as the one-off migration did (deleted after it ran; read it with
-`git show 3e1653b:Tools/HangboardCAD/migration/embed_board_manifest.py`).
+For a new native document, author and embed its reviewed manifest in the same
+way. Do not leave `board.json` in the package; validation rejects it. The
+historical one-off embedding migration is recoverable at
+`3e1653b:Tools/HangboardCAD/migration/embed_board_manifest.py`.
 
 This rewrites only `Document.xml` in the archive; every shape member stays
 byte-identical. Re-running an authoring script that creates the document from
 scratch drops the property, so embed again afterwards.
 
 The authoring script itself is a throwaway: keep it under `.context/` and do not
-commit it. The six boards migrated so far were authored by committed
+commit it. The initial six boards were authored by committed
 `Tools/HangboardCAD/migration/author_*.py` scripts that have since been retired.
 Their provenance (published versus measured values, tolerances, reference SHAs,
 stated deviations) is recoverable from Git history. Record a new board's
@@ -353,7 +367,8 @@ saved document in a fresh process and asserts:
 
 - the sketch is fully constrained and the pad recomputes a solid;
 - the body occupies the expected native frame;
-- each contact region's depth matches the grip depth `board.json` publishes;
+- each contact region's depth satisfies the published-depth check, including
+  only any source-hash-bound exception in `display_depth_audits.json`;
 - each contact region lies exactly on the board surface (measured, not assumed);
 - a pad-length edit reaches the body **and every contact**;
 - a profile dimension edit moves the intended region and leaves the others alone;
@@ -365,16 +380,16 @@ a different surface passes every structural check and fails only a test like thi
 ### 6. Compile and compare against the reference
 
 ```bash
-python3 Tools/HangboardCAD/run_freecad.py --extra-python-path "$PXRPATH" \
-  Tools/HangboardCAD/compile_board.py --package <slug> --check --report /tmp/report.json
+rtk proxy bash scripts/build-board-assets.sh --package <slug>
 
-PYTHONPATH= python3 Tools/HangboardCAD/tests/compare_exports.py \
-  <reference.usdz> Hangboards/<slug>/assets/primary.usdz --limit-mm 0.5
+rtk .context/<owner>/venv/bin/python Tools/HangboardCAD/tests/compare_exports.py \
+  .context/<owner>/prior/<slug>/assets/primary.usdz \
+  Hangboards/<slug>/assets/primary.usdz --limit-mm 0.5
 ```
 
-`PXRPATH` is the directory holding `pxr` (see Prerequisites). `run_freecad.py`
-runs a script under `freecadcmd` with your arguments forwarded in order — use it
-rather than calling `freecadcmd` directly, for the two launcher reasons above.
+The shared build entrypoint supplies the pinned compiler environment.
+For lower-level checks, `run_freecad.py` forwards script arguments to
+`freecadcmd`; use it rather than invoking `freecadcmd` with script options directly.
 
 `compare_exports.py` samples both surfaces and measures point-to-triangle
 distance in **both** directions, so a one-sided comparison cannot hide a missing
@@ -388,34 +403,19 @@ identity survived.
 ### 7. Validate the source-backed package
 
 Run the package validator after any source or metadata edit. It generates
-`board.json` from the FCStd and rejects a stale on-disk copy. Rebuild with
-`prepare_assets.py` on the pinned macOS toolchain to check that the compiled
-asset matches the committed descriptor and model hash.
+`board.json` from the FCStd and rejects a stale on-disk copy. First build the
+ignored assets with `scripts/build-board-assets.sh`; it checks the exact new
+model, descriptor, physics data, and authored suspension hash bindings. A fresh
+checkout needs the complete board build before catalog-wide validation.
 
 ### 8. Verify in the app, with the hold selected
 
-Build and install, then drive the board-detail review route:
-
-```bash
-DERIVED=<derived data path, e.g. .context/<workspace>/derived>
-
-xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug \
-  -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
-  -derivedDataPath "$DERIVED" \
-  CODE_SIGNING_ALLOWED=NO build
-
-UDID=<simulator udid>
-xcrun simctl install $UDID "$DERIVED/Build/Products/Debug-iphonesimulator/HangTen.app"
-SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL=1 \
-SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID=<board id> \
-  xcrun simctl launch $UDID com.hangten.training
-
-# select a hold — deep link, not an environment variable
-xcrun simctl openurl $UDID "hangten://board/<board id>/hold/<contactID>"
-axe tap --label "Open" --udid $UDID            # iOS confirms custom schemes
-axe describe-ui --udid $UDID | grep selectedHold
-xcrun simctl io $UDID screenshot /tmp/<name>.png
-```
+Run `rtk proxy bash scripts/build-runtime-assets.sh`, then follow
+[iOS Simulator validation](IOS_SIMULATOR_VALIDATION.md) to build, install,
+and review on an isolated workspace-owned simulator. Keep DerivedData and
+screenshots under `.context/<owner>/` and clean up the exact owned resources.
+Present front, side, and top previews beside the prior source's export before
+reporting any geometry change complete.
 
 Deep links are handled by `HangTen/Models/DeepLinkManager.swift`:
 
@@ -441,8 +441,8 @@ which is the part a CPU render cannot check.
   parametric migration.
 - Do not present a reconstructed display asset as recovered factory geometry or
   as manufacturing-ready.
-- Do not treat manufacturer or commerce web pages as a primary geometry source,
-  or invent numeric facts from search that the pages do not state.
+- Do not invent numeric facts that primary evidence does not support, or present
+  a display approximation as manufacturer CAD.
 - CPU previews are not native SceneKit screenshots and do not establish
   materials, picking, accessibility, suspension, or performance.
 
@@ -618,8 +618,10 @@ write-up. The durable points:
   solid: `distToShape` to a solid is 0 for any point inside it. See
   the archived migration notes in Git history.
 - **target10a Linebreaker BASE** (23 contacts) came from a retained
-  signed-distance generator, not a Blender script. Search `.context/migration*`
-  history, not only `Tools/HangboardModels`, for a `geometry-config.json`.
+  signed-distance generator, not a Blender script. The retained
+  `geometry-config.json` evidence lives under
+  `docs/source-audits/retired-migrations/`; historical execution code remains in
+  Git rather than in the active toolchain.
   An SDF's smooth blends (`smax`) have no exact B-rep, so author the primitives
   and state which blends are omitted. Check each cavity's mouth against every
   crease *before* authoring. A mouth that crosses a tier crease makes the
@@ -640,14 +642,14 @@ write-up. The durable points:
   20 % undersized, had the wrong topology, and reversed two published depth
   gradients. Before measuring it, check the reference against the
   manufacturer's own images and depth guide. When they disagree, author the
-  front view from a manufacturer top-down photo instead. Type the points in by
-  eye from 1 mm-gridded crops (no detection), and take the scale from a known
-  part in the photo's plane, such as a bolt seat. OCCT will not chamfer an
+  front view deliberately from primary manufacturer evidence instead, recording
+  measurements and assumptions. The initial migration used manual photo readings
+  with a bolt seat as its scale anchor. OCCT will not chamfer an
   outline chain ending at a near-tangent or concave kink, so build asymmetric
   bands as ruled lofts from the photographed front edge to the silhouette at
-  the published depth. The reading and review aids (1 mm-gridded crops and
-  the model-over-photo overlay, `Tools/HangboardCAD/photo_grid.py`) and the
-  full method are in `freecad-authoring-lessons.md` §18. See
+  the published depth. The historical results and OCCT lessons are in
+  `freecad-authoring-lessons.md` §19. Current review uses front/side/top
+  previews beside the prior source's export and manufacturer evidence. See
   the archived migration notes in Git history.
 - **Metolius Light Rail 2.0**: the reference was an analytic Blender mesh.
   Grouping its vertices by coordinate recovered every station exactly (lessons
@@ -674,8 +676,8 @@ write-up. The durable points:
 
 ## Fast loop and definition of done
 
-**Decision tree.** After the Git reference and the required web-search
-cross-reference (procedure steps 2–3), measure the reference before authoring
+**Decision tree.** After preserving the prior export and reviewing primary
+manufacturer evidence (procedure steps 2–3), measure the reference before authoring
 anything:
 
 - **Constant cross-section along the intended axis? → swept profile.** Clone the
@@ -698,25 +700,11 @@ anything:
 **Inner loop (fast, host-side).** After every authoring edit:
 
 ```bash
-# Host venv needs numpy, pillow, usd-core (see Toolchain). Workspace example:
-#   .context/<workspace>/venv/bin/python
-# PXRPATH is the directory that *contains* the `pxr` package (same value
-# `run_freecad.py --extra-python-path` takes).
-python3 Tools/HangboardCAD/run_freecad.py --extra-python-path "$PXRPATH" \
-  Tools/HangboardCAD/compile_board.py --package <slug>
-
-# Resolve the pre-migration USDZ from Git (never from the live package path —
-# compile overwrites it). `reference.load_reference` writes
-# `<scratch>/<slug>-primary.usdz`.
-.context/<workspace>/venv/bin/python -c "
-import sys
-from pathlib import Path
-sys.path.insert(0, 'Tools/HangboardCAD')
-from reference import load_reference
-print(load_reference('<slug>', 'primary.usdz', Path('.context/<workspace>/ref'))[0])
-"
-.context/<workspace>/venv/bin/python Tools/HangboardCAD/preview.py --package <slug> \
-  --reference .context/<workspace>/ref/<slug>-primary.usdz
+rtk proxy bash scripts/build-board-assets.sh --package <slug>
+# The reference was exported and saved before editing (procedure step 2).
+rtk .context/<owner>/venv/bin/python Tools/HangboardCAD/preview.py --package <slug> \
+  --reference .context/<owner>/prior/<slug>/assets/primary.usdz \
+  --out .context/<owner>/previews
 ```
 
 `preview.py` is a diagnostic only (never a build input). It renders front/side/top
@@ -728,7 +716,7 @@ then build the app and screenshot a deep-linked hold. Run the suites and
 validate the package once the shape is right.
 
 **Off-the-shelf Hydra render (`usdrecord`).** After compile, also render the
-committed USDZ with the OpenUSD `usdrecord` CLI (Hydra Storm — not FreeCAD, not
+generated USDZ with the OpenUSD `usdrecord` CLI (Hydra Storm — not FreeCAD, not
 `preview.py`). Framed front / side / top / three-quarter views catch depth steps,
 through-holes, and silhouette issues that the custom lambert preview can
 understate. Keep cameras in a scratch USDA that references the package asset;
@@ -750,18 +738,25 @@ cords).
 
 ## Reproducibility and the USDZ as a build output
 
-`prepare_assets.py` recompiles each source-backed board in a fresh process and
-requires the derived descriptor to equal the committed one and its model hash
-to match the rebuilt USDZ. It writes the checked pair into a staging directory
-for builds that consume a compiled asset.
+`prepare_assets.py` recompiles each source-backed presentation in a fresh
+process using pinned FreeCAD 1.1.3/OpenUSD 26.8. It checks the new descriptor
+against the exact exported USDZ, validates physics and authored suspension
+bindings, and rejects source mutation. `scripts/build-board-assets.sh` installs
+these generated files at their ignored package paths. No old USDZ or descriptor
+is needed to build.
 
 This matters because the app enforces it at runtime: `BoardPackageStore` rejects
 a package whose delivered bytes do not hash to the descriptor's `modelSHA256`. A
-platform that cannot reproduce the committed bytes must not compile the asset for
-delivery. Prove reproducibility on the target platform *before* removing a
-committed asset.
+delivery build must use the pinned producer toolchain. CI uploads the complete
+runtime artifact and consumers download it before package validation or app
+staging. The source-only transition proved reproduction of the approved board
+geometry; the hash-bound Beastmaker metadata-depth exceptions are recorded in
+`Tools/HangboardCAD/display_depth_audits.json`. No board geometry was changed.
 
-## Model and cost policy
+## Historical review-budget experience
+
+The following records the initial migration's review-budget constraints. Follow
+the current session's model and delegation instructions when doing new work.
 
 **Claude/Opus models are too expensive for this work.** One Opus review pass cost
 **$6.37** against a $10 weekly OpenRouter limit — 64% of the budget for a single
@@ -788,40 +783,41 @@ Practical routing:
 ```bash
 PXRPATH=<dir holding pxr>
 
-# compile (check mode: validates and stages, publishes nothing)
-python3 Tools/HangboardCAD/run_freecad.py --extra-python-path "$PXRPATH" \
+# Fresh checkout: all resources required before Xcode or package validation.
+rtk git lfs pull
+rtk proxy bash scripts/build-runtime-assets.sh
+
+# Lower-level compile check: validates without publishing package outputs.
+rtk python3 Tools/HangboardCAD/run_freecad.py --extra-python-path "$PXRPATH" \
   Tools/HangboardCAD/compile_board.py --package <slug> --check
 
-# compile and publish into the package
-python3 Tools/HangboardCAD/run_freecad.py --extra-python-path "$PXRPATH" \
-  Tools/HangboardCAD/compile_board.py --package <slug>
+# Rebuild and install ignored outputs for a selected CAD board.
+rtk proxy bash scripts/build-board-assets.sh --package <slug>
 
-# native source checks (reopen, recompute, edit propagation, guards)
-python3 Tools/HangboardCAD/run_freecad.py --extra-python-path "$PXRPATH" \
-  Tools/HangboardCAD/tests/native_source_checks.py Hangboards/<slug>/<slug>.FCStd
-python3 Tools/HangboardCAD/run_freecad.py --extra-python-path "$PXRPATH" \
-  Tools/HangboardCAD/tests/native_broken_source_check.py
+# CAD contract, exporter, and board-specific native integration suites.
+rtk python3 -m pytest Tools/HangboardCAD/tests -q --basetemp .context/<owner>/cad-tests
 
-# CAD contract, exporter, and native integration suites
-python3 -m pytest Tools/HangboardCAD/tests -q
+# Model and package suites (after generating all board outputs).
+rtk python3 -m pytest Tools/HangboardModels Tools/HangboardPackages -q \
+  --basetemp .context/<owner>/package-tests
 
-# model and package suites
-python3 -m pytest Tools/HangboardModels Tools/HangboardPackages -q
+# Generate board.json in memory or print it; never save into its source package.
+rtk python3 Tools/HangboardCAD/board_manifest.py --all
+rtk python3 Tools/HangboardCAD/board_manifest.py --package <slug>
 
-# generate board.json for every CAD-backed package (no FreeCAD; build-time only)
-python3 Tools/HangboardCAD/board_manifest.py --all
-python3 Tools/HangboardCAD/board_manifest.py --package <slug>   # print one
+# Change sourced CAD metadata, then rebuild and validate.
+rtk python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug> > .context/<owner>/manifest.json
+rtk python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> .context/<owner>/manifest.json
+rtk proxy bash scripts/build-board-assets.sh --package <slug>
 
-# change a CAD board's metadata (then validate; nothing to regenerate)
-python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug> > /tmp/manifest.json
-python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> /tmp/manifest.json
+# Stage generated packages like the Android build.
+rtk scripts/run-supported-python.sh scripts/stage-board-packages.py --target android \
+  --repository-root . --destination .context/<owner>/staged/Hangboards
 
-# stage packages like the Android build (no Xcode environment, no ODR split)
-scripts/run-supported-python.sh scripts/stage-board-packages.py --target android \
-  --repository-root . --destination <scratch>/Hangboards
+# Package validation across the catalog.
+rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 
-# package validation across the catalogue
-scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-
-# compile into a directory instead of the packages
-python3 Tools/HangboardCAD/prepare_assets.py --out <dir> --extra-python-path "$PXRPATH"
+# Compile into scratch instead of installing package outputs.
+rtk python3 Tools/HangboardCAD/prepare_assets.py --out .context/<owner>/compiled \
+  --extra-python-path "$PXRPATH"
+```

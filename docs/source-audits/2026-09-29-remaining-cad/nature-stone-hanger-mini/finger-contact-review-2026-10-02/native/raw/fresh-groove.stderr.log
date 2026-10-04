@@ -1,5 +1,0 @@
-<PropertyLinks> PropertyLinks.cpp(516): nature_stone_hanger_mini#CompleteExteriorSurface.Support missing element reference nature_stone_hanger_mini#FinalSolid ;#99a:1;:H1207,F.Face46
-<PropertyLinks> PropertyLinks.cpp(516): nature_stone_hanger_mini#CompleteExteriorSurface.Support missing element reference nature_stone_hanger_mini#FinalSolid ;#9aa:1;:H1207,F.Face64
-ExteriorWithoutPressureBand: Boolean operation failed
-CompleteExteriorSurface is not a solid
-UpperRailPressureBand is not a solid

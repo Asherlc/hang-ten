@@ -1,12 +1,13 @@
 ---
 name: migrate-hangboard-to-3d
-description: Use when migrating an existing Hang Ten hangboard to an interactive 3D display model, or refining its geometry, exported materials, picking, or app integration.
+description: Use when migrating an existing Hang Ten hangboard to native CAD, refining its 3D geometry, or reviewing unbound exports, picking, or app integration.
 ---
 
 # Migrate a hangboard to 3D
 
 Deliver a faithful model-only schema-v3 package with selectable physical
-contacts. The USDZ and hash-bound descriptor are the sole sources of rendering,
+contacts. Retain `Hangboards/<slug>/<slug>.FCStd` as the geometry and embedded
+metadata source. Its generated USDZ and hash-bound descriptor drive rendering,
 highlighting, hit testing, and resolved spatial geometry. Do not retain raster
 media, canonical paths, cached frames, or fallback geometry in a model package.
 Preserve contact identity and source-backed factual metadata exactly.
@@ -46,8 +47,10 @@ implying the physical product lacks them.
 
 ## Contact-first package contract
 
-Read the live schema-v3 `board.json` and use `contacts[].id` as the only logical
-identity inventory. A model presentation owns one USDZ and one descriptor. Its
+Read the generated schema-v3 document with
+`rtk python3 Tools/HangboardCAD/board_manifest.py --package <slug>` and use
+`contacts[].id` as the only logical identity inventory. A model presentation
+declares one generated USDZ and descriptor. Its
 descriptor binds importer-visible nodes to physical contact IDs; disconnected
 mesh pieces may share a contact ID. Model packages are model-only and
 read-only in the apps. Remote model editing is unsupported.
@@ -55,27 +58,26 @@ read-only in the apps. Remote model editing is unsupported.
 Use only the retained native tools:
 
 - `Tools/HangboardModels/contact_model_descriptor.py` validates and compiles
-  descriptor-v1 contact bindings and read-only mesh-derived bounds.
-- `Tools/HangboardModels/contact_model_package.py` transports deliberately
-  tagged Blender geometry into a deterministic USDZ and descriptor. It reads
-  only schema-v3 `contacts[]`.
-- `Tools/HangboardModels/import_contact_model_source.py` imports a reviewed
-  source model using an explicit contact mapping; it does not infer bindings.
-- `Tools/HangboardModels/verify_yy_baguette_evo.py` verifies the shipped YY
-  Baguette Evo package’s exact model, descriptor, bindings, and hashes.
+  descriptor-v1/v2 bindings and read-only mesh-derived bounds.
 - `Tools/HangboardCAD/compile_board.py` compiles a native FreeCAD source
   (`Hangboards/<slug>/<slug>.FCStd`) directly into the USDZ and descriptor. For
   such a package, `board.json` is generated from the FCStd's embedded
   `HangTenBoardManifest` and any adjacent `suspension.json` at build time and
-  is not committed: embed reviewed CAD metadata with `set_board_manifest.py`,
-  keep optional cord setup in the descriptor-bound sidecar, then `git rm` the
-  old `board.json` and add its path to `.gitignore`. Follow
-  `docs/freecad-authoring-migration.md` and "Authoring a new CAD board" in
-  `Tools/HangboardCAD/README.md`; any authoring script is a throwaway under
+  is not committed: embed reviewed CAD metadata with `set_board_manifest.py`
+  and keep optional cord setup in the descriptor-bound sidecar. Follow
+  "Authoring a new CAD board" in `Tools/HangboardCAD/README.md`; any authoring
+  script is a throwaway under
   `.context/`, and its provenance goes in a dated `docs/source-audits/` record.
+- `scripts/build-board-assets.sh --package <slug>` builds ignored runtime
+  outputs using pinned FreeCAD 1.1.3/OpenUSD 26.8. Run it before validation;
+  run `scripts/build-runtime-assets.sh` before a fresh-checkout app build.
+- `Tools/HangboardModels/verify_owl_climb_poker.py` and the native Training
+  Center verifier retain actual-export regressions for those boards.
 
-Do not recreate removed schema-v2 compilers, migration manifests, baseline
-wrappers, gallery generators, raster converters, or compatibility aliases.
+Commit the FCStd, authored sidecars and evidence; keep USDZ, `*.model.json`,
+`*.physics.json` and generated `board.json` out of Git. Do not recreate retired
+Blender board compilers/importers, per-board authors, mesh cleanup/simplification,
+raster converters, or compatibility aliases.
 
 ## Geometry authoring and export
 
@@ -86,17 +88,17 @@ author analytic silhouettes, sections, recesses, and symmetric counterparts;
 never trace, segment, vectorize, crop, register, or infer geometry from pixels.
 
 The compiler transports authored geometry and must not repair shapes,
-materials, names, or topology. Tag every source mesh explicitly as body,
-attachment, or contact. Keep source-to-imported node correspondence through
-export. Reimport the actual USDZ from an empty scene and rebuild the descriptor
-from importer-visible triangles. Validate exact assets, hashes, materials,
+materials, names, or topology. Bind each exported native object explicitly with
+`NodeID`, `NodeRole`, and `ContactID` or `ContactSlotID`. Reopen the actual USDZ
+with the retained native reader and rebuild its descriptor from exported
+triangles. Validate exact assets, hashes, unbound material policy,
 dimensions, contact inventory, bindings, and sorted canonical descriptor data.
 Derived centers and bounds are read-only mesh outputs, never authored facts.
 
-Blender entrypoints must bootstrap sibling imports from `__file__` and use
-workspace-owned config/cache/temp/output. If Blender fails before Python in the
-managed sandbox, compare one minimal host-context invocation when authorized;
-do not attribute an environment boundary failure to geometry.
+Use `run_freecad.py` or the shared build script to handle FreeCAD launcher
+arguments and its extra Python path. Generated diagnostics belong under a
+workspace-owned `.context` path. Blender 5.2.0 is retained for grip hand export,
+not board authoring or compilation.
 
 ## Runtime integration
 
@@ -118,7 +120,10 @@ must enter the model-unavailable state without a visible stand-in or fallback.
 
 Run retained model-tool pytest collection, package validation, staging parity,
 native model/picking tests, full Swift tests/build, and hard-cut scans. Preserve
-promoted USDZ and descriptor hashes unless audited geometry work explicitly
-authorizes a new promotion. Put generated artifacts under the workspace-owned
-`.context` directory, install exact cleanup traps for external resources, and
+generated USDZ and descriptor hashes for metadata-only changes. For geometry
+changes, build from both prior and changed FCStd sources and present
+front/side/top previews before completion. Hash-bound depth exceptions in
+`Tools/HangboardCAD/display_depth_audits.json` retain specific reviewed source
+facts; they do not authorize geometry changes. Put diagnostic artifacts under
+the workspace-owned `.context` directory, install exact cleanup traps for external resources, and
 verify cleanup before reporting completion.

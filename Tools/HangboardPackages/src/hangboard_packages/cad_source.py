@@ -525,7 +525,7 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> 
         raise ManifestError("suspension.json presentation has an invalid descriptorPath")
     descriptor_file = Path(package_root) / descriptor_path
     if descriptor_file.is_symlink() or not descriptor_file.is_file():
-        raise ManifestError("suspension.json descriptor must be a regular file")
+        raise ManifestError("suspension.json descriptor must be a regular file; run scripts/build-board-assets.sh to generate runtime assets")
     try:
         descriptor = loads(descriptor_file.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as error:

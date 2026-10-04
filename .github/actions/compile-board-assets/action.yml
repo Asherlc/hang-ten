@@ -1,0 +1,21 @@
+name: Compile runtime assets
+description: Generate board, hand, and routine resources from retained authored sources before packaging.
+outputs:
+  owner:
+    description: Workspace owner used in the CI artifact name.
+    value: ${{ steps.compile.outputs.owner }}
+runs:
+  using: composite
+  steps:
+    - name: Set up compiler host Python
+      uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      with:
+        python-version: '3.11'
+    - name: Compile runtime resources
+      id: compile
+      shell: bash
+      run: |
+        set -euo pipefail
+        owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+        echo "owner=$owner" >> "$GITHUB_OUTPUT"
+        scripts/build-runtime-assets.sh

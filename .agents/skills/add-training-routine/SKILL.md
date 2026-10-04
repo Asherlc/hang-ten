@@ -1,13 +1,13 @@
 ---
 name: add-training-routine
-description: Import or audit a manufacturer hangboard routine in Hang Ten while preserving exact tasks, order, repetitions, times, interval structure, provenance, and board compatibility. Use for new routines, source verification, generic-versus-board-specific classification, or routine hold-target corrections.
+description: Use when adding or auditing a manufacturer hangboard routine in Hang Ten, verifying source prescriptions, classifying board compatibility, or correcting routine hold targets.
 ---
 
 # Add a training routine
 
 Read `docs/ADDING_A_ROUTINE.md` completely before changing files. Treat the
 manufacturer's primary source as the prescription and the board catalog as a
-separate semantic-resolution layer.
+separate factual inventory.
 
 ## Workflow
 
@@ -20,11 +20,15 @@ separate semantic-resolution layer.
    exercises. Mark provenance honestly.
 5. Target the narrowest truthful semantic `ContactRequirement` predicate;
    never embed board contact IDs or visual references in a routine.
-6. Regenerate `HangTen/Resources/PlanLibrary.json` with
-   `scripts/export-plan-library.sh`, then run the script again with `--check`.
-7. Verify every target resolves on every board where the plan appears.
+6. Generate board assets before running the plan exporter, which stages board
+   metadata. Regenerate `HangTen/Resources/PlanLibrary.json` with
+   `rtk scripts/export-plan-library.sh`, then run it with `--check`.
+   This JSON is an ignored build output; commit the audited Swift definitions
+   and source mappings. CI generates the same library from those definitions.
+7. Verify each factual requirement remains compatible with every board where
+   the plan appears. Keep source-generic work as explicit athlete self-selection.
 8. Preview representative text, timer, audio, hand cue, and active-hold states
-   in the dedicated simulator.
+   in the dedicated simulator after `rtk proxy bash scripts/build-runtime-assets.sh`.
 
 ## Non-negotiable rules
 

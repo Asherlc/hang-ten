@@ -10,11 +10,23 @@ in `LICENSE.md` and the repository third-party notices.
 
 ## Authoring and reproduction
 
-Requires Blender 5.2. Rebuild from the included source without downloads:
+The app's `HangTen/Resources/GripHand/hand-mesh.json` is an ignored build output.
+Export the retained editable source with pinned Blender 5.2.0:
 
 ```sh
-blender --background --factory-startup --python Art/GripHand/build_hand.py
-python3 Art/GripHand/validate_export.py
+rtk proxy bash scripts/export-grip-hand.sh
+```
+
+The full `scripts/build-runtime-assets.sh` entrypoint runs this export together
+with native board compilation and Swift plan export. CI delivers the generated
+JSON in its runtime artifact. Commit the editable Blender source and evidence,
+not the exported JSON; `SourceHand.glb` and its license remain retained inputs.
+
+To deliberately rebuild the editable source from the included upstream asset:
+
+```sh
+rtk proxy blender --background --factory-startup --python Art/GripHand/build_hand.py
+rtk python3 Art/GripHand/validate_export.py
 ```
 
 The rebuild replaces edits in `GripHand.blend`. To preserve manual edits, open
@@ -25,9 +37,8 @@ post-armature subdivision modifier and the five `highlight_*` point attributes.
 Export the edited document directly:
 
 ```sh
-blender --background Art/GripHand/GripHand.blend --python Art/GripHand/export_hand.py
-python3 Art/GripHand/validate_export.py
-blender --background --factory-startup --python Art/GripHand/review_grips.py
+rtk proxy bash scripts/export-grip-hand.sh
+rtk proxy blender --background --factory-startup --python Art/GripHand/review_grips.py
 ```
 
 The review script renders the actual exported surfaces under the current

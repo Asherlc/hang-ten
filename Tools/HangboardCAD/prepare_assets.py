@@ -1,14 +1,9 @@
 """Compile every source-backed board into a directory of runtime assets.
 
-This is the step that lets the committed USDZ become a build output. It produces
-the pair the app needs (`primary.usdz` and `primary.model.json`) for each board
-that carries a CAD authoring source, and refuses to emit anything that does not
-match the descriptor committed alongside the source.
-
-The descriptor is the contract: `BoardPackageStore` rejects a package at runtime
-when the delivered bytes do not hash to `modelSHA256`. So a compiled asset is only
-usable if the derived descriptor equals the committed one, which is exactly what
-this checks before writing.
+The FCStd and optional authoring sidecars are the only inputs. USDZ files,
+model descriptors, and rope-physics descriptors are generated together; no
+previous export is needed. Hash-bound suspension sidecars still reject a
+changed model until its geometry and cord setup have been reviewed.
 
     python3 Tools/HangboardCAD/prepare_assets.py --out <directory>
     python3 Tools/HangboardCAD/prepare_assets.py --out <dir> --package <slug>
@@ -30,6 +25,8 @@ import tempfile
 from pathlib import Path
 
 from presentation_targets import source_targets
+import use_hangboard_packages  # noqa: F401
+from hangboard_packages import cad_source
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 TOOLS = REPOSITORY / "Tools" / "HangboardCAD"
@@ -71,9 +68,16 @@ def _run_build(package: str, destination: Path, freecad: Path, extra_path: str, 
         arguments.append("--allow-faceted-import")
     wrapper.write_text(
         "import sys, traceback\n"
+        f"sys.path[:0] = {extra_path.split(os.pathsep) if extra_path else []!r}\n"
         f"path = {str(TOOLS / 'compile_board.py')!r}\n"
         f"sys.argv = [path] + {arguments!r}\n"
         "try:\n"
+        "    import FreeCAD as App\n"
+        "    from pxr import Usd\n"
+        "    if tuple(App.Version()[:3]) != ('1', '1', '3'):\n"
+        "        raise RuntimeError('board builds require pinned FreeCAD 1.1.3')\n"
+        "    if Usd.GetVersion() != (0, 26, 8):\n"
+        "        raise RuntimeError('board builds require pinned OpenUSD 26.8')\n"
         "    exec(compile(open(path).read(), path, 'exec'), "
         "{'__name__': '__main__', '__file__': path})\n"
         "except SystemExit:\n"
@@ -103,34 +107,63 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def publish_assets(source: Path, target: Path, names: set[str] | None = None) -> None:
+    """Install a validated runtime set and prune superseded generated files."""
+    def generated(path: Path) -> bool:
+        return path.is_file() and path.name.endswith((".usdz", ".model.json", ".physics.json"))
+
+    names = names if names is not None else {path.name for path in source.iterdir() if generated(path)}
+    target.mkdir(parents=True, exist_ok=True)
+    for name in sorted(names):
+        shutil.copyfile(source / name, target / name)
+    for path in target.iterdir():
+        if generated(path) and path.name not in names:
+            path.unlink()
+
+
 def prepare(package: str, out: Path, freecad: Path, extra_path: str) -> dict:
     package_root = REPOSITORY / "Hangboards" / package
-    targets = source_targets(package_root / f"{package}{SOURCE_SUFFIX}")
+    source = package_root / f"{package}{SOURCE_SUFFIX}"
+    targets = source_targets(source)
+    source_digest = sha256(source)
     reports = []
-    with tempfile.TemporaryDirectory(prefix=f"hangten-prepare-{package}-") as scratch:
-        staging = Path(scratch) / "assets"
+    scratch_root = REPOSITORY / ".context"
+    scratch_root.mkdir(exist_ok=True)
+    owner = Path(os.environ.get("PASEO_WORKTREE_PATH", str(REPOSITORY))).name
+    with tempfile.TemporaryDirectory(prefix=f"{owner}-prepare-{package}-", dir=scratch_root) as scratch:
+        staged_package = Path(scratch) / package
+        staging = staged_package / "assets"
+        generated_files = set()
         for presentation_id, (asset_name, descriptor_name) in targets.items():
-            committed_descriptor = package_root / "assets" / descriptor_name
-            if not committed_descriptor.is_file():
-                raise RuntimeError(f"{package}/{presentation_id} has no committed descriptor")
-            committed = json.loads(committed_descriptor.read_text())
             _run_build(package, staging, freecad, extra_path, presentation_id if len(targets) > 1 else None)
             built_asset, built_descriptor = staging / asset_name, staging / descriptor_name
             if not built_asset.is_file() or not built_descriptor.is_file():
                 raise RuntimeError(f"{package}/{presentation_id}: the build produced no asset/descriptor pair")
             derived = json.loads(built_descriptor.read_text())
-            if derived != committed:
-                raise RuntimeError(f"{package}/{presentation_id}: the compiled descriptor does not match the committed one; the source and descriptor have diverged")
             digest = sha256(built_asset)
             if derived.get("modelSHA256") != digest:
                 raise RuntimeError(f"{package}/{presentation_id}: the compiled asset does not hash to the descriptor")
+            generated_files.update({asset_name, descriptor_name})
+            if (package_root / "rope-physics.json").is_file():
+                physics_path = staging / "primary.physics.json"
+                if not physics_path.is_file():
+                    raise RuntimeError(f"{package}: the build produced no rope-physics descriptor")
+                if json.loads(physics_path.read_text()).get("modelSHA256") != digest:
+                    raise RuntimeError(f"{package}: rope physics does not match its compiled asset")
+                if "primary.physics.json" in generated_files:
+                    raise RuntimeError(f"{package}: multiple presentations cannot share a rope-physics descriptor")
+                generated_files.add("primary.physics.json")
             reports.append((presentation_id, built_asset, built_descriptor, digest))
+        if sha256(source) != source_digest:
+            raise RuntimeError(f"{package}: compiling modified the authored source")
+        if (package_root / "suspension.json").is_file():
+            shutil.copyfile(package_root / "suspension.json", staged_package / "suspension.json")
+            # Check every sidecar entry against the freshly built descriptors,
+            # not against any stale export left in the source workspace.
+            cad_source.merge_suspension_sidecar(cad_source.load_board(source), staged_package)
         # Validate all configurations before copying any of the delivered pairs.
         target = out / package / "assets"
-        target.mkdir(parents=True, exist_ok=True)
-        for _, asset, descriptor, _ in reports:
-            shutil.copyfile(asset, target / asset.name)
-            shutil.copyfile(descriptor, target / descriptor.name)
+        publish_assets(staging, target, generated_files)
         return {"package": package, "assetSHA256": reports[0][3],
                 "bytes": sum(asset.stat().st_size for _, asset, _, _ in reports),
                 "out": str((target / reports[0][1].name).relative_to(out)),
@@ -142,7 +175,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--package", action="append", default=None)
-    parser.add_argument("--freecad", type=Path, default=DEFAULT_FREECAD)
+    parser.add_argument("--freecad", type=Path, default=Path(os.environ.get("HANGTEN_FREECAD_CMD", str(DEFAULT_FREECAD))))
     parser.add_argument(
         "--extra-python-path",
         default=os.environ.get("HANGTEN_CAD_PYTHONPATH", ""),
@@ -163,11 +196,11 @@ def main(argv: list[str] | None = None) -> int:
     for package in packages:
         try:
             report = prepare(package, arguments.out, arguments.freecad, arguments.extra_python_path)
-        except RuntimeError as error:
+        except (RuntimeError, ValueError, OSError) as error:
             failures.append(f"{package}: {error}")
             continue
         prepared.append(report)
-        print(f"  {package}: {report['bytes']} bytes  {report['assetSHA256'][:16]}")
+        print(f"  {package}: {report['bytes']} bytes  {report['assetSHA256'][:16]}", flush=True)
 
     print(json.dumps({"prepared": prepared, "failures": failures}, indent=2, sort_keys=True))
     if failures:

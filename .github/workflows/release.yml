@@ -20,7 +20,47 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  board-assets:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'main'
+      )
+    name: Compile release board assets
+    runs-on: macos-26
+    timeout-minutes: 180
+    outputs:
+      artifact-name: ${{ steps.compile.outputs.owner }}-release-board-assets-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Check out tested commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.workflow_run.head_sha }}
+          lfs: true
+          persist-credentials: false
+
+      - name: Compile from authored sources
+        id: compile
+        uses: ./.github/actions/compile-board-assets
+
+      - name: Upload compiled release catalog
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ steps.compile.outputs.owner }}-release-board-assets-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            Hangboards/*/assets/*.usdz
+            Hangboards/*/assets/*.model.json
+            Hangboards/*/assets/*.physics.json
+            HangTen/Resources/GripHand/hand-mesh.json
+            HangTen/Resources/PlanLibrary.json
+          if-no-files-found: error
+          retention-days: 7
+
   release:
+    needs:
+      - board-assets
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (
@@ -46,6 +86,12 @@ jobs:
           fetch-depth: 1
           lfs: true
           persist-credentials: false
+
+      - name: Restore compiled board catalog
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.board-assets.outputs.artifact-name }}
+          path: .
 
       # actions/cache v4.2.3
       - name: Restore Swift package sources

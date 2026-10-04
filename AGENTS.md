@@ -33,9 +33,11 @@ UI text rather than filling gaps from board metadata or model assumptions.
 
 Author hangboard geometry directly from primary manufacturer evidence, following
 the Trango Rock Prodigy Pivot package as the structural and path-style
-precedent. An operator must deliberately draw and review every canonical hold
-path in `board.json`; exact left/right mirroring is preferred when the product
-is actually symmetric.
+precedent. Catalog board geometry and metadata live in the retained native
+FreeCAD source. Deliberately author and review its contact regions; prefer exact
+left/right mirroring when the product is actually symmetric. For supported
+raster packages, deliberately draw and review every canonical hold path in
+`board.json`.
 
 The apps only read bundled packages; there is no in-app board editor. When
 the checked-out schema supports shape constraints, author an operator-selected
@@ -55,6 +57,16 @@ The sidecar must match the descriptor's model SHA-256 and is checked by package
 validation. See `Tools/HangboardCAD/README.md`. Building or validating
 packages needs the FCStd Git LFS objects, not pointers.
 
+Generated board USDZ, `*.model.json`, and `*.physics.json` files are ignored
+build outputs. Run `rtk proxy bash scripts/build-board-assets.sh` with pinned
+FreeCAD 1.1.3/OpenUSD 26.8 before package validation. For a fresh checkout or
+Xcode build, run `rtk proxy bash scripts/build-runtime-assets.sh`; it also
+exports the grip hand using Blender 5.2.0 and the plan library from Swift.
+Commit source documents, authored sidecars, and source audits. Keep generated
+`PlanLibrary.json` and grip hand mesh JSON out of Git. CI compiles from sources
+once and delivers its artifact to the validation and app-build consumers.
+See [`docs/GENERATED_ARTIFACTS.md`](docs/GENERATED_ARTIFACTS.md).
+
 Do not use image-driven hold detection, segmentation, generated masks or
 contours, source registration/alignment, vectorization, automatic path
 simplification, automatic cropping, or proposal/refine/promote geometry
@@ -69,18 +81,17 @@ profile as an ordered boundary loop of the reference's cross-section"), authored
 deliberately as a Sketcher profile. Never infer a 3D profile from pixels.
 
 Every geometry change must be shown, not just described: render front/side/top
-previews of the changed board next to the prior committed asset and present them
-before reporting the change complete. A geometry change without screenshots is
+previews of the changed board next to an export built from the prior committed
+source and present them before reporting the change complete. A geometry change without screenshots is
 not reported as done.
 
 ## Model material policy
 
 All USDZ models must ship without materials or textures. Meshes are unbound so
 the renderer uses its default appearance. Do not add PBR materials, image
-textures, or color adornments to committed USDZ files. Both compilers
-(`compile_board.py` and `contact_model_package.py`) produce unbound meshes by
-default — objects without `MaterialName` in FreeCAD or without materials in
-Blender are exported as-is.
+textures, or color adornments to generated USDZ files. The retained native
+compiler, `Tools/HangboardCAD/compile_board.py`, produces unbound meshes from
+FreeCAD objects without `MaterialName`. There is no Blender board compiler.
 
 ## 3D suspension and On-Demand Resources
 

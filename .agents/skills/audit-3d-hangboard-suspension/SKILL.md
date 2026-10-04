@@ -10,8 +10,10 @@ geometry. The USDZ is the only On-Demand Resource (ODR); clearing Apple's ODR
 cache cannot make a metadata-driven cord appear.
 
 Read [3D suspension and ODR](../../../docs/3D_SUSPENSION_AND_ODR.md) before
-diagnosis or edits. Also read the current cord audit manifest and its retained
-evidence rather than relying on an older design note.
+diagnosis or edits. Read the board's current source audit and retained evidence;
+when an explicit closed cord-audit manifest is supplied, validate it rather
+than relying on an older design note. A package's `suspension.json` is not that
+audit manifest.
 For a cord entering two connected mouths, read
 [CAD cord authoring](../../../docs/HANGBOARD_CORD_AUTHORING.md) before choosing
 `internalLoop` or changing a winding direction.
@@ -28,10 +30,17 @@ For a cord entering two connected mouths, read
 For a package with a native `<slug>.FCStd`, there is no committed `board.json`:
 it is generated from the FCStd's `HangTenBoardManifest` and any adjacent
 `suspension.json` at build time (read it with
-`python3 Tools/HangboardCAD/board_manifest.py --package <slug>`). Edit the
+`rtk python3 Tools/HangboardCAD/board_manifest.py --package <slug>`). Edit the
 sidecar when present; otherwise edit suspension in the manifest with
 `Tools/HangboardCAD/set_board_manifest.py`. The sidecar must match the model
 descriptor's SHA-256. Never create a `board.json` in the package.
+
+USDZ, model descriptors and physics descriptors are generated, ignored files.
+Run `rtk proxy bash scripts/build-board-assets.sh` before package validation;
+before an app build use `rtk proxy bash scripts/build-runtime-assets.sh`.
+Both retain the FCStd and authored sidecars as inputs. CI consumers download
+the producer artifact before validation/staging. Read
+[generated artifacts](../../../docs/GENERATED_ARTIFACTS.md) for the boundary.
 
 Do not bake a cord, anchor, or fallback into the USDZ. Do not infer a hidden
 route, through-bore, knot, supplied accessory, or safety property.
@@ -93,8 +102,8 @@ Native UNLEVEL uses its current CAD source audit and `nativeRoutes` metadata.
 
 ## Prove the result
 
-Start with a failing parser/audit/runtime regression. Validate the closed cord
-audit, package inventory, JSON, and unchanged USDZ/descriptor hash boundary.
+Start with a failing parser/audit/runtime regression. Validate any supplied
+closed cord audit, package inventory, JSON, and unchanged USDZ/descriptor hash boundary.
 Run relevant Python and XCTest suites. Use `validate-hang-ten-ios` for a
 current-source isolated Simulator review of every canonical pose: front,
 oblique, active contact, clearance, self-intersection, selection, clear/reappear,

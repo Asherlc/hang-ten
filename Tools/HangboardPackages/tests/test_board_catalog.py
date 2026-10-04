@@ -1234,5 +1234,5 @@ def test_every_cad_backed_package_board_json_is_gitignored() -> None:
         if path.is_dir() and module.cad_source.is_cad_package(path)
     )
     assert cad_packages
-    listed = {line for line in ignored if line.startswith("/Hangboards/")}
+    listed = {line for line in ignored if line.startswith("/Hangboards/") and line.endswith("/board.json")}
     assert listed == {f"/Hangboards/{slug}/board.json" for slug in cad_packages}

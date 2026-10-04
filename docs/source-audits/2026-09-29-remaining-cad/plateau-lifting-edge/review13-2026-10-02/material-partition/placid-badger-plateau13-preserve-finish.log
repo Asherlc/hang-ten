@@ -1,8 +1,0 @@
-{
-  "candidateSourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
-  "generatedManifestSHA256": "118d6e273d5e7cd1f8de37389ba65f37b47a4319cfcabe039f2b070e4d0cb772",
-  "restoredOriginalPayloadCount": 75,
-  "allOriginalNonDocumentArchiveMembersByteIdentical": true,
-  "all47OriginalObjectDefinitionsByteEquivalentAfterXMLNormalization": true,
-  "canonicalSourceUnchanged": true
-}

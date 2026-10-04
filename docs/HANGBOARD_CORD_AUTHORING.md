@@ -1,5 +1,13 @@
 # Authoring cords on CAD hangboards
 
+The FCStd and authored cord/physics sidecars remain the source inputs. Run
+`rtk proxy bash scripts/build-board-assets.sh` to generate the ignored USDZ,
+model descriptor, and any physics descriptor before package validation.
+For app builds use `scripts/build-runtime-assets.sh`. Staging generates bundled
+`board.json` from the native manifest and suspension sidecar; CI consumers
+download the producer's runtime artifact. See
+[generated artifacts](GENERATED_ARTIFACTS.md).
+
 ## The standard method
 
 Every corded CAD board generates its routes and hanging height against the
@@ -128,7 +136,7 @@ An earlier offline Bullet experiment tried
 to settle an earlier solid-bar surrogate and failed exact-mesh acceptance in
 all eight cases. That experiment did not contain the now-confirmed channel,
 so it cannot establish whether a correctly constrained physical simulation
-would work. See [the experiment and its measured limits](../Tools/HangboardRopePrototype/README.md).
+would work. See [the archived experiment and its measured limits](source-audits/retired-bullet-rope-prototype.md).
 
 Live simulation remains possible engineering work. RealityKit provides
 [rigid-body physics](https://developer.apple.com/documentation/realitykit/physics-simulations-and-motion),

@@ -343,6 +343,29 @@ struct SuspendedPairedLeadSolvedPresentation {
 }
 
 
+/// Solver output shared by package validation and the RealityKit renderer.
+enum BoardModelSolvedSuspension {
+    case single(SuspendedSolvedPresentation)
+    case pairedLead(SuspendedPairedLeadSolvedPresentation)
+    case twoBranch(SuspendedTwoBranchSolvedPresentation)
+
+    var boardTransform: simd_float4x4 {
+        switch self {
+        case .single(let solved): solved.boardTransform
+        case .pairedLead(let solved): solved.boardTransform
+        case .twoBranch(let solved): solved.boardTransform
+        }
+    }
+
+    var cameraFraming: SuspendedCameraFraming {
+        switch self {
+        case .single(let solved): solved.cameraFraming
+        case .pairedLead(let solved): solved.cameraFraming
+        case .twoBranch(let solved): solved.cameraFraming
+        }
+    }
+}
+
 enum SuspendedBoardPresentation {
     /// The caller supplies F -> B -> W. Anchors remain authored world points;
     /// solving after placement preserves world gravity even for rotated units.

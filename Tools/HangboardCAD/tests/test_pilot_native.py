@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import os
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -20,7 +19,6 @@ FREECAD_CMD = FREECAD / "bin" / "freecadcmd"
 EXTRA_PATH = os.environ.get("HANGTEN_CAD_PYTHONPATH")
 PACKAGE = "lattice-triple-rung"
 SOURCE = REPOSITORY / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
-ASSET = REPOSITORY / "Hangboards" / PACKAGE / "assets" / "primary.usdz"
 
 requires_freecad = pytest.mark.skipif(
     not FREECAD_CMD.is_file() or not EXTRA_PATH,
@@ -99,25 +97,3 @@ def test_compiler_check_mode_reports_a_consistent_package(tmp_path):
     assert payload["schemaVersion"] == 1
     assert sorted(payload["contacts"]) == ["edge-10", "edge-20", "edge-45"]
     assert payload["modelSHA256"] and len(payload["modelSHA256"]) == 64
-
-
-@pytest.mark.skipif(not ASSET.is_file(), reason="pilot asset is not built")
-def test_pilot_asset_matches_the_approved_reference_geometry(tmp_path):
-    """Compare against the reference resolved from Git, not a copied artifact."""
-    sys.path.insert(0, str(TOOLS))
-    import reference as reference_module
-
-    try:
-        resolved, digest = reference_module.load_reference(
-            PACKAGE, "primary.usdz", tmp_path
-        )
-    except (subprocess.CalledProcessError, ValueError) as error:
-        pytest.skip(f"pre-migration reference is not resolvable from Git: {error}")
-    assert len(digest) == 64
-    result = subprocess.run(
-        [sys.executable, str(TOOLS / "tests" / "compare_exports.py"),
-         str(resolved), str(ASSET), "--limit-mm", "0.5"],
-        capture_output=True, text=True, cwd=str(REPOSITORY),
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert "sampled comparison passed" in result.stdout

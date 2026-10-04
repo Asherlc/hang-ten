@@ -7,7 +7,9 @@ ios:
   - 'HangTen/Resources/CountdownAudio/**'
 python:
   - 'Tools/HangboardPackages/**'
+  - 'Tools/HangboardModels/**'
   - 'HangTenUITests/**'
+  - 'scripts/tests/**'
   - 'scripts/hangboard-packages.sh'
   - 'scripts/run-supported-python.sh'
 shared_board_content:
@@ -16,12 +18,17 @@ shared_board_content:
   - 'scripts/hangboard-packages.sh'
   - 'scripts/stage-board-packages.py'
   - 'scripts/run-supported-python.sh'
+  - 'scripts/build-board-assets.sh'
+  - 'scripts/build-runtime-assets.sh'
+  - 'scripts/export-grip-hand.sh'
+  - 'Art/GripHand/**'
+  - 'scripts/export-plan-library.sh'
+  - 'scripts/ExportPlanLibrary*.swift'
 cad:
   - 'Tools/HangboardCAD/**'
   - 'Tools/HangboardModels/contact_model_descriptor.py'
-  - 'Hangboards/**/*.FCStd'
-  - 'Hangboards/**/assets/primary.usdz'
-  - 'Hangboards/**/assets/primary.model.json'
+  - 'Hangboards/**'
+  - 'scripts/build-board-assets.sh'
   - 'scripts/hangboard-packages.sh'
 metadata:
   - 'metadata/**'
