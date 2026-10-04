@@ -1,0 +1,30 @@
+extension RopeDynamicsSolver {
+    private func buildWoodTerms(rows:[ConstraintRow],weights:[[Double]],contactIDs:[Int],initial:[Int:Double])->[WoodTerm] {
+        var result:[WoodTerm]=[]
+        // Sorted traversal prevents Dictionary order from changing numeric assembly.
+        for id in initial.keys.sorted() {
+            guard let multiplier=initial[id],multiplier<0 else{continue}
+            let row=rows[contactIDs[id]]
+            guard row.secondRope==nil,row.particles.count==2,row.particles[1]==row.particles[0]+1,
+                let hit=row.woodHit,let faceID=hit.woodFaceIndex else{continue}
+            let rope=state.ropes[row.rope],i=row.particles[0]
+            let start=state.boardPoint(rope.positions[i]),end=state.boardPoint(rope.positions[i+1])
+            let f=collider.mesh.triangles[faceID],triangle=[collider.mesh.vertices[f.x],collider.mesh.vertices[f.y],collider.mesh.vertices[f.z]]
+            guard let selection=try? RopeTriangleCollider.majorizerWoodSelection(start,end,triangle) else{continue}
+            let winner=selection.candidates[selection.winner]
+            guard simd_distance(winner.point,hit.centerlinePoint)<=1e-12,simd_distance(winner.surface,hit.surfacePoint)<=1e-12,
+                abs(winner.fraction-hit.fraction)<=1e-10 else{continue}
+            let inverse=state.orientation.inverse
+            let axes=(0..<3).map{axis -> SIMD3<Double> in var v=SIMD3<Double>.zero;v[axis]=1;return inverse.act(v)}
+            var a=Array(repeating:SIMD3<Double>.zero,count:7),b=a
+            for axis in 0..<3 {if weights[row.rope][i]>0 {a[axis]=axes[axis]};if weights[row.rope][i+1]>0 {b[axis+3]=axes[axis]}}
+            let height=inverse.act(SIMD3<Double>(0,-1,0))
+            a[6]=rope.attachments[i]==nil ? height:.zero;b[6]=rope.attachments[i+1]==nil ? height:.zero
+            guard let w=WoodMajorizer.selectedBlock(selection,a:a,b:b) else{continue}
+            let scale = -multiplier/w.denominator
+            guard scale.isFinite,w.vector.allSatisfy({x in w.vector.allSatisfy{(scale*x*$0).isFinite}}) else{continue}
+            result.append(WoodTerm(rope:row.rope,first:i,vector:w.vector,scale:scale))
+        }
+        return result
+    }
+}
