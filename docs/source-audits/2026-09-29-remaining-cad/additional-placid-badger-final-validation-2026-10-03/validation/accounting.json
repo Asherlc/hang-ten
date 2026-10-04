@@ -1,0 +1,44 @@
+{
+  "owner": "placid-badger",
+  "recordedUTC": "2026-10-04T02:55:04.132563+00:00",
+  "units": {
+    "productionRef": "bad7500123243937db712f5b0139ab273e373836",
+    "cases": 1520,
+    "passed": 1517,
+    "existingSkips": 3,
+    "failed": 0,
+    "currentHeadCIMustBeCheckedSeparately": true
+  },
+  "actualUIRuns": [
+    {
+      "cases": 8,
+      "passed": 8,
+      "failed": 0,
+      "scope": "All seven GripCue cases and initial Plateau layout regression"
+    },
+    {
+      "cases": 2,
+      "passed": 2,
+      "failed": 0,
+      "scope": "Extended Plateau natural Rest and Mini portrait natural Hang/Rest"
+    }
+  ],
+  "uniqueFinalUITestCases": 9,
+  "plateauBeforeFix": {
+    "cases": 1,
+    "failed": 1,
+    "actualBoardHeightPoints": 3
+  },
+  "sourcePlanUnchanged": true,
+  "livePhysicsTolerancesOrTimeoutsChanged": false,
+  "resourceCleanupVerified": true,
+  "capturedWorkflowBoards": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "humanAppAcceptanceChanged": false
+}

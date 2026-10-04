@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "combined exact-ref integration; inherited human approvals preserved; integrated technical validation pending",
+  "reviewState": "Combined 21-board native integration; scoped human approvals preserved; final local technical validation and dated Hang/Rest evidence retained.",
   "boards": [
     {
       "number": 1,
@@ -56,7 +56,7 @@
       "appReviewPage": "captain-fingerfood-dual/vertical-tightening-review/app-review/index.html",
       "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
       "reviewFeedback": [
-        "Cord doesn\u2019t go through holes",
+        "Cord doesn’t go through holes",
         "the 90 degree position tho, why does the bottom cord jut out to the side?"
       ],
       "latestRevision": "captain-fingerfood-dual/vertical-tightening-review/review.md",
@@ -211,7 +211,7 @@
       "runtimeRevision": "metolius-contact/pinch-rails-review/runtime-validation.json",
       "revisionBaseCommit": "5cfd5b6386b283b2eb8daefc054a42823fdf852b",
       "reviewFeedback": [
-        "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch"
+        "The pinch rails need to extend forward otherwise there’s nothing to pinch"
       ],
       "priorIndividualReview": "metolius-contact/individual-review/index.html",
       "reviewAnswer": "Y",
@@ -354,7 +354,7 @@
       "suspensionSHA256": "7810f367c74b8b70f5185991978dbc8726e45e93696ede5a6f460e545962032f",
       "humanReviewRecord": "nature-stone-hanger-mini/human-review.json",
       "latestRevision": "nature-stone-hanger-mini/finger-contact-review-2026-10-02/review.md",
-      "runtimeRevision": "nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
+      "runtimeRevision": "additional-placid-badger-final-validation-2026-10-03/boards/10.json",
       "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views. Corrected Mini jug highlight across the upper front and back finger-contact faces, rounded crown and upper sides, shown from both faces and in the linked front/side/top comparison.",
       "reviewAnswer": "Lgtm",
       "historicalMigrationReview": {
@@ -383,8 +383,8 @@
         "appReview": "nature-stone-hanger-mini/app-review/validation.json",
         "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
       },
-      "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/10.json",
-      "finalCADReviewQuestion": "Does this cover the Mini\u2019s jug finger-contact area now?",
+      "latestRuntimeAttempt": "additional-placid-badger-final-validation-2026-10-03/boards/10.json",
+      "finalCADReviewQuestion": "Does this cover the Mini’s jug finger-contact area now?",
       "completionHumanAcceptance": "pending current app review",
       "cadReviewViews": [
         "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-front.png",
@@ -401,7 +401,7 @@
         "recordedUTC": "2026-10-03T06:25:10.113937+00:00",
         "rawFeedback": "That's not covering the actual area where the fingers are pinching. That's what needs to be highlighted.",
         "clarification": {
-          "question": "By \u201cJokes should wrap all the way around,\u201d do you mean the jug highlight should wrap around the top rail onto its front and back?",
+          "question": "By “Jokes should wrap all the way around,” do you mean the jug highlight should wrap around the top rail onto its front and back?",
           "answer": "Yes, the jug highlight"
         },
         "interpretation": "Include the broad upper front/back finger-pressure surfaces and continuous upper side band, down to the existing rail opening boundary.",
@@ -442,10 +442,26 @@
           "focusedFailed": 0,
           "focusedExistingSkips": 1,
           "fullSuitePassed": false
+        },
+        {
+          "date": "2026-10-03",
+          "event": "combined-final-natural-workflow",
+          "record": "additional-placid-badger-final-validation-2026-10-03/boards/10.json",
+          "reviewPage": "additional-placid-badger-final-validation-2026-10-03/README.md",
+          "appearanceAndTouch": "Prior bounded appearance/touch evidence preserved; fresh Hang/Rest captures passed.",
+          "contactCoverage": "All 4 logical contacts: jug, wood edge, granite edge and pinch.",
+          "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+          "acceptedGeometryUnchanged": true,
+          "freshAppHumanAcceptance": "pending",
+          "appWorkflowPassed": true,
+          "appWorkflowScope": "Whole captured normal source-task Hang/Rest frames.",
+          "automationResult": "Mini landscape physical-driver completion and portrait XCTest both passed."
         }
       ],
-      "appWorkflowPassed": false,
-      "currentAppHumanAcceptance": "pending"
+      "appWorkflowPassed": true,
+      "currentAppHumanAcceptance": "pending",
+      "appWorkflowScope": "Whole captured normal source-task Hang/Rest frames; see exact limits in the dated record.",
+      "appReviewStatus": "Technical captured Hang/Rest pass; fresh human app acceptance pending."
     },
     {
       "number": 11,
@@ -470,7 +486,7 @@
       "suspensionSHA256": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc",
       "humanReviewRecord": "nature-stone-hanger-mini-karma8a/human-review.json",
       "latestRevision": "nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/review.md",
-      "runtimeRevision": "nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
+      "runtimeRevision": "additional-placid-badger-final-validation-2026-10-03/boards/11.json",
       "historicalMigrationReview": {
         "number": 11,
         "package": "nature-stone-hanger-mini-karma8a",
@@ -552,11 +568,27 @@
           "focusedFailed": 0,
           "focusedExistingSkips": 1,
           "fullSuitePassed": false
+        },
+        {
+          "date": "2026-10-03",
+          "event": "combined-final-natural-workflow",
+          "record": "additional-placid-badger-final-validation-2026-10-03/boards/11.json",
+          "reviewPage": "additional-placid-badger-final-validation-2026-10-03/README.md",
+          "appearanceAndTouch": "Prior bounded appearance/touch evidence preserved; fresh Hang/Rest captures passed.",
+          "contactCoverage": "All 3 logical contacts: wood edge, granite edge and pinch.",
+          "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+          "acceptedGeometryUnchanged": true,
+          "freshAppHumanAcceptance": "pending",
+          "appWorkflowPassed": true,
+          "appWorkflowScope": "Whole captured normal source-task Hang/Rest frames.",
+          "automationResult": "Physical-driver sequence completed with expected Hang and natural Rest frames."
         }
       ],
-      "appWorkflowPassed": false,
+      "appWorkflowPassed": true,
       "currentAppHumanAcceptance": "pending",
-      "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/11.json"
+      "latestRuntimeAttempt": "additional-placid-badger-final-validation-2026-10-03/boards/11.json",
+      "appWorkflowScope": "Whole captured normal source-task Hang/Rest frames; see exact limits in the dated record.",
+      "appReviewStatus": "Technical captured Hang/Rest pass; fresh human app acceptance pending."
     },
     {
       "number": 12,
@@ -603,7 +635,7 @@
       },
       "humanReviewRecord": "owl-climb-poker/human-review.json",
       "latestRevision": "owl-climb-poker/review12-2026-10-02/review.md",
-      "runtimeRevision": "owl-climb-poker/review12-2026-10-02/runtime-validation.json",
+      "runtimeRevision": "additional-placid-badger-final-validation-2026-10-03/boards/12.json",
       "acceptedGeometryDate": "2026-10-02",
       "runtimeAttemptEvents": [
         {
@@ -613,7 +645,7 @@
           "reviewPage": "runtime-final-2026-10-03/boards/12.md",
           "appearanceAndTouch": "bounded supplied-frame pass",
           "physicalMeshPick": "one supplied physical tap passed",
-          "contactCoverage": "Four representative contacts, one from each face A\u2013D; not all 34 contacts.",
+          "contactCoverage": "Four representative contacts, one from each face A–D; not all 34 contacts.",
           "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
           "acceptedGeometryUnchanged": true,
           "freshAppHumanAcceptance": "pending",
@@ -624,11 +656,27 @@
           "focusedFailed": 0,
           "focusedExistingSkips": 1,
           "fullSuitePassed": false
+        },
+        {
+          "date": "2026-10-03",
+          "event": "combined-final-natural-workflow",
+          "record": "additional-placid-badger-final-validation-2026-10-03/boards/12.json",
+          "reviewPage": "additional-placid-badger-final-validation-2026-10-03/README.md",
+          "appearanceAndTouch": "Prior bounded appearance/touch evidence preserved; fresh Hang/Rest captures passed.",
+          "contactCoverage": "Four representative contacts, one from each face A–D; not all 34 contacts.",
+          "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+          "acceptedGeometryUnchanged": true,
+          "freshAppHumanAcceptance": "pending",
+          "appWorkflowPassed": true,
+          "appWorkflowScope": "Whole captured normal source-task Hang/Rest frames.",
+          "automationResult": "Physical-driver sequence completed with expected Hang and natural Rest frames."
         }
       ],
-      "appWorkflowPassed": false,
+      "appWorkflowPassed": true,
       "currentAppHumanAcceptance": "pending",
-      "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/12.json"
+      "latestRuntimeAttempt": "additional-placid-badger-final-validation-2026-10-03/boards/12.json",
+      "appWorkflowScope": "Whole captured normal source-task Hang/Rest frames; see exact limits in the dated record.",
+      "appReviewStatus": "Technical captured Hang/Rest pass; fresh human app acceptance pending."
     },
     {
       "number": 13,
@@ -700,7 +748,7 @@
       },
       "humanReviewRecord": "plateau-lifting-edge/human-review.json",
       "latestRevision": "plateau-lifting-edge/review13-2026-10-02/review.md",
-      "runtimeRevision": "plateau-lifting-edge/review13-2026-10-02/runtime-validation.json",
+      "runtimeRevision": "additional-placid-badger-final-validation-2026-10-03/boards/13.json",
       "acceptedGeometryDate": "2026-10-02",
       "runtimeAttemptEvents": [
         {
@@ -710,7 +758,7 @@
           "reviewPage": "runtime-final-2026-10-03/boards/13.md",
           "appearanceAndTouch": "bounded supplied-frame pass",
           "physicalMeshPick": "one supplied physical tap passed",
-          "contactCoverage": "One physical edge across the 18 \u2192 15 \u2192 10 \u2192 18 mm authored presentation sequence.",
+          "contactCoverage": "One physical edge across the 18 → 15 → 10 → 18 mm authored presentation sequence.",
           "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
           "acceptedGeometryUnchanged": true,
           "freshAppHumanAcceptance": "pending",
@@ -721,11 +769,27 @@
           "focusedFailed": 0,
           "focusedExistingSkips": 1,
           "fullSuitePassed": false
+        },
+        {
+          "date": "2026-10-03",
+          "event": "combined-final-natural-workflow",
+          "record": "additional-placid-badger-final-validation-2026-10-03/boards/13.json",
+          "reviewPage": "additional-placid-badger-final-validation-2026-10-03/README.md",
+          "appearanceAndTouch": "Prior bounded appearance/touch evidence preserved; fresh Hang/Rest captures passed.",
+          "contactCoverage": "One physical edge across the 18 → 15 → 10 → 18 mm authored presentation sequence.",
+          "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+          "acceptedGeometryUnchanged": true,
+          "freshAppHumanAcceptance": "pending",
+          "appWorkflowPassed": true,
+          "appWorkflowScope": "Whole captured normal source-task Hang/Rest frames.",
+          "automationResult": "Actual Plateau layout red/green regression and natural Rest XCTest passed."
         }
       ],
-      "appWorkflowPassed": false,
+      "appWorkflowPassed": true,
       "currentAppHumanAcceptance": "pending",
-      "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/13.json"
+      "latestRuntimeAttempt": "additional-placid-badger-final-validation-2026-10-03/boards/13.json",
+      "appWorkflowScope": "Whole captured normal source-task Hang/Rest frames; see exact limits in the dated record.",
+      "appReviewStatus": "Technical captured Hang/Rest pass; fresh human app acceptance pending."
     },
     {
       "number": 14,
@@ -773,7 +837,7 @@
       "suspensionSHA256": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
       "humanReviewRecord": "tension-flash-board/human-review.json",
       "latestRevision": "tension-flash-board/review14-2026-10-02/review.md",
-      "runtimeRevision": "tension-flash-board/review14-2026-10-02/runtime-validation.json",
+      "runtimeRevision": "additional-placid-badger-final-validation-2026-10-03/boards/14.json",
       "acceptedGeometryDate": "2026-10-02",
       "acceptedCordDate": "2026-10-02",
       "reviewAnswer": "Y",
@@ -797,11 +861,27 @@
           "focusedFailed": 0,
           "focusedExistingSkips": 1,
           "fullSuitePassed": false
+        },
+        {
+          "date": "2026-10-03",
+          "event": "combined-final-natural-workflow",
+          "record": "additional-placid-badger-final-validation-2026-10-03/boards/14.json",
+          "reviewPage": "additional-placid-badger-final-validation-2026-10-03/README.md",
+          "appearanceAndTouch": "Prior bounded appearance/touch evidence preserved; fresh Hang/Rest captures passed.",
+          "contactCoverage": "All 7 logical contacts; left/right semantic naming remains unresolved.",
+          "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+          "acceptedGeometryUnchanged": true,
+          "freshAppHumanAcceptance": "pending",
+          "appWorkflowPassed": true,
+          "appWorkflowScope": "Whole captured normal source-task Hang/Rest frames.",
+          "automationResult": "Captured Hang/Rest passed; later driver command failed and is retained."
         }
       ],
-      "appWorkflowPassed": false,
+      "appWorkflowPassed": true,
       "currentAppHumanAcceptance": "pending",
-      "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/14.json"
+      "latestRuntimeAttempt": "additional-placid-badger-final-validation-2026-10-03/boards/14.json",
+      "appWorkflowScope": "Whole captured normal source-task Hang/Rest frames; see exact limits in the dated record.",
+      "appReviewStatus": "Technical captured Hang/Rest pass; fresh human app acceptance pending."
     },
     {
       "number": 15,
@@ -826,7 +906,7 @@
       },
       "appReview": "trango-rock-prodigy-forge/review15-2026-10-02/runtime-validation.json",
       "appReviewPage": "trango-rock-prodigy-forge/review15-2026-10-02/index.html",
-      "appReviewStatus": "Current app appearance and workflow unverified; generic compilation only",
+      "appReviewStatus": "Technical captured Hang/Rest pass; fresh human app acceptance pending.",
       "historicalAppReview": "trango-rock-prodigy-forge/app-review/validation.json",
       "humanReviewRecord": "trango-rock-prodigy-forge/human-review.json",
       "geometryHumanAcceptance": "accepted",
@@ -884,11 +964,27 @@
           "focusedExistingSkips": 1,
           "fullSuitePassed": false,
           "coverageLimitation": "Ten categories only; three upper contacts nearly edge-on, complete bearing-face coverage unproven."
+        },
+        {
+          "date": "2026-10-03",
+          "event": "combined-final-natural-workflow",
+          "record": "additional-placid-badger-final-validation-2026-10-03/boards/15.json",
+          "reviewPage": "additional-placid-badger-final-validation-2026-10-03/README.md",
+          "appearanceAndTouch": "Prior bounded appearance/touch evidence preserved; fresh Hang/Rest captures passed.",
+          "contactCoverage": "10 representative categories across the native pair; not all 20 left/right contacts.",
+          "sourceSHA256": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124",
+          "acceptedGeometryUnchanged": true,
+          "freshAppHumanAcceptance": "pending",
+          "appWorkflowPassed": true,
+          "appWorkflowScope": "Whole captured normal source-task Hang/Rest frames.",
+          "automationResult": "Captured Hang/Rest passed; later driver command failed and is retained."
         }
       ],
-      "appWorkflowPassed": false,
+      "appWorkflowPassed": true,
       "currentAppHumanAcceptance": "pending",
-      "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/15.json"
+      "latestRuntimeAttempt": "additional-placid-badger-final-validation-2026-10-03/boards/15.json",
+      "appWorkflowScope": "Whole captured normal source-task Hang/Rest frames; see exact limits in the dated record.",
+      "runtimeRevision": "additional-placid-badger-final-validation-2026-10-03/boards/15.json"
     },
     {
       "number": 16,
@@ -1143,7 +1239,7 @@
     }
   ],
   "reviewScope": {
-    "userInstruction": "I only want to review the ones we\u2019re migrating",
+    "userInstruction": "I only want to review the ones we’re migrating",
     "eligibility": "Only packages first given a native CAD source by this task; existing CAD packages and externally claimed migrations are excluded.",
     "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
     "migrationCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",

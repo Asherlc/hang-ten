@@ -1,0 +1,30 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+  "launch": {
+    "number": 10,
+    "boardID": "nature.stone-hanger-mini",
+    "package": "nature-stone-hanger-mini",
+    "contactID": null,
+    "planID": "research.abrahangs",
+    "flags": {
+      "BOARD_ID": "nature.stone-hanger-mini",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "LANDSCAPE": "1",
+      "PLAN": "1",
+      "PLAN_ID": "research.abrahangs",
+      "STEP": "17",
+      "AUTOSTART": "1"
+    },
+    "launchedAt": 1791077001.090362
+  },
+  "image": "10-workout-landscape-retry3-work-highlight.png",
+  "imageSHA256": "a7112fb1ff3e97b8918912dcad03bfa89e7c5a288bbb1536da4caeb4a5a8e556",
+  "accessibilitySHA256": "260ad5fbe8ed17ffbb9c8e4918f6ffb41957705a9ab4a94fa5099da16daf1050",
+  "binarySHA256": "36fdf093a45c7357d6768218356c8bf1f315f39765b4925e1b610ca37202368f",
+  "installedProvenanceSHA256": "b9dc21302641bbff22192bc2f7bc064e7a008536db4b1015efd5253e4de3ea0d",
+  "rendererDiagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "rawFailureCapture": false
+}

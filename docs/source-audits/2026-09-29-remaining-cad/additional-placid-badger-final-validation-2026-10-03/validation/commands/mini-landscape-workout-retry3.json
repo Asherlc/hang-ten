@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "label": "mini-landscape-workout-retry3",
+  "command": [
+    "python3",
+    ".context/placid-badger/combined-runtime-final-2026-10-03/workout_capture_existing3.py",
+    "10",
+    "landscape"
+  ],
+  "timeoutSeconds": 220.0,
+  "ownedProcessGroup": 80252,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 36.15229304099921
+}

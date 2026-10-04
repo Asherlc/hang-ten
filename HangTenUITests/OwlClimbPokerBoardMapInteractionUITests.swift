@@ -264,6 +264,48 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCTAssertGreaterThanOrEqual(board.frame.minY, selector.frame.maxY)
         XCTAssertLessThanOrEqual(board.frame.maxY, app.frame.maxY)
         addScreenshot(named: "Plateau landscape workout board below configuration selector")
+
+        app.buttons["Resume"].tap()
+        let rest = NSPredicate(format: "label CONTAINS %@", "current step 18: Rest")
+        expectation(for: rest, evaluatedWith: app.buttons["workout.routinePicker"])
+        waitForExpectations(timeout: 20)
+        pause.tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        XCTAssertGreaterThan(board.frame.height, 30)
+        XCTAssertGreaterThanOrEqual(board.frame.minY, selector.frame.maxY)
+        addScreenshot(named: "Plateau landscape natural Rest board preview")
+    }
+
+    func testMiniPortraitWorkoutShowsBoardDuringHangAndNaturalRest() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger-mini",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+            "HANGTEN_REVIEW_STEP": "17",
+        ]
+        app.launch()
+        XCTAssertTrue(app.otherElements["train.board"].waitForExistence(timeout: 30))
+        app.open(URL(string: "hangten://plan/research.abrahangs/workout")!)
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 30))
+        pause.tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        let board = app.otherElements["boardModel.3d"]
+        XCTAssertTrue(board.waitForExistence(timeout: 5))
+        board.swipeUp()
+        XCTAssertGreaterThan(board.frame.height, 30)
+        addScreenshot(named: "Mini portrait paused Hang board and finger cues")
+
+        app.buttons["Resume"].tap()
+        let rest = NSPredicate(format: "label CONTAINS %@", "current step 18: Rest")
+        expectation(for: rest, evaluatedWith: app.buttons["workout.routinePicker"])
+        waitForExpectations(timeout: 20)
+        pause.tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        board.swipeUp()
+        XCTAssertGreaterThan(board.frame.height, 30)
+        addScreenshot(named: "Mini portrait natural Rest board and finger cues")
     }
 
     private func launchLandscapeBoardDetail(

@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "label": "final-layout-verified-install",
+  "command": [
+    "python3",
+    ".context/placid-badger/combined-runtime-final-2026-10-03/install_app_layout_fixed.py"
+  ],
+  "timeoutSeconds": 180.0,
+  "ownedProcessGroup": 66474,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 2.486525749991415
+}
