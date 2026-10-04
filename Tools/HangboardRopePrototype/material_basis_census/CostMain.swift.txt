@@ -1,0 +1,42 @@
+do {
+    result["step"]=140;result["reducedBackend"]=false;result["runtimeAlgorithm"]=false
+    for step in 1...139 {
+        let record=try run(&initial).1
+        let old=(priorSteps[step-1]["trace"] as! [String:Any])["corrections"] as! [[String:Double]]
+        guard record.count==old.count else {throw RopePhysicsError.invalid("cost prefix count")}
+        for (a,b) in zip(record,old) {for key in ["movement","alpha","strain"] {
+            guard (a[key] as! Double)==b[key] else {throw RopePhysicsError.invalid("cost prefix numerical identity")}
+        }}
+    }
+    var expected=initial;expected.woodMajorizerExperiment=true
+    _ = try run(&expected)
+    let checkpoint=try serialize(expected.bundleCheckpoint())
+    for iteration in 0..<7 {
+        let order=iteration%2==0 ? [false,true]:[true,false]
+        var clocks:[Bool:Double]=[:]
+        var buckets:[String:Double]=[:],captured:[[String:Any]]=[]
+        for instrumented in order {
+            var x=initial;x.woodMajorizerExperiment=true
+            MaterialBasisTrace.enabled=instrumented;MaterialBasisCost.start(instrumented)
+            let measured=try run(&x)
+            MaterialBasisTrace.enabled=false;MaterialBasisCost.enabled=false
+            guard try serialize(x.bundleCheckpoint())==checkpoint,x.reviewStepCaps==0,x.reviewStepRetries==0 else {
+                throw RopePhysicsError.invalid("cost instrumentation checkpoint/cap identity")
+            }
+            _ = try check(x)
+            clocks[instrumented]=measured.0
+            if instrumented {
+                captured=measured.1
+                buckets=["assemblySeconds":MaterialBasisCost.assemblySeconds,
+                    "contactCorrectionSeconds":MaterialBasisCost.contactCorrectionSeconds,
+                    "configurationSeconds":MaterialBasisCost.configurationSeconds]
+            }
+        }
+        let record:[String:Any]=["iteration":iteration,"unmodifiedSeconds":clocks[false]!,
+            "instrumentedSeconds":clocks[true]!,"buckets":buckets,"trace":captured,
+            "zeroNumericFloorSeconds":clocks[true]!-buckets["assemblySeconds"]!-buckets["contactCorrectionSeconds"]!]
+        pairs.append(record)
+    }
+    result["completeInstrumentationIdentity"]=true;result["costCapturePass"]=true
+    try persist(nil);print("PASS numeric cost ceiling capture; no speed acceptance")
+} catch {try persist(String(describing:error));print("FAIL numeric cost capture",error);exit(2)}

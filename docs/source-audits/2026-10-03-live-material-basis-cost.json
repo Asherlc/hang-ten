@@ -1,0 +1,66 @@
+{
+  "adopted": false,
+  "reducedBackend": false,
+  "performancePass": false,
+  "necessaryCostFloorPass": true,
+  "pairs": [
+    {
+      "iteration": 0,
+      "numericSeconds": 0.0016916666645556688,
+      "optimisticQuerySavingsSeconds": 4.3458392610773444e-05,
+      "optimisticFloorSeconds": 0.0037279999523889273
+    },
+    {
+      "iteration": 1,
+      "numericSeconds": 0.0016482083592563868,
+      "optimisticQuerySavingsSeconds": 5.420824163593352e-05,
+      "optimisticFloorSeconds": 0.0037594583991449326
+    },
+    {
+      "iteration": 2,
+      "numericSeconds": 0.0015898333513177931,
+      "optimisticQuerySavingsSeconds": 5.012488691136241e-05,
+      "optimisticFloorSeconds": 0.0036582917673513293
+    },
+    {
+      "iteration": 3,
+      "numericSeconds": 0.0016461666382383555,
+      "optimisticQuerySavingsSeconds": 5.029185558669269e-05,
+      "optimisticFloorSeconds": 0.0036883748543914407
+    },
+    {
+      "iteration": 4,
+      "numericSeconds": 0.0017612083465792239,
+      "optimisticQuerySavingsSeconds": 4.8458430683240294e-05,
+      "optimisticFloorSeconds": 0.0037901249015703797
+    },
+    {
+      "iteration": 5,
+      "numericSeconds": 0.0016235416696872562,
+      "optimisticQuerySavingsSeconds": 4.620841355063021e-05,
+      "optimisticFloorSeconds": 0.003641458257334307
+    },
+    {
+      "iteration": 6,
+      "numericSeconds": 0.001733125012833625,
+      "optimisticQuerySavingsSeconds": 5.7625031331554055e-05,
+      "optimisticFloorSeconds": 0.0038350832764990628
+    }
+  ],
+  "medianOptimisticFloorSeconds": 0.0037279999523889273,
+  "numericHeadroomSeconds": 0.00027200004761107274,
+  "currentOwnedGroupsIndependentlyAbsent": [
+    99211,
+    1758
+  ],
+  "limits": "grants all numerical work and replacement span queries free; excludes projection, reconstruction, extra certification; host single checkpoint only",
+  "evidenceSHA256": {
+    ".context/strong-owl-live-physics-armijo-b46882d82-material-basis-cost-v2/native/result.json": "d9a6762a4576b85a8629c32b466978207a9945ec0dae17bb77f1fbd8b81a2058",
+    ".context/strong-owl-live-physics-armijo-b46882d82-material-basis-cost-v2/native/interpretation.json": "63862198a3cc1a2f0596273388d79656a7fbc5ca2b0d6be390167eb71cb745d8",
+    ".context/strong-owl-live-physics-armijo-b46882d82-material-basis-cost-v2/native/resources.jsonl": "f155806d0d51031c835442d785409aef49902f29843c9c01f00e62df43834869",
+    "Tools/HangboardRopePrototype/material_basis_census/CostMain.swift.txt": "2e8ce2175bd809c9c9f43f48c3543f69e628a34aa5b8a70f54d967b9600c618b",
+    "Tools/HangboardRopePrototype/material_basis_census/Cost.swift": "9a28c0217d2517a3d0a0628e7b858dccc97e124ebcfc9122460093d0dc09d727",
+    "Tools/HangboardRopePrototype/material_basis_census/cost_snapshot.py": "79516310240967a83a23934c7ddf8d12844e7b24bcfdc44fc197f07f7a7f273e",
+    "Tools/HangboardRopePrototype/run_armijo_checkpoint.py": "9d39242dc092f2b4f799ff8f86027f50c91849c06d4ad90954c76e1b2ba9abe4"
+  }
+}

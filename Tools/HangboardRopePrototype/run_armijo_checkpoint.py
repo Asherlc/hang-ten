@@ -33,6 +33,7 @@ parser.add_argument('--fresh-active-stop-red',action='store_true')
 parser.add_argument('--foreground-qos',action='store_true')
 parser.add_argument('--foreground-qos-red',action='store_true')
 parser.add_argument('--material-basis-census',action='store_true')
+parser.add_argument('--material-basis-cost',action='store_true')
 parser.add_argument('--wood-assembly-red',action='store_true')
 parser.add_argument('--wood-checkpoint',type=int,choices=[3,109,140],default=109)
 parser.add_argument('--arrival-checkpoint',type=int,choices=[109,140],default=109)
@@ -66,6 +67,7 @@ if args.fresh_active_stop_red and not args.fresh_active_stop:parser.error('--fre
 if args.foreground_qos and (not args.wood_majorizer or args.wood_checkpoint!=140 or args.wood_residual or args.step_rate or args.fixtures_only or args.empty_face_floor):parser.error('--foreground-qos requires isolated majorizer140')
 if args.foreground_qos_red and not args.foreground_qos:parser.error('--foreground-qos-red requires --foreground-qos')
 if args.material_basis_census and (not args.wood_majorizer or args.wood_residual or args.step_rate or args.fixtures_only or args.empty_face_floor or args.foreground_qos):parser.error('--material-basis-census requires isolated majorizer capture')
+if args.material_basis_cost and not args.material_basis_census:parser.error('--material-basis-cost requires --material-basis-census')
 if args.wood_residual_diagnostic and (not args.wood_residual or args.wood_residual_red or args.wood_checkpoint!=140):parser.error('--wood-residual-diagnostic requires enabled fixed140')
 if args.wood_residual and (not args.wood_majorizer or args.step_rate or args.fixtures_only):parser.error('--wood-residual requires isolated majorizer checkpoint')
 if args.wood_residual_red and not args.wood_residual:parser.error('--wood-residual-red requires --wood-residual')
@@ -172,6 +174,9 @@ for name in NAMES:
             if args.material_basis_census:
                 from material_basis_census.snapshot import solver_source as basis_solver
                 text=basis_solver(text)
+                if args.material_basis_cost:
+                    from material_basis_census.cost_snapshot import solver_source as cost_solver
+                    text=cost_solver(text)
             if args.fresh_active_stop:
                 from fresh_active_stop.snapshot import solver_source as fresh_solver
                 text=fresh_solver(text)
@@ -267,6 +272,9 @@ for name in ['Math.swift','Trace.swift','main.swift']:
         if args.material_basis_census:
             from material_basis_census.snapshot import driver_source as basis_driver
             text=basis_driver(text)
+            if args.material_basis_cost:
+                from material_basis_census.cost_snapshot import driver_source as cost_driver
+                text=cost_driver(text)
         if args.empty_face_floor:
             from empty_face_floor.snapshot import driver_source as floor_driver
             text=floor_driver(text)
@@ -388,6 +396,7 @@ if args.wood_majorizer:
 if args.empty_face_floor:(sources/'EmptyFaceFloor.swift').write_bytes((tool/'empty_face_floor/Trace.swift').read_bytes())
 if args.foreground_qos:(sources/'ForegroundQoSTrace.swift').write_bytes((tool/'foreground_qos/Trace.swift').read_bytes())
 if args.material_basis_census:(sources/'MaterialBasisTrace.swift').write_bytes((tool/'material_basis_census/Trace.swift').read_bytes())
+if args.material_basis_cost:(sources/'MaterialBasisCost.swift').write_bytes((tool/'material_basis_census/Cost.swift').read_bytes())
 if args.float_face_reject:
     from float_face_reject.snapshot import math_source as float_math,trace_source as float_trace
     (sources/'FloatFaceReject.swift').write_text(float_math((REPO/'HangTen/Models/RopeTriangleCollider.swift').read_text()))
