@@ -1,0 +1,283 @@
+{
+  "plans": [
+    {
+      "blocks": [
+        {
+          "blockID": "research.max-hangs.warm-up"
+        },
+        {
+          "blockID": "research.max-hangs.main"
+        }
+      ],
+      "id": "research.max-hangs",
+      "metadata": {
+        "category": "research",
+        "level": "Advanced",
+        "notes": [
+          "Preserved from the original Hang Ten routine catalog."
+        ],
+        "provenance": "adapted",
+        "sourceLabel": "Lattice max hang protocol",
+        "sourceURL": "https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/",
+        "subtitle": "Five near-maximal 7-second half-crimp hangs on a 20 mm edge.",
+        "tags": [
+          "built-in",
+          "research"
+        ],
+        "title": "Max Hangs",
+        "workoutLabels": [
+          "max-effort"
+        ]
+      }
+    }
+  ],
+  "blocks": [
+    {
+      "id": "research.max-hangs.warm-up",
+      "steps": [
+        {
+          "accessory": "7s hang \u00b7 3m recovery \u00b7 half crimp",
+          "action": "hang",
+          "activeDuration": 7,
+          "duration": 187,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "handUse": "double",
+          "id": "max-hangs-1",
+          "instruction": "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 7,
+              "kind": "work",
+              "target": {
+                "kind": "requirements",
+                "requirements": [
+                  {
+                    "depth": {
+                      "range": {
+                        "maximum": 20,
+                        "minimum": 20
+                      }
+                    },
+                    "kind": "edge",
+                    "selection": "bilateralPair"
+                  }
+                ]
+              },
+              "timing": "fixed"
+            },
+            {
+              "duration": 180,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "side": "both",
+          "title": "Max hang \u00b7 set 1"
+        }
+      ],
+      "title": "Max hang \u00b7 set 1"
+    },
+    {
+      "id": "research.max-hangs.main",
+      "steps": [
+        {
+          "accessory": "7s hang \u00b7 3m recovery \u00b7 half crimp",
+          "action": "hang",
+          "activeDuration": 7,
+          "duration": 187,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "handUse": "double",
+          "id": "max-hangs-2",
+          "instruction": "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 7,
+              "kind": "work",
+              "target": {
+                "kind": "requirements",
+                "requirements": [
+                  {
+                    "depth": {
+                      "range": {
+                        "maximum": 20,
+                        "minimum": 20
+                      }
+                    },
+                    "kind": "edge",
+                    "selection": "bilateralPair"
+                  }
+                ]
+              },
+              "timing": "fixed"
+            },
+            {
+              "duration": 180,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "side": "both",
+          "title": "Max hang \u00b7 set 2"
+        },
+        {
+          "accessory": "7s hang \u00b7 3m recovery \u00b7 half crimp",
+          "action": "hang",
+          "activeDuration": 7,
+          "duration": 187,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "handUse": "double",
+          "id": "max-hangs-3",
+          "instruction": "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 7,
+              "kind": "work",
+              "target": {
+                "kind": "requirements",
+                "requirements": [
+                  {
+                    "depth": {
+                      "range": {
+                        "maximum": 20,
+                        "minimum": 20
+                      }
+                    },
+                    "kind": "edge",
+                    "selection": "bilateralPair"
+                  }
+                ]
+              },
+              "timing": "fixed"
+            },
+            {
+              "duration": 180,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "side": "both",
+          "title": "Max hang \u00b7 set 3"
+        },
+        {
+          "accessory": "7s hang \u00b7 3m recovery \u00b7 half crimp",
+          "action": "hang",
+          "activeDuration": 7,
+          "duration": 187,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "handUse": "double",
+          "id": "max-hangs-4",
+          "instruction": "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 7,
+              "kind": "work",
+              "target": {
+                "kind": "requirements",
+                "requirements": [
+                  {
+                    "depth": {
+                      "range": {
+                        "maximum": 20,
+                        "minimum": 20
+                      }
+                    },
+                    "kind": "edge",
+                    "selection": "bilateralPair"
+                  }
+                ]
+              },
+              "timing": "fixed"
+            },
+            {
+              "duration": 180,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "side": "both",
+          "title": "Max hang \u00b7 set 4"
+        },
+        {
+          "accessory": "7s hang \u00b7 half crimp",
+          "action": "hang",
+          "activeDuration": 7,
+          "duration": 7,
+          "fingerConfiguration": {
+            "engagedFingers": [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "gripType": "halfCrimp",
+          "handUse": "double",
+          "id": "max-hangs-5",
+          "instruction": "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+          "phase": "hang",
+          "segments": [
+            {
+              "duration": 7,
+              "kind": "work",
+              "target": {
+                "kind": "requirements",
+                "requirements": [
+                  {
+                    "depth": {
+                      "range": {
+                        "maximum": 20,
+                        "minimum": 20
+                      }
+                    },
+                    "kind": "edge",
+                    "selection": "bilateralPair"
+                  }
+                ]
+              },
+              "timing": "fixed"
+            }
+          ],
+          "side": "both",
+          "title": "Max hang \u00b7 set 5"
+        }
+      ],
+      "title": "Max Hangs"
+    }
+  ]
+}

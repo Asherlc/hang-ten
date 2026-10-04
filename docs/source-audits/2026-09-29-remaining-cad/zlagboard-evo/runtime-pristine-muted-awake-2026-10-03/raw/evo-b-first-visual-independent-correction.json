@@ -1,0 +1,18 @@
+{
+  "scope": "Additive correction after re-opening exactly elapsed-010s.png as a whole image at original detail; no pixel analysis.",
+  "originalReport": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b-first-visual-independent.json",
+  "originalReportSHA256": "fd5e2f2f21e27b9c288b0f6f750cf759af39d62eb88ac0da2b592a1247953912",
+  "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/evo-b/elapsed-010s.png",
+  "imageSHA256": "030e52d6b20be2ca3bd73537ea7d0b7e59ae0c0072f60b64a9d914b0cb6f9e14",
+  "originalReportedColor": "neutral",
+  "correctedObservedColor": "red on both selected lower outer pockets",
+  "visiblePhase": "Rest",
+  "visibleTimer": "03:00",
+  "nextHoldPreviewCaptionVisible": true,
+  "pairedHandsVisible": true,
+  "finding": "The original neutral classification was a visual-review error. Red selected pockets visibly disagree with the Rest preview state. Original report preserved unchanged.",
+  "limitations": [
+    "No CPU mutation timing or precise duration of mismatch established.",
+    "This correction concerns one image only."
+  ]
+}

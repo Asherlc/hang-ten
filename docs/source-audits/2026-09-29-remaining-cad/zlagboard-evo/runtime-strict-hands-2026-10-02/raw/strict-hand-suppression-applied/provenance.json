@@ -1,0 +1,28 @@
+{
+  "files": [
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "beforeSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "afterSHA256": "b47b76a780061f291a2e32b888e00adfba6b1dcc6a157d5f73df36a5d1797f15"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "beforeSHA256": "008de5d3854b809fb452b9455d3d1d018da8649d48ece7d1d8a7b14120372eb5",
+      "afterSHA256": "6f9fcd3da0677d79c411cf4cf053ae06a88b60f58f2b37522924f91570c3be25"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "beforeSHA256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221",
+      "afterSHA256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "beforeSHA256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+      "afterSHA256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    }
+  ],
+  "patchSHA256": "1d8812e4674980d8fd954d99d198417b55b083b4abafc9233553f30b601c5f9d",
+  "swiftParseExitStatus": 0,
+  "head": "a0ce2031b996ebfa82b7db7a78a970759dfdfed6",
+  "scope": "DEBUG strict hand-host suppression and four sparse lifetime entry counters only; Root/commonGroup and board renderer unchanged."
+}

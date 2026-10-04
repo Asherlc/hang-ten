@@ -1,0 +1,179 @@
+--- a/HangTen/Views/RootView.swift
++++ b/HangTen/Views/RootView.swift
+@@ -199,6 +199,18 @@
+     )
+ 
+     var body: some View {
++        #if DEBUG
++        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_BOARD"] == "1" {
++            StandaloneBoardHighlightProbe()
++        } else {
++            normalBody
++        }
++        #else
++        normalBody
++        #endif
++    }
++
++    private var normalBody: some View {
+ 		TabView(selection: $selectedTab) {
+ 			TrainView { selectedTab = .plans }
+ 				.tabItem { Label("Train", systemImage: "figure.climbing") }
+@@ -3762,3 +3774,59 @@
+     }
+ }
+ #endif
++
++#if DEBUG
++/// Deliberately outside TabView, navigation, workout and every hand host.
++@MainActor
++private struct StandaloneBoardHighlightProbe: View {
++    private enum Selection: String { case active, preview, clear }
++    @State private var selection: Selection = .clear
++    private let env = ProcessInfo.processInfo.environment
++    private var viewport: CGSize {
++        CGSize(width: Double(env["HANGTEN_REVIEW_STANDALONE_WIDTH"] ?? "210") ?? 210,
++               height: Double(env["HANGTEN_REVIEW_STANDALONE_HEIGHT"] ?? "36") ?? 36)
++    }
++    var body: some View {
++        VStack(spacing: 24) {
++            Text("Standalone board: \(selection.rawValue)")
++                .accessibilityIdentifier("standalone.state")
++            if let board = BoardCatalog.all.first(where: { $0.id == "zlagboard.evo" }) {
++                BoardModelSurface(board: board, presentation: board.defaultPresentation,
++                    positionID: board.position(presentationID: board.defaultPresentation.id,
++                                               containingContactID: "edge-20-left")?.id,
++                    highlightedContactIDs: selection == .clear ? [] : ["edge-20-left", "edge-20-right"],
++                    highlightMode: selection == .preview ? .preview : .active,
++                    onContactTap: nil, isDisplayOnly: true)
++                    .frame(width: viewport.width, height: viewport.height)
++            } else {
++                Text("Missing Evo catalog entry")
++            }
++            HStack {
++                control("Active", .active)
++                control("Preview", .preview)
++                control("Clear", .clear)
++            }
++        }
++        .frame(maxWidth: .infinity, maxHeight: .infinity)
++        .background(Color.hangBackground)
++        .onAppear {
++            if env["HANGTEN_REVIEW_LANDSCAPE"] == "1",
++               let scene = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first {
++                scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
++            }
++            BoardHighlightDiagnostic.shared.harnessEvent("standalone-appear", state: selection.rawValue,
++                                                         viewport: viewport)
++        }
++    }
++    private func control(_ title: String, _ target: Selection) -> some View {
++        Button(title) {
++            guard selection != target else { return }
++            BoardHighlightDiagnostic.shared.harnessEvent("standalone-button", state: target.rawValue,
++                                                         viewport: viewport)
++            selection = target
++        }
++        .buttonStyle(.borderedProminent)
++        .accessibilityIdentifier("standalone.\(target.rawValue)")
++    }
++}
++#endif
+--- a/HangTen/Views/BoardModelView.swift
++++ b/HangTen/Views/BoardModelView.swift
+@@ -227,7 +227,7 @@
+                 #if DEBUG
+                 if BoardHighlightDiagnostic.isEnabled {
+                     BoardHighlightDiagnostic.shared.capture("view-make", scene: model,
+-                        view: diagnosticViewToken, roots: Array(content.entities))
++                        view: diagnosticViewToken, roots: Array(content.entities), viewport: size)
+                     BoardHighlightDiagnostic.shared.startSamples(view: diagnosticViewToken, scene: model)
+                 }
+                 #endif
+@@ -241,7 +241,7 @@
+                 #if DEBUG
+                 if BoardHighlightDiagnostic.isEnabled {
+                     BoardHighlightDiagnostic.shared.capture("view-update", scene: model,
+-                        view: diagnosticViewToken, roots: Array(content.entities))
++                        view: diagnosticViewToken, roots: Array(content.entities), viewport: size)
+                 }
+                 #endif
+             }
+--- a/HangTen/Models/BoardModelRealityTypes.swift
++++ b/HangTen/Models/BoardModelRealityTypes.swift
+@@ -1416,6 +1416,7 @@
+     private weak var secondHostRoot: Entity?
+     private weak var secondHostCamera: Entity?
+     private var secondHostToken: UUID?
++    private var viewports: [UUID: CGSize] = [:]
+ 
+     private init() {
+         let env = ProcessInfo.processInfo.environment
+@@ -1468,6 +1469,41 @@
+         } catch { fail(error) }
+     }
+ 
++    func harnessEvent(_ event: String, state: String, viewport: CGSize) {
++        guard enabled else { return }
++        emit(["event": event, "state": state,
++              "viewportPoints": [Double(viewport.width), Double(viewport.height)],
++              "applicationCensus": applicationCensus()])
++    }
++
++    private func applicationCensus() -> [String: Any] {
++        let app = UIApplication.shared
++        let scenes: [[String: Any]] = app.connectedScenes.compactMap { scene in
++            guard let windowScene = scene as? UIWindowScene else { return nil }
++            return ["sceneID": identity(windowScene),
++                    "sessionID": windowScene.session.persistentIdentifier,
++                    "activationState": windowScene.activationState.rawValue,
++                    "interfaceOrientation": windowScene.interfaceOrientation.rawValue,
++                    "windows": windowScene.windows.map { window -> [String: Any] in
++                        var counts: [String: Int] = [:]
++                        func visit(_ view: UIView) {
++                            let name = String(reflecting: type(of: view))
++                            if name.contains("Reality") || name.contains("ARView") {
++                                counts[name, default: 0] += 1
++                            }
++                            view.subviews.forEach(visit)
++                        }
++                        visit(window)
++                        return ["windowID": identity(window), "hidden": window.isHidden,
++                                "alpha": Double(window.alpha), "key": window.isKeyWindow,
++                                "bounds": [Double(window.bounds.width), Double(window.bounds.height)],
++                                "rendererNamedViewClasses": counts]
++                    }]
++        }
++        return ["applicationState": app.applicationState.rawValue, "windowScenes": scenes,
++                "standaloneGate": ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_BOARD"] == "1"]
++    }
++
+     private func identity(_ object: AnyObject) -> String { String(describing: ObjectIdentifier(object)) }
+     private func renderMembership(root: Entity, camera: Entity) -> [String: Any] {
+         var result: [String: Any] = [
+@@ -1509,9 +1545,11 @@
+     func capture(_ event: String, scene: BoardModelRealityScene,
+                  view: UUID? = nil, roots: [Entity]? = nil,
+                  ids: Set<String>? = nil, mode: BoardHighlightMode? = nil,
+-                 priorIDs: Set<String>? = nil, priorMode: BoardHighlightMode? = nil) {
++                 priorIDs: Set<String>? = nil, priorMode: BoardHighlightMode? = nil,
++                 viewport: CGSize? = nil) {
+         guard enabled else { return }
+         let key = scene.diagnosticLifecycleToken
++        if let viewport { viewports[key] = viewport }
+         if let ids { requestedIDs[key] = ids }
+         if let mode { requestedModes[key] = String(describing: mode) }
+         let selected = requestedIDs[key] ?? []
+@@ -1559,6 +1597,12 @@
+             "rootAttached": scene.root.scene != nil, "rootEnabled": scene.root.isEnabled,
+             "rootTransform": matrix(scene.root), "cameraTransform": matrix(scene.camera),
+             "surfaces": surfaces]
++        if let viewport = viewports[key] {
++            row["viewportPoints"] = [Double(viewport.width), Double(viewport.height)]
++        }
++        if event == "view-make" || event == "sample" {
++            row["applicationCensus"] = applicationCensus()
++        }
+         row["boardRenderMembership"] = renderMembership(root: scene.root, camera: scene.camera)
+         if let secondHostRoot, let secondHostCamera, let secondHostToken {
+             row["secondHostLifecycleToken"] = secondHostToken.uuidString

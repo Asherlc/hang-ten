@@ -1,0 +1,19 @@
+{
+  "reviewer": "/root",
+  "method": "Root directly viewed only these2 wholeimages, per collaboration message.",
+  "captures": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p1-landscape/phase-0-active-plus-5.png",
+      "sha256": "9dc4fc0739409b555bfc35faf7db9893efb83699120f7f87f30d1b4af560ec49",
+      "observedBoardColor": "red",
+      "handsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p1-landscape/phase-1-preview-plus-0.25.png",
+      "sha256": "db3b8f929fb6ca81750f288954688a4909ef877700e48a1fa4667554eee1e4ca",
+      "observedBoardColor": "blue",
+      "handsVisible": true
+    }
+  ],
+  "appearance": "Modest perspective change, no obvious clipping in these2; not complete appearance/allposes review."
+}

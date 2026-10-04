@@ -1779,6 +1779,7 @@ final class BoardModelRealityTests: XCTestCase {
                 }
                 let scene = try await BoardModelRealityLoader.load(
                     board: board, presentation: presentation, store: store)
+                let initialInstanceTransforms = scene.instanceEntities.map { $0.transform.matrix }
                 XCTAssertEqual(Set(scene.contactEntities.keys),
                                Set(board.contacts(in: presentation).map(\.id)), board.id)
                 for (contactID, entities) in scene.contactEntities {
@@ -1802,6 +1803,24 @@ final class BoardModelRealityTests: XCTestCase {
                 }) == true
                 for position in board.positions where position.presentationID == presentation.id {
                     XCTAssertTrue(scene.select(positionID: position.id), "\(board.id)/\(position.id)")
+                    if board.id == "yy.penta-evo" {
+                        let instances = try XCTUnwrap(media.instances)
+                        XCTAssertEqual(instances.count, scene.instanceEntities.count)
+                        for (index, instance) in instances.enumerated() {
+                            XCTAssertNil(instance.baseTransform.reflection)
+                            guard case .cadRoutedCord(let profile) = instance.suspension else {
+                                return XCTFail("Penta instances require native routes")
+                            }
+                            let pose = try XCTUnwrap(profile.canonicalPoses[position.id])
+                            let expected = try SuspendedBoardPresentation.boardTransform(for: pose)
+                                * initialInstanceTransforms[index]
+                            let actual = scene.instanceEntities[index].transform.matrix
+                            for column in 0..<4 {
+                                XCTAssertLessThan(simd_distance(actual[column], expected[column]), 1e-6,
+                                                  "\(board.id)/\(position.id): canonical pose applies exactly once")
+                            }
+                        }
+                    }
                     scene.highlight(Set(position.contactIDs), mode: .active)
                     if hasCord {
                         let cord = try XCTUnwrap(scene.transientCordEntity, board.id)
@@ -2082,6 +2101,64 @@ final class BoardModelRealityTests: XCTestCase {
 
         for child in entity.children {
             checkNeutralMaterial(on: child, checkedCount: &checkedCount)
+        }
+    }
+
+    @MainActor
+    func testNativeCADRouteOrbitPreservesSolvedBodyAndCord() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.baguette"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media,
+              let suspension = media.suspension,
+              case .cadRoutedCord = suspension else {
+            return XCTFail("Native CAD route fixture required")
+        }
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+        let position = try XCTUnwrap(board.positions.first { $0.presentationID == presentation.id })
+        scene.frame(in: CGSize(width: 800, height: 500))
+        XCTAssertTrue(scene.select(positionID: position.id))
+        let body = scene.instanceEntities.map { $0.transform.matrix }
+        let cord = try XCTUnwrap(scene.transientCordEntity)
+        let cordTransforms = cord.children.map { $0.transform.matrix }
+        scene.highlight(Set(position.contactIDs), mode: .active)
+        let priorCamera = scene.camera.transform.matrix
+        scene.orbit(azimuth: 0.2, elevation: 0.25)
+        XCTAssertNotEqual(scene.camera.transform.matrix, priorCamera)
+        XCTAssertEqual(scene.instanceEntities.map { $0.transform.matrix }, body,
+                       "A source-solved CAD route must not acquire an invented rigid attachment pivot")
+        XCTAssertEqual(cord.children.map { $0.transform.matrix }, cordTransforms)
+        scene.highlight(Set(position.contactIDs), mode: .preview)
+        scene.resetCamera(animated: false)
+        XCTAssertEqual(scene.instanceEntities.map { $0.transform.matrix }, body)
+        XCTAssertEqual(cord.children.map { $0.transform.matrix }, cordTransforms)
+    }
+
+    @MainActor
+    func testNativePairedLeadAndTwoBranchModelsCreateNonPickableCordSegments() async throws {
+        let store = BoardCatalog.packageStore
+        let cases = [try XCTUnwrap(store.board(id: "nature.stone-hanger")),
+                     try XCTUnwrap(store.board(id: "tension.flash-board"))]
+
+        for board in cases {
+            let presentation = board.defaultPresentation
+            guard case .model(let media) = presentation.media,
+                  let suspension = media.suspension else {
+                return XCTFail("\(board.id) must have a model suspension")
+            }
+            let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation,
+                                                               store: store)
+            let positionID = try XCTUnwrap(board.positions.first {
+                $0.presentationID == presentation.id
+            }?.id, board.id)
+            XCTAssertTrue(scene.select(positionID: positionID), board.id)
+            let cord = try XCTUnwrap(scene.transientCordEntity, board.id)
+            XCTAssertFalse(cord.children.isEmpty, board.id)
+            XCTAssertTrue(cord.children.allSatisfy { scene.contactID(for: $0) == nil }, board.id)
+            XCTAssertTrue(cord.children.allSatisfy { ($0 as? ModelEntity)?.collision == nil }, board.id)
+
+            guard case .cadRoutedCord = suspension else {
+                return XCTFail("\(board.id) now requires native source-solved routes")
+            }
         }
     }
 }

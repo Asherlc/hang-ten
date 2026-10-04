@@ -1,0 +1,296 @@
+{
+  "status": "VALID_TRANSFER_VISUAL_FAILURE",
+  "run": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-landscape",
+  "binarySHA256": "192112d7c16c876094c4a4d1edec76d21d9ec9e3ff3d02801e7fa5f57cdb599c",
+  "traceRecords": 162,
+  "traceSHA256": "710b84b1cd06e61dad9f6703ad9334a19e368d239323f0e4fb73dc0423c52a55",
+  "visual": {
+    "all12DirectWholeViewed": true,
+    "initialHang": [
+      "red",
+      "red",
+      "red",
+      "red"
+    ],
+    "rest": [
+      "red",
+      "red",
+      "red",
+      "red"
+    ],
+    "nextHang": [
+      "blue",
+      "blue",
+      "blue",
+      "red"
+    ],
+    "boardCorrect": 5,
+    "boardIncorrect": 7,
+    "handsVisibleAll12": true,
+    "visibleHandCount": 2,
+    "handPoseLimit": "Frontal paired palms/four red fingertips/thumbs inward; exact joint-angle fidelity not established.",
+    "initialHangTimers": [
+      "00:07",
+      "00:06",
+      "00:05",
+      "00:02"
+    ],
+    "restTimers": [
+      "03:00",
+      "02:59",
+      "02:57",
+      "02:55"
+    ],
+    "nextHangTimers": [
+      "00:07",
+      "00:06",
+      "00:04",
+      "00:02"
+    ]
+  },
+  "proofs": {
+    "structural-correspondence.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-landscape/structural-correspondence.json",
+      "sha256": "d8acf9008df9a420685380132a41881e5f61acd89ad5dfddc1a3baf89dce45c5",
+      "checks": {
+        "completeContiguous": true,
+        "captures12": true,
+        "allCPUBrackets": true,
+        "sameScene": true,
+        "naturalFirstHang": true,
+        "naturalRest": true,
+        "freshSession": true,
+        "boundaryAppActive": true,
+        "boundaryWindowActive": true,
+        "boundaryLandscape": true,
+        "lateBoundaryCensus": true,
+        "noAXOrTouch": true
+      }
+    },
+    "normal-host-frame-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-landscape/normal-host-frame-validation.json",
+      "sha256": "6766fe40b5a9f6d3a46318ea68d0b77c6af4d1a8bca1de6cf225bfe7b7c0a1b2",
+      "checks": {
+        "workoutSceneFromCountdown": true,
+        "hostObserved": true,
+        "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+        "sameHost": true,
+        "sameActualScene": true,
+        "rootCameraActiveSameScene": true,
+        "hostVisible": true,
+        "sampledFramesOnMonotoneOwnEndpointPath": true,
+        "allPostFirstCaptureCensusesFinal": true
+      }
+    },
+    "train-constructor-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-landscape/train-constructor-validation.json",
+      "sha256": "699d964681941e47d93896d7a53492208208604d9cf9c6e1a7790d85e3a16179",
+      "checks": {
+        "completeContiguous": true,
+        "openingBeforeConstructors": true,
+        "uniqueConstructorTokens": true,
+        "exactlyOneWorkoutConstructor": true,
+        "exactlyOneWorkoutMake": true,
+        "allSceneRecordsHaveConstructor": true,
+        "markerGateMatches": true,
+        "realHandsNotSuppressed": true,
+        "observedPredecessorConstruction": true
+      }
+    },
+    "structural-dependency-ownership.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-landscape/structural-dependency-ownership.json",
+      "sha256": "ba58782884512275b865ba69d5f4a603d7beb3c49f9220b9ba3d175b068f6849",
+      "checks": {
+        "completeStream": true,
+        "exactEnvironmentKeys": true,
+        "exactCommonValues": true,
+        "releaseModeMatches": true,
+        "exactRunID": true,
+        "canonicalModelSHA": true,
+        "exactTwoConstructorsAndMakes": true,
+        "oneBeforeAfterTrainOnly": true,
+        "actionFlagCorrect": true,
+        "retentionModeCorrect": true,
+        "allHostsCurrentValid": true,
+        "tagMatchesPredecessor": true,
+        "oneStableOwnerPerHost": true,
+        "exactInitialReadiness": true,
+        "beforeOwnershipObservedOrOrdinaryNaturalLoss": true,
+        "disappearBeforeFirstHang": true,
+        "postEveryTrialKeepsPredecessorRecord": true,
+        "bothRecordsFromFirstHang": true,
+        "workoutAliveAttachedUnchanged": true,
+        "weakCensusRecordAtEveryPostPoint": true,
+        "weakIdentityForEveryLivingEntity": true,
+        "predecessorDisappearedThroughout": true,
+        "zeroExplicitDetachesEntireStream": true,
+        "zeroIntentionalRetentionEntireStream": true,
+        "noUnexpectedOrdinaryOwnershipTransfer": true,
+        "deadEntitiesHaveNoInventedOwnership": true,
+        "throughTail": true
+      }
+    },
+    "structural-dependency-navigation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-landscape/structural-dependency-navigation.json",
+      "sha256": "1b9d93a248aa4f7e238382943a558803d55d91da98d47a043f321b19a4144d47",
+      "checks": {
+        "readinessPassedWithinBound": true,
+        "readinessEvidenceInCompleteTrace": true,
+        "readinessBeforeOpenURL": true,
+        "initialTrainConstructorAndMakeBeforeOpenURL": true,
+        "exactlyInitialFalseThenTrue": true,
+        "initialBoardMapBeforeOpenURL": true,
+        "navigationTrueAfterOpenURLBeforeFirstHang": true,
+        "requestedBranchMatchesAction": true,
+        "expectedBoardPlanPresentation": true,
+        "navFlagsCorrect": true,
+        "sameReadyPredecessorOwnershipValid": true,
+        "distinctWorkoutExactlyOne": true
+      }
+    },
+    "real-hand-lifetime-camera-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-landscape/real-hand-lifetime-camera-validation.json",
+      "sha256": "6a1d484e972f9499e63300c018fe962d68cb14775f0ef0ae54775305d7a282b3",
+      "checks": {
+        "completeStream": true,
+        "handSuppressionAbsent": true,
+        "perspectiveExperimentAbsent": true,
+        "instrumentationVersion": true,
+        "exactCountsMatchEventsAtEveryRecord": true,
+        "actualCreatedAndMadePath": true,
+        "allMakeRecordsHaveEarlierActualConstructor": true,
+        "oneConfigurationPerCreatedCamera": true,
+        "allFitsHaveEarlierSameCameraConfiguration": true,
+        "everyActuallyMadePathHasFit": true,
+        "actualCameraComponentsOrthographic": true,
+        "actualClipsUnchanged": true,
+        "finitePositiveOrthographicScale": true,
+        "fitGeometryInsideClips": true,
+        "noUnknownLifecycleOrCameraEvent": true,
+        "completeTailAfterAllCaptures": true
+      }
+    }
+  },
+  "comparisonChecks": {
+    "sameBinary": true,
+    "onlyHandSuppressionAndRunIDEnvironmentDifference": true,
+    "sameNormalFrameEndpoints": true,
+    "sameResolvedWorkoutInputs": true,
+    "sameRootCameraTransformSets": true,
+    "sameConstructorAndMakeCounts": true
+  },
+  "boardLifecycleOrderSame": true,
+  "boardLifecycleOrder": [
+    "board-scene-constructed:predecessor",
+    "view-make:predecessor",
+    "detach-trial-before:predecessor",
+    "detach-trial-after:predecessor",
+    "view-disappear:predecessor",
+    "board-scene-constructed:workout",
+    "view-make:workout"
+  ],
+  "actualHandCounts": {
+    "single.constructor-entry": 0,
+    "single.make-entry": 0,
+    "pair.constructor-entry": 2,
+    "pair.make-entry": 2
+  },
+  "actualCameraConfiguration": "Every constructed/made pair camera observed orthographic only, clips0.1..100, valid finite fit; single path uncreated and untested.",
+  "handEventOrdering": [
+    {
+      "sequence": 13,
+      "epoch": 1790994036.917036,
+      "event": "hand-lifecycle",
+      "handKind": "pair",
+      "lifecycleEvent": "constructor-entry",
+      "cameraEvent": null
+    },
+    {
+      "sequence": 14,
+      "epoch": 1790994036.917186,
+      "event": "hand-camera",
+      "handKind": "pair",
+      "lifecycleEvent": null,
+      "cameraEvent": "configured"
+    },
+    {
+      "sequence": 15,
+      "epoch": 1790994036.936959,
+      "event": "hand-lifecycle",
+      "handKind": "pair",
+      "lifecycleEvent": "make-entry",
+      "cameraEvent": null
+    },
+    {
+      "sequence": 16,
+      "epoch": 1790994036.9930968,
+      "event": "hand-camera",
+      "handKind": "pair",
+      "lifecycleEvent": null,
+      "cameraEvent": "reset-fitted"
+    },
+    {
+      "sequence": 27,
+      "epoch": 1790994039.420556,
+      "event": "hand-lifecycle",
+      "handKind": "pair",
+      "lifecycleEvent": "constructor-entry",
+      "cameraEvent": null
+    },
+    {
+      "sequence": 28,
+      "epoch": 1790994039.420614,
+      "event": "hand-camera",
+      "handKind": "pair",
+      "lifecycleEvent": null,
+      "cameraEvent": "configured"
+    },
+    {
+      "sequence": 29,
+      "epoch": 1790994039.43335,
+      "event": "hand-lifecycle",
+      "handKind": "pair",
+      "lifecycleEvent": "make-entry",
+      "cameraEvent": null
+    },
+    {
+      "sequence": 30,
+      "epoch": 1790994039.4892,
+      "event": "hand-camera",
+      "handKind": "pair",
+      "lifecycleEvent": null,
+      "cameraEvent": "reset-fitted"
+    }
+  ],
+  "predecessorWeakFirstObservedDead": {
+    "sequence": 19,
+    "epoch": 1790994037.2748408,
+    "event": "highlight-before",
+    "wrapperAlive": false,
+    "rootAlive": false,
+    "cameraAlive": false
+  },
+  "weakParentSceneCounts": {
+    "observations": 138,
+    "parentAlive": 2,
+    "sceneAlive": 2
+  },
+  "ordinaryTeardownOrderDifference": false,
+  "parity": {
+    "all27Equal": true,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-final-parity.json"
+  },
+  "prior235FilesExact": true,
+  "appTerminatedPID65253VerifiedAbsent": true,
+  "interpretation": "The hands-off structural-unmount success did not transfer to real paired hands in this single same-binary run. With equal board endpoints/inputs/transforms and board lifecycle order, CPU state was correct while sampled board colors were stale. This supports a remaining hand-subtree interaction boundary but does not isolate camera, shader, workload, host lifetime or GPU mechanism.",
+  "limits": [
+    "Only one authorized transfer; no repeat or reversal.",
+    "Structural unmount, weak observation and external readiness remain DEBUG conditions; no production fix claimed.",
+    "Point weak death and constructor/camera pointer associations do not establish exact deallocation or concurrent renderer lifetime.",
+    "No inference about unobserved middle-rest frames, first-image settlement or identical animation timing.",
+    "No frontend isolation claim; unknown shared DeviceHub untouched."
+  ],
+  "productionFix": false,
+  "humanAcceptance": false,
+  "handback": "No more runtime/source/build actions. Root owns registered Simulator/DD/controller."
+}

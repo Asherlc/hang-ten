@@ -1,0 +1,47 @@
+{
+  "timestampUTC": "2026-10-02T14:46:05.699415+00:00",
+  "passedStaticPreflight": true,
+  "reviewMode": "Read-only scripts; no resources or source edits by reviewer",
+  "scripts": {
+    "lifecycle.zsh": {
+      "sha256": "30d5b0e1e1c69ac65ef637ca659907246321271ff462b1a9b48894e5694921e7",
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/prep/lifecycle.zsh",
+      "snapshot": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/lifecycle-review/final/lifecycle.zsh"
+    },
+    "bounded-command.py": {
+      "sha256": "1f7ade47210369847e42440d449e6b9b8071437f7a8f857468d3d371fd691505",
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/prep/bounded-command.py",
+      "snapshot": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/lifecycle-review/final/bounded-command.py"
+    },
+    "boot-uninterrupted.py": {
+      "sha256": "efae502ff2e3d4f21833c445dcd789e051c93f0898ff983dfd88851d26680805",
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/prep/boot-uninterrupted.py",
+      "snapshot": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/lifecycle-review/final/boot-uninterrupted.py"
+    },
+    "source-gate.py": {
+      "sha256": "c8ae88b8952bbd196c14e9bd452db18aa2f972852f8cd63865561f067cbcade5",
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/prep/source-gate.py",
+      "snapshot": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/lifecycle-review/final/source-gate.py"
+    },
+    "build-parity.py": {
+      "sha256": "a757d1cf0ce8e7a5c82bcca5362deb99cdc8e495e7166fedd1ff36286719a1f4",
+      "source": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/prep/build-parity.py",
+      "snapshot": ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/lifecycle-review/final/build-parity.py"
+    }
+  },
+  "requirementsChecked": [
+    "EXIT/INT/TERM traps before simctl create",
+    "Unique owner-marked PID-suffixed device name",
+    "Immediate pending then owned exactUUID registration",
+    "Bounded exact-name recovery after partial create failure; no false cleanup success on failed lookup",
+    "Single uninterrupted firstboot;900second monotonic readiness deadline starts before boot/open; no reboot path",
+    "Responsive Home AX IDs confirmed against retained actual Home tree",
+    "Whole Home screenshot independently approved before build; approval binds currentUUID and screenshotSHA256",
+    "CleanHEAD and exact package hash gate before build",
+    "Bounded subprocesses, raw exclusive output files, final interruption records",
+    "Exact UUID/DD/result cleanup and deletion checks on success/failure/interruption"
+  ],
+  "historicalProofsUntouched": true,
+  "resourcesCreatedByReviewer": false,
+  "limits": "Static review does not establish actual startup, Home readiness, app build/runtime behavior, or cleanup completion. Runtime worker/root retain those execution and visual gates. No simulator repair claim."
+}

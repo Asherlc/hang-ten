@@ -1,0 +1,18 @@
+{
+  "pid": 3869,
+  "command": [
+    "rtk",
+    "proxy",
+    "ps",
+    "-p",
+    "3869",
+    "-o",
+    "pid=,args="
+  ],
+  "exitStatus": 1,
+  "stdout": "",
+  "stderr": "",
+  "absent": true,
+  "epoch": 1790996324.6659641,
+  "scope": "Exact app only; root retains registered Simulator/DD/controller."
+}

@@ -1,0 +1,42 @@
+{
+  "method": "Root direct whole-image inspection; no cropping or pixel measurement",
+  "scope": "Four representative screenshots only; full twelve reviewed independently by runtime worker",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-3.png",
+      "sha256": "f6e35cd1991fb0f167ccb0f2b1b3d6688d4ccb33b823995d715921862ddbc9e2",
+      "observedColor": "red",
+      "expectedColor": "blue",
+      "visibleTimer": "02:57",
+      "bothHandsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-5.png",
+      "sha256": "f6e35cd1991fb0f167ccb0f2b1b3d6688d4ccb33b823995d715921862ddbc9e2",
+      "observedColor": "red",
+      "expectedColor": "blue",
+      "visibleTimer": "02:57",
+      "bothHandsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "12e83c841ee8749afc079d74329a54b2a1ca5a597b6290f1636391521ea0d00b",
+      "observedColor": "red",
+      "expectedColor": "red",
+      "visibleTimer": "00:07",
+      "bothHandsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-5.png",
+      "sha256": "d8cd7fbe91ba2779911ddf1ff0d99ffa599b30f7b97bfb25eb9cec12f31db02d",
+      "observedColor": "red",
+      "expectedColor": "red",
+      "visibleTimer": "00:02",
+      "bothHandsVisible": true
+    }
+  ],
+  "limitations": [
+    "Rest requested +5 and +3 have identical bytes and show02:57; no cause inferred.",
+    "Later Hang correct in these captures does not compensate for incorrect Rest or establish repair."
+  ]
+}

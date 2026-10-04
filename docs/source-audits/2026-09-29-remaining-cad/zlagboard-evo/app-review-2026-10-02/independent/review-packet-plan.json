@@ -1,0 +1,23 @@
+{
+  "destination": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/app-review-2026-10-02",
+  "copyAfterCleanup": [
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02",
+      "destination": "ios"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02-independent",
+      "destination": "independent"
+    }
+  ],
+  "preservation": "Copy exact raw logs/images/JSON including failed and preliminary results. Exclude build products and raw result bundles only after their retained summaries/logs and cleanup proofs are finalized. Preserve earlier native and failed-runtime packets unchanged.",
+  "pending": [
+    "Narrow highlight fix proven by retained-view regression",
+    "Fresh final build parity and app transitions",
+    "Final visual judgment",
+    "Exact resource cleanup with independent verification",
+    "Scoped queue/lock/ownership provenance",
+    "Commit and push"
+  ],
+  "humanReview": "pending"
+}

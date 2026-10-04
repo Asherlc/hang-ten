@@ -1,0 +1,71 @@
+{
+  "board": "zlagboard-evo",
+  "status": "passed-independent-visual-review",
+  "humanAcceptance": false,
+  "scope": "Independent whole app screenshot judgment of overall shape and selected jug/sloper/pocket surface coverage. Root owns complete21contact inventory review and human acceptance. No package changes.",
+  "screenshots": [
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/default.png",
+      "sha256": "f902809a6842c21b3f3ac399809e46877bbfb0804e68fcef08e9bdf61caa1256"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/left-jug-top-oblique-orbit.png",
+      "sha256": "88b357063c86b3a91a63a3076d768df61bb0c6d10e0ddf30c732dab00c5e2bbc"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/right-jug-top-oblique-orbit.png",
+      "sha256": "ab2fdfc82d0656131d3b0bb9acd269ea08b3b026b31fc64bf830cbbce126e26d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/top-sloper-oblique-orbit.png",
+      "sha256": "2dc0e4b9990f0e2fb6cb8fe19f1c9953260550f77fe54dce08a928566eb3e178"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/upper-pocket-oblique-orbit.png",
+      "sha256": "c634266f333c6c47520658acd6199461678db1ceb7b0f052b32315ca72c0ec4c"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/captures-after-reboot/lower-pocket-oblique-orbit.png",
+      "sha256": "ccb77cae7b76192976e3503633317eb994346b40290705117f49fd1d5a8bd262"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/elevated-jugs/left-elevated.png",
+      "sha256": "d8fc7acbb3ae0962a6fb7288da86d871e193fee031ea848ade02156b9da8436b"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/elevated-jugs/right-elevated.png",
+      "sha256": "7a304fa5f77740ce366ef4dfd765bf45a51297e233750754e12225e453f7db99"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/elevated-jugs-gentle/left-elevated.png",
+      "sha256": "6ad1e8b8ad7623e62feede4256b0dbe91de662383cd08e3feb001e72ebe5af26"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/elevated-jugs-gentle/right-elevated.png",
+      "sha256": "d5863529c336496c61fd89caaed5244e6f105e1c3316822c86c2ccabef66fa9e"
+    }
+  ],
+  "primaryWholeEvidence": [
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/sources/product-01.png",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/sources/product-02.png"
+  ],
+  "nativeEvidence": [
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/before-after-front-side-top.png",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/candidate-verification.json",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/final-export-jug-crests-strict.json"
+  ],
+  "findings": {
+    "wholeShape": "Visible seven-top/two-pocket-row layout, rounded recessed ends and wooden appearance correspond to the retained whole manufacturer evidence and corrected native proofs. No new substantial shape defect demonstrated.",
+    "leftJug": "Elevated gentle-yaw view shows continuous selected coverage over full visible crest depth and rounded outer top corner, terminating at the adjacent32degree sloper boundary. No unhighlighted crest gap or neighboring contact spill visible.",
+    "rightJug": "Mirrored elevated gentle-yaw view shows corresponding full visible crest/corner coverage and clean adjacent sloper boundary. No unhighlighted crest gap or neighboring contact spill visible.",
+    "otherReviewedHighlights": "Left32degree top sloper, central35mm upper pocket and lower-left20mm pocket highlights align with their intended actual bearing/cavity surfaces.",
+    "framing": "Initial jug views were too shallow for full crest judgment. Stronger elevated raw attempts expose coverage but partly clip the lower silhouette. Subsequent gentle-yaw elevated whole views retain entire board silhouette and sufficient top depth; no additional orbit needed for these review questions.",
+    "recommendedFurtherChanges": "None from this independent screenshot review."
+  },
+  "limitations": [
+    "No pixel measurements, crops, traces or image-derived geometry used.",
+    "Visual shape agreement does not turn estimated2mmtrough/1mmlip radii or inherited envelope into factory dimensions.",
+    "This is not human acceptance and does not claim independent screenshot review of every21contact.",
+    "Native/compiled crest geometry is established by separate retained proofs; screenshot inspection confirms visible runtime selection coverage."
+  ]
+}

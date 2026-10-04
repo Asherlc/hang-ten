@@ -1,0 +1,21 @@
+{
+  "appliedUTC": "2026-10-02T18:44:43.990112+00:00",
+  "authorization": "Root explicit source application gate after Pro baseline frozen at HEAD7a686715; no build/install yet",
+  "patchSHA256": "401b1084a5f8a072a5ca00f17e5f570adf3725d5140ce3875d28d2fdd76c59f6",
+  "before": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8"
+  },
+  "after": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "e18e0a0f59139a4c19cf2e197c383698572d487eed0254dcfc28acbf373ceb39",
+    "HangTen/Views/BoardModelView.swift": "aaf5fdaa7d24865c2bf20f5c6fd7c05db59e41cb1b4da2893fb9fbf7edec078f"
+  },
+  "actualDiffSHA256": "40c8e8dfb31d376c2f0a7979904a659f74294bf8bd4e631bb5d3e51c189f3be4",
+  "applyExitCode": 0,
+  "onlyAuthorizedFiles": [
+    "HangTen/Models/BoardModelRealityTypes.swift",
+    "HangTen/Views/BoardModelView.swift"
+  ],
+  "buildStarted": false,
+  "installed": false
+}

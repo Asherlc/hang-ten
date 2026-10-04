@@ -1,0 +1,21 @@
+{
+  "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+  "descriptorSHA256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+  "scope": "Read-only actual finalUSDZ verification of both previously omitted jug crest surfaces; positions are native-axis mesh coordinates in metres.",
+  "jugCrests": [
+    {
+      "nodeID": "contact_top_jug_left",
+      "triangles": 5299,
+      "actualExportCrestTriangles": 4,
+      "crestAreaMM2": 1015.7212524414062,
+      "totalContactAreaMM2": 4134.80517578125
+    },
+    {
+      "nodeID": "contact_top_jug_right",
+      "triangles": 5658,
+      "actualExportCrestTriangles": 4,
+      "crestAreaMM2": 1015.7293701171875,
+      "totalContactAreaMM2": 4134.63525390625
+    }
+  ]
+}

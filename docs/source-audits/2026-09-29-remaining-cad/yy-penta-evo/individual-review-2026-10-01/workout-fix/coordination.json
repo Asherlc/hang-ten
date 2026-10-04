@@ -1,0 +1,6 @@
+{
+  "parentAgentID": "62e01d1f-0832-4466-9e2c-315d62e8f0cb",
+  "scope": "WorkoutActivityRecording.swift reusable-instance bilateral resolver; no renderer/schema/routine/package changes",
+  "reply": "No overlap here\u2014I\u2019m not editing `WorkoutActivityRecording.swift`. You can apply that fix on your branch with the exact instance and slot checks you described. Keep the existing spatial selection for all other cases and include the positive and negative regressions.",
+  "source": "Paseo get_agent_activity response after explicit coordination prompt"
+}

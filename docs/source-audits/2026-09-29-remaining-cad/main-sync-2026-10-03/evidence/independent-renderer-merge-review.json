@@ -1,0 +1,145 @@
+{
+  "reviewer": "baguette_review_prep",
+  "createdUTC": "2026-10-03T14:24:42.239353+00:00",
+  "scope": "Read-only main merge preparation; no source/ref/runtime mutation. Main ref and ours ref explicitly pinned; current four-file experimental WIP read separately.",
+  "main": "d53c019c43319a70b32e6dc654814de29e87ab89",
+  "oursHEAD": "ecf43a8b9f147b56adbb5abe7802f07627e7a455",
+  "mergeBase": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "workingDiffSHA256": "2da62e7721d91e3bed33658c2c3ee5238442544021da70f7c89a4d2cb670e696",
+  "inputs": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "mainSHA256": "6d4439ffa97e0a93c25fc2b253710c2711186bbbc1515f830d33dd11a36a8b89",
+      "oursHEADSHA256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+      "workingTreeSHA256": "5e840c019cd28157a4cd180fd0423f32f31050e03b1ac0523c6f9abffd731091"
+    },
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "mainSHA256": "65275099eb18cb8a308dfcad380f0691bc7746fe2b3e16355b8efeda1812f5bd",
+      "oursHEADSHA256": null,
+      "workingTreeSHA256": null
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "mainSHA256": "c422d7a64883abaeee64fdfc0d1bb2d202b2125f3c76bc946996592cda32dbf5",
+      "oursHEADSHA256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+      "workingTreeSHA256": "1d256719a57fe4fa44ed419258f211fbd3193b7e7345080f920f839eaec9ab8a"
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "mainSHA256": "0921db646c93486e8b428806d555f68348330ba2f649ce5b6097235ecd7fe017",
+      "oursHEADSHA256": "911fba863c2b7dbc66a48c9c70937fb47ecd422e83e761751e662d756aac6b95",
+      "workingTreeSHA256": "b2986f27f69f59d221cb8a84a5d0e0b84e9ff3a94c9457108ccd5ed820ca4e08"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "mainSHA256": "4927d32b64ce78a987d13bd5f89b37cc572ec670f72833451dad245079cbe42c",
+      "oursHEADSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "workingTreeSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "mainSHA256": "2492b1080f258b3ed5c860b4d746d8959215173bdf6d09fcf04d00f6336e8646",
+      "oursHEADSHA256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+      "workingTreeSHA256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5"
+    },
+    {
+      "path": "HangTen/Models/TrainingModels.swift",
+      "mainSHA256": "87f11412b3b342f74f99915685e4e2f5735034258b1f5df24b014639eddab65a",
+      "oursHEADSHA256": "2e680154c8f9389324440dcf853f2f3ca106c17d3905dac9fb6f51c05676646d",
+      "workingTreeSHA256": "2e680154c8f9389324440dcf853f2f3ca106c17d3905dac9fb6f51c05676646d"
+    },
+    {
+      "path": "HangTenTests/BoardModelRealityTests.swift",
+      "mainSHA256": "3c7d4e4a01c9f7a2f79372f578677c594d35b01f42fdaef1e5e78c7f414248e0",
+      "oursHEADSHA256": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+      "workingTreeSHA256": "b1ec2f9cff5ecc87487bd4bedc484ee7a7e16352cecd28979cb2607c10544d9c"
+    }
+  ],
+  "minimalWorkoutOptInPort": [
+    {
+      "file": "HangTen/Views/WorkoutView.swift",
+      "mainLine": 445,
+      "change": "Add usesFrameRenderer: usesBoardFrameRenderer to portrait BoardMapView invocation, preserving all Main task controls, cue logic, layout and arguments."
+    },
+    {
+      "file": "HangTen/Views/WorkoutView.swift",
+      "mainLine": 650,
+      "change": "Add same argument to landscape BoardMapView, preserving Main task cursor/hand side logic and constraints."
+    },
+    {
+      "file": "HangTen/Views/WorkoutView.swift",
+      "change": "Move only the private usesBoardFrameRenderer computed Bool from our WIP RootView: DEBUG reads HANGTEN_REVIEW_BOARD_FRAME_RENDERER == 1; nonDEBUG false. Do not move the old embedded WorkoutView or apply old RootView hunks blindly."
+    },
+    {
+      "file": "HangTen/Views/BoardMapView.swift",
+      "mainLine": 604,
+      "change": "Add private Bool, default-false initializer argument and assignment, forward to BoardModelSurface at Main line708. Preserve maximumMapHeight, preferredPositionIDs, rotation selectors and stable size modifier."
+    },
+    {
+      "file": "HangTen/Views/BoardModelView.swift",
+      "change": "Add opt-in default-false Surface argument/branch into Main ZStack without replacing Main live child/lifecycle/accessibility logic. Keep callback-bearing picker/detail on the live route. Carry coordinator/cache/tests as unvalidated experimental WIP only."
+    }
+  ],
+  "mustPreserveMain": [
+    "RootView refactor and new WorkoutView/WorkoutSessionState/WorkoutPresentationContent/WorkoutControls files; do not resurrect old monolithic workout implementation.",
+    "GripHandPose nil configuration defaults to Set(FingerSlot.allCases), while explicit selections take priority. Preserve baked mirrored positions/normals/reversed winding, mirrored cache key, paired inward yaw and spacing, balanced lights, review routes and orbit/reset behavior.",
+    "BoardModelSurface ZStack scopes load/disappear to the stable surface; mixed/bilateral highlighted contact cue labels; live RealityView virtual camera, animation invalidation, Simulator presentation workaround and scenePhase/reduceMotion/live-rope lifecycle.",
+    "Main BoardModelRealityScene native finish setup with attachment neutrality, per-node mixed materials, reflection/culling, independent instances; contact-aware selection camera, manual orbit persistence on mode-only changes, picking and reset.",
+    "Main BoardMap rotation selector for reusable uncorded instances, compatible preferred pose persistence and stable sizing/maximumMapHeight; Main workflow task/side selection."
+  ],
+  "materialMergeRisks": [
+    {
+      "severity": "high",
+      "finding": "Main lacks cadRoutedCord in TrainingModels and ModelReality solved suspension switch; wholesale Main replacement drops our CAD route representation used by scoped packages.",
+      "action": "Retain additive branch CAD schema/parser/solver integrations and their tests while integrating Main live ropes. Coordinate broader schema/solver merges with parent; this review makes no edits."
+    },
+    {
+      "severity": "high",
+      "finding": "Main highlight changes camera orbit/zoom and can start animations on contact/position change. Current experimental coordinator calls frame/select/orbit/highlight, assumes final synchronous camera, caches by requested orbit and submits one deltaTime0 frame. Main live rope updates also assume SceneEvents subscription.",
+      "action": "Do not treat the existing candidate proof as validated after merge. Keep disabled by default; settle/snapshot and live-motion semantics need a separate scoped implementation decision and fresh tests/runtime before enabling."
+    },
+    {
+      "severity": "high",
+      "finding": "Branch nested surface selectors use path-aware findNodeID relative to instance roots; Main material traversal resolves finishByNodeID[entity.name]. Main-only adoption could lose inherited attachment/material behavior for nested selectors.",
+      "action": "Preserve both supported selector semantics and Main mixed/native finish/reflection behavior; retain testNestedSurfaceSelectorsPreserveAttachmentNeutralityAndInheritedWood plus Main finish coverage."
+    },
+    {
+      "severity": "medium",
+      "finding": "Main BoardMap uses static presentation.aspectRatio, drops branch cad route framing and selected-position contact remapping; Detail selectedPosition binding also changed.",
+      "action": "Resolve consciously rather than taking one side wholesale. Retain branch source-bound cord/pose framing expectations with Main stable modifier/rotation state and test actual paired/suspended packages."
+    },
+    {
+      "severity": "medium",
+      "finding": "Main WorkoutView no longer passes branch WorkoutHighlightResolver.presentationID(for:on:) at the two calls; Main resolver task/side APIs have changed.",
+      "action": "Reconcile branch multi-presentation selection separately from the minimal experimental flag port; do not blindly insert an old helper call that is absent on Main or lose Main task cursor semantics."
+    }
+  ],
+  "relevantExistingMainTests": [
+    "BoardModelRealityTests/testSelectionAdjustmentPreservesManualOrbitAcrossRenderAndModeUpdates",
+    "BoardModelRealityTests/testClearingSelectionRestoresDefaultCamera",
+    "BoardModelRealityTests/testCameraOrbitAndResetUpdateRealityKitCamera",
+    "BoardModelRealityTests/testMixedFinishesRestoreEveryContact",
+    "BoardModelRealityTests/testBoardFinishCoversUnlistedMeshWhileAttachmentsStayNeutral",
+    "BoardModelRealityTests/testCatalogBoardFinishesCoverEveryImportedBodyAndHoldMesh",
+    "BoardModelRealityTests/testMirroredBoardNormalsAgreeWithRenderedTriangleWinding",
+    "BoardModelTests/testPivotChosenRotationSurvivesActiveAndHighlightedHoldChanges",
+    "HangTenTests/GripHandOrbitTests.swift",
+    "HangTenTests/GripHandCueCardTests.swift"
+  ],
+  "branchTestsToRetain": [
+    "testNUGPinchHighlightsBothOpposingSurfacesAndKeepsJugPicking",
+    "testNativeCADModelsCreateNonPickableCordSegmentsInEveryPosition",
+    "testNestedSurfaceSelectorsPreserveAttachmentNeutralityAndInheritedWood",
+    "testSharedContactMeshUsesPrimaryPickingAndUnionHighlight",
+    "testWoodFinishHighlightsAndRestoresEveryContactWithoutChangingPicking",
+    "testWoodSelectionDoesNotAlterAnotherSceneUsingTheSameResource",
+    "Four current completed-frame cache tests as additive experimental coverage"
+  ],
+  "evidenceStatus": "No repair proven. Previous unlit on-demand full run failed appearance/blank; lit appearance early pass is scoped, latest lit natural cycle INVALID20/44. Prior failures/raw hashes remain unchanged. Main changes require fresh validation and do not retroactively alter any report.",
+  "noSourceEdits": true,
+  "noRefMutations": true,
+  "noRuntimeOrTests": true,
+  "productionCandidateSelected": false,
+  "humanAcceptanceChanged": false
+}

@@ -1,0 +1,16 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "real-hands",
+  "helperSHA256": "277e94838fecf62f7b839f4f2e1625b04cf2bd712d8a24c97a466741f5d92d70",
+  "constructorMarkerAuditReady": true,
+  "structuralNavEventAuditReady": true,
+  "rootSourceRuntimeRelease": true,
+  "previousArmGatePassed": true,
+  "postbootConfirmationPassed": true,
+  "retainedDetachIntervention": false,
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "binarySHA256": "192112d7c16c876094c4a4d1edec76d21d9ec9e3ff3d02801e7fa5f57cdb599c",
+  "authorization": "Root explicitly authorized exactly one real-hands transfer; no further arm, source change, build or install. Exact app termination and handback after tail.",
+  "referencePassGatePath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-ordinary-root-gate.json",
+  "referencePassGateSHA256": "e44475f505b665a189df495c2e8ceac1883da2e144d02c15b2f501f33cbdf6cf"
+}

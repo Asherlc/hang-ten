@@ -1,0 +1,100 @@
+{
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/image/elapsed-006s.png",
+      "sha256": "dc041df82c73693c319b98320193eb5efb2c00b819b96c31cd4feb6609905737",
+      "directWholeImageReviewed": true,
+      "phase": "Hang",
+      "boardColor": "red",
+      "boardColorCorrect": true,
+      "hands": "Both upright image hands visible with four red fingers per hand; warmer/darker appearance adaptation."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/image/elapsed-011s.png",
+      "sha256": "f6e26724ba32c2da58dc57a2ae2e67781ea976b482236a4526dcde29d395d604",
+      "directWholeImageReviewed": true,
+      "phase": "Rest",
+      "boardColor": "red",
+      "boardColorCorrect": false,
+      "hands": "Both upright image hands visible with four red fingers per hand; warmer/darker appearance adaptation."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/image/elapsed-018s.png",
+      "sha256": "9a4565c7d272cd8823929faf9bcf04e474ae74108f4b287c2145133c5088eea3",
+      "directWholeImageReviewed": true,
+      "phase": "Rest",
+      "boardColor": "red",
+      "boardColorCorrect": false,
+      "hands": "Both upright image hands visible with four red fingers per hand; warmer/darker appearance adaptation."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/image/elapsed-090s.png",
+      "sha256": "bd040829ab8248fbeb45c2e6415133b14627b8c040c891f10a54fe535c98aeda",
+      "directWholeImageReviewed": true,
+      "phase": "Rest",
+      "boardColor": "blue",
+      "boardColorCorrect": true,
+      "hands": "Both upright image hands visible with four red fingers per hand; warmer/darker appearance adaptation."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/image/elapsed-191s.png",
+      "sha256": "a4a359d10fb5aa8eda4cdb3633bc7d88521a38a74012a382314bfd9b736e83a7",
+      "directWholeImageReviewed": true,
+      "phase": "Hang",
+      "boardColor": "blue",
+      "boardColorCorrect": false,
+      "hands": "Both upright image hands visible with four red fingers per hand; warmer/darker appearance adaptation."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/image/elapsed-192s.png",
+      "sha256": "f0755618c3b7089f92908d7c2d2e254f2405966dadf76b7ca378e615fd0a18bd",
+      "directWholeImageReviewed": true,
+      "phase": "Hang",
+      "boardColor": "blue",
+      "boardColorCorrect": false,
+      "hands": "Both upright image hands visible with four red fingers per hand; warmer/darker appearance adaptation."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/image/elapsed-193s.png",
+      "sha256": "d925c5d45f6602de7e55ac0583a77f91b4104f011f52371c5cfb20ef053d74d4",
+      "directWholeImageReviewed": true,
+      "phase": "Hang",
+      "boardColor": "blue",
+      "boardColorCorrect": false,
+      "hands": "Both upright image hands visible with four red fingers per hand; warmer/darker appearance adaptation."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/image/elapsed-194s.png",
+      "sha256": "40601a65602ae44948e885bec6e9b13e523c61255dccd3586c7abdc18b2426ef",
+      "directWholeImageReviewed": true,
+      "phase": "Hang",
+      "boardColor": "blue",
+      "boardColorCorrect": false,
+      "hands": "Both upright image hands visible with four red fingers per hand; warmer/darker appearance adaptation."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/image/elapsed-195s.png",
+      "sha256": "47dc6194ced3e8945268e25ea3204631cdbb20c17de33e1f28c45be4d3e1ce4a",
+      "directWholeImageReviewed": true,
+      "phase": "Hang",
+      "boardColor": "blue",
+      "boardColorCorrect": false,
+      "hands": "Both upright image hands visible with four red fingers per hand; warmer/darker appearance adaptation."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/image/elapsed-196s.png",
+      "sha256": "4c835d6f130d3fdede1ef6c93e40b5d3df3ec1c969f153bd8fb890861dd9f893",
+      "directWholeImageReviewed": true,
+      "phase": "Hang",
+      "boardColor": "blue",
+      "boardColorCorrect": false,
+      "hands": "Both upright image hands visible with four red fingers per hand; warmer/darker appearance adaptation."
+    }
+  ],
+  "visualResult": "FAIL",
+  "limits": [
+    "External capture offsets, not internal mutation times.",
+    "Simulator only; no physical iPhone available.",
+    "No pixel measurement or image processing."
+  ]
+}

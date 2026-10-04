@@ -1474,6 +1474,7 @@ def test_every_catalog_model_authors_a_material_finish() -> None:
                 # The maker specifies anodized aluminium. There is no metal palette;
                 # this exact revision must explicitly retain its neutral finish.
                 assert display.get("surfaceFinish") == "neutral", package
+                assert not any(display.get(field) for field in ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs")), package
             elif package.name == "plateau-lifting-edge":
                 # Only the accepted wooden body and working edge use wood;
                 # the neutral default preserves its attachment/insert appearance.

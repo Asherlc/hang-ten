@@ -1,0 +1,12 @@
+{
+  "status": "PASS static review",
+  "scope": "Read protocol, actual capture helper, ownership/navigation validators and comparison; byte-exact legacy checkers preserved.",
+  "findings": [
+    "Only combined retention+detach differs after common UNMOUNT/observation; ordinary requires parent SHA-bound reference gate.",
+    "Readiness preserves actual Train owned attachment, fullcapture natural timing and before/after CPU tail.",
+    "Ordinary allows narrowly evidenced nil natural teardown markers, rejects changed nonnil ownership; retained branch strict.",
+    "No source mutation or production claim."
+  ],
+  "captureSHA256": "010179a029a5595850238e6ad1872c5ee05956a171f34a9e998d002faacdac5e",
+  "ownershipSHA256": "409edc4fe86d2cc3387f86193add1d0efb52bbcfd0b64af023077408c9220bea"
+}

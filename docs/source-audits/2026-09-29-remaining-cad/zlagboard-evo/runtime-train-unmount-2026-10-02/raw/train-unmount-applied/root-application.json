@@ -1,0 +1,9 @@
+{
+  "epoch": 1790990775.326935,
+  "patchSHA256": "57d251e33eb42d4ac224a9ce69e85c770aa7bcaab0f4923b653d0c98bd101bbe",
+  "sourceAfter": {
+    "HangTen/Views/TrainView.swift": "ca5b573e45908edaa6cd3921a5f255df32804d3e0b562872961cd0cfab31cf08",
+    "HangTen/Models/BoardModelRealityTypes.swift": "d1780cf3c9e8b8966b5273db4944e6116993b7569a966d8fb87b59c38773557a"
+  },
+  "purpose": "Same-binary detach-only control vs detach plus structural Train subtree removal; common external attachment readiness before navigation"
+}

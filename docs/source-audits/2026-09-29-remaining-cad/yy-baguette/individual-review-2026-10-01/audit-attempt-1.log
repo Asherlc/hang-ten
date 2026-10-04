@@ -1,0 +1,1 @@
+Initial audit attempt failed after in-memory checks, before audit.json write: KeyError: 'media' at report['generatedDisplay']=b['media'].get('display'). Schema-v3 stores media in presentations. Generated-board.json was already written. Historical proofs untouched.

@@ -148,6 +148,36 @@ def test_native_front_and_reverse_positions_select_the_evidenced_face(
     assert direction[2] * camera_z_sign > _MIN_OPPOSING_DOT
 
 
+
+def _assert_native_baguette_central_pose(board, pose) -> None:
+    # The reviewed native bearing is rotated upward; the camera is stored
+    # in model coordinates. A deep-floor centroid is not its opening normal.
+    # yy-baguette-evo/individual-review-2026-10-01/review.md:39 and its
+    # orientation-audit/recommendation.json + actual-camera-sidecar-check.json.
+    assert board.contact_ids_for_position("central-20-6") == ("edge-central-20",)
+    assert pose.rotation == pytest.approx((math.sqrt(.5), 0, 0, math.sqrt(.5)), abs=1e-8)
+    assert pose.rotation[0] > 0 and pose.rotation[3] > 0
+    camera = tuple(pose.camera["viewDirection"])
+    assert camera == pytest.approx((0, -.939692621, .342020143), abs=1e-9)
+    x, y, z, w = pose.rotation
+    # Quaternion rotation, q * v * inverse(q), normalized for serialized q.
+    norm2 = x*x + y*y + z*z + w*w
+    world = (
+        ((w*w+x*x-y*y-z*z)*camera[0] + 2*(x*y-w*z)*camera[1] + 2*(x*z+w*y)*camera[2])/norm2,
+        (2*(x*y+w*z)*camera[0] + (w*w-x*x+y*y-z*z)*camera[1] + 2*(y*z-w*x)*camera[2])/norm2,
+        (2*(x*z-w*y)*camera[0] + 2*(y*z+w*x)*camera[1] + (w*w-x*x-y*y+z*z)*camera[2])/norm2,
+    )
+    assert world == pytest.approx((0, -.342020143, -.939692621), abs=1e-8)
+    assert world[1] < 0 and world[2] < -_MIN_OPPOSING_DOT
+
+
+def test_native_baguette_central_pose_retains_bearing_and_camera_frame() -> None:
+    module = load_board_catalog_module()
+    package = module.load_board_package(HANGBOARDS_ROOT / "yy-baguette-evo")
+    pose = package.board.presentations[0].media.suspension.canonical_poses["central-20-6"]
+    _assert_native_baguette_central_pose(package.board, pose)
+
+
 def test_suspended_canonical_poses_face_the_camera() -> None:
     from hangboard_packages.usd_mesh_chain import UsdcatUnavailable
 
@@ -174,6 +204,10 @@ def test_suspended_canonical_poses_face_the_camera() -> None:
 
             for pose_id, pose in suspension.canonical_poses.items():
                 contact_ids = package.board.contact_ids_for_position(pose_id)
+                if package.board.id == "yy.baguette-evo" and pose_id == "central-20-6":
+                    _assert_native_baguette_central_pose(package.board, pose)
+                    checked += 1
+                    continue
                 offsets = [
                     tuple(centroids[cid][axis] - body_center[axis] for axis in range(3))
                     for cid in contact_ids

@@ -1,0 +1,12 @@
+{
+  "verifiedUTC": "2026-10-02T19:02:07.233100+00:00",
+  "manifest": "baseline-promotion-manifest-v3.json",
+  "manifestSHA256": "96cd13a14f9d0829adb2b5e4867f44d6852fea329bf654d435363ea04e2c60ba",
+  "mappedRawFiles": 689,
+  "mappedRawBytes": 83544614,
+  "everyDestinationHashMatches": true,
+  "humanReviewSHA256Unchanged": "6d3b112acd91ade64ed4e37142da45d0430ecd58d0056ea5e194c1baeb67f625",
+  "globalQueueLockTouched": false,
+  "resourceOperations": false,
+  "cleanupClaimed": false
+}

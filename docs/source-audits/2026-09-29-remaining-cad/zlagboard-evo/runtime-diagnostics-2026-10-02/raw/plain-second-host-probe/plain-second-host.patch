@@ -1,0 +1,115 @@
+--- a/HangTen/Views/RootView.swift
++++ b/HangTen/Views/RootView.swift
+@@ -1,5 +1,8 @@
+ import SwiftUI
+ import UIKit
++#if DEBUG
++import RealityKit
++#endif
+ 
+ struct MotherboardWorkoutPreparationHandoff {
+     private(set) var didAccept = false
+@@ -2370,6 +2373,9 @@
+ 						#if DEBUG
+ 						if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_WORKOUT_HAND_HOST"] == "1" {
+ 							Color.clear
++						} else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAIN_SECOND_HOST"] == "1" {
++							WorkoutPlainSecondHostProbe(posture: holdCue.gripType,
++								fingerConfiguration: holdCue.fingerConfiguration)
+ 						} else {
+ 							GripHandPairModelView(posture: holdCue.gripType,
+ 								fingerConfiguration: holdCue.fingerConfiguration)
+@@ -3637,3 +3643,93 @@
+ 			- TimeInterval(remaining)
+ 	}
+ }
++
++#if DEBUG
++/// Diagnostic-only nonempty second renderer without hand meshes or custom materials.
++@MainActor
++private struct WorkoutPlainSecondHostProbe: View {
++    let posture: GripType?
++    let fingerConfiguration: FingerConfiguration?
++    @State private var storage = WorkoutPlainSecondHostStorage()
++
++    var body: some View {
++        GeometryReader { proxy in
++            let size = proxy.size
++            RealityView { content in
++                content.camera = .virtual
++                content.add(storage.scene.root)
++                storage.scene.update(pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
++                                     viewportSize: size)
++            } update: { _ in
++                storage.scene.update(pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
++                                     viewportSize: size)
++            }
++        }
++        .accessibilityHidden(true)
++    }
++}
++
++@MainActor
++private final class WorkoutPlainSecondHostStorage {
++    lazy var scene = WorkoutPlainSecondHostScene()
++}
++
++@MainActor
++private final class WorkoutPlainSecondHostScene {
++    let root = Entity()
++    private let camera = Entity()
++    private var currentPose: GripHandPose?
++    private var currentViewportSize: CGSize = .zero
++    private let halfSize = SIMD3<Float>(0.65, 0.5, 0.275)
++
++    init() {
++        var material = PhysicallyBasedMaterial()
++        material.baseColor = .init(tint: .systemPurple)
++        material.roughness = .init(floatLiteral: 0.8)
++        material.metallic = .init(floatLiteral: 0)
++        let box = ModelEntity(mesh: .generateBox(size: halfSize * 2), materials: [material])
++        box.name = "diagnostic_plain_pbr_box"
++        root.addChild(box)
++        // Same public orthographic camera and two-light rig as the paired hand host.
++        var component = OrthographicCameraComponent()
++        component.near = 0.1
++        component.far = 100
++        component.scale = 3.2
++        component.scaleDirection = .vertical
++        camera.components.set(component)
++        root.addChild(camera)
++        let key = Entity()
++        let fill = Entity()
++        key.components.set(DirectionalLightComponent(color: .white, intensity: 3_200))
++        fill.components.set(DirectionalLightComponent(color: .white, intensity: 600))
++        root.addChild(key)
++        root.addChild(fill)
++        key.look(at: .zero, from: SIMD3(0, 8, 7), relativeTo: root)
++        fill.look(at: .zero, from: SIMD3(0, 2, -5), relativeTo: root)
++    }
++
++    func update(pose: GripHandPose, viewportSize: CGSize) {
++        guard currentPose != pose || currentViewportSize != viewportSize else { return }
++        currentPose = pose
++        currentViewportSize = viewportSize
++        camera.look(at: .zero, from: SIMD3<Float>(0, 2.75, 9.4), relativeTo: root)
++        let inverse = simd_inverse(camera.transform.matrix)
++        var halfWidth: Float = 0
++        var halfHeight: Float = 0
++        for x: Float in [-halfSize.x, halfSize.x] {
++            for y: Float in [-halfSize.y, halfSize.y] {
++                for z: Float in [-halfSize.z, halfSize.z] {
++                    let point = inverse * SIMD4<Float>(x, y, z, 1)
++                    halfWidth = max(halfWidth, abs(point.x))
++                    halfHeight = max(halfHeight, abs(point.y))
++                }
++            }
++        }
++        let aspect = viewportSize.width > 0 && viewportSize.height > 0
++            ? Float(viewportSize.width / viewportSize.height) : 0.85
++        var component = camera.components[OrthographicCameraComponent.self]!
++        component.scale = max(halfHeight, halfWidth / aspect) * 1.08
++        camera.components.set(component)
++    }
++}
++#endif

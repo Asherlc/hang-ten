@@ -1,0 +1,39 @@
+{
+  "review": "Read-only independent cache, prefetch and lighting source review",
+  "reviewer": "baguette_review_prep",
+  "createdUTC": "2026-10-03T14:07:42.354731+00:00",
+  "inputs": [
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "1d256719a57fe4fa44ed419258f211fbd3193b7e7345080f920f839eaec9ab8a"
+    },
+    {
+      "path": "HangTenTests/BoardModelRealityTests.swift",
+      "sha256": "b1ec2f9cff5ecc87487bd4bedc484ee7a7e16352cecd28979cb2607c10544d9c"
+    }
+  ],
+  "blockingFindings": [],
+  "findings": [
+    "Cache keys contact IDs, position, mode, orbit and viewport. Aspect-preserving fallback retains semantic and orbit identity. Different selections cannot substitute cached frames.",
+    "Opposite-mode prefetch is bounded by two exact cache entries; empty selections skip prefetch. Input revisions invalidate stale GPU completions before cache publication.",
+    "Submitted frame retains model, renderer, texture and output through completion and eager conversion. Mutations are serialized around the in-flight frame. Surface child identity is keyed to the model.",
+    "Nil position is a valid cleared selection rather than an error. Runtime key/fill are attached to the coordinator-owned camera; appearance requires actual visual validation."
+  ],
+  "limitations": [
+    "During an orbit, presentation intentionally permits the prior completed camera image for the same semantic input until the requested camera render completes.",
+    "A speculative alternate-mode render failure currently makes the whole coordinator unavailable, including an existing cached current frame.",
+    "Same-aspect resize fallback may temporarily show a lower-resolution completed frame. Initial-frame latency remains a runtime concern.",
+    "The four new cache tests exercise a value cache with stand-in values; they do not establish GPU rendering, coordinator lifecycle, visual fidelity or complete workout behavior."
+  ],
+  "testsReadNotExecuted": [
+    "testCompletedBoardFramesSwitchModesWithoutAnotherRender",
+    "testCompletedBoardFrameDoesNotSubstituteDifferentSelectionOrCamera",
+    "testCompletedBoardFrameCanScaleDuringAspectPreservingResize",
+    "testCompletedBoardFrameCacheReleasesSupersededPresentation"
+  ],
+  "sourceEdited": false,
+  "runtimeAccessed": false,
+  "testExecuted": false,
+  "productionFixEstablished": false,
+  "humanAcceptanceChanged": false
+}

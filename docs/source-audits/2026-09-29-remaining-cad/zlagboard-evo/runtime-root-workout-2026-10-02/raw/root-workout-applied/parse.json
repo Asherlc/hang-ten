@@ -1,0 +1,13 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "swiftc",
+    "-frontend",
+    "-parse",
+    "HangTen/Views/RootView.swift",
+    "HangTen/Models/BoardModelRealityTypes.swift"
+  ],
+  "exitStatus": 0
+}

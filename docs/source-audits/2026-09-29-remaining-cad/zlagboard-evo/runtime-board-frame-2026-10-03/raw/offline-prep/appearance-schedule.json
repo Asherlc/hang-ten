@@ -1,0 +1,28 @@
+{
+  "anchor": "monotonic end of successful production openurl command; not app phase start",
+  "offsetSeconds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "maximumStartLatenessSeconds": 0.25,
+  "hardBoundSeconds": 60,
+  "classification": "Human whole-image step/interval/timer; no trace/CPU brackets",
+  "noRetries": true,
+  "scope": "Appearance and initial modes only; no full workflow or control contrast"
+}

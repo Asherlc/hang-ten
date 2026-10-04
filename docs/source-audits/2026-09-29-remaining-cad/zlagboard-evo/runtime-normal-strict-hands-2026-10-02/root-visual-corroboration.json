@@ -1,0 +1,22 @@
+{
+  "attribution": "Root reported direct whole-image inspection in collaboration message. Packaging worker preserves that report; root did not claim review of the other ten images.",
+  "scope": "Exactly two whole images; no crop or pixel measurement.",
+  "images": [
+    {
+      "path": "raw/normal-strict-hands-off-landscape/phase-1-preview-plus-5.png",
+      "sha256": "5501e6d0debbfb7c3c4c8ca68fe9344a2f920f77bcc0dc3f2efd108dc903e90b",
+      "phase": "Rest",
+      "timer": "02:55",
+      "observedBoardColor": "red",
+      "correct": false
+    },
+    {
+      "path": "raw/normal-strict-hands-off-landscape/phase-2-active-plus-3.png",
+      "sha256": "9c15e495f3bd5618001368e04d3333186668816500234fc68f4cba61736b4a18",
+      "phase": "Hang",
+      "timer": "00:04",
+      "observedBoardColor": "blue",
+      "correct": false
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "create",
+    "Hang Ten Paseo placid-badger-cad-second-half BoardFrame20261003 63244",
+    "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+    "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+  ],
+  "boundSeconds": 30.0,
+  "timedOut": false,
+  "interruptedBySignal": null,
+  "exitStatus": 0,
+  "elapsedSeconds": 0.30909283299115486
+}

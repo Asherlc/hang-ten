@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "coordinateFrame": "hang-ten-board-v1",
-  "modelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+  "modelSHA256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
   "modelBounds": {
     "min": [
       -0.113304302,
@@ -15,10 +15,6 @@
     ]
   },
   "nodes": [
-    {
-      "nodeID": "central_ring_001",
-      "role": "attachment"
-    },
     {
       "nodeID": "penta_body_001",
       "role": "body"
@@ -57,10 +53,6 @@
       "nodeID": "unit_tray_001",
       "role": "contact",
       "contactSlotID": "tray"
-    },
-    {
-      "nodeID": "upper_band_exterior_001",
-      "role": "attachment"
     }
   ],
   "contactSlots": {
@@ -89,17 +81,17 @@
       ],
       "facePlaneAABB": {
         "min": [
-          0.779937466,
-          0.18421923
+          0.779526039,
+          0.184229272
         ],
         "max": [
-          0.953435204,
+          0.961773001,
           0.520118561
         ]
       },
       "center": [
-        0.866686335,
-        0.352168895
+        0.87064952,
+        0.352173916
       ]
     },
     "edge-15": {

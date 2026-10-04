@@ -1,0 +1,10 @@
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal x86_64 Compiling\ BoardModelRealityTypes.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Models/BoardModelRealityTypes.swift (in target 'HangTen' from project 'HangTen')
+	SwiftCompile normal x86_64 /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Models/BoardModelRealityTypes.swift (in target 'HangTen' from project 'HangTen')
+	SwiftCompile normal arm64 Compiling\ BoardModelRealityTypes.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Models/BoardModelRealityTypes.swift (in target 'HangTen' from project 'HangTen')
+	SwiftCompile normal arm64 /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Models/BoardModelRealityTypes.swift (in target 'HangTen' from project 'HangTen')
+	Building project HangTen with scheme HangTen and configuration Debug
+(5 failures)

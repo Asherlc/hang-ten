@@ -1,0 +1,8 @@
+{
+  "allowedTotalBootSeconds": 480,
+  "observedElapsed": "08:25",
+  "rawStatus": "Status=2, isTerminal=NO; Waiting on Data Migration; com.apple.addressbook.migrator (AddressBookLegacy.migrator)",
+  "action": "SIGTERM exact owned bootstatus process after bounded wait; lifecycle trap cleans exact UUID and build artifacts",
+  "process": "44129       08:25 /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl bootstatus F4AB4722-62E5-411D-82B6-11502495F8C2 -b",
+  "interpretation": "Bounded startup timeout, not proof migration could never finish. No runtime board checks ran."
+}

@@ -1,0 +1,43 @@
+1572:     private func applicationCensus() -> [String: Any] {
+1573:         let app = UIApplication.shared
+1574:         let scenes: [[String: Any]] = app.connectedScenes.compactMap { scene in
+1575:             guard let windowScene = scene as? UIWindowScene else { return nil }
+1576:             return ["sceneID": identity(windowScene),
+1577:                     "sessionID": windowScene.session.persistentIdentifier,
+1578:                     "activationState": windowScene.activationState.rawValue,
+1579:                     "interfaceOrientation": windowScene.interfaceOrientation.rawValue,
+1580:                     "windows": windowScene.windows.map { window -> [String: Any] in
+1581:                         var counts: [String: Int] = [:]
+1582:                         var placements: [[String: Any]] = []
+1583:                         func visit(_ view: UIView) {
+1584:                             let name = String(reflecting: type(of: view))
+1585:                             if name.contains("Reality") || name.contains("ARView") {
+1586:                                 counts[name, default: 0] += 1
+1587:                                 let rect = view.convert(view.bounds, to: window)
+1588:                                 var placement: [String: Any] = ["viewID": String(describing: ObjectIdentifier(view)), "class": name,
+1589:                                     "frameInWindow": [Double(rect.minX), Double(rect.minY), Double(rect.width), Double(rect.height)],
+1590:                                     "hidden": view.isHidden, "alpha": Double(view.alpha)]
+1591:                                 if let host = view as? ARView { placement["realitySceneID"] = String(describing: ObjectIdentifier(host.scene)) }
+1592:                                 placements.append(placement)
+1593:                             }
+1594:                             view.subviews.forEach(visit)
+1595:                         }
+1596:                         visit(window)
+1597:                         return ["windowID": identity(window), "hidden": window.isHidden,
+1598:                                 "alpha": Double(window.alpha), "key": window.isKeyWindow,
+1599:                                 "bounds": [Double(window.bounds.width), Double(window.bounds.height)],
+1600:                                 "rendererNamedViewClasses": counts, "rendererPlacements": placements]
+1601:                     }]
+1602:         }
+1603:         return ["applicationState": app.applicationState.rawValue, "windowScenes": scenes,
+1604:                 "standaloneGate": ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_BOARD"] == "1"]
+
+1717:         let workoutBoundaryCensus = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS"] == "1"
+1718:             && (event == "highlight-before" || event == "highlight-after")
+1719:         if event == "view-make" || event == "sample" || event.hasPrefix("standalone-") || workoutBoundaryCensus {
+1720:             row["applicationCensus"] = applicationCensus()
+1721:         }
+1722:         row["boardRenderMembership"] = renderMembership(root: scene.root, camera: scene.camera)
+1723:         if let secondHostRoot, let secondHostCamera, let secondHostToken {
+1724:             row["secondHostLifecycleToken"] = secondHostToken.uuidString
+1725:             row["secondHost"] = renderMembership(root: secondHostRoot, camera: secondHostCamera)

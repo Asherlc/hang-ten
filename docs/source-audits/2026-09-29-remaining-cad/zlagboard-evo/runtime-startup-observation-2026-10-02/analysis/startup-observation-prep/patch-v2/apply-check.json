@@ -1,0 +1,11 @@
+{
+  "command": [
+    "git",
+    "apply",
+    "--check",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-prep/patch-v2/startup-observation.patch"
+  ],
+  "exitCode": 0,
+  "patchSHA256": "6fc896c9ee56b9f8ecbbe4078ce923148ba6725eb25f400f44f53b8b73b42c3c",
+  "applied": false
+}

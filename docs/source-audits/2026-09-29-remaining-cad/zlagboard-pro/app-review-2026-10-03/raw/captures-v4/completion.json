@@ -1,0 +1,10 @@
+{
+  "completed": true,
+  "expectedContacts": 28,
+  "capturedContacts": 28,
+  "totalImages": 40,
+  "sourceAndPackageParityPreserved": true,
+  "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+  "error": null,
+  "cleanupPassed": true
+}

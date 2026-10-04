@@ -1,0 +1,21 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "nm",
+    "-u",
+    "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DevicesTrampoline"
+  ],
+  "exitStatus": 0,
+  "selectedStaticOutput": [
+    "_OBJC_CLASS_$_DVTFirstLaunchPackageInstaller",
+    "_OBJC_CLASS_$_DVTFirstLaunchPackageInstallerCLI",
+    "__NSGetExecutablePath",
+    "_exit",
+    "_posix_spawnattr_init",
+    "_posix_spawnattr_setflags",
+    "_posix_spawnp"
+  ],
+  "stderr": "",
+  "executedTarget": false
+}

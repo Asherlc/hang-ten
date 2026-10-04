@@ -1,0 +1,74 @@
+{
+  "boardID": "zlagboard.pro",
+  "runtime": {
+    "bootCommands": "boot-recovery-commands.json",
+    "bootLog": "boot-after-reboot.log",
+    "firstTimeoutScreen": "first-timeout-screen.png",
+    "directAttempt": "status4-direct-app-attempt/commands.json",
+    "install": "succeeded (exit0)",
+    "launch": "timed out after40seconds",
+    "screenshot": "timed out after40seconds; no app image exists",
+    "accessibility": "exit1; no usable app UI",
+    "installedParity": {
+      "status": "unavailable: get_app_container timed out20seconds",
+      "record": "installed-without-runtime-ready/command.json"
+    },
+    "priorAttempt": {
+      "scratchRelative": "../ios-2026-10-02/final-runtime-validation.json",
+      "runtime": "iOS26.4",
+      "status": "blocked and cleaned",
+      "warning": "Raw links identify scratch paths; canonical packet destination mapping is parent-owned."
+    },
+    "noAdditionalRepairs": "No shared restart, private migration edits, new app code, or repeated install/launch after failure."
+  },
+  "owner": "placid-badger-cad-second-half",
+  "status": "BLOCKED: Simulator startup never produced an interactive app within bounded first boot and one ordinary same-device reboot.",
+  "appWorkflowPassed": false,
+  "readyForHumanGeometryReview": false,
+  "humanAccepted": false,
+  "humanAcceptance": "Pending user reply; fresh app gate unmet.",
+  "contactCoverage": {
+    "required": 28,
+    "captured": 0,
+    "defaultCaptured": false,
+    "jugAndIncutObliquesCaptured": false,
+    "physicalPickingOrbitReset": "not reached"
+  },
+  "build": {
+    "summary": "build-results-summary.json",
+    "status": "succeeded",
+    "errorCount": 0,
+    "warningCount": 6,
+    "stagedThreeFileParity": "staged-package-parity.json",
+    "builtFiveMachOPayloads": "built-mach-o-sha256.json",
+    "packageHashGate": "final-package-gate.json",
+    "earlierGenericBuild": {
+      "scratchRelative": "../build-only-2026-10-02/build-results-summary.json",
+      "status": "succeeded",
+      "errorCount": 0,
+      "warningCount": 6
+    },
+    "rebuildReason": "The earlier build-only EXIT trap had already removed the app before the alternative-runtime handoff request arrived. A necessary second fresh build retained DD/app/results under this single lifecycle through attempted install and cleanup."
+  },
+  "tests": {
+    "run": 0,
+    "reason": "No app code changes; unchanged wood tests retained from prior board. New source/package/compiler checks recorded separately by package worker."
+  },
+  "workout": {
+    "planID": "research.max-hangs",
+    "attempted": false,
+    "finding": "Not reached. Known #20 workout highlight-phase issue remains unresolved and untested on #21."
+  },
+  "cleanup": {
+    "uuid": "F96B758F-638C-4C74-8732-08ACB950A84F",
+    "simulatorDeleted": true,
+    "derivedDataDeleted": true,
+    "resultBundleDeleted": true,
+    "testResultBundleDeleted": true
+  },
+  "limits": [
+    "Build and staged-package parity do not establish installed parity or actual app interaction.",
+    "Source/native geometry checks are separate; this record does not accept human geometry review.",
+    "Both bounded startup failures and earlier build success remain preserved without rewriting history."
+  ]
+}

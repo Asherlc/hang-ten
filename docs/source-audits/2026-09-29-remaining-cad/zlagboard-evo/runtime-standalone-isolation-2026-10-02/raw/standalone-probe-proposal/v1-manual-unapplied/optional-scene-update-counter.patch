@@ -1,0 +1,78 @@
+--- a/HangTen/Models/BoardModelRealityTypes.swift
++++ b/HangTen/Models/BoardModelRealityTypes.swift
+@@ -1,4 +1,7 @@
+ import Foundation
++#if DEBUG
++import Combine
++#endif
+ import RealityKit
+ import Metal
+ import SwiftUI
+@@ -1417,6 +1420,8 @@
+     private weak var secondHostCamera: Entity?
+     private var secondHostToken: UUID?
+     private var viewports: [UUID: CGSize] = [:]
++    private var updateCounters: [ViewSceneKey: BoardDiagnosticUpdateCounter] = [:]
++    private var updateSubscriptions: [ViewSceneKey: any Cancellable] = [:]
+ 
+     private init() {
+         let env = ProcessInfo.processInfo.environment
+@@ -1597,6 +1602,9 @@
+             "rootAttached": scene.root.scene != nil, "rootEnabled": scene.root.isEnabled,
+             "rootTransform": matrix(scene.root), "cameraTransform": matrix(scene.camera),
+             "surfaces": surfaces]
++        if let view, let counter = updateCounters[ViewSceneKey(scene: key, view: view)] {
++            row["sceneUpdateCount"] = counter.value
++        }
+         if let viewport = viewports[key] {
+             row["viewportPoints"] = [Double(viewport.width), Double(viewport.height)]
+         }
+@@ -1657,6 +1665,16 @@
+         guard enabled else { return }
+         let key = ViewSceneKey(scene: scene.diagnosticLifecycleToken, view: view)
+         guard samplers[key] == nil else { return }
++        let env = ProcessInfo.processInfo.environment
++        if env["HANGTEN_REVIEW_STANDALONE_BOARD"] == "1",
++           env["HANGTEN_REVIEW_SCENE_UPDATE_COUNTER"] == "1",
++           let actualScene = scene.root.scene {
++            let counter = BoardDiagnosticUpdateCounter()
++            updateCounters[key] = counter
++            updateSubscriptions[key] = actualScene.subscribe(to: SceneEvents.Update.self) { [weak counter] _ in
++                counter?.increment()
++            }
++        }
+         samplers[key] = Task { @MainActor [weak scene] in
+             for _ in 0..<120 {
+                 do { try await Task.sleep(for: .seconds(1)) }
+@@ -1665,6 +1683,8 @@
+                 self.capture("sample", scene: scene, view: view)
+             }
+             if let scene { self.capture("sample-end", scene: scene, view: view) }
++            self.updateSubscriptions.removeValue(forKey: key)?.cancel()
++            self.updateCounters.removeValue(forKey: key)
+         }
+     }
+ 
+@@ -1673,6 +1693,8 @@
+         capture("view-disappear", scene: scene, view: view)
+         let key = ViewSceneKey(scene: scene.diagnosticLifecycleToken, view: view)
+         samplers.removeValue(forKey: key)?.cancel()
++        updateSubscriptions.removeValue(forKey: key)?.cancel()
++        updateCounters.removeValue(forKey: key)
+         if let restore = visibilityRestores.removeValue(forKey: scene.diagnosticLifecycleToken) {
+             restore()
+             capture("visibility-teardown-restored", scene: scene, view: view)
+@@ -1682,3 +1704,13 @@
+     }
+ }
+ #endif
++
++#if DEBUG
++/// No SwiftUI observations, per-frame I/O, scene ownership or rendering mutation.
++private final class BoardDiagnosticUpdateCounter: @unchecked Sendable {
++    private let lock = NSLock()
++    private var count: UInt64 = 0
++    func increment() { lock.lock(); count &+= 1; lock.unlock() }
++    var value: UInt64 { lock.lock(); defer { lock.unlock() }; return count }
++}
++#endif

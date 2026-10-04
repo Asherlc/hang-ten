@@ -303,6 +303,43 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(selection.contacts.map(\.id), ["edge-a", "edge-b"])
     }
 
+    func testPerHandTaskCursorAndRecordingPreserveConfiguredPositions() throws {
+        let configured = configuredBoard()
+        let tasks: [[PlanHandTarget]] = [18, 10].map { depth in
+            [.init(target: .init(kind: .edge, depth: .measured(.init(minimum: Double(depth), maximum: Double(depth)))), side: .left),
+             .init(target: .init(kind: .edge, depth: .measured(.init(minimum: Double(depth), maximum: Double(depth)))), side: .right)]
+        }
+        let taskStep = WorkoutStep(id: "configured-tasks", number: 1, title: "Fixture",
+            instruction: "", accessory: "", duration: 30, phase: .hang,
+            segments: [WorkoutSegment(kind: .work, target: .tasks(tasks), timing: .undefined, duration: nil)])
+        XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: taskStep, on: configured, taskIndex: 0), "depth-18mm")
+        XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: taskStep, on: configured, taskIndex: 1), "depth-10mm")
+        XCTAssertEqual(WorkoutHighlightResolver.contacts(for: taskStep, on: configured, taskIndex: 1).map(\.depth),
+                       [.range(.init(minimum: 10, maximum: 10)), .range(.init(minimum: 10, maximum: 10))])
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: taskStep, on: configured, taskIndex: 1), ["edge-a", "edge-b"])
+        let workout = TrainingPlan(id: "configured-tasks", title: "Fixture", subtitle: "", level: "",
+            sourceLabel: "Fixture", sourceURL: nil, provenance: .custom, boardID: configured.id, steps: [taskStep])
+        let records = try WorkoutActivityRecorder().segments(for: workout, on: configured,
+            performedTaskIndicesByStepID: [taskStep.id: [1]])
+        let snapshot = try XCTUnwrap(try XCTUnwrap(records.first).target?.resolvedContactSnapshot)
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(snapshot.positionID, "depth-10mm")
+        XCTAssertEqual(snapshot.handTargets, tasks[1])
+        XCTAssertEqual(snapshot.modelSHA256, String(repeating: "b", count: 64))
+        XCTAssertEqual(try JSONDecoder().decode(ResolvedContactSnapshot.self, from: JSONEncoder().encode(snapshot)), snapshot)
+        XCTAssertEqual(configured.contacts.map(\.depth),
+                       [.range(.init(minimum: 18, maximum: 18)), .range(.init(minimum: 18, maximum: 18))])
+    }
+
+    func testPerHandTaskRejectsDifferentRequiredPositions() {
+        let configured = configuredBoard()
+        let task: [PlanHandTarget] = [
+            .init(target: .init(kind: .edge, depth: .measured(.init(minimum: 18, maximum: 18))), side: .left),
+            .init(target: .init(kind: .edge, depth: .measured(.init(minimum: 10, maximum: 10))), side: .right)
+        ]
+        XCTAssertThrowsError(try ContactResolver.resolveSelection(task, step: step(targets: []), board: configured))
+    }
+
     func testConfiguredTaskRecordsHandTargetsAndEffectivePositionTogether() throws {
         let configured = configuredBoard(positionOrder: [10, 18])
         let task: [PlanHandTarget] = [WorkoutSide.left, .right].map { side in
@@ -595,7 +632,25 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                                    instruction: "", accessory: "", duration: 10, phase: .hang)
             let pair = try ContactResolver.resolve(.edge(selection: .bilateralPair), step: step, board: board)
             XCTAssertEqual(pair.count, 2, boardID)
-            XCTAssertEqual(Set(pair.map(\.equipmentObjectID)), ["left-half", "right-half"], boardID)
+            if boardID == "trango.rock-prodigy-forge" {
+                // The native Forge package contains both physical halves in one model.
+                // Resolve distinct contacts and descriptor nodes, not retired instance IDs.
+                let left = try XCTUnwrap(pair.first { $0.id.hasSuffix("-left") })
+                let right = try XCTUnwrap(pair.first { $0.id.hasSuffix("-right") })
+                XCTAssertNotEqual(left.id, right.id)
+                XCTAssertLessThan(try XCTUnwrap(left.resolvedFrame(in: board.defaultPresentation)).rect.maxX, 0.5)
+                XCTAssertGreaterThan(try XCTUnwrap(right.resolvedFrame(in: board.defaultPresentation)).rect.minX, 0.5)
+                guard case .model(let media) = board.defaultPresentation.media else {
+                    return XCTFail("Native Forge requires model media")
+                }
+                let leftNodes = try XCTUnwrap(media.descriptor.contacts[left.id]).nodeIDs
+                let rightNodes = try XCTUnwrap(media.descriptor.contacts[right.id]).nodeIDs
+                XCTAssertFalse(leftNodes.isEmpty)
+                XCTAssertFalse(rightNodes.isEmpty)
+                XCTAssertTrue(Set(leftNodes).isDisjoint(with: rightNodes))
+            } else {
+                XCTAssertEqual(Set(pair.map(\.equipmentObjectID)), ["left-half", "right-half"], boardID)
+            }
         }
     }
 
@@ -2501,4 +2556,6 @@ private final class BlockingWorkoutActivityFileManager: FileManager {
             attributes: attributes
         )
     }
+
+
 }

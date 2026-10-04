@@ -568,8 +568,9 @@ Native packages can declare several model presentations when a real accessory
 changes the solid. Tag each bound feature with `HangTenPresentationID`, keep
 each presentation's asset/descriptor names unique in the embedded manifest,
 and compile it with `--presentation <id>`. Untagged legacy features belong to
-the document's default presentation. `prepare_assets.py` and
-`verify_reproducible.py` cover every declared asset pair. Plateau uses this for
+the document's default presentation. `prepare_assets.py` covers every declared asset pair. The former global delivery
+lock and reproduction checker were retired on Main; prior exact checks remain
+historical evidence. Plateau uses this for
 its 18/15/10 mm spacer configurations while retaining one physical contact ID;
 position `effectiveDepths` records each actual configured depth.
 

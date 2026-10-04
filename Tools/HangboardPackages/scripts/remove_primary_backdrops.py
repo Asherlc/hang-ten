@@ -20,8 +20,7 @@ MODEL_IDENTIFIER = f"rembg.{DEFAULT_MODEL_NAME}"
 DEFAULT_MODEL_ROOT = Path(".context/hangboard-rembg-models")
 _SESSION_ARTIFACT = ":memory:.ses"
 _MAX_ENCLOSED_BACKGROUND_PIXELS = 100_000
-_ENCLOSED_BACKGROUND_SEEDS = {
-}
+_ENCLOSED_BACKGROUND_SEEDS = {}
 
 
 class SegmentationResult(NamedTuple):

@@ -1,0 +1,272 @@
+{
+  "scope": "Read-only source audit and frozen action trace; no runtime interaction, source edit, patch or next arm selected",
+  "sourceHashes": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1"
+    },
+    {
+      "path": "HangTen/Models/WorkoutTimeline.swift",
+      "sha256": "f6133f787e0639cf6071eb1236f9b39fa8d85eca0cc02bc295f8cd164a882248"
+    }
+  ],
+  "trace": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/events-C45FEE4D-E02E-4D42-BAEE-FB53473F019E.jsonl",
+    "sha256": "2635675c7b101b5ff2ecb80422ecd00c0b6f4d8f91efadc89292d9b161f30a44",
+    "records": 152,
+    "selectedRecords": [
+      {
+        "sequence": 12,
+        "epoch": 1790998919.908019,
+        "uptime": 81994.45231479168,
+        "event": "workout-prestart-hand-state",
+        "state": "flag=true;routineStartedIsNil=true;suppressed=true;countdown=0",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 0,
+          "pair.make-entry": 0,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        }
+      },
+      {
+        "sequence": 13,
+        "epoch": 1790998919.910209,
+        "uptime": 81994.45450587501,
+        "event": "workout-probe-appear-before-autostart",
+        "state": "plan=research.max-hangs;board=zlagboard.evo;pausedElapsed=0.0;activeStartIsNil=true;routineStartedIsNil=true;prestartHandFlag=true;prestartHandsSuppressed=true",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 0,
+          "pair.make-entry": 0,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        }
+      },
+      {
+        "sequence": 14,
+        "epoch": 1790998939.279011,
+        "uptime": 82013.8233725,
+        "event": "hand-view-lifecycle",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 0,
+          "pair.make-entry": 0,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        }
+      },
+      {
+        "sequence": 15,
+        "epoch": 1790998940.048887,
+        "uptime": 82014.59325170834,
+        "event": "hand-lifecycle",
+        "lifecycleEvent": "constructor-entry",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 0,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        }
+      },
+      {
+        "sequence": 17,
+        "epoch": 1790998940.077683,
+        "uptime": 82014.62204829167,
+        "event": "hand-lifecycle",
+        "lifecycleEvent": "make-entry",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        }
+      },
+      {
+        "sequence": 19,
+        "epoch": 1790998940.1760712,
+        "uptime": 82014.72043504167,
+        "event": "board-scene-constructed",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        }
+      },
+      {
+        "sequence": 20,
+        "epoch": 1790998940.3527942,
+        "uptime": 82014.897161,
+        "event": "surface-inputs",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "resolvedSurfaceInputs": {
+          "boardID": "zlagboard.evo",
+          "ids": [
+            "edge-20-left",
+            "edge-20-right"
+          ],
+          "isDisplayOnly": false,
+          "mode": "preview",
+          "positionID": "primary",
+          "presentationID": "primary"
+        }
+      },
+      {
+        "sequence": 145,
+        "epoch": 1790999110.19747,
+        "uptime": 82184.742402,
+        "event": "highlight-before",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "resolvedSurfaceInputs": {
+          "boardID": "zlagboard.evo",
+          "ids": [
+            "edge-20-left",
+            "edge-20-right"
+          ],
+          "isDisplayOnly": false,
+          "mode": "preview",
+          "positionID": "primary",
+          "presentationID": "primary"
+        },
+        "requestedMode": "active"
+      },
+      {
+        "sequence": 146,
+        "epoch": 1790999110.2061682,
+        "uptime": 82184.75109995833,
+        "event": "highlight-after",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "resolvedSurfaceInputs": {
+          "boardID": "zlagboard.evo",
+          "ids": [
+            "edge-20-left",
+            "edge-20-right"
+          ],
+          "isDisplayOnly": false,
+          "mode": "preview",
+          "positionID": "primary",
+          "presentationID": "primary"
+        },
+        "requestedMode": "active"
+      },
+      {
+        "sequence": 148,
+        "epoch": 1790999110.2093558,
+        "uptime": 82184.75428995833,
+        "event": "surface-inputs",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "resolvedSurfaceInputs": {
+          "boardID": "zlagboard.evo",
+          "ids": [
+            "edge-20-left",
+            "edge-20-right"
+          ],
+          "isDisplayOnly": false,
+          "mode": "active",
+          "positionID": "primary",
+          "presentationID": "primary"
+        }
+      },
+      {
+        "sequence": 149,
+        "epoch": 1790999117.23155,
+        "uptime": 82191.77650570835,
+        "event": "highlight-before",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "resolvedSurfaceInputs": {
+          "boardID": "zlagboard.evo",
+          "ids": [
+            "edge-20-left",
+            "edge-20-right"
+          ],
+          "isDisplayOnly": false,
+          "mode": "active",
+          "positionID": "primary",
+          "presentationID": "primary"
+        },
+        "requestedMode": "preview"
+      },
+      {
+        "sequence": 150,
+        "epoch": 1790999117.239166,
+        "uptime": 82191.78412187501,
+        "event": "highlight-after",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "resolvedSurfaceInputs": {
+          "boardID": "zlagboard.evo",
+          "ids": [
+            "edge-20-left",
+            "edge-20-right"
+          ],
+          "isDisplayOnly": false,
+          "mode": "active",
+          "positionID": "primary",
+          "presentationID": "primary"
+        },
+        "requestedMode": "preview"
+      },
+      {
+        "sequence": 152,
+        "epoch": 1790999117.241596,
+        "uptime": 82191.78655279167,
+        "event": "surface-inputs",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "resolvedSurfaceInputs": {
+          "boardID": "zlagboard.evo",
+          "ids": [
+            "edge-20-left",
+            "edge-20-right"
+          ],
+          "isDisplayOnly": false,
+          "mode": "preview",
+          "positionID": "primary",
+          "presentationID": "primary"
+        }
+      }
+    ]
+  },
+  "actionFindings": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-findings.json",
+    "sha256": "beee2dd3d01ad9c5527ad868c4f3037ce9e98d7eacafe68b305541c37e1a1bec"
+  },
+  "result": "Initial nil-only suppression excludes the future initial countdown interval by semantics, but the frozen action does not establish a constructor during that interval. Later CPU transitions disfavor an unstarted-throughout claim. No cause or fix established."
+}

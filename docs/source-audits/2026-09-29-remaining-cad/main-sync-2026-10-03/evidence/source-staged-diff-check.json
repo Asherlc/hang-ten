@@ -1,0 +1,15 @@
+{
+  "args": [
+    "rtk",
+    "proxy",
+    "git",
+    "diff",
+    "--cached",
+    "--check",
+    "--",
+    ".",
+    ":(exclude)docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/**"
+  ],
+  "exitStatus": 0,
+  "rawEvidenceExcluded": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence"
+}

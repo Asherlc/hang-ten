@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "All shown CAD revisions assigned to this workspace (#1–15) retain historical acceptance. Current #10–15 appearance, representative selections, one physical mesh pick each and ordinary touch views have bounded supplied-frame evidence. Fresh app human acceptance remains pending; appWorkflowPassed=false because #10 landscape rest remains red and portrait AX timed out, with #11–15 workouts not executed afterward. Flash screen-side naming explanation remains incomplete. Focused tests:455 passed/0 failed/1 pre-existing skip; full opt-in physics suite not passed. Reviews #16–21 remain outside this workspace scope.",
+  "reviewState": "combined exact-ref integration; inherited human approvals preserved; integrated technical validation pending",
   "boards": [
     {
       "number": 1,
@@ -56,7 +56,7 @@
       "appReviewPage": "captain-fingerfood-dual/vertical-tightening-review/app-review/index.html",
       "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
       "reviewFeedback": [
-        "Cord doesn’t go through holes",
+        "Cord doesn\u2019t go through holes",
         "the 90 degree position tho, why does the bottom cord jut out to the side?"
       ],
       "latestRevision": "captain-fingerfood-dual/vertical-tightening-review/review.md",
@@ -211,7 +211,7 @@
       "runtimeRevision": "metolius-contact/pinch-rails-review/runtime-validation.json",
       "revisionBaseCommit": "5cfd5b6386b283b2eb8daefc054a42823fdf852b",
       "reviewFeedback": [
-        "The pinch rails need to extend forward otherwise there’s nothing to pinch"
+        "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch"
       ],
       "priorIndividualReview": "metolius-contact/individual-review/index.html",
       "reviewAnswer": "Y",
@@ -384,7 +384,7 @@
         "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
       },
       "latestRuntimeAttempt": "runtime-final-2026-10-03/boards/10.json",
-      "finalCADReviewQuestion": "Does this cover the Mini’s jug finger-contact area now?",
+      "finalCADReviewQuestion": "Does this cover the Mini\u2019s jug finger-contact area now?",
       "completionHumanAcceptance": "pending current app review",
       "cadReviewViews": [
         "nature-stone-hanger-mini/finger-contact-review-2026-10-02/views/mini-finger-contact-jug-loaded-front.png",
@@ -401,7 +401,7 @@
         "recordedUTC": "2026-10-03T06:25:10.113937+00:00",
         "rawFeedback": "That's not covering the actual area where the fingers are pinching. That's what needs to be highlighted.",
         "clarification": {
-          "question": "By “Jokes should wrap all the way around,” do you mean the jug highlight should wrap around the top rail onto its front and back?",
+          "question": "By \u201cJokes should wrap all the way around,\u201d do you mean the jug highlight should wrap around the top rail onto its front and back?",
           "answer": "Yes, the jug highlight"
         },
         "interpretation": "Include the broad upper front/back finger-pressure surfaces and continuous upper side band, down to the existing rail opening boundary.",
@@ -613,7 +613,7 @@
           "reviewPage": "runtime-final-2026-10-03/boards/12.md",
           "appearanceAndTouch": "bounded supplied-frame pass",
           "physicalMeshPick": "one supplied physical tap passed",
-          "contactCoverage": "Four representative contacts, one from each face A–D; not all 34 contacts.",
+          "contactCoverage": "Four representative contacts, one from each face A\u2013D; not all 34 contacts.",
           "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
           "acceptedGeometryUnchanged": true,
           "freshAppHumanAcceptance": "pending",
@@ -710,7 +710,7 @@
           "reviewPage": "runtime-final-2026-10-03/boards/13.md",
           "appearanceAndTouch": "bounded supplied-frame pass",
           "physicalMeshPick": "one supplied physical tap passed",
-          "contactCoverage": "One physical edge across the 18 → 15 → 10 → 18 mm authored presentation sequence.",
+          "contactCoverage": "One physical edge across the 18 \u2192 15 \u2192 10 \u2192 18 mm authored presentation sequence.",
           "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
           "acceptedGeometryUnchanged": true,
           "freshAppHumanAcceptance": "pending",
@@ -895,83 +895,125 @@
       "package": "yy-baguette",
       "boardID": "yy.baguette",
       "name": "YY Vertical La Baguette",
-      "humanReview": "pending",
-      "sourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
-      "reviewPage": "yy-baguette/review/index.html",
+      "humanReview": "reviewed; smooth-end geometry, exterior cords and wood display accepted",
+      "sourceSHA256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "reviewPage": "yy-baguette/groove-removal-review/review.md",
       "sourceAudit": "yy-baguette/native-authoring.md",
       "comparisons": [
         "yy-baguette/review/prior-reverse-face.png",
         "yy-baguette/review/prior-stepped-face.png",
         "yy-baguette/review/primary-front.png",
         "yy-baguette/review/primary-side.png",
-        "yy-baguette/review/primary-top.png"
+        "yy-baguette/review/primary-top.png",
+        "yy-baguette/groove-removal-review/prior-revised-front-side-top.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5",
-          "modelSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2"
+          "descriptorSHA256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934",
+          "modelSHA256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea"
         }
       },
-      "appReview": "yy-baguette/app-review/validation.json",
-      "appReviewPage": "yy-baguette/app-review/index.html"
+      "appReview": "yy-baguette/groove-removal-review/ios/captures/validation.json",
+      "appReviewPage": "yy-baguette/groove-removal-review/review.md",
+      "individualReview": "yy-baguette/groove-removal-review/review.md",
+      "appReviewHistory": [
+        "yy-baguette/app-review/validation.json"
+      ],
+      "reviewPageHistory": [
+        "yy-baguette/review/index.html"
+      ],
+      "humanReviewRecord": "yy-baguette/human-review.json",
+      "reviewAnswer": "y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed La Baguette revision with unsupported grooves removed, exterior cords on smooth rounded end surfaces, wood finish and all six selectable contacts."
     },
     {
       "number": 17,
       "package": "yy-baguette-evo",
       "boardID": "yy.baguette-evo",
       "name": "YY Vertical Baguette Evo",
-      "humanReview": "pending",
-      "sourceSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
-      "reviewPage": "yy-baguette-evo/geometry-review.html",
+      "humanReview": "reviewed; rounded cavity geometry, cords, wood display and opposing hold poses accepted",
+      "sourceSHA256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "reviewPage": "yy-baguette-evo/individual-review-2026-10-01/review.md",
       "sourceAudit": "yy-baguette-evo/README.md",
       "comparisons": [
-        "yy-baguette-evo/comparison-sheet.png"
+        "yy-baguette-evo/comparison-sheet.png",
+        "yy-baguette-evo/individual-review-2026-10-01/original-native-front-side-top.png",
+        "yy-baguette-evo/individual-review-2026-10-01/prior-rounded-front-side-top.png",
+        "yy-baguette-evo/individual-review-2026-10-01/rounded-original-native-front-side-top.png",
+        "yy-baguette-evo/individual-review-2026-10-01/original-prior-corrected-front-side-top.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921",
-          "modelSHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3"
+          "descriptorSHA256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+          "modelSHA256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf"
         }
       },
-      "appReview": "yy-baguette-evo/app-review/validation.json",
-      "appReviewPage": "yy-baguette-evo/app-review/index.html"
+      "appReview": "yy-baguette-evo/individual-review-2026-10-01/ios/final-runtime-validation.json",
+      "appReviewPage": "yy-baguette-evo/individual-review-2026-10-01/review.md",
+      "reviewPageHistory": [
+        "yy-baguette-evo/geometry-review.html"
+      ],
+      "appReviewHistory": [
+        "yy-baguette-evo/app-review/validation.json"
+      ],
+      "individualReview": "yy-baguette-evo/individual-review-2026-10-01/review.md",
+      "humanReviewRecord": "yy-baguette-evo/human-review.json",
+      "reviewAnswer": "y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed Baguette Evo revision with rounded native cavity ends, wood finish, visible native-solved cords, nineteen contacts and nine bearing-up poses; rounding radii documented as display estimates."
     },
     {
       "number": 18,
       "package": "yy-penta-evo",
       "boardID": "yy.penta-evo",
       "name": "YY Vertical Penta Evo",
-      "humanReview": "pending",
-      "sourceSHA256": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
-      "reviewPage": "yy-penta-evo/geometry-review.html",
+      "humanReview": "reviewed; corrected rear recess, wood display, seven grip poses, cords and workout highlighting accepted",
+      "sourceSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "reviewPage": "yy-penta-evo/individual-review-2026-10-01/review.md",
       "sourceAudit": "yy-penta-evo/README.md",
       "comparisons": [
-        "yy-penta-evo/comparison-sheet.png"
+        "yy-penta-evo/comparison-sheet.png",
+        "yy-penta-evo/individual-review-2026-10-01/comparison/original-prior-corrected-views.png"
       ],
       "presentations": {
         "front-pair": {
-          "descriptorSHA256": "b0cd578994a9290d8bd52441ac615c3d8b20b059144b2dadcb85b733c566d764",
-          "modelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787"
+          "descriptorSHA256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+          "modelSHA256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab"
         }
       },
-      "appReview": "yy-penta-evo/app-review/validation.json",
-      "appReviewPage": "yy-penta-evo/app-review/index.html"
+      "appReview": "yy-penta-evo/individual-review-2026-10-01/ios/final-runtime-validation.json",
+      "appReviewPage": "yy-penta-evo/individual-review-2026-10-01/review.md",
+      "reviewPageHistory": [
+        "yy-penta-evo/geometry-review.html"
+      ],
+      "appReviewHistory": [
+        "yy-penta-evo/app-review/validation.json"
+      ],
+      "individualReview": "yy-penta-evo/individual-review-2026-10-01/review.md",
+      "humanReviewRecord": "yy-penta-evo/human-review.json",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed Penta Evo revision: enclosed rear 10 mm recess, wood finish, seven loadable grip poses with native-solved cords, fourteen contact selections and bilateral workout highlighting. Display estimates remain labeled."
     },
     {
       "number": 19,
       "package": "yy-travelboard",
       "boardID": "yy.travelboard",
       "name": "YY Vertical TravelBoard",
-      "humanReview": "pending",
-      "sourceSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
-      "reviewPage": "yy-travelboard/review/index.html",
+      "humanReview": "reviewed; wood finish, short native-solved cords, six contact selections and both poses accepted",
+      "sourceSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "reviewPage": "yy-travelboard/individual-review-2026-10-01/review.md",
       "sourceAudit": "yy-travelboard/native-authoring.md",
       "comparisons": [
         "yy-travelboard/review/prior-front-25-15.png",
         "yy-travelboard/review/prior-reverse-10.png",
         "yy-travelboard/review/primary-front.png",
         "yy-travelboard/review/primary-side.png",
-        "yy-travelboard/review/primary-top.png"
+        "yy-travelboard/review/primary-top.png",
+        "yy-travelboard/individual-review-2026-10-01/comparison/original-raster-native-front-rear.png",
+        "yy-travelboard/individual-review-2026-10-01/comparison/native-front-side-top.png",
+        "yy-travelboard/individual-review-2026-10-01/comparison/rear-depth-cue-final.png"
       ],
       "presentations": {
         "primary": {
@@ -979,58 +1021,129 @@
           "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f"
         }
       },
-      "appReview": "yy-travelboard/app-review/validation.json",
-      "appReviewPage": "yy-travelboard/app-review/index.html"
+      "appReview": "yy-travelboard/individual-review-2026-10-01/ios/final-runtime-validation.json",
+      "appReviewPage": "yy-travelboard/individual-review-2026-10-01/review.md",
+      "reviewPageHistory": [
+        "yy-travelboard/review/index.html"
+      ],
+      "appReviewHistory": [
+        "yy-travelboard/app-review/validation.json"
+      ],
+      "individualReview": "yy-travelboard/individual-review-2026-10-01/review.md",
+      "humanReviewRecord": "yy-travelboard/human-review.json",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed TravelBoard revision: wood finish, shorter native-solved visible cords, six contact selections, both poses and 15 mm workout highlighting. Native body geometry unchanged; display estimates remain labeled."
     },
     {
       "number": 20,
       "package": "zlagboard-evo",
       "boardID": "zlagboard.evo",
       "name": "Zlagboard Zlagboard.Evo",
-      "humanReview": "pending",
-      "sourceSHA256": "8a8e4957b044d01c76c49ee1b0c07f88f388bac05cff36b31d655c0e6d4ae8fb",
-      "reviewPage": "zlagboard-evo/source-audit.md",
+      "humanReview": "reviewed; native geometry, wood finish, all21 static contacts and displayed corrected workout highlight sequence accepted",
+      "sourceSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+      "reviewPage": "zlagboard-evo/app-review-2026-10-02/review.md",
       "sourceAudit": "zlagboard-evo/source-audit.md",
       "comparisons": [
         "zlagboard-evo/review/comparison-side.png",
         "zlagboard-evo/review/comparison-top.png",
-        "zlagboard-evo/review/comparison-front.png"
+        "zlagboard-evo/review/comparison-front.png",
+        "zlagboard-evo/individual-review-2026-10-01/shape-audit/before-after-front-side-top.png",
+        "zlagboard-evo/individual-review-2026-10-01/comparison-final/comparison-front-side-top.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "54a24c155967b3349be34fb3918e1c22be8acc8f7117772a15b347e251d99383",
-          "modelSHA256": "92e0e754d888a5ab6976f22197b11f9f55353309ef6648a9307c45c404d4dabe"
+          "descriptorSHA256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+          "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee"
         }
       },
-      "appReview": "zlagboard-evo/app-review/validation.json",
-      "appReviewPage": "zlagboard-evo/app-review/index.html"
+      "appReview": "zlagboard-evo/app-review-2026-10-02/validation.json",
+      "appReviewPage": "zlagboard-evo/app-review-2026-10-02/review.md",
+      "reviewPageHistory": [
+        "zlagboard-evo/source-audit.md",
+        "zlagboard-evo/individual-review-2026-10-01/review.md"
+      ],
+      "appReviewHistory": [
+        "zlagboard-evo/app-review/validation.json",
+        "zlagboard-evo/individual-review-2026-10-01/ios/final-runtime-validation.json"
+      ],
+      "individualReview": "zlagboard-evo/app-review-2026-10-02/review.md",
+      "runtimeRecovery": "zlagboard-evo/runtime-recovery-2026-10-02/validation.json",
+      "humanReviewRecord": "zlagboard-evo/human-review.json",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-02",
+      "acceptedScope": "Displayed Zlagboard.Evo geometry at b60f41c59: native top rounds, full jug crest/corner selection coverage, wood finish and all 21 static selections. Display-estimate limits remain. This reply does not accept or resolve the documented workout red/blue refresh failure.",
+      "acceptedRevisionCommit": "b60f41c5933a53059814f3f375a82beddedca609",
+      "runtimeHumanReviewRecord": "zlagboard-evo/post-main-presentation-2026-10-03/human-runtime-review.json",
+      "runtimeReviewAnswer": "Y",
+      "runtimeAcceptedDate": "2026-10-03",
+      "runtimeAcceptedRevisionCommit": "c42815f8cf4ac09d0d409e53e466d0e3ade92cb8",
+      "runtimeAcceptedScope": "Displayed clean Zlagboard.Evo workout views: red selected contacts during Hang, blue Rest preview, red contacts during following Hang, with both hands and native wood board visible. Existing native/static acceptance remains unchanged.",
+      "runtimeReview": "zlagboard-evo/post-main-presentation-2026-10-03/accepted-runtime-review.md"
     },
     {
       "number": 21,
       "package": "zlagboard-pro",
       "boardID": "zlagboard.pro",
       "name": "Zlagboard Zlagboard.Pro 2.0",
-      "humanReview": "pending",
-      "sourceSHA256": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
-      "reviewPage": "zlagboard-pro/source-audit.md",
+      "humanReview": "reviewed; native geometry, wood finish, fresh contact selection views and displayed corrected workout highlight sequence accepted",
+      "sourceSHA256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "reviewPage": "zlagboard-pro/app-review-2026-10-03/accepted-app-review.md",
       "sourceAudit": "zlagboard-pro/source-audit.md",
       "comparisons": [
         "zlagboard-pro/review/comparison-side.png",
         "zlagboard-pro/review/comparison-top.png",
-        "zlagboard-pro/review/comparison-front.png"
+        "zlagboard-pro/review/comparison-front.png",
+        "zlagboard-pro/individual-review-2026-10-02/comparison/comparison-front-side-top.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "5e3ea9a135173ec6730b0d5e145cc098a8b2e6a54f1cf50bc9df982248711b82",
-          "modelSHA256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7"
+          "descriptorSHA256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+          "modelSHA256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684"
         }
       },
-      "appReview": "zlagboard-pro/app-review/validation.json",
-      "appReviewPage": "zlagboard-pro/app-review/index.html"
+      "appReview": "zlagboard-pro/app-review-2026-10-03/validation.json",
+      "appReviewPage": "zlagboard-pro/app-review-2026-10-03/accepted-app-review.md",
+      "reviewPageHistory": [
+        "zlagboard-pro/source-audit.md",
+        "zlagboard-pro/individual-review-2026-10-02/review.md",
+        "zlagboard-pro/app-review-2026-10-03/review.md"
+      ],
+      "appReviewHistory": [
+        "zlagboard-pro/app-review/validation.json",
+        "zlagboard-pro/individual-review-2026-10-02/ios/final-runtime-validation.json"
+      ],
+      "individualReview": "zlagboard-pro/individual-review-2026-10-02/review.md",
+      "humanReviewRecord": "zlagboard-pro/human-review.json",
+      "reviewAnswer": "Y",
+      "acceptedDate": "2026-10-02",
+      "acceptedScope": "Displayed Zlagboard.Pro 2.0 native geometry at e28886489, shown in original/prior/corrected front-side-top comparisons. Estimated top rounding and native contact-region corrections are included. Fresh app appearance, highlighting, picking and workout behavior are not accepted or verified by this reply; app contact coverage remains 0/28.",
+      "acceptedRevisionCommit": "e28886489b212b83ac776f5bd0b4430bf733a873",
+      "freshAppContactCoverage": {
+        "expected": 28,
+        "verified": 28,
+        "wholeScreenshots": 40,
+        "yawViews": 6,
+        "freshViewReentries": 6
+      },
+      "freshAppVisualReviewPassed": true,
+      "humanAppAccepted": true,
+      "freshAppReviewSourceCommit": "1e1a931ed97a067c9f31bfffd84e50051f883294",
+      "appHumanReviewRecord": "zlagboard-pro/app-review-2026-10-03/human-app-review.json",
+      "appReviewAnswer": "y",
+      "appAcceptedDate": "2026-10-03",
+      "appAcceptedRevisionCommit": "0c1ebae25a6c9a591b3c3dbb7d6627cded5b58fd",
+      "appAcceptedScope": "Displayed Zlagboard.Pro 2.0 fresh jug and incut selection views, wood finish, and normal-workout red Hang / blue Rest preview / red following Hang with both hand cues visible, together with the linked fresh 28-contact review and original/prior/native front-side-top comparisons. Adds app acceptance to the prior native geometry approval; display-estimate limits remain.",
+      "runtimeHumanReviewRecord": "zlagboard-pro/app-review-2026-10-03/human-app-review.json",
+      "runtimeReviewAnswer": "y",
+      "runtimeAcceptedDate": "2026-10-03",
+      "runtimeAcceptedRevisionCommit": "0c1ebae25a6c9a591b3c3dbb7d6627cded5b58fd",
+      "runtimeAcceptedScope": "Displayed Zlagboard.Pro 2.0 fresh jug and incut selection views, wood finish, and normal-workout red Hang / blue Rest preview / red following Hang with both hand cues visible, together with the linked fresh 28-contact review and original/prior/native front-side-top comparisons. Adds app acceptance to the prior native geometry approval; display-estimate limits remain.",
+      "runtimeReview": "zlagboard-pro/app-review-2026-10-03/accepted-app-review.md"
     }
   ],
   "reviewScope": {
-    "userInstruction": "I only want to review the ones we’re migrating",
+    "userInstruction": "I only want to review the ones we\u2019re migrating",
     "eligibility": "Only packages first given a native CAD source by this task; existing CAD packages and externally claimed migrations are excluded.",
     "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
     "migrationCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",

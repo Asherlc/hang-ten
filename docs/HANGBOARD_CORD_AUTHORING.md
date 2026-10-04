@@ -514,3 +514,22 @@ identity; authoring solver settings are never staged into the runtime board.
 The offline solver handles both forms. `--equipment-object` may select one
 instance from a shared map; omitting it solves both. `--presentation` selects
 an entry in the multi-presentation form.
+
+
+## Pose-specific exterior loop bearings
+
+`nativeRoutes` may include authoring-only `terminalsByPoseID`, mapping an
+existing canonical pose ID to a complete `terminalsByStrandID`-shaped map.
+Every override retains the declared strand IDs, station counts and axis rules.
+Poses without an override use the global terminal map. Unknown poses, malformed
+stations and a combination with `grooveGuides` are rejected. The optional
+field is stripped with the other solver authoring settings before staging.
+
+Penta Evo uses this for its source-supported rotation: the selected grip moves
+to the lower band, so its exterior loop must bear against the newly upper
+band. Stations are deliberately derived from the actual native bearing surface
+plus the estimated cord radius and clearance. They are not hand-authored route
+vertices or evidence of hidden passages. The existing native solver generates
+and certifies each complete route and hanging height. Each pose is solved with
+its effective station map before pose or section caching, even when rotations
+match. These constrained display routes do not claim dynamic equilibrium.

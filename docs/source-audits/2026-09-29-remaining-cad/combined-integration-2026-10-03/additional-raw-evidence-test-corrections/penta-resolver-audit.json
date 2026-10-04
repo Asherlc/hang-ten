@@ -1,0 +1,412 @@
+{
+  "scope": "Independent read-only diagnosis; no production/test edits, builds, simulator or resource actions performed by this audit.",
+  "failure": {
+    "raw": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-ci-recipe/tests.stdout",
+    "test": "ContactResolverTests.testMaxHangsResolvesPentaReusableTwentyMillimeterPairAndPose",
+    "originalTestLocation": "HangTenTests/BoardTargetSubstitutionTests.swift:400",
+    "observedError": "invalidBilateralPair(candidateCount: 6)",
+    "durationSeconds": 0.018
+  },
+  "rootCause": "The legacy source range leaves the athlete-selected edge size unspecified. On Penta it matches the actual left/right 10, 15, and 20 mm edges. The original test incorrectly assumed the resolver would choose 20 mm automatically. Model reusable-unit frames are local to each unit; broad geometric outermost selection cannot substitute for an explicit shared-slot selection.",
+  "classification": "Two distinct findings: original broad legacy test assumption was invalid; corrected exact-depth production task path reveals a model-instance hand-side resolution bug.",
+  "sourceEvidence": [
+    {
+      "location": "HangTen/Models/TrainingModels.swift:3126",
+      "fact": "Legacy Lopez MAW source permits athlete-chosen 8\u201320 mm, using 9\u201319 mm with one-mm resolver tolerance. Comment explicitly says plan page narrows to selected size."
+    },
+    {
+      "location": "HangTen/Models/TrainingModels.swift:2075",
+      "fact": "MaxHangsEdgeSelection derives available exact measured edge depths and generates exact selected two-hand task predicates. Guard checks exactly two contacts with the chosen physical point depth."
+    },
+    {
+      "location": "HangTen/Models/WorkoutActivityRecording.swift:724",
+      "fact": "Reusable-unit strict pair branch requires exactly two candidates, one contact owned by each distinct instance, unique mappings, same slot, and equal kind/shape/depth/finger/hand facts."
+    },
+    {
+      "location": "HangTen/Models/WorkoutActivityRecording.swift:661",
+      "fact": "Default-presentation candidates include its full contact IDs, not just one assumed position."
+    },
+    {
+      "location": "HangTen/Models/TrainingModels.swift:1510",
+      "fact": "workRequirements flattens modern tasks into legacy hand requirements; selected work target must be resolved directly to retain task semantics."
+    },
+    {
+      "location": "HangTen/Views/PlanDetailView.swift:4",
+      "fact": "Plan-page variant policy explicitly selects supported depth, falling back to largest available variant; this is not generic broad-requirement selection."
+    }
+  ],
+  "canonicalSelection": {
+    "path": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+    "selectedOwner": "own",
+    "selectedRef": "1ead8834f744fcaba2ce4d53b07545841b2d6927",
+    "gitBlobSHA256": "682e6dd51d01e15076611fc492e8dbdb52faedfbeb07646c80fe9a6cfb361674",
+    "lfsOID": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+    "contentSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef"
+  },
+  "sourceManifestComparison": {
+    "own": {
+      "ref": "1ead8834f744fcaba2ce4d53b07545841b2d6927",
+      "lfsOID": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "positions": [
+        {
+          "contactIDs": [
+            "edge-25-left",
+            "edge-25-right"
+          ],
+          "id": "primary",
+          "presentationID": "front-pair"
+        },
+        {
+          "contactIDs": [
+            "duo-left",
+            "duo-right"
+          ],
+          "id": "duo",
+          "presentationID": "front-pair"
+        },
+        {
+          "contactIDs": [
+            "edge-15-left",
+            "edge-15-right"
+          ],
+          "id": "edge-15",
+          "presentationID": "front-pair"
+        },
+        {
+          "contactIDs": [
+            "edge-20-left",
+            "edge-20-right"
+          ],
+          "id": "edge-20",
+          "presentationID": "front-pair"
+        },
+        {
+          "contactIDs": [
+            "mono-left",
+            "mono-right"
+          ],
+          "id": "mono",
+          "presentationID": "front-pair"
+        },
+        {
+          "contactIDs": [
+            "edge-10-left",
+            "edge-10-right"
+          ],
+          "id": "reverse",
+          "presentationID": "front-pair"
+        },
+        {
+          "contactIDs": [
+            "tray-left",
+            "tray-right"
+          ],
+          "id": "tray",
+          "presentationID": "front-pair"
+        }
+      ],
+      "hasEffectiveDepths": false
+    },
+    "parent": {
+      "ref": "4d010a76003a24c8f6d22f02e5b159eea1ee7d92",
+      "lfsOID": "9428f611eacebba0345d860fb935f50e1bedf3dac4317a1ffe89cc52d371c4fa",
+      "positions": [
+        {
+          "id": "primary",
+          "presentationID": "front-pair",
+          "contactIDs": [
+            "edge-25-left",
+            "edge-20-left",
+            "mono-left",
+            "duo-left",
+            "edge-15-left",
+            "tray-left",
+            "edge-20-right",
+            "edge-25-right",
+            "edge-15-right",
+            "mono-right",
+            "duo-right",
+            "tray-right"
+          ]
+        },
+        {
+          "id": "reverse",
+          "presentationID": "front-pair",
+          "contactIDs": [
+            "mono-left",
+            "duo-left",
+            "edge-10-left",
+            "tray-left",
+            "edge-10-right",
+            "mono-right",
+            "duo-right",
+            "tray-right"
+          ]
+        }
+      ],
+      "hasEffectiveDepths": false
+    }
+  },
+  "currentSourceSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+  "builtManifest": {
+    "path": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/yy-penta-evo/board.json",
+    "sha256": "58c9e678d0949d0b5728febb850b9d911f79f18a7c7a990779ce6f3d91471e63",
+    "positions": [
+      {
+        "contactIDs": [
+          "edge-25-left",
+          "edge-25-right"
+        ],
+        "id": "primary",
+        "presentationID": "front-pair"
+      },
+      {
+        "contactIDs": [
+          "duo-left",
+          "duo-right"
+        ],
+        "id": "duo",
+        "presentationID": "front-pair"
+      },
+      {
+        "contactIDs": [
+          "edge-15-left",
+          "edge-15-right"
+        ],
+        "id": "edge-15",
+        "presentationID": "front-pair"
+      },
+      {
+        "contactIDs": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "id": "edge-20",
+        "presentationID": "front-pair"
+      },
+      {
+        "contactIDs": [
+          "mono-left",
+          "mono-right"
+        ],
+        "id": "mono",
+        "presentationID": "front-pair"
+      },
+      {
+        "contactIDs": [
+          "edge-10-left",
+          "edge-10-right"
+        ],
+        "id": "reverse",
+        "presentationID": "front-pair"
+      },
+      {
+        "contactIDs": [
+          "tray-left",
+          "tray-right"
+        ],
+        "id": "tray",
+        "presentationID": "front-pair"
+      }
+    ],
+    "hasEffectiveDepths": false,
+    "pointDepthPairs": {
+      "10": [
+        "edge-10-left",
+        "edge-10-right"
+      ],
+      "15": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "20": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "25": [
+        "edge-25-left",
+        "edge-25-right"
+      ]
+    }
+  },
+  "referenceComparison": {
+    "resolverByteIdenticalToOwn1ead": true,
+    "ownAddedOriginalTest": true,
+    "parentOriginalTestAbsent": true
+  },
+  "minimalCorrection": {
+    "scope": "Tests only; keep production resolver and CAD/package facts unchanged.",
+    "selectedIntegrationPath": "MaxHangsEdgeSelection.resolvedPlans(for: PlanCatalog.maxHangs, on: board)[20], first non-rest step, first work segment target; resolve actual target through ContactResolver.resolve(target, step: step, board: board).first.",
+    "retainAssertions": [
+      "exact IDs edge-20-left and edge-20-right",
+      "WorkoutHighlightResolver returns exact same IDs",
+      "each resolved contact physical point depth exactly 20 mm",
+      "BoardMapPresentationSelection returns canonical edge-20 position"
+    ],
+    "additionalGates": [
+      "Legacy unchosen broad requirement rejects invalidBilateralPair(candidateCount: 6).",
+      "Explicit exact-20 bilateral requirement resolves same mapped left/right pair.",
+      "Existing different-slot, same-instance, differing physical-fact rejection tests remain unchanged."
+    ],
+    "unsupportedChanges": [
+      "Inventing effectiveDepth metadata on positions",
+      "Broadening reusable pair resolver to guess largest/deepest candidate pair",
+      "Changing physical depths or slot maps",
+      "Replacing native package with a synthetic success fixture"
+    ]
+  },
+  "currentParentCorrectionReview": {
+    "observed": "Current shared test source has selected-20 actual-target integration path plus broad-legacy rejection and explicit exact-20 bilateral pair assertion, matching the recommendation. Parent owns those edits.",
+    "productionResolverStillByteExact": true,
+    "runtimeValidation": "Pending parent execution; no pass claim made by audit."
+  },
+  "verificationPlan": [
+    "Run ContactResolverTests including corrected selected-20 integration, broad ambiguity and all strict reusable-pair rejection regressions against source-built native Penta.",
+    "Repeat full integrated HangTenTests using existing optimized Debug/assertions CI recipe; parent owns build and resources."
+  ],
+  "notes": [
+    "Penta selected canonical owner is own1ead, with seven distinct positions including edge-20. Parent4d FCStd positions differ but it is not the selected integrated Penta. Do not judge edge-20 pose against the unselected parent package."
+  ],
+  "classificationBeforeModernTaskRun": "Stale test fixture/plan selection assumption; evidence does not support a production resolver correction.",
+  "modernTaskFollowup": {
+    "raw": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/integration-test-corrections-focus/tests.stdout",
+    "observed": "MaxHangsEdgeSelection.resolvedPlans(...)[20] is nil in fresh focused execution; explicit exact-20 legacy pair succeeds and broad legacy rejection succeeds.",
+    "rootCause": "Task side filtering calls contact(fits:in:) on model-local descriptor frames for suspended units. Only Rock Rings equipment IDs are hardcoded. Penta contact.side is absent and the two native units share local descriptor frames. Actual instance placement is not consulted.",
+    "sourceLocations": [
+      "HangTen/Models/WorkoutActivityRecording.swift:493",
+      "HangTen/Models/WorkoutActivityRecording.swift:503",
+      "HangTen/Models/WorkoutActivityRecording.swift:557",
+      "HangTen/Models/TrainingModels.swift:498",
+      "HangTen/Views/SuspendedBoardPresentation.swift:477"
+    ],
+    "frameFact": "BoardModelMedia.resolvedContactFrame intentionally returns local descriptor frame when instances are suspended (TrainingModels.swift:500\u2013503). Do not globally change frame rendering to repair task semantics.",
+    "physicalPlacement": {
+      "PentaContactsHaveExplicitSide": false,
+      "PentaBaseTransform": "identity quaternion and zero translation for both units",
+      "poseXTranslations": "every left pose \u22120.15; every right pose +0.15",
+      "descriptorBoundsCenter": [
+        4.381000000004687e-06,
+        0.0,
+        0.0
+      ],
+      "composedWorldCenters": {
+        "duo": {
+          "left-penta": [
+            -0.14999864619654762,
+            -0.026960192421402105,
+            0.0
+          ],
+          "right-penta": [
+            0.15000135380345236,
+            -0.026960192421402105,
+            0.0
+          ]
+        },
+        "edge-15": {
+          "left-penta": [
+            -0.14999864619654762,
+            -0.026969419578597897,
+            0.0
+          ],
+          "right-penta": [
+            0.15000135380345236,
+            -0.026969419578597897,
+            0.0
+          ]
+        },
+        "edge-20": {
+          "left-penta": [
+            -0.1500033560407053,
+            -0.02134993205251804,
+            0.0
+          ],
+          "right-penta": [
+            0.14999664395929468,
+            -0.02134993205251804,
+            0.0
+          ]
+        },
+        "mono": {
+          "left-penta": [
+            -0.15,
+            -0.021126691999999996,
+            0.0
+          ],
+          "right-penta": [
+            0.15,
+            -0.021126691999999996,
+            0.0
+          ]
+        },
+        "primary": {
+          "left-penta": [
+            -0.1500033560407053,
+            -0.02136136794748196,
+            0.0
+          ],
+          "right-penta": [
+            0.14999664395929468,
+            -0.02136136794748196,
+            0.0
+          ]
+        },
+        "reverse": {
+          "left-penta": [
+            -0.15000135380345236,
+            -0.026969437578597894,
+            -5.365177627070294e-22
+          ],
+          "right-penta": [
+            0.14999864619654762,
+            -0.026969437578597894,
+            -5.365177627070294e-22
+          ]
+        },
+        "tray": {
+          "left-penta": [
+            -0.149995619,
+            -0.023531686,
+            0.0
+          ],
+          "right-penta": [
+            0.150004381,
+            -0.023531686,
+            0.0
+          ]
+        }
+      },
+      "edge20DescriptorLocalFrame": {
+        "minimum": [
+          0.564192292,
+          0.652185476
+        ],
+        "maximum": [
+          0.859390602,
+          0.913031901
+        ],
+        "midX": 0.711791447
+      }
+    },
+    "authoritativeTransform": "CAD renderer uses P * B. Base rotations/reflections pivot about descriptor bounds center C, so B(C)=C+baseTranslation. World body center = quaternion(poseRotation).act(C + baseTranslation) + poseTranslation. Translation is not generally body center. Compare pair relative X ordering, not origin sign, array order, contact ID suffix, or lexical ordering.",
+    "smallestCorrectionGate": [
+      "Two-hand task with distinct inferred/explicit sides.",
+      "Identical per-hand candidate ID sets; union contains exactly two contacts.",
+      "Reuse outermostPair reusable instance guard: distinct ownership, unique mapping, common authored slot, matching physical facts.",
+      "Exactly one authored position contains that pair for that presentation; fetch each CAD instance exact canonical pose.",
+      "Finite distinct transformed body-center X values determine physical left/right; preserve authoritative contact.side if present and reject contradictory/ambiguous assignment.",
+      "Return contact matching firstSide then secondSide; preserve old different-target/non-CAD paths."
+    ],
+    "alternativeDesignReview": "Thread exact positionID through task candidate resolver and CAD side helper. Enter authored-position iteration only behind uniquely mapped same-pair/unique-position gate. Blanket CAD-position iteration may silently choose first position for broad predicates and alter mixed-hand target semantics.",
+    "regressionGates": [
+      "Actual native Penta selected20 available and resolves/highlights/records correct contacts and pose.",
+      "Explicit swapped sides return reversed contact order while preserving IDs.",
+      "Reversed instances array does not reverse physical side assignment.",
+      "Mismatched/duplicate/same-owner slot mapping rejects.",
+      "Ambiguous equal body center X rejects rather than falling back to unit-local midpoint.",
+      "Different-target task semantics and Rock Rings/non-CAD existing behavior remain unchanged.",
+      "Broad legacy requirement still rejects six candidates."
+    ],
+    "verificationStatus": "Read-only diagnosis and proposal only; parent owns fix and execution.",
+    "boundaryDetail": "Both exact-20 contacts resolve to local minX 0.564192292 > 0.5 and midX 0.711791447. Thus neither passes firstSide left at task filtering; both pass right. No valid left/right task pair exists despite a valid explicit reusable slot pair."
+  }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Region_hold_edge_10mm_left_mesh_001",
+    "area": 1736.7878707749146
+  },
+  {
+    "name": "Region_hold_edge_20mm_left_mesh_001",
+    "area": 2556.787870774914
+  },
+  {
+    "name": "Region_hold_edge_10mm_right_mesh_001",
+    "area": 1736.7878707749142
+  },
+  {
+    "name": "Region_hold_edge_20mm_right_mesh_001",
+    "area": 2556.7878707749132
+  }
+]

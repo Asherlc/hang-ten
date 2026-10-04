@@ -1,0 +1,22 @@
+{
+  "solve-1": {
+    "status": "interrupted",
+    "reason": "Dijkstra generation exceeded 10 minutes without completing; stopped exact workspace-owned process. No sidecar caches published. Raw interrupt traceback retained.",
+    "replacement": "Existing supported pathSearch=aStar searches the same native visibility graph and reuses exactly identical rotations; no solver implementation change."
+  },
+  "solve-2": {
+    "status": "passed",
+    "report": "solve-2.json",
+    "sourceState": "before key-order-only correction"
+  },
+  "final-cord-check": {
+    "status": "passed",
+    "report": "final-cord-check.json",
+    "sourceState": "before key-order-only correction"
+  },
+  "final-sorted-cord-check": {
+    "status": "passed",
+    "report": "final-sorted-cord-check.json",
+    "sourceState": "final source 7f1a6c34c92984b7f8ac89007051ce49ed3cd358290293018cdb8cb2ec8d69a7"
+  }
+}

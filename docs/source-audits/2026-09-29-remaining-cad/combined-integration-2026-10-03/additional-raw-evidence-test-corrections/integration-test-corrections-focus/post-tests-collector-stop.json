@@ -1,0 +1,10 @@
+{
+  "exactHelperPID": 59788,
+  "verifiedCommand": "59788 /opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python .context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/run-tests.py --name integration-test-corrections-focus --only HangTenTests/ContactResolverTests --only HangTenTests/BoardSourceBoundaryTests/testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds\n",
+  "testCasesAlreadyCompleted": true,
+  "completedCases": 32,
+  "failures": 2,
+  "stoppedEpoch": 1791070571.8474948,
+  "reason": "Stop only exact registered helper after completed failed cases; preserve logs/results and reap owned command group.",
+  "noPassingClaim": true
+}

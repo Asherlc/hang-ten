@@ -1,0 +1,16 @@
+{
+  "compiledSourceSHA256": "3948de31bd846c93d87e0b83ff0f4e2e28a6a6b65e565d80c4c643fd12628ee0",
+  "finalSourceSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+  "compiledProofOriginalSHA256": "3948de31bd846c93d87e0b83ff0f4e2e28a6a6b65e565d80c4c643fd12628ee0",
+  "compileProofRetainedAndBoundToPriorSource": true,
+  "changedArchiveMembers": [
+    "Document.xml"
+  ],
+  "geometryMembersExact": true,
+  "embeddedManifestSemanticEquality": true,
+  "colliderTrianglesExact": true,
+  "colliderVerticesExact": true,
+  "newColliderHashBound": true,
+  "stagingEvidenceCopiedByteExactly": true,
+  "note": "No export rerun: metadata lexical-only source change preserves all geometry archive members and original compiler proof. Original failure and first incorrect untransformed USD depth calculation retained; transformed USD depth proof is authoritative."
+}

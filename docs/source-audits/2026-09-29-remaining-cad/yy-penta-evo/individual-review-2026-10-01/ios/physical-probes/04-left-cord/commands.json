@@ -1,0 +1,34 @@
+[
+  [
+    "rtk",
+    "proxy",
+    "/opt/homebrew/bin/axe",
+    "tap",
+    "-x",
+    "92",
+    "-y",
+    "302",
+    "--tap-style",
+    "physical",
+    "--udid",
+    "B404FE03-AE3E-4295-88F7-D63D384E3E58"
+  ],
+  [
+    "rtk",
+    "proxy",
+    "/opt/homebrew/bin/axe",
+    "describe-ui",
+    "--udid",
+    "B404FE03-AE3E-4295-88F7-D63D384E3E58"
+  ],
+  [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "io",
+    "B404FE03-AE3E-4295-88F7-D63D384E3E58",
+    "screenshot",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/04-left-cord/view.png"
+  ]
+]

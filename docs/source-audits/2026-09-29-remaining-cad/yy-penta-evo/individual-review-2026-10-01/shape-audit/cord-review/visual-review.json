@@ -1,0 +1,71 @@
+{
+  "scope": "Independent visual review of seven successful scratch trial routes on one corrected reusable native unit. Final two-instance generation and app acceptance remain separate.",
+  "sourceSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+  "geometrySource": "../corrected-collider.json",
+  "renderMethod": "Whole native body plus exact route caches transformed by supplied canonical pose and settled height; world support reconstructed from descriptor bounds and anchor offset. Software depth buffer. Diagnostic tube radius equals actual 2 mm; colors are preview-only.",
+  "overall": "No demonstrated visual cord defect. Inner bridges follow the upper band actual offset inner surface, front/rear runs remain adjacent to wood and bend around supported rim transitions. No visible free-air station knee, wood penetration, or crossing.",
+  "views": [
+    "front",
+    "side",
+    "oblique"
+  ],
+  "observations": [
+    {
+      "slot": "edge-25",
+      "visualStatus": "passed",
+      "image": "edge-25-review.png",
+      "sourceReport": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/normal-plane/edge-25.json",
+      "sourceReportSHA256": "39914b81a0e66ad14668681c3cabb2d7240c5471f1550382a08f02e86b7611d2",
+      "observation": "The two hanging legs approach the outer rim, descend on opposite faces of the upper band, and connect beneath its inner edge. The station bridge blends into the surface-following bends without a visible unsupported corner. The diagonal front run and its outward-rim turn are visibly supported by the wood geometry; the normal-plane solution avoids the rejected radial-plane clearance problem."
+    },
+    {
+      "slot": "edge-20",
+      "visualStatus": "passed",
+      "image": "edge-20-review.png",
+      "sourceReport": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/normal-plane/edge-20.json",
+      "sourceReportSHA256": "437baddf6c3ab3f437303cab47d939b4c7420b7d29bc0b5a529cae315138a498",
+      "observation": "The two hanging legs approach the outer rim, descend on opposite faces of the upper band, and connect beneath its inner edge. The station bridge blends into the surface-following bends without a visible unsupported corner. The diagonal front run and its outward-rim turn are visibly supported by the wood geometry; the normal-plane solution avoids the rejected radial-plane clearance problem."
+    },
+    {
+      "slot": "edge-15",
+      "visualStatus": "passed",
+      "image": "edge-15-review.png",
+      "sourceReport": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/edge-15.json",
+      "sourceReportSHA256": "9b8d255702a2d6dea8b32ba255a34a368eb0ee5dcb4dd48448747ff48af5b376",
+      "observation": "The two hanging legs approach the outer rim, descend on opposite faces of the upper band, and connect beneath its inner edge. The station bridge blends into the surface-following bends without a visible unsupported corner."
+    },
+    {
+      "slot": "edge-10",
+      "visualStatus": "passed",
+      "image": "edge-10-review.png",
+      "sourceReport": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/edge-10.json",
+      "sourceReportSHA256": "ee74d33ebbbbf18c6407d56613f409722aa6622ee3f25155a0628984acafd3de",
+      "observation": "The two hanging legs approach the outer rim, descend on opposite faces of the upper band, and connect beneath its inner edge. The station bridge blends into the surface-following bends without a visible unsupported corner."
+    },
+    {
+      "slot": "mono",
+      "visualStatus": "passed",
+      "image": "mono-review.png",
+      "sourceReport": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/mono.json",
+      "sourceReportSHA256": "ee1ef1e904a7d2b9a57249c2f34853173c831650c01f946b0e2d19140f04fc30",
+      "observation": "The two hanging legs approach the outer rim, descend on opposite faces of the upper band, and connect beneath its inner edge. The station bridge blends into the surface-following bends without a visible unsupported corner."
+    },
+    {
+      "slot": "duo",
+      "visualStatus": "passed",
+      "image": "duo-review.png",
+      "sourceReport": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/duo.json",
+      "sourceReportSHA256": "33129dbcb489b130056a5e999070b4b028916d777ca1f0c7d633cdedc39fe345",
+      "observation": "The two hanging legs approach the outer rim, descend on opposite faces of the upper band, and connect beneath its inner edge. The station bridge blends into the surface-following bends without a visible unsupported corner."
+    },
+    {
+      "slot": "tray",
+      "visualStatus": "passed",
+      "image": "tray-review.png",
+      "sourceReport": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-penta-evo/route-experiments/tray.json",
+      "sourceReportSHA256": "3f66a1a6bd961a74564777cbe10086b82623c528475d73f9e756a4217cc431f0",
+      "observation": "The two hanging legs approach the outer rim, descend on opposite faces of the upper band, and connect beneath its inner edge. The station bridge blends into the surface-following bends without a visible unsupported corner."
+    }
+  ],
+  "limits": "A static shape review supports the visual plausibility of these deterministic display routes; it does not establish unrestricted sliding dynamics, friction behavior, or global physical equilibrium. Existing full-solid and tube/length certificates remain required."
+}

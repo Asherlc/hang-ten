@@ -1,0 +1,380 @@
+{
+  "bodyVolume": 754063.9492070642,
+  "bodyFaces": 336,
+  "regions": [
+    {
+      "name": "Region_hold_edge_10mm_left_mesh_001",
+      "area": 2326.787870774914,
+      "faces": 5
+    },
+    {
+      "name": "Region_hold_edge_20mm_left_mesh_001",
+      "area": 3736.7878707749132,
+      "faces": 8
+    },
+    {
+      "name": "Region_hold_edge_15mm_left_mesh_001",
+      "area": 1707.0171634635108,
+      "faces": 5
+    },
+    {
+      "name": "Region_hold_edge_25mm_left_mesh_001",
+      "area": 2297.01716346351,
+      "faces": 5
+    },
+    {
+      "name": "Region_hold_edge_06mm_left_mesh_001",
+      "area": 2043.980069221865,
+      "faces": 4
+    },
+    {
+      "name": "Region_hold_edge_12mm_left_mesh_001",
+      "area": 1398.1385060422622,
+      "faces": 2
+    },
+    {
+      "name": "Region_hold_edge_08mm_left_mesh_001",
+      "area": 1158.1385060422622,
+      "faces": 2
+    },
+    {
+      "name": "Region_hold_rounded_left_mesh_001",
+      "area": 7775.4416125585485,
+      "faces": 4
+    },
+    {
+      "name": "Region_hold_edge_10mm_right_mesh_001",
+      "area": 2326.787870774914,
+      "faces": 5
+    },
+    {
+      "name": "Region_hold_edge_20mm_right_mesh_001",
+      "area": 3736.7878707749132,
+      "faces": 8
+    },
+    {
+      "name": "Region_hold_edge_15mm_right_mesh_001",
+      "area": 1707.017163463511,
+      "faces": 5
+    },
+    {
+      "name": "Region_hold_edge_25mm_right_mesh_001",
+      "area": 2297.0171634635103,
+      "faces": 5
+    },
+    {
+      "name": "Region_hold_edge_06mm_right_mesh_001",
+      "area": 2043.9800692218744,
+      "faces": 4
+    },
+    {
+      "name": "Region_hold_edge_12mm_right_mesh_001",
+      "area": 1398.138506042265,
+      "faces": 2
+    },
+    {
+      "name": "Region_hold_edge_08mm_right_mesh_001",
+      "area": 1158.1385060422647,
+      "faces": 2
+    },
+    {
+      "name": "Region_hold_rounded_right_mesh_001",
+      "area": 7775.441612558531,
+      "faces": 4
+    },
+    {
+      "name": "Region_hold_central_20mm_mesh_001",
+      "area": 2369.867878229532,
+      "faces": 5
+    },
+    {
+      "name": "Region_hold_central_06mm_mesh_001",
+      "area": 1487.867878229532,
+      "faces": 2
+    },
+    {
+      "name": "Region_hold_central_30mm_mesh_001",
+      "area": 2648.785670513096,
+      "faces": 3
+    },
+    {
+      "name": "Region_hold_central_25mm_mesh_001",
+      "area": 2338.7856705130953,
+      "faces": 3
+    }
+  ],
+  "frontLipEdges": [
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77
+  ],
+  "roundedTools": [
+    {
+      "name": "left10to20CutRoundedEnds",
+      "edges": [
+        [
+          3,
+          9.0,
+          9.0
+        ],
+        [
+          4,
+          9.0,
+          9.0
+        ],
+        [
+          9,
+          9.0,
+          9.0
+        ],
+        [
+          10,
+          9.0,
+          9.0
+        ]
+      ]
+    },
+    {
+      "name": "left15to25CutRoundedEnds",
+      "edges": [
+        [
+          3,
+          9.0,
+          9.0
+        ],
+        [
+          4,
+          9.0,
+          9.0
+        ],
+        [
+          9,
+          9.0,
+          9.0
+        ],
+        [
+          10,
+          9.0,
+          9.0
+        ]
+      ]
+    },
+    {
+      "name": "leftSixCutRoundedEnds",
+      "edges": [
+        [
+          6,
+          8.5,
+          8.5
+        ],
+        [
+          7,
+          8.5,
+          8.5
+        ],
+        [
+          11,
+          8.5,
+          8.5
+        ],
+        [
+          12,
+          8.5,
+          8.5
+        ]
+      ]
+    },
+    {
+      "name": "leftTwelveEightCutRoundedEnds",
+      "edges": [
+        [
+          3,
+          8.5,
+          8.5
+        ],
+        [
+          4,
+          8.5,
+          8.5
+        ],
+        [
+          9,
+          8.5,
+          8.5
+        ],
+        [
+          10,
+          8.5,
+          8.5
+        ]
+      ]
+    },
+    {
+      "name": "right10to20CutRoundedEnds",
+      "edges": [
+        [
+          3,
+          9.0,
+          9.0
+        ],
+        [
+          4,
+          9.0,
+          9.0
+        ],
+        [
+          9,
+          9.0,
+          9.0
+        ],
+        [
+          10,
+          9.0,
+          9.0
+        ]
+      ]
+    },
+    {
+      "name": "right15to25CutRoundedEnds",
+      "edges": [
+        [
+          3,
+          9.0,
+          9.0
+        ],
+        [
+          4,
+          9.0,
+          9.0
+        ],
+        [
+          9,
+          9.0,
+          9.0
+        ],
+        [
+          10,
+          9.0,
+          9.0
+        ]
+      ]
+    },
+    {
+      "name": "rightSixCutRoundedEnds",
+      "edges": [
+        [
+          6,
+          8.5,
+          8.5
+        ],
+        [
+          7,
+          8.5,
+          8.5
+        ],
+        [
+          11,
+          8.5,
+          8.5
+        ],
+        [
+          12,
+          8.5,
+          8.5
+        ]
+      ]
+    },
+    {
+      "name": "rightTwelveEightCutRoundedEnds",
+      "edges": [
+        [
+          3,
+          8.5,
+          8.5
+        ],
+        [
+          4,
+          8.5,
+          8.5
+        ],
+        [
+          9,
+          8.5,
+          8.5
+        ],
+        [
+          10,
+          8.5,
+          8.5
+        ]
+      ]
+    },
+    {
+      "name": "CentralTwentySixCutRoundedEnds",
+      "edges": [
+        [
+          3,
+          8.5,
+          8.5
+        ],
+        [
+          4,
+          8.5,
+          8.5
+        ],
+        [
+          9,
+          8.5,
+          8.5
+        ],
+        [
+          10,
+          8.5,
+          8.5
+        ]
+      ]
+    },
+    {
+      "name": "CentralThirtyTwentyFiveCutRoundedEnds",
+      "edges": [
+        [
+          3,
+          9.0,
+          9.0
+        ],
+        [
+          4,
+          9.0,
+          9.0
+        ],
+        [
+          9,
+          9.0,
+          9.0
+        ],
+        [
+          10,
+          9.0,
+          9.0
+        ]
+      ]
+    }
+  ]
+}

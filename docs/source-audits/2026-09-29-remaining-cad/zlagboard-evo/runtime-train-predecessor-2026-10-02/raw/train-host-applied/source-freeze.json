@@ -1,0 +1,27 @@
+{
+  "head": "2c0b74652bb82a83cf4596ad50f0e85b7fd09fe3",
+  "files": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "e186a896f012ee595690d78013dfef7816d5caf54a0bac7b699e1c20cdbfc872"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "86245095b857d1ae864672ca4f6d3dfacbd1f17390ac1dd5f7d1a0b909b19af0"
+    }
+  ],
+  "sourceAppliedBy": "root; this worker only verified and froze",
+  "recipeSHA256": "d55f5f555f4f823e055a8ec4112d4b70d923c61dc1ca07a849fd4869040c31cb"
+}

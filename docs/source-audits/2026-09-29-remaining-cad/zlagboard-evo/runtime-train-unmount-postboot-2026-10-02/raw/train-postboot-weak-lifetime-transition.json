@@ -1,0 +1,41 @@
+{
+  "arms": {
+    "control": {
+      "counts": {
+        "observations": 135,
+        "parentAlive": 135,
+        "sceneAlive": 135
+      },
+      "lastObservedAliveBeforeNil": null,
+      "firstObservedNil": null,
+      "allLaterNil": false
+    },
+    "unmount": {
+      "counts": {
+        "observations": 138,
+        "parentAlive": 2,
+        "sceneAlive": 2
+      },
+      "lastObservedAliveBeforeNil": {
+        "sequence": 11,
+        "epoch": 1790992273.7585459,
+        "event": "view-disappear",
+        "recordedParentID": "ObjectIdentifier(0x0000000117ad11c0)",
+        "recordedActualSceneID": "ObjectIdentifier(0x0000000106eccf00)",
+        "currentRootParentID": "nil",
+        "currentRootSceneID": "nil"
+      },
+      "firstObservedNil": {
+        "sequence": 15,
+        "epoch": 1790992274.258075,
+        "event": "highlight-before",
+        "recordedParentID": "nil",
+        "recordedActualSceneID": "nil",
+        "currentRootParentID": "nil",
+        "currentRootSceneID": "nil"
+      },
+      "allLaterNil": true
+    }
+  },
+  "limitation": "Weak-reference point observations only; no exact deallocation time or backing UIKit/GPU death measurement. Retained wrapper and detached root/camera stay alive."
+}

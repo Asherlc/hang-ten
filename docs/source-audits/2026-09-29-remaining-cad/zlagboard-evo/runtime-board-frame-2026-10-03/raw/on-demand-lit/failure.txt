@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/prep/capture.py", line 94, in <module>
+    target=anchor['monotonic']+offset;wait_until(target);name=f'elapsed-{offset:03d}s.png';run(['xcrun','simctl','io',UID,'screenshot',out/name],target=target);c=commands[-1]
+                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/prep/capture.py", line 49, in run
+    row['notLaunched']=True;write('commands.json',commands);raise AssertionError('Fixed screenshot deadline missed; no backfill')
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Fixed screenshot deadline missed; no backfill

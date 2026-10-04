@@ -1,0 +1,82 @@
+{
+  "notExecuted": true,
+  "targetArm": "hand-image-workout-live-a",
+  "sourceDirectory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control",
+  "adaptation": "Copy to new owned helper directory; replace only startup-full-color-control arm/path labels with hand-image-workout-live-a. Preserve all predicates, retained=False/action=False prestart settings and original reports. Do not run old comparison tied to different binary.",
+  "orderedCommands": [
+    "rtk proxy python3 <new-live-helper-dir>/check-cpu-semantics.py hand-image-workout-live-a-landscape",
+    "rtk proxy python3 <new-live-helper-dir>/check-frames.py hand-image-workout-live-a-landscape",
+    "rtk proxy python3 <new-live-helper-dir>/check-constructors.py hand-image-workout-live-a-landscape",
+    "rtk proxy python3 <new-live-helper-dir>/check-ownership.py",
+    "rtk proxy python3 <new-live-helper-dir>/check-navigation.py",
+    "rtk proxy python3 <new-live-helper-dir>/check-real-hands.py",
+    "rtk proxy python3 <new-live-helper-dir>/check-weak-hand-census.py",
+    "rtk proxy python3 <new-live-helper-dir>/check-sync-counters.py",
+    "rtk proxy python3 <new-live-helper-dir>/check-prestart-hands.py"
+  ],
+  "following": [
+    "Run path-adapted check-supplemental-timing.py on LIVE, retaining original prestart result whether pass/fail. Only its two exact known temporal qualifications may be accepted; unknown failures invalidate.",
+    "Run unchanged marker_correlations.audit with bound marker-schema.json. Require zero errors.",
+    "Require exactly12 captures, all starts within150ms, no missed/missing-initial-sequence artifact, following-preview tail, exact hashes and verified app cleanup.",
+    "Run branch protocol over retained complete trace and compare all12 recorded before/after branch proofs. Review all12 whole screenshots separately."
+  ],
+  "imageDifference": "Do not run LIVE attachment/prestart/supplemental validators as IMAGE gates. Preserve common board gates; use current image session/revision/stage/publication/PNG checks and no live hand makes. Manual fixed-cue visibility/pose judgement remains required.",
+  "sourceHelpers": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-navigation.py",
+      "sha256": "deda8bf3a760533892b428fce4f9810667eefcc1346a8585268adf1369235907"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-ownership.py",
+      "sha256": "2208c5c389d1bac54122d72a77500773a593742dddac3a260ac81f688fa5ced9"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-prestart-hands.py",
+      "sha256": "03f591bd6ed7a49fe6d53d6dd298dd4c8bcf7842f6e0485a875568d4045644a0"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-real-hands.py",
+      "sha256": "012acaef4cee2bc734bb7524da7a5186df02c7d130c27ed1b2ae0f877e23cc18"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-sync-counters.py",
+      "sha256": "850061ffc495b5c4cf786589f6cdf52880067a47c7d4779606f31e5fab48c650"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-weak-hand-census.py",
+      "sha256": "f0217e87e33c4ef3ea58315e27ea0cbcbffcece80ecdcab6f8393ba5d6ed7567"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/compare.py",
+      "sha256": "2a95246c411ddccfc8b2b5bd9803454fe3ca1a5b4a84971618ad39e88a2dcbbf"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/check-supplemental-timing.py",
+      "sha256": "ba62ecddd10c4515fd84cf0049fc96c6e2c16a7f139fccabfdc1d014baec37a0"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/marker_correlations.py",
+      "sha256": "edfdd6480f5054c53607cc5bdbf2420feb80cf606138698a55551bb1b023a0cc"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/marker-schema.json",
+      "sha256": "a4a9065f46d9a8f018dfd47ccf5a13c9d9c8eb4b6b22554e701e3fa678d23707"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/validate.py",
+      "sha256": "9d21e8b1498943c6d20d176d42defc709f34ff0b5d35bbb2415cc0e22b1f51b5"
+    }
+  ]
+}

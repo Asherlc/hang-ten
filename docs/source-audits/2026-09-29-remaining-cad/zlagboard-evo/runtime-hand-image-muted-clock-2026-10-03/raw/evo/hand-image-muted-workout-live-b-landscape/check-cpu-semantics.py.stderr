@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/validators/live/check-cpu-semantics.py", line 29, in <module>
+    assert all(checks.values())
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError

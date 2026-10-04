@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+    "-m",
+    "pytest",
+    "-q",
+    "Tools/HangboardCAD/tests/test_integration_dispatch.py",
+    "Tools/HangboardCAD/tests/test_native_pose_terminals.py",
+    "Tools/HangboardCAD/tests/test_native_cord_guides.py",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py"
+  ],
+  "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/test-overlay",
+  "exitCode": 2,
+  "durationSeconds": 0.29865691700251773,
+  "logSHA256": "9174d481ff40940d7ac71b526565726f1145e28883a5ba8b22fd054eacfdb942",
+  "scope": "scratch-only exact snapshot overlay, no installed package mutation or CAD re-export"
+}

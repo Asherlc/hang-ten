@@ -1,0 +1,27 @@
+{
+  "baseHEAD": "f7f1d87fc09452535b5ab6edd09b8916c6cb45c2",
+  "patchSHA256": "103c25dd368f4a819f6cd84f289d577e68154d5741d8e44090e81243a3b2c9e4",
+  "files": [
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "beforeSHA256": "b47b76a780061f291a2e32b888e00adfba6b1dcc6a157d5f73df36a5d1797f15",
+      "afterSHA256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "beforeSHA256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+      "afterSHA256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "beforeSHA256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221",
+      "afterSHA256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "beforeSHA256": "6f9fcd3da0677d79c411cf4cf053ae06a88b60f58f2b37522924f91570c3be25",
+      "afterSHA256": "eb00001d1215aa25f02f62e80340bc905203f0deecd730fbff02fd276fc638e6"
+    }
+  ],
+  "scope": "DEBUG diagnostic only; exactly Models+GripHand source changed; Root/BoardModelView snapshots unchanged."
+}

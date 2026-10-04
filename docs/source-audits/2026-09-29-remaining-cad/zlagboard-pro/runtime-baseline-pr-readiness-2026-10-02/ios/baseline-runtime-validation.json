@@ -1,0 +1,40 @@
+{
+  "recordedUTC": "2026-10-02T18:51:37.484706+00:00",
+  "baselineHead": "7a6867151307170dd0993a6d6492500d3fd46467",
+  "sourceProvenance": "source-head-before-build.json",
+  "codeParityBefore": "baseline-code-parity/mach-o-parity.json",
+  "codeParityAfter": "baseline-code-parity-after-captures/mach-o-parity.json",
+  "packageParity": "package-parity.json",
+  "proDirectSelectionCoverage": "captures/validation.json",
+  "proSelectedContacts": 28,
+  "proExpectedContacts": 28,
+  "defaultNote": "No explicit hold route defaults to selecting left top jug; default screenshot is not an inactive selection.",
+  "wholePhoneSelectionSheets": [
+    "review-montages/selections-1.png",
+    "review-montages/selections-2.png",
+    "review-montages/selections-3.png",
+    "review-montages/selections-4.png",
+    "review-montages/selections-5.png",
+    "review-montages/selections-6.png",
+    "review-montages/selections-7.png",
+    "review-montages/selections-8.png",
+    "review-montages/selections-9.png",
+    "review-montages/selections-10.png"
+  ],
+  "jugViews": [
+    "elevated-jugs-gentle/left-elevated.png",
+    "elevated-jugs-gentle/right-elevated.png"
+  ],
+  "lowerViews": [
+    "lower-edge-obliques/edge-15-left-elevated.png",
+    "lower-edge-obliques/edge-incut-15-left-elevated.png",
+    "lower-edge-obliques/edge-incut-10-center-elevated.png"
+  ],
+  "physicalProbes": "physical-probes/validation.json",
+  "proWorkout": "baseline-pro-workout-portrait/visual-review.json",
+  "evoWorkout": "baseline-evo-workout-landscape/visual-review.json",
+  "appWorkflowPassed": false,
+  "humanAccepted": false,
+  "resources": "Still owned and alive under lifecycle controller; explicit diagnostic handoff follows. Cleanup not performed.",
+  "baselineIntegrity": "Diagnostic source patch applied only after baseline build/install/parity; no later build/install during these baseline screenshots. Five installed Mach-O payloads verify baseline bytes."
+}

@@ -1,0 +1,38 @@
+{
+  "status": "PASS_READ_ONLY_STATIC_REVIEW",
+  "sourceReview": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/standalone-timing-independent-review/source-review.json",
+  "helpers": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/standalone-timing-capture.py",
+      "sha256": "0b59bcbe6798a965f97e136b8d506200464fb7dded53a4487b9bcd064ed36af9",
+      "frozenCopyExact": true,
+      "pythonASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-standalone-timing.py",
+      "sha256": "db13d8b8b0d378d654f95481059c3b0c97126e754aa89fc33878b063d9f856c4",
+      "frozenCopyExact": true,
+      "pythonASTPassed": true
+    }
+  ],
+  "checks": {
+    "emittedDurationTableConsumedAndExactShortLongValidated": true,
+    "allInheritedReviewEnvironmentScrubbed": true,
+    "driverEFixedViewportNoSamplerCounterHandsOrExtraHostsRequested": true,
+    "twentyCapturesPhaseBoundedWithRawFailuresRetained": true,
+    "twentyActualBeforeAfterMaterialBracketsRequired": true,
+    "fortySparseSnapshotsRequired": true,
+    "exactlyOnePublicARViewAndMatchingFixedPlacementRequired": true,
+    "fourSemanticTransitionsAndPhaseBoundsRequired": true,
+    "completionAndObservationEndAfterLastCaptureRequired": true,
+    "completeContiguousRawJSONLRequired": true,
+    "legacySourceBehaviorPreservedBySourceReview": true
+  },
+  "limitations": [
+    "Static review only; no build, Simulator operation, screenshot or runtime success claimed.",
+    "Sparse snapshots do not observe the middle of the 180-second rest continuously.",
+    "Long arm has 172 seconds greater process age; it cannot isolate a sleep mechanism.",
+    "Visual correctness remains a separate whole-image review; CPU material brackets do not prove rendered color."
+  ],
+  "reviewedRefinement": "Validator now counts all public RealityKit.ARView records at each of 40 snapshots, in addition to exactly one matching board host."
+}

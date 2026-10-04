@@ -1,0 +1,14 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "pytest",
+    "Tools/HangboardPackages/tests/test_remove_primary_backdrops.py",
+    "-q",
+    "-k",
+    "test_model_only_packages_exclude_raster_backdrop_inputs or test_enclosed_background_seeds_have_live_raster_inputs"
+  ],
+  "exitCode": 0,
+  "duration": 0.20215392112731934,
+  "imageProcessingExecuted": false
+}

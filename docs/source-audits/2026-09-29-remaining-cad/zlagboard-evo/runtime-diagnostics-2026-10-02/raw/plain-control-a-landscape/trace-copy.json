@@ -1,0 +1,13 @@
+[
+  {
+    "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/AA2FB860-2F5A-4884-AE77-FF219A629670/Documents/HighlightDiagnostic-placid-badger-cad-second-half-plain-control-a/events-D6232F83-F4A2-4D42-BCE8-FAD504DABADE.jsonl",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/plain-control-a-landscape/events-D6232F83-F4A2-4D42-BCE8-FAD504DABADE.jsonl",
+    "sha256": "000c8d97124139c7d6b2477d2fe260090f717e7f4aa454f79f510f390f69ecc6",
+    "copyEpoch": 1790969608.110353,
+    "records": 102,
+    "newlineComplete": true,
+    "allComplete": true,
+    "contiguousSequences": true,
+    "limitReached": false
+  }
+]

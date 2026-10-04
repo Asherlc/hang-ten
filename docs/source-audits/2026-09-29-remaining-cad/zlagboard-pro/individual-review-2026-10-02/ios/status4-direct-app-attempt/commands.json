@@ -1,0 +1,95 @@
+[
+  {
+    "label": "launch-services",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "spawn",
+      "F96B758F-638C-4C74-8732-08ACB950A84F",
+      "launchctl",
+      "print",
+      "system"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.3780059814453125
+  },
+  {
+    "label": "install",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "install",
+      "F96B758F-638C-4C74-8732-08ACB950A84F",
+      ".context/placid-badger-cad-second-half/zlagboard-pro/ios-26-5-2026-10-02/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 4.126442909240723
+  },
+  {
+    "label": "launch",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "F96B758F-638C-4C74-8732-08ACB950A84F",
+      "com.hangten.training"
+    ],
+    "exitStatus": null,
+    "timedOut": true,
+    "elapsedSeconds": 40.00987482070923
+  },
+  {
+    "label": "frontend",
+    "command": [
+      "rtk",
+      "proxy",
+      "open",
+      "-a",
+      "Simulator",
+      "--args",
+      "-CurrentDeviceUDID",
+      "F96B758F-638C-4C74-8732-08ACB950A84F"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.10766315460205078
+  },
+  {
+    "label": "screenshot",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "F96B758F-638C-4C74-8732-08ACB950A84F",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/zlagboard-pro/ios-26-5-2026-10-02/status4-direct-app-attempt/view.png"
+    ],
+    "exitStatus": null,
+    "timedOut": true,
+    "elapsedSeconds": 40.00975298881531
+  },
+  {
+    "label": "accessibility",
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "F96B758F-638C-4C74-8732-08ACB950A84F"
+    ],
+    "exitStatus": 1,
+    "timedOut": false,
+    "elapsedSeconds": 3.2123892307281494
+  }
+]

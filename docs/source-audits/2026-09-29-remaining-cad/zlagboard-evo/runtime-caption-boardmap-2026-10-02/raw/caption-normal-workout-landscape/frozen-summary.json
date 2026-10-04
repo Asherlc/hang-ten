@@ -1,0 +1,314 @@
+{
+  "frozen": true,
+  "finalTraceRecords": 155,
+  "samplerEnded": true,
+  "codeParity": [
+    {
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/4EB4D31F-E381-4DFA-A37E-54A147523821/HangTen.app/__preview.dylib",
+      "expectedSHA256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1",
+      "actualSHA256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1"
+    },
+    {
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/4EB4D31F-E381-4DFA-A37E-54A147523821/HangTen.app/HangTen",
+      "expectedSHA256": "2a6f26aa6b91ff5aff75a4fb312c8eca79c0c2b33aa28db14b9df0ae6be20ffc",
+      "actualSHA256": "2a6f26aa6b91ff5aff75a4fb312c8eca79c0c2b33aa28db14b9df0ae6be20ffc"
+    },
+    {
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/4EB4D31F-E381-4DFA-A37E-54A147523821/HangTen.app/HangTen.debug.dylib",
+      "expectedSHA256": "57b71dd01b35fb95de9519f85dde8c5232655788baeffe32deb982bd68640267",
+      "actualSHA256": "57b71dd01b35fb95de9519f85dde8c5232655788baeffe32deb982bd68640267"
+    },
+    {
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/4EB4D31F-E381-4DFA-A37E-54A147523821/HangTen.app/Frameworks/Sentry.framework/Sentry",
+      "expectedSHA256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7",
+      "actualSHA256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7"
+    },
+    {
+      "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/4EB4D31F-E381-4DFA-A37E-54A147523821/HangTen.app/Frameworks/AmplitudeCore.framework/AmplitudeCore",
+      "expectedSHA256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+      "actualSHA256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503"
+    }
+  ],
+  "sourceStillExact": true,
+  "normalWorkoutPassed": false,
+  "criticalCPUDisagreement": {
+    "image": "next-active-timed-2.png",
+    "visible": "BLUE at Hang00:05",
+    "CPU": "active red in same scene before and after screenshot",
+    "bracketRecords": [
+      42,
+      44
+    ],
+    "secondsAfterActiveMutation": 2.9968769550323486
+  },
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/000-stdout.txt",
+      "sha256": "b60a4b1f412b79ab61fec46acfb9ad051498bf685db77726a3a0db9ea0f5967a"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/001-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/002-stdout.txt",
+      "sha256": "ee797d18d385b2f254120f40ce75e8adea11c2e2e28c2d5b66b28b2e0f6e072f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/003-stdout.txt",
+      "sha256": "a271a4d575274c4c7c05133ad42d82ba826ae22de37b98d50943d69c1017e206"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/004-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/004-stdout.txt",
+      "sha256": "0d2844b1cc7b59c7e79621cc9c1449a8c2a44e5efe913cfff34c295da8bfa770"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/005-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/005-stdout.txt",
+      "sha256": "e8c795f23eeb5ecaf420b5bd5bdcca4d6ef87759c2296368efd130255f0d74fe"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/006-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/006-stdout.txt",
+      "sha256": "cb850cfbcdcac316a5be0f282294904d7658e55814a3b8b8faac86199a6f797a"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/007-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/007-stdout.txt",
+      "sha256": "d6cddc4543162344f5680f3960b84f287ee1840b9a104e24a675a45aacee43e4"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/008-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/008-stdout.txt",
+      "sha256": "ea02bfd19ad7caca611edf44d4f4718f86af82585c1b1478ec6dcf0a3ca5ec62"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/009-stderr.txt",
+      "sha256": "e2d827d0e45147e66a00b30332056327ffe17c6e6b576718d202263132c10b14"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/009-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/010-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/010-stdout.txt",
+      "sha256": "23c09f3f1cbc7316403fe6abe4a3576571ba32e0a76d102c574093ceaabb70a9"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/011-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/011-stdout.txt",
+      "sha256": "130608751c6dcef32158e1519ddd8abcc1139e238e4d3d8411181185070406e5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/012-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/012-stdout.txt",
+      "sha256": "d223c8575398db6920f9efdf6c56157f7fc48401d65e09a388184746769fd953"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/013-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/013-stdout.txt",
+      "sha256": "c0c03e74c9552c7a45d7b5f2e6d6c37aeaccc7ba36c3bbb415afd0daea99891b"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/014-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/014-stdout.txt",
+      "sha256": "3fd290a3d986c16ee79a0cae4f1e44bdf0387518e3b1c18838094baf8413f0dc"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/015-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/015-stdout.txt",
+      "sha256": "0f25c3918ed4093b39c039e769f0b52d42404d4ae27920d067e41f9d21e8de10"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/016-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/016-stdout.txt",
+      "sha256": "86d906d393bf3a7c8730992cca350802a5f372ea5fe966ce7d5e285211f1fe51"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/017-stderr.txt",
+      "sha256": "44d7bad1d91b16d2c41136e09e85fe065e058fa01daf5f0e33c1dd8e84522273"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/017-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/018-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/018-stdout.txt",
+      "sha256": "2a6ca68f69b91178b8258c17927990a4d8cd042c603f623e3831aad9ec84be5d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/019-stderr.txt",
+      "sha256": "d872a4b22f7442a243ce982fc61bb62dba65e1c111e63c5e251c2b2e79d0be4e"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/019-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/020-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/020-stdout.txt",
+      "sha256": "e5c3cfe078f683b2dd1b375b17e0a844e2e5414be83e39b5393570eb7907c0b1"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/021-stderr.txt",
+      "sha256": "539f3cc99775e95d3173a844b0b4c4a6c8a4fcd2c7fa5ad2f80762f19635f022"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/021-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/022-stderr.txt",
+      "sha256": "5460d534ac01f8a37057525309a6c936d51c5f70c2b3d43276646cfab992ebd6"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/022-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/023-stderr.txt",
+      "sha256": "908734d8e7e20ce9bf8f9bc9b3713d730527605150f5f9d14a06bfceb9d9b2ef"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/023-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/active-settled-ax.json",
+      "sha256": "7ddf47239377b8ca1e4435db0394dc0147f85fae3b5dcf419af4e052a94e5473"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/active-settled.png",
+      "sha256": "12e918c6190d82bc332fb3a57eefd9ee3ac9fb0539e38dc03e39870a3951153f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/complete-trace/events-6687B648-CAF3-4912-ADFC-30621807CF2B.jsonl",
+      "sha256": "b4bb16e355b8b6a1b57be5fdbc2d64d27d3f17b78e6895ed41bb9ae30c78f61c"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/complete-trace/trace-copy.json",
+      "sha256": "b38b5061d625d2563b20a7791678aa7695e8236731b3078bc6565d5f44e7b2e8"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/events-6687B648-CAF3-4912-ADFC-30621807CF2B.jsonl",
+      "sha256": "cb44bcfd3e31afd779ad87867c094759c5af54504edff708cd4e64cc34938b14"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/following-rest-ax.json",
+      "sha256": "7aa9c7543f373a675bb6dadada88c98bf124189fecbe3ee7b943a5930c629842"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/following-rest-settled-ax.json",
+      "sha256": "73e2591a2c5ba0e1844c8bbe3be9ce95177cd761ff1dbf80928104823c5d8250"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/following-rest-settled.png",
+      "sha256": "a875000ec1c3d8b569060cef233c365ca6c63d980d0fd924979608d401267388"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/following-rest.png",
+      "sha256": "14e7a4f09ecc7870155e58747f5784d8d99fac8e84d40fcd911c255532b6a523"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/launch-review-environment.json",
+      "sha256": "7d8dca19deaf6b52693c9ca681ce3dca651875601cd9404c5f9d745d4c1c3c27"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/next-active-timed-0.png",
+      "sha256": "dc0821a4506d380a4697ddc317ea024c4d81618fa36de1f452bcf413c12837f7"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/next-active-timed-1.png",
+      "sha256": "16bbfe5b3839e6ea2b21df7867df19b39bdde8c3c244e0821a41e55f9dc0fa58"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/next-active-timed-2.png",
+      "sha256": "2e0cc983ca6fdbedf33517bfbd7015d50c79311135934937c7880ebb13a6f3b0"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/normal-workout-correspondence.json",
+      "sha256": "4e115dcbbf4399c2b4c8ce599a56ab030e62bc66356a198e69fe37db21f720a3"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/root-visual-review.json",
+      "sha256": "00edfa392c6a8fd9e2129b3993f4e52b387e6bab1da8bad61750fa2573b61ae5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/trace-container.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/trace-container.stdout",
+      "sha256": "b5165d689de054a59b28ace69f831205f5a1a0f8285e6cae0e3f8d46e3377848"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/trace-copy.json",
+      "sha256": "7ff2f7b2adb82c93bcc749cc6491d923df66156c6a13114b8b3b1b5e44005992"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/validation.json",
+      "sha256": "daa46fa498716910966c7f303832ef71d4ceae499561834a463a1b2e00517bed"
+    }
+  ]
+}

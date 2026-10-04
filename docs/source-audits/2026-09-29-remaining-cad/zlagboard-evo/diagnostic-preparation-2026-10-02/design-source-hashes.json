@@ -1,0 +1,13 @@
+{
+  "sourceEdits": false,
+  "compiledOrRun": false,
+  "files": {
+    "HangTen/HangTenApp.swift": "ce691d0d9a5360452f3704a64918f5a6af6c20d2608450aa532bf346bd101efd",
+    "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTen/Views/RootView.swift": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "HangTen/Models/DeepLinkManager.swift": "e56a93e0908cce433dbdbe2f49f3e75bfdda600f94118806020d51117a2fe030",
+    "HangTen/Views/TrainView.swift": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+    "HangTen/Views/BoardMapView.swift": "911fba863c2b7dbc66a48c9c70937fb47ecd422e83e761751e662d756aac6b95"
+  }
+}

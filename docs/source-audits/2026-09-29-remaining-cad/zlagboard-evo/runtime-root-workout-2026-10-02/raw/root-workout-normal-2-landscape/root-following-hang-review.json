@@ -1,0 +1,43 @@
+{
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-normal-2-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "8d25b23b97c30cfd01fd945431b4a5cea999fb36f58c7c4bc9031620207eee17",
+      "wholeImageViewed": true,
+      "observedColor": "blue",
+      "expectedColor": "red",
+      "timer": "00:07",
+      "PauseVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-normal-2-landscape/phase-2-active-plus-1.png",
+      "sha256": "6806ee0b4b98b43655ad0ad4d5fddbd3fc87b019b838331c64cde1331fee4602",
+      "wholeImageViewed": true,
+      "observedColor": "blue",
+      "expectedColor": "red",
+      "timer": "00:06",
+      "PauseVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-normal-2-landscape/phase-2-active-plus-3.png",
+      "sha256": "78cc44814e9a19de371155545e687dab82f19b59ecd8b13e9d9979ca00fca0fb",
+      "wholeImageViewed": true,
+      "observedColor": "blue",
+      "expectedColor": "red",
+      "timer": "00:04",
+      "PauseVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-normal-2-landscape/phase-2-active-plus-5.png",
+      "sha256": "67ae3730d936cd8e150128749f9bcc743988bba99f75f7ad8b32f948bf18823b",
+      "wholeImageViewed": true,
+      "observedColor": "blue",
+      "expectedColor": "red",
+      "timer": "00:02",
+      "PauseVisible": true
+    }
+  ],
+  "combinedWith": "root-initial-rest-review.json",
+  "wholeSequencePass": false,
+  "meaning": "MatchednormalnextHangstale throughoutfourcaptures;directrootpass implicatesremovedcontextasbundle, notsinglecause"
+}

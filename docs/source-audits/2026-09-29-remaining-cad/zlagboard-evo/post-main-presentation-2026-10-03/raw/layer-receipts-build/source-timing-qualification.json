@@ -1,0 +1,4 @@
+{
+  "status": "NOT_RELEASED",
+  "reason": "Root added window diagnostic while build process remained active; no guarantee this built binary contains final source. Raw build/install/parity retained, fresh final-source rebuild required."
+}

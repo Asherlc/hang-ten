@@ -1,0 +1,33 @@
+{
+  "devices" : {
+    "com.apple.CoreSimulator.SimRuntime.iOS-26-4" : [
+
+    ],
+    "com.apple.CoreSimulator.SimRuntime.watchOS-26-4" : [
+
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-26-3" : [
+
+    ],
+    "com.apple.CoreSimulator.SimRuntime.watchOS-26-2" : [
+
+    ],
+    "com.apple.CoreSimulator.SimRuntime.watchOS-26-5" : [
+
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-26-5" : [
+      {
+        "dataPath" : "\/Users\/asherlc\/Library\/Developer\/CoreSimulator\/Devices\/BDCA0D77-94C2-4A97-900B-443F75C64691\/data",
+        "dataPathSize" : 3881414656,
+        "logPath" : "\/Users\/asherlc\/Library\/Logs\/CoreSimulator\/BDCA0D77-94C2-4A97-900B-443F75C64691",
+        "udid" : "BDCA0D77-94C2-4A97-900B-443F75C64691",
+        "lastUsedAt" : "2026-10-03T01:46:09Z",
+        "isAvailable" : true,
+        "logPathSize" : 458752,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "state" : "Booted",
+        "name" : "Hang Ten Paseo placid-badger-cad-second-half Review Pro MigrationDiagnosis20261002 96137"
+      }
+    ]
+  }
+}

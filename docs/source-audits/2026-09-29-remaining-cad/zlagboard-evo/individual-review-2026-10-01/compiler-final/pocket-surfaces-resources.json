@@ -1,0 +1,14 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "stage": "pocket-surfaces",
+  "exactTemporaryDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/compiler-final/temporary-placid-badger-cad-second-half-pocket-surfaces",
+  "childPID": 96521,
+  "created": true,
+  "command": [
+    "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/compiler-final/compare_pocket_surfaces.py"
+  ],
+  "sourceSHA256Before": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+  "verifiedTemporaryDirectoryDeleted": true,
+  "childExited": true
+}

@@ -1,0 +1,16 @@
+{
+  "checks": {
+    "oneMakeWholeRun": true,
+    "oneScene": true,
+    "oneView": true,
+    "stableViewportDuringMeasurement": true,
+    "appActiveDuringMeasurement": true,
+    "windowActiveDuringMeasurement": true,
+    "noSamples": true,
+    "noCounter": true,
+    "scriptComplete": true
+  },
+  "scope": "Measurement after scheduled base epoch, following load/viewport/app readiness",
+  "priorCheckCorrection": "validity.json mistakenly included pre-readiness appear (applicationState1) and initial highlights before first viewport capture. Retained as failed overly broad check. These records precede schedule.",
+  "baseEpoch": 1790972673.6302195
+}

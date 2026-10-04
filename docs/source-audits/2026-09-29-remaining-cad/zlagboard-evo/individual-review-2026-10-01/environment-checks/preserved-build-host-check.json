@@ -1,0 +1,69 @@
+{
+  "atUTC": "2026-10-02T03:11:10.561053+00:00",
+  "app": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-recovery/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app",
+  "plist": {
+    "CFBundleIdentifier": "com.hangten.training",
+    "CFBundleExecutable": "HangTen",
+    "CFBundleSupportedPlatforms": [
+      "iPhoneSimulator"
+    ],
+    "MinimumOSVersion": "18.0",
+    "DTPlatformName": "iphonesimulator",
+    "DTSDKName": "iphonesimulator27.0"
+  },
+  "commands": {
+    "app-size": {
+      "command": [
+        "du",
+        "-sh",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-recovery/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app"
+      ],
+      "exitCode": 0,
+      "stdout": "130M\t.context/placid-badger-cad-second-half/zlagboard-evo/ios-recovery/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app\n",
+      "stderr": ""
+    },
+    "app-signature": {
+      "command": [
+        "codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-recovery/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-recovery/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app: valid on disk\n.context/placid-badger-cad-second-half/zlagboard-evo/ios-recovery/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app: satisfies its Designated Requirement\n"
+    },
+    "app-signature-details": {
+      "command": [
+        "codesign",
+        "-dvvv",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-recovery/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Executable=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-recovery/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/HangTen\nIdentifier=com.hangten.training\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20400 size=429 flags=0x2(adhoc) hashes=3+7 location=embedded\nHash type=sha256 size=32\nCandidateCDHash sha256=cfc71e5634dc44f11d6f6ccea5be347f25206c0c\nCandidateCDHashFull sha256=cfc71e5634dc44f11d6f6ccea5be347f25206c0cfacff3ef74f3183c96edc636\nHash choices=sha256\nCMSDigest=cfc71e5634dc44f11d6f6ccea5be347f25206c0cfacff3ef74f3183c96edc636\nCMSDigestType=2\nCDHash=cfc71e5634dc44f11d6f6ccea5be347f25206c0c\nSignature=adhoc\nInfo.plist entries=37\nTeamIdentifier=not set\nSealed Resources version=2 rules=10 files=287\nInternal requirements count=0 size=12\nTotal signatures=1\nChosen signature=1\n"
+    },
+    "app-binary": {
+      "command": [
+        "file",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-recovery/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/HangTen"
+      ],
+      "exitCode": 0,
+      "stdout": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-recovery/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/HangTen: Mach-O 64-bit executable arm64\n",
+      "stderr": ""
+    },
+    "host-disk-current": {
+      "command": [
+        "df",
+        "-h",
+        "/System/Volumes/Data"
+      ],
+      "exitCode": 0,
+      "stdout": "Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on\n/dev/disk3s1   926Gi   863Gi    23Gi    98%     25M  240M    9%   /System/Volumes/Data\n",
+      "stderr": ""
+    }
+  },
+  "binarySHA256": "e09469a43dbee78ca72aac5cb653774185e64f3effb5d18e99f67cd9967b63bb"
+}

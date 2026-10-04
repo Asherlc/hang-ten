@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "resourceName": "placid-badger-cad-second-half-train-only-control-a-idle-sleep-assertion",
+  "pid": 47940,
+  "parentPID": 47937,
+  "command": [
+    "placid-badger-cad-second-half-train-only-control-a-idle-sleep-assertion",
+    "-i",
+    "-w",
+    "47937",
+    "-t",
+    "300"
+  ],
+  "executable": "/usr/bin/caffeinate",
+  "registeredImmediately": true
+}

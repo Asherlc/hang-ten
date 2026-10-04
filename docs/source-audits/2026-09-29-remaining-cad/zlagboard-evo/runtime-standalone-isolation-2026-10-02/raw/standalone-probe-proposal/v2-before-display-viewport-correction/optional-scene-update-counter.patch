@@ -1,0 +1,76 @@
+--- a/HangTen/Models/BoardModelRealityTypes.swift
++++ b/HangTen/Models/BoardModelRealityTypes.swift
+@@ -1,4 +1,7 @@
+ import Foundation
++#if DEBUG
++import Combine
++#endif
+ import RealityKit
+ import Metal
+ import SwiftUI
+@@ -1421,6 +1424,8 @@
+     private var standaloneViewToken: UUID?
+     private var standaloneViewport: CGSize = .zero
+     private var standaloneViewportChanged: TimeInterval = 0
++    private var standaloneCounter: BoardDiagnosticUpdateCounter?
++    private var standaloneSubscription: (any Cancellable)?
+ 
+     private init() {
+         let env = ProcessInfo.processInfo.environment
+@@ -1482,6 +1487,14 @@
+     }
+ 
+     func standaloneSchedule(baseUptime: TimeInterval, viewport: CGSize) {
++        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SCENE_UPDATE_COUNTER"] == "1",
++           let actualScene = standaloneScene?.root.scene {
++            let counter = BoardDiagnosticUpdateCounter()
++            standaloneCounter = counter
++            standaloneSubscription = actualScene.subscribe(to: SceneEvents.Update.self) { [weak counter] _ in
++                counter?.increment()
++            }
++        }
+         emit(["event": "standalone-schedule", "baseUptime": baseUptime,
+               "baseEpoch": Date().timeIntervalSince1970 + baseUptime - ProcessInfo.processInfo.systemUptime,
+               "phases": ["clear", "active", "preview", "active", "preview"],
+@@ -1498,6 +1511,9 @@
+ 
+     func finishStandaloneObservation() {
+         standaloneSnapshot("standalone-observation-end")
++        standaloneSubscription?.cancel()
++        standaloneSubscription = nil
++        standaloneCounter = nil
+     }
+ 
+     func harnessEvent(_ event: String, state: String, viewport: CGSize) {
+@@ -1638,6 +1654,9 @@
+             "rootAttached": scene.root.scene != nil, "rootEnabled": scene.root.isEnabled,
+             "rootTransform": matrix(scene.root), "cameraTransform": matrix(scene.camera),
+             "surfaces": surfaces]
++        if let standaloneCounter, scene === standaloneScene {
++            row["sceneUpdateCount"] = standaloneCounter.value
++        }
+         if let viewport = viewports[key] {
+             row["viewportPoints"] = [Double(viewport.width), Double(viewport.height)]
+         }
+@@ -1714,6 +1733,7 @@
+     func disappear(view: UUID, scene: BoardModelRealityScene) {
+         guard enabled else { return }
+         capture("view-disappear", scene: scene, view: view)
++        if scene === standaloneScene, view == standaloneViewToken { finishStandaloneObservation() }
+         let key = ViewSceneKey(scene: scene.diagnosticLifecycleToken, view: view)
+         samplers.removeValue(forKey: key)?.cancel()
+         if let restore = visibilityRestores.removeValue(forKey: scene.diagnosticLifecycleToken) {
+@@ -1725,3 +1745,13 @@
+     }
+ }
+ #endif
++
++#if DEBUG
++/// No SwiftUI observations, per-frame I/O, scene ownership or rendering mutation.
++private final class BoardDiagnosticUpdateCounter: @unchecked Sendable {
++    private let lock = NSLock()
++    private var count: UInt64 = 0
++    func increment() { lock.lock(); count &+= 1; lock.unlock() }
++    var value: UInt64 { lock.lock(); defer { lock.unlock() }; return count }
++}
++#endif

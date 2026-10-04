@@ -1,0 +1,40 @@
+{
+  "applied": false,
+  "typechecked": false,
+  "checks": [
+    {
+      "argv": [
+        "git",
+        "apply",
+        "--check",
+        ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/minimal-real-workout-diagnostic.patch"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "xcrun",
+        "swiftc",
+        "-frontend",
+        "-parse",
+        "-D",
+        "DEBUG",
+        ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/proposal/HangTen/Models/BoardModelRealityTypes.swift",
+        ".context/placid-badger-cad-second-half/runtime-resume-2026-10-02/renderer-review/proposal/HangTen/Views/BoardModelView.swift"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "sourceSHA256": {
+        "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+        "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8"
+      },
+      "sourcesStillExact": true
+    }
+  ],
+  "patchSHA256": "401b1084a5f8a072a5ca00f17e5f570adf3725d5140ce3875d28d2fdd76c59f6"
+}

@@ -1,0 +1,117 @@
+[
+  {
+    "name": "host-boot",
+    "command": [
+      "rtk",
+      "proxy",
+      "sysctl",
+      "kern.boottime"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.009534835815429688
+  },
+  {
+    "name": "clock",
+    "command": [
+      "rtk",
+      "proxy",
+      "date",
+      "-u"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.010283946990966797
+  },
+  {
+    "name": "disk",
+    "command": [
+      "rtk",
+      "proxy",
+      "df",
+      "-h",
+      "."
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.00946187973022461
+  },
+  {
+    "name": "macos",
+    "command": [
+      "rtk",
+      "proxy",
+      "sw_vers"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.014297008514404297
+  },
+  {
+    "name": "xcode",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcodebuild",
+      "-version"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.07408595085144043
+  },
+  {
+    "name": "developer-path",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcode-select",
+      "-p"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.010330915451049805
+  },
+  {
+    "name": "runtimes",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "list",
+      "runtimes",
+      "--json"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.15130281448364258
+  },
+  {
+    "name": "devices",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "list",
+      "devices",
+      "--json"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.17093300819396973
+  },
+  {
+    "name": "coresimulator-service-identity",
+    "command": [
+      "rtk",
+      "proxy",
+      "pgrep",
+      "-x",
+      "com.apple.CoreSimulator.CoreSimulatorService"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.033364057540893555
+  }
+]

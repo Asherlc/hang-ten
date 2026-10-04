@@ -1,0 +1,76 @@
+{
+  "boardID": "zlagboard.evo",
+  "owner": "placid-badger-cad-second-half",
+  "status": "blocked before fresh build: first boot exceeded 480 seconds after authorized shared service restart",
+  "humanAcceptance": "pending user reply; fresh app validation incomplete",
+  "simulator": {
+    "uuid": "71029F02-AF9E-46C2-920B-394C8837ECF2",
+    "device": "iPhone 17 Pro",
+    "runtime": "iOS26.5"
+  },
+  "packageSHA256": {
+    "Hangboards/zlagboard-evo/zlagboard-evo.FCStd": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+    "Hangboards/zlagboard-evo/assets/primary.usdz": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "Hangboards/zlagboard-evo/assets/primary.model.json": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe"
+  },
+  "packageBytesUnchanged": true,
+  "authorizationAndSharedRestart": {
+    "performedBy": "root agent, not validation worker",
+    "scratchRelativeEvidence": "../service-restart-2026-10-02/restart.json",
+    "scope": "User-authorized shared Simulator service restart completed before this isolated device was created."
+  },
+  "firstBoot": {
+    "boundedSeconds": 480,
+    "rawCommand": "bootstatus-command.json",
+    "rawLog": "bootstatus.log",
+    "timeout": "boot-timeout.json",
+    "rawExitStatus": "bootstatus-exit-status.txt",
+    "observedStage": "Status=2 / AddressBookLegacy migration remained active at timeout",
+    "interpretation": "Bounded startup timeout; does not prove first boot could never complete."
+  },
+  "independentReadiness": {
+    "rawCommands": "independent-readiness.json",
+    "launchServices": "launch-services-stdout.txt",
+    "earlyScreen": "readiness-screen.png",
+    "lateScreen": "late-readiness-screen.png",
+    "lateScreenCommand": "late-readiness-screen-command.json",
+    "visualFinding": "Worker inspected both whole screenshots. They show Apple boot progress, not a ready home screen, permission dialog or app. launchctl print system succeeds but does not establish UI readiness."
+  },
+  "diagnosis": {
+    "scratchRelativeEvidence": "../service-restart-2026-10-02/diagnosis/diagnosis-summary.json",
+    "finding": "Separate read-only worker retained migration and Contacts symptoms; no proven cause or supported narrow fix. No migration database or daemon manipulation occurred."
+  },
+  "thisAttempt": {
+    "freshBuild": "not started; boot gate not met",
+    "focusedTests": "not started; zero test methods ran",
+    "install": "not started",
+    "launch": "not started",
+    "contactSelections": 0,
+    "orbits": 0,
+    "physicalPickingAndReset": "not run",
+    "workout": "not run",
+    "installedPackageParity": "not run"
+  },
+  "historicalEvidence": {
+    "scratchRelativeAggregate": "../runtime-evidence/final-runtime-validation.json",
+    "preservation": "Prior evidence packet remains unchanged. Its fresh build pass and raw canceled test failure are historical, not a successful run after the service restart."
+  },
+  "cleanup": {
+    "status": "verified passed",
+    "ownership": "ownership.json",
+    "verification": "cleanup-verification.json",
+    "observation": {
+      "uuid": "71029F02-AF9E-46C2-920B-394C8837ECF2",
+      "simulatorDeleted": true,
+      "derivedDataDeleted": true,
+      "resultBundleDeleted": true,
+      "testResultBundleDeleted": true
+    }
+  },
+  "limits": [
+    "No new runtime validation or human acceptance is claimed.",
+    "No further devices or shared service changes were attempted after this bounded run.",
+    "Native comparison and compiler proofs do not substitute for the required app review."
+  ],
+  "pathConvention": "Paths within this directory are portable. scratchRelativeEvidence and scratchRelativeAggregate identify separate retained sibling scratch packets; root determines their final documentation locations."
+}

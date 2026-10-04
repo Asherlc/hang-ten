@@ -1,0 +1,37 @@
+[
+  {
+    "name": "service-process",
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "26430",
+      "-o",
+      "pid=,ppid=,user=,lstart=,etime=,comm="
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.010458946228027344
+  },
+  {
+    "name": "owned-failure-hostlog",
+    "command": [
+      "rtk",
+      "proxy",
+      "/usr/bin/log",
+      "show",
+      "--start",
+      "2026-10-02 06:40:00",
+      "--end",
+      "2026-10-02 07:13:00",
+      "--style",
+      "compact",
+      "--predicate",
+      "eventMessage CONTAINS \"9B0B559E-0E57-4C3F-9685-E5892BC41E30\" OR eventMessage CONTAINS \"F96B758F-638C-4C74-8732-08ACB950A84F\""
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 6.2365639209747314
+  }
+]

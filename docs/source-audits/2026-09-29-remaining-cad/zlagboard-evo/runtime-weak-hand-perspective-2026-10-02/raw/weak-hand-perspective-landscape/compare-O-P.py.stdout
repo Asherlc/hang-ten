@@ -1,0 +1,10 @@
+{
+  "sameObservedHandConstructorMakePath": true,
+  "sameRecordedHandCameraTransforms": true,
+  "sameCensusBinary": true,
+  "onlyPerspectiveGateAndRunIDEnvironmentDifference": true,
+  "sameNormalFrameEndpoints": true,
+  "sameResolvedWorkoutInputs": true,
+  "sameRootCameraTransformSets": true,
+  "sameConstructorAndMakeCounts": true
+}

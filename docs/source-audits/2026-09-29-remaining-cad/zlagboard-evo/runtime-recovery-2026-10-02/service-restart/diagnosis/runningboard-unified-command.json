@@ -1,0 +1,18 @@
+{
+  "atUTC": "2026-10-02T04:12:55.544253+00:00",
+  "command": [
+    "xcrun",
+    "simctl",
+    "spawn",
+    "71029F02-AF9E-46C2-920B-394C8837ECF2",
+    "log",
+    "show",
+    "--last",
+    "3m",
+    "--style",
+    "compact",
+    "--predicate",
+    "process == \"runningboardd\" AND (messageType == 16 OR messageType == 17 OR eventMessage CONTAINS[c] \"12425\" OR eventMessage CONTAINS[c] \"11817\")"
+  ],
+  "exitCode": 0
+}

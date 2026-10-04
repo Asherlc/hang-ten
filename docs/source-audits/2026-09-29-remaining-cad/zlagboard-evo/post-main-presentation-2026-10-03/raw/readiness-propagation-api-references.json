@@ -1,0 +1,13 @@
+{
+  "sources": [
+    {
+      "url": "https://developer.apple.com/documentation/swiftui/view/transformpreference(_:_:)",
+      "supports": "Transform existing preference values rather than replace descendant report."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/realitykit/realityview/init(make:update:placeholder:)",
+      "supports": "Make configures initial content asynchronously; update follows view state changes, not guaranteed post-attachment delivery."
+    }
+  ],
+  "limits": "Current make/sync milestone is CPU setup only. Initial stall does not identify either issue as sole cause; actual workflow remains pending."
+}

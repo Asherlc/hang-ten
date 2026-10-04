@@ -1,0 +1,33 @@
+{
+  "patchSHA256": "01fa926fe7139a4dd0e339a3f9127dc02e42038c382e2d38b44d62caf00fe02f",
+  "source": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "before": "37f32c3c9e45b85da06978aca49cb0f1066f092d3b62a1ac114e1dd3a90cf361",
+      "after": "37f32c3c9e45b85da06978aca49cb0f1066f092d3b62a1ac114e1dd3a90cf361"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "before": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+      "after": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "before": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+      "after": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "before": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba",
+      "after": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "before": "10368b26488a7daa145eaff42673b4c2bdbed18d87ef132b3b87c49ca98839c8",
+      "after": "ccb0ab3f261ae0b172eac238eb9f40fe0c71ffc4e6112f6b3700ee743fc7b6e5"
+    }
+  ],
+  "scope": "DEBUG fixed vertical image-coordinate conversion plus read-only lighting values",
+  "lightingOrColorConfigurationChanged": false,
+  "runtimeClaims": false
+}

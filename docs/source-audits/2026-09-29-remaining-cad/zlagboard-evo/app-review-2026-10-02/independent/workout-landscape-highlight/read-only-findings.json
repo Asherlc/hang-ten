@@ -1,0 +1,53 @@
+{
+  "timestampUTC": "2026-10-02T05:35:01.989242+00:00",
+  "scope": "Read-only code trace and direct whole screenshot inspection; no app interaction or shared source changes.",
+  "observedImage": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/workout-landscape-longer-settle/following-rest-settled.png",
+  "observation": "Rest02:51, visible NEXT HOLD PREVIEW, selected bilateral bottom pockets remain red. Hand-model red fingertips are separate and not the reported defect.",
+  "trace": [
+    {
+      "file": "HangTen/Views/RootView.swift:1955",
+      "fact": "One boardCue supplies identical highlightMode to portrait and landscape; showsHoldPreview requires preview mode and nonempty IDs."
+    },
+    {
+      "file": "HangTen/Views/RootView.swift:2257",
+      "fact": "Portrait conditionally inserts a preview label before BoardMapView."
+    },
+    {
+      "file": "HangTen/Views/RootView.swift:2384",
+      "fact": "Landscape retains its label/layout and changes opacity; mode still forwarded to BoardMapView."
+    },
+    {
+      "file": "HangTen/Views/BoardMapView.swift:650",
+      "fact": "Model branch forwards highlightMode and IDs unchanged."
+    },
+    {
+      "file": "HangTen/Views/BoardModelView.swift:46",
+      "fact": "BoardModelSurface forwards mode and IDs to retained BoardModelRealityView; model load identity depends only on board/presentation/asset."
+    },
+    {
+      "file": "HangTen/Views/BoardModelView.swift:178",
+      "fact": "RealityView make/update call applySync; no explicit mode/IDs onChange. Scene identity is ObjectIdentifier(model). Camera changes schedule cameraRevision, semantic highlight changes do not."
+    },
+    {
+      "file": "HangTen/Views/BoardModelView.swift:213",
+      "fact": "applySync calls model.highlight with supplied IDs/mode."
+    },
+    {
+      "file": "HangTen/Models/BoardModelRealityTypes.swift:717",
+      "fact": "Scene highlight guard compares BOTH IDs and mode; active maps holdActive, preview restBlue. No apparent mode omission in material logic."
+    },
+    {
+      "file": "HangTen/Models/BoardModelRealityTypes.swift:922",
+      "fact": "applyHighlight restores baseline on deselect; selected material tint is passed color withalpha0.6."
+    }
+  ],
+  "workingHypothesis": "Retained RealityView update closure does not reliably synchronize changed highlightMode when IDs, position, viewport and scene identity stay unchanged. Portrait conditional-label/framing changes can mask that missing invalidation. Hosted-view regression/instrumentation required to prove this mechanism; static trace cannot establish framework scheduling.",
+  "recommendedNarrowChange": "After shared ownership coordination, explicitly synchronize semantic input changes on retained scene, e.g. onChange for composite (IDs, mode, position) to applySync at current GeometryReader size. Preserve root/camera identity and orbit, avoid reload or id keyed to phase. Make/update continue initial framing.",
+  "testGap": "testWoodFinishHighlightsAndRestoresEveryContactWithoutChangingPicking calls scene directly, clears between modes, asserts material type/roughness and picking but not tint. It does not exercise SwiftUI retained-view update. Timeline preview tests cover correct mode selection.",
+  "regressionProposal": [
+    "Hosted UIHostingController harness with one existing wood scene and stable size/contact IDs/position. Set active and assert selected material tint == holdActive, toggle only mode to preview and assert tint == restBlue, toggle active again. Assert scene/root identity and unselected baseline/picking remain intact. Must fail before proposed fix to substantiate framework boundary diagnosis.",
+    "Focused direct-scene active\u2192preview same IDs test should explicitly assert both tints as low-cost lower-level coverage; it should already pass and cannot alone prove UI fix.",
+    "Fresh landscape and portrait research.max-hangs runtime active/rest captures remain required; no package geometry change needed."
+  ],
+  "changesMade": []
+}

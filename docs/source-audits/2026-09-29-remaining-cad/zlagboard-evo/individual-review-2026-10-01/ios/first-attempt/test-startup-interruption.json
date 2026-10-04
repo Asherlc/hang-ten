@@ -1,0 +1,6 @@
+{
+  "atUTC": "2026-10-02T03:05:39.599680+00:00",
+  "exactOwnedProcess": "  PID ELAPSED COMMAND\n19563   05:35 /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination platform=iOS Simulator,id=6969EFC0-48DE-459D-8186-057E71B7A95B -derivedDataPath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-review/DerivedData-placid-badger-cad-second-half -resultBundlePath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-review/tests-placid-badger-cad-second-half.xcresult -parallel-testing-enabled NO -only-testing:HangTenTests/BoardPackageStoreTests/testModelBoardFinishDecodesWithoutPerMeshSelections -only-testing:HangTenTests/BoardModelRealityTests/testWoodFinishHighlightsAndRestoresEveryContactWithoutChangingPicking test\n",
+  "action": "SIGINT to exact xcodebuild PID after over five minutes with no test host launch; preserve log and result. Not an assertion failure or passing test run.",
+  "signal": 2
+}

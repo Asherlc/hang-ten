@@ -1,0 +1,135 @@
+[
+  {
+    "sequence": 1,
+    "event": "recorder-open",
+    "epoch": 1791008913.6655421,
+    "uptime": 90711.89425654167,
+    "deltaAppearance": -2.993649959564209
+  },
+  {
+    "sequence": 2,
+    "event": "train-navigation-source",
+    "epoch": 1791008913.6672049,
+    "uptime": 90711.89592016667,
+    "deltaAppearance": -2.9919872283935547
+  },
+  {
+    "sequence": 3,
+    "event": "startup-board-load-call",
+    "epoch": 1791008913.6674972,
+    "uptime": 90711.89621075001,
+    "deltaAppearance": -2.991694927215576
+  },
+  {
+    "sequence": 4,
+    "event": "board-scene-constructed",
+    "epoch": 1791008913.984572,
+    "uptime": 90712.21328733333,
+    "deltaAppearance": -2.6746201515197754
+  },
+  {
+    "sequence": 5,
+    "event": "startup-board-load-return",
+    "epoch": 1791008914.9796019,
+    "uptime": 90713.20832179167,
+    "deltaAppearance": -1.6795902252197266
+  },
+  {
+    "sequence": 6,
+    "event": "startup-board-ready-published",
+    "epoch": 1791008914.980174,
+    "uptime": 90713.20889220833,
+    "deltaAppearance": -1.6790180206298828
+  },
+  {
+    "sequence": 7,
+    "event": "surface-inputs",
+    "epoch": 1791008915.520759,
+    "uptime": 90713.74948725001,
+    "deltaAppearance": -1.1384329795837402
+  },
+  {
+    "sequence": 8,
+    "event": "highlight-before",
+    "epoch": 1791008915.551639,
+    "uptime": 90713.78036637501,
+    "deltaAppearance": -1.1075530052185059
+  },
+  {
+    "sequence": 9,
+    "event": "highlight-after",
+    "epoch": 1791008915.556226,
+    "uptime": 90713.78495175,
+    "deltaAppearance": -1.102966070175171
+  },
+  {
+    "sequence": 10,
+    "event": "view-make",
+    "epoch": 1791008915.562769,
+    "uptime": 90713.79149108334,
+    "deltaAppearance": -1.0964231491088867
+  },
+  {
+    "sequence": 11,
+    "event": "train-navigation-source",
+    "epoch": 1791008916.2807388,
+    "uptime": 90714.50946133333,
+    "deltaAppearance": -0.37845325469970703
+  },
+  {
+    "sequence": 12,
+    "event": "detach-trial-before",
+    "epoch": 1791008916.282627,
+    "uptime": 90714.51135029168,
+    "deltaAppearance": -0.37656497955322266
+  },
+  {
+    "sequence": 13,
+    "event": "detach-trial-after",
+    "epoch": 1791008916.2842488,
+    "uptime": 90714.51297158333,
+    "deltaAppearance": -0.37494325637817383
+  },
+  {
+    "sequence": 14,
+    "event": "view-disappear",
+    "epoch": 1791008916.28581,
+    "uptime": 90714.514532375,
+    "deltaAppearance": -0.3733820915222168
+  },
+  {
+    "sequence": 15,
+    "event": "workout-prestart-hand-state",
+    "epoch": 1791008916.656242,
+    "uptime": 90714.88496987501,
+    "deltaAppearance": -0.0029501914978027344
+  },
+  {
+    "sequence": 16,
+    "event": "startup-context-appear",
+    "epoch": 1791008916.656742,
+    "uptime": 90714.885465625,
+    "deltaAppearance": -0.0024499893188476562
+  },
+  {
+    "sequence": 17,
+    "event": "workout-probe-appear-before-autostart",
+    "epoch": 1791008916.659192,
+    "uptime": 90714.88791879168,
+    "deltaAppearance": 0.0
+  },
+  {
+    "sequence": 18,
+    "event": "startup-request-entry",
+    "epoch": 1791008916.6758409,
+    "uptime": 90714.90456595834,
+    "deltaAppearance": 0.01664876937866211
+  },
+  {
+    "sequence": 19,
+    "event": "startup-audio-prepare-before",
+    "epoch": 1791008916.676192,
+    "uptime": 90714.90491579167,
+    "deltaAppearance": 0.01699995994567871
+  }
+]

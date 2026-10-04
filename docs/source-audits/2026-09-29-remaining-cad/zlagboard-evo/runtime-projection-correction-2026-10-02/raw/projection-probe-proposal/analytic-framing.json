@@ -1,0 +1,33 @@
+{
+  "source": "Authored analytic box corners only; no image measurements",
+  "cornerCameraDepthRange": [
+    9.389674221059972,
+    10.198332313551967
+  ],
+  "examples": [
+    {
+      "aspect": 0.85,
+      "oldOrthographicScale": 0.8258823529411766,
+      "perspectiveVerticalFOVDegrees": 10.053194326693356,
+      "referenceDistance": 9.79400326730597
+    },
+    {
+      "aspect": 1,
+      "oldOrthographicScale": 0.7020000000000001,
+      "perspectiveVerticalFOVDegrees": 8.551297297085727,
+      "referenceDistance": 9.79400326730597
+    },
+    {
+      "aspect": 2,
+      "oldOrthographicScale": 0.6016691887035602,
+      "perspectiveVerticalFOVDegrees": 7.120391936906516,
+      "referenceDistance": 9.79400326730597
+    },
+    {
+      "aspect": 4,
+      "oldOrthographicScale": 0.6016691887035602,
+      "perspectiveVerticalFOVDegrees": 7.120391936906516,
+      "referenceDistance": 9.79400326730597
+    }
+  ]
+}

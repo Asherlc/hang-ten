@@ -1,0 +1,13 @@
+[
+  {
+    "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/8D941AB7-3199-47BB-8DFD-E78230E65D33/Documents/HighlightDiagnostic-placid-badger-cad-second-half-projection-perspective-a/events-D36CB799-1B5F-456C-9F62-C7117B78A102.jsonl",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/projection-perspective-a-landscape/events-D36CB799-1B5F-456C-9F62-C7117B78A102.jsonl",
+    "sha256": "c03496dcb666511c16f047bf30f77ab4cc1ad26a8f307f194365e6dc34f0cee3",
+    "copyEpoch": 1790971509.7685812,
+    "records": 125,
+    "newlineComplete": true,
+    "allComplete": true,
+    "contiguousSequences": true,
+    "limitReached": false
+  }
+]

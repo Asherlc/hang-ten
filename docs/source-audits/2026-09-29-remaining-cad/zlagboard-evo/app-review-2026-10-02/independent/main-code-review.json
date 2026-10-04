@@ -1,0 +1,8 @@
+{
+  "reviewer": "root Astra",
+  "productionChanges": "None: temporary logging removed and renderer/RootView equal HEAD. No speculative synchronization change retained.",
+  "testChanges": "Two hosted view tests exercise actual material tint updates on retained scene: direct observed state and WorkoutClock-driven TimelineView. Both preserve camera transform; direct-state test additionally preserves contact picking and unselected wood materials.",
+  "testLimit": "These isolated tests did not reproduce earlier landscape first-rest screenshots; passing them is not evidence that the intermittent actual-app failure was fixed. Actual normal-build runtime recheck remains separate.",
+  "nativePackageChanged": false,
+  "historicalFailuresPreserved": true
+}

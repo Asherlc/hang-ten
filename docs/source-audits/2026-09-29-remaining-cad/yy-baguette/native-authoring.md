@@ -1,5 +1,12 @@
 # La Baguette — native CAD source audit
 
+**2026-10-01 correction:** the user explicitly confirmed there are no grooves.
+The [smooth-end review](groove-removal-review/review.md) supersedes all groove
+dimensions and the grooved-end interpretation below. Eight native groove
+tools/cuts are removed; the cord is re-solved on the restored smooth solid.
+Historical reports and maker evidence remain unchanged. Human acceptance is
+still pending the corrected app review.
+
 Published 470×40×40 mm; front paired stepped 20/25 mm cavities; reverse five cavities 10/15/30/15/10 mm, plus outer tray. Retained loaded front/rear originals support exterior end wraps.
 
 Body corner 19/outer round 2 mm. Front openings 155×21 mm centers x ±125, outer half  25/inner half  20. Reverse centers x ±166(width 78, depth 10), ±87(width 55, depth 15), 0(width 68, depth 30); all height  21/corner 9. External bandscenter x ±220, width 4, depth 1.5. Unpublished spacing, cavity widths and radii are display estimates.

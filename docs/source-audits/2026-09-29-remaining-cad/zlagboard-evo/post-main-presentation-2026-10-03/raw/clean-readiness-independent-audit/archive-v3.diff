@@ -1,0 +1,11 @@
+--- archive-presentation-evidence-v2.py
++++ archive-presentation-evidence-v3.py
+@@ -43,7 +43,7 @@
+    if not c.exists() or not q.exists():deferred[folder.name]='Capture not finalized: completion/cleanup absent.'
+    elif json.loads(q.read_text()).get('passed') is not True:deferred[folder.name]='Exact per-run cleanup not verified.'
+  # Test logs are only frozen after raw bundle archive+deletion are retained.
+- for folder in ROOT.glob('readiness-*'):
++ for folder in ROOT.iterdir():
+   if folder.is_dir() and (folder/'command.json').exists() and (folder/'stdout.log').exists():
+    required=['exit.json','bundle-archive.json','bundle-deletion.json']
+    if not all((folder/name).exists() for name in required):

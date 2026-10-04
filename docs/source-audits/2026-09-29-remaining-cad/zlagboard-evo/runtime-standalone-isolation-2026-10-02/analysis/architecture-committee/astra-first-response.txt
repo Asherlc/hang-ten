@@ -1,0 +1,107 @@
+Showing 8 of 64 activities (limited to 8)
+
+[Shell] rtk proxy jq '{conclusion,limitations,runs:[.runs[]|{run,keys:keys}]}' .context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/semantic-identity-findings.json
+[Shell] rtk proxy sed -n '260,325p' HangTen/Views/RootView.swift
+[Shell] rtk proxy git status --short
+[Shell] rtk proxy rg -n 'func applyHighlight|class BoardModelRealityCache|func updateCameraTransform|struct GripHandModelInspector|IPHONEOS_DEPLOYMENT_TARGET' HangTen/Models/BoardModelRealityTypes.swift Ha...
+---
+
+**The evidence supports testing a single workout render host next. It does not yet support a production fix or a claim about RealityKit’s internal root cause.** Further material reassignment, state invalidation, animation wrappers, or semantic remounts would revisit explanations that the experiments have substantially weakened.
+
+I reviewed the instructions, current source, selected findings, retained API research, and prior hand-renderer design. HEAD is `f15623ea`; the same three temporary probe files remain dirty. I made no edits and ran no builds, Simulator actions, or external research.
+
+**What the evidence establishes**
+
+| Evidence | Supported conclusion | Remaining limit |
+|---|---|---|
+| Complete traces show correct PBR RGBA on the selected entities before and after stale screenshots | The demonstrated failures occur beyond the application’s highlight-value calculation and mutation | CPU state does not certify the rendered frame |
+| Corrected hands ON/OFF/ON result is **FAIL/PASS/FAIL** | Concurrent hand-host presence matters in that reproduction | One series; removing the host also removes its camera, lights, renderer activity, and lifecycle |
+| Plain PBR box host reproduces failure | Hand mesh and custom hand shader are unnecessary for this failure | The box retains the hand host’s orthographic camera and lighting arrangement |
+| Explicit virtual camera and non-AR ARView fail | Neither change alone repairs it | Neither removes concurrent RealityKit rendering |
+| Selected entities disappear but remain absent after CPU visibility restoration | The defect extends beyond tint propagation | This does not distinguish scene synchronization, activation, rendering, or presentation |
+| Semantic remount produces disappearance with new make preceding old disappear | Reusing mutable entities across overlapping host lifetimes is an unsuccessful repair strategy | Its blanking may be a separate lifecycle failure |
+
+The [correction report](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-host-probe-correction.json) supersedes the original OFF visual classification. The original report must not be used to argue that suppression failed.
+
+The [prior paired-hand design](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/docs/superpowers/specs/2026-09-26-realitykit-grip-hand-renderer-design.md:35) is especially relevant: it records correct CPU meshes, stale sibling-renderer frames, failed invalidation attempts, and successful consolidation into one host. That is a strong architectural precedent, though it is not proof that the current defect has identical internals.
+
+**Important unresolved boundaries**
+
+- **Camera ownership:** Board and hand cameras are separately allocated; I found no application-level global camera owner in these paths. However, the plain-box experiment still includes an authored orthographic camera. Explicit `.virtual` tests camera mode, not interference between simultaneous scene cameras. A framework-global active-camera defect remains a hypothesis.
+- **Actual scene versus wrapper identity:** The diagnostic `sceneID` identifies `BoardModelRealityScene`, the application wrapper. `rootAttached` checks `root.scene != nil`. These are useful but weaker than identifying the RealityKit scene and current presenting host. The ARView probe supplies stronger host-scene membership evidence, and still fails.
+- **Retained screens:** [RootView](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Views/RootView.swift:202) has tabs and navigation; [hand cue cards](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Views/GripDiagramView.swift:189) can present another hand renderer in a sheet. Hand scene storage has no corresponding disappearance cleanup. This does not prove a leak, but “two visible hosts” is not yet a census of live rendering hosts.
+- **Lifetime:** The loader creates a distinct board scene per invocation. Ordinary baseline sharing is therefore less likely than the explicit sharing introduced by semantic remounting. Do not generalize the remount’s ownership hazard into a proven explanation for the original stable-host failure.
+- **Environment and instrumentation:** Current reproduction evidence is Simulator-specific. The earlier hand precedent mentions device review, but cannot substitute for this workload on hardware. Body logging can mask the defect; even sparse instrumentation needs an uninstrumented confirmation.
+- **Failure direction varies:** The semantic-control run had stale red during Rest but correct red at the next Hang. Acceptance must cover the complete sequence, not just the final active screenshot.
+
+**Highest-information next experiment**
+
+Run one bounded **host-consolidation experiment with a projection-matched control**, rather than immediately implementing the finished layout.
+
+Use the existing board and actual paired-hand surfaces. Establish a common perspective composition for the experiment, keeping authored geometry and materials unchanged. Compare:
+
+| Arm | Rendering arrangement | Purpose |
+|---|---|---|
+| A | Current board perspective host plus hand orthographic host | Reproduce the existing failure |
+| B | Two hosts displaying the experimental composition, with equivalent perspective cameras and consistent lighting | Control for projection, placement, and lighting changes |
+| C | One host displaying that same experimental composition, with one camera and one lighting rig | Test consolidation |
+
+B and C must use the same viewport coordinates, object transforms, camera parameters, and intended illumination. Each host in B gets its own entities and camera. C must never attach the existing hand camera or reuse entities still attached to another host.
+
+This control matters: comparing the original layout directly with a newly composed single scene would conflate host count with camera projection, framing, lighting, and attachment changes.
+
+Before judging the arms, record a sparse lifecycle census for board and hand hosts, their actual `Entity.scene` identities, camera components, and attachment ownership. Keep launch route, package hashes, orientation, workout inputs, and logging identical. Unexpected additional live hosts invalidate the intended comparison.
+
+Bound the initial experiment to **two cold runs per arm**, each exercising Hang → Rest → Hang and a contact change without camera gestures. Review complete screenshots individually at predetermined settled points.
+
+Interpretation:
+
+- **A fails, B fails, C repeatedly passes:** supports consolidation in the tested composition. Proceed to layout feasibility.
+- **A fails, B and C pass:** normalization already changed the outcome. Host count has not been isolated; do not credit consolidation alone.
+- **C fails:** reject this candidate. Do not append redraw pulses, delayed writes, or repeated remounting.
+- **A does not reproduce:** inconclusive. Stop and reassess the reproduction rather than promote a passing candidate.
+
+A passing C also needs one separate hide/restore trial: the selected contacts must visibly return after restoration. CPU flags are insufficient. Before promotion, confirm the result without diagnostics and on physical hardware.
+
+**Smallest coherent production design, if consolidation passes**
+
+Introduce a workout-owned render host covering the board and hand artwork slots. Keep the workout text, controls, source-backed cues, and accessibility structure in SwiftUI.
+
+The useful boundaries are:
+
+- [RootView workout layouts](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Views/RootView.swift:2235): coordinate board and hand content in both orientations, including single-hand cases.
+- [BoardModelSurface and RealityView](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Views/BoardModelView.swift:4): separate resource/loading ownership from host construction.
+- [BoardModelRealityScene](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Models/BoardModelRealityTypes.swift:166): retain contact mapping, materials, suspension, selection, and resource lease.
+- [GripHandRealityPairScene](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Views/GripHandModelView.swift:558): reuse surfaces and pose application while separating its camera and lights from renderable hand content.
+
+The host’s identity should follow its loaded content lifetime. Highlight mode, selected contacts, and pose are updates within that lifetime. Entities must have exclusive attachment ownership; stale callbacks must not act on a replacement host.
+
+**Projection is the main design gate.** One ordinary camera cannot exactly reproduce both the existing perspective board and orthographic hands. Merely adding both roots is insufficient.
+
+Keep the board’s perspective presentation and investigate camera-relative hand placement with reviewed perspective distortion and slot fit. Independent board and hand orbit would become transformations of their respective presentation groups under the shared camera. Preserve original orbit limits, pinch behavior, resets, and gesture regions. If acceptable fit requires deforming meshes or materially changing hand appearance, reject that layout approach.
+
+Other necessary gates:
+
+- Real contact picking still uses the existing collision entities and contact lookup.
+- Projected accessibility contacts use the effective shared camera and board slot coordinates; the current projection helper assumes its own viewport.
+- Hand exploration controls and exact finger labels remain available.
+- Opening an inspector must not silently recreate the failing concurrent-host arrangement.
+- Rotation, scrolling, navigation, and model replacement must preserve exclusive ownership and resource lifetime.
+- No new redraw timer; idle/offscreen behavior must be measured separately.
+
+This can remain within the iOS 18 deployment target. The layout and interaction work makes it an architectural change, not a small material fix.
+
+**Fallback**
+
+If one-camera composition fails its visual or interaction gates, investigate **on-demand rendered hand images before replacing the board renderer**.
+
+Render the existing hand surfaces with their existing orthographic projection into a runtime image, keyed by pose, exact selected fingers, side, viewport, and orbit state. Preserve gestures through event-driven image updates and retain exploration controls. This preserves the board’s existing picking path and avoids RealityRenderer’s unresolved scene/raycast bridge.
+
+It still needs a feasibility test: offscreen RealityRenderer shares the backend, and concurrent submissions could reproduce the defect. Correct completion ordering, stale-result rejection, bounded caching, and actual displayed-image correctness must be demonstrated. A hidden second RealityView is not an acceptable substitute.
+
+Replacing the board host with RealityRenderer/MTKView remains the later option. The retained [feasibility review](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/reality-renderer-feasibility/report.json) identifies the unresolved physical-picking gate and substantial presentation ownership work. Its explicit submission API provides control, but no evidence yet that it cures this failure.
+
+Production acceptance requires visible red → blue → red on Evo and Pro, preserved hands and interactions, correct restore behavior, and stable lifecycle across orientation and navigation. Passing CPU tests remains supporting evidence only.
+[User] Additional confounder worth considering: the plain PBR second-host probe deliberately reused the hand's OrthographicCameraComponent and light rig. Thus it excludes hand mesh/shader dependence, but does not distinguish any second renderer from a second orthographic camera. ARView probe changed board host only (board perspective, hand orthographic remained). Please assess whether same-binary plain-box orthographic vs perspective camera is a worthwhile bounded discriminator before broad architecture changes. Also on-demand rendering of hands (not board) avoids the RealityRenderer collision-picking gate while preserving live board interaction. No change made; these are hypotheses only. This is analysis only. Do NOT edit, create, or delete any files. Do NOT write code.
+I’m using the systematic-debugging skill to assess whether this camera comparison can narrow the cause before a broader rendering change.
+[Shell] rtk proxy cat /Users/asherlc/.codex/plugins/cache/openai-curated-remote/superpowers/6.4.2/skills/systematic-debugging/SKILL.md

@@ -1,0 +1,9 @@
+{
+  "source": "HangTen/Views/RootView.swift",
+  "beforeSHA256": "ce690c12d0182a57c659f3e4f01bf4b25c37c2dc6d98fbe9dafaa57686f4152f",
+  "proposedSHA256": "086b571f4125321846ab9b52551c33d6a993db9968d44214474f5352d882cc8e",
+  "patchSHA256": "72295f398942a26dadfcd7ee7795daca9fb2adfc8139b46ff09294ed4a6313c5",
+  "applyCheckExit": 0,
+  "canonicalUnchanged": true,
+  "scope": "Scratch-only unapplied proposal; no compile/build/runtime"
+}

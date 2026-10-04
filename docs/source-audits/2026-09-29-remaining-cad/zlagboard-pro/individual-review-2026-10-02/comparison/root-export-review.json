@@ -1,0 +1,10 @@
+{
+  "reviewer": "root/Astra",
+  "image": "comparison-front-side-top.png",
+  "imageSHA256": "816e158f1df4fb51d89335d306caf4d763e1c7794bb2b9a5e2393d8f28bca20c",
+  "reviewed": "Whole original/prior/final front-side-top comparison; no image measurement, tracing or cropping.",
+  "finding": "Published native shape preserves the intended outline, three pocket rows and top arrangement. Narrow top-transition rounding is credible; no additional geometry defect demonstrated.",
+  "limits": "Orthographic rendered geometry is not a substitute for fresh app material/highlight/picking review.",
+  "humanAccepted": false,
+  "appVisualReviewComplete": false
+}

@@ -1,0 +1,22 @@
+{
+  "hardBoundSeconds": 300,
+  "role": "action",
+  "plannedPhases": [
+    "active",
+    "preview",
+    "active"
+  ],
+  "captureOffsetsAfterActualMutation": [
+    0.25,
+    1,
+    3,
+    5
+  ],
+  "captureStartToleranceSeconds": 0.15,
+  "missedCapturePolicy": "Record missed window and stop; never backfill",
+  "initialDiscoveryBoundSecondsAfterRecordedAppearance": 30,
+  "methodDifference": "External polling continues during the unchanged initial screenshot command",
+  "afterLaunchUIAccess": "screenshots only; no AX/touches/Skip",
+  "routineUnchanged": true,
+  "supplementalHandTiming": "Unchanged after-last-positive and before actual first screenshot START; no relaxation for delayed hands"
+}

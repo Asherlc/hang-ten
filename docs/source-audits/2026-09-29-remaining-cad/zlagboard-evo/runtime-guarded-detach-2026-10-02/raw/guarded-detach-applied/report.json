@@ -1,0 +1,89 @@
+{
+  "status": "Conditional scratch-only diagnostic; no tracked application, build, tests or runtime by this author",
+  "patchSHA256": "0a9d708b372a86c11e4357443097ace03eb9d405f019114c602b2959af0551b3",
+  "scope": [
+    "HangTen/Models/BoardModelRealityTypes.swift",
+    "HangTen/Views/BoardModelView.swift",
+    "HangTen/Views/TrainView.swift"
+  ],
+  "experiment": "Same binary: trial control first. Only a valid reproduced failure with expected attachment/lifetimes permits the detach arm. Both arms set HANGTEN_REVIEW_BOARD_DETACH_TRIAL=1 and existing diagnostic/census flags; only action arm sets HANGTEN_REVIEW_DETACH_DISAPPEARING_BOARD_HOST=1. No Train suppression or other inherited host experiments.",
+  "commonChanges": [
+    "Exact Evo one-presentation main Train card gets DEBUG environment marker; no BoardMap edit, geometry/layout alteration or suppression. Workout and other cards remain unmarked.",
+    "Weak attachment ownership record after both content.add calls, keyed scene/view UUID, with fresh owner UUID per record. Record binds only when both entities share a nonnil parent and actual RealityKit Scene. Attachment may be pending immediately after add; existing capture observes later without a new poll.",
+    "Registry intentionally retains already-created BoardModelRealityScene/model/entities/resource lease in both arms until process termination. No strong parent or RealityKit Scene property. Diagnostic retention must be removed before any production candidate.",
+    "All original make and update callbacks run unchanged, including applySync after disappear. A repeated make invalidates detachment eligibility after its normal content.add calls; it is not blocked. No ordinary callback is suppressed.",
+    "Existing capture serializes owner/attachment/action fields only after update dedup. No new timer, body logging, observable state, counter, task, sampler or material/camera mutation."
+  ],
+  "detachGuard": [
+    "Explicit Train marker true; Evo one-presentation launch source gate",
+    "First disappear for that key",
+    "Initial shared nonnil parent/actual scene observed; weak references still live",
+    "No invalidation or change in attachment",
+    "Exact scene model identity and current-owner UUID still match",
+    "Both current root/camera parents and scenes are identical to recorded weak ownership"
+  ],
+  "action": "Synchronously remove only scene.root and scene.camera from their parents. Never remove or disable the shared parent or mutate workout entities. Record sparse before/after captures in both arms. Verify both parent and scene references become nil; otherwise action is invalid. No await between ownership guard and removal.",
+  "staleCallbackSafety": [
+    "A new make with another view key replaces current-owner UUID for that scene, so old disappear cannot detach its entities.",
+    "Repeated make with the same key runs normally then invalidates that record and replaces its owner UUID, preventing a late stale detach.",
+    "Late update callbacks continue original applySync. Later census records reattachedAfterDetach if external reattachment occurs; such a run is invalid, with no forced second removal."
+  ],
+  "requiredRuntimeGates": [
+    "Source/input/installed code parity and exact launch environment for both arms",
+    "Train renders normally before leaving; its marker is true, workout marker false",
+    "Opening-to-tail complete constructor stream and weak census",
+    "Control keeps predecessor model/lease and same attachment through workout; must reproduce stale-color failure under trial common changes",
+    "Action targets exactly the marked predecessor, with observed ownership before and nil parent+scene afterward",
+    "Predecessor wrapper/root/camera remain alive through all action captures; their resource lease owner remains the same retained model",
+    "Workout identities, actual frame, camera, selections, natural timing and all CPU/image brackets unchanged",
+    "No repeated make, stale owner action, unexpected constructor, unobserved ownership, detach failure or later reattachment",
+    "Terminate the owned diagnostic app at end to release intentional retained models"
+  ],
+  "guardTestPlan": [
+    {
+      "case": "matching first Train owner",
+      "expected": "only its two entities detach; wrapper retained"
+    },
+    {
+      "case": "unmarked workout",
+      "expected": "never detaches regardless action flag"
+    },
+    {
+      "case": "control flag absent",
+      "expected": "ownership/retention captures same; no detach"
+    },
+    {
+      "case": "new owner different view same model",
+      "expected": "old disappear refuses"
+    },
+    {
+      "case": "repeat make same key",
+      "expected": "normal add runs; ownership invalidated; subsequent detach refuses"
+    },
+    {
+      "case": "parent or actual Scene changed/nil before action",
+      "expected": "refuses; no hierarchy mutation"
+    },
+    {
+      "case": "attachment absent immediately after add then valid sparse snapshot",
+      "expected": "binds once; later exact guard usable"
+    },
+    {
+      "case": "never attached or late reappearance",
+      "expected": "invalid/no detach; no recovery behavior"
+    },
+    {
+      "case": "postaction callback",
+      "expected": "original applySync still runs; any observed external reattachment invalidates trial"
+    }
+  ],
+  "limits": [
+    "No generic teardown/reappearance design; repeated host makes run normally but invalidate this one-way diagnostic.",
+    "Holding models changes lifetime versus production; shared control reproduction is mandatory.",
+    "CPU attachment and nil membership do not prove GPU host destruction, scheduler behavior or causality.",
+    "Same shared-parent assumption is deliberately narrower than general RealityView ownership; observed case only.",
+    "Apply-check verifies textual applicability only, not Swift typechecking. No test is claimed executed."
+  ],
+  "apiContext": "Uses removeFromParent according to retained predecessor-attachment-proposal/apple-api-notes.md; no private renderer API.",
+  "reviewRevision": "Parent requested removal of all callback skipping. Earlier draft/report/provenance retained as *.before-callback-review. Final patch preserves normal make/update behavior; only marked guarded disappear action detaches."
+}

@@ -29,3 +29,11 @@ Status: historical exact set reused. Native CAD is authored; see geometry-review
 
 
 Native CAD review artifacts: [geometry comparison](geometry-review.html), [authoring notes](geometry-authoring-notes.md), [metadata preservation](metadata-preservation.json), [native edit validation](native-validation.json). Final app review is coordinated separately.
+
+## Individual review, 2026-10-01
+
+[Current pending review](individual-review-2026-10-01/review.md) corrects the rear
+10 mm slot alignment and wood display, and supplies seven loaded grip poses
+with native per-pose cord bearings. Historical migration proofs remain intact.
+
+User accepted the displayed revision with “Y” on 2026-10-01: [acceptance record](human-review.json). The earlier review packet and its pending-at-capture status remain unchanged.

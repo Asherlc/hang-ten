@@ -1,0 +1,32 @@
+{
+  "exitStatus": 0,
+  "testsPassed": 155,
+  "failures": 0,
+  "classes": [
+    [
+      "BoardModelRealityTests",
+      "9",
+      "0"
+    ],
+    [
+      "SuspendedBoardPresentationTests",
+      "73",
+      "0"
+    ],
+    [
+      "WorkoutActivityRecordingTests",
+      "73",
+      "0"
+    ]
+  ],
+  "remainingUnresolvedTest": "testLiveScenePausesThenPublishesAcceptedSettledFrame: firstfullrun30secondtimeout, unchanged repeatbounded/incomplete",
+  "originalFullRun": {
+    "tests": 527,
+    "assertionFailures": 66,
+    "failedCases": 8
+  },
+  "sevenNonPhysicsFailedCasesResolved": true,
+  "fullSuitePassingClaim": false,
+  "runtimeRepairClaim": false,
+  "hardwareCheckAvailable": false
+}

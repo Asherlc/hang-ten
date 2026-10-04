@@ -571,14 +571,17 @@ final class BoardSourceBoundaryTests: XCTestCase {
             source.contains(physicalHoldVisualFrame),
             "Each PhysicalHoldVisual must receive the board's explicit bounds."
         )
+        let holdFrameRange = try XCTUnwrap(source.range(of: physicalHoldVisualFrame))
+        let modelStart = try XCTUnwrap(source.range(of: "                case .model:",
+                                                  range: holdFrameRange.upperBound..<source.endIndex))
+        let rasterSource = source[holdFrameRange.lowerBound..<modelStart.lowerBound]
         let outerZStackFrame =
+            "                            }\n" +
             "                        }\n" +
-            "                        .frame(width: boardBounds.width, height: boardBounds.height)\n" +
-            "                    }\n" +
-            "                case .model:"
+            "                        .frame(width: boardBounds.width, height: boardBounds.height)"
         XCTAssertTrue(
-            source.contains(outerZStackFrame),
-            "The outer board ZStack must receive the board's explicit bounds."
+            rasterSource.contains(outerZStackFrame),
+            "The raster board ZStack must receive explicit bounds before later modifiers."
         )
     }
 

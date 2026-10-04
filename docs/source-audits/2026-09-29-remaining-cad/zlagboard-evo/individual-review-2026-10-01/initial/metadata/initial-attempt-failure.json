@@ -1,0 +1,6 @@
+{
+  "status": "failed before source mutation",
+  "cause": "Manifest has no display object; initial attempt indexed board[display] directly.",
+  "toolReportedExitCode": 1,
+  "toolReportedOutput": "Traceback (most recent call last):\n  File \"<stdin>\", line 7, in <module>\nKeyError: 'display'\n"
+}

@@ -1,0 +1,77 @@
+{
+  "source": "Frozen final/staging-input actual tested package",
+  "rows": [
+    {
+      "positionID": "paired-25-20-15-10",
+      "projectedBodyHeight": 0.06408563819424541,
+      "projectedFullHeight": 0.3097673917060533,
+      "fullHeightExceedsBody": true,
+      "mapHeightAt334pt": 198.965986171426,
+      "heightGrowthRatio": 4.833647607083812
+    },
+    {
+      "positionID": "paired-10-15",
+      "projectedBodyHeight": 0.06408563819424541,
+      "projectedFullHeight": 0.3097673917060533,
+      "fullHeightExceedsBody": true,
+      "mapHeightAt334pt": 198.965986171426,
+      "heightGrowthRatio": 4.833647607083812
+    },
+    {
+      "positionID": "paired-12-8-6",
+      "projectedBodyHeight": 0.06408563819424547,
+      "projectedFullHeight": 0.11719856676843737,
+      "fullHeightExceedsBody": true,
+      "mapHeightAt334pt": 75.27754385809415,
+      "heightGrowthRatio": 1.8287805204218306
+    },
+    {
+      "positionID": "paired-8-6",
+      "projectedBodyHeight": 0.06408563819424545,
+      "projectedFullHeight": 0.14293537526266964,
+      "fullHeightExceedsBody": true,
+      "mapHeightAt334pt": 91.80849456519529,
+      "heightGrowthRatio": 2.2303807731371625
+    },
+    {
+      "positionID": "central-30-25",
+      "projectedBodyHeight": 0.06408563819424541,
+      "projectedFullHeight": 0.3097673917060533,
+      "fullHeightExceedsBody": true,
+      "mapHeightAt334pt": 198.965986171426,
+      "heightGrowthRatio": 4.833647607083812
+    },
+    {
+      "positionID": "central-25",
+      "projectedBodyHeight": 0.06408563819424541,
+      "projectedFullHeight": 0.3097673917060533,
+      "fullHeightExceedsBody": true,
+      "mapHeightAt334pt": 198.965986171426,
+      "heightGrowthRatio": 4.833647607083812
+    },
+    {
+      "positionID": "central-20-6",
+      "projectedBodyHeight": 0.06408563819424547,
+      "projectedFullHeight": 0.11719856676843737,
+      "fullHeightExceedsBody": true,
+      "mapHeightAt334pt": 75.27754385809415,
+      "heightGrowthRatio": 1.8287805204218306
+    },
+    {
+      "positionID": "central-6",
+      "projectedBodyHeight": 0.06408563819424545,
+      "projectedFullHeight": 0.14293537526266964,
+      "fullHeightExceedsBody": true,
+      "mapHeightAt334pt": 91.80849456519529,
+      "heightGrowthRatio": 2.2303807731371625
+    },
+    {
+      "positionID": "rounded-tray",
+      "projectedBodyHeight": 0.06830127018724941,
+      "projectedFullHeight": 0.2901029856772882,
+      "fullHeightExceedsBody": true,
+      "mapHeightAt334pt": 186.33538642869613,
+      "heightGrowthRatio": 4.247402498986689
+    }
+  ]
+}

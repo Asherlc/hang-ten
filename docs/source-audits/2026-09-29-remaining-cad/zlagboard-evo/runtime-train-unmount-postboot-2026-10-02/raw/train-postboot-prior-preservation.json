@@ -1,0 +1,17 @@
+{
+  "prior": [
+    {
+      "manifest": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-frozen-manifest.json",
+      "sha256": "b8155db6e5ded1f79f565ca27cde8c91e301a59d30ecaf9006cc12bac4b7fdde",
+      "fileCount": 230,
+      "changed": []
+    },
+    {
+      "manifest": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal-frozen-manifest.json",
+      "sha256": "371ffaa0e171a6f6b988ee17eab66f6624e6e67f0677cef9f85a4be992825174",
+      "fileCount": 11,
+      "changed": []
+    }
+  ],
+  "allExact": true
+}

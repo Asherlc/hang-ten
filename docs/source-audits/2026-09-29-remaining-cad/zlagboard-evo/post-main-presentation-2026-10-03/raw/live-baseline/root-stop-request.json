@@ -1,0 +1,7 @@
+{
+  "pid": 23689,
+  "command": "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python .context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/capture-prep/capture.py .context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/baseline-release.json\n",
+  "signal": "SIGTERM",
+  "timeUTC": 1791048226.022787,
+  "reason": "Whole screenshots show Open in Hang Ten confirmation; no workout reached. Stop invalid route run without backfilling or accepting captures."
+}

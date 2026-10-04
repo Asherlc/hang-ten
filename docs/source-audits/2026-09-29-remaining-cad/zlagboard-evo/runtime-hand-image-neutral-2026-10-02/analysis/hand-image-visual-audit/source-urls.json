@@ -1,0 +1,6 @@
+{
+  "renderer-lighting": "https://developer.apple.com/documentation/realitykit/realityrenderer/lighting.md",
+  "renderer-resource": "https://developer.apple.com/documentation/realitykit/realityrenderer/imagebasedlight/resource.md",
+  "view-environment": "https://developer.apple.com/documentation/realitykit/realityviewenvironment.md",
+  "renderer-ibl": "https://developer.apple.com/documentation/realitykit/realityrenderer/imagebasedlight.md"
+}

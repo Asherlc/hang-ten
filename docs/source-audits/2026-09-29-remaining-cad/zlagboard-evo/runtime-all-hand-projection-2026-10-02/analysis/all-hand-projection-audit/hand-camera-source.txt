@@ -1,0 +1,359 @@
+398: @MainActor
+399: final class GripHandRealityScene {
+400:     let root = Entity()
+401:     let hand = Entity()
+402:     let camera = Entity()
+403:     private let keyLight = Entity()
+404:     private let fillLight = Entity()
+405:     private(set) var isUnavailable = false
+406: 
+407:     private var surface: GripHandRealitySurface?
+408:     private(set) var currentPose: GripHandPose?
+409:     private var currentSide: GripCueSide?
+410:     private var currentViewportSize: CGSize = .zero
+411:     private var currentResetToken: Int?
+412:     private var canonicalCenter = SIMD3<Float>.zero
+413:     private var canonicalOffset = SIMD3<Float>(0, 0, 1)
+414:     private var canonicalOrthographicScale: Float = 1
+415:     private var orbitAzimuth: Float = 0
+416:     private var orbitElevation: Float = 0
+417:     private var orbitZoom: Float = 1
+418:     init(assetResult: Result<GripHandAsset, Error> = GripHandAsset.bundled) {
+419:         #if DEBUG
+420:         if BoardHighlightDiagnostic.isEnabled {
+421:             BoardHighlightDiagnostic.shared.handLifecycle(kind: "single",
+422:                 event: "constructor-entry", root: root)
+423:         }
+424:         #endif
+425:         root.addChild(hand)
+426:         var orthographicCamera = OrthographicCameraComponent()
+427:         orthographicCamera.near = 0.1
+428:         orthographicCamera.far = 100
+429:         orthographicCamera.scale = 3.2
+430:         orthographicCamera.scaleDirection = .vertical
+431:         camera.components.set(orthographicCamera)
+432:         root.addChild(camera)
+433: 
+434:         root.addChild(keyLight)
+435:         root.addChild(fillLight)
+436:         orientLights(for: .right)
+437: 
+438:         do {
+439:             let asset = try assetResult.get()
+440:             let surface = try GripHandRealitySurface(asset: asset)
+441:             hand.addChild(surface.root)
+442:             self.surface = surface
+443:         } catch {
+444:             isUnavailable = true
+445:         }
+446:     }
+447: 
+448:     func update(pose: GripHandPose, side: GripCueSide, viewportSize: CGSize, resetToken: Int) {
+449:         let poseChanged = currentPose != pose
+450:         let sideChanged = currentSide != side
+451:         let viewportChanged = currentViewportSize != viewportSize
+452:         if poseChanged {
+453:             do {
+454:                 try surface?.apply(pose)
+455:             } catch {
+456:                 surface?.root.removeFromParent()
+457:                 surface = nil
+458:                 isUnavailable = true
+459:             }
+460:         }
+461:         if sideChanged {
+462:             hand.scale.x = side == .left ? -1 : 1
+463:             orientLights(for: side)
+464:         }
+465:         let needsReset = poseChanged || sideChanged || viewportChanged || currentResetToken != resetToken
+466:         currentPose = pose
+467:         currentSide = side
+468:         currentViewportSize = viewportSize
+469:         currentResetToken = resetToken
+470:         if needsReset { resetCamera() }
+471:     }
+472: 
+473:     func resetCamera() {
+474:         guard let surface else { return }
+475:         let points = surface.posedVerticesForFraming().map { point in
+476:             SIMD4<Float>(point.x * hand.scale.x, point.y, point.z, 1)
+477:         }
+478:         guard !points.isEmpty else { return }
+479:         var low = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
+480:         var high = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
+481:         for point in points {
+482:             let xyz = SIMD3<Float>(point.x, point.y, point.z)
+483:             low = simd_min(low, xyz)
+484:             high = simd_max(high, xyz)
+485:         }
+486:         let center = (low + high) / 2
+487:         let offset = SIMD3<Float>(currentSide == .left ? 5.8 : -5.8, 2.75, 9.4)
+488:         guard let transform = Self.cameraTransform(position: center + offset, target: center) else { return }
+489:         let inverseCamera = simd_inverse(transform)
+490:         var halfWidth: Float = 0
+491:         var halfHeight: Float = 0
+492:         for point in points {
+493:             let projected = inverseCamera * point
+494:             halfWidth = max(halfWidth, abs(projected.x))
+495:             halfHeight = max(halfHeight, abs(projected.y))
+496:         }
+497:         let size = currentViewportSize
+498:         let aspect = size.width.isFinite && size.height.isFinite && size.width > 0 && size.height > 0
+499:             ? Float(size.width / size.height) : 0.85
+500:         guard aspect.isFinite, aspect > 0 else { return }
+501:         let orthographicScale = max(halfHeight, halfWidth / aspect) * 1.08
+502:         guard orthographicScale.isFinite, orthographicScale > 0 else { return }
+503:         camera.transform = Transform(matrix: transform)
+504:         var component = camera.components[OrthographicCameraComponent.self]!
+505:         component.scale = orthographicScale
+506:         camera.components.set(component)
+507: 
+508:         canonicalCenter = center
+509:         canonicalOffset = offset
+510:         canonicalOrthographicScale = orthographicScale
+511:         orbitAzimuth = 0
+512:         orbitElevation = 0
+513:         orbitZoom = 1
+514:     }
+515: 
+516:     func orbit(azimuthDelta: Float, elevationDelta: Float, zoomScale: Float = 1) {
+517:         guard azimuthDelta.isFinite, elevationDelta.isFinite,
+518:               zoomScale.isFinite, zoomScale > 0 else { return }
+519:         let fullRotation: Float = .pi * 2
+520:         let nextAzimuth = (orbitAzimuth + azimuthDelta).truncatingRemainder(dividingBy: fullRotation)
+521:         let nextElevation = min(max(orbitElevation + elevationDelta, -0.55), 0.55)
+522:         let nextZoom = min(max(orbitZoom * zoomScale, 0.75), 1.35)
+523:         let baseDistance = simd_length(canonicalOffset)
+524:         guard baseDistance > 1e-6 else { return }
+525:         let baseDirection = canonicalOffset / baseDistance
+526:         let worldUp = SIMD3<Float>(0, 1, 0)
+527:         let rightVector = simd_cross(worldUp, baseDirection)
+528:         guard simd_length(rightVector) > 1e-6 else { return }
+529:         let right = simd_normalize(rightVector)
+530: 
+531:         let yaw = simd_quatf(angle: nextAzimuth, axis: worldUp)
+532:         let pitch = simd_quatf(angle: nextElevation, axis: right)
+533:         let distance = baseDistance / nextZoom
+534:         guard distance.isFinite, distance > 0 else { return }
+535:         let rotatedOffset = (pitch * yaw).act(baseDirection) * distance
+536:         guard rotatedOffset.x.isFinite, rotatedOffset.y.isFinite, rotatedOffset.z.isFinite,
+537:               let transform = Self.cameraTransform(position: canonicalCenter + rotatedOffset,
+538:                                                    target: canonicalCenter) else { return }
+539:         camera.transform = Transform(matrix: transform)
+540:         var component = camera.components[OrthographicCameraComponent.self]!
+541:         component.scale = canonicalOrthographicScale / nextZoom
+542:         camera.components.set(component)
+543:         orbitAzimuth = nextAzimuth
+544:         orbitElevation = nextElevation
+545:         orbitZoom = nextZoom
+546:     }
+585: @MainActor
+586: final class GripHandRealityPairScene {
+587:     let root = Entity()
+588:     let camera = Entity()
+589:     let leftHand = Entity()
+590:     let rightHand = Entity()
+591:     private let keyLight = Entity()
+592:     private let fillLight = Entity()
+593:     private(set) var leftSurface: GripHandRealitySurface?
+594:     private(set) var rightSurface: GripHandRealitySurface?
+595:     private(set) var isAvailable = false
+596:     private(set) var currentPose: GripHandPose?
+597:     private(set) var currentViewportSize: CGSize = .zero
+598:     private(set) var currentResetToken: Int?
+599: 
+600:     private let slotOffset: Float = 0.82
+601:     private var canonicalCenter = SIMD3<Float>.zero
+602:     private var canonicalOffset = SIMD3<Float>(0, 0, 1)
+603:     private var canonicalOrthographicScale: Float = 1
+604:     private var orbitAzimuth: Float = 0
+605:     private var orbitElevation: Float = 0
+606:     private var orbitZoom: Float = 1
+607: 
+608:     init(assetResult: Result<GripHandAsset, Error> = GripHandAsset.bundled) {
+609:         #if DEBUG
+610:         if BoardHighlightDiagnostic.isEnabled {
+611:             BoardHighlightDiagnostic.shared.handLifecycle(kind: "pair",
+612:                 event: "constructor-entry", root: root)
+613:         }
+614:         #endif
+615:         root.addChild(leftHand)
+616:         root.addChild(rightHand)
+617:         leftHand.position.x = -slotOffset
+618:         rightHand.position.x = slotOffset
+619:         leftHand.scale.x = -1
+620:         var orthographicCamera = OrthographicCameraComponent()
+621:         orthographicCamera.near = 0.1
+622:         orthographicCamera.far = 100
+623:         orthographicCamera.scale = 3.2
+624:         orthographicCamera.scaleDirection = .vertical
+625:         camera.components.set(orthographicCamera)
+626:         root.addChild(camera)
+627:         root.addChild(keyLight)
+628:         root.addChild(fillLight)
+629:         keyLight.components.set(DirectionalLightComponent(color: .white, intensity: 3_200))
+630:         fillLight.components.set(DirectionalLightComponent(color: .white, intensity: 600))
+631:         // Directional lights affect every entity, so the pair shares one centered rig.
+632:         keyLight.look(at: .zero, from: SIMD3(0, 8, 7), relativeTo: root)
+633:         fillLight.look(at: .zero, from: SIMD3(0, 2, -5), relativeTo: root)
+634: 
+635:         do {
+636:             let asset = try assetResult.get()
+637:             let left = try GripHandRealitySurface(asset: asset)
+638:             let right = try GripHandRealitySurface(asset: asset)
+639:             leftHand.addChild(left.root)
+640:             rightHand.addChild(right.root)
+641:             leftSurface = left
+642:             rightSurface = right
+643:             isAvailable = true
+644:         } catch {
+645:             isAvailable = false
+646:         }
+647:     }
+648: 
+649:     func update(pose: GripHandPose, viewportSize: CGSize, resetToken: Int) {
+650:         let poseChanged = currentPose != pose
+651:         let viewportChanged = currentViewportSize != viewportSize
+652:         if poseChanged {
+653:             do {
+654:                 try leftSurface?.apply(pose)
+655:                 try rightSurface?.apply(pose)
+656:             } catch {
+657:                 if let leftSurface { leftHand.removeChild(leftSurface.root) }
+658:                 if let rightSurface { rightHand.removeChild(rightSurface.root) }
+659:                 leftSurface = nil
+660:                 rightSurface = nil
+661:                 isAvailable = false
+662:             }
+663:         }
+664:         let needsReset = poseChanged || viewportChanged || currentResetToken != resetToken
+665:         currentPose = pose
+666:         currentViewportSize = viewportSize
+667:         currentResetToken = resetToken
+668:         if needsReset { resetCamera() }
+669:     }
+670: 
+671:     func resetCamera() {
+672:         guard let leftSurface, let rightSurface else { return }
+673:         let points = framedPoints(for: leftSurface, under: leftHand)
+674:             + framedPoints(for: rightSurface, under: rightHand)
+675:         guard !points.isEmpty else { return }
+676:         var low = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
+677:         var high = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
+678:         for point in points {
+679:             let xyz = SIMD3<Float>(point.x, point.y, point.z)
+680:             low = simd_min(low, xyz)
+681:             high = simd_max(high, xyz)
+682:         }
+683:         let center = (low + high) / 2
+684:         // Shared frontal oblique camera frames the union, leaving room for both hands.
+685:         let offset = SIMD3<Float>(0, 2.75, 9.4)
+686:         guard let transform = Self.cameraTransform(position: center + offset, target: center) else { return }
+687:         let inverseCamera = simd_inverse(transform)
+688:         var halfWidth: Float = 0
+689:         var halfHeight: Float = 0
+690:         for point in points {
+691:             let projected = inverseCamera * point
+692:             halfWidth = max(halfWidth, abs(projected.x))
+693:             halfHeight = max(halfHeight, abs(projected.y))
+694:         }
+695:         let size = currentViewportSize
+696:         let aspect = size.width.isFinite && size.height.isFinite && size.width > 0 && size.height > 0
+697:             ? Float(size.width / size.height) : 0.85
+698:         guard aspect.isFinite, aspect > 0 else { return }
+699:         let scale = max(halfHeight, halfWidth / aspect) * 1.08
+700:         guard scale.isFinite, scale > 0 else { return }
+701:         camera.transform = Transform(matrix: transform)
+702:         var component = camera.components[OrthographicCameraComponent.self]!
+703:         component.scale = scale
+704:         camera.components.set(component)
+705:         canonicalCenter = center
+706:         canonicalOffset = offset
+707:         canonicalOrthographicScale = scale
+708:         orbitAzimuth = 0
+709:         orbitElevation = 0
+710:         orbitZoom = 1
+711:     }
+712: 
+713:     func orbit(azimuthDelta: Float, elevationDelta: Float, zoomScale: Float = 1) {
+714:         guard azimuthDelta.isFinite, elevationDelta.isFinite,
+715:               zoomScale.isFinite, zoomScale > 0 else { return }
+716:         let nextAzimuth = (orbitAzimuth + azimuthDelta).truncatingRemainder(dividingBy: .pi * 2)
+717:         let nextElevation = min(max(orbitElevation + elevationDelta, -0.55), 0.55)
+718:         let nextZoom = min(max(orbitZoom * zoomScale, 0.75), 1.35)
+719:         let distance = simd_length(canonicalOffset)
+720:         guard distance.isFinite, distance > 1e-6 else { return }
+721:         let direction = canonicalOffset / distance
+722:         let up = SIMD3<Float>(0, 1, 0)
+723:         let rightVector = simd_cross(up, direction)
+724:         guard simd_length(rightVector) > 1e-6 else { return }
+725:         let yaw = simd_quatf(angle: nextAzimuth, axis: up)
+726:         let pitch = simd_quatf(angle: nextElevation, axis: simd_normalize(rightVector))
+727:         let rotatedOffset = (pitch * yaw).act(direction) * (distance / nextZoom)
+728:         guard let transform = Self.cameraTransform(position: canonicalCenter + rotatedOffset,
+729:                                                    target: canonicalCenter) else { return }
+730:         camera.transform = Transform(matrix: transform)
+731:         var component = camera.components[OrthographicCameraComponent.self]!
+732:         component.scale = canonicalOrthographicScale / nextZoom
+733:         camera.components.set(component)
+734:         orbitAzimuth = nextAzimuth
+735:         orbitElevation = nextElevation
+736:         orbitZoom = nextZoom
+737:     }
+738: 
+739:     private func framedPoints(for surface: GripHandRealitySurface, under hand: Entity) -> [SIMD4<Float>] {
+740:         surface.posedVerticesForFraming().map { hand.transform.matrix * SIMD4<Float>($0, 1) }
+741:     }
+801:     }
+802: 
+803:     var body: some View {
+804:         #if DEBUG
+805:         if BoardHighlightDiagnostic.suppressesAllHandHosts {
+806:             Color.clear
+807:                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+808:                 .allowsHitTesting(false)
+809:                 .accessibilityHidden(true)
+810:         } else {
+811:             handContent
+812:         }
+813:         #else
+814:         handContent
+815:         #endif
+816:     }
+817: 
+818:     private var handContent: some View {
+819:         let _ = cameraRevision
+820:         return GeometryReader { proxy in
+821:             let size = proxy.size
+822:             RealityView { content in
+823:                 #if DEBUG
+824:                 if BoardHighlightDiagnostic.isEnabled {
+825:                     BoardHighlightDiagnostic.shared.handLifecycle(kind: "pair",
+826:                         event: "make-entry", root: scene.root)
+827:                 }
+828:                 #endif
+829:                 content.camera = .virtual
+830:                 content.add(scene.root)
+831:                 syncScene(in: size)
+832:                 updateUnavailableState()
+833:             } update: { _ in
+834:                 syncScene(in: size)
+835:                 updateUnavailableState()
+836:             }
+837:             .simultaneousGesture(orbitGesture(size: size))
+838:             .simultaneousGesture(magnifyGesture)
+839:             .overlay {
+840:                 if isUnavailable {
+841:                     Text("3D hands unavailable")
+842:                         .font(.caption2)
+843:                         .foregroundStyle(.secondary)
+844:                         .multilineTextAlignment(.center)
+845:                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+846:                         .accessibilityHidden(true)
+847:                 }
+848:             }
+849:             .accessibilityHidden(true)
+850:         }
+851:     }
+852: 
+853:     func syncScene(in size: CGSize) {

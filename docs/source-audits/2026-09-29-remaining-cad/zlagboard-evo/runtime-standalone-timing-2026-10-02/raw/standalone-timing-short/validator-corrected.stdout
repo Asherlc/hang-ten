@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "oneMakeWholeRun": true,
+    "oneScene": true,
+    "oneView": true,
+    "stableViewportDuringMeasurement": true,
+    "appActiveDuringMeasurement": true,
+    "windowActiveDuringMeasurement": true,
+    "rootAndCameraActive": true,
+    "noPeriodicSampler": true,
+    "noSecondHost": true,
+    "counterPresenceCorrect": true,
+    "scriptComplete": true,
+    "all20Brackets": true,
+    "expected40Snapshots": true,
+    "exactlyOnePublicARView": true,
+    "fixedActualPlacement": true,
+    "singleActualSceneRootCamera": true,
+    "stableTransforms": true,
+    "resolvedInputsMatch": true,
+    "completeContiguousJSONL": true,
+    "completeTailAfterCaptures": true,
+    "fiveIntendedPhases": true,
+    "fourActualTransitions": true,
+    "mutationsInIntendedPhase": true
+  },
+  "maxScreenshotStartLag": 0.012683391571044922
+}

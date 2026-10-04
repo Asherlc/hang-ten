@@ -1,0 +1,10 @@
+{
+  "checks": {
+    "completeStream": true,
+    "existingWeakAndCameraChecksPass": true,
+    "prestartSpecificChecks": true,
+    "all12Bracketed": true
+  },
+  "errors": [],
+  "actualConstructors": 2
+}

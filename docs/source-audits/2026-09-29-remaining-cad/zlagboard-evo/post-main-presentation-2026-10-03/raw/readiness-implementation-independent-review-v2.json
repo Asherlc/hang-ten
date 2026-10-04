@@ -1,0 +1,84 @@
+{
+  "createdUTC": "2026-10-03T19:07:02.072652+00:00",
+  "scope": "Read-only second review. No app source/test edits, builds, Simulator actions or protected parent changes.",
+  "originalInspectedSource": {
+    "createdUTC": "2026-10-03T19:04:16.215780+00:00",
+    "files": [
+      {
+        "path": "HangTen/Views/BoardModelView.swift",
+        "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v2-source/BoardModelView.swift",
+        "sha256": "43f6777a08e3e0ee1ff366da7a3a4ccaea0f9a34002ee08b521cb7bce36b9eb4"
+      },
+      {
+        "path": "HangTen/Views/GripHandModelView.swift",
+        "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v2-source/GripHandModelView.swift",
+        "sha256": "2af37de375d637f12418a77749f78ff92bb00048915695f62f233baedc474abb"
+      },
+      {
+        "path": "HangTen/Views/WorkoutView.swift",
+        "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v2-source/WorkoutView.swift",
+        "sha256": "23fee5a36b220b854994dcca71629e802aba73d72cd5464a564e0713d022fb73"
+      },
+      {
+        "path": "HangTen/Views/BoardMapView.swift",
+        "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v2-source/BoardMapView.swift",
+        "sha256": "738908c478aa2303f8b399d94292ae7aa6b2179de2a26e68a58c3b41af176aca"
+      },
+      {
+        "path": "HangTenTests/WorkoutTimelineTests.swift",
+        "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v2-source/WorkoutTimelineTests.swift",
+        "sha256": "521dea85b36198b2a58464fef3a89bfdbbd22df1d26ff3b06e7acc928647cd8c"
+      }
+    ]
+  },
+  "postReviewFieldCorrection": [
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "43f6777a08e3e0ee1ff366da7a3a4ccaea0f9a34002ee08b521cb7bce36b9eb4",
+      "unchangedFromSnapshot": true
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "2af37de375d637f12418a77749f78ff92bb00048915695f62f233baedc474abb",
+      "unchangedFromSnapshot": true
+    },
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "sha256": "417a4b27d7ae0ce1d1fa7f4dee440fadcea12d7a8c1b7a33a285edac61709e8f",
+      "unchangedFromSnapshot": false
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "738908c478aa2303f8b399d94292ae7aa6b2179de2a26e68a58c3b41af176aca",
+      "unchangedFromSnapshot": true
+    }
+  ],
+  "compileFinding": {
+    "original": "Renderer lacked preparationID despite initializer and consume uses; immediately reported to root.",
+    "followup": "Root added var preparationID: UUID? = nil. Exact one-line diff and corrected WorkoutView SHA417a4b27d7ae0ce1d1fa7f4dee440fadcea12d7a8c1b7a33a285edac61709e8f retained. No build result claimed by this review."
+  },
+  "resolvedPriorFindings": [
+    "Every preference record now carries request ID and consume requires all records to match the current request. New stale-snapshot test exercises a cancelled request against a new one.",
+    "Board readiness compares token, actual viewport, position, contacts and mode; hand readiness compares token, actual viewport, pose/finger configuration, side and reset token. A changed signature does not immediately inherit true readiness.",
+    "Workout pre-start content change cancels pending audio/visual arm, stops audio and reissues a fresh first-start request while routineStartedAt is nil. Main hand-choice and task controls remain available.",
+    "Actual raster branch emits a board record from positive finite viewport, and the parent always requires a board record. This removes inferred model/raster media and empty-preference fallback from the start condition.",
+    "Hands requirement matches portrait concrete-hold path or actual left/right cue policy. The existing Main single/pair/selected-side resolution is retained.",
+    "Initial countdown retains cue subtree via mountedCueCountdown and opacity; hidden wrappers now explicitly suppress hit testing and accessibility. Pair RealityView remains accessibilityHidden throughout.",
+    "cancelCountdown now resets the renderer gate; interruption, end, pending-toggle and disappearance cancellation remain connected. Skip/resume stay outside requestFirstStart initial branch; audio schedule and prescribed countdown/interval durations are unchanged."
+  ],
+  "remainingSourceRisk": {
+    "severity": "narrow identity hardening",
+    "path": "BoardModelView.swift:BoardModelRealityView.Preparation and inner .id(ObjectIdentifier(model))",
+    "finding": "Preparation does not include model identity. synchronizedPreparation State belongs to outer BoardModelRealityView, while model .id is applied only to the inner RealityView. If a replacement loaded model reaches the same outer view without an observed intervening loading branch, unchanged token/viewport/selection could inherit prior scene readiness before replacement make. Ordinary loading UI replacement often resets this state, but the identity contract should not depend on that intermediate body being committed.",
+    "recommendation": "Include ObjectIdentifier(model) in Preparation or otherwise scope the synchronization state to model identity. No actual runtime occurrence claimed."
+  },
+  "runtimeBoundariesNotEstablishedBySourceReview": [
+    "Actual child preference propagation through BoardModelSurface parent preference, make-to-attachment timing and the initial loading-to-ready transition require hosted/runtime proof; aggregation tests alone do not cover them.",
+    "Opacity zero preserves SwiftUI structural identity but is not a guarantee of continuous GPU drawing or first displayed frame. The full first-Hang blank/color/hand gate remains unchanged.",
+    "Token and signature guard late scheduled assignments from producing true readiness for different current inputs. They are not a compositor or material-presentation guarantee.",
+    "The disabled DEBUG BoardFrameImageView path still has no readiness publisher; it is not validated by this live-renderer change.",
+    "Changing layout during an already-running initial countdown does not trigger rearm because routineStartedAt is set. This is an explicit first-start-only scope limit; it does not guarantee readiness of a replacement orientation host at expiry."
+  ],
+  "testAssessment": "New stale-request test is relevant. Existing dictionary/gate tests do not replace actual scene/host lifecycle checks. This worker executed no tests.",
+  "conclusion": "After the one-line field correction, no additional definite normal-route logic blocker found in task-side, opacity grouping, audio or cancellation review. Model identity should be included for a complete preparation identity. Runtime correctness and repair remain unproven."
+}

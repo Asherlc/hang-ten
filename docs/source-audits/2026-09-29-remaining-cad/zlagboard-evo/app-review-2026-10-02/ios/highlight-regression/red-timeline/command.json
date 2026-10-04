@@ -1,0 +1,21 @@
+[
+  "rtk",
+  "proxy",
+  "xcodebuild",
+  "-project",
+  "HangTen.xcodeproj",
+  "-scheme",
+  "HangTen",
+  "-configuration",
+  "Debug",
+  "-destination",
+  "platform=iOS Simulator,id=1684856E-FC2D-4407-8063-9B343B99CAD6",
+  "-derivedDataPath",
+  ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/DerivedData-placid-badger-cad-second-half",
+  "-resultBundlePath",
+  ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/red-timeline/tests-placid-badger-cad-second-half.xcresult",
+  "-parallel-testing-enabled",
+  "NO",
+  "-only-testing:HangTenTests/BoardModelRealityTests/testTimelineDrivenHostedModelUpdatesHighlightModeWithoutLayoutChanges",
+  "test"
+]

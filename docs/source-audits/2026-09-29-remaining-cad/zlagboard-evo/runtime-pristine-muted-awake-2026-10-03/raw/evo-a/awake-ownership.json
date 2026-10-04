@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "resourceName": "placid-badger-cad-second-half-pristine-zlagboard-evo-a-idle-sleep-assertion",
+  "pid": 33929,
+  "parentPID": 33926,
+  "command": [
+    "placid-badger-cad-second-half-pristine-zlagboard-evo-a-idle-sleep-assertion",
+    "-i",
+    "-w",
+    "33926",
+    "-t",
+    "300"
+  ],
+  "executable": "/usr/bin/caffeinate",
+  "registeredImmediately": true
+}

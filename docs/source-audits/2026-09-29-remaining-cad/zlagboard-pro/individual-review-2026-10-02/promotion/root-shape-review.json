@@ -1,0 +1,20 @@
+{
+  "reviewer": "root/Astra",
+  "sourceSetPreviouslyApproved": true,
+  "inspected": [
+    "sources/product-01.png",
+    "sources/product-02.png",
+    "preparation/rounded-candidate/before-after-front-side-top.png"
+  ],
+  "judgment": "Existing native candidate is consistent with the qualitative rounded wooden form and correct28-contact arrangement. Proceed to actual USDZ/app validation.",
+  "nativeChanges": "Two editable fillets and corrected topjug crest/corner contact coverage; existing113sketch history preserved.",
+  "estimates": [
+    "2mm trough radius",
+    "1mm frontlip radius",
+    "705x152x42mm prior display envelope",
+    "7degree incut slope and other unspecified shapes remain prior display estimates",
+    "19.3degree downward appcamera"
+  ],
+  "preserved": "28contact IDs and all metadata except supported woodfinish/displaycamera; all21pocket bearing surfaces/depths and26mainplanar normals unchanged under retained proof.",
+  "humanAccepted": false
+}

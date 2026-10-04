@@ -1,0 +1,185 @@
+{
+  "lifetimes": [
+    {
+      "token": "A3785AB5-C70B-4DF4-A76B-6EBF061A30FA",
+      "constructorSequence": 14,
+      "firstObservedBothDeadSequence": 21,
+      "lastObservation": {
+        "sequence": 164,
+        "epoch": 1790997231.04815,
+        "observation": {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014771fc00)",
+          "constructedRootID": "ObjectIdentifier(0x000000014771fba0)",
+          "handLifetimeToken": "A3785AB5-C70B-4DF4-A76B-6EBF061A30FA",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "A3785AB5-C70B-4DF4-A76B-6EBF061A30FA"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 19,
+              "lastSwiftUIEventUptime": 80109.1007025,
+              "viewToken": "9946B500-1359-4B49-AEB3-12E9EC18F07A"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "token": "F6D2F364-1150-4BDF-BD92-2BF9D96734D5",
+      "constructorSequence": 30,
+      "firstObservedBothDeadSequence": null,
+      "lastObservation": {
+        "sequence": 164,
+        "epoch": 1790997231.04815,
+        "observation": {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x0000000111ff5220)",
+            "isActive": true,
+            "orthographicComponent": true,
+            "parentEntityID": "ObjectIdentifier(0x0000000111ff5620)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000112149c00)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x0000000111ff5220)",
+          "constructedRootID": "ObjectIdentifier(0x0000000111ff5620)",
+          "handLifetimeToken": "F6D2F364-1150-4BDF-BD92-2BF9D96734D5",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x0000000111ff5620)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000148b80f00)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000112149c00)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "F6D2F364-1150-4BDF-BD92-2BF9D96734D5"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 29,
+              "lastSwiftUIEventUptime": 80111.41393895834,
+              "viewToken": "D286D9D8-B2D9-4BBC-A6E5-999FFD23E078"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "brackets": [
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-0-active-plus-0.25.png",
+      "beforeSequence": 34,
+      "afterSequence": 35,
+      "beforeEpoch": 1790997036.951205,
+      "afterEpoch": 1790997037.954677,
+      "spanSeconds": 1.003472089767456
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-0-active-plus-1.png",
+      "beforeSequence": 34,
+      "afterSequence": 36,
+      "beforeEpoch": 1790997036.951205,
+      "afterEpoch": 1790997039.0213609,
+      "spanSeconds": 2.0701558589935303
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-0-active-plus-3.png",
+      "beforeSequence": 36,
+      "afterSequence": 38,
+      "beforeEpoch": 1790997039.0213609,
+      "afterEpoch": 1790997041.066139,
+      "spanSeconds": 2.0447781085968018
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-0-active-plus-5.png",
+      "beforeSequence": 38,
+      "afterSequence": 40,
+      "beforeEpoch": 1790997041.066139,
+      "afterEpoch": 1790997043.137412,
+      "spanSeconds": 2.0712730884552
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-0.25.png",
+      "beforeSequence": 43,
+      "afterSequence": 46,
+      "beforeEpoch": 1790997043.74586,
+      "afterEpoch": 1790997045.234208,
+      "spanSeconds": 1.4883480072021484
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-1.png",
+      "beforeSequence": 45,
+      "afterSequence": 47,
+      "beforeEpoch": 1790997044.199547,
+      "afterEpoch": 1790997046.286694,
+      "spanSeconds": 2.0871469974517822
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-3.png",
+      "beforeSequence": 47,
+      "afterSequence": 48,
+      "beforeEpoch": 1790997046.286694,
+      "afterEpoch": 1790997048.292077,
+      "spanSeconds": 2.005383014678955
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-5.png",
+      "beforeSequence": 48,
+      "afterSequence": 49,
+      "beforeEpoch": 1790997048.292077,
+      "afterEpoch": 1790997049.301124,
+      "spanSeconds": 1.009047031402588
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-0.25.png",
+      "beforeSequence": 160,
+      "afterSequence": 162,
+      "beforeEpoch": 1790997224.012631,
+      "afterEpoch": 1790997231.0404239,
+      "spanSeconds": 7.027792930603027
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-1.png",
+      "beforeSequence": 160,
+      "afterSequence": 162,
+      "beforeEpoch": 1790997224.012631,
+      "afterEpoch": 1790997231.0404239,
+      "spanSeconds": 7.027792930603027
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-3.png",
+      "beforeSequence": 160,
+      "afterSequence": 162,
+      "beforeEpoch": 1790997224.012631,
+      "afterEpoch": 1790997231.0404239,
+      "spanSeconds": 7.027792930603027
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-5.png",
+      "beforeSequence": 160,
+      "afterSequence": 162,
+      "beforeEpoch": 1790997224.012631,
+      "afterEpoch": 1790997231.0404239,
+      "spanSeconds": 7.027792930603027
+    }
+  ],
+  "limitation": "Weak point observations only. Existing board checkpoints are not a complete hand-only lifecycle history or presenting-host/GPU proof."
+}

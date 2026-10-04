@@ -1,0 +1,9 @@
+{
+  "scope": "Root whole screenshot review, incomplete run only",
+  "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-a-landscape/phase-0-active-plus-0.25.png",
+  "sha256": "d9765eca14b7c473c19e588c57d7e0786bc2179292a6dc75ed9c90ec3cbb4246",
+  "board": "Selected left/right 20mm contacts visibly red in initial Hang",
+  "hands": "Paired half-crimp cues visible, four selected red fingers each, upright",
+  "result": "INITIAL_FRAME_ONLY_CORRECT; full sequence unavailable; original helper failure retained",
+  "processing": "Viewed whole image, no crops/pixel measurements"
+}

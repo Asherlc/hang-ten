@@ -1,0 +1,118 @@
+{
+  "status": "UNAPPLIED_SCRATCH_DEBUG_PROPOSAL_NOT_BUILT_OR_RUN",
+  "revision": 3,
+  "patchSHA256": "c53b409f878296d440c9eb567163a7afcb0c8c2c9be3a1288995411008d8241d",
+  "patchLines": 368,
+  "files": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "inputSHA256": "72ffe2a766a128688510fa02c2c1a1cbcc56c0aa28b6202f74f59a567ed42f67",
+      "proposedSHA256": "a75b0fe069f6f8d03f0ecd21bf18f001d83e5d4c7ac173abd4809d3fba910b9b",
+      "trackedInputStillExact": true
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "inputSHA256": "d74f4fbb2bd260cdd777e3fd15c0d0fc92f9b7b2a9f9b5cd9daa9bdf54748426",
+      "proposedSHA256": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+      "trackedInputStillExact": true
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "inputSHA256": "5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926",
+      "proposedSHA256": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+      "trackedInputStillExact": true
+    }
+  ],
+  "inputDiagnosticBinaryLabelFromRoot": "f98; exact source hashes authoritative; no binary/device access",
+  "preservedRevision1": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-prep/patch-v1",
+    "patchSHA256": "76901946edd8edee1c6937a707aac4d417f6ebbfe4d60dfefe68e8b04607f541"
+  },
+  "checks": {
+    "HangTen/Models/BoardModelRealityTypes.swift": {
+      "insertionsOnly": true,
+      "trackedInputExact": true,
+      "sameTaskCreation": true,
+      "sameAwait": true,
+      "sameSleep": true,
+      "sameStateDeclarations": true,
+      "sameOnChange": true,
+      "sameActorAnnotations": true
+    },
+    "HangTen/Views/BoardModelView.swift": {
+      "insertionsOnly": true,
+      "trackedInputExact": true,
+      "sameTaskCreation": true,
+      "sameAwait": true,
+      "sameSleep": true,
+      "sameStateDeclarations": true,
+      "sameOnChange": true,
+      "sameActorAnnotations": true
+    },
+    "HangTen/Views/RootView.swift": {
+      "insertionsOnly": true,
+      "trackedInputExact": true,
+      "sameTaskCreation": true,
+      "sameAwait": true,
+      "sameSleep": true,
+      "sameStateDeclarations": true,
+      "sameOnChange": true,
+      "sameActorAnnotations": true
+    }
+  },
+  "applyCheck": {
+    "exitCode": 0,
+    "readOnly": true,
+    "applied": false
+  },
+  "flag": "HANGTEN_REVIEW_STARTUP_OBSERVATION=1 plus existing diagnostic",
+  "correlation": {
+    "context": "String of existing audioCoach ObjectIdentifier plus plan.id; no object retained. Diagnostic registry contains only String/Int collections.",
+    "singleWorkoutValidity": "Future observation gate must require exactly one context and appearance, all relevant associationValid=true, and no startup-association-ambiguous event. Same-plan concurrent or reappearing views cannot be distinguished and invalidate association; this is not a production behavior guard.",
+    "request": "Each request gets a fresh local UUID. Synchronous scope is pushed/popped without suspension. A deferred audio dispatch consumes the prior pending ID; a subsequent request is a new child ID with explicit parentAttemptID. Direct beginVisibly uses the original deferred ID.",
+    "task": "Task captures immutable local startupAttemptID and startupContext. Entry/resume/catch use that explicit ID, never a latest-global request ID. Only after the original await and cancellation guard is the captured ID pushed around synchronous beginVisibleCountdown.",
+    "cancelRequested": "Each of four existing optional cancel call sites emits actual task/pending presence plus their associated IDs. Nil optional invocations are explicitly distinguishable from actual task cancellation requests. Only diagnostic maps are cleared.",
+    "cancelObserved": "The existing Task.sleep catch emits startup-arm-task-cancelled with captured ID. A resumed event includes Task.isCancelled immediately before the unchanged guard; true means cancellation observed at that guard. These are distinct from request markers.",
+    "lateCompletion": "Old task completion after armed association changes logs ambiguity. It does not suppress the original task=nil assignment or countdown mutation.",
+    "audioChange": "The raw audio preparation callback has no inferred pending attempt ID outside synchronous scope; the subsequent explicit deferred-dispatch binds the consumed request. If mapping is missing/ambiguous, null ID and ambiguity remain visible.",
+    "surface": "Local loadAttempt UUID connects load-call/return/ready/error. Return and ready include existing immutable model diagnosticLifecycleToken matching constructor/make events. Reading that UUID does not inspect entities, actual Scene or lazy state."
+  },
+  "preservedBehavior": [
+    "All original source lines remain in order: three reserved files only; additions are DEBUG-scoped.",
+    "No added observable state, @State, Task, await, sleep, observer, timer, body logging, UIKit census, entity access or lazy hand read.",
+    "All original scheduling expressions, production signatures, actor annotations, mutations, callback conditions and cancellation guards remain unchanged.",
+    "No change to geometry, renderer state, audio schedule, training content, packages or review records."
+  ],
+  "observationProtocol": [
+    "Bound observation to 30 seconds from recorded workout appearance; do not extend for missing stages.",
+    "Require one context/appearance and no ambiguous association to claim complete attempt linkage.",
+    "Use existing timestamps and explicit planned armUptime/actual activeStartUptime; nil numeric fields remain NSNull.",
+    "Missing endpoint or events after the bound are right-censored, not evidence of no work.",
+    "Existing scene-construction/make events retain their original meaning; no new host identity or presented-frame assertion."
+  ],
+  "limits": [
+    "Read-only apply-check and textual source invariants only; no Swift parse/typecheck/build or runtime trial.",
+    "Scalar allocation, UUID generation and synchronous event serialization/file I/O can perturb actor timing; measured spans include observer overhead.",
+    "No registry association can prove same-plan concurrent view identity; such appearances/overlap are rejected by evidence validity, never by production logic.",
+    "An audio callback without a consumed deferred request remains intentionally unassociated rather than guessed.",
+    "A Surface Task cancelled before its existing first guard emits no startup load marker.",
+    "Task catch identifies the existing sleep failure/cancellation path; it does not establish why a task was cancelled beyond separately observed requests.",
+    "This proposal authorizes no application, build, device access or next experiment and makes no root-cause/fix claim.",
+    "V3 has 368 diff lines. V2 remains exact; changes from v2 are separately retained in v2-to-v3.patch."
+  ],
+  "preservedRevision2": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-prep/patch-v2",
+    "patchSHA256": "6fc896c9ee56b9f8ecbbe4078ce923148ba6725eb25f400f44f53b8b73b42c3c",
+    "reportSHA256": "557c2f29bfa40e0cfeab072f193451b79d6bf0c426b5616a1b2f0cd1b83b4402"
+  },
+  "v2DeltaSHA256": "13ce1f617cd2f62c062d0b75a0bfa0cb6632f3181a96fbeeafd8768cdb222848",
+  "revision3Changes": [
+    "Read the existing DEBUG model.diagnosticLifecycleToken.uuidString at load-return and ready-published, linking Surface loadAttempt to existing scene-constructor/make identity. No entity, actual Scene, lazy property or extra object reference accessed.",
+    "Two sparse scalar markers directly surround the existing prepareCountdownAudio() call, with the current immutable startupAttemptID. The original call/condition and scheduling remain unchanged."
+  ],
+  "typeEvidence": {
+    "loader": "HangTen/Models/BoardModelRealityTypes.swift:1397-1402 BoardModelRealityLoader.load async throws -> BoardModelRealityScene",
+    "token": "HangTen/Models/BoardModelRealityTypes.swift:169-175 BoardModelRealityScene has existing DEBUG let diagnosticLifecycleToken = UUID()",
+    "surface": "HangTen/Views/BoardModelView.swift:117 infers model from that loader; ready(model) already uses it."
+  }
+}

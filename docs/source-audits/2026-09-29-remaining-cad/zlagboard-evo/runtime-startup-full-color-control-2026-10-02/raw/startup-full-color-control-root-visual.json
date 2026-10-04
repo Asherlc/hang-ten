@@ -1,0 +1,39 @@
+{
+  "scope": "Root whole-image corroboration; all12 independently reviewed by runtime worker",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-0.25.png",
+      "sha256": "947fd784666b3a807892701021752eee92b19037f1ed680b69e6c24db4957b1c",
+      "observedBoardColor": "red",
+      "phase": "active",
+      "result": "PASS",
+      "handsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-5.png",
+      "sha256": "1f2d4583b9a5d78496d15b0e44dba6283e32f96e9f1b0a798668237ed73201c9",
+      "observedBoardColor": "red",
+      "phase": "preview",
+      "result": "FAIL",
+      "handsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "2227d82298b64153848121dfb365797a2304d2a85cebf07f8abdfe8ce92fa475",
+      "observedBoardColor": "blue",
+      "phase": "active",
+      "result": "FAIL",
+      "handsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-5.png",
+      "sha256": "e63331888e50c041366c104d74026d7d8cadec6975f30fd5e75b4fcc64d47f16",
+      "observedBoardColor": "blue",
+      "phase": "active",
+      "result": "FAIL",
+      "handsVisible": true
+    }
+  ],
+  "fullWorkflowResult": "FAIL",
+  "noPixelMeasurement": true
+}

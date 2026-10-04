@@ -1,0 +1,10 @@
+{
+  "phase": "migration-wrapper ownership guard",
+  "processService": "com.apple.migrationpluginwrapper",
+  "result": "aborted before sampling because no live numeric PID remained in exact-device launchctl list",
+  "guardExitStatus": 1,
+  "samplingExecuted": false,
+  "serviceSignalsSent": false,
+  "rawEvidence": "migration-wrapper-launchctl.stdout",
+  "interpretation": "Boot completed and migration service exited naturally; no recovery cause established."
+}

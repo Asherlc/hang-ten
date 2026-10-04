@@ -1,0 +1,472 @@
+{
+  "status": "OBSERVED_AFFINE_PATH_EQUIVALENCE_CONFIRMED_EXACT_FRAME_SET_GATE_STILL_FAILED",
+  "endpoints": {
+    "initial": [
+      232,
+      143.33333333333331,
+      410,
+      70
+    ],
+    "settled": [
+      257,
+      182.66666666666666,
+      360,
+      61.66666666666666
+    ]
+  },
+  "arms": [
+    {
+      "arm": "o1",
+      "rawTraceSHA256": "e7b3712ffc2d2908ac0bf5aa001a976f3ad46ccd06b2321992758288c492562d",
+      "initialActiveSequence": 13,
+      "initialActiveEpoch": 1790983525.254562,
+      "firstCapture": {
+        "phaseIndex": 0,
+        "mode": "active",
+        "offset": 0.25,
+        "targetEpoch": 1790983525.504562,
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o1-landscape/phase-0-active-plus-0.25.png",
+        "sha256": "df5e49b73db5da9a46e9f89f9d9e1db2fe1904ea7869f70768787273311f9cc7",
+        "startEpoch": 1790983525.537344,
+        "endEpoch": 1790983526.0221171,
+        "startDelayFromTarget": 0.03278207778930664,
+        "traceReadBefore": {
+          "observedEpoch": 1790983525.537344,
+          "lastSequence": 20
+        },
+        "traceReadAfter": {
+          "observedEpoch": 1790983526.022795,
+          "lastSequence": 20
+        }
+      },
+      "observationCount": 128,
+      "intermediateObservations": [
+        {
+          "sequence": 20,
+          "event": "sample",
+          "epoch": 1790983525.425887,
+          "frame": [
+            236.005765914917,
+            149.6357383728027,
+            401.988468170166,
+            68.66474469502768
+          ],
+          "lambda": 0.1602306365966796,
+          "maximumAffineResidualPoints": 1.4210854715202004e-14,
+          "secondsFromInitialActive": 0.1713252067565918,
+          "secondsBeforeFirstCaptureStart": 0.11145687103271484
+        }
+      ],
+      "firstFinalEndpointObserved": {
+        "sequence": 21,
+        "event": "sample",
+        "epoch": 1790983526.45665,
+        "frame": [
+          257,
+          182.66666666666666,
+          360,
+          61.66666666666666
+        ],
+        "lambda": 1.0,
+        "maximumAffineResidualPoints": 0.0,
+        "secondsFromInitialActive": 1.2020881175994873,
+        "secondsBeforeFirstCaptureStart": -0.9193060398101807
+      },
+      "monotoneObservedProgress": true,
+      "maxResidualPoints": 1.4210854715202004e-14,
+      "endpointOnlyAfterFirstFinalObservation": true
+    },
+    {
+      "arm": "p1",
+      "rawTraceSHA256": "7a6c76ac8063c5fa9494a7cb870bc2d4228214f32db918491cf9c1df0cfb6e1e",
+      "initialActiveSequence": 13,
+      "initialActiveEpoch": 1790983771.281828,
+      "firstCapture": {
+        "phaseIndex": 0,
+        "mode": "active",
+        "offset": 0.25,
+        "targetEpoch": 1790983771.531828,
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p1-landscape/phase-0-active-plus-0.25.png",
+        "sha256": "6544aa72bccda02ceafcdfd9a9bbc1bc3ccc7e3f238a91018ce714ffb5abd815",
+        "startEpoch": 1790983771.572203,
+        "endEpoch": 1790983772.020261,
+        "startDelayFromTarget": 0.0403749942779541,
+        "traceReadBefore": {
+          "observedEpoch": 1790983771.572203,
+          "lastSequence": 20
+        },
+        "traceReadAfter": {
+          "observedEpoch": 1790983772.0209548,
+          "lastSequence": 20
+        }
+      },
+      "observationCount": 128,
+      "intermediateObservations": [
+        {
+          "sequence": 20,
+          "event": "sample",
+          "epoch": 1790983771.5496058,
+          "frame": [
+            255.59673976898193,
+            180.4588705698649,
+            362.80652046203613,
+            62.13442007700601
+          ],
+          "lambda": 0.9438695907592776,
+          "maximumAffineResidualPoints": 0.0,
+          "secondsFromInitialActive": 0.2677779197692871,
+          "secondsBeforeFirstCaptureStart": 0.022597074508666992
+        }
+      ],
+      "firstFinalEndpointObserved": {
+        "sequence": 21,
+        "event": "sample",
+        "epoch": 1790983772.613935,
+        "frame": [
+          257,
+          182.66666666666666,
+          360,
+          61.66666666666666
+        ],
+        "lambda": 1.0,
+        "maximumAffineResidualPoints": 0.0,
+        "secondsFromInitialActive": 1.3321070671081543,
+        "secondsBeforeFirstCaptureStart": -1.0417320728302002
+      },
+      "monotoneObservedProgress": true,
+      "maxResidualPoints": 0.0,
+      "endpointOnlyAfterFirstFinalObservation": true
+    }
+  ],
+  "evidence": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o1-landscape/events-9F6783FD-E2B9-45CF-B72A-B939C99C98D8.jsonl",
+      "sha256": "e7b3712ffc2d2908ac0bf5aa001a976f3ad46ccd06b2321992758288c492562d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o1-landscape/captures.json",
+      "sha256": "4aa026a3de939ddcd8fa782fe37119eb26db361e8ae40bb11d4ba45df54353cd"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p1-landscape/events-2F6FDE80-13D0-495E-8C03-04DB3400B3A8.jsonl",
+      "sha256": "7a6c76ac8063c5fa9494a7cb870bc2d4228214f32db918491cf9c1df0cfb6e1e"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p1-landscape/captures.json",
+      "sha256": "b918c2189a9a2766f3c1d630ce7ef1c6cf485bfa4f6759c295b7321053a4f99d"
+    }
+  ],
+  "sameBinaryAndSourcesFromRetainedParity": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-early-o1-parity.json",
+      "sha256": "2cdce7495c095ea0ccc85fefa3a6dc6530d856f1d26ea06c87f45464dec59fe2",
+      "allEqual": true,
+      "checks": [
+        {
+          "category": "source",
+          "path": "HangTen/Models/BoardModelRealityTypes.swift",
+          "sha256": "eb00001d1215aa25f02f62e80340bc905203f0deecd730fbff02fd276fc638e6"
+        },
+        {
+          "category": "source",
+          "path": "HangTen/Views/BoardModelView.swift",
+          "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+        },
+        {
+          "category": "source",
+          "path": "HangTen/Views/RootView.swift",
+          "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221"
+        },
+        {
+          "category": "source",
+          "path": "HangTen/Views/GripHandModelView.swift",
+          "sha256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2"
+        },
+        {
+          "category": "builtMachO",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/__preview.dylib",
+          "sha256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1"
+        },
+        {
+          "category": "builtMachO",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/HangTen",
+          "sha256": "d023292947daa8947f19697288d92f7e9cf6b8d9851b1bb4f0dc2fd5e9662191"
+        },
+        {
+          "category": "builtMachO",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/HangTen.debug.dylib",
+          "sha256": "eef5a676aac05b09fbff374204347109caabd9842a1da7e8c6a64e7953914d15"
+        },
+        {
+          "category": "builtMachO",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Frameworks/Sentry.framework/Sentry",
+          "sha256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7"
+        },
+        {
+          "category": "builtMachO",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Frameworks/AmplitudeCore.framework/AmplitudeCore",
+          "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503"
+        },
+        {
+          "category": "installedMachO",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/__preview.dylib",
+          "sha256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1"
+        },
+        {
+          "category": "installedMachO",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/HangTen",
+          "sha256": "d023292947daa8947f19697288d92f7e9cf6b8d9851b1bb4f0dc2fd5e9662191"
+        },
+        {
+          "category": "installedMachO",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/HangTen.debug.dylib",
+          "sha256": "eef5a676aac05b09fbff374204347109caabd9842a1da7e8c6a64e7953914d15"
+        },
+        {
+          "category": "installedMachO",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/Frameworks/Sentry.framework/Sentry",
+          "sha256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7"
+        },
+        {
+          "category": "installedMachO",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/Frameworks/AmplitudeCore.framework/AmplitudeCore",
+          "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-evo/board.json",
+          "sha256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-evo/assets/primary.model.json",
+          "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-evo-0b78784dcf96651ad8ed90e6bf624ac9.assetpack/Hangboards/zlagboard-evo/assets/primary.usdz",
+          "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/Hangboards/zlagboard-evo/board.json",
+          "sha256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/Hangboards/zlagboard-evo/assets/primary.model.json",
+          "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-evo-0b78784dcf96651ad8ed90e6bf624ac9.assetpack/Hangboards/zlagboard-evo/assets/primary.usdz",
+          "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-pro/board.json",
+          "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-pro/assets/primary.model.json",
+          "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-pro-b3be02ccb6cb0d1b9e573fdd1e258fa8.assetpack/Hangboards/zlagboard-pro/assets/primary.usdz",
+          "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/Hangboards/zlagboard-pro/board.json",
+          "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/Hangboards/zlagboard-pro/assets/primary.model.json",
+          "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-pro-b3be02ccb6cb0d1b9e573fdd1e258fa8.assetpack/Hangboards/zlagboard-pro/assets/primary.usdz",
+          "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684"
+        }
+      ]
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-after-p1-parity.json",
+      "sha256": "2cdce7495c095ea0ccc85fefa3a6dc6530d856f1d26ea06c87f45464dec59fe2",
+      "allEqual": true,
+      "checks": [
+        {
+          "category": "source",
+          "path": "HangTen/Models/BoardModelRealityTypes.swift",
+          "sha256": "eb00001d1215aa25f02f62e80340bc905203f0deecd730fbff02fd276fc638e6"
+        },
+        {
+          "category": "source",
+          "path": "HangTen/Views/BoardModelView.swift",
+          "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+        },
+        {
+          "category": "source",
+          "path": "HangTen/Views/RootView.swift",
+          "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221"
+        },
+        {
+          "category": "source",
+          "path": "HangTen/Views/GripHandModelView.swift",
+          "sha256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2"
+        },
+        {
+          "category": "builtMachO",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/__preview.dylib",
+          "sha256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1"
+        },
+        {
+          "category": "builtMachO",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/HangTen",
+          "sha256": "d023292947daa8947f19697288d92f7e9cf6b8d9851b1bb4f0dc2fd5e9662191"
+        },
+        {
+          "category": "builtMachO",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/HangTen.debug.dylib",
+          "sha256": "eef5a676aac05b09fbff374204347109caabd9842a1da7e8c6a64e7953914d15"
+        },
+        {
+          "category": "builtMachO",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Frameworks/Sentry.framework/Sentry",
+          "sha256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7"
+        },
+        {
+          "category": "builtMachO",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Frameworks/AmplitudeCore.framework/AmplitudeCore",
+          "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503"
+        },
+        {
+          "category": "installedMachO",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/__preview.dylib",
+          "sha256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1"
+        },
+        {
+          "category": "installedMachO",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/HangTen",
+          "sha256": "d023292947daa8947f19697288d92f7e9cf6b8d9851b1bb4f0dc2fd5e9662191"
+        },
+        {
+          "category": "installedMachO",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/HangTen.debug.dylib",
+          "sha256": "eef5a676aac05b09fbff374204347109caabd9842a1da7e8c6a64e7953914d15"
+        },
+        {
+          "category": "installedMachO",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/Frameworks/Sentry.framework/Sentry",
+          "sha256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7"
+        },
+        {
+          "category": "installedMachO",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/Frameworks/AmplitudeCore.framework/AmplitudeCore",
+          "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-evo/board.json",
+          "sha256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-evo/assets/primary.model.json",
+          "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-evo-0b78784dcf96651ad8ed90e6bf624ac9.assetpack/Hangboards/zlagboard-evo/assets/primary.usdz",
+          "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/Hangboards/zlagboard-evo/board.json",
+          "sha256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/Hangboards/zlagboard-evo/assets/primary.model.json",
+          "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-evo-0b78784dcf96651ad8ed90e6bf624ac9.assetpack/Hangboards/zlagboard-evo/assets/primary.usdz",
+          "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-pro/board.json",
+          "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-pro/assets/primary.model.json",
+          "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-pro-b3be02ccb6cb0d1b9e573fdd1e258fa8.assetpack/Hangboards/zlagboard-pro/assets/primary.usdz",
+          "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/Hangboards/zlagboard-pro/board.json",
+          "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/Hangboards/zlagboard-pro/assets/primary.model.json",
+          "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f"
+        },
+        {
+          "category": "package",
+          "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/C59AC117-ECBB-41C9-A182-B87B4551FE55/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-pro-b3be02ccb6cb0d1b9e573fdd1e258fa8.assetpack/Hangboards/zlagboard-pro/assets/primary.usdz",
+          "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684"
+        }
+      ]
+    }
+  ],
+  "source": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221",
+      "lines": [
+        2431,
+        2491
+      ],
+      "excerpt": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/all-hand-projection-frame-correspondence-audit/RootView.swift.excerpt.txt"
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "911fba863c2b7dbc66a48c9c70937fb47ecd422e83e761751e662d756aac6b95",
+      "lines": [
+        650,
+        674
+      ],
+      "excerpt": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/all-hand-projection-frame-correspondence-audit/BoardMapView.swift.excerpt.txt"
+    }
+  ],
+  "sourceFinding": "Same RootView layout and BoardMapView animation code executes in both same-binary arms: paired-hand insertion changes available board height, aspect-fit scales board; highlightedHoldIDs drives easeInOut(.18). Projection flag only changes hand camera projection, not these layout declarations. This does not establish identical scheduling or a continuous measured .18-second animation.",
+  "prospectiveRuleForRemainingP2O2": {
+    "requiresParentApproval": true,
+    "scope": "Additional explicitly named observed endpoint/path correspondence; do not replace original exact-set checker or retroactively mark it passed.",
+    "endpointEquality": "Require exact initial and settled endpoint tuples equal to both recorded controls; same board root/camera/layout viewport endpoint values, same actual matching ARView identity within each run.",
+    "path": "Every observed matching board ARView frame must lie on A+lambda*(B-A), lambda within[0,1], observed lambda nondecreasing. Use at most1e-5 point component residual solely for floating serialization arithmetic, far below a layout unit. Do not use bounding-box or pixel tolerance to hide geometry changes.",
+    "semanticWindow": "All non-endpoint samples must occur only during the first active-selection startup transition and strictly before the first screenshot command starts. Require B at the first complete board census after that screenshot ends, with that observation no later than the second(+1s) screenshot command end. All later observed board frames through the final tail must remain exactly B. If any of these conditions fails, stop/review; no compensating frames or further heuristic extension.",
+    "unchangedGates": "Preserve all existing CPU brackets, complete trace/tail, actual camera/clip facts, lifecycle order/counts, source/binary/package parity, all whole-image judgments and phase timing gates. No source/validator/runtime edits by this audit.",
+    "why": "Set equality compares time-sampled animation positions from different offsets; endpoint/path/window correspondence tests geometric layout equivalence at the resolution actually observed. It deliberately does not claim temporal equivalence."
+  },
+  "limits": [
+    "Original control-correspondence boardFrames=false remains an honest historical failure.",
+    "The two intermediate records occur before first screenshot start, but neither trace observes B until AFTER the first screenshot ends. First screenshot settlement is not proven.",
+    "Sparse observations cannot prove continuous affine motion between records, equal easing/duration, identical presentation transaction scheduling or lack of overshoot between samples.",
+    "Same source and binary do not exclude projection-dependent timing effects. The prospective rule accepts that timing confound explicitly and cannot by itself establish a rendering fix or causality.",
+    "No screenshot pixel measurement or image manipulation; all arithmetic uses raw UIKit census tuples. No source/runtime/validator modifications."
+  ]
+}

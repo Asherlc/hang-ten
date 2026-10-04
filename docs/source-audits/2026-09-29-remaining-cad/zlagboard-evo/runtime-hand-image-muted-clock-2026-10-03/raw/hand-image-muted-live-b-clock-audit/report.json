@@ -1,0 +1,88 @@
+{
+  "result": "MONOTONIC_TIMING_QUALIFICATION_WITH_ORIGINAL_CPU_FAILURE_RETAINED",
+  "originalCPUChecks": {
+    "completeContiguous": true,
+    "captures12": true,
+    "allCPUBrackets": true,
+    "sameScene": true,
+    "naturalFirstHang": true,
+    "naturalRest": false,
+    "freshSession": true,
+    "boundaryAppActive": true,
+    "boundaryWindowActive": true,
+    "boundaryLandscape": true,
+    "lateBoundaryCensus": true,
+    "noAXOrTouch": true
+  },
+  "originalCPUValidatorExit": 1,
+  "records": 180,
+  "phaseIntervals": [
+    {
+      "fromPhase": 0,
+      "toPhase": 1,
+      "epochSeconds": 6.915497064590454,
+      "uptimeSeconds": 6.915529249992687
+    },
+    {
+      "fromPhase": 1,
+      "toPhase": 2,
+      "epochSeconds": 2429.9404649734497,
+      "uptimeSeconds": 180.55901879166777
+    }
+  ],
+  "restEpochMinusUptimeSeconds": 2249.381446181782,
+  "discontinuities": [
+    {
+      "beforeSequence": 90,
+      "afterSequence": 91,
+      "epochDelta": 261.2946820259094,
+      "uptimeDelta": 1.636135833337903,
+      "offsetChangeSeconds": 259.6585461925715
+    },
+    {
+      "beforeSequence": 101,
+      "afterSequence": 102,
+      "epochDelta": 927.9941160678864,
+      "uptimeDelta": 0.9990127083437983,
+      "offsetChangeSeconds": 926.9951033595426
+    },
+    {
+      "beforeSequence": 114,
+      "afterSequence": 115,
+      "epochDelta": 327.5832989215851,
+      "uptimeDelta": 1.0015169999969658,
+      "offsetChangeSeconds": 326.5817819215881
+    },
+    {
+      "beforeSequence": 172,
+      "afterSequence": 173,
+      "epochDelta": 788.764084815979,
+      "uptimeDelta": 52.617368625011295,
+      "offsetChangeSeconds": 736.1467161909677
+    }
+  ],
+  "all12LocalCaptureWindowsAndCPUBracketsUnaffected": true,
+  "maxStartClockDifferenceSeconds": 4.2082276195287704e-05,
+  "maxDurationClockDifferenceSeconds": 5.281093763187528e-06,
+  "followingHangCPUBracketUptimeSeconds": 7.016795083327452,
+  "appTraceSHA256": "dd6172d131dd90c689094cf17fe134b8c7a5d12717905d65c68397aceb4fd1ed",
+  "sourceFreeze": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/root-completed-control-freeze.json",
+    "sha256": "08bc57d84c6eebe4710c1060221b0bca747f9a13be463588307a525a6969b9a8",
+    "files": 75,
+    "allUnchanged": true
+  },
+  "visualResult": {
+    "value": "FAIL",
+    "attributedTo": "Root report; this timing audit did not open screenshots",
+    "sequence": "firstHang red4; Rest blue4; nextHang blue at+.25/+1 then red at+3/+5"
+  },
+  "conclusion": "The epoch-based naturalRest predicate failed because epoch-minus-uptime changed during Rest. App uptime preserves a180.559s phase interval; local screenshot offsets, durations and recorded CPU bracket ordering agree with host monotonic measurements and cross no recorded offset jump. This is an additive clock-domain qualification, not a rewritten validator pass.",
+  "limits": [
+    "Cause of clock-domain discontinuities unknown; this audit cannot distinguish clock adjustment, sleep or other host/runtime behavior.",
+    "Uptime-relative timing does not prove uninterrupted wall-clock180s execution or absence of host effects on rendering.",
+    "CPU bracket proof remains sparse; following-Hang bracket spans7.014954s and does not prove continuous material presentation.",
+    "No new visual judgment, product fix, IMAGE authorization, source edit or runtime action.",
+    "The original naturalRest=false, validator exit1 and aggregate allHelpers=false remain unchanged."
+  ]
+}

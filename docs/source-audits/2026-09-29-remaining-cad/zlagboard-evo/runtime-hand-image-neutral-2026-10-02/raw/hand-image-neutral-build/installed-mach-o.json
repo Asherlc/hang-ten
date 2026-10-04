@@ -1,0 +1,22 @@
+{
+  "__preview.dylib": {
+    "sha256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1",
+    "bytes": 49568
+  },
+  "HangTen": {
+    "sha256": "b51acd53cf0bfa117996744762d881f064754cf2a717bdf2cbd1d41fbef50c36",
+    "bytes": 89648
+  },
+  "HangTen.debug.dylib": {
+    "sha256": "d6d6eccdd693a54094056197cc1e47f62f0e661c6354cf8028bf6499e90af575",
+    "bytes": 53818576
+  },
+  "Frameworks/Sentry.framework/Sentry": {
+    "sha256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7",
+    "bytes": 49568
+  },
+  "Frameworks/AmplitudeCore.framework/AmplitudeCore": {
+    "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+    "bytes": 1687328
+  }
+}

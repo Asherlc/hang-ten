@@ -1,0 +1,16 @@
+{
+  "applied": false,
+  "built": false,
+  "runtimeRun": false,
+  "patchSHA256": "57d251e33eb42d4ac224a9ce69e85c770aa7bcaab0f4923b653d0c98bd101bbe",
+  "applyCheckExitCode": 0,
+  "patchLines": 78,
+  "inputs": {
+    "HangTen/Views/TrainView.swift": "1d381d39babf4f665c170a1fb74336832620c5cf70dd281e29b498830cd9a30d",
+    "HangTen/Models/BoardModelRealityTypes.swift": "9fb7c5331ec4975be198673f6bf18fb25531d120376ea48fd1e23b1a8263b4ff"
+  },
+  "outputs": {
+    "HangTen/Views/TrainView.swift": "ca5b573e45908edaa6cd3921a5f255df32804d3e0b562872961cd0cfab31cf08",
+    "HangTen/Models/BoardModelRealityTypes.swift": "d1780cf3c9e8b8966b5273db4944e6116993b7569a966d8fb87b59c38773557a"
+  }
+}

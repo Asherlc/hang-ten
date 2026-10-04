@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "resourceType": "idle-system-sleep-assertion-process",
+  "pid": 14856,
+  "parentPID": 14855,
+  "executable": "/usr/bin/caffeinate",
+  "argv": [
+    "placid-badger-cad-second-half-idle-sleep-assertion",
+    "-i",
+    "-w",
+    "14855",
+    "-t",
+    "360"
+  ],
+  "createdEpoch": 1791020990.2609332,
+  "createdMonotonic": 92553.261128083,
+  "cleanupRegisteredBeforeCreation": true
+}

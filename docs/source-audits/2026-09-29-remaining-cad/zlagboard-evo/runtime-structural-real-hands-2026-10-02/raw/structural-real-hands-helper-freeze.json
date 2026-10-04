@@ -1,0 +1,85 @@
+{
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/PROTOCOL.md",
+      "sha256": "cd11d1e16e83d74699f74fb76a3ac8744ab75c54594a94f4368c1410fbbba092"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/capture.patch",
+      "sha256": "1f338e1c4a75ddfc8d4a8496b6a3b60ce4f52b6230ebb1acdb2887e63edc0e8e"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/capture.patch.before-full-binary-binding",
+      "sha256": "e7f50676dadd3ced9fd4f585d67412d02c8dd3331f97d097ffa4743be269dfef"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/check-navigation.py",
+      "sha256": "cefe1d72225c96a81d1e5a03a91445ec969317afe9b7be501aa3a1c825ce133a"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/check-navigation.py.patch",
+      "sha256": "042d63ce0c3326b4b5886457a31e19b21726ddb7e68a974ae963e3fae0d8901f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/check-ownership.py",
+      "sha256": "857993e063ec1c987bf84cefa6e143828071f10fa0b1028fb3af58774174a7e0"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/check-ownership.py.patch",
+      "sha256": "e3078e88895c0af0d46ba4ccb66e123b9b66666d0e7af8f5d24d14227127c353"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/check-real-hands.py",
+      "sha256": "09b113ea0c57fc14a5952cf188a5c2931c3592b91451ce2027a8638291a4a0c9"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/compare-prior-ordinary.py",
+      "sha256": "3dced381437499899e2e8c1e88e837e00194e77fb3c0036bd4953d9938b42b94"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/constructors.patch",
+      "sha256": "5104c5613c843b59abb2ca140302db3f5c4163feab1178d83332618c5cec53c6"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/report.json",
+      "sha256": "33051bad2327b97ba5f8fb6aa5b4467172dd5c9f95a2cb74b894bc39fe71f0bf"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/report.json.before-full-binary-binding",
+      "sha256": "8f218ee6f57dbf2f32c67ef2dd9f618ef1f861cc4fdb9e22ed7044e2acb11bc9"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/static-check.json",
+      "sha256": "2eed115e92ce8a8e1bef0e901dcfe8d1c4f07aa16eb90dd8ae447395f0bea618"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/static-check.json.before-full-binary-binding",
+      "sha256": "bce46acd85f7de60796f72f09e4ae07dacff1a54a6adbc42e995cc48a53e062f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/visual-review-template.json",
+      "sha256": "731fddb338b0a2dde660260796a7c9cfec5998410b6bcd9e9c703694c46bea43"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/workout-real-hands.py",
+      "sha256": "277e94838fecf62f7b839f4f2e1625b04cf2bd712d8a24c97a466741f5d92d70"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-prepared/workout-real-hands.py.before-full-binary-binding",
+      "sha256": "4102d3fac3e0bf1fb7a886f1d3941793dedd79e18ac21116ece9e0012e97a34f"
+    }
+  ],
+  "review": "Read capture/readiness/full binary and prior gate requirements, real-hand camera/count audit, comparison, protocol; AST pass. Source and runtime protocol unchanged except hand suppression removal and runID."
+}

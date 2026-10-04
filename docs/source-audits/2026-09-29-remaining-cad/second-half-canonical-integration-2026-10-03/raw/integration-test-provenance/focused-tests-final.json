@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "Tools/HangboardCAD/tests/test_integration_dispatch.py",
+    "Tools/HangboardCAD/tests/test_native_pose_terminals.py",
+    "Tools/HangboardCAD/tests/test_native_cord_guides.py",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py"
+  ],
+  "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/test-overlay",
+  "exitCode": 0,
+  "durationSeconds": 2.8910667919990374,
+  "logSHA256": "ff62d481e44fba103257314095effa541c7808f91558ab872990b6e61a1b0bfd",
+  "scope": "scratch-only exact snapshot overlay; previous two setup/import failures retained verbatim"
+}

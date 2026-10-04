@@ -1,0 +1,32 @@
+--- v6/prototype_schema.py
++++ v7/prototype_schema.py
+@@ -1,8 +1,8 @@
+-"""Prospective adapter for viewport-readiness prototype v3; requires explicit runtime release."""
++"""Prospective adapter for orientation-boundary prototype v4; requires explicit runtime release."""
+ from pathlib import Path
+ import hashlib, json, math, re
+ READY = True
+-EXPECTED_EVENT_SCHEMA_SHA256 = "f80ca24971a12232bc78991201be4b583b1e48729ffdcae0340999d608072a7c"  # Revised v3 only; no launch authorization.
++EXPECTED_EVENT_SCHEMA_SHA256 = "a982a44b8cc2b7bf6c2302e50b39f2cc678600d9c531551da4773e4b0aad5f91"  # Revised v4 only; no launch authorization.
+ sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+ 
+ def validate_release(release):
+@@ -55,6 +55,10 @@
+             assert r["viewport"]==dimensions and r["displayScale"]==scale
+             assert r["kind"]=="pair" and r["orthographic"] is True and r["perspective"] is False
+             assert r["textureFormat"]=="bgra8Unorm_srgb" and r["inputColorSpace"]=="sRGB"
++            assert r["orientationConversion"]=="CIImage.downMirrored; UIImage.up"
++            assert isinstance(r["environmentLightingResourcePresent"],bool)
++            assert isinstance(r["environmentLightingIntensityExponent"],(int,float)) and not isinstance(r["environmentLightingIntensityExponent"],bool)
++            assert math.isfinite(r["environmentLightingIntensityExponent"])
+             assert r["displayScale"]>0 and all(math.isfinite(v) and v>0 for v in r["viewport"])
+             assert r["textureWidth"]==math.ceil(r["viewport"][0]*r["displayScale"])
+             assert r["textureHeight"]==math.ceil(r["viewport"][1]*r["displayScale"])
+@@ -67,6 +71,7 @@
+         elif event=="conversion-complete":
+             assert pending==k and "gpu-completion-callback" in stages[k]
+             assert r["eagerMaterialization"] is True and r["orientation"]=="up"
++            assert r["ciOrientationConversion"]=="downMirrored"
+             assert r["cgWidth"]==stages[k]["submitted"]["textureWidth"]
+             assert r["cgHeight"]==stages[k]["submitted"]["textureHeight"]
+             assert r["cgBitsPerComponent"]==8 and r["cgAlphaInfo"] in (1,2,3,4)

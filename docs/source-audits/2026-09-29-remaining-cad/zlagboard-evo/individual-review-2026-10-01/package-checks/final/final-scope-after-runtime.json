@@ -1,0 +1,133 @@
+{
+  "timestampUTC": "2026-10-02T03:26:39.232697+00:00",
+  "baseline": "04979bde9b8c6056de4cdecf4eb6bf7b5235f628",
+  "changedTrackedFiles": [
+    "Hangboards/zlagboard-evo/assets/primary.model.json",
+    "Hangboards/zlagboard-evo/assets/primary.usdz",
+    "Hangboards/zlagboard-evo/zlagboard-evo.FCStd",
+    "docs/model-delivery-lock.json",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+    "docs/source-audits/2026-09-29-remaining-cad/second-half-ownership.md",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/source-audit.md"
+  ],
+  "untrackedFileCount": 197,
+  "outOfScopeChangedFiles": [],
+  "queue": {
+    "onlyChangedBoardNumbers": [
+      20
+    ],
+    "other20RowsExact": true,
+    "otherMetadataExact": true,
+    "humanReview": "pending"
+  },
+  "lock": {
+    "changedPackageRecords": [
+      "zlagboard-evo"
+    ],
+    "other56RecordsExact": true,
+    "changedTopLevelKeys": [
+      "sha256ManifestHistory",
+      "sha256Manifest"
+    ],
+    "onlyDigestAndHistoryChanged": true,
+    "priorHistoryPreserved": true,
+    "actualHashFieldsMatch": {
+      "sourceSHA256": true,
+      "assetSHA256": true,
+      "descriptorSHA256": true
+    }
+  },
+  "otherPackageBytes": {
+    "filesCompared": 203,
+    "realLFSObjectsCompared": 115,
+    "mismatches": [],
+    "includesAccepted16Through19": true
+  },
+  "currentPackageHashes": {
+    "Hangboards/zlagboard-evo/zlagboard-evo.FCStd": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+    "Hangboards/zlagboard-evo/assets/primary.usdz": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    "Hangboards/zlagboard-evo/assets/primary.model.json": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe"
+  },
+  "stagedFilesMatchWorkingTree": {
+    "Hangboards/zlagboard-evo/zlagboard-evo.FCStd": true,
+    "Hangboards/zlagboard-evo/assets/primary.usdz": true,
+    "Hangboards/zlagboard-evo/assets/primary.model.json": true
+  },
+  "realSourceZIP": true,
+  "realSourceLFSObject": {
+    "path": "/Users/asherlc/src/hang-ten/.git/lfs/objects/6f/44/6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+    "oid": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+    "bytes": 1000365,
+    "matches": true
+  },
+  "verificationIndexLinks": {
+    "native": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/shape-audit/candidate-verification.json",
+      "exists": true
+    },
+    "shapeJudgment": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/shape-audit/review-summary.json",
+      "exists": true
+    },
+    "runtime": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/ios/final-runtime-validation.json",
+      "exists": true
+    },
+    "delivery": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/delivery-validation.json",
+      "exists": true
+    },
+    "compilerCheck": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/compiler-final/check.json",
+      "exists": true
+    },
+    "compilerPublish": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/compiler-final/publish.json",
+      "exists": true
+    },
+    "pocketSurfaces": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/compiler-final/pocket-surfaces.json",
+      "exists": true
+    },
+    "package": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/package-checks/final/published-package-verification.json",
+      "exists": true
+    },
+    "scope": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/package-checks/final/finalscope.json",
+      "exists": true
+    },
+    "sourceLFS": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/source-lfs-verification.json",
+      "exists": true
+    },
+    "reproducibility": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/compiler-final/reproduction.json",
+      "exists": true
+    },
+    "compilerCleanup": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/compiler-final/completion-and-cleanup.json",
+      "exists": true
+    },
+    "finalContract": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/package-checks/final/final-contract.json",
+      "exists": true
+    },
+    "exportedJugCrests": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/shape-audit/final-export-jug-crests-strict.json",
+      "exists": true
+    },
+    "nativeVisual": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/native-visual-review.json",
+      "exists": true
+    },
+    "copyAndCleanup": {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/ios-copy-and-cleanup-verification.json",
+      "exists": true
+    }
+  },
+  "verificationIndexAssetHashesMatch": true,
+  "pendingProofLinks": [],
+  "runtimeStatus": "pending; no human acceptance inferred",
+  "scopePass": true
+}

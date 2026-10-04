@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "gitApplyCheck": true,
+    "onlyTwoReservedFiles": true,
+    "singleAndPairSameExistingConditional": true,
+    "singleHandContentByteExact": true,
+    "pairHandContentByteExact": true,
+    "workoutStateTransitionsByteExact": true,
+    "sourceInputsStillExact": true,
+    "noAdditionalOnChangeCallback": true,
+    "noAdditionalTaskOrTimer": true,
+    "singleViewActorAnnotationPreserved": true,
+    "diagnosticEnumExplicitActor": true,
+    "pairViewActorAnnotationPreserved": true
+  },
+  "command": "rtk proxy git apply --check .context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-suppression-proposal-v2/prestart-hand-suppression.patch",
+  "exitCode": 0,
+  "stdout": "",
+  "stderr": "",
+  "noCompileOrRuntime": true
+}

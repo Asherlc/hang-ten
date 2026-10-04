@@ -1,0 +1,78 @@
+{
+  "images": [
+    {
+      "offset": 18,
+      "sha256": "768b870ccff9af90be6383410379e63d95b7e79951791a6c1cfb562645a01bd8",
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-018s.png",
+      "wholeImageReviewed": true,
+      "visiblePhase": "Rest",
+      "selectedPocketColor": "red",
+      "handsVisible": true
+    },
+    {
+      "offset": 90,
+      "sha256": "17bbdaf1dab86cc7ef5cb8e3f1386aa44cdb8af7864d751e3ab9bc10589b556c",
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-090s.png",
+      "wholeImageReviewed": true,
+      "visiblePhase": "Rest",
+      "selectedPocketColor": "blue",
+      "handsVisible": true
+    },
+    {
+      "offset": 191,
+      "sha256": "1b7457ae8c81535cc69b9e9de47f39440b157271423aeffe23bde4958d87faef",
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-191s.png",
+      "wholeImageReviewed": true,
+      "visiblePhase": "Hang2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true
+    },
+    {
+      "offset": 192,
+      "sha256": "1c85bbf688225236ecda377b4873817ee6bfffe3bab18f7a41cc7b4850ef0770",
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-192s.png",
+      "wholeImageReviewed": true,
+      "visiblePhase": "Hang2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true
+    },
+    {
+      "offset": 193,
+      "sha256": "51b11d65518f8896b11e6a1257c3cba64237faab58643c7f7f9ec92eb6b731a8",
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-193s.png",
+      "wholeImageReviewed": true,
+      "visiblePhase": "Hang2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true
+    },
+    {
+      "offset": 194,
+      "sha256": "7129665d20c9e59963958a60a829c18a73e0f044deef3d42a02df8628996c5d6",
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-194s.png",
+      "wholeImageReviewed": true,
+      "visiblePhase": "Hang2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true
+    },
+    {
+      "offset": 195,
+      "sha256": "d076050118f55f824c91d5e92b6a75db21ba3f7f09b3f06f6b996449dbe68e51",
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-195s.png",
+      "wholeImageReviewed": true,
+      "visiblePhase": "Hang2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true
+    },
+    {
+      "offset": 196,
+      "sha256": "a6f51d1fbfa4e1167ca8f3e2305a242b80f099e746160e090473f21ef262599b",
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/live-a/elapsed-196s.png",
+      "wholeImageReviewed": true,
+      "visiblePhase": "Hang2",
+      "selectedPocketColor": "blue",
+      "handsVisible": true
+    }
+  ],
+  "visualFailureObserved": true,
+  "fullReviewPendingIndependentTail": true
+}

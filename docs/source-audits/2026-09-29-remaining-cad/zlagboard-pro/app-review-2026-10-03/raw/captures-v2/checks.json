@@ -1,0 +1,19 @@
+[
+  {
+    "image": "top-jug-left.png",
+    "sha256": "611afe6bdf9e4bdaec053320ea71a1a4c1dcd209ac84b78f32cc94b00cbbef98",
+    "contactID": "top-jug-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=12;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.20943952;cameraPitch=0.5461143;cameraSettled=true;selection=top-jug-left;tapRevision=1;pickedContact=top-jug-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "jug-orbit.png",
+    "sha256": "611afe6bdf9e4bdaec053320ea71a1a4c1dcd209ac84b78f32cc94b00cbbef98",
+    "contactID": "top-jug-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=12;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.20943952;cameraPitch=0.5461143;cameraSettled=true;selection=top-jug-left;tapRevision=1;pickedContact=top-jug-left"
+  }
+]

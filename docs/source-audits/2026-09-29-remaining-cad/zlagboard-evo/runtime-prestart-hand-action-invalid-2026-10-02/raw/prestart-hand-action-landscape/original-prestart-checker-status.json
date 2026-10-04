@@ -1,0 +1,12 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "python3",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-applied/runtime-helpers/action/check-prestart-hands.py"
+  ],
+  "exitStatus": 1,
+  "classification": "NOT_EVALUABLE_CAPTURE_INCOMPLETE",
+  "supplementalTimingAuditRun": false,
+  "reason": "No transition-observations or12phase captures; unknown setup failure stops interpretation. No amended criterion can supply missing phases."
+}

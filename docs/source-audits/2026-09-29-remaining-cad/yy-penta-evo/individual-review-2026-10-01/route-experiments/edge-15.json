@@ -1,0 +1,249 @@
+{
+  "status": "passed",
+  "sourceSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+  "scope": "Scratch feasibility experiment, not promoted runtime cache",
+  "elapsedSeconds": 1.1013508749892935,
+  "input": {
+    "presentationID": "front-pair",
+    "modelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+    "suspension": {
+      "type": "cadRoutedCord",
+      "bodyNodeID": "penta_body_001",
+      "strands": [
+        {
+          "id": "upper-band-loop",
+          "kind": "loop",
+          "restLength": 0.6,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible loop only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+        }
+      ],
+      "anchor": {
+        "offsetFromBoardBounds": [
+          -0.15,
+          0.21,
+          0
+        ],
+        "visibility": "invisible",
+        "provenance": "authored-display-estimate: independent fixed overhead display anchor with canonical pose-owned spacing. All unit dimensions except sourced contact depths, wood color, rounding, camera and placement are display estimates."
+      },
+      "canonicalPoses": {
+        "edge-15": {
+          "rotation": [
+            0.0,
+            0.0,
+            0.5877852522924732,
+            -0.8090169943749473
+          ],
+          "translation": [
+            -0.15,
+            0,
+            0
+          ],
+          "camera": {
+            "viewDirection": [
+              0.3252804860140796,
+              -0.10569003670618679,
+              -0.9396926207859084
+            ],
+            "fitPadding": 0.1
+          }
+        }
+      }
+    },
+    "ropeSolver": {
+      "method": "nativeRoutes",
+      "clearance": 0.0002,
+      "supportDirection": 1,
+      "terminalsByStrandID": {
+        "upper-band-loop": {
+          "points": [
+            [
+              -0.06398002773395543,
+              0.020414725225485694,
+              0.01
+            ],
+            [
+              -0.06398002773395543,
+              0.020414725225485694,
+              -0.01
+            ]
+          ],
+          "planeNormal": [
+            -0.3090169943749472,
+            -0.9510565162951536,
+            0
+          ]
+        }
+      },
+      "pathSearch": "aStar"
+    },
+    "equipmentObjectID": "left-penta"
+  },
+  "result": {
+    "edge-15": {
+      "height": -0.026965253,
+      "routes": {
+        "upper-band-loop": [
+          [
+            -0.105522932,
+            0.033912833,
+            0.017191251
+          ],
+          [
+            -0.105336522,
+            0.033852265,
+            0.0172
+          ],
+          [
+            -0.102023996,
+            0.03277596,
+            0.0172
+          ],
+          [
+            -0.06886139,
+            0.022000776,
+            0.0172
+          ],
+          [
+            -0.068516653,
+            0.021888764,
+            0.017169933
+          ],
+          [
+            -0.068181338,
+            0.021779814,
+            0.017080554
+          ],
+          [
+            -0.067864612,
+            0.021676903,
+            0.016934306
+          ],
+          [
+            -0.066813955,
+            0.021335524,
+            0.016335796
+          ],
+          [
+            -0.066442656,
+            0.021214882,
+            0.01606694
+          ],
+          [
+            -0.06613475,
+            0.021114837,
+            0.015720696
+          ],
+          [
+            -0.064420051,
+            0.020557697,
+            0.013321874
+          ],
+          [
+            -0.064190469,
+            0.020483102,
+            0.012916538
+          ],
+          [
+            -0.064048356,
+            0.020436926,
+            0.012469054
+          ],
+          [
+            -0.064000247,
+            0.020421295,
+            0.012
+          ],
+          [
+            -0.063980028,
+            0.020414725,
+            0.01
+          ],
+          [
+            -0.063980028,
+            0.020414725,
+            0.0
+          ],
+          [
+            -0.063980028,
+            0.020414725,
+            -0.01
+          ],
+          [
+            -0.064000247,
+            0.020421295,
+            -0.012
+          ],
+          [
+            -0.064048356,
+            0.020436926,
+            -0.012469054
+          ],
+          [
+            -0.064190469,
+            0.020483102,
+            -0.012916538
+          ],
+          [
+            -0.064420051,
+            0.020557697,
+            -0.013321874
+          ],
+          [
+            -0.06613475,
+            0.021114837,
+            -0.015720696
+          ],
+          [
+            -0.066442656,
+            0.021214882,
+            -0.01606694
+          ],
+          [
+            -0.066813955,
+            0.021335524,
+            -0.016335796
+          ],
+          [
+            -0.067864612,
+            0.021676903,
+            -0.016934306
+          ],
+          [
+            -0.068181338,
+            0.021779814,
+            -0.017080554
+          ],
+          [
+            -0.068516653,
+            0.021888764,
+            -0.017169933
+          ],
+          [
+            -0.06886139,
+            0.022000776,
+            -0.0172
+          ],
+          [
+            -0.105336522,
+            0.033852265,
+            -0.0172
+          ],
+          [
+            -0.105522475,
+            0.033912685,
+            -0.017191294
+          ]
+        ]
+      },
+      "lengthRatios": {
+        "upper-band-loop": 0.999999991117397
+      },
+      "minimumClearance": {
+        "upper-band-loop": 0.0019939413250965746
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/C0DABE75-A621-4F9D-8B17-0F4EF75A2132/Documents/HighlightDiagnostic-placid-badger-cad-second-half-structural-dependency-retained-detach/events-FA8D3D3E-CB95-4CED-8BF9-3456DE0B8E69.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/events-FA8D3D3E-CB95-4CED-8BF9-3456DE0B8E69.jsonl",
+      "sha256": "12f46620132517b0769c1faa3597b0af774a17cf9db0ae58033d605e601ef120"
+    }
+  ],
+  "records": 154,
+  "completeContiguous": true,
+  "copiedEpoch": 1790993047.542708,
+  "includesSamplerEnd": true
+}

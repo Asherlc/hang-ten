@@ -1,0 +1,24 @@
+{
+  "checks": {
+    "commonTrial": true,
+    "normalTrainPresentHandsOff": true,
+    "exactTwoConstructorsAndMakes": true,
+    "oneBeforeAfterTrainOnly": true,
+    "actionFlagCorrect": true,
+    "allHostsRetainedCurrentValid": true,
+    "tagMatchesExactPredecessor": true,
+    "oneStableOwnerPerHost": true,
+    "beforeOwnershipObserved": true,
+    "actionBeforeFirstHang": true,
+    "exactEnvironmentAllowlist": true,
+    "postActionEveryTrialHasPredecessor": true,
+    "bothHostsPresentFromFirstHang": true,
+    "workoutAttachedUnmarkedUnchanged": true,
+    "expectedPredecessorAttachmentThroughout": true,
+    "weakPredecessorAliveEveryPostObservation": true,
+    "weakMembershipMatchesAction": true,
+    "weakEntityIDsPreserved": true,
+    "observationsThroughTail": true
+  },
+  "postActionCount": 139
+}

@@ -1,0 +1,5 @@
+{
+  "scope": "Exact launched app only; existing controller retains Simulator/DD",
+  "recordedAppPIDAbsent": true,
+  "passed": true
+}

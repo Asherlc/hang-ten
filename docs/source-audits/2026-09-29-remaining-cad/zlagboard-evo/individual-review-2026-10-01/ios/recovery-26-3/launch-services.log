@@ -1,0 +1,59 @@
+system = {
+	type = system
+	handle = 0
+	active count = 26
+	service count = 6
+	active service count = 4
+	maximum allowed shutdown time = 30 s
+	service stats = {
+	}
+	trial factors reloads = 0
+	trial factors memory = 0/0
+	trial factors = {
+	}
+	creator = launchd_sim[43988]
+	creator euid = 502
+	session = System
+	security context = {
+		uid unset
+		session uid = -101
+	}
+
+	bringup time = 157 ms
+	death port = 0x2b03
+	subdomains = {
+		user/502
+	}
+
+	services = {
+		   44122      - 	com.apple.logd_helper
+		   44124      - 	com.apple.diagnosticd
+		   43992      - 	com.apple.logd
+		       0      - 	com.apple.containermanagerd.system
+		   44069      - 	com.apple.notifyd
+		       0      - 	com.apple.cfprefsd.xpc.daemon.system
+	}
+
+	unmanaged processes = {
+	}
+
+	endpoints = {
+		  0x7f03    M   A   com.apple.logd.events
+		 0x1861b    M   A   com.apple.diagnosticd
+		       0    M   D   com.apple.cfprefsd.daemon.system
+		  0x7e03    M   A   com.apple.logd
+		  0x177f    M   A   com.apple.system.notification_center
+		 0x18703    M   A   com.apple.logd_helper
+		       0    M   D   com.apple.containermanagerd.system
+		  0x5603    M   A   com.apple.logd.cachedelete
+		  0x5703    M   A   com.apple.logd.realtime
+		  0x5803    M   A   com.apple.logd.admin
+	}
+
+	task-special ports = {
+			   0xa03 4       bootstrap  com.apple.xpc.launchd.domain.system
+	}
+
+
+	properties = uncorked | bound
+}

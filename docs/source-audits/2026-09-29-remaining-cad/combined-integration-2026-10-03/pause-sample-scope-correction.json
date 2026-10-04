@@ -1,0 +1,5 @@
+{
+  "rawFilesPreserved": true,
+  "correction": "fixture.sample.txt filename does not identify the sampled phase. Its stack demonstrates LiveRopeWorker -> settled -> step -> correctConstraints/merit, after fixture readiness. worker.sample.txt occurs near timeout; active-work extent needs temporal correlation. Filenames are historical labels, not causal evidence.",
+  "timing": "fixture-ready44.543s afterstart; workerentry59ms afterwaitBegin; offmain; eightsteps0.033333simseconds in28.281wallseconds; wait ends30.310s afterwaitBegin; exactunchangedassertionsfail."
+}

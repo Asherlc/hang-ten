@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/DE3D0FB9-0185-4900-926D-AF1C3C526313/Documents/HighlightDiagnostic-placid-badger-cad-second-half-weak-hand-census/events-4E12E5B9-C2D3-45BA-9602-F03DC760A42C.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/events-4E12E5B9-C2D3-45BA-9602-F03DC760A42C.jsonl",
+      "sha256": "418fde301bd446ccc5100b2e67297497b03ac17f652ed0aaa1c9321fcd36c208"
+    }
+  ],
+  "records": 165,
+  "completeContiguous": true,
+  "copiedEpoch": 1790995352.0657291,
+  "includesSamplerEnd": true
+}

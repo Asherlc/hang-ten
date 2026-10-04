@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/solve_threaded_rope.py", line 435, in <module>
+    main()
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/solve_threaded_rope.py", line 402, in main
+    solved = solve_native_routes(mesh, data, model)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py", line 515, in solve_native_routes
+    return _solve_native_seed(mesh, data, descriptor)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py", line 628, in _solve_native_seed
+    return _solve_native_routes(mesh, data, descriptor)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py", line 818, in _solve_native_routes
+    height = settle()
+             ^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py", line 789, in settle
+    if max(evaluate(high)[1].values()) > 1+1e-6:
+           ^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py", line 755, in evaluate
+    first=first_section.route(local,points[0])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Tools/HangboardCAD/native_cord_routes.py", line 124, in route
+    raise ValueError("cord terminal or support is inside the rope-offset native solid")
+ValueError: cord terminal or support is inside the rope-offset native solid

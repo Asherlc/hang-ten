@@ -1,0 +1,77 @@
+[
+  {
+    "profile": "legacy",
+    "durations": [
+      8,
+      8,
+      8,
+      8,
+      8
+    ],
+    "starts": [
+      0,
+      8,
+      16,
+      24,
+      32
+    ],
+    "tail": 42,
+    "capturePhaseChecks": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "profile": "short",
+    "durations": [
+      8,
+      7,
+      8,
+      7,
+      8
+    ],
+    "starts": [
+      0,
+      8,
+      15,
+      23,
+      30
+    ],
+    "tail": 40,
+    "capturePhaseChecks": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "profile": "long",
+    "durations": [
+      8,
+      7,
+      180,
+      7,
+      8
+    ],
+    "starts": [
+      0,
+      8,
+      15,
+      195,
+      202
+    ],
+    "tail": 212,
+    "capturePhaseChecks": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  }
+]

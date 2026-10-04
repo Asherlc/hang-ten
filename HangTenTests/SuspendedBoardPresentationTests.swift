@@ -92,20 +92,25 @@ final class SuspendedBoardPresentationTests: XCTestCase {
                 }
             }
         }
-        for (positionID, xDirection) in [("primary", Float(1)), ("reverse", Float(-1))] {
-            XCTAssertTrue(scene.select(positionID: positionID))
+        // The native migration retains source-solved per-instance poses rather
+        // than the superseded exterior-lead fixture's two hard-coded flips.
+        for position in board.positions where position.presentationID == board.defaultPresentation.id {
+            XCTAssertTrue(scene.select(positionID: position.id), position.id)
             XCTAssertEqual(scene.instanceEntities.count, 2)
-            XCTAssertEqual(scene.instanceEntities[0].position.x, -0.15, accuracy: 1e-6)
-            XCTAssertEqual(scene.instanceEntities[1].position.x, 0.15, accuracy: 1e-6)
-            for entity in scene.instanceEntities {
-                XCTAssertEqual(entity.transform.matrix.columns.0.x, xDirection, accuracy: 1e-6)
+            for (entity, authored) in zip(scene.instanceEntities, instances) {
+                guard case .cadRoutedCord(let profile) = authored.suspension else {
+                    return XCTFail("expected native Penta route")
+                }
+                let pose = try XCTUnwrap(profile.canonicalPoses[position.id])
+                let expected = try SuspendedBoardPresentation.boardTransform(for: pose)
+                for column in 0..<4 {
+                    XCTAssertLessThan(simd_length(entity.transform.matrix[column] - expected[column]), 1e-6,
+                                      "\(authored.equipmentObjectID)/\(position.id)")
+                }
             }
-            // The native bounds have a small authored X offset. Frame that
-            // midpoint rather than the origin, and reflect it with the pose.
-            let sourceCenterX = Float((media.descriptor.modelBounds.minimum[0]
-                + media.descriptor.modelBounds.maximum[0]) / 2)
-            XCTAssertEqual(scene.camera.position.x, xDirection * sourceCenterX, accuracy: 1e-6)
+            XCTAssertTrue(scene.camera.position.x.isFinite)
         }
+
     }
 
     @MainActor

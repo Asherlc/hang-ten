@@ -1,0 +1,10 @@
+{
+  "baseline": "3fcf41daed7013eeb40d3e45340bdc4b3ee3cc14",
+  "other20QueueRowsExact": true,
+  "other56PackageLockRecordsExact": true,
+  "globalQueueAndLockMetadataExact": true,
+  "allHangboardPackagesUnchanged": true,
+  "priorEvidencePacketUnchanged": true,
+  "humanReview": "pending",
+  "runtimeRecoveryPointerOnlyAddedToBoard20": true
+}

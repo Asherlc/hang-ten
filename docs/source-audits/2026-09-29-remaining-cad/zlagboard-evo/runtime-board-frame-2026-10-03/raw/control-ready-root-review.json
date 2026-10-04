@@ -1,0 +1,64 @@
+{
+  "reviewer": "root",
+  "method": "whole screenshots individually viewed; no pixel measurement",
+  "CPUBracketsAvailable": false,
+  "actualAppPhaseBoundariesMeasured": false,
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/control-ready/elapsed-090s.png",
+      "sha256": "c6918326a360a24aabd010a62c6751ff24a99238f88a2aef339a5984dc88b446",
+      "visiblePhase": "Rest",
+      "boardContactColor": "blue",
+      "handsVisible": true,
+      "correct": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/control-ready/elapsed-191s.png",
+      "sha256": "9aba710be0c4f53014c5bd4a914ba65d52b4399d9a2048a74f98cab1f3c338e4",
+      "visiblePhase": "Hang set 2",
+      "boardContactColor": "blue",
+      "handsVisible": true,
+      "correct": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/control-ready/elapsed-192s.png",
+      "sha256": "1c85bbf688225236ecda377b4873817ee6bfffe3bab18f7a41cc7b4850ef0770",
+      "visiblePhase": "Hang set 2",
+      "boardContactColor": "blue",
+      "handsVisible": true,
+      "correct": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/control-ready/elapsed-193s.png",
+      "sha256": "28a36d75409e3372554f2a37c2e4e02a70e9486fdc260aeef61ac66d243734cf",
+      "visiblePhase": "Hang set 2",
+      "boardContactColor": "blue",
+      "handsVisible": true,
+      "correct": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/control-ready/elapsed-194s.png",
+      "sha256": "c298c9e204ad11ecde537850972361a95eb37362e3a279821d27a2cc62fab62f",
+      "visiblePhase": "Hang set 2",
+      "boardContactColor": "blue",
+      "handsVisible": true,
+      "correct": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/control-ready/elapsed-195s.png",
+      "sha256": "9b4eb7aa0e35e2686fa7a6c7a07f7209311f7085882eb1405be27a7ee14d66c3",
+      "visiblePhase": "Hang set 2",
+      "boardContactColor": "blue",
+      "handsVisible": true,
+      "correct": false
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/control-ready/elapsed-196s.png",
+      "sha256": "3a769edeea7d6149606460f4fa350242b0ddcfeb50da5a50649fb7a4ce7c9f6f",
+      "visiblePhase": "Hang set 2",
+      "boardContactColor": "blue",
+      "handsVisible": true,
+      "correct": false
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "kind": "read-only source design review; no implementation or runtime action",
+  "createdUTC": "2026-10-03T18:45:46.752151+00:00",
+  "sourceSHA256": {
+    "HangTen/Views/WorkoutView.swift": "caa67bd053af93b60b92adc14e9ba6a3325ac0e91936d765f56d6232314a7029",
+    "HangTen/Views/BoardMapView.swift": "bb126b43ac1065fa048cc10ff90d275c1816bdbb3ea3beed3609b005521e0cec",
+    "HangTen/Views/BoardModelView.swift": "7d551e314b93f056556effb8dc9d52dbd2bd4a303231a064e41cf4f1559b1701",
+    "HangTen/Views/GripHandModelView.swift": "495713ec55b83645f4777c81ea1f60c52ce7c04e752f2896f95c794e5cb998cf",
+    "HangTen/Views/GripDiagramView.swift": "8ebb0f74d756a66d00a24f833a2fb60e4d90ea100b9d84f8966d89ea10d40e4d",
+    "HangTen/Models/WorkoutTimeline.swift": "d5e570e784a48019552ab6c792208d490377682f01e40e75c900a76832e449a3"
+  },
+  "conclusion": "A current-host preparation gate can prevent first countdown from starting before required board/hand construction and synchronization. It cannot guarantee a displayed frame or establish repair of historical stale colors. Keep the SAME visible hand host mounted across preparation, initial countdown and first Hang; loader-only or offscreen prewarm alone is insufficient.",
+  "sourceFacts": [
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "lines": "331-370,1171-1287",
+      "fact": "onAppear can toggleRunning; initial path calls requestCountdownStart, which gates audio preparation but has no board or hand readiness input. Initial visible countdown mutates session clock only in beginVisibleCountdown."
+    },
+    {
+      "path": "HangTen/Models/WorkoutTimeline.swift",
+      "lines": "322-377",
+      "fact": "Initial countdown suppresses hand cue construction (countdown > 0 and not skip). Before a session starts countdown is zero, so an initial hand may briefly exist, then be removed by countdown and recreated at Hang. Thus first host only at expiry is not a universal source guarantee."
+    },
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "lines": "458-479,610-643,739-765",
+      "fact": "Both portrait and landscape conditionally construct hand views from cue visibility. Pair/single choice depends on actual cue, task index and selected hand. Both paths need stable initial preparation/countdown mounting."
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "lines": "115-165,230-257",
+      "fact": "Loader .ready means model returned, not RealityView make. Make adds root/camera then applySync; update applies sync again. Surface disappearance resets loading. No ready callback exists."
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "lines": "116-123,464-488,656-677,821-828",
+      "fact": "Actual single/pair make adds root then synchronizes pose/side/viewport and camera. Surface availability distinguishes failed asset/pose construction; finite positive viewport is a separate readiness requirement."
+    }
+  ],
+  "minimalCandidate": [
+    "Add an explicit cancellable pending FIRST-start preparation state before entering the existing audio/countdown request path. Do not create activeStartUptime/routineStartedAt until the existing beginVisibleCountdown executes; preparation consumes no prescribed interval.",
+    "Resolve the first displayed cue through existing sessionSteps, taskCursor, selectedHandSide, hold-cue and presentation selection logic AFTER Main hand-choice/preparation decisions. Required slots come from actual visible resolved content, not always two hands.",
+    "Mount actual visible cue hosts during preparation and keep their structural identity across the initial countdown. Make this a workout-local initial-start override, not a global removal of countdown visibility policy and not a hidden/offscreen duplicate host. Keep existing single/pair rendering, gestures, semantics and default four-finger behavior.",
+    "Board readiness requires current selected presentation/model load plus actual current RealityView make/sync at a finite positive layout size; hand readiness requires each actual required current host make/sync with available posed surfaces and finite positive fitted viewport. Reporting must use current generation/semantic identity and discard callbacks from disappeared/replaced hosts.",
+    "When all required current hosts are prepared and explicit start intent remains pending, consume the intent ONCE and call existing requestCountdownStart(.initial). Keep audio defer/arm and three-second schedule unchanged. Do not route visual waiting through pendingCountdownStart without updating its audio state observer, since that observer can call beginVisibleCountdown directly.",
+    "Report missing/unavailable content explicitly and keep first start unarmed; Cancel/Back must remain available. Do not silently mark unavailable as ready or insert a guessed timeout/sleep.",
+    "Use optional readiness plumbing with no behavior change for Train/picker callers. BoardMap needs to report the actually selected displayed presentation; 2D/raster paths must not deadlock waiting for a 3D make. A no-grip cue must not require an absent hand host."
+  ],
+  "preservationRequirements": [
+    "First-start only: resume and Skip retain existing state/timing paths, task cursor, alternate expansion and per-hand selection. A waiting first-start request must be cancelled by Pause/Cancel/Back/background or superseding navigation, not resurrected by a late child callback.",
+    "Hand preference/task/presentation/layout changes during preparation invalidate readiness for the superseded content; do not let transient portrait or old paired host satisfy a new landscape/single requirement. A layout replacement during countdown remains a concrete risk: no first-start-only gate guarantees readiness after later rotation without separately specified behavior.",
+    "Keep prepared host mounted when countdown changes 0 to 3 and 1 to 0; do not use countdown/mode as its .id. Avoid a new pair branch at Hang or a slot-height change that creates a different host.",
+    "Do not reset orbit or demand perpetual camera settlement/rope physics settling as readiness. Current make/sync is a CPU preparation milestone; contact animation and live ropes remain Main behavior.",
+    "Audio availability, preparation failure/fallback, debug autostart, hand choice and Motherboard preparation must still converge on one initial-start request rather than bypassing the gate or double-starting."
+  ],
+  "limits": [
+    "No callback here proves CAMetalLayer or GPU frame presentation. Root/scene attachment, availability and make completion are CPU/host facts only. Neither Task.yield nor SceneEvents.Update should be labeled first displayed frame.",
+    "Latest action has absent board and hands at Hang003 despite later colors correct; historical controls show variable late-color results. This gate targets start-before-preparation and does not prove those failures share a cause or fix later stale material updates.",
+    "Actual whole-image validation must still fail if any active capture is blank or has wrong colors/hands; do not retime capture checkpoints around readiness results or normalize prior failures."
+  ],
+  "focusedValidation": [
+    "Pure initial-start state behavior: early load-only signal cannot start; required current make/sync signals release once; stale/cancelled signals do not release; audio callbacks cannot bypass visual waiting; selected-side change resets required readiness.",
+    "Actual normal-route Evo and Pro, portrait and landscape: observe preparation and unchanged three-second countdown, correct first Hang board and prescribed hands, full natural active/rest/next-active sequence. Include existing hand-choice/single-hand/no-cue and resume/Skip behavior coverage at appropriate scope.",
+    "Keep parent-reserved physics/test methods untouched. Coordinate WorkoutView reservation and any required GripDiagramView or WorkoutTimeline policy plumbing before edits; this report changes no source."
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "timeUTC": 1791042102.22977,
+  "reason": "Unchanged Main live-physics test consuming CPU without completing after over 12 minutes; bound repeat, retain incomplete run, run changed contracts separately. Original full run physics test timeout remains failed.",
+  "process": {
+    "pid": 36138,
+    "ppid": 36137,
+    "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination platform=iOS Simulator,id=0C1CF662-98B1-43FF-9405-7AC58CD2132A -derivedDataPath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/main-sync-2026-10-03/ios/DerivedData-placid-badger-cad-second-half -resultBundlePath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/main-sync-2026-10-03/ios/tests-placid-badger-cad-second-half.xcresult -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1 test -only-testing:HangTenTests/BoardModelRealityTests -only-testing:HangTenTests/SuspendedBoardPresentationTests -only-testing:HangTenTests/WorkoutActivityRecordingTests"
+  },
+  "signal": "SIGINT"
+}

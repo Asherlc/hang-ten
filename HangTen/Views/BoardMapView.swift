@@ -403,10 +403,7 @@ struct BoardDetailMapView: View {
         .animation(.easeInOut(duration: 0.18), value: selectedHoldID)
         .onAppear(perform: updateSelectedPosition)
         .onChange(of: selectedHoldID) { _, _ in updateSelectedPosition() }
-        .onChange(of: board.id) { _, _ in
-            preferredPositionIDs.removeAll()
-            updateSelectedPosition()
-        }
+        .onChange(of: board.id) { _, _ in preferredPositionIDs.removeAll(); updateSelectedPosition() }
     }
 
     @ViewBuilder
@@ -442,10 +439,7 @@ struct BoardDetailMapView: View {
                         board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID,
                         preferredPositionID: preferredPositionIDs[map.presentation.id]
                     ) },
-                    set: {
-                        preferredPositionIDs[map.presentation.id] = $0
-                        updateSelectedPosition()
-                    }
+                    set: { preferredPositionIDs[map.presentation.id] = $0; updateSelectedPosition() }
                 ),
                 accessibilityID: "boardDetail.rotationSelector"
             )
@@ -643,6 +637,9 @@ struct BoardMapView: View {
     @State private var presentationSelection: BoardMapPresentationSelection
     @State private var preferredPositionIDs: [String: String] = [:]
 
+    @Environment(\.workoutRendererPreparationID) private var preparationID
+    @State private var preparationHostID = UUID()
+
     init(
         board: BoardRevision,
         highlightedHoldIDs: Set<String> = [],
@@ -737,6 +734,15 @@ struct BoardMapView: View {
                             }
                         }
                         .frame(width: boardBounds.width, height: boardBounds.height)
+                        // Raster presentations have no asynchronous 3D host.
+                        // Report the actual selected presentation, so a retained
+                        // picker selection cannot be mistaken for a model host.
+                        .preference(key: WorkoutRendererReadinessKey.self, value: preparationID == nil
+                                    ? .init() : .init(renderers: [preparationHostID: .init(
+                                        kind: .board,
+                                        isReady: boardBounds.width.isFinite && boardBounds.height.isFinite
+                                            && boardBounds.width > 0 && boardBounds.height > 0,
+                                        preparationID: preparationID)]))
                     }
                 case .model:
                     BoardModelSurface(

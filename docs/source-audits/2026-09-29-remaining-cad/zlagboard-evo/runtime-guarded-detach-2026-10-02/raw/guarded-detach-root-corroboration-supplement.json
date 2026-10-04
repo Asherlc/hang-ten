@@ -1,0 +1,20 @@
+{
+  "scope": "Parent reported direct whole-image inspection of this single image and independent read-only tail census inspection. Added after main freeze; earlier manifest remains unchanged.",
+  "reviewer": "/root",
+  "image": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-2-active-plus-5.png",
+    "sha256": "ab8874f90ad3ea34e1fbe6fabf6d61636ac0e368b99fe902db441c0c47a37d67",
+    "observedBoardColor": "blue",
+    "expectedBoardColor": "red",
+    "timer": "00:02"
+  },
+  "pointCensus": {
+    "sequence": 152,
+    "rootAndCameraAlive": true,
+    "rootAndCameraActive": false,
+    "currentParentAndSceneNil": true,
+    "weakRecordedParentAndSceneStillNonnil": true
+  },
+  "limitation": "Nonnil weak recorded parent/scene indicates those objects are still alive at this point; not proof of GPU rendering, destruction, visibility or causal mechanism.",
+  "frozenManifestSHA256": "ef004763b891aba414ae015d755d5efae5c0e18504d6fc8f3bb50c20c22ac9de"
+}

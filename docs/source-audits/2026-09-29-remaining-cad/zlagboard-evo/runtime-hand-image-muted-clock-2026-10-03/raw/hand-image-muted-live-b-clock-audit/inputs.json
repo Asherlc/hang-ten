@@ -1,0 +1,30 @@
+[
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-muted-live-b-prep/root-completed-control-freeze.json",
+    "sha256": "08bc57d84c6eebe4710c1060221b0bca747f9a13be463588307a525a6969b9a8"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-b-landscape/commands.json",
+    "sha256": "e60f1468cae3b14b096141e592280aa2251f88bed11ca179a564119128e62d40"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-b-landscape/captures.json",
+    "sha256": "4b8028228374a1275dbd9faed70b61c79ca9acfe088d298012d270f40a43d4bf"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-b-landscape/transition-observations.json",
+    "sha256": "f8102bc8eeef39a6a80e77df98d21c737c292b292d32b5076599f9cbe40c891f"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-b-landscape/structural-correspondence.json",
+    "sha256": "c04a2e96ea4101f5eacb3d23f5216feca387390a3636e3116aa29854074c9043"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-b-landscape/muted-validator-command-results.json",
+    "sha256": "496ff21b0bf38628d31694b56afe5ec0be1b68f3a925d3cb455b74f578c933f7"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-b-landscape/events-DDECBDD1-0983-40CE-B4C2-81E89D6CEBF4.jsonl",
+    "sha256": "dd6172d131dd90c689094cf17fe134b8c7a5d12717905d65c68397aceb4fd1ed"
+  }
+]

@@ -1,0 +1,77 @@
+{
+  "result": "INVALID_CONTROL_NO_QUALIFIED_PHASE_CAPTURES",
+  "binarySHA256": "d6d6eccdd693a54094056197cc1e47f62f0e661c6354cf8028bf6499e90af575",
+  "helperSHA256": "d582299ee0fe605c4d2f0febbad63137ab477aa39770f6518f9e36231cbfd24e",
+  "schemaSHA256": "87eb845d31e1dda2a23b5df847dab02454b2057e625d9ead35d0135cd9585aea",
+  "originalCompletion": {
+    "captureProtocolCompleted": false,
+    "visualResult": "NOT_REVIEWED",
+    "commonValidators": "PENDING_SEPARATE_REVIEW",
+    "overallComparisonPassed": false,
+    "postflightErrors": [],
+    "limits": [
+      "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+      "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+      "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+    ]
+  },
+  "originalCleanup": {
+    "scope": "Exact launched app only; existing controller retains Simulator/DD",
+    "recordedAppPIDAbsent": true,
+    "passed": true
+  },
+  "timedCaptures": 0,
+  "trace": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/events-4F1E2EDD-6532-46B6-8C55-6AD3AB5E0301.jsonl",
+    "sha256": "ad8bc018e07e6cd2ddb7b263fae0a1733d8ec3ff41908a6519c51181aa34d56b",
+    "records": 19,
+    "completeContiguous": true,
+    "includesSamplerEnd": false,
+    "lastEvent": "startup-audio-prepare-before",
+    "lastSequence": 19
+  },
+  "startup": {
+    "trainReadinessPassed": true,
+    "appearanceSequence": 17,
+    "appearanceEpoch": 1791008916.659192,
+    "requestSequence": 18,
+    "lastBeforePrepareDeltaSeconds": 0.01699995994567871,
+    "recordedAfterPrepare": false,
+    "stopDeltaSeconds": 30.014413118362427,
+    "selectedBilateralRows": 0,
+    "allFinalHandCounts": {
+      "pair.constructor-entry": 0,
+      "pair.make-entry": 0,
+      "single.constructor-entry": 0,
+      "single.make-entry": 0
+    }
+  },
+  "initialScreenshot": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-workout-live-a-landscape/launch-initial.png",
+    "sha256": "beefa880902137e376c5725d62acf7a648356b9d667c553eadece47f33b2b35f",
+    "commandStartEpoch": 1791008916.2957408,
+    "commandEndEpoch": 1791008917.25827,
+    "commandDurationSeconds": 0.962529182434082,
+    "wrapperDurationSeconds": 0.9658207893371582,
+    "startRelativeToAppearance": -0.3634512424468994,
+    "endRelativeToAppearance": 0.5990779399871826,
+    "visualReviewedByThisAudit": false,
+    "scope": "Initial navigation screenshot only, not a timed Hang/Rest capture"
+  },
+  "cleanupFacts": {
+    "recordedAppPID": 23363,
+    "terminateExitStatus": 3,
+    "terminateDiagnostic": "found nothing to terminate",
+    "exactPIDQueryExitStatus": 1,
+    "exactPIDQueryEmpty": true,
+    "causeOfExit": "UNKNOWN",
+    "simulatorAndDerivedData": "Still owned by persistent parent lifecycle; no cleanup by this audit"
+  },
+  "limits": [
+    "No color comparison, hand-image workout, successful first-Hang or suppression conclusion.",
+    "Last before-prepare event and missing after marker do not identify blocked API duration, deadlock, backend, main-thread state or exit cause.",
+    "No continuous app liveness observation between startup and final exact PID query.",
+    "Original pending validator/not-reviewed statuses preserved; absence of postflight errors is not full validation.",
+    "No retry/IMAGE run authorized or performed by this audit."
+  ]
+}

@@ -1,0 +1,27 @@
+Prospective P arm only — no source/build/device or run authorization.
+
+Root has frozen and audited the O run. Before output creation or launch, the helper requires completedOrthographicAuditPath to equal evo/weak-hand-census-root-gate.json under this owner’s R tree, and completedOrthographicAuditSHA256 to equal 1ab681076b5b7ea4ad654f44e6805fe5464fa0da5fd3edc8836b230f796c2ea5. It verifies orthographic arm, same full binary SHA, allRequiredGatesPassed/visualFailureConfirmed/earlierHandAbsentAtAllCaptureBrackets, exact five root checks, exact seven named proof paths/hashes/check mappings, and findings/frozenManifest hashes. Visual classification remains the root’s SHA-bound judgment; no image-color inference by helper. Existing source/code/package parity and full prior-manifest guards remain. No failure from another binary substitutes. This preparation grants no runtime authorization.
+
+P uses exact current binary70707e27453ae150763a302152c04e028564dbe97b41bffbcc91c98642f95c94. No app/source/build change. Exactly one fixed fresh output evo/weak-hand-perspective-landscape and run ID placid-badger-cad-second-half-weak-hand-perspective. Relative to current O, add only HANGTEN_REVIEW_ALL_HAND_PERSPECTIVE=1 plus fresh run ID. Ordinary Train UNMOUNT, no model retention/detach, real hands and existing weak board+hand census remain. Environment allowlist updated only for that flag. Inherited review flags stripped as before.
+
+Same bounded20s external live tagged Train readiness,30ms trace polling,300s capture bound, passive natural7/180/7, offsets+.25/+1/+3/+5,12whole images and following-preview tail. The readiness and capture loops are byte-identical to O helpers. No observer/sampler/timer/cadence change.
+
+Future commands ONLY after root/runtime-owner release:
+  rtk proxy python3 <prep>/workout-weak-hand-perspective.py <root-release.json>
+  rtk proxy python3 <prep>/check-cpu-semantics.py weak-hand-perspective-landscape
+  rtk proxy python3 <prep>/check-frames.py weak-hand-perspective-landscape
+  rtk proxy python3 <prep>/check-constructors.py weak-hand-perspective-landscape
+  rtk proxy python3 <prep>/check-ownership.py
+  rtk proxy python3 <prep>/check-navigation.py
+  rtk proxy python3 <prep>/check-real-hands.py
+  rtk proxy python3 <prep>/check-weak-hand-census.py
+  rtk proxy python3 <prep>/compare-O-P.py
+Preserve raw stdout/stderr/failures in new files. No overwrite/retry against frozen O or previous reports. Existing owner retains device/lifecycle responsibility; helpers create no external resources.
+
+CPU/frame/board constructor checkers are byte-exact. Ownership/navigation change only namespace/runID and exact perspective flag allowance; no ownership gate is relaxed. Real-hand checker requires perspective component present, orthographic absent, finite vertical FOV0<theta<180, unchanged clips.1..100, same fit geometry bounds and lifecycle/count reconciliation. Weak census checker changes only expected camera component and flag, preserving UUID/tombstone/view association/12bracket checks. No fixed hand constructor count or alive/dead result is imposed on P.
+
+Comparator requires same exact binary, permitted environment difference, board inputs/frame endpoints/root-camera transforms/projection, and actual board constructors/makes. It compares observed hand constructor/make paths by actual lifetime ordinal and camera transform sets without imposing a historical hand count. SwiftUI lifecycle order is retained separately. Actual hand projection/framing records are retained; FOV-vs-orthographic-scale differences are intended diagnostic adaptations. Same camera transform does not guarantee identical projected size, foreshortening or screen coverage.
+
+Review all12 WHOLE images with the copied template: board color/timer separately from hand visibility/count/pose/cue match and artifacts. Never infer visible hands from constructors or actual presenting host from appeared/last-made. No crops or pixel measurements. Root/runtime owner perform exact final code/package parity.
+
+P outcome must be fully valid and all12 visual PASS before a reversal O can even be considered. No reversal helper/arm is prepared or authorized here; root decides after P final audit. A pass alone is not a production fix or manufacturing/ergonomic claim.

@@ -1,0 +1,40 @@
+{
+  "files": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+      "matchesHEAD": true
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+      "matchesHEAD": true
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+      "matchesHEAD": true
+    },
+    {
+      "path": "HangTenTests/BoardModelRealityTests.swift",
+      "sha256": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+      "matchesHEAD": true
+    },
+    {
+      "path": "HangTenTests/BoardModelTests.swift",
+      "sha256": "74dfab4632f744e10f74f85216b77d3b073d0e84858d750a4ba8fd118d1c4601",
+      "matchesHEAD": true
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+      "matchesHEAD": true
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+      "matchesHEAD": true
+    }
+  ],
+  "allRestored": true
+}

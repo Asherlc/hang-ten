@@ -1,0 +1,24 @@
+{
+  "createdUTC": "2026-10-02T21:13:09.301845+00:00",
+  "head": "8455851926c5d8c66e90d0668cac40a3079e3228",
+  "sourceFiles": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "retained": "BoardModelRealityTypes.swift",
+      "sha256": "48c2b5cc6a5d2c1b1b7912576b71f9ba1fca1e281b9655bdb5a46fa1cc684186"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "retained": "BoardModelView.swift",
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "retained": "RootView.swift",
+      "sha256": "ce690c12d0182a57c659f3e4f01bf4b25c37c2dc6d98fbe9dafaa57686f4152f"
+    }
+  ],
+  "patchSHA256": "7ca977687acc548f560120ae97df559c2c552471442552b0f46ab29f39de9c14",
+  "diagnosticOnly": true,
+  "productionFixEstablished": false
+}

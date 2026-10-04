@@ -1,0 +1,24 @@
+{
+  "authorizedByParent": true,
+  "parent": "workspace coordinator root",
+  "packageSHA256": {
+    "Hangboards/yy-penta-evo/yy-penta-evo.FCStd": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+    "Hangboards/yy-penta-evo/assets/primary.usdz": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+    "Hangboards/yy-penta-evo/assets/primary.model.json": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+    "Hangboards/yy-penta-evo/suspension.json": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97"
+  },
+  "cordChecks": "export/final-cord-check-left.json and export/final-cord-check-right.json",
+  "note": "Root authorized coordinated narrow resolver fix fresh green. package_checks confirmed source-ready after red regression. Package unchanged.",
+  "sourceSHA256": {
+    "HangTen/Models/WorkoutActivityRecording.swift": "3ccf1cb1678c2bfdb2b2963aef5d7a18ac5fb5f4dbba6c712c47d30cb7cbe924",
+    "HangTenTests/BoardTargetSubstitutionTests.swift": "b11d6fea355add7aff252966831f7ed1734959182cc43716e259ee41268ef9dc",
+    "HangTenTests/BoardModelTests.swift": "74dfab4632f744e10f74f85216b77d3b073d0e84858d750a4ba8fd118d1c4601",
+    "HangTenTests/SuspendedBoardPresentationTests.swift": "faae886aff5c9db83475e05f0e330d864cb9ca7eeaae213e53d8f4c04c01bce5"
+  },
+  "tests": [
+    "ContactResolverTests",
+    "WorkoutActivityRecordingTests",
+    "BoardModelTests/testPentaEvoSelectedBearingsFaceUp",
+    "SuspendedBoardPresentationTests/testNativeCADPentaInstancesKeepTheirAuthoredPoseAndInextensibleLoop"
+  ]
+}

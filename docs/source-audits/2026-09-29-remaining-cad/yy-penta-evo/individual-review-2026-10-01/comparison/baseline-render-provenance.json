@@ -1,0 +1,12 @@
+{
+  "originalAssetCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "originalUSDZSHA256": "1c097a4ec69649f9115253cb8dfe22a9b91aae6ec9bcc22e27d15f2fe565eac0",
+  "prior": {
+    "suspension.json": "e419f73232d56bdf29b609f94316cf8b6fc1db215c0423a6348841ddd9714c8f",
+    "yy-penta-evo.FCStd": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+    "assets/primary.usdz": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+    "assets/primary.model.json": "b0cd578994a9290d8bd52441ac615c3d8b20b059144b2dadcb85b733c566d764"
+  },
+  "renderStatus": "Whole original and prior native front/side/top frames generated",
+  "firstAttempt": "render-attempt-1-status.json"
+}

@@ -1,0 +1,20 @@
+{
+  "hardBoundSeconds": 300,
+  "plannedPhases": [
+    "active",
+    "preview",
+    "active"
+  ],
+  "captureOffsetsAfterActualMutation": [
+    0.25,
+    1,
+    3,
+    5
+  ],
+  "afterLaunchUIAccess": "screenshots only; no AX queries/taps/Skip",
+  "externalTracePollingSeconds": 0.03,
+  "routineUnchanged": true,
+  "samplerLimit": "Existing120-iteration sampler remains; new identical both-arm boundary census on actual highlight-before/after supplies sparse late-phase app/window/placement evidence, not every capture instant",
+  "arm": "weak-hand-perspective",
+  "startup": "One conditional P arm on identical70707weak-hand-censusbinary, only ALL_HAND_PERSPECTIVE=1 and fresh run ID differ from completed O. O must first be fully audited with reproduced visual failure and earlier pair gone at failed checkpoints. Normal Train UNMOUNT, weak observation/census, real hands, no retention/detach, bounded20s readiness and passive7/180/7/12captures+tail unchanged. Projection/FOV fit changes are an existing diagnostic adaptation; judge actual hand visibility/pose separately from board colors. No source/build/new observer or additional arm authorized."
+}

@@ -1,0 +1,18 @@
+{
+  "package": "yy-travelboard",
+  "number": 19,
+  "reviewAnswer": "Y",
+  "question": "Does #19 look right?",
+  "acceptedDate": "2026-10-01",
+  "reviewedCommit": "61cacdd7f8769b047bbb04321fde07ebea162f1b",
+  "acceptedScope": "Displayed TravelBoard revision: wood finish, shorter native-solved visible cords, six contact selections, both poses and 15 mm workout highlighting. Native body geometry unchanged; display estimates remain labeled.",
+  "sourceSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+  "presentations": {
+    "primary": {
+      "descriptorSHA256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+      "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f"
+    }
+  },
+  "reviewPacket": "individual-review-2026-10-01/review.md",
+  "status": "accepted"
+}

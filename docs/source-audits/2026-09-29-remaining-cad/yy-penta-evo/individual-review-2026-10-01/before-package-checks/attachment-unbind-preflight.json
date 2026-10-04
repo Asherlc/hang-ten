@@ -1,0 +1,36 @@
+{
+  "boundObjectSelector": "Tools/HangboardCAD/compile_board.py:137: nonempty NodeID property; no visibility test",
+  "recommendedSourceOnlyUnbind": "removeProperty NodeID and NodeRole from both Part::Common region helpers; retain shapes/dependencies and leave Cut6 penta_body_001 binding. Main agent owns edits.",
+  "retiredNodeIDs": [
+    "central_ring_001",
+    "upper_band_exterior_001"
+  ],
+  "generatedManifestReferences": {
+    "central_ring_001": false,
+    "upper_band_exterior_001": false
+  },
+  "sidecarBodyNodeIDs": [
+    "penta_body_001",
+    "penta_body_001"
+  ],
+  "compilerTransport": "Region partition includes only bound contact+attachment nodes. Unbinding these helpers stops removing their Cut6 surface triangles from the main body mesh. Primary body and7 contact regions still export.",
+  "nodeRoleOnlyUnsupported": "Compiler selects only first body node; simply retagging2 extra bodies removes their exports and mismatches descriptor bound inventory.",
+  "expectedNodeInventoryAfter": [
+    "penta_body_001",
+    "unit_duo_001",
+    "unit_edge_10_001",
+    "unit_edge_15_001",
+    "unit_edge_20_001",
+    "unit_edge_25_001",
+    "unit_mono_001",
+    "unit_tray_001"
+  ],
+  "verificationPlan": [
+    "Before edit retain exact source/model/descriptor/sidecar SHA and archive member hashes.",
+    "After edit compare all native geometry archive members byte-for-byte; expect only Document.xml tag removal plus manifest finish changes. Native save may alter structural XML/time metadata; report actual differences, do not claim unsupported byte equality.",
+    "Confirm Cut6 and7 contact B-rep shapes unchanged via geometry-member hash or fresh native shape volume/surface/depth checks if save reserializes.",
+    "Compile changed export partition, reimport actualUSDZ:8nodes,7slots,unbound materials, model bounds/contact slot descriptor geometry unchanged within exact numeric/export tolerance as appropriate. USDZ bytes are expected to change; do not relabel old export proof.",
+    "Compare all14 logical contact facts,2equipment instances and slot mappings exact; cord topology/rotations/routes unchanged if source collision solid identical, rebind sidecar modelSHA and prove current source solid geometry identity.",
+    "Narrow iOS+Android production staging copies generated manifest,descriptor/modelexact; omit authoring files; fresh app material/picking check of former attachment surfaces required."
+  ]
+}

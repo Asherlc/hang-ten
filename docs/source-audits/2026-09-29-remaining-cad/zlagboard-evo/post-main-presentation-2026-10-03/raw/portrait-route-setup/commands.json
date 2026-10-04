@@ -1,0 +1,52 @@
+[
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "terminate",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "com.hangten.training"
+    ],
+    "startUTC": 1791048560.285347,
+    "endUTC": 1791048560.49985,
+    "exitStatus": 3
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "launch",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startUTC": 1791048560.5001001,
+    "endUTC": 1791048560.786741,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "E0AC7F37-369F-414E-B407-353435A0BE03"
+    ],
+    "startUTC": 1791048563.7885172,
+    "endUTC": 1791048564.888406,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/portrait-route-setup/before-route.png"
+    ],
+    "startUTC": 1791048564.888823,
+    "endUTC": 1791048565.379551,
+    "exitStatus": 0
+  }
+]

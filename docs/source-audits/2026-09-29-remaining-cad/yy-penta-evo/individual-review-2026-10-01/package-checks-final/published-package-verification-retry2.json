@@ -1,0 +1,111 @@
+{
+  "timestampUTC": "2026-10-01T23:57:13.546528+00:00",
+  "package": "yy-penta-evo",
+  "filesBefore": {
+    "Hangboards/yy-penta-evo/suspension.json": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97",
+    "Hangboards/yy-penta-evo/yy-penta-evo.FCStd": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+    "Hangboards/yy-penta-evo/assets/primary.usdz": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+    "Hangboards/yy-penta-evo/assets/primary.model.json": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9"
+  },
+  "schemaPassed": true,
+  "boardID": "yy.penta-evo",
+  "usd": {
+    "version": [
+      0,
+      26,
+      8
+    ],
+    "meshes": [
+      {
+        "name": "penta_body_001",
+        "faces": 62956
+      },
+      {
+        "name": "unit_tray_001",
+        "faces": 126
+      },
+      {
+        "name": "unit_edge_25_001",
+        "faces": 1028
+      },
+      {
+        "name": "unit_edge_20_001",
+        "faces": 1028
+      },
+      {
+        "name": "unit_edge_15_001",
+        "faces": 1028
+      },
+      {
+        "name": "unit_edge_10_001",
+        "faces": 1028
+      },
+      {
+        "name": "unit_mono_001",
+        "faces": 1512
+      },
+      {
+        "name": "unit_duo_001",
+        "faces": 1780
+      }
+    ],
+    "materialsOrShaders": [],
+    "materialBindings": [],
+    "members": [
+      "stage.usdc"
+    ],
+    "exactDescriptorNodes": true,
+    "modelHashMatches": true,
+    "unbound": true
+  },
+  "manifest": {
+    "woodFinish": true,
+    "instanceSuspensionTypes": [
+      "cadRoutedCord",
+      "cadRoutedCord"
+    ],
+    "contactIDs": [
+      "duo-left",
+      "duo-right",
+      "edge-10-left",
+      "edge-10-right",
+      "edge-15-left",
+      "edge-15-right",
+      "edge-20-left",
+      "edge-20-right",
+      "edge-25-left",
+      "edge-25-right",
+      "mono-left",
+      "mono-right",
+      "tray-left",
+      "tray-right"
+    ]
+  },
+  "staging": {
+    "ios": {
+      "generatedBoardMatchesSource": true,
+      "descriptorBytesMatch": true,
+      "modelBytesMatch": true,
+      "authoringFilesOmitted": true,
+      "usdzDeliveryLocationCorrect": true,
+      "stagedFiles": [
+        "assets/primary.model.json",
+        "board.json"
+      ]
+    },
+    "android": {
+      "generatedBoardMatchesSource": true,
+      "descriptorBytesMatch": true,
+      "modelBytesMatch": true,
+      "authoringFilesOmitted": true,
+      "usdzDeliveryLocationCorrect": true,
+      "stagedFiles": [
+        "assets/primary.model.json",
+        "assets/primary.usdz",
+        "board.json"
+      ]
+    }
+  },
+  "sourceFilesUnchanged": true,
+  "passed": true
+}

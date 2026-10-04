@@ -1,0 +1,32 @@
+{
+  "HangTen/Models/BoardModelRealityTypes.swift": {
+    "insertionsOnly": true,
+    "trackedInputExact": true,
+    "sameTaskCreation": true,
+    "sameAwait": true,
+    "sameSleep": true,
+    "sameStateDeclarations": true,
+    "sameOnChange": true,
+    "sameActorAnnotations": true
+  },
+  "HangTen/Views/BoardModelView.swift": {
+    "insertionsOnly": true,
+    "trackedInputExact": true,
+    "sameTaskCreation": true,
+    "sameAwait": true,
+    "sameSleep": true,
+    "sameStateDeclarations": true,
+    "sameOnChange": true,
+    "sameActorAnnotations": true
+  },
+  "HangTen/Views/RootView.swift": {
+    "insertionsOnly": true,
+    "trackedInputExact": true,
+    "sameTaskCreation": true,
+    "sameAwait": true,
+    "sameSleep": true,
+    "sameStateDeclarations": true,
+    "sameOnChange": true,
+    "sameActorAnnotations": true
+  }
+}

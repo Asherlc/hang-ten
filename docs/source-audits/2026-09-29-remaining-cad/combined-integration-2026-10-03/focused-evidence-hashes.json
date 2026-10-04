@@ -1,0 +1,227 @@
+[
+  {
+    "path": "focused-evidence/pause-timing-optimized/controller.command.json",
+    "bytes": 183,
+    "sha256": "9fc9beaae795154b8f8d14b8d1cdfa4146b8dcb56ad222e4047dbbf3e9affe25"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/controller.exit.json",
+    "bytes": 134,
+    "sha256": "45558750d729bb5d26bd1dc7b1d18246c9327c910afd409617fc4be7f03e5516"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/controller.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/controller.stdout",
+    "bytes": 189,
+    "sha256": "e5f583acf689f5b93d95a84d3706918977b14efead65b3b362c6335bdd0eb8be"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/device.command.json",
+    "bytes": 188,
+    "sha256": "70c265dbf3e470de05bbc68d7437574e0589d6282a7ed2af1fefedf030ed8f62"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/device.exit.json",
+    "bytes": 132,
+    "sha256": "3987c1abb1eb3a20267e411977b9875f9cf63716e8d8bfc6bd039509e9c2481b"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/device.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/device.stdout",
+    "bytes": 55495,
+    "sha256": "e427667468ac36082fce039186a2fc7816b69e23e0f3d7cedd06ad9655b0bb92"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/tests-placid-badger-cad-second-half-pause-timing-optimized.xcresult.archive.json",
+    "bytes": 9878,
+    "sha256": "a51cbe167e00d5bb39c3a15794a4bc6e9ca41be6be2668d162630d994520988b"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/tests-placid-badger-cad-second-half-pause-timing-optimized.xcresult.deletion.json",
+    "bytes": 259,
+    "sha256": "e30260953dfb97a7d1dbf096e3e4a2fbc2fa5a687dec839d06a2d25a94c5a833"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/tests-placid-badger-cad-second-half-pause-timing-optimized.xcresult.zip",
+    "bytes": 34946,
+    "sha256": "67b00e16a7daad3d7cdbf2555de0ff3043db5465a32338ddd8f4f6cfbd56e09c"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/tests.command.json",
+    "bytes": 1154,
+    "sha256": "ec48886858e08db445c8af6e125c7dfd8f7a2402197a76e8cee2de99dc508faa"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/tests.exit.json",
+    "bytes": 132,
+    "sha256": "8657f2c66a2989eba932e4dc7c7bae618653d7dc04f42116a31cf737e9eedefb"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/tests.stderr",
+    "bytes": 365,
+    "sha256": "bbe60f1d61a81897a81442b6d3eb0e0d760cd2256f284900192b1fcb440e6ec7"
+  },
+  {
+    "path": "focused-evidence/pause-timing-optimized/tests.stdout",
+    "bytes": 12339,
+    "sha256": "aa9328f8d354aa632006f8a7a083432c9dc505ae4b8e070d0212765845b9d487"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/controller.command.json",
+    "bytes": 184,
+    "sha256": "dc0f64724f32fd8dae435b03966f1470a19e69c589bf1ab2a5a3a78657936e43"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/controller.exit.json",
+    "bytes": 134,
+    "sha256": "d88bfad6827ad9587ca577d513187b5d4cb6aa15d4660dd4e2711c285086799c"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/controller.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/controller.stdout",
+    "bytes": 189,
+    "sha256": "e5f583acf689f5b93d95a84d3706918977b14efead65b3b362c6335bdd0eb8be"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/device.command.json",
+    "bytes": 190,
+    "sha256": "db5e6a4e04d0451fcac7065ccd0420da7b304b08846fb47a0967c7f7d7add172"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/device.exit.json",
+    "bytes": 133,
+    "sha256": "66ece16a8266cced5e42039b03c45ffce5e12e7631af2886e420a03d33592d59"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/device.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/device.stdout",
+    "bytes": 56151,
+    "sha256": "7bffbf4f443bdca3c65a2fb614a72170ed22f15b7491fb57e8abf03fcd35637e"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/tests-placid-badger-cad-second-half-terminal-readiness-green.xcresult.archive.json",
+    "bytes": 21095,
+    "sha256": "8e4e38d252c9e9a8b6c3b2fed424115c62fddb4fa3fbc047dceb326b8dba0e74"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/tests-placid-badger-cad-second-half-terminal-readiness-green.xcresult.deletion.json",
+    "bytes": 261,
+    "sha256": "452f03662682adea360ffb75cc4aab28c4085b94d1143a30d7c4eaea718d40a0"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/tests-placid-badger-cad-second-half-terminal-readiness-green.xcresult.zip",
+    "bytes": 64994,
+    "sha256": "a24497a6623d71df2f9205b527ab97390d241b37a8b563224fb58f880bcb4ca2"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/tests.command.json",
+    "bytes": 1350,
+    "sha256": "c0af7ef03ca95450e1cab1f37897a2349bf4411f0fc41925f5d4fad7d8cf418b"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/tests.exit.json",
+    "bytes": 131,
+    "sha256": "b37a30f02b5f2ee4bf687afee0fb48798c316da2a277f164100e73804eaee433"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/tests.stderr",
+    "bytes": 368,
+    "sha256": "1c0086924f5cbbc0fe97649ad29a77be587b3d4543fb3213370f00e2d1f4fd49"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-green/tests.stdout",
+    "bytes": 43225,
+    "sha256": "920965b71068b7ab2502e14f5f755b7ce013c2163336e866f713a12bca87d096"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/controller.command.json",
+    "bytes": 184,
+    "sha256": "a045c513889cf096ab524495409ac792758b5fad26d56d344d2d82e48bf7dfa4"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/controller.exit.json",
+    "bytes": 133,
+    "sha256": "ffba0e51ac1981d20c646fa55ad4c5ae3859970a95a7ce2ee1a81e0e97c96cf7"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/controller.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/controller.stdout",
+    "bytes": 189,
+    "sha256": "e5f583acf689f5b93d95a84d3706918977b14efead65b3b362c6335bdd0eb8be"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/device.command.json",
+    "bytes": 189,
+    "sha256": "0c8a42fd25a47c1c4989fc9dfac4bd5742e0f1e63a94915ff635bf19c6da6cb1"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/device.exit.json",
+    "bytes": 132,
+    "sha256": "42bce36f01cc2c66536641ee174a22431bc6f23629f94ab0ced511720c1bef55"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/device.stderr",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/device.stdout",
+    "bytes": 56151,
+    "sha256": "c21cd92fd6353d382ce445ec761a75dbb36c5bd29ecd3c4185ee02d6699ec892"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/tests-placid-badger-cad-second-half-terminal-readiness-red.xcresult.archive.json",
+    "bytes": 438879,
+    "sha256": "4f7ee0746a999fa24366993afc2fa9227a6bd12fbc7e764732bfd0840c6af582"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/tests-placid-badger-cad-second-half-terminal-readiness-red.xcresult.deletion.json",
+    "bytes": 259,
+    "sha256": "a22899db617c56c58d90d97ea5f78fc497be393a203c738d404c778d60b87e1e"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/tests-placid-badger-cad-second-half-terminal-readiness-red.xcresult.zip",
+    "bytes": 43606654,
+    "sha256": "b8f3dbb459418a1a95798d9f8a92d40fff1a0f0378b1cc8e5b1e9c44b21ec4a7"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/tests.command.json",
+    "bytes": 1266,
+    "sha256": "c38c57021be46dfc7036dbfc2680f1505bf819124a09898902ec2d983c93938e"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/tests.exit.json",
+    "bytes": 134,
+    "sha256": "fde858079920b7927a96b86de44e5ff02e13bd7a1f2c69a98c08781cdb20c177"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/tests.stderr",
+    "bytes": 879,
+    "sha256": "9b01d1d331d867aaf8114ef0233decd23be1fe0f1ae4854255fd11fa0e4282b5"
+  },
+  {
+    "path": "focused-evidence/terminal-readiness-red/tests.stdout",
+    "bytes": 22415,
+    "sha256": "26fb3db38744a64ceb8c9320692413b90695e3999bda670d701caeb4fe6ac9bf"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "requestedInitialViewport": [
+    410,
+    70
+  ],
+  "actualGeometryReaderViewport": [
+    408.3333333333333,
+    70
+  ],
+  "actualUIKitFrameInWindow": [
+    233,
+    149,
+    408,
+    70
+  ],
+  "clarification": "Previous prose decimal408.33333333333337 was a transcription rounding typo; this appendix uses exact logged values. Invalid setup classification unchanged."
+}

@@ -1,0 +1,10 @@
+--- .context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-runtime-prep/control/check-weak-hand-census.py
++++ .context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-weak-hand-census.py
+@@ -1,6 +1,6 @@
+ from pathlib import Path
+ import json,hashlib,uuid
+-E=Path('.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo');p=E/'prestart-hand-control-landscape'
++E=Path('.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo');p=E/'startup-full-color-control-landscape'
+ files=list(p.glob('events-*.jsonl'));assert len(files)==1
+ raw=files[0].read_bytes();rows=[json.loads(l) for l in raw.splitlines()];caps=json.loads((p/'captures.json').read_text());env=json.loads((p/'launch-review-environment.json').read_text())
+ ctors={};configs={};views={};dead=set();snapshots=[];errors=[];events=[]

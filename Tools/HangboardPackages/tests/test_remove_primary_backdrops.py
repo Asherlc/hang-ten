@@ -35,7 +35,7 @@ def test_enclosed_background_seeds_have_live_raster_inputs() -> None:
 
 
 @pytest.mark.parametrize(
-    "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii", "soill-training-tiles", "yy-penta-evo", "trango-rock-prodigy-pivot", "yy-verticalboard-first", "yy-verticalboard-light", "yy-verticalboard-one", "yy-verticalboard-evo", "tension-honestone", "tension-grindstone-original", "yy-travelboard")
+    "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii", "soill-training-tiles", "yy-penta-evo", "trango-rock-prodigy-pivot", "yy-travelboard", "yy-verticalboard-first", "yy-verticalboard-light", "yy-verticalboard-one", "yy-verticalboard-evo", "tension-honestone", "tension-grindstone-original")
 )
 def test_model_only_packages_exclude_raster_backdrop_inputs(package: str) -> None:
     """Require migrated model packages to ship descriptors and USDZ without raster backdrop inputs."""

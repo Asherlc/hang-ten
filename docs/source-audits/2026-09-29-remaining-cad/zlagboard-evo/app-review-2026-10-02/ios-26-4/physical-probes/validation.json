@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "actualOrbitChangedProjectedContactFrames": true,
+    "actualContactTapRestoredCanonicalCameraFrames": false,
+    "resetKeptExpectedContact": true,
+    "04-right-pocket-pick": true,
+    "05-left-jug-pick": true,
+    "06-center-pocket-pick": true
+  },
+  "allPassed": false,
+  "method": "Physical screen taps at projected contact centers; actual drag; contact tap resets canonical camera. RawAX/screens/commands retained perstep.",
+  "cordProbe": "not applicable: fixed wallboard package has no suspension",
+  "visualReview": "root review pending; AX+camera probes do not alone certifygeometry"
+}

@@ -1,0 +1,8 @@
+** TEST BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ BoardTargetSubstitutionTests.swift,\ GripHandCueCardTests.swift,\ GripHandOrbitTests.swift,\ OrbitPanArbitrationTests.swift,\ FreeWorkoutTests.swift,\ FreeWorkoutLogTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/BoardTargetSubstitutionTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/GripHandCueCardTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/GripHandOrbitTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/OrbitPanArbitrationTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/FreeWorkoutTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/FreeWorkoutLogTests.swift (in target 'HangTenTests' from project 'HangTen')
+	SwiftCompile normal arm64 /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/BoardTargetSubstitutionTests.swift (in target 'HangTenTests' from project 'HangTen')
+	Building project HangTen for testing with scheme HangTen
+(3 failures)

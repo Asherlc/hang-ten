@@ -1,0 +1,6 @@
+# Evidence index
+
+- [Root all-12 visual review and stop decision](raw/evo/hand-image-muted-live-c-root-visual.json).
+- [All nine validator results](raw/evo/hand-image-muted-workout-live-c-landscape/muted-validator-command-results.json), [aggregate](raw/evo/hand-image-muted-workout-live-c-landscape/muted-independent-validation.json), [clock stability](raw/evo/hand-image-muted-workout-live-c-landscape/prospective-clock-stability.json), and [23-point ownership qualification](raw/evo/hand-image-muted-workout-live-c-landscape/muted-current-hand-validation.json).
+- [75-file original raw freeze](raw/hand-image-workout-awake-prep/root-completed-live-c-freeze.json), [app cleanup](raw/evo/hand-image-muted-workout-live-c-landscape/app-cleanup.json), [assertion/child cleanup](raw/hand-image-workout-awake-prep/hand-image-muted-workout-live-c-awake-ownership/cleanup.json), and [Python PID absence](raw/hand-image-workout-awake-prep/hand-image-muted-workout-live-c-awake-ownership/capture-python-cleanup.json).
+- [Prepared direct-child correction, not executed](raw/hand-image-workout-awake-prep/direct-child-correction.json) and [existing exact tested source/build references](frozen-source-build-references.json).

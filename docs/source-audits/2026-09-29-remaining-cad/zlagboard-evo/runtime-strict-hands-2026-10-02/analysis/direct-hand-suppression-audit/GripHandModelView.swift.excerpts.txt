@@ -1,0 +1,141 @@
+35: /// Displays the evaluated surfaces authored in Art/GripHand/GripHand.blend.
+36: /// Pose changes preserve Blender deformation and smoothing exactly.
+37: @MainActor
+38: private final class GripHandSceneStorage {
+39:     private let makeScene: @MainActor () -> GripHandRealityScene
+40:     lazy var scene = makeScene()
+41: 
+42:     init(makeScene: @escaping @MainActor () -> GripHandRealityScene = { GripHandRealityScene() }) {
+43:         self.makeScene = makeScene
+44:     }
+45: }
+
+79: struct GripHandModelView: View {
+80:     let posture: GripType?
+81:     let fingerConfiguration: FingerConfiguration?
+82:     let side: GripCueSide
+83:     let resetToken: Int
+84:     @State private var sceneStorage: GripHandSceneStorage
+85:     @State private var isUnavailable: Bool
+86:     @State private var dragState = GripHandDragState()
+87:     @State private var lastMagnification: CGFloat = 1
+88:     @State private var cameraRevision = 0
+89: 
+90:     private var scene: GripHandRealityScene { sceneStorage.scene }
+91: 
+92:     init(posture: GripType?, fingerConfiguration: FingerConfiguration?, side: GripCueSide,
+93:          resetToken: Int = 0) {
+94:         self.posture = posture
+95:         self.fingerConfiguration = fingerConfiguration
+96:         self.side = side
+97:         self.resetToken = resetToken
+98:         _sceneStorage = State(initialValue: GripHandSceneStorage())
+99:         _isUnavailable = State(initialValue: false)
+100:     }
+101: 
+102:     init(posture: GripType?, fingerConfiguration: FingerConfiguration?, side: GripCueSide,
+103:          resetToken: Int, scene: GripHandRealityScene) {
+104:         self.posture = posture
+105:         self.fingerConfiguration = fingerConfiguration
+106:         self.side = side
+107:         self.resetToken = resetToken
+108:         _sceneStorage = State(initialValue: GripHandSceneStorage(makeScene: { scene }))
+109:         _isUnavailable = State(initialValue: scene.isUnavailable)
+110:     }
+111: 
+112:     var body: some View {
+113:         let _ = cameraRevision
+114:         GeometryReader { proxy in
+115:             let size = proxy.size
+116:             RealityView { content in
+117:                 content.camera = .virtual
+118:                 content.add(scene.root)
+119:                 syncScene(in: size)
+120:                 updateUnavailableState()
+121:             } update: { _ in
+122:                 syncScene(in: size)
+123:                 updateUnavailableState()
+124:             }
+125:             .simultaneousGesture(orbitGesture(size: size))
+126:             .simultaneousGesture(magnifyGesture)
+127:             .overlay {
+128:                 if isUnavailable {
+129:                     Text("3D hand unavailable")
+130:                         .font(.caption2)
+131:                         .foregroundStyle(.secondary)
+132:                         .multilineTextAlignment(.center)
+133:                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+134:                         .accessibilityHidden(true)
+135:                 }
+136:             }
+137:             .accessibilityHidden(true)
+138:         }
+139:     }
+
+730: private final class GripHandPairSceneStorage {
+731:     private let makeScene: @MainActor () -> GripHandRealityPairScene
+732:     lazy var scene = makeScene()
+733: 
+734:     init(makeScene: @escaping @MainActor () -> GripHandRealityPairScene = { GripHandRealityPairScene() }) {
+735:         self.makeScene = makeScene
+736:     }
+737: }
+738: 
+739: /// Shared RealityView host for layouts that display both mirrored hands.
+740: @MainActor
+741: struct GripHandPairModelView: View {
+742:     let posture: GripType?
+743:     let fingerConfiguration: FingerConfiguration?
+744:     let resetToken: Int
+745:     @State private var sceneStorage: GripHandPairSceneStorage
+746:     @State private var isUnavailable: Bool
+747:     @State private var dragState = GripHandDragState()
+748:     @State private var lastMagnification: CGFloat = 1
+749:     @State private var cameraRevision = 0
+750: 
+751:     private var scene: GripHandRealityPairScene { sceneStorage.scene }
+752: 
+753:     init(posture: GripType?, fingerConfiguration: FingerConfiguration?, resetToken: Int = 0) {
+754:         self.posture = posture
+755:         self.fingerConfiguration = fingerConfiguration
+756:         self.resetToken = resetToken
+757:         _sceneStorage = State(initialValue: GripHandPairSceneStorage())
+758:         _isUnavailable = State(initialValue: false)
+759:     }
+760: 
+761:     init(posture: GripType?, fingerConfiguration: FingerConfiguration?, resetToken: Int = 0,
+762:          scene: GripHandRealityPairScene) {
+763:         self.posture = posture
+764:         self.fingerConfiguration = fingerConfiguration
+765:         self.resetToken = resetToken
+766:         _sceneStorage = State(initialValue: GripHandPairSceneStorage(makeScene: { scene }))
+767:         _isUnavailable = State(initialValue: !scene.isAvailable)
+768:     }
+769: 
+770:     var body: some View {
+771:         let _ = cameraRevision
+772:         GeometryReader { proxy in
+773:             let size = proxy.size
+774:             RealityView { content in
+775:                 content.camera = .virtual
+776:                 content.add(scene.root)
+777:                 syncScene(in: size)
+778:                 updateUnavailableState()
+779:             } update: { _ in
+780:                 syncScene(in: size)
+781:                 updateUnavailableState()
+782:             }
+783:             .simultaneousGesture(orbitGesture(size: size))
+784:             .simultaneousGesture(magnifyGesture)
+785:             .overlay {
+786:                 if isUnavailable {
+787:                     Text("3D hands unavailable")
+788:                         .font(.caption2)
+789:                         .foregroundStyle(.secondary)
+790:                         .multilineTextAlignment(.center)
+791:                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+792:                         .accessibilityHidden(true)
+793:                 }
+794:             }
+795:             .accessibilityHidden(true)
+796:         }

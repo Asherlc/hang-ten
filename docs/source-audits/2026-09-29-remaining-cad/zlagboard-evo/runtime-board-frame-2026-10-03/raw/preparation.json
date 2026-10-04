@@ -1,0 +1,32 @@
+{
+  "preparedOnly": true,
+  "runtimeExecuted": false,
+  "externalResourcesCreated": false,
+  "sourceOrGitModified": false,
+  "checks": {
+    "pythonAST": true,
+    "zshSyntax": true,
+    "noOldDeviceOrController": true,
+    "noTrainOrHandFlag": true
+  },
+  "files": {
+    "prep/README.md": "2b2740c6b39040640937263a0a3c76ccd28665070778f9459689bd385621f3b7",
+    "prep/boot-uninterrupted.py": "efae502ff2e3d4f21833c445dcd789e051c93f0898ff983dfd88851d26680805",
+    "prep/bounded-command.py": "1f7ade47210369847e42440d449e6b9b8071437f7a8f857468d3d371fd691505",
+    "prep/capture-original.py": "3fc04051847e945614905aa5cd76b04246c069410c3dccb369cda895a737dfde",
+    "prep/capture.diff": "13cee5fc1ada85cd2178b92a3a3e01aeaecbf16cf59c1bec764a51e3ace982df",
+    "prep/capture.py": "b1f94408c6bd591fc6b55ca57625b76add2bc4b7e6d19e2466798a6212c0ae59",
+    "prep/cleanup.py": "b56b289d8d34cccc3a7fb457b4a90420b9cac74b4777533b87f8bde177f036ca",
+    "prep/lifecycle.zsh": "e08936228df4227991dc184f54fc9b5c7648ffcb2edf8bec3340a631ba6b06d2",
+    "prep/register-controller.py": "71bdfaa7d717e02c65dd69f2742a18db81bba973e07e2ee633f55a2db128662a",
+    "prep/release-template.NOT-AUTHORIZED.json": "54042862bd31dcb80f21fb94812736011b74c1d0968b76403e91dae14b2fe8ef",
+    "prep/schedule.json": "a1ddc84211b458b6a0e188bb110e83f64350290119de6b586050e8accf510701",
+    "prep/syntax.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prep/syntax.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "limits": [
+    "Candidate whitelist/hash/parity must be supplied by root.",
+    "Lifecycle deliberately leaves build/install to root after visual Home approval.",
+    "Muted awake passive protocol retained; not audio-on qualification."
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "O1": [
+    {
+      "event": "hand-lifecycle",
+      "detail": "constructor-entry",
+      "kind": "pair",
+      "sequence": 3,
+      "epoch": 1790985393.333971
+    },
+    {
+      "event": "hand-camera",
+      "detail": "configured",
+      "kind": "pair",
+      "sequence": 4,
+      "epoch": 1790985393.334172
+    },
+    {
+      "event": "hand-lifecycle",
+      "detail": "make-entry",
+      "kind": "pair",
+      "sequence": 5,
+      "epoch": 1790985393.373661
+    },
+    {
+      "event": "hand-camera",
+      "detail": "reset-fitted",
+      "kind": "pair",
+      "sequence": 6,
+      "epoch": 1790985393.431404
+    },
+    {
+      "event": "view-make",
+      "detail": "active",
+      "kind": null,
+      "sequence": 10,
+      "epoch": 1790985393.8127341
+    },
+    {
+      "event": "view-make",
+      "detail": "active",
+      "kind": null,
+      "sequence": 14,
+      "epoch": 1790985393.936537
+    },
+    {
+      "event": "view-make",
+      "detail": "active",
+      "kind": null,
+      "sequence": 21,
+      "epoch": 1790985394.151476
+    },
+    {
+      "event": "hand-lifecycle",
+      "detail": "constructor-entry",
+      "kind": "pair",
+      "sequence": 27,
+      "epoch": 1790985395.8265681
+    },
+    {
+      "event": "hand-camera",
+      "detail": "configured",
+      "kind": "pair",
+      "sequence": 28,
+      "epoch": 1790985395.826617
+    },
+    {
+      "event": "hand-lifecycle",
+      "detail": "make-entry",
+      "kind": "pair",
+      "sequence": 29,
+      "epoch": 1790985395.837836
+    },
+    {
+      "event": "hand-camera",
+      "detail": "reset-fitted",
+      "kind": "pair",
+      "sequence": 30,
+      "epoch": 1790985395.8925738
+    }
+  ],
+  "P1": [
+    {
+      "event": "hand-lifecycle",
+      "detail": "constructor-entry",
+      "kind": "pair",
+      "sequence": 3,
+      "epoch": 1790985645.901791
+    },
+    {
+      "event": "hand-camera",
+      "detail": "configured",
+      "kind": "pair",
+      "sequence": 4,
+      "epoch": 1790985645.905531
+    },
+    {
+      "event": "hand-lifecycle",
+      "detail": "make-entry",
+      "kind": "pair",
+      "sequence": 5,
+      "epoch": 1790985645.945879
+    },
+    {
+      "event": "hand-camera",
+      "detail": "reset-fitted",
+      "kind": "pair",
+      "sequence": 6,
+      "epoch": 1790985646.006453
+    },
+    {
+      "event": "view-make",
+      "detail": "active",
+      "kind": null,
+      "sequence": 10,
+      "epoch": 1790985646.419806
+    },
+    {
+      "event": "view-make",
+      "detail": "active",
+      "kind": null,
+      "sequence": 14,
+      "epoch": 1790985646.525508
+    },
+    {
+      "event": "hand-lifecycle",
+      "detail": "constructor-entry",
+      "kind": "pair",
+      "sequence": 21,
+      "epoch": 1790985648.436125
+    },
+    {
+      "event": "hand-camera",
+      "detail": "configured",
+      "kind": "pair",
+      "sequence": 22,
+      "epoch": 1790985648.436177
+    },
+    {
+      "event": "hand-lifecycle",
+      "detail": "make-entry",
+      "kind": "pair",
+      "sequence": 23,
+      "epoch": 1790985648.447324
+    },
+    {
+      "event": "hand-camera",
+      "detail": "reset-fitted",
+      "kind": "pair",
+      "sequence": 24,
+      "epoch": 1790985648.504005
+    }
+  ],
+  "originalComparisonGatePassed": false,
+  "interpretation": "Complete opening-stream order differs; no claim camera projection alone was isolated from all normal-route construction-history differences.",
+  "noFurtherRuns": true
+}

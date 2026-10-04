@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "rawFiles": 19,
+  "rawBytes": 21821,
+  "originalFrozenFilesVerified": 11,
+  "recoveryFilesVerified": 7,
+  "previousPacketFilesUnchanged": 8038,
+  "retentionManifestSHA256": "8e1cc272c767d3668d013fc73b49c383700c0326ddd570a3c080de9b14d5d24b",
+  "sourceOrRuntimeChanged": false,
+  "stagedOrCommitted": false
+}

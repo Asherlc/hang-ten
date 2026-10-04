@@ -1,0 +1,6 @@
+{
+  "exitStatus": 1,
+  "error": "FileNotFoundError: hand-lifetime-validation.json",
+  "cause": "Proof-index assembler used old output filename; reviewed check-hands.py emits strict-absence-validation.json. All runtime validators already passed. No runtime/source correction.",
+  "correction": "Bind actual strict-absence-validation.json"
+}

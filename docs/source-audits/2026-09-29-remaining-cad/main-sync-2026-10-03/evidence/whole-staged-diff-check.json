@@ -1,0 +1,12 @@
+{
+  "args": [
+    "rtk",
+    "proxy",
+    "git",
+    "diff",
+    "--cached",
+    "--check"
+  ],
+  "exitStatus": 2,
+  "scope": "Full staged tree includes exact raw logs and frozen conflicted source. This check fails for their intentionally retained bytes; they are not compiled code. No raw bytes normalized to make this pass."
+}

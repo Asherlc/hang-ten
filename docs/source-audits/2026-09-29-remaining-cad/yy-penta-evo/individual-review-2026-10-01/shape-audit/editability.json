@@ -1,0 +1,18 @@
+{
+  "sha256Before": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+  "angleEdit": {
+    "trialNativeYDegrees": 2,
+    "validSingleSolid": true,
+    "changedVolumeRegionMM3": 945.8164069143231
+  },
+  "angleRestoreVolumeDeltaMM3": 0.0,
+  "depthEdit": {
+    "beforeScale": 1.0,
+    "trialScale": 1.04,
+    "depth10MM": 10.400000000000013,
+    "validSingleSolid": true
+  },
+  "depthRestoreVolumeDeltaMM3": 1.1641532182693481e-10,
+  "sha256After": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+  "bytesUnchanged": true
+}

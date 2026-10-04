@@ -1,0 +1,707 @@
+import XCTest
+import RealityKit
+import simd
+@testable import HangTen
+
+final class BoardModelRealityTests: XCTestCase {
+    func testCompletedBoardFramesSwitchModesWithoutAnotherRender() throws {
+        let active = BoardFrameInput(positionID: "primary", contacts: ["left", "right"],
+                                     mode: .active, size: CGSize(width: 210, height: 36), scale: 2)
+        let preview = BoardFrameInput(positionID: active.positionID, contacts: active.contacts,
+                                                       mode: .preview, size: active.size, scale: active.scale)
+        var cache = BoardFrameCache<String>()
+        cache.store("red", input: active, orbit: SIMD3(0, 0, 1))
+        cache.store("blue", input: preview, orbit: SIMD3(0, 0, 1))
+        XCTAssertEqual(cache.value(for: active, orbit: SIMD3(0, 0, 1)), "red")
+        XCTAssertEqual(cache.value(for: preview, orbit: SIMD3(0, 0, 1)), "blue")
+        XCTAssertEqual(cache.count, 2)
+    }
+
+    func testCompletedBoardFrameDoesNotSubstituteDifferentSelectionOrCamera() {
+        let active = BoardFrameInput(positionID: "primary", contacts: ["left"],
+                                     mode: .active, size: CGSize(width: 210, height: 36), scale: 2)
+        var cache = BoardFrameCache<String>()
+        cache.store("selected", input: active, orbit: SIMD3(0, 0, 1))
+        let clear = BoardFrameInput(positionID: nil, contacts: [], mode: .active, size: active.size, scale: 2)
+        let other = BoardFrameInput(positionID: "other", contacts: active.contacts, mode: .active, size: active.size, scale: 2)
+        XCTAssertNil(cache.value(for: clear, orbit: SIMD3(0, 0, 1)))
+        XCTAssertNil(cache.value(for: other, orbit: SIMD3(0, 0, 1)))
+        XCTAssertNil(cache.value(for: active, orbit: SIMD3(0.2, 0, 1)))
+        XCTAssertEqual(cache.value(for: active, orbit: SIMD3(0, 0, 1)), "selected")
+    }
+
+    func testCompletedBoardFrameCanScaleDuringAspectPreservingResize() {
+        let small = BoardFrameInput(positionID: "primary", contacts: ["left"],
+                                    mode: .active, size: CGSize(width: 210, height: 36), scale: 2)
+        let large = BoardFrameInput(positionID: small.positionID, contacts: small.contacts, mode: .active,
+                                    size: CGSize(width: 420, height: 72), scale: 3)
+        let portrait = BoardFrameInput(positionID: small.positionID, contacts: small.contacts, mode: .active,
+                                       size: CGSize(width: 36, height: 210), scale: 2)
+        var cache = BoardFrameCache<String>()
+        cache.store("complete", input: small, orbit: SIMD3(0, 0, 1))
+        XCTAssertEqual(cache.value(for: large, orbit: SIMD3(0, 0, 1)), "complete")
+        XCTAssertNil(cache.value(for: large, orbit: SIMD3(0, 0, 1), exactViewport: true))
+        XCTAssertNil(cache.value(for: portrait, orbit: SIMD3(0, 0, 1)))
+    }
+
+    func testCompletedBoardFrameCacheReleasesSupersededPresentation() {
+        let old = BoardFrameInput(positionID: "primary", contacts: ["left"],
+                                  mode: .active, size: CGSize(width: 210, height: 36), scale: 2)
+        let next = BoardFrameInput(positionID: "next", contacts: ["right"],
+                                   mode: .preview, size: old.size, scale: old.scale)
+        var cache = BoardFrameCache<String>()
+        cache.store("old", input: old, orbit: SIMD3(0, 0, 1))
+        cache.store("next", input: next, orbit: SIMD3(0, 0, 1))
+        XCTAssertNil(cache.value(for: old, orbit: SIMD3(0, 0, 1)))
+        XCTAssertEqual(cache.value(for: next, orbit: SIMD3(0, 0, 1)), "next")
+        XCTAssertEqual(cache.count, 1)
+    }
+
+    func testRealityTypesCompile() {
+        let _ = BoardModelRealityScene.self
+        let _ = BoardModelRealityLoader.self
+    }
+
+    @MainActor
+    func testWhetstoneNativeModelLoadsAllPickableContacts() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.whetstone"))
+        let presentation = board.defaultPresentation
+        guard case .model = presentation.media else { return XCTFail("Whetstone requires model media") }
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+        XCTAssertEqual(board.contacts.count, 12)
+        XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts.map(\.id)))
+        for (contactID, entities) in scene.contactEntities {
+            XCTAssertFalse(entities.isEmpty, contactID)
+            for entity in entities {
+                XCTAssertNotNil(entity.collision, contactID)
+                XCTAssertNotNil(entity.components[InputTargetComponent.self], contactID)
+            }
+        }
+        var checkedEntities = 0
+        for entity in scene.instanceEntities {
+            checkNeutralMaterial(on: entity, checkedCount: &checkedEntities)
+        }
+        XCTAssertGreaterThan(checkedEntities, 0)
+    }
+
+    @MainActor
+    func testUSDZLoadsAndBindsDescriptor() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else { return XCTFail("model media required") }
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+
+        // Verify geometry loaded
+        XCTAssertNotNil(scene.modelEntity)
+        XCTAssertGreaterThan(scene.instanceEntities.count, 0)
+
+        // Verify model has visual bounds (indicating geometry loaded)
+        if let modelEntity = scene.modelEntity {
+            let bounds = modelEntity.visualBounds(relativeTo: nil)
+            XCTAssertTrue(bounds.min.x.isFinite && bounds.max.x.isFinite)
+        }
+    }
+
+    @MainActor
+    func testContactEntitiesPopulatedAndMatchBoardContacts() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else { return XCTFail("model media required") }
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+
+        // Verify contactEntities is populated
+        XCTAssertFalse(scene.contactEntities.isEmpty, "contactEntities should be populated")
+
+        // Get expected contact IDs from board contacts for this presentation
+        let boardContacts = board.contacts(in: presentation)
+        let expectedContactIDs = Set(boardContacts.map(\.id))
+
+        // Verify contactEntities keys match board contact IDs
+        let actualContactIDs = Set(scene.contactEntities.keys)
+        XCTAssertEqual(actualContactIDs, expectedContactIDs,
+                       "contactEntities keys should match board contacts for this presentation")
+
+        // Verify each contact has at least one entity
+        for (contactID, entities) in scene.contactEntities {
+            XCTAssertFalse(entities.isEmpty, "Contact \(contactID) should have at least one entity")
+            for entity in entities {
+                XCTAssertNotNil(entity.collision, "Contact \(contactID) should be pickable")
+                XCTAssertNotNil(entity.components[InputTargetComponent.self],
+                                "Spatial taps require an input target on each contact entity")
+            }
+        }
+    }
+
+    func testPerspectiveFitUsesFieldOfViewAndViewportAspect() throws {
+        let framing = SuspendedCameraFraming(
+            target: .zero, direction: SIMD3(0, 0, -1), viewDirection: SIMD3(0, 0, -1),
+            right: SIMD3(1, 0, 0), up: SIMD3(0, 1, 0), distance: 1,
+            width: 4, height: 2, depth: 0.5, fitPadding: 1.2, includedPoints: []
+        )
+        let wide = try XCTUnwrap(BoardModelRealityScene.perspectiveFitDistance(
+            framing: framing, viewportSize: CGSize(width: 400, height: 200), fieldOfViewDegrees: 30))
+        let narrow = try XCTUnwrap(BoardModelRealityScene.perspectiveFitDistance(
+            framing: framing, viewportSize: CGSize(width: 200, height: 400), fieldOfViewDegrees: 30))
+        let telephoto = try XCTUnwrap(BoardModelRealityScene.perspectiveFitDistance(
+            framing: framing, viewportSize: CGSize(width: 400, height: 200), fieldOfViewDegrees: 6))
+        XCTAssertGreaterThan(narrow, wide)
+        XCTAssertGreaterThan(telephoto, wide)
+    }
+
+    @MainActor
+    func testPBRNeutralMaterialsApplied() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else { return XCTFail("model media required") }
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+
+        // Verify all model entities have PhysicallyBasedMaterial with neutral values
+        var checkedEntities = 0
+        for entity in scene.instanceEntities {
+            checkNeutralMaterial(on: entity, checkedCount: &checkedEntities)
+        }
+
+        XCTAssertGreaterThan(checkedEntities, 0, "Should have checked at least one entity for neutral material")
+    }
+
+@MainActor
+    func testInstanceHierarchyFromMediaInstances() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else { return XCTFail("model media required") }
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+
+        // Verify instances are created from media.instances
+        let expectedInstanceCount = media.instances?.count ?? 1
+        XCTAssertEqual(scene.instanceEntities.count, expectedInstanceCount,
+                       "Should have one instance entity per media instance (or 1 for single)")
+
+        // Verify each instance has baseTransform applied
+        if let instances = media.instances {
+            for (index, instance) in instances.enumerated() {
+                let entity = scene.instanceEntities[index]
+                // The entity transform should reflect the instance's baseTransform
+                let baseTranslation = SIMD3<Float>(
+                    Float(instance.baseTransform.translation[0]),
+                    Float(instance.baseTransform.translation[1]),
+                    Float(instance.baseTransform.translation[2])
+                )
+                // Position should be close to baseTransform translation (allowing for model centering)
+                XCTAssertTrue(entity.position.x.isFinite && entity.position.y.isFinite && entity.position.z.isFinite,
+                              "Instance \(index) should have valid transform from baseTransform")
+
+                // If reflection == .x, verify mirroring was applied
+                if instance.baseTransform.reflection == .x {
+                    XCTAssertLessThan(simd_determinant(entity.transform.matrix), 0,
+                                      "Mirrored instance should preserve a negative transform determinant")
+                    // And should have ModelEntity children with model components
+                    var hasModelEntities = false
+                    func checkForModelEntity(_ e: Entity) {
+                        if e is ModelEntity { hasModelEntities = true }
+                        for child in e.children { checkForModelEntity(child) }
+                    }
+                    checkForModelEntity(entity)
+                    XCTAssertTrue(hasModelEntities, "Mirrored instance should have ModelEntity children")
+                }
+            }
+        }
+    }
+
+    @MainActor
+    func testInstanceSourceTemplateIsNotAttachedAlongsideClones() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media,
+              let instances = media.instances, !instances.isEmpty else {
+            return XCTFail("model media with explicit instances required")
+        }
+
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+
+        XCTAssertNil(scene.modelEntity?.parent,
+                     "The imported model is only a clone template when explicit instances exist")
+        XCTAssertEqual(scene.root.children.count, instances.count,
+                       "Only transformed instance entities should be rendered")
+    }
+
+    @MainActor
+    func testSelectingPositionAppliesReusableInstanceTransforms() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let presentation = board.defaultPresentation
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+        let initial = scene.instanceEntities.map { $0.transform.matrix }
+        let positionID = try XCTUnwrap(board.positions.first(where: { $0.presentationID == presentation.id })?.id)
+
+        XCTAssertTrue(scene.select(positionID: positionID))
+        let selected = scene.instanceEntities.map { $0.transform.matrix }
+        XCTAssertEqual(selected.count, initial.count)
+        XCTAssertNotEqual(selected, initial, "Position transforms should be applied to cloned instances")
+    }
+
+    @MainActor
+    func testCameraOrbitAndResetUpdateRealityKitCamera() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let scene = try await BoardModelRealityLoader.load(board: board,
+                                                          presentation: board.defaultPresentation)
+        let viewport = CGSize(width: 390, height: 240)
+        scene.frame(in: viewport)
+        let initial = scene.camera.transform.matrix
+        let contactIDs = scene.contactEntities.keys.sorted()
+        let canonicalCenters = Dictionary(uniqueKeysWithValues: contactIDs.compactMap { id in
+            scene.projectedContactCenter(id, viewport: viewport, fieldOfViewDegrees: 40)
+                .map { (id, $0) }
+        })
+        XCTAssertEqual(canonicalCenters.count, contactIDs.count,
+                       "Every contact must have a projected center before orbit")
+
+        scene.orbit(azimuth: 0.35, elevation: 0.2, zoomScale: 0.9)
+        XCTAssertNotEqual(scene.camera.transform.matrix, initial)
+        let orbitedCenters = Dictionary(uniqueKeysWithValues: contactIDs.compactMap { id in
+            scene.projectedContactCenter(id, viewport: viewport, fieldOfViewDegrees: 40)
+                .map { (id, $0) }
+        })
+        XCTAssertTrue(contactIDs.contains { canonicalCenters[$0] != orbitedCenters[$0] },
+                      "Orbit must change projected contact centers")
+
+        scene.resetCamera(animated: false)
+        XCTAssertEqual(scene.camera.transform.matrix, initial)
+        for id in contactIDs {
+            let canonical = try XCTUnwrap(canonicalCenters[id])
+            let reset = try XCTUnwrap(scene.projectedContactCenter(
+                id, viewport: viewport, fieldOfViewDegrees: 40))
+            XCTAssertEqual(reset.x, canonical.x, accuracy: 0.001, id)
+            XCTAssertEqual(reset.y, canonical.y, accuracy: 0.001, id)
+        }
+    }
+
+    @MainActor
+    func testSharedContactMeshUsesPrimaryPickingAndUnionHighlight() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.contact"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else { return XCTFail("model") }
+        XCTAssertEqual(media.descriptor.schemaVersion, 1)
+        XCTAssertNil(media.instances)
+        let ids = media.descriptor.contacts.keys.sorted()
+        let primaryID = try XCTUnwrap(ids.first)
+        let secondaryID = try XCTUnwrap(ids.dropFirst().first)
+        let originalPrimary = try XCTUnwrap(media.descriptor.contacts[primaryID])
+        XCTAssertEqual(originalPrimary.nodeIDs.count, 1)
+        let sharedNode = try XCTUnwrap(originalPrimary.nodeIDs.first)
+        let originalSecondary = try XCTUnwrap(media.descriptor.contacts[secondaryID])
+        let minimum = zip(originalPrimary.facePlaneAABB.minimum, originalSecondary.facePlaneAABB.minimum)
+            .map { min($0, $1) }
+        let maximum = zip(originalPrimary.facePlaneAABB.maximum, originalSecondary.facePlaneAABB.maximum)
+            .map { max($0, $1) }
+        var contacts = media.descriptor.contacts
+        contacts[secondaryID] = BoardModelContactDescriptor(
+            nodeIDs: (originalSecondary.nodeIDs + [sharedNode]).sorted(),
+            facePlaneAABB: BoardModelFacePlaneAABB(minimum: minimum, maximum: maximum),
+            center: zip(minimum, maximum).map { ($0 + $1) / 2 })
+        let nodes = media.descriptor.nodes.map { node in
+            node.nodeID == sharedNode
+                ? BoardModelNodeDescriptor(nodeID: node.nodeID, role: node.role,
+                                           contactID: node.contactID, additionalContactIDs: [secondaryID])
+                : node
+        }
+        let descriptor = BoardModelDescriptor(
+            schemaVersion: media.descriptor.schemaVersion,
+            coordinateFrame: media.descriptor.coordinateFrame,
+            modelSHA256: media.descriptor.modelSHA256, modelBounds: media.descriptor.modelBounds,
+            nodes: nodes, contacts: contacts)
+        let loadedSource = try await BoardModelRealityCache.source(
+            for: BoardModelRealityKey(boardID: board.id, presentationID: presentation.id,
+                                      modelSHA256: descriptor.modelSHA256),
+            media: media, board: board, presentationID: presentation.id,
+            store: BoardCatalog.packageStore, resourceAccess: .live)
+        let source = try XCTUnwrap(loadedSource)
+        let scene = BoardModelRealityScene(descriptor: descriptor, display: media.display,
+            suspension: nil, orientation: nil, allowedPositionIDs: [], resourceLease: source.resourceLease)
+        try await scene.load(usdzURL: source.resourceLease.url)
+        let primary = try XCTUnwrap(scene.contactEntities[primaryID])
+        let secondary = try XCTUnwrap(scene.contactEntities[secondaryID])
+        let shared = try XCTUnwrap(primary.first { entity in secondary.contains { $0 === entity } })
+        let secondaryOnly = try XCTUnwrap(secondary.first { entity in !primary.contains { $0 === entity } })
+        XCTAssertEqual(scene.contactID(for: shared), primaryID)
+        XCTAssertEqual(scene.contactID(for: secondaryOnly), secondaryID)
+        XCTAssertNotNil(shared.collision)
+        XCTAssertNotNil(shared.components[InputTargetComponent.self])
+        XCTAssertEqual(Set(secondary.map(ObjectIdentifier.init)).count, secondary.count)
+        func roughness(_ entity: ModelEntity) throws -> Float {
+            try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial).roughness.scale
+        }
+        scene.highlight([secondaryID], mode: .active)
+        XCTAssertEqual(try roughness(shared), 0.8, accuracy: 0.0001)
+        XCTAssertEqual(try roughness(secondaryOnly), 0.8, accuracy: 0.0001)
+        scene.highlight([primaryID], mode: .active)
+        XCTAssertEqual(try roughness(shared), 0.8, accuracy: 0.0001)
+        XCTAssertEqual(try roughness(secondaryOnly), 0.5, accuracy: 0.0001)
+        scene.highlight([primaryID, secondaryID], mode: .active)
+        XCTAssertEqual(try roughness(shared), 0.8, accuracy: 0.0001)
+        scene.highlight([], mode: .active)
+        XCTAssertEqual(try roughness(shared), 0.5, accuracy: 0.0001)
+        XCTAssertEqual(try roughness(secondaryOnly), 0.5, accuracy: 0.0001)
+    }
+
+    @MainActor
+    func testNUGPinchHighlightsBothOpposingSurfacesAndKeepsJugPicking() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "frictitious.nug"))
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+        XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts.map(\.id)))
+        XCTAssertEqual(board.contacts.count, 6)
+        let jug = try XCTUnwrap(scene.contactEntities["jug-40"])
+        let pinch = try XCTUnwrap(scene.contactEntities["pinch-60"])
+        XCTAssertFalse(jug.isEmpty)
+        XCTAssertTrue(jug.allSatisfy { upper in pinch.contains { $0 === upper } })
+        let lower = pinch.filter { item in !jug.contains { $0 === item } }
+        XCTAssertFalse(lower.isEmpty)
+        XCTAssertEqual(Set(pinch.map(ObjectIdentifier.init)).count, pinch.count)
+        for entity in jug { XCTAssertEqual(scene.contactID(for: entity), "jug-40") }
+        for entity in lower { XCTAssertEqual(scene.contactID(for: entity), "pinch-60") }
+        func assertRoughness(_ entities: [ModelEntity], _ expected: Float) throws {
+            for entity in entities {
+                let material = try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial)
+                XCTAssertEqual(material.roughness.scale, expected, accuracy: 0.0001)
+            }
+        }
+        scene.highlight(["pinch-60"], mode: .active)
+        try assertRoughness(pinch, 0.8)
+        scene.highlight(["jug-40"], mode: .active)
+        try assertRoughness(jug, 0.8)
+        try assertRoughness(lower, 0.5)
+        scene.highlight(["jug-40", "pinch-60"], mode: .active)
+        try assertRoughness(pinch, 0.8)
+        scene.highlight([], mode: .active)
+        try assertRoughness(pinch, 0.5)
+    }
+
+    @MainActor
+    func testClearingHighlightRestoresNeutralPBRBaseline() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let scene = try await BoardModelRealityLoader.load(board: board,
+                                                          presentation: board.defaultPresentation)
+        let contactID = try XCTUnwrap(scene.contactEntities.keys.first)
+        scene.highlight([contactID], mode: .active)
+        scene.highlight([], mode: .active)
+
+        for entity in try XCTUnwrap(scene.contactEntities[contactID]) {
+            let material = try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial)
+            XCTAssertEqual(material.metallic.scale, 0, accuracy: 0.0001)
+            XCTAssertEqual(material.roughness.scale, 0.5, accuracy: 0.0001)
+        }
+    }
+
+    @MainActor
+    func testSuspendedSelectionCreatesTransientCordEntity() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media,
+              media.suspension != nil else {
+            return XCTFail("expected suspended model presentation")
+        }
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+        let positionID = try XCTUnwrap(board.positions.first(where: { $0.presentationID == presentation.id })?.id)
+
+        XCTAssertTrue(scene.select(positionID: positionID))
+        let cord = try XCTUnwrap(scene.transientCordEntity)
+        XCTAssertGreaterThan(cord.children.count, 0, "Solved cord paths should become RealityKit segments")
+        XCTAssertTrue(cord.parent === scene.root)
+    }
+
+    @MainActor
+    func testNativeCADModelsCreateNonPickableCordSegmentsInEveryPosition() async throws {
+        let store = BoardCatalog.packageStore
+        let boardIDs = [
+            "aelith.cyclops-011", "captain-fingerfood.dual", "captain-fingerfood.unlevel",
+            "frictitious.nug", "frictitious.port-a-board", "mammut.diamond-finger",
+            "metolius.contact", "metolius.simulator-3d", "nature.stone-hanger",
+            "nature.stone-hanger-mini", "nature.stone-hanger-mini-karma8a", "owl-climb.poker",
+            "plateau.lifting-edge", "tension.flash-board", "trango.rock-prodigy-forge",
+            "yy.baguette", "yy.baguette-evo", "yy.penta-evo", "yy.travelboard",
+            "zlagboard.evo", "zlagboard.pro"
+        ]
+
+        for boardID in boardIDs {
+            let board = try XCTUnwrap(store.board(id: boardID), boardID)
+            for presentation in board.presentations {
+                guard case .model(let media) = presentation.media else {
+                    return XCTFail("\(board.id)/\(presentation.id) must have model media")
+                }
+                let scene = try await BoardModelRealityLoader.load(
+                    board: board, presentation: presentation, store: store)
+                XCTAssertEqual(Set(scene.contactEntities.keys),
+                               Set(board.contacts(in: presentation).map(\.id)), board.id)
+                for (contactID, entities) in scene.contactEntities {
+                    XCTAssertFalse(entities.isEmpty, "\(board.id)/\(contactID)")
+                    for entity in entities {
+                        let pickedID = try XCTUnwrap(scene.contactID(for: entity), board.id)
+                        if pickedID != contactID {
+                            let node = try XCTUnwrap(media.descriptor.nodes.first {
+                                $0.nodeID == entity.name
+                            }, "Shared mesh must have a descriptor node: \(board.id)/\(entity.name)")
+                            XCTAssertEqual(node.contactID, pickedID, board.id)
+                            XCTAssertTrue(node.additionalContactIDs?.contains(contactID) == true, board.id)
+                            XCTAssertTrue(media.descriptor.contacts[contactID]?.nodeIDs.contains(node.nodeID) == true, board.id)
+                        }
+                        XCTAssertNotNil(entity.collision, board.id)
+                        XCTAssertNotNil(entity.components[InputTargetComponent.self], board.id)
+                    }
+                }
+                let hasCord = media.suspension != nil || media.instances?.contains(where: {
+                    $0.suspension != nil
+                }) == true
+                for position in board.positions where position.presentationID == presentation.id {
+                    XCTAssertTrue(scene.select(positionID: position.id), "\(board.id)/\(position.id)")
+                    scene.highlight(Set(position.contactIDs), mode: .active)
+                    if hasCord {
+                        let cord = try XCTUnwrap(scene.transientCordEntity, board.id)
+                        XCTAssertFalse(cord.children.isEmpty, board.id)
+                        XCTAssertTrue(cord.children.allSatisfy { scene.contactID(for: $0) == nil }, board.id)
+                        XCTAssertTrue(cord.children.allSatisfy { ($0 as? ModelEntity)?.collision == nil }, board.id)
+                    } else {
+                        XCTAssertNil(scene.transientCordEntity, board.id)
+                    }
+                }
+            }
+        }
+    }
+
+    @MainActor
+    func testMiniBarRealityKitCordWrapsUnderTheBodyInEveryGripPose() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "lattice.mini-bar"))
+        let scene = try await BoardModelRealityLoader.load(
+            board: board, presentation: board.defaultPresentation)
+        for position in board.positions {
+            XCTAssertTrue(scene.select(positionID: position.id), position.id)
+            let cord = try XCTUnwrap(scene.transientCordEntity, position.id)
+            let body = try XCTUnwrap(scene.instanceEntities.first, position.id)
+            let inverse = body.transformMatrix(relativeTo: scene.root).inverse
+            let localCenters = cord.children.map { child -> SIMD3<Float> in
+                let center = inverse * SIMD4<Float>(child.position(relativeTo: scene.root), 1)
+                return SIMD3<Float>(center.x, center.y, center.z)
+            }
+            XCTAssertLessThan(try XCTUnwrap(localCenters.map(\.y).min()), 0.008,
+                              "The \(position.id) loop must pass around the lower surface")
+            XCTAssertTrue(cord.children.allSatisfy { ($0 as? ModelEntity)?.collision == nil })
+        }
+    }
+
+    @MainActor
+    func testClearingSelectionRemovesTransientCordEntity() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
+        let presentation = board.defaultPresentation
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+        let positionID = try XCTUnwrap(board.positions.first(where: { $0.presentationID == presentation.id })?.id)
+        XCTAssertTrue(scene.select(positionID: positionID))
+        let cordEntity = try XCTUnwrap(scene.transientCordEntity)
+        XCTAssertNotNil(cordEntity.parent)
+
+        XCTAssertFalse(scene.select(positionID: nil))
+
+        XCTAssertNil(scene.transientCordEntity)
+        XCTAssertNil(cordEntity.parent)
+    }
+
+    @MainActor
+    func testNativeLoadGateSerializesWaitersAndRecoversAfterCancellation() async throws {
+        let firstResult = await BoardModelRealityLoadGate.acquire()
+        XCTAssertTrue(firstResult)
+        let cancelled = Task { @MainActor in await BoardModelRealityLoadGate.acquire() }
+        for _ in 0..<100 where BoardModelRealityLoadGate.queuedWaiterCount == 0 {
+            await Task.yield()
+        }
+        XCTAssertEqual(BoardModelRealityLoadGate.queuedWaiterCount, 1)
+        cancelled.cancel()
+        let cancelledResult = await cancelled.value
+        XCTAssertFalse(cancelledResult)
+
+        let next = Task { @MainActor in await BoardModelRealityLoadGate.acquire() }
+        for _ in 0..<100 where BoardModelRealityLoadGate.queuedWaiterCount == 0 {
+            await Task.yield()
+        }
+        XCTAssertEqual(BoardModelRealityLoadGate.queuedWaiterCount, 1)
+        BoardModelRealityLoadGate.release()
+        let nextResult = await next.value
+        XCTAssertTrue(nextResult)
+        BoardModelRealityLoadGate.release()
+
+        let finalResult = await BoardModelRealityLoadGate.acquire()
+        XCTAssertTrue(finalResult)
+        BoardModelRealityLoadGate.release()
+    }
+
+    @MainActor
+    func testSuspensionOrientationDisplayPassedToScene() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else { return XCTFail("model media required") }
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+
+        // Verify scene has access to suspension, orientation, display through public accessors
+        // These may be nil depending on the board's media configuration
+        XCTAssertNotNil(scene.descriptorForTesting)
+        XCTAssertNotNil(scene.displayForTesting)
+        // suspension and orientation are optional - just verify they're accessible
+        _ = scene.suspensionForTesting
+        _ = scene.orientationForTesting
+    }
+
+    // MARK: - Helpers
+
+    @MainActor
+    func testNestedSurfaceSelectorsPreserveAttachmentNeutralityAndInheritedWood() throws {
+        let contact = BoardModelContactDescriptor(
+            nodeIDs: ["Group/Left"],
+            facePlaneAABB: .init(minimum: [0, 0], maximum: [1, 1]), center: [0.5, 0.5])
+        let descriptor = BoardModelDescriptor(
+            schemaVersion: 1, coordinateFrame: "hang-ten-board-v1",
+            modelSHA256: String(repeating: "0", count: 64),
+            modelBounds: .init(minimum: [-1, -1, -1], maximum: [1, 1, 1]),
+            nodes: [
+                .init(nodeID: "Group/Hardware", role: .attachment, contactID: nil),
+                .init(nodeID: "Group/Left", role: .contact, contactID: "primary",
+                      additionalContactIDs: ["secondary"])
+            ], contacts: ["primary": contact, "secondary": contact])
+        let camera = BoardModelCamera(type: "orthographic", viewDirection: [0, 0, -1],
+            up: [0, 1, 0], fitPadding: 0.1, distanceMultiplier: nil, boundsExpansionFactor: nil)
+        for finish: BoardSurfaceFinish in [.neutral, .wood] {
+            let scene = BoardModelRealityScene(
+                descriptor: descriptor,
+                display: .init(camera: camera, surfaceFinish: finish, woodNodeIDs: ["Group/Left"]),
+                suspension: nil, orientation: nil, allowedPositionIDs: [],
+                resourceLease: .init(url: Bundle(for: Self.self).bundleURL))
+            var contacts: [ModelEntity] = []
+            var inheritedMeshes: [ModelEntity] = []
+            var attachments: [ModelEntity] = []
+            for index in 0..<2 {
+                let instance = Entity()
+                instance.name = "Instance\(index)"
+                let group = Entity()
+                group.name = "Group"
+                let left = ModelEntity(mesh: .generateBox(size: 0.01))
+                left.name = "Left"
+                let unnamedMesh = ModelEntity(mesh: .generateBox(size: 0.005))
+                unnamedMesh.name = ""
+                left.addChild(unnamedMesh)
+                let hardware = ModelEntity(mesh: .generateBox(size: 0.005))
+                hardware.name = "Hardware"
+                group.addChild(left)
+                group.addChild(hardware)
+                instance.addChild(group)
+                scene.root.addChild(instance)
+                scene.instanceEntities.append(instance)
+                contacts.append(left)
+                inheritedMeshes.append(unnamedMesh)
+                attachments.append(hardware)
+            }
+            scene.applyBoardMaterials()
+            for entity in contacts + inheritedMeshes {
+                XCTAssertTrue(entity.model?.materials.first is CustomMaterial,
+                              "Relative selector and unnamed-child inheritance must apply in each instance")
+            }
+            for entity in attachments {
+                let neutral = try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial,
+                                           "Nested attachment must stay neutral under the wood default")
+                XCTAssertEqual(neutral.roughness.scale, 0.5, accuracy: 0.0001)
+            }
+            // Test selection over the same physical meshes in two logical inventories.
+            // Descriptor parsing and primary picking are covered by separate binding tests.
+            scene.contactEntities = ["primary": contacts, "secondary": contacts]
+            scene.highlight(["secondary"], mode: .active)
+            for entity in contacts {
+                let selected = try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial)
+                XCTAssertEqual(selected.roughness.scale, 0.8, accuracy: 0.0001)
+            }
+            scene.highlight([], mode: .active)
+            for entity in contacts {
+                if let restored = entity.model?.materials.first as? CustomMaterial {
+                    XCTAssertEqual(restored.roughness.scale, 0.82, accuracy: 0.0001)
+                } else {
+                    XCTFail("Clearing a shared selection must restore the selected node's wood finish")
+                }
+            }
+        }
+    }
+
+    @MainActor
+    func testWoodFinishHighlightsAndRestoresEveryContactWithoutChangingPicking() async throws {
+        let scene = try await woodFixtureScene()
+        let bounds = scene.root.visualBounds(relativeTo: nil)
+        for (contactID, entities) in scene.contactEntities {
+            XCTAssertFalse(entities.isEmpty)
+            for entity in entities {
+                XCTAssertTrue(entity.model?.materials.first is CustomMaterial,
+                              "Wood must cover cavity walls and floors, not just the body")
+                XCTAssertEqual(scene.contactID(for: entity), contactID)
+                XCTAssertNotNil(entity.collision)
+                XCTAssertNotNil(entity.components[InputTargetComponent.self])
+            }
+            for mode: BoardHighlightMode in [.active, .preview] {
+                scene.highlight([contactID], mode: mode)
+                for entity in entities {
+                    let selected = try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial)
+                    XCTAssertEqual(selected.roughness.scale, 0.8, accuracy: 0.0001)
+                }
+                scene.highlight([], mode: mode)
+                for entity in entities {
+                    let restored = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial)
+                    XCTAssertEqual(restored.roughness.scale, 0.82, accuracy: 0.0001)
+                    XCTAssertEqual(scene.contactID(for: entity), contactID)
+                }
+            }
+        }
+        XCTAssertEqual(scene.root.visualBounds(relativeTo: nil), bounds)
+    }
+
+    @MainActor
+    func testWoodSelectionDoesNotAlterAnotherSceneUsingTheSameResource() async throws {
+        let first = try await woodFixtureScene()
+        let second = try await woodFixtureScene()
+        let contactID = try XCTUnwrap(first.contactEntities.keys.sorted().first)
+        first.highlight([contactID], mode: .active)
+        for entity in try XCTUnwrap(second.contactEntities[contactID]) {
+            XCTAssertTrue(entity.model?.materials.first is CustomMaterial)
+        }
+        first.highlight([], mode: .active)
+        for entity in try XCTUnwrap(first.contactEntities[contactID]) {
+            XCTAssertTrue(entity.model?.materials.first is CustomMaterial)
+        }
+    }
+
+    @MainActor
+    private func woodFixtureScene() async throws -> BoardModelRealityScene {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "mammut.diamond-finger"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else {
+            throw BoardModelRealityError.presentationNotModel
+        }
+        let loaded = try await BoardModelRealityCache.source(
+            for: BoardModelRealityKey(boardID: board.id, presentationID: presentation.id,
+                                      modelSHA256: media.descriptor.modelSHA256),
+            media: media, board: board, presentationID: presentation.id,
+            store: BoardCatalog.packageStore, resourceAccess: .live)
+        let source = try XCTUnwrap(loaded)
+        let scene = BoardModelRealityScene(
+            descriptor: media.descriptor,
+            display: BoardModelDisplay(camera: media.display.camera, surfaceFinish: .wood),
+            suspension: nil, orientation: nil, allowedPositionIDs: [],
+            resourceLease: source.resourceLease)
+        try await scene.load(usdzURL: source.resourceLease.url)
+        return scene
+    }
+
+    private func checkNeutralMaterial(
+        on entity: Entity,
+        checkedCount: inout Int
+    ) {
+        if let modelEntity = entity as? ModelEntity,
+           let material = modelEntity.model?.materials.first as? PhysicallyBasedMaterial {
+            checkedCount += 1
+            XCTAssertEqual(material.metallic.scale, 0, accuracy: 0.0001)
+            XCTAssertEqual(material.roughness.scale, 0.5, accuracy: 0.0001)
+        }
+
+        for child in entity.children {
+            checkNeutralMaterial(on: child, checkedCount: &checkedCount)
+        }
+    }
+}
