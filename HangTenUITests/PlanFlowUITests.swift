@@ -23,6 +23,13 @@ final class PlanFlowUITests: XCTestCase {
         let app = launchPlan("method.intermediate-hangboarding.repeaters")
         reveal("Repeat 4 times", in: app)
         XCTAssertGreaterThanOrEqual(app.staticTexts.matching(NSPredicate(format: "label == %@", "Repeat 4 times")).count, 2)
+        XCTAssertEqual(app.otherElements.matching(identifier: "plan.sessionFlow").count, 1)
+        let repeatCards = app.otherElements.matching(
+            NSPredicate(format: "identifier BEGINSWITH %@", "plan.flow.repeat.")
+        ).allElementsBoundByIndex
+        let identifiers = repeatCards.map(\.identifier)
+        XCTAssertGreaterThanOrEqual(identifiers.count, 2)
+        XCTAssertEqual(Set(identifiers).count, identifiers.count, "Nested repeat cards must have distinct identifiers")
         XCTAssertTrue(app.staticTexts["Repeaters"].exists)
         XCTAssertTrue(app.staticTexts["105s recovery"].exists)
         attachScreenshot(named: "Nested repeated rounds", app: app)

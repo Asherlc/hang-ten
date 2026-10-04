@@ -532,6 +532,7 @@ struct PlanDetailView: View {
             PlanFlowRows(groups: groups)
         }
         .hangCard()
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("plan.sessionFlow")
     }
 
@@ -664,7 +665,9 @@ struct PlanDetailView: View {
 
 private struct PlanFlowRows: View {
     let groups: [PlanFlowGroup]
-    var isNested = false
+    var depth = 0
+
+    private var isNested: Bool { depth > 0 }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -691,7 +694,7 @@ private struct PlanFlowRows: View {
                                     .foregroundStyle(Color.hangMuted)
                             }
                         }
-                        PlanFlowRows(groups: group.children, isNested: true)
+                        PlanFlowRows(groups: group.children, depth: depth + 1)
                     }
                     .padding(14)
                     .background(
@@ -699,7 +702,7 @@ private struct PlanFlowRows: View {
                         in: RoundedRectangle(cornerRadius: 14)
                     )
                     .accessibilityElement(children: .contain)
-                    .accessibilityIdentifier("plan.flow.repeat.\(group.id)")
+                    .accessibilityIdentifier("plan.flow.repeat.\(depth).\(group.id)")
                     .padding(.bottom, isLast ? 0 : 14)
                 } else if let step = group.sourceSteps.first {
                     StepRow(step: step, title: group.title, isLast: isLast, showsNumber: !isNested)
