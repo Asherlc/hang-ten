@@ -8,14 +8,14 @@ struct WorkoutPrimaryControl: View {
     let action: () -> Void
 
     private var title: String {
-        if isComplete { return "Log session" }
+        if isComplete { return "Review session" }
         if countdown > 0 { return "Cancel countdown" }
         if isRunning { return "Pause" }
         return isFirstStart ? "Start" : "Resume"
     }
 
     private var symbol: String {
-        if isComplete { return "checkmark" }
+        if isComplete { return "list.bullet.rectangle" }
         if countdown > 0 { return "xmark" }
         return isRunning ? "pause.fill" : "play.fill"
     }
@@ -25,16 +25,14 @@ struct WorkoutPrimaryControl: View {
             HStack {
                 Image(systemName: symbol)
                 Text(title)
-                if isComplete { Image(systemName: "arrow.right") }
             }
             .frame(maxWidth: .infinity)
             .font(.system(.callout, design: .rounded, weight: .bold))
-            .foregroundStyle(Color.hangInk)
-            .padding(.horizontal, 18)
-            .padding(.vertical, 16)
-            .background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 17, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
+        .tint(.hangGreenDark)
+        .accessibilityIdentifier("workout.primaryControl")
     }
 }
 

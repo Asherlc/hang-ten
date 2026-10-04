@@ -48,17 +48,22 @@ struct GripDiagramView: View {
                     GripHandCueCard(
                         posture: gripType,
                         fingerConfiguration: fingerConfiguration,
-                        side: singleSide
+                        side: singleSide,
+                        showsPostureLabel: false
                     )
                 } else {
-                    GripHandPairCueCards(posture: gripType, fingerConfiguration: fingerConfiguration)
+                    GripHandPairCueCards(
+                        posture: gripType,
+                        fingerConfiguration: fingerConfiguration,
+                        showsPostureLabel: false
+                    )
                 }
             }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 10)
         .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .accessibilityElement(children: .contain)
+        .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilitySummary)
     }
 
@@ -132,6 +137,7 @@ struct GripHandCueCard: View {
     let fingerConfiguration: FingerConfiguration?
     let side: GripCueSide
     var usesSharedPairPreview = false
+    var showsPostureLabel = true
 
     var body: some View {
         VStack(spacing: 3) {
@@ -142,11 +148,12 @@ struct GripHandCueCard: View {
                     .accessibilityHidden(true)
             }
 
-            Text(posture?.label ?? "Grip not specified")
-                .font(.system(size: 10, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangMuted)
-                .lineLimit(1)
-                .minimumScaleFactor(0.68)
+            if showsPostureLabel {
+                Text(posture?.label ?? "Grip not specified")
+                    .font(.system(.caption, design: .rounded, weight: .bold))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             if fingerConfiguration == nil {
                 Text(fingerSummary)
                     .font(.system(size: 10, weight: .semibold, design: .rounded))
@@ -175,6 +182,7 @@ struct GripHandCueCard: View {
 
     var accessibilityLabel: String {
         [
+            side == .left ? "Left hand" : "Right hand",
             posture?.label ?? "Grip not specified",
             fingerSummary
         ].joined(separator: ", ")
@@ -184,21 +192,33 @@ struct GripHandCueCard: View {
 struct GripHandPairCueCards: View {
     let posture: GripType?
     let fingerConfiguration: FingerConfiguration?
+    var showsPostureLabel = true
 
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: 6) {
             GripHandPairModelView(posture: posture, fingerConfiguration: fingerConfiguration)
                 .frame(height: 88)
                 .padding(.horizontal, 8)
                 .accessibilityHidden(true)
 
-            HStack(spacing: 10) {
-                GripHandCueCard(posture: posture, fingerConfiguration: fingerConfiguration,
-                                side: .left, usesSharedPairPreview: true)
-                GripHandCueCard(posture: posture, fingerConfiguration: fingerConfiguration,
-                                side: .right, usesSharedPairPreview: true)
+            if showsPostureLabel {
+                Text(posture?.label ?? "Grip not specified")
+                    .font(.system(.caption, design: .rounded, weight: .bold))
+                    .foregroundStyle(Color.hangMuted)
+            }
+            if fingerConfiguration == nil {
+                Text("4 fingers (assumed)")
+                    .font(.system(.caption, design: .rounded, weight: .semibold))
+                    .foregroundStyle(Color.hangMuted)
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Both hands, \(posture?.label ?? "Grip not specified"), \(fingerSummary)")
+        .accessibilityIdentifier("workout.gripCue.both")
+    }
+
+    private var fingerSummary: String {
+        fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" } ?? "4 fingers (assumed)"
     }
 }
 

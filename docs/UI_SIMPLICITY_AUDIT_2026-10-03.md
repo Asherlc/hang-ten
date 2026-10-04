@@ -1,0 +1,56 @@
+# Hang Ten UI simplicity audit — October 3, 2026
+
+This pass simplifies the iOS interface around the task on each screen. It preserves the cream/green palette, rounded typography, board imagery, and three tabs. Astra and Opus independently reviewed the code and actual simulator screenshots; their initial code-only suggestions were treated as hypotheses until screenshots were available.
+
+## Research applied
+
+- [Apple HIG: Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) and [Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars): choose controls deliberately, make the principal action easy to find, and use native button styles. Keep immediately useful controls accessible. This led to one Finish or Save action per view and a direct spoken-cues toggle during workouts.
+- [Apple HIG: Writing](https://developer.apple.com/design/human-interface-guidelines/writing): use concise, meaningful labels and consistent capitalization. This led to “Step n of total” as the step picker, sentence-case set controls, and state-specific weight help.
+- [Apple HIG: Layout](https://developer.apple.com/design/human-interface-guidelines/layout): establish hierarchy and reveal optional detail when it matters. Plan identity, setup, and Start now precede the board preview; board-picker thumbnails and free-workout previews have bounded heights.
+- [Apple HIG: Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets): give a sheet a clear task and completion path. Save stays visible in editor and pending summary toolbars. A pending summary requires Save or confirmed Discard before dismissal.
+- [Apple HIG: Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility): retain meaningful labels, state, and adequately sized targets. Bodyweight has one labeled switch row; set completion exposes completion/undo state; hold names wrap; changed completion, favorite, menu, and navigation targets have room for touch.
+- [Nielsen Norman Group: Aesthetic and Minimalist Design](https://www.nngroup.com/articles/aesthetic-minimalist-design/): keep the information and affordances needed for the task while removing low-value competition. Fewer controls is useful only when the remaining controls still express the distinct tasks clearly.
+
+## Screenshot-backed changes
+
+| Screen/state | Change | Evidence in `.context/ui-review/` |
+| --- | --- | --- |
+| Train and board details | Product page moved into details; Change board and View hold specs remain distinct. Hold names wrap instead of losing their distinguishing endings. | `before/`, `after/`: `train.png`, `board-detail.png` |
+| Board picker | Display-only, bounded thumbnails beside board names. Specs and favorites have separate targets without image overlap. Several results fit on screen. | `board-picker.png` |
+| Plan, Max Hangs, manual setup | Identity/setup/Start precede the first-hold preview. Duration appears in metadata rather than again on Start. Optional tracking retains Skip/Scale/Manual; manual weight has a visible field label and one Add bodyweight toggle. | `plan.png`, `max-hangs.png`, `plan-manual.png` |
+| Settings and sensor settings | One heading per connection card; one threshold readout. Slider and stepper retain their different coarse/precise adjustment roles. | `settings.png`, `sensor-settings.png` |
+| Free workout: empty/populated | One persistent toolbar Finish; elapsed-only content header. Empty logs collapse the board area; populated logs bound it. Pull-ups use the checkbox for completion and undo. Start set and Log set retain their separate workflows. | `free-session.png`, `free-sets.png` |
+| Free workout: rest | Skip rest appears while counting; Dismiss appears after completion. Completed rest drops the zero countdown and unused adjustment controls. | `free-rest.png`, `after/free-rest-complete.png` |
+| Workout: work/rest/steps | Step position and Routine become one clearly interactive picker. Phase and shared grip labels appear once. End is the confirmed exit; spoken cues stay directly accessible; reporting moves into options. | `workout.png`, `workout-rest.png`, `workout-steps.png` |
+| Workout: landscape | Each hand diagram stays with its own cue beside the board; the timer and primary controls stay together. | `workout-landscape.png` |
+| Routine editor | Save stays in the toolbar; Reorder belongs to Steps and appears only with multiple steps. Reordering exposes drag handles, with a legible Done action; swipe deletion remains available outside that mode. Save failures and validation issues appear in a visible alert. | `editor.png`, `after/editor-validation.png`, `after/editor-reorder.png`, `after/editor-after-reorder.png` |
+| Pending summary/history | Save and Discard stay visible. Discard asks explicitly; a drag cannot silently close pending data. Rest rows do not repeat their title; whole durations drop unnecessary decimal zeros. History uses the app palette. | `summary.png`, `after/summary-discard.png`, `history.png` |
+
+The original blank free-workout board region was captured during loading. The final empty-state layout deliberately omits that preview; it is not evidence of a missing asset. The settled completed-rest capture shows the bounded board correctly. Free workout already had a navigation title. The completed workout automatically opens its summary, so the standalone completion chrome was reviewed in code rather than represented by a misleading summary screenshot.
+
+The Add bodyweight row uses a 44-point whole-row toggle style. Its visible native switch does not handle touches or expose a second accessibility element; a single native Toggle supplies the accessible label, state, and activation through Apple's [accessibility representation API](https://developer.apple.com/documentation/swiftui/view/accessibilityrepresentation(representation:)). This consolidates the prior separate label button and switch. A plain native switch missed short taps in this simulator beside the live Grindstone preview, including physical input; a longer test press was unreliable. The underlying cause remains unconfirmed. The replacement is verified with ordinary XCTest taps, exactly one accessible switch, and on/off assertions. AXe physical down/up input also turned it on at the visible knob and off at the label, with screenshots confirming both the switch and explanatory text; it does not claim to repair the shared 3D renderer.
+
+## Preserved distinctions and source fidelity
+
+Training plan files, manufacturer instructions, accessory text, adaptations, hold geometry, grip/finger prescriptions, sequence, durations, and assets are unchanged. This pass changes presentation and operational labels; it does not introduce training claims. The step picker retains the sourced instructions and ordering. Rest still identifies the next-hold preview, and prescribed duration remains distinct from remaining time. Assumed fingers remain explicitly labeled as assumed.
+
+The board map and textual hold list remain complementary. Board identity remains visible in plan setup without the checkbox-like icon. Scale connection/preparation, manual weight versus added bodyweight, local history versus Health authorization, free-workout Close/resume versus Finish/history, and the different set workflows remain separate. Sourced routine titles and standardized metadata are retained even when words overlap.
+
+## Verification
+
+The Debug app built and ran on isolated, workspace-owned iPhone 17 Pro simulators with iOS 26.5. The review includes 22 before captures, 25 final after captures, and ten comparisons made from the original screenshots. Astra and Opus independently opened the primary and final state captures and reviewed the diff. Their final reviews found no concrete new regression; earlier landscape accessibility, summary save explanation, and editor contrast/reorder concerns were addressed and recaptured.
+
+Across the broad run and focused follow-ups, **260 unique unit tests and 19 unique UI regression cases passed**. Four temporary capture cases also passed and were removed from the committed test source. These counts are aggregated across runs, not one all-green full-suite invocation. `verification.json` records each case's latest result and its log.
+
+- `validation.xcresult`: all 260 unit tests passed, covering plan/draft fidelity, grip cues, timelines, summary formatting, session policies, free-workout logging/rest/finish, board filters, and sensor behavior. Its initial UI run had four failures; these prompted the switch interaction fix and a native alert-button lookup correction.
+- `final-captures.xcresult`: rotation/resume and protected pending-summary dismissal, cancel, and confirmed Discard passed. Its temporary editor capture failed on an inherited accessibility identifier; label-based capture then succeeded.
+- `final-interactions.xcresult`: the updated 19 grip-card unit tests, pull-up completion/skip-rest/undo, and scale preparation paths passed. Longer switch presses remained unreliable, so that workaround was replaced with the single row control.
+- `single-switch-row.xcresult`: ordinary switch activation and editor validation/reorder/Done interaction passed.
+- `final-weight-flows.xcresult`: all four weight setup cases passed, including exactly one switch, no duplicate button, ordinary tap/undo, draft preservation, connected preparation, and disconnected start. The settled completed-rest capture also passed.
+- `final-manual-summary.xcresult`: the verified purchase fixture carried the entered manual weight and bodyweight choice through to the summary.
+
+All build/test commands used the explicit owned simulator UUID, `.context/DerivedData`, disabled parallel testing, and disabled test diagnostics collection. Simulator artifacts and logs live under the ignored workspace-owned `.context/ui-review/` directory. Generated comparisons pair actual captures without altering app images. No training-plan or board-package files changed.
+
+Before/after examples: [Board picker](../.context/ui-review/comparisons/board-picker.png), [Plan setup](../.context/ui-review/comparisons/plan.png), [Workout](../.context/ui-review/comparisons/workout.png), [Settings](../.context/ui-review/comparisons/settings.png).
+
+Physical-device checks remain appropriate for real sensor hardware, audio output, and HealthKit writes. Simulator inspection and test fixtures do not certify those integrations or a complete accessibility audit.

@@ -336,6 +336,7 @@ private struct BoardRotationSelector: View {
 }
 
 struct BoardDetailMapView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let board: BoardRevision
     @Binding var selectedHoldID: String?
     private let maximumMapHeight: CGFloat?
@@ -479,7 +480,9 @@ struct BoardDetailMapView: View {
         if !map.entries.isEmpty {
             SectionLabel(title: "Hold map")
             LazyVGrid(
-                    columns: [GridItem(.adaptive(minimum: 132), spacing: 8)],
+                    columns: dynamicTypeSize.isAccessibilitySize
+                        ? [GridItem(.flexible())]
+                        : [GridItem(.adaptive(minimum: 132), spacing: 8)],
                     alignment: .leading,
                     spacing: 8
             ) {
@@ -499,13 +502,15 @@ struct BoardDetailMapView: View {
                                     in: Circle()
                                 )
                             Text(entry.hold.name)
-                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                .font(.system(.footnote, design: .rounded, weight: .semibold))
                                 .foregroundStyle(Color.hangInk)
-                                .lineLimit(1)
+                                .fixedSize(horizontal: false, vertical: true)
                             Spacer(minLength: 0)
                         }
                         .padding(.horizontal, 8)
                         .padding(.vertical, 7)
+                        .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                        .contentShape(Rectangle())
                         .background(
                             selectedHoldID == entry.hold.id
                                 ? Color.holdActive.opacity(0.16)

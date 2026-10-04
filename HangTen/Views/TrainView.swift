@@ -146,9 +146,6 @@ struct TrainView: View {
         let layout = isCompact
             ? AnyLayout(HStackLayout(alignment: .center, spacing: 20))
             : AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
-        let headingLayout = dynamicTypeSize.isAccessibilitySize
-            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
-            : AnyLayout(HStackLayout())
         return layout {
             BoardMapView(board: store.selectedBoard, maximumMapHeight: isCompact ? 72 : 80)
                 .cardPreviewStyle()
@@ -156,17 +153,7 @@ struct TrainView: View {
 
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 5) {
-                    headingLayout {
-                        SectionLabel(title: "Your board")
-                        if !dynamicTypeSize.isAccessibilitySize { Spacer() }
-                        Link(destination: store.selectedBoard.productURL) {
-                            Label("Product page", systemImage: "arrow.up.right")
-                                .frame(minHeight: 44)
-                                .contentShape(Rectangle())
-                        }
-                        .font(.system(.footnote, design: .rounded, weight: .medium))
-                        .foregroundStyle(Color.hangGreenDark)
-                    }
+                    SectionLabel(title: "Your board")
                     Text(store.selectedBoard.name)
                         .font(.system(.title3, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
@@ -186,6 +173,7 @@ struct TrainView: View {
             .layoutPriority(1)
         }
         .hangCard()
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("train.board")
     }
 
@@ -308,6 +296,13 @@ struct BoardDetailView: View {
                     Text(board.name)
                         .font(.system(size: isCompactHeight ? 22 : 28, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
+                    Link(destination: board.productURL) {
+                        Label("Product page", systemImage: "arrow.up.right")
+                            .frame(minHeight: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .font(.system(.footnote, design: .rounded, weight: .medium))
+                    .foregroundStyle(Color.hangGreenDark)
                 }
                 .overlay {
                     GeometryReader { summary in
@@ -578,41 +573,52 @@ private struct BoardPickerCard: View {
     let onToggleFavorite: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            ZStack(alignment: .topTrailing) {
-                Button(action: onSelect) {
-                    VStack(alignment: .leading, spacing: 14) {
-                        BoardMapView(board: board, isDisplayOnly: true)
-                            .cardPreviewStyle()
+        VStack(alignment: .leading, spacing: 4) {
+            Button(action: onSelect) {
+                HStack(spacing: 14) {
+                    BoardMapView(board: board, isDisplayOnly: true, maximumMapHeight: 60)
+                        .cardPreviewStyle()
+                        .frame(width: 88)
+                        .accessibilityHidden(true)
 
-                        HStack(alignment: .top, spacing: 12) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(board.name)
-                                    .font(.system(.headline, design: .rounded, weight: .bold))
-                                    .foregroundStyle(Color.hangInk)
-                            }
+                    Text(board.name)
+                        .font(.system(.headline, design: .rounded, weight: .bold))
+                        .foregroundStyle(Color.hangInk)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                            Spacer()
-
-                            if isSelected {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .font(.system(size: 22, weight: .bold))
-                                    .foregroundStyle(Color.hangGreenDark)
-                                    .accessibilityLabel("Selected")
-                            }
-                        }
+                    if isSelected {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundStyle(Color.hangGreenDark)
+                            .accessibilityHidden(true)
                     }
-                    .contentShape(Rectangle())
                 }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("boardPicker.board.\(board.id)")
+                .frame(minHeight: 60)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(board.name)
+            .accessibilityAddTraits(isSelected ? .isSelected : [])
+            .accessibilityIdentifier("boardPicker.board.\(board.id)")
+
+            HStack {
+                NavigationLink("View hold specs") {
+                    BoardDetailView(board: board)
+                }
+                .frame(minHeight: 44)
+                .font(.system(.footnote, design: .rounded, weight: .bold))
+                .foregroundStyle(Color.hangGreenDark)
+                .accessibilityIdentifier("boardPicker.holdSpecs.\(board.id)")
+
+                Spacer()
 
                 Button(action: onToggleFavorite) {
                     Image(systemName: isFavorite ? "star.fill" : "star")
                         .font(.system(size: 18, weight: .bold))
                         .foregroundStyle(isFavorite ? Color.hangGreenDark : Color.hangMuted)
-                        .padding(10)
-                        .background(.ultraThinMaterial, in: Circle())
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(
@@ -621,17 +627,9 @@ private struct BoardPickerCard: View {
                         : "Add \(board.name) to favorites"
                 )
                 .accessibilityIdentifier("boardPicker.favorite.\(board.id)")
-                .padding(10)
             }
-
-            NavigationLink("View hold specs") {
-                BoardDetailView(board: board)
-            }
-            .font(.system(.footnote, design: .rounded, weight: .bold))
-            .foregroundStyle(Color.hangGreenDark)
-            .accessibilityIdentifier("boardPicker.holdSpecs.\(board.id)")
         }
-        .hangCard()
+        .hangCard(padding: 12)
     }
 }
 

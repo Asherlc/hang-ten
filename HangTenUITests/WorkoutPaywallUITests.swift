@@ -8,7 +8,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         app.buttons["plan.startRoutine"].tap()
 
         XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
         XCTAssertTrue(app.buttons["paywall.restore"].exists)
         XCTAssertTrue(app.staticTexts["Unlock Hang Ten"].exists)
         XCTAssertTrue(app.staticTexts[
@@ -26,7 +26,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         app.buttons["paywall.close"].tap()
 
         XCTAssertTrue(app.buttons["plan.startRoutine"].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testVerifiedFakePurchaseContinuesIntoSession() {
@@ -43,7 +43,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertEqual(purchase.label, "Unlock for $2.99")
         purchase.tap()
 
-        XCTAssertTrue(app.navigationBars["Session"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["workout.primaryControl"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.otherElements["paywall.lifetimeUnlock"].exists)
     }
 
@@ -58,7 +58,7 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         app.buttons["paywall.restore"].tap()
 
-        XCTAssertTrue(app.navigationBars["Session"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["workout.primaryControl"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.otherElements["paywall.lifetimeUnlock"].exists)
     }
 
@@ -123,7 +123,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
         XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
         XCTAssertEqual(bodyweight.value as? String, "0")
-        app.buttons["workout.initialWeight.addBodyweight.label"].tap()
+        bodyweight.tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
@@ -232,7 +232,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[
             "Purchase pending. Your workout will unlock after the App Store approves it."
         ].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testFailedPurchaseShowsApprovedStatusCopy() {
@@ -246,7 +246,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[
             "We couldn’t complete the purchase. Please try again or restore purchases."
         ].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testCancelledPurchaseShowsApprovedStatusCopy() {
@@ -260,7 +260,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[
             "Purchase cancelled. You weren’t charged."
         ].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testRetryAfterTransientProductLoadFailureMakesBuyAvailable() {
@@ -281,7 +281,7 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         XCTAssertTrue(app.buttons["Unlock for $2.99"].waitForExistence(timeout: 2))
         XCTAssertTrue(purchase.isEnabled)
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testRetryRemainsAvailableAfterProductLoadFailureAndEmptyRestore() {
@@ -316,7 +316,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         let purchase = app.buttons["paywall.purchase"]
         XCTAssertTrue(app.buttons["Unlock for $2.99"].waitForExistence(timeout: 2))
         XCTAssertTrue(purchase.isEnabled)
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testRetryRemainsHittableAfterProductLoadFailureAndRestoreFailure() {
@@ -342,7 +342,7 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         XCTAssertTrue(app.buttons["Unlock for $2.99"].waitForExistence(timeout: 2))
         XCTAssertTrue(app.buttons["paywall.purchase"].isEnabled)
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testRestoreWithoutEntitlementShowsNothingToRestoreFeedback() {
@@ -357,7 +357,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[
             "Nothing to restore. No lifetime unlock purchase was found."
         ].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testRestoreFailureUsesRestoreSpecificFeedback() {
@@ -376,7 +376,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts[
             "We couldn’t complete the purchase. Please try again or restore purchases."
         ].exists)
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     private func lockedPlanApp() -> XCUIApplication {

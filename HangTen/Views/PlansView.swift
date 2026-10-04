@@ -341,7 +341,7 @@ private struct PlanCard: View {
             }
 
             if isIncompatible {
-                Label("Not on this board", systemImage: "exclamationmark.triangle")
+                Label("Missing required holds", systemImage: "exclamationmark.triangle")
                     .font(.system(.footnote, design: .rounded, weight: .semibold))
                     .foregroundStyle(Color.holdActiveDeep)
             }

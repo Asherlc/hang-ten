@@ -288,6 +288,56 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
 
 }
 
+final class PendingWorkoutSummaryUITests: XCTestCase {
+    func testPendingSummaryRequiresSaveOrConfirmedDiscard() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+            "HANGTEN_REVIEW_PLAN": "1",
+            "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+            "HANGTEN_REVIEW_BOARD_ID": "tension.grindstone-original",
+            "HANGTEN_REVIEW_STEP": "999",
+        ]
+        app.launch()
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertTrue(start.waitForExistence(timeout: 20))
+        start.tap()
+
+        let save = app.buttons["workout.summary.save"]
+        let discard = app.buttons["workout.summary.discard"]
+        XCTAssertTrue(save.waitForExistence(timeout: 20))
+        let summaryCapture = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        summaryCapture.name = "Pending summary with persistent Save"
+        summaryCapture.lifetime = .keepAlways
+        add(summaryCapture)
+        let summary = app.navigationBars["Summary"]
+        summary.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1))
+            .press(forDuration: 0.05, thenDragTo:
+                app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)))
+        XCTAssertTrue(save.isHittable, "Dragging must not dismiss an unsaved summary.")
+
+        discard.tap()
+        let confirmation = app.alerts["Discard this session?"]
+        XCTAssertTrue(confirmation.waitForExistence(timeout: 5))
+        let discardCapture = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        discardCapture.name = "Pending summary discard confirmation"
+        discardCapture.lifetime = .keepAlways
+        add(discardCapture)
+        confirmation.buttons["Keep reviewing"].tap()
+        XCTAssertTrue(save.isHittable)
+
+        discard.tap()
+        // SwiftUI alerts can expose both a proxy and its native child button.
+        confirmation.buttons["Discard session"].firstMatch.tap()
+        let dismissed = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == false"), object: save
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 10), .completed)
+    }
+}
+
 final class InitialWeightSetupUITests: XCTestCase {
     private let app = XCUIApplication()
 
@@ -321,13 +371,8 @@ final class InitialWeightSetupUITests: XCTestCase {
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
         XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
-        XCTAssertLessThan(
-            bodyweight.frame.width,
-            XCUIApplication(bundleIdentifier: "com.apple.springboard").frame.width / 3,
-            "The switch accessibility target should not span the full weight-tracking row."
-        )
         XCTAssertEqual(bodyweight.value as? String, "0")
-        app.buttons["workout.initialWeight.addBodyweight.label"].tap()
+        bodyweight.tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
@@ -355,22 +400,35 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "1")
     }
 
-    func testManualWeightLabelTogglesTheSameSwitch() {
+    func testManualWeightUsesOneLabeledToggle() {
         app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
         XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
         XCTAssertEqual(bodyweight.value as? String, "0")
         XCTAssertEqual(bodyweight.label, "Add bodyweight")
+        XCTAssertEqual(app.switches.matching(identifier: "workout.initialWeight.addBodyweight").count, 1)
+        XCTAssertFalse(app.buttons["workout.initialWeight.addBodyweight"].exists,
+                       "The tappable row must expose only its switch accessibility representation.")
 
-        let label = app.buttons["workout.initialWeight.addBodyweight.label"]
-        XCTAssertTrue(label.waitForExistence(timeout: 5))
-        label.tap()
+        XCTAssertFalse(app.buttons["workout.initialWeight.addBodyweight.label"].exists,
+                       "Bodyweight should have one labeled toggle, without a duplicate button.")
+        bodyweight.tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed)
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "Final manual bodyweight setup"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        bodyweight.tap()
+        let bodyweightDisabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "0"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightDisabled], timeout: 5), .completed)
     }
 
     func testInlineScaleConnectionStartsWithExistingSensorPreparation() {
