@@ -1,0 +1,34 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "packetScope": "Preparation and preservation only; no acceptance or current runtime workflow execution claim.",
+  "recordedCompletedUnitRun": {
+    "scope": "The exact preserved full-unit-reviewed-corrections raw command/source build only.",
+    "testsExecuted": 1511,
+    "testsSkipped": 3,
+    "testFailures": 0,
+    "processExitStatus": 0,
+    "rawSummaryLines": [
+      "\t Executed 1511 tests, with 3 tests skipped and 0 failures (0 unexpected) in 268.174 (268.762) seconds",
+      "\t Executed 1511 tests, with 3 tests skipped and 0 failures (0 unexpected) in 268.174 (268.763) seconds"
+    ],
+    "stdout": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/tests.stdout",
+    "stderr": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/tests.stderr",
+    "exitRecord": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/tests.exit.json"
+  },
+  "diagnosticCollectionTimeoutScope": "The original Xcode stderr records a post-test diagnostic collection timeout after 600.0 seconds. That collector diagnostic is not a unit-test failure: the same preserved run reports zero test failures and actual process exit 0. The stderr and raw result archive remain unchanged.",
+  "preparedArtifacts": {
+    "sourcePaths": [
+      "prep/runtime/capture.py",
+      "prep/runtime/prepare-release.py",
+      "prep/runtime/schedule.json",
+      "prep/runtime/same-launch-protocol-change.json",
+      "prep/runtime/README.md",
+      "prep/runtime/history-same-launch-confirmation-v1/capture.py",
+      "prep/runtime/history-same-launch-confirmation-v1/schedule.json",
+      "prep/runtime/history-same-launch-confirmation-v1/README.md",
+      "prep/install-runtime-proof.py"
+    ],
+    "executionStatus": "Not established by this packet. Helpers/protocol/schedules and historical helper bytes are retained as prepared artifacts, including the current installer helper. Separate per-arm capture proof is required after actual execution."
+  },
+  "activeBoardUIRun": "Excluded; no active board-ui-reviewed-corrections files or resources inspected or modified."
+}

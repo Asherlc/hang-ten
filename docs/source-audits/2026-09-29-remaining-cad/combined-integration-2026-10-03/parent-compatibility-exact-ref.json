@@ -1,0 +1,15 @@
+{
+  "parentRef": "aae31a6159bbbb57ce59f882000889fcc366c63e",
+  "previousParentRef": "7e12907150374f722446a0e8725123d1bc52b650",
+  "ownBeforeMerge": "2e3dbf02ed5d09cbac9ee11a0d2421d957542d06",
+  "preMergeFiles": {
+    "HangTen/Models/WorkoutActivityRecording.swift": "36b12abb1dd8a85c012f40173df893b1a28a904fa37463de3fb0395af0cf4064",
+    "HangTenTests/SuspendedBoardPresentationTests.swift": "ea096bb25a0043f5aa08cdca908eb900bbe10a8a0bc48851dd3f674ddb15102d",
+    "HangTenTests/WorkoutActivityRecordingTests.swift": "7519d6d3d016cfedc41b073c1e1a9807718bc1235f468d1c8aa7e83e2a6bb531",
+    "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests.swift": "ec935f517127bd701d259ab79bd3a88700ec204e506349c5933e6dcf7739225f",
+    "HangTen/Views/BoardModelView.swift": "7c6a9d3902870dcc30d2035ef89a4c0515b22587da1f9496997b049aeffcec65",
+    "HangTen/Views/BoardMapView.swift": "4a023bf0e3ce4115fcb69862b2373bf7bedfebece9b4f856298c18f57874602a",
+    "HangTen/Views/WorkoutView.swift": "4de76a2fbb3fcf8f5968706e67b63260dcb50be08611e6e7088177ac8cd474d8"
+  },
+  "scope": "Explicit published parent ref; no other workspace inspection. Preserve own all-pose Penta method and strict resolver; import narrow storage/rest/independent-camera regressions."
+}

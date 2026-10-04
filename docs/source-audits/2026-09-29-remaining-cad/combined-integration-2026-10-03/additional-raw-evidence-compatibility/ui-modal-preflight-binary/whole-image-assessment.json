@@ -1,0 +1,9 @@
+{
+  "image": "before.png",
+  "sha256": "709de247901f947cbb79e70b587995d6a68e3505fb0ab99bdfc6c67a9828e08e",
+  "wholeImageReviewed": true,
+  "visibleScreen": "normal Train with Wood Grips Compact II",
+  "systemOpenConfirmationVisible": false,
+  "noTapIssued": true,
+  "qualification": "Whole image confirms no modal at this checkpoint. Empty AX tree is retained and is not used as proof of absence. Earlier UI failure videos retain their visible dialog."
+}

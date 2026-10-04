@@ -1,0 +1,26 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "method": "Byte/archive identity verification only; not execution-result validation.",
+  "archives": [
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult.zip",
+      "archiveSHA256": "e1dd6ebd817de1d0bdc80f56b89623c5e5d3fad6037503a45ec30e26a42ac520",
+      "archiveBytes": 50327156,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/full-unit-reviewed-corrections/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult.archive.json",
+      "verifiedMemberCount": 4442,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/build-placid-badger-cad-second-half-reviewed-corrections.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/build-placid-badger-cad-second-half-reviewed-corrections.xcresult.zip",
+      "archiveSHA256": "90991050c0b1bd5bceb002b080f8c5d16690526d659ac2537538b8371eeb3bb8",
+      "archiveBytes": 34283,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-reviewed-corrections/build-placid-badger-cad-second-half-reviewed-corrections.xcresult.archive.json",
+      "verifiedMemberCount": 8,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    }
+  ]
+}

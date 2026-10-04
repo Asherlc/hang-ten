@@ -1,0 +1,229 @@
+{
+  "testIdentifier" : "OwlClimbPokerBoardMapInteractionUITests/testLandscapeMultiPresentationBoardDetailKeepsMapInViewport()",
+  "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testLandscapeMultiPresentationBoardDetailKeepsMapInViewport",
+  "testName" : "testLandscapeMultiPresentationBoardDetailKeepsMapInViewport()",
+  "testRuns" : [
+    {
+      "activities" : [
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "attachments" : [
+            {
+              "lifetime" : "deleteOnSuccess",
+              "name" : "Screen Recording 2026-10-03 at 04.58.16 PM.mp4",
+              "payloadId" : "0~T_93IcZLrE8cwYTv2vhfzVT1oFkVCZtU5ijyFdHgx4fKyWSjIO-pFxsZwLkYpB9buiOfq2qsilik2vHLXQc5Fw==",
+              "timestamp" : 1791071896.06,
+              "uuid" : "FF88F87E-A40C-45C0-AAF9-397DD661E934"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1791071896.06,
+              "title" : "kXCTAttachmentScreenRecording"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071896.042,
+          "title" : "Start Test at 2026-10-03 16:58:16.042"
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071896.062,
+          "title" : "Set Up"
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "childActivities" : [
+            {
+              "activityType" : "com.apple.dt.xctest.activity-type.internal",
+              "childActivities" : [
+                {
+                  "activityType" : "com.apple.dt.xctest.activity-type.internal",
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1791071896.064,
+                  "title" : "Terminate com.hangten.training:30181"
+                },
+                {
+                  "activityType" : "com.apple.dt.xctest.activity-type.internal",
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1791071897.568,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "activityType" : "com.apple.dt.xctest.activity-type.internal",
+                  "childActivities" : [
+                    {
+                      "activityType" : "com.apple.dt.xctest.activity-type.orientation.landscapeRight",
+                      "isAssociatedWithFailure" : false,
+                      "startTime" : 1791071899.41,
+                      "title" : "Interface orientation changed to Landscape Right"
+                    }
+                  ],
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1791071898.392,
+                  "title" : "Wait for com.hangten.training to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1791071896.064,
+              "title" : "Launch com.hangten.training"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071896.063,
+          "title" : "Open com.hangten.training"
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "childActivities" : [
+            {
+              "activityType" : "com.apple.dt.xctest.activity-type.internal",
+              "childActivities" : [
+                {
+                  "activityType" : "com.apple.dt.xctest.activity-type.internal",
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1791071901.736,
+                  "title" : "Checking existence of `\"Hold specs\" NavigationBar`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1791071901.735,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"Hold specs\" NavigationBar`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071900.69,
+          "title" : "Waiting 10.0s for \"Hold specs\" NavigationBar to exist"
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "childActivities" : [
+            {
+              "activityType" : "com.apple.dt.xctest.activity-type.internal",
+              "childActivities" : [
+                {
+                  "activityType" : "com.apple.dt.xctest.activity-type.internal",
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1791071902.853,
+                  "title" : "Checking existence of `\"Lifting Edge\" StaticText`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1791071902.852,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"Lifting Edge\" StaticText`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071901.812,
+          "title" : "Waiting 5.0s for \"Lifting Edge\" StaticText to exist"
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071902.88,
+          "title" : "Checking existence of `TabBar (First Match)`"
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "childActivities" : [
+            {
+              "activityType" : "com.apple.dt.xctest.activity-type.internal",
+              "childActivities" : [
+                {
+                  "activityType" : "com.apple.dt.xctest.activity-type.internal",
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1791071903.969,
+                  "title" : "Checking existence of `\"boardDetail.map\" Other`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1791071903.968,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"boardDetail.map\" Other`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071902.921,
+          "title" : "Waiting 10.0s for \"boardDetail.map\" Other to exist"
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071903.997,
+          "title" : "Find the \"boardDetail.map\" Other"
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071904.028,
+          "title" : "Find the Target Application 'com.hangten.training'"
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071904.054,
+          "title" : "Find the \"boardDetail.map\" Other"
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071904.103,
+          "title" : "Checking existence of `Any (First Match)`"
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071904.144,
+          "title" : "Checking existence of `\"boardModel.3d\" Any`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1791071904.173,
+          "title" : "XCTAssertTrue failed - Map (or a hold marker / 3D surface on it) must remain hittable in compact landscape."
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.internal",
+          "childActivities" : [
+            {
+              "activityType" : "com.apple.dt.xctest.activity-type.internal",
+              "childActivities" : [
+                {
+                  "activityType" : "com.apple.dt.xctest.activity-type.internal",
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1791071904.222,
+                  "title" : "Wait for com.apple.springboard to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1791071904.219,
+              "title" : "Setting device orientation to Portrait"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1791071904.218,
+          "title" : "Tear Down"
+        }
+      ],
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "055BDCE2-3263-470D-89DF-04B967EF7790",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ]
+}
