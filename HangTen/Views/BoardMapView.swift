@@ -655,7 +655,7 @@ struct BoardMapView: View {
         )
         let displayedHolds = content.holds
         VStack(spacing: 8) {
-            if board.presentations.count > 1 {
+            if board.presentations.count > 1 && !isDisplayOnly {
                 Picker(
                     "Board surface",
                     selection: Binding(

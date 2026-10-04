@@ -434,70 +434,48 @@ private struct BoardDetailCompactMetricsPreferenceKey: PreferenceKey {
 struct BoardPickerView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var filters = BoardPickerFilters()
+    @State private var favoritesOnly = false
+    @State private var inspectedBoardID: String?
+    @State private var isSearchPresented = false
 
     private var filteredBoards: [BoardRevision] {
         filters.filteredBoards(
             from: BoardCatalog.all,
             favoriteBoardIDs: store.favoriteBoardIDs
-        )
+        ).filter { !favoritesOnly || store.isFavorite($0) }
     }
 
     private var manufacturerOptions: [String] {
         BoardPickerFilters.manufacturerOptions(from: BoardCatalog.all)
     }
 
+    private var galleryColumns: [GridItem] {
+        dynamicTypeSize.isAccessibilitySize
+            ? [GridItem(.flexible())]
+            : [GridItem(.adaptive(minimum: 160), spacing: 14)]
+    }
+
     var body: some View {
         ScrollView(showsIndicators: false) {
-            LazyVStack(spacing: 16) {
-                Picker("Manufacturer", selection: $filters.manufacturer) {
-                    Text("All manufacturers")
-                        .tag(nil as String?)
-                    ForEach(manufacturerOptions, id: \.self) { manufacturer in
-                        Text(manufacturer)
-                            .tag(Optional(manufacturer))
-                    }
+            VStack(alignment: .leading, spacing: 20) {
+                scopeControls
+
+                if let manufacturer = filters.manufacturer {
+                    Text(manufacturer)
+                        .font(.system(.title3, design: .rounded, weight: .bold))
+                        .foregroundStyle(Color.hangInk)
                 }
-                .pickerStyle(.menu)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityIdentifier("boardPicker.manufacturerFilter")
 
                 if filteredBoards.isEmpty {
-                    VStack(spacing: 8) {
-                        Text("No boards match your filters.")
-                            .font(.system(.headline, design: .rounded, weight: .bold))
-                            .foregroundStyle(Color.hangInk)
-                        Text("Try a different search or manufacturer.")
-                            .font(.system(.subheadline, design: .rounded, weight: .medium))
-                            .foregroundStyle(Color.hangMuted)
-                        Button("Clear filters") {
-                            filters.clear()
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(.hangGreenDark)
-                        .accessibilityIdentifier("boardPicker.clearFilters")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 36)
+                    emptyState
                 } else {
-                    ForEach(filteredBoards) { board in
-                        BoardPickerCard(
-                            board: board,
-                            isSelected: board.id == store.selectedBoard.id,
-                            isFavorite: store.isFavorite(board),
-                            onSelect: {
-                                store.selectBoard(board)
-                                dismiss()
-                            },
-                            onToggleFavorite: {
-                                store.toggleFavorite(board)
-                            }
-                        )
-                    }
+                    gallery(filteredBoards)
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.top, 18)
+            .padding(.top, 12)
             .padding(.bottom, 30)
         }
         .background(Color.hangBackground)
@@ -505,10 +483,94 @@ struct BoardPickerView: View {
         .navigationBarTitleDisplayMode(.inline)
         .searchable(
             text: $filters.searchText,
+            isPresented: $isSearchPresented,
             placement: .navigationBarDrawer(displayMode: .always),
             prompt: "Search boards"
         )
         .accessibilityIdentifier("boardPicker.search")
+        .navigationDestination(item: $inspectedBoardID) { boardID in
+            BoardDetailView(board: BoardCatalog.board(for: boardID))
+        }
+    }
+
+    private var scopeControls: some View {
+        HStack(spacing: 12) {
+            Picker("Boards", selection: $favoritesOnly) {
+                Text("All boards").tag(false)
+                Text("Favorites").tag(true)
+            }
+            .pickerStyle(.segmented)
+            .accessibilityIdentifier("boardPicker.scope")
+
+            Menu {
+                Picker("Manufacturer", selection: $filters.manufacturer) {
+                    Text("All manufacturers").tag(nil as String?)
+                    ForEach(manufacturerOptions, id: \.self) { manufacturer in
+                        Text(manufacturer).tag(Optional(manufacturer))
+                    }
+                }
+            } label: {
+                Image(systemName: filters.manufacturer == nil
+                      ? "line.3.horizontal.decrease" : "line.3.horizontal.decrease.circle.fill")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .frame(width: 44, height: 44)
+            }
+            .accessibilityLabel("Filter by manufacturer")
+            .accessibilityValue(filters.manufacturer ?? "All manufacturers")
+            .accessibilityIdentifier("boardPicker.manufacturerFilter")
+        }
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: 10) {
+            Image(systemName: favoritesOnly ? "star" : "magnifyingglass")
+                .font(.system(size: 30, weight: .regular))
+                .foregroundStyle(Color.hangMuted)
+            Text(favoritesOnly ? "No matching favorites" : "No boards match your filters")
+                .font(.system(.headline, design: .rounded, weight: .semibold))
+                .foregroundStyle(Color.hangInk)
+            Text(favoritesOnly && store.favoriteBoardIDs.isEmpty
+                 ? "Star a board to keep it here."
+                 : "Try another search or manufacturer.")
+                .font(.system(.subheadline, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+            Button("Show all boards") {
+                favoritesOnly = false
+                filters.clear()
+            }
+            .buttonStyle(.bordered)
+            .tint(.hangGreenDark)
+            .accessibilityIdentifier("boardPicker.clearFilters")
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 48)
+    }
+
+    private func gallery(_ boards: [BoardRevision]) -> some View {
+        LazyVGrid(columns: galleryColumns, alignment: .leading, spacing: 14) {
+            ForEach(boards) { board in
+                card(board)
+            }
+        }
+    }
+
+    private func card(_ board: BoardRevision) -> some View {
+        BoardPickerCard(
+            board: board,
+            isSelected: board.id == store.selectedBoard.id,
+            isFavorite: store.isFavorite(board),
+            onSelect: {
+                isSearchPresented = false
+                store.selectBoard(board)
+                dismiss()
+            },
+            onToggleFavorite: { store.toggleFavorite(board) },
+            onViewSpecs: {
+                isSearchPresented = false
+                inspectedBoardID = board.id
+            }
+        )
     }
 }
 
@@ -571,30 +633,28 @@ private struct BoardPickerCard: View {
     let isFavorite: Bool
     let onSelect: () -> Void
     let onToggleFavorite: () -> Void
+    let onViewSpecs: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        ZStack(alignment: .bottomTrailing) {
             Button(action: onSelect) {
-                HStack(spacing: 14) {
-                    BoardMapView(board: board, isDisplayOnly: true, maximumMapHeight: 60)
+                VStack(alignment: .leading, spacing: 12) {
+                    BoardMapView(board: board, isDisplayOnly: true, maximumMapHeight: 150)
                         .cardPreviewStyle()
-                        .frame(width: 88)
+                        .frame(height: 150)
                         .accessibilityHidden(true)
+                        .allowsHitTesting(false)
 
                     Text(board.name)
-                        .font(.system(.headline, design: .rounded, weight: .bold))
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangInk)
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
-
-                    if isSelected {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 22, weight: .bold))
-                            .foregroundStyle(Color.hangGreenDark)
-                            .accessibilityHidden(true)
-                    }
+                        .padding(.trailing, 40)
+                        .frame(minHeight: 44, alignment: .top)
                 }
-                .frame(minHeight: 60)
+                .frame(maxWidth: .infinity)
+                .padding(14)
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
@@ -602,34 +662,48 @@ private struct BoardPickerCard: View {
             .accessibilityAddTraits(isSelected ? .isSelected : [])
             .accessibilityIdentifier("boardPicker.board.\(board.id)")
 
-            HStack {
-                NavigationLink("View hold specs") {
-                    BoardDetailView(board: board)
-                }
-                .frame(minHeight: 44)
-                .font(.system(.footnote, design: .rounded, weight: .bold))
-                .foregroundStyle(Color.hangGreenDark)
-                .accessibilityIdentifier("boardPicker.holdSpecs.\(board.id)")
-
-                Spacer()
-
-                Button(action: onToggleFavorite) {
-                    Image(systemName: isFavorite ? "star.fill" : "star")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundStyle(isFavorite ? Color.hangGreenDark : Color.hangMuted)
-                        .frame(width: 44, height: 44)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(
-                    isFavorite
-                        ? "Remove \(board.name) from favorites"
-                        : "Add \(board.name) to favorites"
-                )
-                .accessibilityIdentifier("boardPicker.favorite.\(board.id)")
+            Button(action: onToggleFavorite) {
+                Image(systemName: isFavorite ? "star.fill" : "star")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(isFavorite ? Color.hangGreenDark : Color.hangMuted)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(
+                isFavorite
+                    ? "Remove \(board.name) from favorites"
+                    : "Add \(board.name) to favorites"
+            )
+            .accessibilityIdentifier("boardPicker.favorite.\(board.id)")
+            .padding(.trailing, 8)
+            .padding(.bottom, 8)
+        }
+        .hangCard(padding: 0)
+        .overlay(alignment: .topLeading) {
+            if isSelected {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .frame(width: 44, height: 44)
+                    .padding(8)
+                    .accessibilityHidden(true)
+                    .allowsHitTesting(false)
             }
         }
-        .hangCard(padding: 12)
+        .overlay(alignment: .topTrailing) {
+            Button(action: onViewSpecs) {
+                Image(systemName: "info.circle")
+                    .font(.system(size: 18, weight: .regular))
+                    .foregroundStyle(Color.hangMuted)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("View hold specs for \(board.name)")
+            .accessibilityIdentifier("boardPicker.holdSpecs.\(board.id)")
+            .padding(8)
+        }
     }
 }
 

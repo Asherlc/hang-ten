@@ -706,3 +706,69 @@ extension XCTestCase {
         return nil
     }
 }
+
+final class BoardPickerUITests: XCTestCase {
+    func testKnownBoardSearchFavoritesAndSpecsKeepSelectionDistinct() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchArguments = ["-favoriteBoardIDs", "()", "-workoutAudioCuesEnabled", "NO"]
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_PICKER": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+            "HANGTEN_REVIEW_BOARD_ID": "tension.honestone",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
+        ]
+        app.launch()
+        let picker = app.navigationBars["Choose board"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 20))
+        let favorite = app.buttons["boardPicker.favorite.beastmaker-1000"]
+        XCTAssertTrue(favorite.waitForExistence(timeout: 10))
+        favorite.tap()
+        XCTAssertTrue(picker.isHittable, "Starring a board must not select or dismiss it.")
+
+        let manufacturer = app.buttons["boardPicker.manufacturerFilter"]
+        manufacturer.tap()
+        let beastmaker = app.buttons["Beastmaker"].firstMatch
+        XCTAssertTrue(beastmaker.waitForExistence(timeout: 10))
+        beastmaker.tap()
+        XCTAssertEqual(app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "boardPicker.board.")).count, 2)
+
+        let scope = app.segmentedControls["boardPicker.scope"]
+        scope.buttons["Favorites"].tap()
+        let board = app.buttons["boardPicker.board.beastmaker-1000"]
+        XCTAssertTrue(board.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "boardPicker.board.")).count, 1)
+
+        let specs = app.buttons["boardPicker.holdSpecs.beastmaker-1000"]
+        XCTAssertTrue(specs.waitForExistence(timeout: 10))
+        specs.tap()
+        let details = app.navigationBars["Hold specs"]
+        XCTAssertTrue(details.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Beastmaker 1000"].exists)
+        details.buttons.firstMatch.tap()
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+
+        favorite.tap()
+        XCTAssertTrue(app.staticTexts["No matching favorites"].waitForExistence(timeout: 10))
+        app.buttons["boardPicker.clearFilters"].tap()
+        XCTAssertTrue(scope.buttons["All boards"].isSelected)
+        XCTAssertEqual(manufacturer.value as? String, "All manufacturers")
+        let search = app.searchFields.firstMatch
+        search.tap()
+        search.typeText("beastmaker 1000")
+        XCTAssertTrue(board.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "boardPicker.board.")).count, 1)
+        specs.tap()
+        XCTAssertTrue(details.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.keyboards.firstMatch.exists, "Inspecting a search result must dismiss its keyboard.")
+        details.buttons.firstMatch.tap()
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        XCTAssertTrue(board.waitForExistence(timeout: 10))
+        search.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5))
+        board.tap()
+        XCTAssertTrue(app.navigationBars["Train"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Beastmaker 1000"].exists)
+        XCTAssertFalse(app.keyboards.firstMatch.exists, "Selecting a search result must dismiss its keyboard.")
+    }
+}
