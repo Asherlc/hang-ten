@@ -639,12 +639,14 @@ jobs:
               HangTenUITests/WorkoutPaywallUITests/testRestoreFailureUsesRestoreSpecificFeedback
               HangTenUITests/SettingsUITests
               HangTenUITests/PlanFlowUITests
+              HangTenUITests/PendingWorkoutSummaryUITests
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptySessionShowsLogControls
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptyStartsMinimalLogSession
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutResumeAfterCloseAndLastAfterFinish
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutGuidedHangCancelLeavesSetUnchecked
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutStartSheetOpensFromTrain
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout
+              HangTenUITests/FreeWorkoutUITests/testPullUpCompletionCanBeUndoneAfterSkippingRest
     timeout-minutes: 70
 
     steps:
@@ -763,6 +765,7 @@ jobs:
               HangTenUITests/InitialWeightSetupUITests
               HangTenUITests/OneHandedHandChoiceUITests
               HangTenUITests/BeastmakerBoardPickerInteractionUITests
+              HangTenUITests/BoardPickerUITests
     timeout-minutes: 70
 
     steps:
