@@ -41,8 +41,10 @@ route, through-bore, knot, supplied accessory, or safety property.
 Discover model packages at execution time. Every represented or excluded
 decision needs an independent `sourceFact`, retained exact-revision evidence,
 a ruling, and human approval. Current validated evidence outranks superseded
-assumptions; in particular, `yy.baguette-evo` intentionally retains its
-source-backed `twoBranchCord` alongside orientation metadata.
+assumptions; in particular, native `yy.baguette-evo` retains source-backed
+`cadRoutedCord` alongside orientation metadata. Its descriptor-bound
+`suspension.json` supplies the current suspension, authored with
+`ropeSolver.method: "nativeRoutes"`.
 
 For a CAD board (a package with `<slug>.FCStd`), preserve the evidenced
 connection graph and use the native solver in

@@ -115,12 +115,11 @@ safe for a particular load.
 
 Current validated `sourceFact`, retained evidence, and audit outcome are the
 decision authority. Older design documents are historical context, not a
-reason to reverse a later source-backed ruling. The current Baguette Evo record
-is the important regression example: `yy.baguette-evo` deliberately has
-`documentedSuspension`, a represented `twoBranchCord`, and retained
-exact-revision manufacturer evidence. Its model media may also retain
-orientation metadata; those fields are not mutually exclusive in the current
-schema. Do not remove its suspension because an older orientation design said
+reason to reverse a later source-backed ruling. Native `yy.baguette-evo` uses
+source-backed `cadRoutedCord` from its descriptor-bound `suspension.json`,
+authored with `ropeSolver.method: "nativeRoutes"`, alongside orientation
+metadata. Preserve that current contract; do not remove its suspension or
+restore a historical topology because an older orientation design said
 otherwise.
 
 ## Select the narrowest truthful topology
