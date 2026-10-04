@@ -57,10 +57,14 @@ final class PlanFlowPresentationTests: XCTestCase {
     }
 
     func testCombinedRoundAndRepCountersCanGroupNestedSequences() throws {
-        let steps = (1...3).flatMap { round in
-            (1...2).map { rep in
-                step(number: (round - 1) * 3 + rep, title: "Repeaters · round \(round), rep \(rep)")
-            } + [step(number: round * 3, phase: .rest)]
+        var steps: [WorkoutStep] = []
+        for round in 1...3 {
+            for rep in 1...2 {
+                let number = (round - 1) * 3 + rep
+                let title = "Repeaters · round \(round), rep \(rep)"
+                steps.append(step(number: number, title: title))
+            }
+            steps.append(step(number: round * 3, phase: .rest))
         }
 
         let group = try XCTUnwrap(PlanFlowPresentation.groups(for: steps).first)
