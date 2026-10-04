@@ -6,7 +6,9 @@ def solver_source(s):
     var stationaryResidualExperiment=false
     private var stationaryResidualAccepted=false
     private var stationaryContextTime:Double?
-    private var stationaryContextEligible=false""")
+    private var stationaryContextEligible=false
+    private var stationaryRetryDepth=0""")
+ s=once(s,'        var trial=self\n        do {','        var trial=self\n        trial.stationaryRetryDepth=depth\n        do {')
  s=once(s,'        let old=state',
  """        let old=state
         let oldEvaluation=cachedEvaluation
@@ -18,7 +20,7 @@ def solver_source(s):
         // experimental initial stopping check at the prior accepted pose.
         let oldSpeed=max(abs(old.boardVerticalVelocity),old.ropes.flatMap{$0.velocities}.map{simd_length($0)}.max() ?? 0)
         if stationaryResidualExperiment && convergenceExperiment && preconditionedResidualExperiment,
-           dt==lastStepDuration,stationaryContextTime==time,stationaryContextEligible,
+           stationaryRetryDepth==0,dt==lastStepDuration,stationaryContextTime==time,stationaryContextEligible,
            (lastCorrectionFullStep || previousStationary),oldSpeed<0.001,
            state.orientation.vector==old.orientation.vector,
            abs(simd_dot(old.orientation.vector,targetOrientation.vector))>1-1e-12 {
@@ -31,7 +33,7 @@ def solver_source(s):
                 reviewConverged=true
                 #endif
                 StationaryResidualTrace.accepted += 1
-                StationaryResidualTrace.estimates.append(estimate)
+                if SolverCollection.collect {StationaryResidualTrace.estimates.append(estimate)}
             } else {self=normalPath;StationaryResidualTrace.rejected += 1}
         }
         for _ in 0..<(stationaryAccepted ? 0:80) {""")

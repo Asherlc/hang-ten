@@ -5,20 +5,20 @@ sys.dont_write_bytecode=True
 sys.path.insert(0,str(pathlib.Path(__file__).resolve().parent))
 from run_native_contact_screen import OwnedCommands,REPO
 from run_live_speed_screen import NAMES
-ap=argparse.ArgumentParser();ap.add_argument('mode',choices=['stage','record']);ap.add_argument('--label',required=True);a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('mode',choices=['stage','record']);ap.add_argument('--label',required=True);ap.add_argument('--stationary',action='store_true');a=ap.parse_args()
 assert REPO.name=='strong-owl-live-physics' and all(c in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in a.label)
 root=REPO/'.context'/f'{REPO.name}-preconditioned-ios-{a.label}';workspace=root/REPO.name;logs=workspace/'.context'
 def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 if a.mode=='stage':
     root.mkdir();workspace.mkdir();logs.mkdir()
-    native=REPO/'.context/strong-owl-live-physics-armijo-b4c2027fc-preconditioned-stop-540/native'
+    native=REPO/('.context/strong-owl-live-physics-stationary-residual-ab04d57-retry-guard-540' if a.stationary else '.context/strong-owl-live-physics-armijo-b4c2027fc-preconditioned-stop-540/native')
     report=json.loads((native/'result.json').read_text())
     assert report['accuracyPass'] and report['measuredSteps']==540
-    audit=json.loads((REPO/'docs/source-audits/2026-10-03-live-preconditioned-stopping-screen.json').read_text())
+    audit=json.loads((REPO/('docs/source-audits/2026-10-03-live-stationary-residual-screen.json' if a.stationary else 'docs/source-audits/2026-10-03-live-preconditioned-stopping-screen.json')).read_text())
     assert audit['evidenceSHA256'][str((native/'result.json').relative_to(REPO))]==digest(native/'result.json')
     hashes=json.loads((native/'provenance.json').read_text())['hashes']
     for p in (native/'sources').glob('*.swift'):assert hashes[str(p.relative_to(REPO))]==digest(p)
-    (root/'stage-ownership.json').write_text(json.dumps({'owner':REPO.name,'parentWorkspace':str(REPO),'stagedWorkspace':str(workspace),'resourcesStarted':False},indent=2))
+    (root/'stage-ownership.json').write_text(json.dumps({'owner':REPO.name,'parentWorkspace':str(REPO),'stagedWorkspace':str(workspace),'resourcesStarted':False,'stationaryResidual':a.stationary},indent=2))
     shutil.copytree(REPO/'HangTen',workspace/'HangTen');shutil.copytree(REPO/'HangTen.xcodeproj',workspace/'HangTen.xcodeproj')
     project=workspace/'HangTen.xcodeproj/project.pbxproj';text=project.read_text();assert text.count('path = HangTen;')==1
     # Only the app group points to copied experimental source. Build scripts,
@@ -31,7 +31,7 @@ if a.mode=='stage':
         for p in helpers:f.write('\n'+p.read_text()+'\n')
     controller=workspace/'HangTen/Models/LiveRopeController.swift';text=controller.read_text()
     old='    init(solver: RopeDynamicsSolver) { self.solver = solver }';assert text.count(old)==1
-    controller.write_text(text.replace(old,"""    init(solver: RopeDynamicsSolver) {
+    initialization="""    init(solver: RopeDynamicsSolver) {
         var candidate=solver
         #if DEBUG
         if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PRECONDITIONED_ROPE"] == "1" {
@@ -41,8 +41,27 @@ if a.mode=='stage':
         }
         #endif
         self.solver=candidate
-    }"""))
-    (root/'staged-source.json').write_text(json.dumps({'owner':REPO.name,'accurateNativeResultSHA256':digest(native/'result.json'),'nativeHostRealtimePass':False,'adopted':False,
+    }"""
+    if a.stationary:
+        initialization=initialization.replace('candidate.preconditionedResidualExperiment=true','candidate.preconditionedResidualExperiment=true;candidate.stationaryResidualExperiment=true\n            SolverCollection.collect=false')
+    controller.write_text(text.replace(old,initialization))
+    scene=workspace/'HangTen/Models/BoardModelRealityTypes.swift';text=scene.read_text()
+    start='            if let degrees = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_ROPE_ROTATION_DEGREES"].flatMap(Double.init), degrees.isFinite {\n                setLivePhysicalOrientation(simd_quatd(angle:degrees*Double.pi/180,axis:SIMD3(0,0,1)))'
+    assert text.count(start)==1
+    text=text.replace(start,start+"""
+                if let delay=ProcessInfo.processInfo.environment["HANGTEN_REVIEW_ROPE_START_DELAY_SECONDS"].flatMap(Double.init),delay>0,delay<=5 {
+                    // Capture pre-roll only: no simulation time accrues while paused.
+                    liveControllers.forEach{$0.pause()}
+                    let expectedGeneration=liveGeneration
+                    DispatchQueue.main.asyncAfter(deadline:.now()+delay) { [weak self] in
+                        guard let self,self.liveGeneration==expectedGeneration,self.liveActivity,self.activePositionID != nil,self.liveFailure==nil else{return}
+                        self.liveControllers.forEach{$0.resume()}
+                        LiveRopeReviewTrace.log("capture pre-roll finished generation=\\(expectedGeneration)")
+                    }
+                }
+""")
+    scene.write_text(text)
+    (root/'staged-source.json').write_text(json.dumps({'owner':REPO.name,'accurateNativeResultSHA256':digest(native/'result.json'),'nativeHostRealtimePass':False,'stationaryResidual':a.stationary,'diagnosticStorageEnabled':not a.stationary,'capturePreRollSeconds':1.5,'adopted':False,
         'hashes':{str(p.relative_to(workspace)):digest(p) for p in [project,*list((workspace/'HangTen/Models').glob('*.swift'))]}},indent=2))
     print('STAGED',workspace)
     raise SystemExit(0)
@@ -82,7 +101,7 @@ try:
     # Retained SCRIPT is read as evidence/template, never its historical UUID,
     # binary or ownership manifest. This fresh recorder binds only the new UUID.
     source=(REPO/'.context/strong-owl-live-physics-ios-schedule-debt-lifecycle-fix/candidate-capture/run.py').read_text()
-    source=source.replace("'HANGTEN_REVIEW_PHYSICAL_CONVERGENCE':'1'","'HANGTEN_REVIEW_PHYSICAL_CONVERGENCE':'1','HANGTEN_REVIEW_PRECONDITIONED_ROPE':'1'")
+    source=source.replace("'HANGTEN_REVIEW_PHYSICAL_CONVERGENCE':'1'","'HANGTEN_REVIEW_PHYSICAL_CONVERGENCE':'1','HANGTEN_REVIEW_PRECONDITIONED_ROPE':'1','HANGTEN_REVIEW_ROPE_START_DELAY_SECONDS':'1.5'")
     source=source.replace('range(8)','range(12)')
     source=source.replace("c.run('launch',", "assert c.run('launch',").replace("root/'launch.log',boardenv)", "root/'launch.log',boardenv)==0")
     source=source.replace("c.run('frame-'+str(i),", "assert c.run('frame-'+str(i),").replace("root/('frame-'+str(i)+'.log'),env)", "root/('frame-'+str(i)+'.log'),env)==0")

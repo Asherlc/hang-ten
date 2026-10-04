@@ -44,7 +44,9 @@
     "Internal stationary status/context stamp not persisted; restoredsolverineligible",
     "Changed target/dt, failedsource/compression/inactivechecks, or nonquietoldstate fallback unchanged",
     "540host includes192frames theapp sleeps through; no sleeping saving claim",
-    "Moving p95 fails4ms gate; simulator/video stillrequired and no productadoption"
+    "Moving p95 fails4ms gate; simulator/video stillrequired and no productadoption",
+    "Explicit retry-depth zero guard now excludes both half-steps; newfull540 allnumericalrecords/finalpersistedcheckpoint identical",
+    "Native stationary diagnostic storage guarded by SolverCollection.collect; acceptedglobalcounter counts prechecks, committedperstepflag counts actualacceptedtransactions"
   ],
   "evidenceSHA256": {
     ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-140/result.json": "8761e16f26bf019dcdcfd4960e8e0836c9ab6921cea6d54037f5ac544e087968",
@@ -61,6 +63,29 @@
     ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-540/provenance.json": "1b7406b5cf466df059287b45268673620c1d79642b2b75d4a06ffcc464b91c4b",
     ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-540/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-540/run.log": "f10f26f16ed06a46b7ba7b716885cf7d0e2e36469fec87254f3d9305d8f1bc14",
-    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-540/resources.jsonl": "398e5218548edc8686e72f79f591b01562b8c8ef5b4cb27150ab7d612c720444"
+    ".context/strong-owl-live-physics-stationary-residual-e540f8ff4-540/resources.jsonl": "398e5218548edc8686e72f79f591b01562b8c8ef5b4cb27150ab7d612c720444",
+    ".context/strong-owl-live-physics-stationary-residual-ab04d57-retry-guard-540/result.json": "4b0a7a535d56e29b4aa7aeea5140aab3b3b164eb51d78fe96f46eed2d39a65e8",
+    ".context/strong-owl-live-physics-stationary-residual-ab04d57-retry-guard-540/provenance.json": "46054d0d9013c4e6c6859e73c6f92c5efc9331bd28a2e996b028818a2954dd62",
+    ".context/strong-owl-live-physics-stationary-residual-ab04d57-retry-guard-540/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-stationary-residual-ab04d57-retry-guard-540/run.log": "c7549fddbd9861e91f86b53be2bd0e5a0a50401cd8f27be2dc1836f0b5d111cb",
+    ".context/strong-owl-live-physics-stationary-residual-ab04d57-retry-guard-540/resources.jsonl": "1f60db84e9caca92fdde6361a40254445b7b343c9edbc4e2f2b8f4391f9a73e1",
+    ".context/strong-owl-live-physics-stationary-residual-ab04d57-retry-guard-540/final-candidate.json": "9b83a0d7e93143112f1f625d3d994534811d4f330feef511abd1fdebd5a47094"
+  },
+  "retryGuardValidation": {
+    "full540NumericalIdentity": true,
+    "completeFinalCandidateBytesIdentical": true,
+    "engineSeconds": 1.3089357088610996,
+    "p95Seconds": 0.006396166660124436,
+    "hostRealtimePass": false,
+    "freshGroupsAbsent": [
+      {
+        "group": 46740,
+        "absent": true
+      },
+      {
+        "group": 47010,
+        "absent": true
+      }
+    ]
   }
 }
