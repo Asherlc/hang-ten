@@ -28,20 +28,23 @@ For a cord entering two connected mouths, read
   includes the suspension renderer and current bundled metadata.
 
 For a board with one flat `Hangboards/<slug>.FCStd`, there is no committed
-`board.json`: it is generated from the FCStd's `HangTenBoardManifest` and
-validated generated `assets/suspension.json` at build time (read it with
-`rtk python3 Tools/HangboardCAD/board_manifest.py --package <slug>`). Edit the
+`board.json`: it is generated from the FCStd's `HangTenBoardManifest`.
+If the source carries `HangTenSuspensionAuthoring`, generation also validates
+and merges `assets/suspension.json`. A source without that property has no
+suspension artifact to find or require. Read the generated board with
+`rtk python3 Tools/HangboardCAD/board_manifest.py --package <slug>`. Edit the
 document-level `App::PropertyString` `HangTenSuspensionAuthoring` with
 `Tools/HangboardCAD/set_cad_authoring.py`; inspect it with
 `board_manifest.py --package <slug> --dump-authoring suspension`. Optional
 simulation inputs live in `HangTenRopePhysics`. Suspension authoring contains
 only topology, dimensions, solver settings, evidence, pose rotations/cameras,
 and optional `offsetXZ: [x, z]`. Source/model hashes, settled heights, and
-solved routes are generated; never save them into CAD. Package generation
-rejects absent/stale artifacts and mismatches with current authoring inputs.
+solved routes are generated; never save them into CAD. When suspension
+authoring exists, package generation rejects absent/stale artifacts and
+mismatches with current authoring inputs.
 Never create `board.json` or authored JSON sidecars in the package.
 
-USDZ, model/physics descriptors, and `assets/suspension.json` are generated,
+USDZ, model/physics descriptors, and any generated suspension artifact are
 ignored files at the existing `Hangboards/<slug>/assets/` paths.
 Run `rtk proxy bash scripts/build-board-assets.sh` before package validation;
 before an app build use `rtk proxy bash scripts/build-runtime-assets.sh`.
@@ -74,7 +77,9 @@ documented `cadRoutedCord` / `ropeSolver.method: "nativeRoutes"` contract;
 do not invent a connecting channel. Generate every canonical pose against the
 actual native solid through the pinned build's `compile_suspension.py` and
 retained solvers, then reproduce generated artifacts with
-`solve_threaded_rope.py --check` and retain clearance, length, tube and topology checks. Replace
+`solve_threaded_rope.py --package <slug> --solid <owned-collision-solid.json> --check`
+using the [pinned environment and collider export](../../../Tools/HangboardCAD/README.md#focused-cord-reproduction).
+Retain clearance, length, tube and topology checks. Replace
 hand-authored `pairedLeadCord` routes when a board moves to CAD, and extend the
 solver with evidence and tests instead of hand-placing routes.
 

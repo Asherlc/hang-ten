@@ -66,12 +66,11 @@ def test_untagged_body_belongs_only_to_the_document_default_presentation():
     assert compiler().selected_body(doc, {"bodyNodeID": "body"}, "alternate", {}) is alternate
 
 
-def test_connected_cord_mouths_can_bind_to_attachment_nodes():
+def test_attachment_nodes_do_not_count_as_collision_bodies():
     body = feature("Body", node="ring_body")
     mouth = feature("RoofExit", node="roof_exit")
     mouth.NodeRole = "attachment"
-    setup = {"passages": {"left": [{"id": "mouth", "nodeID": "roof_exit"}], "right": []}}
-    assert compiler().selected_body(document(body, mouth), setup, "primary", {}) is body
+    assert compiler().selected_body(document(body, mouth), {}, "primary", {}) is body
 
 
 def test_shell_requires_an_explicit_native_collision_feature():

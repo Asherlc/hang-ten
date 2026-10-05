@@ -155,13 +155,16 @@ def selected_suspension(data, presentation_id=None, equipment_id=None):
     if "entries" in data:
         entries = [entry for entry in data["entries"]
                    if (presentation_id is None or entry["presentationID"] == presentation_id)
-                   and (equipment_id is None or entry.get("equipmentObjectID") == equipment_id)]
+                   and (equipment_id is None or entry.get("equipmentObjectID") == equipment_id
+                        or equipment_id in entry.get("instanceSuspensions", {}))]
         if len(entries) != 1:
             raise ValueError(
                 "select exactly one authored setup with HANGTEN_CHANNEL_PRESENTATION_ID "
                 "and HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID"
             )
-        return entries[0]["suspension"]
+        data = entries[0]
+        if "instanceSuspensions" not in data:
+            return data["suspension"]
     if presentation_id is not None and data.get("presentationID") != presentation_id:
         raise ValueError(f"unknown presentation: {presentation_id}")
     if "instanceSuspensions" in data:

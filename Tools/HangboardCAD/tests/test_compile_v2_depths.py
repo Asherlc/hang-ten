@@ -154,6 +154,8 @@ def test_native_lip_floor_witness_must_be_a_complete_pair():
 
 def test_reviewed_beastmaker_label_correction_preserves_display_geometry():
     source = REPOSITORY / "Hangboards/beastmaker-1000.FCStd"
+    if compile_board.cad_source._is_lfs_pointer(source):
+        pytest.skip("FCStd sources are Git LFS pointers; run `git lfs pull` first")
     declared = {
         "pocket-middle-center": 53.0,
         "pocket-top-outer-left": 15.0,
@@ -183,6 +185,8 @@ def test_reviewed_beastmaker_label_correction_preserves_display_geometry():
 
 def test_display_depth_audit_rejects_changed_source_or_label():
     source = REPOSITORY / "Hangboards/beastmaker-1000.FCStd"
+    if compile_board.cad_source._is_lfs_pointer(source):
+        pytest.skip("FCStd sources are Git LFS pointers; run `git lfs pull` first")
     with pytest.raises(compile_board.BuildError, match="re-audit"):
         compile_board._audited_display_depths("0" * 64, "beastmaker-1000", {"pocket-middle-center": 53})
     with pytest.raises(compile_board.BuildError, match="re-audit"):

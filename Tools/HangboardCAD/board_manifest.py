@@ -176,7 +176,7 @@ def describe_source(path: Path) -> str:
         else:
             try:
                 lines.append(cad_source._encode(cad_source.loads(text), 2))
-            except json.JSONDecodeError:
+            except (json.JSONDecodeError, cad_source.ManifestError):
                 lines.append(f"(invalid JSON) {text}")
     lines.append("")
     lines.append("# archive members (sha256 size name)")

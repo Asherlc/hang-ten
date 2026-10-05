@@ -313,9 +313,10 @@ tests. No solver choice can recover hidden threading from the mesh alone.
    then lowers the board until the loop is taut), so the settled hang depends
    on the loop length, not on that offset. Store canonical rotation, camera,
    and any horizontal displacement as `offsetXZ: [x, z]`; omit the offset when
-   it is zero. Run `scripts/build-board-assets.sh --package <slug>` to export
+   it is zero. Run `rtk proxy bash scripts/build-board-assets.sh --package <slug>` to export
    the final native solid and solve every pose, then reproduce the generated
-   artifact with `solve_threaded_rope.py --check`.
+   artifact with `solve_threaded_rope.py --package <slug> --solid <owned-collision-solid.json> --check`
+   using the [pinned environment and collider export](../Tools/HangboardCAD/README.md#focused-cord-reproduction).
    When a winding is in doubt, compare each mouth's route length and turn for
    both directions; the physical one is normally the short route over the
    nearest edge.
@@ -534,8 +535,17 @@ valid. A radius that fills a mouth cannot also provide clearance: use an audited
 cord display estimate when warranted, and preserve the evidenced native solid.
 
 Embed reviewed authoring changes in the CAD document, run
-`rtk proxy bash scripts/build-board-assets.sh --package <slug>`, then use
-`solve_threaded_rope.py --check --report <owned-path>` for focused reproduction.
+`rtk proxy bash scripts/build-board-assets.sh --package <slug>`, then set up the
+[persistent pinned environment and native collider export](../Tools/HangboardCAD/README.md#focused-cord-reproduction).
+With that setup's `rope_python` and `rope_root`, reproduce the selected board's
+generated artifact with:
+
+```sh
+rtk proxy "$rope_python" Tools/HangboardCAD/solve_threaded_rope.py \
+  --package <slug> --solid "$rope_root/<slug>-solid.json" --check \
+  --report "$rope_root/<slug>-check.json"
+```
+
 The generated cache contains only body-space `wrappedRoutes`. For this cached
 `cadRoutedCord` path, apps transform those points and add the fixed world
 support; they render transient non-pickable tubes without inferring missing

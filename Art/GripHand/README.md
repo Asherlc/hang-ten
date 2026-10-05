@@ -25,7 +25,7 @@ not the exported JSON; `SourceHand.glb` and its license remain retained inputs.
 To deliberately rebuild the editable source from the included upstream asset:
 
 ```sh
-rtk proxy blender --background --factory-startup --python Art/GripHand/build_hand.py
+rtk proxy blender --background --factory-startup --python-exit-code 1 --python Art/GripHand/build_hand.py
 rtk python3 Art/GripHand/validate_export.py
 ```
 

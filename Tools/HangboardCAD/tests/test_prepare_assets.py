@@ -260,7 +260,9 @@ def test_boards_compile_concurrently_in_separate_directories(compiler, tmp_path,
     package, _, build, _ = compiler
     (package.parent / "second.FCStd").write_bytes(b"second source")
     barrier = threading.Barrier(2, timeout=3)
+    destinations = []
     def simultaneous_build(*args):
+        destinations.append(args[1])
         barrier.wait()
         build(*args)
     monkeypatch.setattr(prepare_assets, "_run_build", simultaneous_build)
@@ -271,6 +273,8 @@ def test_boards_compile_concurrently_in_separate_directories(compiler, tmp_path,
                     "commit", "-q", "--allow-empty", "-m", "fixture"], check=True)
     out = tmp_path / "compiled"
     assert prepare_assets.main(["--out", str(out), "--freecad", str(freecad), "--jobs", "2"]) == 0
+    assert len(destinations) == 2
+    assert destinations[0] != destinations[1]
     assert (out / "fixture/assets/primary.usdz").read_bytes() == b"primary.usdz"
     assert (out / "second/assets/primary.usdz").read_bytes() == b"primary.usdz"
 

@@ -600,7 +600,7 @@ def _load_authoring(source: Path, name: str, validator) -> dict | None:
         raise ManifestError(f"{name} exceeds its 1 MiB authoring size limit")
     try:
         return validator(loads(text))
-    except (json.JSONDecodeError, UnicodeError) as error:
+    except (json.JSONDecodeError, UnicodeError, RecursionError) as error:
         raise ManifestError(f"{name} is invalid JSON: {error}") from error
 
 
@@ -836,7 +836,8 @@ def merge_suspension_artifact(board: dict, package_root: Path, source: Path) -> 
     document = {key: value for key, value in artifact.items() if key != "sourceSHA256"}
     if "entries" in document:
         for entry in document["entries"]:
-            board = _merge_suspension_entry(board, package_root, {"schemaVersion": 1, **entry})
+            schema = 2 if "instanceSuspensions" in entry else 1
+            board = _merge_suspension_entry(board, package_root, {"schemaVersion": schema, **entry})
         return board
     return _merge_suspension_entry(board, package_root, document)
 

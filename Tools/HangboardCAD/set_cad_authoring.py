@@ -43,11 +43,11 @@ def main(argv: list[str] | None = None) -> int:
     if not any((arguments.suspension, arguments.remove_suspension,
                 arguments.rope_physics, arguments.remove_rope_physics)):
         parser.error("specify a metadata input or removal")
-    if arguments.package and not re.fullmatch(r"[a-z0-9][a-z0-9-]*", arguments.package):
+    if arguments.package is not None and not re.fullmatch(r"[a-z0-9][a-z0-9-]*", arguments.package):
         parser.error(f"invalid package name: {arguments.package!r}")
     source = (
         board_manifest.package_source(board_manifest.REPOSITORY, arguments.package)
-        if arguments.package else arguments.source
+        if arguments.package is not None else arguments.source
     )
     if arguments.suspension is not None:
         authored_suspension = read_input(arguments.suspension)

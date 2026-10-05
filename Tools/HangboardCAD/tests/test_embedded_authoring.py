@@ -15,6 +15,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import use_hangboard_packages  # noqa: E402,F401
 from hangboard_packages import cad_source  # noqa: E402
+import board_manifest  # noqa: E402
 
 
 def native_source(tmp_path: Path, properties=()) -> Path:
@@ -191,6 +192,37 @@ def test_invalid_native_properties_are_rejected(tmp_path, property_name, loader,
     source = native_source(tmp_path, props)
     with pytest.raises(cad_source.ManifestError):
         getattr(cad_source, loader)(source)
+
+
+@pytest.mark.parametrize("property_name,loader", [
+    ("HangTenSuspensionAuthoring", "load_suspension_authoring"),
+    ("HangTenRopePhysics", "load_rope_physics_authoring"),
+])
+def test_textconv_shows_duplicate_key_authoring_without_weakening_validation(
+    tmp_path, property_name, loader,
+):
+    text = '{"value":1,"value":2}'
+    source = native_source(tmp_path, [(property_name, "App::PropertyString", text)])
+
+    rendering = board_manifest.describe_source(source)
+    assert f"# {property_name}\n(invalid JSON) {text}\n" in rendering
+    assert "Body.Shape.brp" in rendering
+    with pytest.raises(cad_source.ManifestError, match="duplicate JSON key"):
+        getattr(cad_source, loader)(source)
+
+
+@pytest.mark.parametrize("property_name,loader", [
+    ("HangTenSuspensionAuthoring", "load_suspension_authoring"),
+    ("HangTenRopePhysics", "load_rope_physics_authoring"),
+])
+def test_size_valid_deep_authoring_is_reported_as_a_source_error(tmp_path, property_name, loader):
+    depth = sys.getrecursionlimit() + 100
+    text = '{"nested":' + "[" * depth + "0" + "]" * depth + "}"
+    source = native_source(tmp_path, [(property_name, "App::PropertyString", text)])
+
+    with pytest.raises(cad_source.ManifestError, match=property_name) as raised:
+        getattr(cad_source, loader)(source)
+    assert isinstance(raised.value.__cause__, RecursionError)
 
 
 @pytest.mark.parametrize("generated", ["modelSHA256", "sourceSHA256", "translation", "cordContactPoints", "wrappedRoutes"])

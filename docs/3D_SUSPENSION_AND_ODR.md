@@ -147,8 +147,10 @@ independent visible leads, exterior wraps and unknown interior joins use
 `cadRoutedCord` with authoring `ropeSolver.method: "nativeRoutes"`; do not
 invent a hidden connection. Generate every canonical pose against the actual
 native solid through the pinned build's `compile_suspension.py` and native
-solvers, reproduce the generated artifact with `solve_threaded_rope.py --check`,
-and retain native-solid clearance, length, tube and topology checks. The table
+solvers. For focused reproduction, use the
+[pinned environment and collider export](../Tools/HangboardCAD/README.md#focused-cord-reproduction),
+then run `solve_threaded_rope.py --package <slug> --solid <owned-collision-solid.json> --check`.
+Retain native-solid clearance, length, tube and topology checks. The table
 below governs older non-CAD packages; migrate their cords to the native method
 matching the evidence when they move to CAD. Do not retain hand-authored routes
 or `pairedLeadCord` on a CAD board; extend the solver with evidence and tests

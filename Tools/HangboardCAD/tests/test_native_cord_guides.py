@@ -260,6 +260,27 @@ def test_no_feasible_guided_candidate_still_fails_within_its_budget(monkeypatch)
     assert len(starts)==4
 
 
+@pytest.mark.parametrize("use_plane", [False, True])
+def test_initially_infeasible_seed_can_recover_from_a_distinct_rejected_iterate(monkeypatch,use_plane):
+    from types import SimpleNamespace
+    module,seed,collision,accepted,starts,candidates,plane=_guided_optimizer_fixture(monkeypatch,feasible_seed=False)
+    collision[1,1]=-.001  # Within the optimizer's 25 mm movement bound.
+    def optimize(objective,x,**kwargs):
+        starts.append(x.copy())
+        # Deterministic solve: repeating the original start repeats its collision;
+        # the rejected iterate is a useful recovery start, not a certified route.
+        candidate=accepted if np.array_equal(x,collision[1:-1].ravel()*1000) else collision
+        return SimpleNamespace(x=candidate[1:-1].ravel()*1000,success=False,
+                               message="Inequality constraints incompatible",nit=22)
+    monkeypatch.setattr(module,"minimize",optimize)
+    result,proof=module._optimize_lead(None,seed,.0015,[1,0,0],plane=plane if use_plane else None)
+    np.testing.assert_array_equal(result,accepted)
+    assert len(starts)==2
+    np.testing.assert_array_equal(starts[1],collision[1:-1].ravel()*1000)
+    assert proof["continuousClearanceLowerBound"]==pytest.approx(.002)
+    assert proof["reactions"]["status"]=="pass"
+
+
 def test_unsuccessful_optimizer_can_return_an_independently_certified_route(monkeypatch):
     module,seed,collision,accepted,starts,candidates,plane=_guided_optimizer_fixture(monkeypatch,feasible_seed=False)
     candidates.append(accepted)

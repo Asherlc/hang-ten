@@ -29,7 +29,7 @@ def write_native_authoring(package_root: Path, board: dict, authoring: dict) -> 
     text = cad_source.render_manifest(manifest)
     document = f'''<Document>
   <Properties Count="2">
-    <Property name="HangTenBoardID" type="App::PropertyString"><String value="fixture.board"/></Property>
+    <Property name="HangTenBoardID" type="App::PropertyString"><String value={quoteattr(board.get("id", "fixture.board"))}/></Property>
     <Property name="HangTenBoardManifest" type="App::PropertyString"><String value={quoteattr(text)}/></Property>
   </Properties>
   <Objects Count="1"><Object type="Part::Feature" name="Solid"/></Objects>

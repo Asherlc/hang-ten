@@ -361,6 +361,11 @@ def _optimize_lead(mesh,seed,radius,mouth_axis,plane=None):
                 plane=None
             if feasible_seed is not None:
                 seed=feasible_seed.copy()
+            else:
+                # With no certified path to preserve, retain optimizer progress
+                # as a recovery start instead of repeating the same failed solve.
+                # This iterate remains uncertified and cannot bypass any gate.
+                seed=candidate.copy()
             _LOG.info("Native guided phase %d collision rejected: %s",phase,error)
             continue
         if plane is not None:

@@ -99,6 +99,32 @@ def test_editor_removes_only_the_selected_authoring_property(tmp_path, monkeypat
     assert writes == [(source, {"suspension": None, "rope_physics": retained_physics})]
 
 
+def test_editor_rejects_an_empty_package_name(capsys):
+    with pytest.raises(SystemExit) as raised:
+        set_cad_authoring.main(["--package", "", "--remove-suspension"])
+    assert raised.value.code == 2
+    assert "invalid package name" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("board_id, expected_id", [
+    ("review.board", "review.board"),
+    ('board&<>"\'', 'board&<>"\''),
+    (None, "fixture.board"),
+])
+def test_native_authoring_fixture_preserves_board_identity(tmp_path, board_id, expected_id):
+    board = {"name": "Fixture board"}
+    if board_id is not None:
+        board["id"] = board_id
+    authoring = {"schemaVersion": 1, "presentationID": "primary", "suspension": {
+        "type": "twoBranchCord", "canonicalPoses": {"front": canonical_pose()},
+    }}
+    source = write_native_authoring(tmp_path / "fixture", board, authoring)
+
+    assert board_manifest.cad_source.load_board(source) == {
+        "schemaVersion": 3, "id": expected_id, "name": "Fixture board",
+    }
+
+
 def test_dump_and_editor_round_trip_embedded_authoring_without_a_generated_package(
     tmp_path, capsys,
 ):
@@ -141,6 +167,60 @@ def test_channel_measurement_selects_authored_multi_presentation_instances(monke
     assert measure_channel_spines.selected_suspension(data, "single") == {"label": "single"}
     with pytest.raises(ValueError, match="select exactly one"):
         measure_channel_spines.selected_suspension(data)
+
+
+@pytest.fixture
+def reusable_instance_authoring():
+    def setup(offset):
+        return {"type": "twoBranchCord", "canonicalPoses": {
+            "front": {**canonical_pose(), "offsetXZ": offset},
+        }}
+
+    return board_manifest.cad_source.validate_suspension_authoring({
+        "schemaVersion": 2, "entries": [
+            {"presentationID": "pair", "instanceSuspensions": {
+                "left": setup([-.02, 0]), "right": setup([.02, 0]),
+            }},
+            {"presentationID": "back", "instanceSuspensions": {
+                "left": setup([0, -.01]),
+            }},
+            {"presentationID": "single", "suspension": setup([0, 0])},
+        ],
+    })
+
+
+@pytest.mark.parametrize("presentation_id,equipment_id,expected_offset", [
+    ("pair", "left", [-.02, 0]),
+    ("pair", "right", [.02, 0]),
+    (None, "right", [.02, 0]),
+    ("back", "left", [0, -.01]),
+])
+def test_channel_measurement_selects_instance_maps_inside_collections(
+    monkeypatch, reusable_instance_authoring, presentation_id, equipment_id, expected_offset,
+):
+    monkeypatch.setitem(sys.modules, "FreeCAD", SimpleNamespace())
+    import measure_channel_spines
+
+    setup = measure_channel_spines.selected_suspension(
+        reusable_instance_authoring, presentation_id, equipment_id,
+    )
+    assert setup["canonicalPoses"]["front"]["offsetXZ"] == expected_offset
+
+
+@pytest.mark.parametrize("presentation_id,equipment_id", [
+    (None, None), ("pair", None), ("back", None), (None, "left"),
+    ("pair", "missing"), ("missing", "right"),
+])
+def test_channel_measurement_rejects_missing_or_ambiguous_instance_map_selections(
+    monkeypatch, reusable_instance_authoring, presentation_id, equipment_id,
+):
+    monkeypatch.setitem(sys.modules, "FreeCAD", SimpleNamespace())
+    import measure_channel_spines
+
+    with pytest.raises(ValueError, match="HANGTEN_CHANNEL_"):
+        measure_channel_spines.selected_suspension(
+            reusable_instance_authoring, presentation_id, equipment_id,
+        )
 
 
 @pytest.mark.parametrize("target", ["xcode", "android"])

@@ -311,28 +311,53 @@ to export both spine centerlines in model coordinates. The output paths run
 from the first to second declared mouth, including both endpoints; they are
 derived from CAD and must not be copied into the USDZ.
 
+### Focused cord reproduction
+
 For a bar-shaped board with two connected cord channels, the shared producer
 solves visible settled routes from the native wood solid and writes only the
 ignored `assets/suspension.json`. Authored inputs remain the mouths, connected
 channel lengths, winding, overhead anchor, loop length, pose rotations/cameras,
 and horizontal offsets. The build provisions pinned
-`rope_solver_requirements.txt` dependencies in workspace scratch. Generate the
-package with the build script; for a focused native-solid reproduction check,
-export the collider to workspace scratch and invoke the retained solver:
+`rope_solver_requirements.txt` dependencies in temporary scratch and removes
+that environment on exit. For focused reproduction, create a retained
+workspace-owned virtualenv explicitly. Run these commands from the repository
+root with Python 3.11 or 3.12 and an installed FreeCAD 1.1.3 executable;
+set `HANGTEN_FREECAD_CMD` if FreeCAD is installed elsewhere:
 
 ```sh
+rope_owner="${PASEO_WORKTREE_PATH:-$PWD}"
+rope_owner="${rope_owner##*/}"
+rope_root=".context/$rope_owner/cord-reproduction"
+rope_python="$rope_root/rope-venv/bin/python"
+freecad_command="${HANGTEN_FREECAD_CMD:-/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd}"
+
+rtk proxy python3 -m venv "$rope_root/rope-venv"
+rtk proxy "$rope_python" -m pip install --disable-pip-version-check --only-binary=:all: \
+  -r Tools/HangboardCAD/rope_solver_requirements.txt
+
 rtk proxy bash scripts/build-board-assets.sh --package lattice-mini-bar
-rtk proxy env HANGTEN_ROPE_PACKAGE=lattice-mini-bar \
-HANGTEN_ROPE_SOLID_FEATURE=RightCordChannel \
-HANGTEN_ROPE_SOLID_OUTPUT=.context/<workspace-owner>/mini-bar-solid.json \
-  /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \
+rtk proxy env TMPDIR="$rope_root" HANGTEN_ROPE_PACKAGE=lattice-mini-bar \
+  HANGTEN_ROPE_SOLID_FEATURE=RightCordChannel \
+  HANGTEN_ROPE_SOLID_OUTPUT="$rope_root/lattice-mini-bar-solid.json" \
+  python3 Tools/HangboardCAD/run_freecad.py --freecad "$freecad_command" \
   Tools/HangboardCAD/export_rope_collision_solid.py
 
-rtk .context/<workspace-owner>/rope-venv/bin/python \
+rtk proxy "$rope_python" \
   Tools/HangboardCAD/solve_threaded_rope.py \
   --package lattice-mini-bar \
-  --solid .context/<workspace-owner>/mini-bar-solid.json --check
+  --solid "$rope_root/lattice-mini-bar-solid.json" --check \
+  --report "$rope_root/lattice-mini-bar-check.json"
 ```
+
+For another board, export its selected final native solid, including any
+explicit `ropeSolver.collisionFeature`, and pass that board's slug and collider
+path. Groove-guided routes also require the retained native groove and bore
+feature selections in `HANGTEN_ROPE_GROOVE_FEATURES` and
+`HANGTEN_ROPE_BORE_FEATURES` during export. Schema-2 entries require
+`--presentation` and, for a reusable-unit entry, `--equipment-object`.
+The host virtualenv example supports `twoBranchCord` and `nativeRoutes`;
+`threadedLoopCord` requires FreeCAD's interpreter for exact native-solid checks,
+as used by the pinned producer.
 
 The solver finds a shortest route in each declared winding direction on a
 CAD section offset by the rope radius, moves the board under the fixed anchor

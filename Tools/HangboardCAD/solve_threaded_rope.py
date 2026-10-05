@@ -480,7 +480,8 @@ def main():
     document = json.loads(artifact.read_text())
     if document.get("schemaVersion") == 2 and "entries" in document:
         selected = [entry for entry in document["entries"] if entry["presentationID"] == arguments.presentation
-                    and entry.get("equipmentObjectID") == arguments.equipment_object]
+                    and (entry.get("equipmentObjectID") == arguments.equipment_object
+                         or arguments.equipment_object in entry.get("instanceSuspensions", {}))]
         if len(selected) != 1:
             raise ValueError("select exactly one generated entry with --presentation and optional --equipment-object")
         data = selected[0]
