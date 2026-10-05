@@ -27,6 +27,26 @@ directly. `HANGTEN_REVIEW_HEALTH=1` and `HANGTEN_REVIEW_MOTHERBOARD=1` also
 open Settings from Train. Release builds ignore all review-only tab and
 navigation routing.
 
+Plans uses native focus browsing, All workouts, and My routines. Focus is
+optional source-audited editorial metadata; unsupported categories and empty
+compatible focus destinations are hidden. See
+[the chooser classification audit](WORKOUT_CHOOSER_CLASSIFICATION_AUDIT_2026-10-05.md).
+Search preserves catalog order and matches names, descriptions, and displayed
+labels. Results expose actual exercise content separately from training goals.
+Duration is marked approximate for variable or untimed routines.
+
+The filter sheet stages duration, exercise, and difficulty choices until Show
+workouts is tapped; Cancel discards the draft. Filter groups combine with AND,
+and exercises/difficulties allow any selected value within their group. Duration
+ranges are under 10 minutes, 10 to under 20 minutes, and 20 minutes or more.
+Removing applied filters or clearing them leaves the current focus unchanged.
+At accessibility text sizes, board names and workout titles use the full row
+width, with the favorite action below the workout. The filter action uses a
+shorter label and exposes its matching count to accessibility. Empty My routines
+offers routine creation; a search or filter with no matches retains refinement
+guidance. Difficulty choices follow Entry, Beginner, Intermediate, and Advanced,
+followed by other difficulty labels in alphabetical order.
+
 ## Supported Bluetooth scales
 
 An optional supported scale is a live force input, not a workout timer. On a

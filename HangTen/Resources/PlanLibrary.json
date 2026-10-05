@@ -19478,6 +19478,7 @@
       "id" : "metolius.generic-ten-minute.entry",
       "metadata" : {
         "category" : "manufacturer",
+        "focus" : "mixed",
         "level" : "Entry",
         "notes" : [
           "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
@@ -19511,6 +19512,7 @@
       "id" : "metolius.generic-ten-minute.intermediate",
       "metadata" : {
         "category" : "manufacturer",
+        "focus" : "mixed",
         "level" : "Intermediate",
         "notes" : [
           "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
@@ -19544,6 +19546,7 @@
       "id" : "metolius.generic-ten-minute.advanced",
       "metadata" : {
         "category" : "manufacturer",
+        "focus" : "mixed",
         "level" : "Advanced",
         "notes" : [
           "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
@@ -19577,6 +19580,7 @@
       "id" : "metolius.contact.entry",
       "metadata" : {
         "category" : "manufacturer",
+        "focus" : "mixed",
         "level" : "Entry",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -19610,6 +19614,7 @@
       "id" : "metolius.contact.intermediate",
       "metadata" : {
         "category" : "manufacturer",
+        "focus" : "mixed",
         "level" : "Intermediate",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -19643,6 +19648,7 @@
       "id" : "metolius.contact.advanced",
       "metadata" : {
         "category" : "manufacturer",
+        "focus" : "mixed",
         "level" : "Advanced",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -19676,6 +19682,7 @@
       "id" : "metolius.simulator-3d.entry",
       "metadata" : {
         "category" : "manufacturer",
+        "focus" : "mixed",
         "level" : "Entry",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -19709,6 +19716,7 @@
       "id" : "metolius.simulator-3d.intermediate",
       "metadata" : {
         "category" : "manufacturer",
+        "focus" : "mixed",
         "level" : "Intermediate",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -19742,6 +19750,7 @@
       "id" : "metolius.simulator-3d.advanced",
       "metadata" : {
         "category" : "manufacturer",
+        "focus" : "mixed",
         "level" : "Advanced",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -19775,6 +19784,7 @@
       "id" : "metolius.rock-rings.ten-minute",
       "metadata" : {
         "category" : "manufacturer",
+        "focus" : "mixed",
         "level" : "All levels",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -19834,6 +19844,7 @@
       "id" : "research.max-hangs",
       "metadata" : {
         "category" : "research",
+        "focus" : "fingerStrength",
         "level" : "Advanced",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19864,6 +19875,7 @@
       "id" : "research.force-feedback-f80",
       "metadata" : {
         "category" : "research",
+        "focus" : "fingerEndurance",
         "level" : "Advanced",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19892,6 +19904,7 @@
       "id" : "research.force-feedback-f100",
       "metadata" : {
         "category" : "research",
+        "focus" : "fingerStrength",
         "level" : "Expert",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19923,6 +19936,7 @@
       "id" : "research.eva-int-hangs",
       "metadata" : {
         "category" : "research",
+        "focus" : "fingerEndurance",
         "level" : "Intermediate+",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19950,6 +19964,7 @@
       "id" : "research.seven-three-repeaters",
       "metadata" : {
         "category" : "research",
+        "focus" : "fingerStrength",
         "level" : "Intermediate",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19980,6 +19995,7 @@
       "id" : "research.megos-one-arm-7-3",
       "metadata" : {
         "category" : "research",
+        "focus" : "fingerEndurance",
         "level" : "Advanced",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -20034,6 +20050,7 @@
       "id" : "coach.horst-seven-fifty-three",
       "metadata" : {
         "category" : "coach",
+        "focus" : "fingerStrength",
         "level" : "Advanced",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -20151,6 +20168,7 @@
       "id" : "hoopers-beta.introductory-home-hangboard",
       "metadata" : {
         "category" : "coach",
+        "focus" : "mixed",
         "level" : "Intermediate",
         "notes" : [
           "Exact round order, counts, hold durations, rest intervals, and optional Round 5 guidance are retained.",
@@ -20215,6 +20233,7 @@
       "id" : "method.intermediate-hangboarding.emom",
       "metadata" : {
         "category" : "coach",
+        "focus" : "mixed",
         "level" : "Intermediate",
         "notes" : [
           "Both Method Climbing workouts are included; source ranges and exact EMOM order are retained.",
