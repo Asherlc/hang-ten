@@ -459,8 +459,37 @@ final class DualMaxHangsHighlightUITests: XCTestCase {
 
         let start = app.buttons["plan.startRoutine"]
         XCTAssertTrue(start.waitForExistence(timeout: 10))
-        if !start.isHittable { app.swipeDown() }
-        start.tap()
+        // Scrolling to the preview can leave Start behind the navigation bar
+        // even when XCTest reports it as hittable. Keep the whole button
+        // between the navigation and tab bars before synthesizing the tap.
+        let navigationBar = app.navigationBars["Plan"]
+        let tabBar = app.tabBars.firstMatch
+        func contentBottom() -> CGFloat {
+            tabBar.exists ? min(tabBar.frame.minY, app.frame.maxY) : app.frame.maxY
+        }
+        func isStartVisible() -> Bool {
+            let frame = start.frame
+            return start.isHittable
+                && frame.minY >= navigationBar.frame.maxY
+                && frame.maxY <= contentBottom()
+        }
+        var remainingScrollAttempts = 8
+        while !isStartVisible(), remainingScrollAttempts > 0 {
+            let viewport = app.frame
+            let contentTop = navigationBar.frame.maxY
+            let origin = app.coordinate(withNormalizedOffset: .zero).withOffset(
+                CGVector(dx: viewport.width / 2,
+                         dy: (contentTop + contentBottom()) / 2 - viewport.minY)
+            )
+            let scrollDelta: CGFloat = start.frame.minY < contentTop ? 100 : -100
+            origin.press(forDuration: 0.05, thenDragTo: origin.withOffset(CGVector(dx: 0, dy: scrollDelta)))
+            remainingScrollAttempts -= 1
+        }
+        guard isStartVisible() else {
+            XCTFail("Start must be visible between the navigation and tab bars; frame=\(start.frame)")
+            return
+        }
+        tapVisibleControl(start, in: app)
         let pause = app.buttons["Pause"]
         XCTAssertTrue(pause.waitForExistence(timeout: 20))
         pause.tap()
