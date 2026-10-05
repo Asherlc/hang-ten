@@ -66,6 +66,7 @@ jobs:
       needs.changes.outputs.ios != 'true' &&
       needs.changes.outputs.workflow != 'true' &&
       needs.changes.outputs.shared_board_content != 'true'
+    # Validates resolved Debug/Release build settings with xcodebuild.
     runs-on: macos-26
     timeout-minutes: 15
 
@@ -217,7 +218,8 @@ jobs:
       github.event_name != 'pull_request' ||
       needs.changes.outputs.cad == 'true' ||
       needs.changes.outputs.workflow == 'true'
-    runs-on: macos-26
+    # Native CAD uses FreeCAD/OpenUSD, with no Apple SDK dependency.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Check out source
@@ -236,28 +238,34 @@ jobs:
           set -euo pipefail
           owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
           cad_root="$PWD/.context/$owner-transgression-native-ci"
-          mkdir -p "$cad_root/mount"
-          cleanup_mount() {
-            if mount | grep -Fq " on $cad_root/mount "; then
-              hdiutil detach "$cad_root/mount"
+          mkdir -p "$cad_root"
+          echo "$cad_root" > "$cad_root/owned-toolchain"
+          install_complete=false
+          cleanup_incomplete_install() {
+            if [[ "$install_complete" != true ]]; then
+              rm -rf "$cad_root"
+              test ! -e "$cad_root"
             fi
-            if mount | grep -Fq " on $cad_root/mount "; then exit 1; fi
           }
-          trap cleanup_mount EXIT
-          case "$(uname -m)" in
-            arm64) digest=f5c0ece7cd7c932466d6effadc0fc6e179b0538a9d9a6a77a6769eae3af2667c ;;
-            x86_64) digest=8434bd6ad32f597605d184e5b996f496e9cbc7e6d8ffb6db4dbd6e2ce6d1612b ;;
-            *) exit 1 ;;
-          esac
+          trap cleanup_incomplete_install EXIT
+          # Extract the official Python 3.11 AppImage: no FUSE or mount needed.
+          # SHA-256 from the FreeCAD 1.1.3 release asset digest.
           curl --fail --location --retry 3 \
-            "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-macOS-$(uname -m)-py311.dmg" \
-            --output "$cad_root/FreeCAD.dmg"
-          echo "$digest  $cad_root/FreeCAD.dmg" | shasum -a 256 -c -
-          # Record ownership before mounting; the trap deletes only this mount.
-          echo "$cad_root/mount" > "$cad_root/owned-mount"
-          hdiutil attach "$cad_root/FreeCAD.dmg" -nobrowse -readonly -mountpoint "$cad_root/mount"
-          ditto "$cad_root/mount/FreeCAD.app" "$cad_root/FreeCAD.app"
-          echo "HANGTEN_FREECAD_CMD=$cad_root/FreeCAD.app/Contents/Resources/bin/freecadcmd" >> "$GITHUB_ENV"
+            "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-Linux-x86_64-py311.AppImage" \
+            --output "$cad_root/FreeCAD.AppImage"
+          echo "3a853eb69ee595f779f2255dbf80a765926981d8ff68903cefee4dfb03a8f5ef  $cad_root/FreeCAD.AppImage" | sha256sum -c -
+          chmod +x "$cad_root/FreeCAD.AppImage"
+          (cd "$cad_root" && ./FreeCAD.AppImage --appimage-extract > /dev/null)
+          # AppRun sets the bundled Python home and FreeCAD library directory.
+          # Forward to its CLI binary rather than launching the GUI.
+          cat > "$cad_root/freecadcmd" <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          exec "$(dirname "$0")/squashfs-root/AppRun" freecadcmd "$@"
+          SH
+          chmod +x "$cad_root/freecadcmd"
+          echo "HANGTEN_FREECAD_CMD=$cad_root/freecadcmd" >> "$GITHUB_ENV"
+          install_complete=true
 
       - name: Run native CAD, cord and YY persisted-edit regressions
         run: |
@@ -303,10 +311,6 @@ jobs:
           set -euo pipefail
           owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
           cad_root="$PWD/.context/$owner-transgression-native-ci"
-          if mount | grep -Fq " on $cad_root/mount "; then
-            hdiutil detach "$cad_root/mount"
-          fi
-          if mount | grep -Fq " on $cad_root/mount "; then exit 1; fi
           rm -rf "$cad_root"
           test ! -e "$cad_root"
 
