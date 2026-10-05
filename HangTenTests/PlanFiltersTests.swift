@@ -271,9 +271,23 @@ final class PlanFiltersTests: XCTestCase {
         XCTAssertEqual(workout().browserDurationLabel, "10 min")
         XCTAssertTrue(workout(timing: .stopwatch).hasEstimatedDuration)
         XCTAssertTrue(workout(timing: .undefined).hasEstimatedDuration)
-        XCTAssertTrue(workout(instruction: "Hang for 7–10 seconds.").hasEstimatedDuration)
+        XCTAssertFalse(workout(instruction: "Hang for 7–10 seconds; this session uses 7 seconds.").hasEstimatedDuration)
+        XCTAssertTrue(workout(timing: .undefined, instruction: "Hang for 7–10 seconds.").hasEstimatedDuration)
         XCTAssertTrue(workout(instruction: "This fourth set is optional.").hasEstimatedDuration)
         XCTAssertTrue(workout(timing: .undefined).browserDurationLabel.hasPrefix("Approx."))
+    }
+
+    func testSourceRangesDoNotMakeFixedNelsonTimerDefaultsEstimated() {
+        for plan in [
+            LegacyPlanSeedCatalog.nelsonRecruitmentBeginner,
+            LegacyPlanSeedCatalog.nelsonRecruitmentExpert,
+            LegacyPlanSeedCatalog.nelsonVelocityBeginner,
+            LegacyPlanSeedCatalog.nelsonVelocityExpert
+        ] {
+            XCTAssertFalse(plan.hasEstimatedDuration, plan.id)
+            XCTAssertEqual(plan.browserDurationLabel, plan.durationLabel, plan.id)
+        }
+        XCTAssertTrue(LegacyPlanSeedCatalog.nelsonDensityExpert.hasEstimatedDuration)
     }
 
     func testOptionalFocusMetadataDecodesLegacyAndRoundTrips() throws {

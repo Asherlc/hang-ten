@@ -140,14 +140,13 @@ extension TrainingPlan {
         }
     }
 
+    /// Source guidance may retain a range while the adapted session chooses
+    /// fixed timer defaults. Only executable timing and optional work affect
+    /// whether the displayed session duration is an estimate.
     var hasEstimatedDuration: Bool {
         steps.contains { step in
             step.duration <= 0 || step.segments.contains { $0.timing != .fixed }
                 || step.instruction.localizedCaseInsensitiveContains("optional")
-                || step.instruction.range(
-                    of: #"\d+\s*[–-]\s*\d+\s*(?:seconds?|minutes?|s\b|m\b)"#,
-                    options: [.regularExpression, .caseInsensitive]
-                ) != nil
         }
     }
 
