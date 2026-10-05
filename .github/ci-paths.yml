@@ -21,6 +21,7 @@ shared_board_content:
   - 'scripts/run-supported-python.sh'
   - 'scripts/build-board-assets.sh'
   - 'scripts/install-freecad.sh'
+  - 'scripts/install-cad-ci-dependencies.sh'
   - 'scripts/build-runtime-assets.sh'
   - 'scripts/export-grip-hand.sh'
   - 'Art/GripHand/**'
@@ -31,6 +32,7 @@ cad:
   - 'Hangboards/**'
   - 'scripts/build-board-assets.sh'
   - 'scripts/install-freecad.sh'
+  - 'scripts/install-cad-ci-dependencies.sh'
   - 'scripts/hangboard-packages.sh'
 metadata:
   - 'metadata/**'

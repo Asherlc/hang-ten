@@ -19,10 +19,15 @@ and do not guess which is authoritative.
 ## 2. Classify the routine before importing it
 
 A board-flexible routine names semantic holds such as “Jug,” “Round Sloper,” or
-“Large Edge.” It can use `boardID: nil` if every required feature resolves on
-the selected board. `AppStore` hides a plan when even one of its targets does
-not resolve; catalog tests require semantic targets and at least one
-fully compatible registered board.
+“Large Edge.” Use `boardID: nil` when the source is board-agnostic, and retain
+every prescribed semantic hand target. `AppStore` lists these plans on every
+board; compatibility is assessed separately, and unresolved targets mark the
+plan “Not on this board.”
+
+Catalog resolution checks apply to plans with a declared `boardID`, not every
+board-agnostic routine. Non-custom, source-linked board-agnostic work may record
+as self-selected when its prescribed requirements or hand tasks cannot resolve.
+Test each board mapping claimed to support the full source prescription.
 
 A board-specific routine refers to numbered holds, a board diagram, or unique
 features whose meaning depends on one product. Set its `boardID` and do not show

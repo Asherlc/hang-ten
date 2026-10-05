@@ -24,8 +24,10 @@ audits. All runtime exports, including solved suspension, remain ignored.
 Fetch the retained Git LFS sources, then compile and install every ignored board
 asset before package validation.
 
-On Ubuntu 24.04, install `libegl1 libgl1 libglu1-mesa libopengl0 squashfs-tools`
-first. The installer extracts the pinned AppImage and runs its bundled
+On Ubuntu 24.04, install the prerequisites for FreeCAD board builds and the
+Blender hand export used by the full runtime build below:
+`libegl1 libgl1 libglu1-mesa libopengl0 libxi6 libxfixes3 libxrender1 libsm6 libxxf86vm1 libxkbcommon0 squashfs-tools xz-utils`.
+The FreeCAD installer extracts the pinned AppImage and runs its bundled
 `freecadcmd` without a FUSE mount.
 
 ```sh
