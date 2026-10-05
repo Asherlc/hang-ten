@@ -218,6 +218,29 @@ final class PlanFiltersTests: XCTestCase {
         XCTAssertEqual(workout(phase: .conditioning, stepTitle: "Task", instruction: "No pull-ups today. Perform a plank.").workoutExercises, [.core])
     }
 
+    func testExerciseDetectionRetainsAffirmativeClausesAfterNegation() {
+        XCTAssertEqual(
+            workout(phase: .conditioning, stepTitle: "Task", instruction: "Hang 20 mm; no rest, then 5 pull-ups.").workoutExercises,
+            [.hangs, .pullUps]
+        )
+        XCTAssertEqual(
+            workout(phase: .conditioning, stepTitle: "Task", instruction: "No swings today; hold a plank.").workoutExercises,
+            [.core]
+        )
+        XCTAssertEqual(
+            workout(phase: .conditioning, stepTitle: "Task", instruction: "Don't do pull-ups, but hold a plank.").workoutExercises,
+            [.core]
+        )
+        XCTAssertEqual(
+            workout(phase: .conditioning, stepTitle: "Task", instruction: "No plank today, instead do 5 pull-ups.").workoutExercises,
+            [.pullUps]
+        )
+        XCTAssertEqual(
+            workout(phase: .conditioning, stepTitle: "Task", instruction: "No hangs, pull-ups or core today.").workoutExercises,
+            []
+        )
+    }
+
     func testWorkoutFiltersCombineGroupsAndAllowAnySelectedExerciseAndLevel() {
         var filters = WorkoutBrowserFilters()
         filters.duration = .tenToTwentyMinutes

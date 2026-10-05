@@ -124,7 +124,7 @@ extension TrainingPlan {
         steps.reduce(into: []) { exercises, step in
             guard step.phase != .rest, step.phase != .coolDown else { return }
             let affirmativeInstruction = step.instruction.replacingOccurrences(
-                of: #"\b(?:do not|don['’]t|never|no)\b[^.!?]*"#,
+                of: #"\b(?:do not|don['’]t|never|no)\b(?:(?!,\s*(?:then|but|instead)\b)[^.!?;])*"#,
                 with: "", options: [.regularExpression, .caseInsensitive]
             )
             let movement = Self.normalizedMovement(step.title + " " + affirmativeInstruction)
