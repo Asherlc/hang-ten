@@ -5,8 +5,8 @@ The editable source is `Art/GripHand/GripHand.blend`, a stylized schematic hand 
 `HangTen/Resources/GripHand/hand-mesh.json` is generated and ignored by Git.
 `scripts/export-grip-hand.sh` exports the retained editable source using pinned
 Blender 5.2.0; `scripts/build-runtime-assets.sh` includes that step before app
-builds, and CI delivers the JSON in its producer artifact. Source geometry,
-poses, upstream provenance, and licenses remain unchanged. See
+builds, and CI delivers the JSON in its producer artifact. Commit the editable
+source, upstream provenance and licenses. See
 [generated artifacts](GENERATED_ARTIFACTS.md).
 
 The app displays finite 3D surfaces evaluated in Blender after posing and smoothing. This preserves the authored joint shapes without approximating Blender's modifier stack through runtime linear skinning. The surfaces remain fully rotatable 3D geometry; they are not rendered images. The thumb stays relaxed beside the hand in every illustration.
@@ -19,7 +19,7 @@ The JSON uses `schemaVersion: 2`. Shared `indices` contain triangle vertex indic
 
 `poses` maps each name to an object with flat XYZ `positions` and `normals` arrays. Every surface uses the same vertex count and triangle topology. Y is upward along the fingers, X is lateral with the thumb negative, and positive Z is palmward. There are no exported bone transforms or runtime skin weights in this contract.
 
-Required surfaces are `Neutral`, `OpenHand`, `HalfCrimp`, `FullCrimp`, `Sloper`, and `Pocket0` through `Pocket15`. Pocket names encode explicit membership: index is bit 1, middle bit 2, ring bit 4, and pinky bit 8. For example, `Pocket6` keeps middle and ring available and tucks the unused index and pinky. `Pocket0` leaves all fingers open for unspecified membership, with no highlights. Pocket count never supplies a missing finger selection. Other postures use one surface regardless of highlight selection.
+Required surfaces are `Neutral`, `OpenHand`, `HalfCrimp`, `FullCrimp`, `Sloper`, and `Pocket0` through `Pocket15`. Pocket names encode membership: index is bit 1, middle bit 2, ring bit 4, and pinky bit 8. For example, `Pocket6` keeps middle and ring available and tucks the unused index and pinky. `Pocket0` and `Pocket15` share the all-open surface. Runtime pose selection uses explicit fingers when supplied and the four-finger display default otherwise; a pocket count does not select a particular pair. Other postures use one surface regardless of highlight selection.
 
 The loader rejects unsupported schema versions, missing required poses, inconsistent position/normal lengths in any pose, out-of-range triangle/digit indices, non-finite values, and missing or out-of-range highlight weights before GPU upload.
 
@@ -27,10 +27,10 @@ The loader rejects unsupported schema versions, missing required poses, inconsis
 
 The model is a schematic illustration, not anatomical measurement or new training guidance. The primary visual reference is Lattice Training's [A Lattice Guide to Home Training](https://latticetraining.com/app/uploads/2020/03/Lite-Guide-to-home-adaptations.pdf), PDF page 11, comparing open, half-crimp, and full-crimp positions. The finger relationships inform the authored open and crimp shapes. All numeric angles, mesh dimensions, smoothing, camera placement, sloper curvature, and pocket rendering are illustrative adaptations chosen for legibility. Keeping the thumb relaxed in the full-crimp illustration is an intentional display adaptation; it does not reproduce the reference's thumb placement.
 
-The source does not prescribe arbitrary finger subsets, numerical model angles, or the model's pocket/sloper shapes. `GripHandPose` reads only a routine's existing `GripType` and explicit `FingerConfiguration`. Highlight membership is exactly `engagedFingers`; grip names and pocket counts never imply which fingers are highlighted. Unknown membership leaves every digit unhighlighted and labels the missing information. The thumb is never highlighted because the current finger-configuration schema has no thumb member. No routine text, timing, grip selection, or finger prescription changes.
+The source does not prescribe arbitrary finger subsets, numerical model angles, or the model's pocket/sloper shapes. `GripHandPose` reads a routine's `GripType` and `FingerConfiguration`. Explicit `engagedFingers` controls highlights; an omitted configuration displays all four fingers and labels them `4 fingers (assumed)`. This display default is not a sourced training prescription and does not fill the omitted routine or recording field. The thumb is never highlighted because the finger-configuration schema has no thumb member.
 
 ## Validation
 
-`GripHandCueCardTests` checks all 15 nonempty subsets against every grip, exact pocket bit selection, unknown membership, posture selection independent of highlights, preserved left/right labels, the bundled evaluated surfaces, and rejection of damaged schema-v2 buffers. A passing contract test does not establish anatomical realism or user visual acceptance.
+`GripHandCueCardTests` checks explicit finger subsets, pocket bit selection, the display default, posture selection independent of highlights, left/right labels, evaluated surfaces, and rejection of damaged schema-v2 buffers. A passing contract test does not establish anatomical realism or user visual acceptance.
 
-In DEBUG builds set `HANGTEN_REVIEW_GRIP_MODEL=1` to inspect both hands. Optional `HANGTEN_REVIEW_GRIP_POSE` uses a `GripType` raw value and `HANGTEN_REVIEW_GRIP_FINGERS` is a comma-separated list (`index,middle,ring,pinky`); an empty string demonstrates unknown membership. The review screen's grip and finger controls only alter this isolated visual fixture, never a workout. Review open, half, full, sloper, explicit two-finger pocket, and unknown two-finger pocket; rotate the model to inspect depth and reset afterward. Also review compact cues in portrait and landscape workouts.
+In DEBUG builds set `HANGTEN_REVIEW_GRIP_MODEL=1` to inspect both hands. Optional `HANGTEN_REVIEW_GRIP_POSE` uses a `GripType` raw value and `HANGTEN_REVIEW_GRIP_FINGERS` is a comma-separated list (`index,middle,ring,pinky`); an empty string demonstrates the assumed four-finger display. The controls alter this isolated fixture. Review open, half, full, sloper, an explicit two-finger pocket and a pocket with omitted fingers; rotate and reset the model, then review compact cues in portrait and landscape workouts.

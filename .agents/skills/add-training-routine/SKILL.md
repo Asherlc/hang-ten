@@ -18,8 +18,11 @@ separate factual inventory.
    order, switch, stay-on, maximum/failure, and rest instruction.
 4. Add `TrainingPlan` and `WorkoutStep` data without inventing segments or
    exercises. Mark provenance honestly.
-5. Target the narrowest truthful semantic `ContactRequirement` predicate;
-   never embed board contact IDs or visual references in a routine.
+5. Express each sourced hold requirement through `PlanHandTarget` and the
+   supported `PlanContactPredicate` fields: kind, shape, depth, and
+   fingerCapacity. Catalog routine exports use semantic predicates rather than
+   board contact IDs. Follow the checked-out schema in `PlanStorage.swift`;
+   board inventory fields do not automatically become plan target fields.
 6. Generate board assets before running the plan exporter, which stages board
    metadata from each flat `Hangboards/<slug>.FCStd` document's
    `HangTenBoardManifest` and validated generated suspension. Cord/simulation
@@ -28,8 +31,11 @@ separate factual inventory.
    `rtk scripts/export-plan-library.sh`, then run it with `--check`.
    This JSON is an ignored build output; commit the audited Swift definitions
    and source mappings. CI generates the same library from those definitions.
-7. Verify each factual requirement remains compatible with every board where
-   the plan appears. Keep source-generic work as explicit athlete self-selection.
+7. Check semantic resolution and incompatibility with representative boards.
+   Board-flexible routines retain source-backed predicates. Use explicit
+   athlete self-selection only when the source leaves the hold unspecified
+   and the current `PlanStorage` validation allows it; a missing `boardID`
+   alone does not grant that allowance.
 8. Preview representative text, timer, audio, hand cue, and active-hold states
    in the dedicated simulator after `rtk proxy bash scripts/build-runtime-assets.sh`.
 

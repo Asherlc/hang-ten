@@ -25,7 +25,7 @@ Source authorization: the first six boards inherit September20 approval only for
 
 The [continuous cord certificate](cord-continuous-clearance.json) checks the exact rounded runtime routes, including fixed-support legs and final terminals, against the native collision solid using adaptive signed-distance bounds. Every route passes the explicit 0.01 mm numerical tolerance; reported values are conservative lower bounds, not sampled minima.
 
-Initial compile reports predate metadata-only edits and are superseded for final source identity. [Current-source fresh rebuild proof](reproducibility.json); [batch validation notes](../validation-notes.md).
+Initial compile reports predate metadata-only edits and are superseded for final source identity. [Current-source fresh rebuild proof](reproducibility.json).
 
 ## October 2 individual review
 

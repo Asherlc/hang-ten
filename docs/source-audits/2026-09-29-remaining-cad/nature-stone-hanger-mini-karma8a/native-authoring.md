@@ -26,7 +26,7 @@ The [continuous cord certificate](cord-continuous-clearance.json) checks the exa
 
 [Camera correction proof](camera-correction-proof.json) records local front/rear and inverted viewing directions. The correction changes camera metadata only; native assets, routes, heights and cord dimensions remain byte/value identical.
 
-Initial compile reports predate metadata-only edits and are superseded for final source identity. [Current-source fresh rebuild proof](reproducibility.json); [batch validation notes](../validation-notes.md).
+Initial compile reports predate metadata-only edits and are superseded for final source identity. [Current-source fresh rebuild proof](reproducibility.json).
 
 ## October 2 KARMA8A revision
 

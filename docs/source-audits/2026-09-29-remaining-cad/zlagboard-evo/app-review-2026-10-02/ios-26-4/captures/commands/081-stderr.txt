@@ -1,3 +1,0 @@
-Detected file type from extension: PNG
-Note: No display specified. Defaulting to display: 3981D7D5-FB9C-44F2-9D8B-FF9694A8E133 (screenID: 1, name: LCD)
-Wrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/captures/sloper-edge-25-lower-right.png

@@ -3,7 +3,7 @@
 This is the supported authoring process for a physical Hang Ten board. Research
 the exact revision, record source mappings, author canonical geometry directly,
 validate the package, and visually review it. Never invent training content or
-derive a contact fact from the image or model.
+present an estimated display dimension as a published measurement.
 
 Catalog boards retain one flat `Hangboards/<slug>.FCStd` containing native
 FreeCAD geometry and embedded board, cord, and simulation inputs; runtime
@@ -22,10 +22,12 @@ Record URLs, review date, revision decision, and field-by-field mappings in a
 tracked source audit. Omit any optional measurement, capacity, side, pairing,
 grip type, or feature the evidence does not establish.
 
-Board facts do not define routine targets. A training plan may contain only the
-factual `ContactRequirement` supported by its own plan evidence. Source-generic
-work remains targetless and is recorded as the athlete's explicit self-selection;
-there is no semantic, contact-ID, or fallback resolution layer.
+Board facts do not define routine prescriptions. Catalog plans contain only
+contact predicates justified by their own source audits; the resolver matches
+them against the selected board's factual inventory without substituting another
+hold type. Athlete-choice targets require their own source justification; the
+legacy self-selected work form and modern per-hand `any` targets have different
+validation rules. See [adding a routine](ADDING_A_ROUTINE.md).
 
 ## 2. Freeze the physical contact inventory
 
@@ -85,9 +87,10 @@ solver settings, evidence, pose rotations/cameras, and optional
 `offsetXZ: [x, z]` live in document-level `App::PropertyString`
 `HangTenSuspensionAuthoring`; optional simulation inputs live in
 `HangTenRopePhysics`. Hashes, settled heights, and generated routes are outputs.
-Change the metadata as in "Board metadata" in `Tools/HangboardCAD/README.md`. To author a
-new CAD-backed board, follow
-[the CAD authoring guide](../Tools/HangboardCAD/README.md).
+Edit board metadata with `Tools/HangboardCAD/set_board_manifest.py` and
+cord/simulation inputs with `Tools/HangboardCAD/set_cad_authoring.py`. Follow
+[the CAD authoring guide](../Tools/HangboardCAD/README.md) for the source contract
+and commands.
 
 ## 4. Author and review native geometry
 
@@ -109,9 +112,9 @@ result in the app. Preserve that evidence before reporting completion.
 
 ### Supported raster geometry
 
-The schema also supports raster presentations. For those packages, author every
-canonical path directly in `board.json`; the apps
-only read packages and have no in-app editor. Deliberately draw and review
+The schema also supports raster presentations in packages without a native CAD
+source. For those packages, author every canonical path directly in `board.json`;
+the apps only read packages and have no in-app editor. Deliberately draw and review
 every canonical path against manufacturer evidence. Prefer
 exact left/right mirroring only when the product is actually symmetric. Use a
 human-selected circle, oval, pill, rounded rectangle, or rectangle constraint
@@ -155,4 +158,4 @@ ignored. See [generated artifacts](GENERATED_ARTIFACTS.md).
   `media.contactGeometry` and model bindings only in the descriptor.
 - Every raster path was directly authored and human reviewed; no geometry was inferred.
 - Model assets/descriptors are hash-bound and model packages have no fallback.
-- Package validation, direct staging, full tests/build, and owned-simulator review pass.
+- Package validation, direct staging, affected tests/build, and owned-simulator review pass.

@@ -165,9 +165,9 @@ def _stone_reverse_six_bearing_samples(position_id: str):
     The fitted granite revision preserves all seven wood contact surfaces even
     though its recomputed BRep serialization and overall source hash changed.
     """
-    audit = REPO_ROOT / "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger"
-    native_path = audit / "display-and-pose-review/raw/fresh-native-bearing/new-native-bearing.json"
-    preserved_path = audit / "granite-seat-review/independent-native-check.json"
+    fixtures = Path(__file__).parent / "fixtures/nature-stone-hanger-bearing"
+    native_path = fixtures / "display-bearing.json"
+    preserved_path = fixtures / "contact-preservation.json"
     assert hashlib.sha256(native_path.read_bytes()).hexdigest() == (
         "b3f52e79fa12d5a090c92c0c07afb295e18012e139b0996006ddff185a898137"
     )
@@ -176,14 +176,14 @@ def _stone_reverse_six_bearing_samples(position_id: str):
     )
     native = json.loads(native_path.read_bytes())
     preserved = json.loads(preserved_path.read_bytes())
-    runtime = json.loads((audit / "granite-seat-review/runtime-validation.json").read_bytes())
+    runtime = json.loads((fixtures / "runtime-validation.json").read_bytes())
     package = HANGBOARDS_ROOT / "nature-stone-hanger"
     descriptor = json.loads((package / "assets/primary.model.json").read_bytes())
     artifact = json.loads((package / "assets/suspension.json").read_bytes())
     source = load_board_catalog_module().cad_source.package_source_path(package)
     assert preserved["status"] == runtime["status"] == "pass"
     assert preserved["beforeSHA256"] == native["sourceSHA256"]
-    # The audit records the source before metadata was consolidated. Its
+    # The fixture records the source before metadata was consolidated. Its
     # exported model still binds the native bearing proof to current geometry;
     # the compiled suspension separately binds the current flat CAD document.
     assert preserved["sourceSHA256"] == runtime["sourceSHA256"]

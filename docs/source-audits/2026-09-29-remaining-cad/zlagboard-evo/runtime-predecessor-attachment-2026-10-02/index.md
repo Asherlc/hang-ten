@@ -1,8 +1,0 @@
-- [Summary and limitations](README.md)
-- [Frozen findings](raw/predecessor-attachment-findings.json)
-- [Original 110-file freeze](raw/predecessor-attachment-frozen-manifest.json)
-- [Raw captures and records](raw/predecessor-attachment-normal-landscape/)
-- [Parent two-image review](root-scoped-visual-review.json)
-- [API paraphrase](analysis/predecessor-attachment-proposal/apple-api-notes.md)
-- [Exact copy mapping](retention-manifest.json)
-- [Retained hash inventory](retained-files.sha256.json)

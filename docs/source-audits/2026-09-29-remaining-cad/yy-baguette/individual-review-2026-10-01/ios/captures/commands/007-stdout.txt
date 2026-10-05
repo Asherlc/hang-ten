@@ -1,1 +1,0 @@
-✓ Tap at resolved tap point at (206.33333333333334, 443.0) completed successfully

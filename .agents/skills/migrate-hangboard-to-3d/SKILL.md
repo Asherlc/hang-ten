@@ -29,9 +29,12 @@ every canonical pose through `scripts/build-board-assets.sh` and
 `compile_suspension.py`, reproduce the generated artifact with
 `solve_threaded_rope.py --check`, and retain native-solid clearance, length,
 tube and topology checks. Change CAD inputs and rebuild; solved heights and
-routes never become source metadata. POCKET's pre-existing manifest suspension
-remains the documented legacy exception pending a separate evidence-backed
-revision; consolidation does not infer new threading for it.
+routes never become source metadata. Five existing manifest-only
+`pairedLeadCord` setups remain: Captain Fingerfood POCKET, J. Bryant FTG-32,
+both Lattice MXEdge Lift sizes, and Metolius Light Rail II. Preserve their
+evidenced facts during unrelated changes. New or revised cord authoring uses
+native inputs and computed routes; retained caches do not establish native
+certification or justify new hand-authored routes.
 The cord route is not live physics; document its mesh and topology assumptions.
 
 ## Evidence and scope
@@ -77,8 +80,9 @@ Use only the retained native tools:
   belong in the generated artifact. Missing/stale artifacts and changed
   authoring payloads fail package validation. Follow
   "Authoring a new CAD board" in `Tools/HangboardCAD/README.md`; any authoring
-  script is a throwaway under
-  `.context/`, and its provenance goes in a dated `docs/source-audits/` record.
+  script belongs under `.context/`. Update the product's source mapping with
+  durable manufacturer evidence, supported facts, and labeled estimates;
+  keep working plans, run diaries, and command output in `.context` or CI.
 - `scripts/build-board-assets.sh --package <slug>` builds ignored runtime
   outputs using pinned FreeCAD 1.1.3/OpenUSD 26.8. Run it before validation;
   run `scripts/build-runtime-assets.sh` before a fresh-checkout app build.
