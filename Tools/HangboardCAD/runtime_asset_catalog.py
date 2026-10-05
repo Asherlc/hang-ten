@@ -10,12 +10,18 @@ import subprocess
 import prepare_assets as compiler
 
 SCHEMA_VERSION = 1
-AUXILIARY_FILES = ("HangTen/Resources/GripHand/hand-mesh.json", "HangTen/Resources/PlanLibrary.json")
+SOURCE_FILES = ("HangTen/Resources/PlanLibrary.json",)
+AUXILIARY_FILES = ("HangTen/Resources/GripHand/hand-mesh.json",)
 
 
 def _inventory() -> tuple[dict[str, str], dict[str, str]]:
     repository = compiler.REPOSITORY
     sources, files = {}, {}
+    for relative in SOURCE_FILES:
+        path = repository / relative
+        if path.is_symlink() or not path.is_file():
+            raise ValueError(f"missing regular retained source: {relative}")
+        sources[relative] = compiler.sha256(path)
     for package in compiler.source_backed_packages():
         source = repository / "Hangboards" / f"{package}.FCStd"
         sources[source.relative_to(repository).as_posix()] = compiler.sha256(source)

@@ -27,8 +27,9 @@ PXR_AVAILABLE = any(
 )
 
 requires_native_toolchain = pytest.mark.skipif(
-    not FREECAD_CMD.is_file() or not PXR_AVAILABLE,
-    reason="pinned FreeCAD or pxr in HANGTEN_CAD_PYTHONPATH is unavailable",
+    (not FREECAD_CMD.is_file() or not PXR_AVAILABLE)
+    and os.environ.get("HANGTEN_REQUIRE_NATIVE_CAD", "").lower() != "true",
+    reason="pinned FreeCAD or pxr unavailable outside the required native lane",
 )
 
 

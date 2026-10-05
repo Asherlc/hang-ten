@@ -5,7 +5,7 @@ final class PlanStorageTests: XCTestCase {
 
     func testSourceExplicitOneArmPlansAndRPTCChoiceKeepTheirHandCounts() throws {
         for planID in ["research.force-feedback-f100", "hoopers-beta.introductory-home-hangboard"] {
-            let plan = try XCTUnwrap(LegacyPlanSeedCatalog.all.first { $0.id == planID })
+            let plan = try XCTUnwrap(CanonicalPlanSourceFixture.all.first { $0.id == planID })
             let singleArmSteps = plan.steps.filter {
                 planID == "research.force-feedback-f100"
                     ? $0.id.hasPrefix("f100-set-")
@@ -20,7 +20,7 @@ final class PlanStorageTests: XCTestCase {
         }
 
         let rptc = try XCTUnwrap(
-            LegacyPlanSeedCatalog.all.first { $0.id == "rptc.seven-three-repeaters" }
+            CanonicalPlanSourceFixture.all.first { $0.id == "rptc.seven-three-repeaters" }
         )
         for step in rptc.steps.prefix(7) {
             let task = try XCTUnwrap(step.segments.first?.target?.planTasks?.only)
@@ -31,7 +31,7 @@ final class PlanStorageTests: XCTestCase {
 
     func testMethodOffsetPullUpsUseJugAndSmallEdgeSimultaneously() throws {
         let plan = try XCTUnwrap(
-            LegacyPlanSeedCatalog.all.first { $0.id == "method.intermediate-hangboarding.emom" }
+            CanonicalPlanSourceFixture.all.first { $0.id == "method.intermediate-hangboarding.emom" }
         )
         let step = try XCTUnwrap(plan.steps.first { $0.id == "method-emom-minute-7" })
         let work = step.segments.filter { $0.kind == .work }
@@ -131,7 +131,7 @@ final class PlanStorageTests: XCTestCase {
 
     func testMetoliusIntermediateSmallEdgeExcludesExactDepthsOutsideInferredBand() throws {
         let step = try XCTUnwrap(
-            LegacyPlanSeedCatalog.metoliusIntermediate.steps.first {
+            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.intermediate").steps.first {
                 $0.id == "intermediate.minute-3.task-1"
             }
         )
@@ -729,7 +729,7 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testForceFeedbackPlansAreUnavailableUntilInstrumentedEdgeSetupCanBeVerified() {
-        for plan in [LegacyPlanSeedCatalog.forceF80, LegacyPlanSeedCatalog.forceF100] {
+        for plan in [CanonicalPlanSourceFixture.plan("research.force-feedback-f80"), CanonicalPlanSourceFixture.plan("research.force-feedback-f100")] {
             XCTAssertEqual(
                 PlanStartAvailabilityPolicy.availability(for: plan),
                 .unavailable(requirement: "Requires real-time force feedback from an instrumented 12 mm edge.")
@@ -739,13 +739,13 @@ final class PlanStorageTests: XCTestCase {
 
     func testOrdinaryPlanRemainsAvailableToStart() {
         XCTAssertEqual(
-            PlanStartAvailabilityPolicy.availability(for: LegacyPlanSeedCatalog.maxHangs),
+            PlanStartAvailabilityPolicy.availability(for: CanonicalPlanSourceFixture.plan("research.max-hangs")),
             .available
         )
     }
 
     func testPlanSourcePresentationContainsOnlySourceName() {
-        let plan = LegacyPlanSeedCatalog.maxHangs
+        let plan = CanonicalPlanSourceFixture.plan("research.max-hangs")
         XCTAssertEqual(PlanSourcePresentationContent.label(for: plan), "Source: Eva López · MaxHangs (MAW)")
     }
 
@@ -1502,8 +1502,8 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
-    func testBundledSourceSeedsClassifyTimedUntimedAndStopwatchActivities() throws {
-        let entrySteps = LegacyPlanSeedCatalog.metoliusEntry.steps
+    func testCanonicalPlanSourceClassifiesTimedUntimedAndStopwatchActivities() throws {
+        let entrySteps = CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.entry").steps
         let entryMinuteSixTaskOne = try XCTUnwrap(
             entrySteps.first { $0.id == "entry.minute-6.task-1" }
         )
@@ -1519,7 +1519,10 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .fromLegacyTargets([ContactRequirement(kind: .sloper, shape: .round)]),
+                    target: .tasks([[
+                        PlanHandTarget(target: .init(kind: .sloper, shape: .round)),
+                        PlanHandTarget(target: .init(kind: .sloper, shape: .round))
+                    ]]),
                     timing: .fixed,
                     duration: 10
                 )
@@ -1530,7 +1533,10 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .fromLegacyTargets([.kind(.pocket)]),
+                    target: .tasks([[
+                        PlanHandTarget(target: .init(kind: .pocket)),
+                        PlanHandTarget(target: .init(kind: .pocket))
+                    ]]),
                     timing: .fixed,
                     duration: 5
                 )
@@ -1541,7 +1547,10 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .fromLegacyTargets([ContactRequirement(kind: .sloper, shape: .round)]),
+                    target: .tasks([[
+                        PlanHandTarget(target: .init(kind: .sloper, shape: .round)),
+                        PlanHandTarget(target: .init(kind: .sloper, shape: .round))
+                    ]]),
                     timing: .stopwatch,
                     duration: nil
                 )
@@ -1553,7 +1562,7 @@ final class PlanStorageTests: XCTestCase {
         let unsupportedPhases: Set<WorkoutPhase> = [.warmUp, .coolDown]
 
         XCTAssertTrue(
-            LegacyPlanSeedCatalog.all
+            CanonicalPlanSourceFixture.all
                 .flatMap(\.steps)
                 .allSatisfy { !unsupportedPhases.contains($0.phase) }
         )
@@ -1566,7 +1575,7 @@ final class PlanStorageTests: XCTestCase {
             "density-grip-1-rep-2-recovery",
             "density-grip-2-rep-1-recovery"
         ]
-        let recoverySteps = LegacyPlanSeedCatalog.all.flatMap(\.steps).filter {
+        let recoverySteps = CanonicalPlanSourceFixture.all.flatMap(\.steps).filter {
             recoveryIDs.contains($0.id)
         }
 
@@ -1890,12 +1899,12 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
-    func testCatalogWorkRequirementsResolveOnCapableFixtures() throws {
-        let twelveMM = ContactRequirement.edge(depth: .range(.init(minimum: 12, maximum: 12)))
-        let twentyToTwentyFour = ContactRequirement.edge(
-            depth: .range(.init(minimum: 20, maximum: 24))
+    func testCanonicalPlanHandTasksResolveOnCapableFixtures() throws {
+        let twelveMM = PlanContactPredicate(kind: .edge, depth: .measured(.init(minimum: 12, maximum: 12)))
+        let twentyToTwentyFour = PlanContactPredicate(
+            kind: .edge, depth: .measured(.init(minimum: 20, maximum: 24))
         )
-        let twentyMM = ContactRequirement.edge(depth: .range(.init(minimum: 20, maximum: 20)))
+        let twentyMM = PlanContactPredicate(kind: .edge, depth: .measured(.init(minimum: 20, maximum: 20)))
         let geometry = [
             "edge-12": [
                 BoardContactPiece(
@@ -1927,6 +1936,7 @@ final class PlanStorageTests: XCTestCase {
                     id: "edge-12",
                     name: "12 mm edge",
                     kind: .edge,
+                    handCapacity: 2,
                     depth: .range(.init(minimum: 12, maximum: 12))
                 )
             ],
@@ -1940,38 +1950,80 @@ final class PlanStorageTests: XCTestCase {
         let dual = try XCTUnwrap(BoardCatalog.packageStore.board(id: "captain-fingerfood.dual"))
 
         let f80Work = try XCTUnwrap(
-            LegacyPlanSeedCatalog.forceF80.steps.first { !$0.workRequirements.isEmpty }
+            CanonicalPlanSourceFixture.plan("research.force-feedback-f80").steps.first { !$0.workRequirements.isEmpty }
         )
-        XCTAssertEqual(f80Work.workRequirements, [twelveMM])
-        XCTAssertNoThrow(try ContactResolver.resolve(f80Work.workRequirements, step: f80Work, board: forceBoard))
+        let f80Task = try XCTUnwrap(f80Work.segments.first?.target?.planTasks?.only)
+        XCTAssertEqual(f80Task, [PlanHandTarget(target: twelveMM), PlanHandTarget(target: twelveMM)])
+        XCTAssertEqual(f80Work.handUse, .double)
+        XCTAssertEqual(
+            try ContactResolver.resolve(f80Task, step: f80Work, board: forceBoard).map(\.id),
+            ["edge-12", "edge-12"]
+        )
 
         let f100Work = try XCTUnwrap(
-            LegacyPlanSeedCatalog.forceF100.steps.first { !$0.workRequirements.isEmpty }
+            CanonicalPlanSourceFixture.plan("research.force-feedback-f100").steps.first { !$0.workRequirements.isEmpty }
         )
-        XCTAssertEqual(f100Work.workRequirements, [twelveMM])
-        XCTAssertNoThrow(try ContactResolver.resolve(f100Work.workRequirements, step: f100Work, board: forceBoard))
+        let f100Task = try XCTUnwrap(f100Work.segments.first?.target?.planTasks?.only)
+        XCTAssertEqual(f100Task, [PlanHandTarget(target: twelveMM, side: .right)])
+        XCTAssertEqual(f100Work.handUse, .single)
+        XCTAssertEqual(f100Work.side, .right)
+        XCTAssertEqual(
+            try ContactResolver.resolve(f100Task, step: f100Work, board: forceBoard).map(\.id),
+            ["edge-12"]
+        )
 
         let megosWork = try XCTUnwrap(
-            LegacyPlanSeedCatalog.megoOneArmSevenThree.steps.first { !$0.workRequirements.isEmpty }
+            CanonicalPlanSourceFixture.plan("research.megos-one-arm-7-3").steps.first { !$0.workRequirements.isEmpty }
         )
-        XCTAssertEqual(megosWork.workRequirements, [twentyToTwentyFour])
-        XCTAssertNoThrow(try ContactResolver.resolve(megosWork.workRequirements, step: megosWork, board: dual))
+        let megosTask = try XCTUnwrap(megosWork.segments.first?.target?.planTasks?.only)
+        XCTAssertEqual(megosTask, [PlanHandTarget(target: twentyToTwentyFour, side: .left)])
+        XCTAssertEqual(megosWork.handUse, .single)
+        XCTAssertEqual(megosWork.side, .left)
+        let megosContacts = try ContactResolver.resolve(megosTask, step: megosWork, board: dual)
+        XCTAssertEqual(megosContacts.count, 1)
+        XCTAssertTrue(megosContacts.allSatisfy {
+            $0.kind == .edge && HoldDepth.range(.init(minimum: 20, maximum: 24)).matches($0.depth)
+        })
 
         let emom20 = try XCTUnwrap(
-            LegacyPlanSeedCatalog.methodEMOM.steps.first { $0.id == "method-emom-minute-1" }
+            CanonicalPlanSourceFixture.plan("method.intermediate-hangboarding.emom").steps.first { $0.id == "method-emom-minute-1" }
         )
-        XCTAssertEqual(emom20.workRequirements, [twentyMM])
-        XCTAssertNoThrow(try ContactResolver.resolve(emom20.workRequirements, step: emom20, board: dual))
+        let emomTask = try XCTUnwrap(emom20.segments.first?.target?.planTasks?.only)
+        XCTAssertEqual(emomTask, [PlanHandTarget(target: twentyMM), PlanHandTarget(target: twentyMM)])
+        XCTAssertEqual(emom20.handUse, .double)
+        XCTAssertTrue(dual.isOneHanded)
+        let emomContacts = try ContactResolver.resolve(emomTask, step: emom20, board: dual)
+        XCTAssertEqual(emomContacts.count, 2)
+        XCTAssertEqual(Set(emomContacts.map(\.id)).count, 1)
+        XCTAssertTrue(emomContacts.allSatisfy {
+            $0.kind == .edge && $0.depth == .range(.init(minimum: 20, maximum: 20))
+        })
     }
 
-    func testRPTCRepeatersPreserveTheSourceSetTimingWithoutInventedGripTargets() {
-        let plan = LegacyPlanSeedCatalog.rptcRepeaters
+    func testRPTCRepeatersPreserveTheSourceSetTimingWithoutInventedGripTargets() throws {
+        let plan = CanonicalPlanSourceFixture.plan("rptc.seven-three-repeaters")
 
         XCTAssertEqual(plan.provenance, .official)
         XCTAssertNil(plan.boardID)
         XCTAssertEqual(plan.duration, 420)
         XCTAssertEqual(plan.steps.count, 8)
-        XCTAssertTrue(plan.steps.dropLast().allSatisfy { $0.workRequirements.isEmpty })
+        for step in plan.steps.dropLast() {
+            let work = try XCTUnwrap(step.segments.first)
+            XCTAssertEqual(work.target, .tasks([[PlanHandTarget(), PlanHandTarget()]]), step.id)
+            XCTAssertTrue(work.target?.isSelfSelected == true, step.id)
+            XCTAssertEqual(work.timing, .fixed, step.id)
+            XCTAssertEqual(work.duration, 7, step.id)
+            XCTAssertEqual(step.handUse, .double, step.id)
+            XCTAssertEqual(step.side, .both, step.id)
+        }
+        XCTAssertEqual(
+            plan.steps.prefix(6).map { $0.segments.last },
+            Array(repeating: WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 3), count: 6)
+        )
+        XCTAssertEqual(
+            plan.steps[6].segments.last,
+            WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 173)
+        )
         XCTAssertEqual(plan.steps.prefix(6).map(\.duration), Array(repeating: 10, count: 6))
         XCTAssertEqual(plan.steps.prefix(7).map(\.timedWorkDuration), Array(repeating: 7, count: 7))
         XCTAssertEqual(plan.steps[6].duration, 180)
@@ -1984,7 +2036,7 @@ final class PlanStorageTests: XCTestCase {
 
     func testRoutineCatalogIncludesRPTCAsAnOfficialPlan() throws {
         let plan = try XCTUnwrap(
-            LegacyPlanSeedCatalog.all.first { $0.id == "rptc.seven-three-repeaters" }
+            CanonicalPlanSourceFixture.all.first { $0.id == "rptc.seven-three-repeaters" }
         )
 
         XCTAssertEqual(plan.provenance, .official)
@@ -2013,7 +2065,7 @@ final class PlanStorageTests: XCTestCase {
 
         for planID in allowlistedSelfSelectedPlanIDs {
             let plan = try XCTUnwrap(
-                LegacyPlanSeedCatalog.all.first { $0.id == planID },
+                CanonicalPlanSourceFixture.all.first { $0.id == planID },
                 "Missing bundled plan \(planID)."
             )
             let workSteps = plan.steps.filter { step in
@@ -2032,7 +2084,7 @@ final class PlanStorageTests: XCTestCase {
 
         for planID in newlyPrescribedPlanIDs {
             let plan = try XCTUnwrap(
-                LegacyPlanSeedCatalog.all.first { $0.id == planID },
+                CanonicalPlanSourceFixture.all.first { $0.id == planID },
                 "Missing bundled plan \(planID)."
             )
             XCTAssertTrue(
@@ -2042,59 +2094,39 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
-    func testMetoliusGenericTermsRetainAuthoredSemanticRequirements() throws {
-        let entry = LegacyPlanSeedCatalog.metoliusEntry
-        let intermediate = LegacyPlanSeedCatalog.metoliusIntermediate
-        let advanced = LegacyPlanSeedCatalog.metoliusAdvanced
-        let mediumEdge = ContactRequirement.edge(depth: .category(.medium))
-        let roundSloper = ContactRequirement(kind: .sloper, shape: .round)
-        let jug = ContactRequirement.kind(.jug)
-        let pocket = ContactRequirement.kind(.pocket)
-        let fourFingerFlat = ContactRequirement(
-            kind: .edge,
-            shape: .flat,
-            fingerCapacity: 4
-        )
-        let largeSlope = ContactRequirement(
-            kind: .sloper,
-            depth: .category(.large)
-        )
-
-        XCTAssertEqual(
-            try XCTUnwrap(entry.steps.first { $0.id == "entry.minute-1.task-1" }).workRequirements,
-            [jug]
-        )
-        XCTAssertEqual(
-            try XCTUnwrap(entry.steps.first { $0.id == "entry.minute-2.task-1" }).workRequirements,
-            [roundSloper]
-        )
-        XCTAssertEqual(
-            try XCTUnwrap(entry.steps.first { $0.id == "entry.minute-3.task-1" }).workRequirements,
-            [mediumEdge]
-        )
-        XCTAssertEqual(
-            try XCTUnwrap(entry.steps.first { $0.id == "entry.minute-4.task-1" }).workRequirements,
-            [pocket]
-        )
-        XCTAssertEqual(
-            try XCTUnwrap(intermediate.steps.first { $0.id == "intermediate.minute-3.task-1" }).workRequirements,
-            [ContactRequirement.edge(depth: .range(.init(minimum: 9, maximum: 18)))]
-        )
-        XCTAssertEqual(
-            try XCTUnwrap(advanced.steps.first { $0.id == "advanced.minute-1.task-1" }).workRequirements,
-            [largeSlope]
-        )
-        XCTAssertEqual(
-            try XCTUnwrap(advanced.steps.first { $0.id == "advanced.minute-1.task-2" }).workRequirements,
-            [fourFingerFlat]
-        )
+    func testMetoliusGenericTermsRetainSourcePrescribedHandTasks() throws {
+        let entry = CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.entry")
+        let intermediate = CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.intermediate")
+        let advanced = CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.advanced")
+        let cases: [(plan: TrainingPlan, stepID: String, target: PlanContactPredicate)] = [
+            (entry, "entry.minute-1.task-1", .init(kind: .jug)),
+            (entry, "entry.minute-2.task-1", .init(kind: .sloper, shape: .round)),
+            (entry, "entry.minute-3.task-1", .init(kind: .edge, depth: .category(.medium))),
+            (entry, "entry.minute-4.task-1", .init(kind: .pocket)),
+            (intermediate, "intermediate.minute-3.task-1", .init(
+                kind: .edge, depth: .measured(.init(minimum: 9, maximum: 18))
+            )),
+            (advanced, "advanced.minute-1.task-1", .init(kind: .sloper, depth: .category(.large))),
+            (advanced, "advanced.minute-1.task-2", .init(kind: .edge, shape: .flat, fingerCapacity: 4))
+        ]
+        for testCase in cases {
+            let step = try XCTUnwrap(testCase.plan.steps.first { $0.id == testCase.stepID })
+            let work = try XCTUnwrap(step.segments.filter { $0.kind == .work }.only)
+            XCTAssertEqual(
+                work.target,
+                .tasks([[PlanHandTarget(target: testCase.target), PlanHandTarget(target: testCase.target)]]),
+                testCase.stepID
+            )
+            XCTAssertEqual(step.handUse, .double, testCase.stepID)
+            XCTAssertEqual(step.side, .both, testCase.stepID)
+        }
     }
 
     func testMetoliusIntermediateSmallEdgeResolvesCompactNineteenMillimeterEdge() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
         for stepID in ["intermediate.minute-3.task-1", "intermediate.minute-6.task-1"] {
             let step = try XCTUnwrap(
-                LegacyPlanSeedCatalog.metoliusIntermediate.steps.first { $0.id == stepID }
+                CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.intermediate").steps.first { $0.id == stepID }
             )
 
             let contacts = try ContactResolver.resolve(step.workRequirements, step: step, board: board)
@@ -2114,7 +2146,7 @@ final class PlanStorageTests: XCTestCase {
     func testHoopersMinimalEdgeStillResolvesSimulatorFourteenMillimeterEdge() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.simulator-3d"))
         let step = try XCTUnwrap(
-            LegacyPlanSeedCatalog.hoopersBetaIntroductory.steps.first {
+            CanonicalPlanSourceFixture.plan("hoopers-beta.introductory-home-hangboard").steps.first {
                 $0.id == "hoopers-intro-round-4-set-1-hang"
             }
         )
@@ -2128,7 +2160,7 @@ final class PlanStorageTests: XCTestCase {
     func testMetoliusIntermediateUnqualifiedSlopeResolvesCompactSloper() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
         let step = try XCTUnwrap(
-            LegacyPlanSeedCatalog.metoliusIntermediate.steps.first {
+            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.intermediate").steps.first {
                 $0.id == "intermediate.minute-9.task-1"
             }
         )
@@ -2140,7 +2172,7 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testSimulator3DPlansUseSemanticFlatAndRoundSloperTargets() throws {
-        let simulatorPlans = LegacyPlanSeedCatalog.all.filter {
+        let simulatorPlans = CanonicalPlanSourceFixture.all.filter {
             $0.id.hasPrefix("metolius.simulator-3d.")
         }
         XCTAssertEqual(simulatorPlans.count, 3)
@@ -2177,7 +2209,7 @@ final class PlanStorageTests: XCTestCase {
             BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
         )
         let sourceStep = try XCTUnwrap(
-            LegacyPlanSeedCatalog.metoliusSimulator3DEntry.steps.first {
+            CanonicalPlanSourceFixture.plan("metolius.simulator-3d.entry").steps.first {
                 $0.id == "metolius.simulator-3d.entry.minute-2"
             }
         )
@@ -2194,7 +2226,7 @@ final class PlanStorageTests: XCTestCase {
             BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
         )
         let sourceStep = try XCTUnwrap(
-            LegacyPlanSeedCatalog.metoliusSimulator3DEntry.steps.first {
+            CanonicalPlanSourceFixture.plan("metolius.simulator-3d.entry").steps.first {
                 $0.id == "metolius.simulator-3d.entry.minute-3"
             }
         )
@@ -2211,24 +2243,30 @@ final class PlanStorageTests: XCTestCase {
             BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
         )
         let entryStep = try XCTUnwrap(
-            LegacyPlanSeedCatalog.metoliusSimulator3DEntry.steps.first {
+            CanonicalPlanSourceFixture.plan("metolius.simulator-3d.entry").steps.first {
                 $0.id == "metolius.simulator-3d.entry.minute-5"
             }
         )
         let intermediateStep = try XCTUnwrap(
-            LegacyPlanSeedCatalog.metoliusSimulator3DIntermediate.steps.first {
+            CanonicalPlanSourceFixture.plan("metolius.simulator-3d.intermediate").steps.first {
                 $0.id == "metolius.simulator-3d.intermediate.minute-2"
             }
         )
 
         XCTAssertTrue(entryStep.instruction.contains("flat slopers (2)"))
+        let entryTasks = try XCTUnwrap(entryStep.segments.first?.target?.planTasks)
+        let flatSloper = PlanHandTarget(target: .init(kind: .sloper, shape: .flat))
+        let jug = PlanHandTarget(target: .init(kind: .jug))
+        XCTAssertEqual(entryTasks, [[flatSloper, flatSloper], [jug, jug]])
         XCTAssertEqual(
-            Set(try ContactResolver.resolve(entryStep.workRequirements[0], step: entryStep, board: board).map(\.id)),
+            try ContactResolver.resolve(entryTasks[0], step: entryStep, board: board).map(\.id),
             ["flat-sloper-2-left", "flat-sloper-2-right"]
         )
         XCTAssertTrue(intermediateStep.instruction.contains("flat slopers (2)"))
+        let intermediateTasks = try XCTUnwrap(intermediateStep.segments.first?.target?.planTasks)
+        XCTAssertEqual(intermediateTasks, [[flatSloper, flatSloper]])
         XCTAssertEqual(
-            Set(try ContactResolver.resolve(intermediateStep.workRequirements[0], step: intermediateStep, board: board).map(\.id)),
+            try ContactResolver.resolve(intermediateTasks[0], step: intermediateStep, board: board).map(\.id),
             ["flat-sloper-2-left", "flat-sloper-2-right"]
         )
         let roundRequirement = ContactRequirement(kind: .sloper, shape: .round)
@@ -2273,7 +2311,7 @@ final class PlanStorageTests: XCTestCase {
 
         for expected in expectedSteps {
             let step = try XCTUnwrap(
-                LegacyPlanSeedCatalog.all.lazy.flatMap(\.steps).first { $0.id == expected.id }
+                CanonicalPlanSourceFixture.all.lazy.flatMap(\.steps).first { $0.id == expected.id }
             )
 
             XCTAssertEqual(
@@ -2301,11 +2339,11 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testShippedRoutineSeedsExceptRPTCExpandToTerminalWorkSteps() throws {
-        let terminalSteps = try LegacyPlanSeedCatalog.all
+        let terminalSteps = try CanonicalPlanSourceFixture.all
             .filter {
-                $0.id != LegacyPlanSeedCatalog.rptcRepeaters.id &&
-                    $0.id != LegacyPlanSeedCatalog.megoOneArmSevenThree.id &&
-                    $0.id != LegacyPlanSeedCatalog.abrahangs.id
+                $0.id != "rptc.seven-three-repeaters" &&
+                    $0.id != "research.megos-one-arm-7-3" &&
+                    $0.id != "research.abrahangs"
             }
             .map { plan in
                 try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
@@ -2314,7 +2352,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(terminalSteps.allSatisfy { $0.phase != .rest })
 
         let megoTerminalStep = try XCTUnwrap(
-            LegacyPlanSeedCatalog.megoOneArmSevenThree.steps
+            CanonicalPlanSourceFixture.plan("research.megos-one-arm-7-3").steps
                 .flatMap(WorkoutStepNormalizer.expand)
                 .last
         )
@@ -2324,18 +2362,27 @@ final class PlanStorageTests: XCTestCase {
 
     func testAbrahangsSecondGripKeepsOriginalThreeFingerPocketCue() throws {
         let step = try XCTUnwrap(
-            LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2-rep-1" }
+            CanonicalPlanSourceFixture.plan("research.abrahangs").steps.first { $0.id == "abrahangs-grip-2-rep-1" }
         )
 
         XCTAssertEqual(step.title, "Abrahang · Three-finger drag · deep pocket · rep 1 of 3")
         XCTAssertEqual(
-            step.workRequirements,
-            [ContactRequirement(
-                kind: .pocket,
-                fingerCapacity: 3,
-                selection: .bilateralPair
-            )]
+            step.segments,
+            [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .tasks([[
+                        PlanHandTarget(target: .init(kind: .pocket, fingerCapacity: 3)),
+                        PlanHandTarget(target: .init(kind: .pocket, fingerCapacity: 3))
+                    ]]),
+                    timing: .fixed,
+                    duration: 10
+                ),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 50)
+            ]
         )
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
         XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(
             step.fingerConfiguration,
@@ -2344,9 +2391,9 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testAbrahangsFourthGripKeepsSourceBackedFrontTwoOpenCue() throws {
-        let store = try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
+        let store = try PlanLibraryStore(definition: CanonicalPlanSourceFixture.definition)
         let step = try XCTUnwrap(
-            store.plan(id: LegacyPlanSeedCatalog.abrahangs.id)?.steps.first {
+            store.plan(id: "research.abrahangs")?.steps.first {
                 $0.id == "abrahangs-grip-4-rep-1.segment-1"
             }
         )
@@ -2392,14 +2439,14 @@ final class PlanStorageTests: XCTestCase {
 
     func testUnsupportedBuiltInGripAndFingerOverridesAreAbsent() throws {
         let plansWithoutSourceBackedCues = [
-            LegacyPlanSeedCatalog.metoliusEntry,
-            LegacyPlanSeedCatalog.metoliusIntermediate,
-            LegacyPlanSeedCatalog.metoliusAdvanced,
-            LegacyPlanSeedCatalog.forceF80,
-            LegacyPlanSeedCatalog.forceF100,
-            LegacyPlanSeedCatalog.evaIntHangs,
-            LegacyPlanSeedCatalog.ladders,
-            LegacyPlanSeedCatalog.zlagboardEndurance
+            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.entry"),
+            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.intermediate"),
+            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.advanced"),
+            CanonicalPlanSourceFixture.plan("research.force-feedback-f80"),
+            CanonicalPlanSourceFixture.plan("research.force-feedback-f100"),
+            CanonicalPlanSourceFixture.plan("research.eva-int-hangs"),
+            CanonicalPlanSourceFixture.plan("coach.bechtel-three-six-nine"),
+            CanonicalPlanSourceFixture.plan("device.zlagboard-sixty-sixty")
         ]
 
         XCTAssertTrue(
@@ -2410,23 +2457,23 @@ final class PlanStorageTests: XCTestCase {
 
         // Nelson's original Table 2 specifies these grip positions, but no
         // exact finger selection. Retain only the cues supported by that table.
-        let densityWork = LegacyPlanSeedCatalog.densityHangs.steps.filter { !$0.isRestStep }
+        let densityWork = CanonicalPlanSourceFixture.plan("coach.density-hangs").steps.filter { !$0.isRestStep }
         XCTAssertEqual(densityWork.map(\.gripType), [.openHand, .openHand, .halfCrimp, .halfCrimp])
         XCTAssertTrue(densityWork.allSatisfy { $0.fingerConfiguration == nil })
 
-        let zlagboardStep = try XCTUnwrap(LegacyPlanSeedCatalog.zlagboardEndurance.steps.first)
+        let zlagboardStep = try XCTUnwrap(CanonicalPlanSourceFixture.plan("device.zlagboard-sixty-sixty").steps.first)
         XCTAssertEqual(zlagboardStep.instruction, "Hang for 60 seconds, then rest for 60 seconds.")
         XCTAssertEqual(zlagboardStep.accessory, "60s hang · 60s rest")
     }
 
     func testMetoliusAdvancedMinuteEightKeepsAlternativeDurationUndefined() throws {
         let minuteEightTaskOne = try XCTUnwrap(
-            LegacyPlanSeedCatalog.metoliusAdvanced.steps.first {
+            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.advanced").steps.first {
                 $0.id == "advanced.minute-8.task-1"
             }
         )
         let minuteEightTaskTwo = try XCTUnwrap(
-            LegacyPlanSeedCatalog.metoliusAdvanced.steps.first {
+            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.advanced").steps.first {
                 $0.id == "advanced.minute-8.task-2"
             }
         )
@@ -2436,9 +2483,10 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .fromLegacyTargets([
-                        ContactRequirement(kind: .sloper, depth: .category(.large))
-                    ]),
+                    target: .tasks([[
+                        PlanHandTarget(target: .init(kind: .sloper, depth: .category(.large))),
+                        PlanHandTarget(target: .init(kind: .sloper, depth: .category(.large)))
+                    ]]),
                     timing: .fixed,
                     duration: 15
                 )
@@ -2449,9 +2497,10 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .fromLegacyTargets([
-                        ContactRequirement(kind: .sloper, depth: .category(.large))
-                    ]),
+                    target: .tasks([[
+                        PlanHandTarget(target: .init(kind: .sloper, depth: .category(.large))),
+                        PlanHandTarget(target: .init(kind: .sloper, depth: .category(.large)))
+                    ]]),
                     timing: .undefined,
                     duration: nil
                 )
@@ -2624,12 +2673,12 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
-    func testBundledSourceSeedsClassifyExplicitWorkRestAndRecovery() throws {
+    func testCanonicalPlanSourceClassifiesExplicitWorkRestAndRecovery() throws {
         let maxHang = try XCTUnwrap(
-            LegacyPlanSeedCatalog.maxHangs.steps.first { $0.id == "max-hangs-1" }
+            CanonicalPlanSourceFixture.plan("research.max-hangs").steps.first { $0.id == "max-hangs-1" }
         )
         let recovery = try XCTUnwrap(
-            LegacyPlanSeedCatalog.forceF80.steps.first { $0.id == "f80-set-1-recovery" }
+            CanonicalPlanSourceFixture.plan("research.force-feedback-f80").steps.first { $0.id == "f80-set-1-recovery" }
         )
 
         XCTAssertEqual(
@@ -2637,12 +2686,10 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .fromLegacyTargets([
-                        ContactRequirement.edge(
-                            depth: .range(.init(minimum: 9, maximum: 19)),
-                            selection: .bilateralPair
-                        )
-                    ]),
+                    target: .tasks([[
+                        PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 9, maximum: 19)))),
+                        PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 9, maximum: 19))))
+                    ]]),
                     timing: .fixed,
                     duration: 10
                 ),
@@ -2655,8 +2702,8 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testPlanCatalogMatchesLiteralizedLegacyPlanSeeds() throws {
-        let expectedPlans = try LegacyPlanSeedCatalog.all.map { seedPlan in
+    func testPlanCatalogMatchesLiteralizedCanonicalPlanSource() throws {
+        let expectedPlans = try CanonicalPlanSourceFixture.all.map { seedPlan in
             let literalSteps = try seedPlan.steps
                 .map(WorkoutStepNormalizer.materializingImplicitSegments)
                 .flatMap(WorkoutStepNormalizer.expand)
@@ -2678,6 +2725,7 @@ final class PlanStorageTests: XCTestCase {
             )
         }
 
+        XCTAssertEqual(PlanLibraryStore.builtIn.definition, CanonicalPlanSourceFixture.definition)
         XCTAssertEqual(PlanLibraryStore.builtIn.plans, expectedPlans)
         XCTAssertEqual(PlanCatalog.all, expectedPlans)
     }
@@ -2685,7 +2733,7 @@ final class PlanStorageTests: XCTestCase {
     func testBuiltInPlanLibraryVisibleCueFieldsHaveSourceAuditCoverage() throws {
         throw XCTSkip("Historical source-audit records were removed from the repository.")
         let audit = try loadPlanCueAudit()
-        let library = BuiltInPlanLibraryDefinition.document
+        let library = CanonicalPlanSourceFixture.definition
         let store = try PlanLibraryStore(definition: library)
 
         let sourcesByPlanID = Dictionary(grouping: audit.planSources, by: \.planID)
@@ -2846,9 +2894,9 @@ final class PlanStorageTests: XCTestCase {
         )
 
         for planID in [
-            LegacyPlanSeedCatalog.metoliusEntry.id,
-            LegacyPlanSeedCatalog.metoliusIntermediate.id,
-            LegacyPlanSeedCatalog.metoliusAdvanced.id
+            "metolius.generic-ten-minute.entry",
+            "metolius.generic-ten-minute.intermediate",
+            "metolius.generic-ten-minute.advanced"
         ] {
             XCTAssertTrue(
                 audit.planFieldRules.contains {
@@ -2866,14 +2914,14 @@ final class PlanStorageTests: XCTestCase {
     func testLatticeBeginnerGuideIsNotAvailableFromBuiltInCatalog() {
         let removedPlanID = "lattice.beginner-climbers-training-guide"
 
-        XCTAssertFalse(LegacyPlanSeedCatalog.all.contains { $0.id == removedPlanID })
+        XCTAssertFalse(CanonicalPlanSourceFixture.all.contains { $0.id == removedPlanID })
         XCTAssertNil(PlanCatalog.plan(id: removedPlanID))
     }
 
     func testLatticeLiteHomeAdaptationsIsNotAvailableFromBuiltInCatalog() {
         let removedPlanID = "lattice.lite-home-adaptations"
 
-        XCTAssertFalse(LegacyPlanSeedCatalog.all.contains { $0.id == removedPlanID })
+        XCTAssertFalse(CanonicalPlanSourceFixture.all.contains { $0.id == removedPlanID })
         XCTAssertNil(PlanCatalog.plan(id: removedPlanID))
     }
 
@@ -2886,7 +2934,7 @@ final class PlanStorageTests: XCTestCase {
         ]
 
         XCTAssertTrue(expectedIDs.allSatisfy { id in
-            LegacyPlanSeedCatalog.all.contains { $0.id == id } && PlanCatalog.plan(id: id) != nil
+            CanonicalPlanSourceFixture.all.contains { $0.id == id } && PlanCatalog.plan(id: id) != nil
         })
         XCTAssertEqual(
             expectedIDs.map { PlanCatalog.metadata(for: $0)?.category },
@@ -2895,7 +2943,7 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testHoopersRoundTwoKeepsFiveRecruitmentRepsPerHandAcrossThreeSets() throws {
-        let steps = LegacyPlanSeedCatalog.hoopersBetaIntroductory.steps
+        let steps = CanonicalPlanSourceFixture.plan("hoopers-beta.introductory-home-hangboard").steps
         let recruitment = steps.filter { $0.id.contains("hoopers-intro-round-2-set-") && $0.id.contains("-rep-") }
         XCTAssertEqual(recruitment.count, 30)
         XCTAssertEqual(recruitment.filter { $0.id.hasSuffix("-left") }.count, 15)
@@ -2904,7 +2952,7 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testHoopersOptionalRoundFiveIsFourPossiblePairedSetsNotEightIndependentSets() throws {
-        let steps = LegacyPlanSeedCatalog.hoopersBetaIntroductory.steps
+        let steps = CanonicalPlanSourceFixture.plan("hoopers-beta.introductory-home-hangboard").steps
         let pullUps = steps.filter { $0.id.contains("hoopers-intro-round-5-set-") && $0.id.hasSuffix("-pull-ups") }
         let hollow = steps.filter { $0.id.contains("hoopers-intro-round-5-set-") && $0.id.hasSuffix("-hollow") }
         XCTAssertEqual(pullUps.count, 4)
@@ -3161,9 +3209,9 @@ final class PlanStorageTests: XCTestCase {
 
     private func timerOrRangePlanFields(for planID: String) -> [String] {
         switch planID {
-        case LegacyPlanSeedCatalog.metoliusEntry.id,
-            LegacyPlanSeedCatalog.metoliusIntermediate.id,
-            LegacyPlanSeedCatalog.metoliusAdvanced.id:
+        case "metolius.generic-ten-minute.entry",
+            "metolius.generic-ten-minute.intermediate",
+            "metolius.generic-ten-minute.advanced":
             return ["subtitle", "accessory", "duration", "interval"]
         case "research.max-hangs":
             return ["subtitle", "accessory", "count", "duration", "interval"]
@@ -3184,9 +3232,9 @@ final class PlanStorageTests: XCTestCase {
 
     private func timerOrRangeStepFields(for planID: String, step: WorkoutStepDefinition) -> [String] {
         switch planID {
-        case LegacyPlanSeedCatalog.metoliusEntry.id,
-            LegacyPlanSeedCatalog.metoliusIntermediate.id,
-            LegacyPlanSeedCatalog.metoliusAdvanced.id:
+        case "metolius.generic-ten-minute.entry",
+            "metolius.generic-ten-minute.intermediate",
+            "metolius.generic-ten-minute.advanced":
             guard step.phase == .rest else { return [] }
             return visibleCueFields(
                 instruction: step.instruction,
@@ -3612,6 +3660,69 @@ final class PlanStorageTests: XCTestCase {
             return array.flatMap(legacyPlanTargetKeys)
         }
         return []
+    }
+}
+
+/// Reads the canonical bundled source before the resolver expands its segments.
+/// Source-prescription tests keep checking the same authored step boundary.
+enum CanonicalPlanSourceFixture {
+    static let definition: PlanLibraryDefinition = {
+        let bundle = Bundle(for: PlanStorageTests.self)
+        guard let url = bundle.url(forResource: "PlanLibrary", withExtension: "json") else {
+            preconditionFailure("Expected canonical PlanLibrary.json in the test bundle")
+        }
+        do {
+            return try JSONDecoder().decode(PlanLibraryDefinition.self, from: Data(contentsOf: url))
+        } catch {
+            preconditionFailure("Canonical plan fixture could not be decoded: \(error)")
+        }
+    }()
+
+    static let all: [TrainingPlan] = {
+        let blocks = Dictionary(uniqueKeysWithValues: definition.blocks.map { ($0.id, $0) })
+        return definition.plans.map { plan in
+            var steps: [WorkoutStep] = []
+            for reference in plan.blocks {
+                guard let block = blocks[reference.blockID] else {
+                    preconditionFailure("Canonical plan fixture is missing block \(reference.blockID)")
+                }
+                for repetition in 0..<reference.repeatCount {
+                    for (index, step) in block.steps.enumerated() {
+                        let sourceID = reference.stepIDs.indices.contains(index)
+                            ? reference.stepIDs[index] : step.id
+                        let id = reference.repeatCount > 1
+                            ? "\(sourceID)-\(repetition + 1)" : sourceID
+                        steps.append(WorkoutStep(
+                            id: id, number: steps.count + 1, title: step.title,
+                            instruction: step.instruction, accessory: step.accessory,
+                            duration: step.duration, phase: step.phase,
+                            segments: step.segments.map {
+                                WorkoutSegment(kind: $0.kind, target: $0.target,
+                                               timing: $0.timing, duration: $0.duration)
+                            },
+                            gripType: step.gripType,
+                            fingerConfiguration: step.fingerConfiguration,
+                            handUse: step.handUse, side: step.side, action: step.action,
+                            repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
+                            timedWorkDuration: step.activeDuration
+                        ))
+                    }
+                }
+            }
+            return TrainingPlan(
+                id: plan.id, title: plan.metadata.title, subtitle: plan.metadata.subtitle,
+                level: plan.metadata.level, sourceLabel: plan.metadata.sourceLabel,
+                sourceURL: plan.metadata.sourceURL, provenance: plan.metadata.provenance,
+                boardID: plan.boardID, steps: steps
+            )
+        }
+    }()
+
+    static func plan(_ id: String) -> TrainingPlan {
+        guard let plan = all.first(where: { $0.id == id }) else {
+            preconditionFailure("Canonical plan fixture is missing plan \(id)")
+        }
+        return plan
     }
 }
 

@@ -39,6 +39,16 @@ runs:
         key: ${{ steps.keys.outputs.cache-key }}
         restore-keys: ${{ steps.keys.outputs.cache-prefix }}
 
+    - name: Install native libraries for cache misses
+      if: ${{ runner.os == 'Linux' }}
+      shell: bash
+      env:
+        SHARD_INDEX: ${{ inputs.shard-index }}
+        SHARD_COUNT: ${{ inputs.shard-count }}
+        HANGTEN_CAD_CACHE_DIR: ${{ github.workspace }}/.context/${{ steps.keys.outputs.owner }}-board-cache-${{ inputs.shard-index }}
+      run: |
+        scripts/install-cad-ci-dependencies.sh "$SHARD_INDEX" "$SHARD_COUNT" "$HANGTEN_CAD_CACHE_DIR"
+
     - name: Compile missing board resources
       id: compile
       shell: bash

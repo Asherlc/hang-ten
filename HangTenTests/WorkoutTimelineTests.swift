@@ -4023,61 +4023,47 @@ final class WorkoutStepDurationTests: XCTestCase {
     }
 }
 
-final class MetoliusTaskExpansionTests: XCTestCase {
-    deinit {}
+final class CanonicalMetoliusTaskTests: XCTestCase {
+    func testPullUpTasksKeepFiveSecondsPerPullUpAndRemainingMinuteRest() {
+        let steps = CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.entry").steps.filter {
+            $0.id.hasPrefix("entry.minute-9.")
+        }
 
-    func testPullUpTasksUseFiveSecondsPerPullUp() throws {
-        let task = MetoliusCycleBuilder.pullUps(
-            count: 3,
-            title: "Three pull-ups",
-            instruction: "Do 3 pull-ups on the jugs.",
-            phase: .pull,
-            targets: [.kind(.jug)]
-        )
-
-        let steps = try MetoliusCycleBuilder.expand(planID: "test", minute: 1, tasks: [task])
-
-        XCTAssertEqual(steps[0].duration, 15)
+        XCTAssertEqual(steps.map(\.duration), [15, 45])
+        XCTAssertEqual(steps[0].instruction, "Do 3 pull-ups on the jugs.")
         XCTAssertEqual(steps[1].phase, .rest)
-        XCTAssertEqual(steps[1].duration, 45)
     }
 
-    func testExpansionKeepsTaskOrderAndAddsRemainingMinuteRest() throws {
-        let first = MetoliusCycleBuilder.fixed(
-            title: "First hang",
-            instruction: "Hang for 15 seconds.",
-            duration: 15,
-            phase: .hang,
-            targets: [.edge(depth: .category(.large))]
-        )
-        let second = MetoliusCycleBuilder.pullUps(
-            count: 2,
-            title: "Pull-ups",
-            instruction: "Do 2 pull-ups.",
-            phase: .pull,
-            targets: [.kind(.jug)]
-        )
+    func testCanonicalTasksKeepSourceOrderAndRemainingMinuteRest() {
+        let steps = CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.intermediate").steps.filter {
+            $0.id.hasPrefix("intermediate.minute-2.")
+        }
 
-        let steps = try MetoliusCycleBuilder.expand(planID: "test", minute: 2, tasks: [first, second])
-
-        XCTAssertEqual(steps.map(\.id), ["test.minute-2.task-1", "test.minute-2.task-2", "test.minute-2.rest"])
-        XCTAssertEqual(steps.map(\.duration), [15, 10, 35])
-        XCTAssertEqual(steps[0].workRequirements, first.targets)
-        XCTAssertEqual(steps[1].workRequirements, second.targets)
+        XCTAssertEqual(steps.map(\.id), [
+            "intermediate.minute-2.task-1", "intermediate.minute-2.task-2", "intermediate.minute-2.rest"
+        ])
+        XCTAssertEqual(steps.map(\.duration), [10, 20, 30])
+        XCTAssertEqual(
+            steps[0].workRequirements,
+            Array(repeating: ContactRequirement(kind: .sloper, shape: .round), count: 2)
+        )
+        XCTAssertEqual(
+            steps[1].workRequirements,
+            Array(repeating: ContactRequirement.edge(depth: .category(.medium)), count: 2)
+        )
+        XCTAssertEqual(steps[2].phase, .rest)
     }
 
-    func testExpansionRejectsTasksThatExceedTheMinute() {
-        let overfull = MetoliusTaskDefinition(
-            title: "Overfull",
-            instruction: "Overfull",
-            accessory: "",
-            duration: 61,
-            phase: .hang,
-            targets: [.edge(depth: .category(.large))],
-            gripType: nil
-        )
-
-        XCTAssertThrowsError(try MetoliusCycleBuilder.expand(planID: "test", minute: 3, tasks: [overfull]))
+    func testCanonicalSourceMinutesKeepTheSixtySecondBudget() {
+        for plan in CanonicalPlanSourceFixture.all where plan.id.hasPrefix("metolius.generic-ten-minute.") {
+            let prefix = String(plan.steps[0].id.split(separator: ".")[0])
+            for minute in 1...10 {
+                let steps = plan.steps.filter { $0.id.hasPrefix("\(prefix).minute-\(minute).") }
+                XCTAssertFalse(steps.isEmpty, "\(plan.id) minute \(minute)")
+                XCTAssertEqual(steps.reduce(0) { $0 + $1.duration }, 60, "\(plan.id) minute \(minute)")
+                XCTAssertTrue(steps.allSatisfy { $0.duration <= 60 })
+            }
+        }
     }
 }
 

@@ -894,7 +894,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     func testRPTCRepeatersRecordSelfSelectedWorkWithoutBoardHolds() throws {
         let workout = try XCTUnwrap(
-            PlanCatalog.plan(id: LegacyPlanSeedCatalog.rptcRepeaters.id)
+            PlanCatalog.plan(id: "rptc.seven-three-repeaters")
         )
 
         let records = try WorkoutActivityRecorder().segments(
@@ -995,9 +995,9 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             BoardCatalog.all.first { $0.id == "metolius.wood-grips-compact-ii" }
         )
         let plans = [
-            LegacyPlanSeedCatalog.metoliusEntry,
-            LegacyPlanSeedCatalog.metoliusIntermediate,
-            LegacyPlanSeedCatalog.metoliusAdvanced
+            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.entry"),
+            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.intermediate"),
+            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.advanced")
         ]
 
         for plan in plans {
@@ -1706,9 +1706,9 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testSevenThreeRepeatersRecordSourceWorkWithoutAppSelectedTargets() throws {
-        let plan = LegacyPlanSeedCatalog.repeaters
+        let plan = CanonicalPlanSourceFixture.plan("research.seven-three-repeaters")
         let board = BoardCatalog.defaultBoard
-        let repeaterSteps = plan.steps.filter { $0.id.hasPrefix(LegacyPlanSeedCatalog.repeaterStepIDPrefix) }
+        let repeaterSteps = plan.steps.filter { $0.id.hasPrefix("repeaters-grip-") }
         let workSteps = repeaterSteps.filter { $0.phase == .hang }
         let interRepRestSteps = workSteps.filter { $0.restDuration == 3 }
         let seriesRecoverySteps = repeaterSteps.filter {

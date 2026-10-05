@@ -34,7 +34,7 @@ prepare_arguments=(--out "$build_root/compiled" --jobs "${HANGTEN_CAD_JOBS:-2}")
 cache_ready=false
 if [[ -n "${HANGTEN_CAD_CACHE_DIR:-}" ]]; then
     prepare_arguments+=(--cache-dir "$HANGTEN_CAD_CACHE_DIR")
-    # A complete hit requires only host Python. Skip the DMG and native wheels.
+    # A complete hit requires only host Python. Skip FreeCAD and native wheels.
     if "$python_command" "$repository_root/Tools/HangboardCAD/prepare_assets.py" \
         "${prepare_arguments[@]}" "$@" --cache-only > "$build_root/cache-probe.log" 2>&1; then
         cache_ready=true
@@ -47,24 +47,7 @@ fi
 
 if [[ "$cache_ready" == false ]]; then
 if [[ ! -x "$freecad_command" ]]; then
-    if [[ "$(uname -s)" != Darwin ]]; then
-        echo "Set HANGTEN_FREECAD_CMD to a pinned FreeCAD 1.1.3 executable." >&2
-        exit 69
-    fi
-    case "$(uname -m)" in
-        arm64) digest=f5c0ece7cd7c932466d6effadc0fc6e179b0538a9d9a6a77a6769eae3af2667c ;;
-        x86_64) digest=8434bd6ad32f597605d184e5b996f496e9cbc7e6d8ffb6db4dbd6e2ce6d1612b ;;
-        *) echo "Unsupported FreeCAD architecture" >&2; exit 69 ;;
-    esac
-    curl --fail --location --retry 3 \
-        "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-macOS-$(uname -m)-py311.dmg" \
-        --output "$build_root/FreeCAD.dmg"
-    echo "$digest  $build_root/FreeCAD.dmg" | shasum -a 256 -c -
-    mkdir "$mount_path"
-    hdiutil attach "$build_root/FreeCAD.dmg" -nobrowse -readonly -mountpoint "$mount_path"
-    ditto "$mount_path/FreeCAD.app" "$build_root/FreeCAD.app"
-    hdiutil detach "$mount_path"
-    freecad_command="$build_root/FreeCAD.app/Contents/Resources/bin/freecadcmd"
+    freecad_command="$("$repository_root/scripts/install-freecad.sh" "$build_root/freecad")"
 fi
 
 # Use FreeCAD's Python ABI even when the host Python has a different version.

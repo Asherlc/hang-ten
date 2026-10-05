@@ -30,19 +30,29 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 
 if [[ ! -x "$blender_command" ]]; then
-    if [[ "$(uname -s)" != Darwin || "$(uname -m)" != arm64 ]]; then
-        echo "Set HANGTEN_BLENDER_CMD to a pinned Blender 5.2.0 executable." >&2
-        exit 69
-    fi
-    curl --fail --location --retry 3 \
-        https://download.blender.org/release/Blender5.2/blender-5.2.0-macos-arm64.dmg \
-        --output "$export_root/Blender.dmg"
-    echo "ed4d8390166dec5ea0a2813a03db6221f206ce016442be7f59f41d760972568a  $export_root/Blender.dmg" | shasum -a 256 -c -
-    mkdir "$mount_path"
-    hdiutil attach "$export_root/Blender.dmg" -nobrowse -readonly -mountpoint "$mount_path"
-    ditto "$mount_path/Blender.app" "$export_root/Blender.app"
-    hdiutil detach "$mount_path"
-    blender_command="$export_root/Blender.app/Contents/MacOS/Blender"
+    case "$(uname -s)/$(uname -m)" in
+        Darwin/arm64)
+            curl --fail --location --retry 3 \
+                https://download.blender.org/release/Blender5.2/blender-5.2.0-macos-arm64.dmg \
+                --output "$export_root/Blender.dmg"
+            echo "ed4d8390166dec5ea0a2813a03db6221f206ce016442be7f59f41d760972568a  $export_root/Blender.dmg" | shasum -a 256 -c -
+            mkdir "$mount_path"
+            hdiutil attach "$export_root/Blender.dmg" -nobrowse -readonly -mountpoint "$mount_path"
+            ditto "$mount_path/Blender.app" "$export_root/Blender.app"
+            hdiutil detach "$mount_path"
+            blender_command="$export_root/Blender.app/Contents/MacOS/Blender" ;;
+        Linux/x86_64)
+            archive="$export_root/blender-5.2.0-linux-x64.tar.xz"
+            curl --fail --location --retry 3 \
+                https://download.blender.org/release/Blender5.2/blender-5.2.0-linux-x64.tar.xz \
+                --output "$archive"
+            echo "96f6c181a30f4950607839dc84d42a354b250d8a0231b098b59b7bc69c351c48  $archive" | sha256sum -c -
+            tar -xJf "$archive" -C "$export_root"
+            blender_command="$export_root/blender-5.2.0-linux-x64/blender" ;;
+        *)
+            echo "Set HANGTEN_BLENDER_CMD to a pinned Blender 5.2.0 executable." >&2
+            exit 69 ;;
+    esac
 fi
 
 export BLENDER_USER_CONFIG="$export_root/config"

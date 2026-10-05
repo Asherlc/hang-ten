@@ -211,10 +211,10 @@ rtk proxy bash scripts/build-runtime-assets.sh
 ```
 
 This produces ignored board USDZ/descriptors, optional suspension/physics
-artifacts, grip hand mesh JSON, and plan JSON. Each flat
+artifacts and grip hand mesh JSON. Each flat
 `Hangboards/<slug>.FCStd` embeds board, cord, and simulation inputs; the hand
-Blender source and Swift plan definitions also remain
-authoritative. CI consumers receive the same runtime files from the producer
+Blender source and checked-in canonical `HangTen/Resources/PlanLibrary.json`
+remain authoritative. CI consumers receive the generated runtime files from the producer
 artifact. See [generated artifacts](GENERATED_ARTIFACTS.md).
 
 Use a workspace-specific Derived Data path and explicit destination:

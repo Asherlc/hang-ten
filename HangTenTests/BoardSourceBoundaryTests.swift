@@ -1053,9 +1053,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
         if relativePath == "HangTenTests" || relativePath.hasPrefix("HangTenTests/") {
             return "test fixtures"
         }
-        // The plan export is generated and runtime-replaces its legacy mappings.
+        // Canonical plan content is checked-in data, not handwritten app code.
         if relativePath == "HangTen/Resources/PlanLibrary.json" {
-            return "generated canonical plan resource"
+            return "canonical plan source resource"
         }
         // Workspace products and indexes are not checked-in handwritten app inputs.
         for prefix in [".context/", ".codegraph/", "build/", "DerivedData/"]

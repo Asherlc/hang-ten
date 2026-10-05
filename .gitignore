@@ -21,7 +21,6 @@ xcuserdata/
 /Hangboards/*/assets/*.physics.json
 /Hangboards/*/assets/suspension.json
 /HangTen/Resources/GripHand/hand-mesh.json
-/HangTen/Resources/PlanLibrary.json
 
 # CodeGraph local index and runtime state
 .codegraph/

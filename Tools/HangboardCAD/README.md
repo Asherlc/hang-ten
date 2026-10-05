@@ -13,7 +13,11 @@ conversion in the build path. Both apps consume bundled generated packages.
 
 ## Build from a fresh checkout
 
-Run from the repository root:
+Run from the repository root. On Ubuntu 24.04, install the runtime and
+extraction prerequisites for FreeCAD and the full build's Blender hand export:
+`libegl1 libgl1 libglu1-mesa libopengl0 libxi6 libxfixes3 libxrender1 libsm6 libxxf86vm1 libxkbcommon0 squashfs-tools xz-utils`.
+The FreeCAD installer extracts the pinned AppImage and runs its bundled
+`freecadcmd` without a FUSE mount.
 
 ```sh
 rtk git lfs pull
@@ -23,7 +27,8 @@ rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 
 Before Xcode or a full app build, use
 `rtk proxy bash scripts/build-runtime-assets.sh`; it also exports the grip hand
-with Blender 5.2.0 and the plan library from Swift. See
+with Blender 5.2.0. Audited plans live in the checked-in canonical
+`HangTen/Resources/PlanLibrary.json`. See
 [generated artifacts](../../docs/GENERATED_ARTIFACTS.md) for CI production,
 caching, staging, and release consumption.
 
@@ -31,7 +36,8 @@ The board producer uses pinned FreeCAD 1.1.3 and OpenUSD 26.8. It builds every
 model presentation, solves declared suspension against the native solid, checks
 source/model/physics/suspension bindings, and installs complete packages. It
 needs no previous export. Its temporary toolchain and scratch resources are
-owned by the workspace and cleaned on exit.
+owned by the workspace and cleaned on exit. CI runs eight stable board shards
+on Ubuntu 24.04 and assembles one complete catalog for its consumers.
 
 For a selected board, use `--package <slug>`; repeat `--package` for several.
 `--jobs <count>` controls independent board workers. `HANGTEN_FREECAD_CMD`
