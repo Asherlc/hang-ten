@@ -58,7 +58,10 @@ enum RootTab: Hashable, CaseIterable {
         if environment["HANGTEN_REVIEW_HISTORY"] == "1" {
             return .history
         }
-        if environment["HANGTEN_REVIEW_PLANS"] == "1" {
+        if environment["HANGTEN_REVIEW_PLANS"] == "1"
+            || environment["HANGTEN_REVIEW_CHOOSER_RESULTS"] == "1"
+            || environment["HANGTEN_REVIEW_CHOOSER_FILTERS"] == "1"
+            || environment["HANGTEN_REVIEW_CHOOSER_MY_ROUTINES"] == "1" {
             return .plans
         }
         #endif
@@ -90,7 +93,7 @@ struct RootView: View {
 				.tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
 				.tag(RootTab.history)
 		}
-		.tint(.hangGreenDark)
+		.tint(selectedTab == .plans ? .workoutBrowserAccent : .hangGreenDark)
 		.environmentObject(workoutAudioCoach)
 		.environmentObject(deepLinkManager)
 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in

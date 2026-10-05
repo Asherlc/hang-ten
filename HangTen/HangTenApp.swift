@@ -64,6 +64,19 @@ struct HangTenApp: App {
 		#else
 		let purchaseManager = PurchaseManager()
 		#endif
+		#if DEBUG
+		let customRoutineStore: CustomRoutineStoring?
+		if environment["HANGTEN_REVIEW_ISOLATED_CUSTOM_ROUTINES"] == "1" {
+			// Review launches start empty without changing the athlete's library.
+			let reviewKey = "HangTen.review.customRoutines.v2"
+			UserDefaults.standard.removeObject(forKey: reviewKey)
+			customRoutineStore = CustomRoutineStore(key: reviewKey)
+		} else {
+			customRoutineStore = nil
+		}
+		#else
+		let customRoutineStore: CustomRoutineStoring? = nil
+		#endif
 		let telemetry = TelemetryComposition.make(bundle: .main)
 
 		_motherboardBluetoothService = StateObject(wrappedValue: motherboardBluetoothService)
@@ -73,6 +86,7 @@ struct HangTenApp: App {
 			motherboardBluetoothService: motherboardBluetoothService,
 			motherboardSettingsStore: motherboardSettingsStore,
 			workoutSessionStore: workoutSessionStore,
+			customRoutineStore: customRoutineStore,
 			workoutAccessStore: workoutAccessStore,
 			purchaseManager: purchaseManager,
 			telemetry: telemetry

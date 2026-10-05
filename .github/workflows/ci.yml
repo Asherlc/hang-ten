@@ -639,6 +639,7 @@ jobs:
               HangTenUITests/WorkoutPaywallUITests/testRetryRemainsHittableAfterProductLoadFailureAndRestoreFailure
               HangTenUITests/WorkoutPaywallUITests/testRestoreFailureUsesRestoreSpecificFeedback
               HangTenUITests/SettingsUITests
+              HangTenUITests/WorkoutChooserUITests
               HangTenUITests/PlanFlowUITests
               HangTenUITests/PendingWorkoutSummaryUITests
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptySessionShowsLogControls

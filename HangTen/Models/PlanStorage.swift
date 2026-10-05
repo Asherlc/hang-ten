@@ -1,5 +1,30 @@
 import Foundation
 
+/// A routine's training goal is authored from retained source evidence, not
+/// inferred from its title or the presence of a particular exercise.
+enum WorkoutFocus: String, Codable, CaseIterable, Hashable, Identifiable {
+    case fingerStrength, fingerEndurance, pullingStrength, mixed
+
+    var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .fingerStrength: "Finger strength"
+        case .fingerEndurance: "Finger endurance"
+        case .pullingStrength: "Pulling strength"
+        case .mixed: "Mixed workouts"
+        }
+    }
+    var subtitle: String {
+        switch self {
+        case .fingerStrength: "Workouts focused on finger strength"
+        case .fingerEndurance: "Workouts focused on finger endurance"
+        case .pullingStrength: "Workouts focused on pulling strength"
+        case .mixed: "Workouts that combine different exercises"
+        }
+    }
+}
+
+
 private struct PlanLibraryCodingKey: CodingKey {
     let stringValue: String
     let intValue: Int?
@@ -81,6 +106,8 @@ struct PlanMetadata: Codable, Hashable {
     /// Curated athlete-facing labels. Unlike `tags`, these never expose
     /// library provenance or runtime requirements in the Plans filter.
     let workoutLabels: [String]
+    /// Source-audited training goal; absent for unclassified and legacy routines.
+    let focus: WorkoutFocus?
     let tags: [String]
     let notes: [String]
     /// Deprecated fields preserved for round-trip fidelity with old plan
@@ -98,6 +125,7 @@ struct PlanMetadata: Codable, Hashable {
         provenance: RoutineProvenance,
         category: String = "general",
         workoutLabels: [String] = [],
+        focus: WorkoutFocus? = nil,
         tags: [String] = [],
         notes: [String] = [],
         equipment: [String]? = nil,
@@ -111,6 +139,7 @@ struct PlanMetadata: Codable, Hashable {
         self.provenance = provenance
         self.category = category
         self.workoutLabels = workoutLabels
+        self.focus = focus
         self.tags = tags
         self.notes = notes
         self.equipment = equipment
@@ -133,6 +162,7 @@ struct PlanMetadata: Codable, Hashable {
         case provenance
         case category
         case workoutLabels
+        case focus
         case tags
         case notes
         case equipment
@@ -149,6 +179,7 @@ struct PlanMetadata: Codable, Hashable {
         provenance = try container.decode(RoutineProvenance.self, forKey: .provenance)
         category = try container.decodeIfPresent(String.self, forKey: .category) ?? "general"
         workoutLabels = try container.decodeIfPresent([String].self, forKey: .workoutLabels) ?? []
+        focus = try container.decodeIfPresent(WorkoutFocus.self, forKey: .focus)
         tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
         notes = try container.decodeIfPresent([String].self, forKey: .notes) ?? []
         equipment = try container.decodeIfPresent([String].self, forKey: .equipment)
@@ -167,6 +198,7 @@ struct PlanMetadata: Codable, Hashable {
         if !workoutLabels.isEmpty {
             try container.encode(workoutLabels, forKey: .workoutLabels)
         }
+        try container.encodeIfPresent(focus, forKey: .focus)
         try container.encode(tags, forKey: .tags)
         try container.encode(notes, forKey: .notes)
         try container.encodeIfPresent(equipment, forKey: .equipment)
@@ -1872,6 +1904,24 @@ private enum PlanWorkoutLabelAudit {
         labelsByPlanID[planID] ?? []
     }
 
+    static func focus(for planID: String) -> WorkoutFocus? {
+        switch planID {
+        case "research.max-hangs", "research.force-feedback-f100",
+             "research.seven-three-repeaters", "coach.horst-seven-fifty-three":
+            .fingerStrength
+        case "research.force-feedback-f80", "research.eva-int-hangs", "research.megos-one-arm-7-3":
+            .fingerEndurance
+        case "metolius.generic-ten-minute.entry", "metolius.generic-ten-minute.intermediate",
+             "metolius.generic-ten-minute.advanced", "metolius.contact.entry",
+             "metolius.contact.intermediate", "metolius.contact.advanced",
+             "metolius.simulator-3d.entry", "metolius.simulator-3d.intermediate",
+             "metolius.simulator-3d.advanced", "metolius.rock-rings.ten-minute",
+             "hoopers-beta.introductory-home-hangboard", "method.intermediate-hangboarding.emom":
+            .mixed
+        default: nil
+        }
+    }
+
     private static let labelsByPlanID: [String: [String]] = [
         "metolius.generic-ten-minute.entry": ["max-effort", "pull-ups", "core"],
         "metolius.generic-ten-minute.intermediate": ["max-effort", "pull-ups", "core"],
@@ -2100,6 +2150,7 @@ enum BuiltInPlanLibraryDefinition {
             provenance: plan.provenance,
             category: category,
             workoutLabels: PlanWorkoutLabelAudit.labels(for: plan.id),
+            focus: PlanWorkoutLabelAudit.focus(for: plan.id),
             tags: tags,
             notes: notes
         )
