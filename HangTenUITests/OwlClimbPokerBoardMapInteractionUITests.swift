@@ -62,8 +62,15 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         addScreenshot(named: "Beastmaker manual orbit after selection")
         let pocket = app.buttons["boardDetail.holdLegend.pocket-middle-center"]
         XCTAssertTrue(pocket.waitForExistence(timeout: 10))
+        // Wrapped names and full-sized row targets can put this hold below
+        // the viewport. Start on the legend so the 3D orbit gesture cannot win.
+        for _ in 0..<3 {
+            if pocket.isHittable { break }
+            try scrollHoldLegend(in: app, upward: true)
+        }
         XCTAssertTrue(pocket.isHittable)
         pocket.tap()
+        try scrollHoldLegend(in: app, upward: false)
         let front = NSPredicate { _, _ in
             guard let value = diagnostic.value as? String,
                   value.contains("cameraSettled=true"),
@@ -76,6 +83,25 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         expectation(for: front, evaluatedWith: diagnostic)
         waitForExpectations(timeout: 10)
         addScreenshot(named: "Beastmaker pocket returns to front")
+    }
+
+    private func scrollHoldLegend(in app: XCUIApplication, upward: Bool) throws {
+        let viewport = app.scrollViews.firstMatch.frame.intersection(app.frame)
+        let rows = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@", "boardDetail.holdLegend."
+        )).allElementsBoundByIndex.filter {
+            $0.isHittable && viewport.contains(CGPoint(x: $0.frame.midX, y: $0.frame.midY))
+        }
+        let ordered = rows.sorted { $0.frame.midY < $1.frame.midY }
+        let anchor = try XCTUnwrap(upward ? ordered.last : ordered.first,
+                                  "Scrolling needs a visible legend row outside the 3D preview")
+        let destinationY = upward
+            ? max(viewport.minY + 40, anchor.frame.midY - 300)
+            : min(viewport.maxY - 40, anchor.frame.midY + 300)
+        let distance = destinationY - anchor.frame.midY
+        XCTAssertGreaterThan(abs(distance), 44)
+        let start = anchor.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)))
     }
 
     func testPivotRotationPresetsPersistWhenSelectingHolds() throws {
@@ -268,7 +294,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         addScreenshot(named: "Plateau landscape workout board below configuration selector")
 
         app.buttons["Resume"].tap()
-        let rest = NSPredicate(format: "label CONTAINS %@", "current step 18: Rest")
+        let rest = NSPredicate(format: "label BEGINSWITH %@", "Step 18 of ")
         expectation(for: rest, evaluatedWith: app.buttons["workout.routinePicker"])
         waitForExpectations(timeout: 20)
         pause.tap()
@@ -304,7 +330,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         addScreenshot(named: "Mini portrait paused Hang board and finger cues")
 
         app.buttons["Resume"].tap()
-        let rest = NSPredicate(format: "label CONTAINS %@", "current step 18: Rest")
+        let rest = NSPredicate(format: "label BEGINSWITH %@", "Step 18 of ")
         expectation(for: rest, evaluatedWith: app.buttons["workout.routinePicker"])
         waitForExpectations(timeout: 20)
         pause.tap()

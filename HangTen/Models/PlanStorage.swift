@@ -1441,7 +1441,15 @@ enum PlanLibraryValidator {
     private static let plansAllowingExplicitSelfSelectedWork: Set<String> = [
         "rptc.seven-three-repeaters",
         "coach.bechtel-three-six-nine",
-        "research.eva-int-hangs"
+        "research.eva-int-hangs",
+        "beastmaker-max-hangs",
+        "beastmaker-repeaters",
+        "rei-hangboard-training-101",
+        "rock-prodigy.original-beginner",
+        "rock-prodigy.original-advanced",
+        "rock-prodigy.rptc-intermediate",
+        "rock-prodigy.pivot-introductory",
+        "rock-prodigy.pivot-intermediate"
     ]
 
     /// Whether catalog validation may accept `.selfSelected` work (or compact
@@ -1478,6 +1486,22 @@ enum PlanLibraryValidator {
         in plan: PlanDefinition,
         terminalStep: WorkoutStepDefinition
     ) -> Bool {
+        // These source tables explicitly retain recovery on their final cycle.
+        // Limit the exception to the audited terminal identity and duration.
+        let publishedTerminalRests: [String: (id: String, duration: TimeInterval)] = [
+            "beastmaker-repeaters": ("beastmaker-repeaters.grip-rest", 180),
+            "tension-6-and-10": ("tension-6-and-10.set-4.rest-5", 10),
+            "rock-prodigy.pivot-introductory": ("rp-pivot-intro-6-3", 10),
+            "rock-prodigy.pivot-intermediate": ("rp-pivot-intermediate-10-5", 5)
+        ]
+        if let expected = publishedTerminalRests[plan.id],
+           plan.metadata.provenance == .adapted,
+           terminalStep.id == expected.id,
+           let rest = terminalStep.segments.last,
+           rest.kind == .rest, rest.timing == .fixed,
+           rest.duration == expected.duration {
+            return true
+        }
         if plan.id == "research.abrahangs",
            plan.metadata.provenance == .adapted,
            plan.metadata.sourceURL == URL(string: "https://www.youtube.com/watch?v=sBTI9qiH4UE"),

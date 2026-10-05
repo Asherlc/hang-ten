@@ -145,17 +145,11 @@ struct MotherboardSettingsView: View {
 
             Section("Detection threshold") {
                 Slider(value: $settings.thresholdKGF, in: 0.1...50, step: 0.1)
+                    .accessibilityLabel("Detection threshold")
+                    .accessibilityValue(settings.thresholdKGF.forceString(in: settings.forceUnit))
 
                 Stepper(value: $settings.thresholdKGF, in: 0.1...50, step: 0.1) {
                     Text("\(settings.thresholdKGF.forceString(in: settings.forceUnit))")
-                }
-
-                LabeledContent("Canonical threshold") {
-                    Text(settings.thresholdKGF.forceString(in: .kgf))
-                }
-
-                LabeledContent("Displayed threshold") {
-                    Text(settings.thresholdKGF.forceString(in: settings.forceUnit))
                 }
             }
 
@@ -184,6 +178,8 @@ struct MotherboardSettingsView: View {
                 Text(tareDescription)
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color.hangBackground)
         .navigationTitle("Sensor settings")
         .navigationBarTitleDisplayMode(.inline)
     }
