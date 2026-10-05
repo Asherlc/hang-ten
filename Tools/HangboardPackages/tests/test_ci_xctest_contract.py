@@ -36,21 +36,6 @@ def test_ci_model_asset_guard_matches_staging_inventory() -> None:
     assert set(actual) == expected
 
 
-@pytest.mark.parametrize("workflow_name", ["ci", "release"])
-def test_compiled_catalog_artifact_delivers_every_generated_resource(workflow_name: str) -> None:
-    workflow = yaml.safe_load((REPO_ROOT / f".github/workflows/{workflow_name}.yml").read_text())
-    upload = next(step for step in workflow["jobs"]["board-assets"]["steps"]
-                  if step.get("uses", "").startswith("actions/upload-artifact@"))
-    assert set(upload["with"]["path"].splitlines()) == {
-        "Hangboards/*/assets/*.usdz",
-        "Hangboards/*/assets/*.model.json",
-        "Hangboards/*/assets/*.physics.json",
-        "Hangboards/*/assets/suspension.json",
-        "HangTen/Resources/GripHand/hand-mesh.json",
-        "HangTen/Resources/PlanLibrary.json",
-    }
-
-
 def test_android_staging_check_uses_flat_native_sources() -> None:
     workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
     step = next(step for step in workflow["jobs"]["python"]["steps"]

@@ -30,6 +30,22 @@ trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
+prepare_arguments=(--out "$build_root/compiled" --jobs "${HANGTEN_CAD_JOBS:-2}")
+cache_ready=false
+if [[ -n "${HANGTEN_CAD_CACHE_DIR:-}" ]]; then
+    prepare_arguments+=(--cache-dir "$HANGTEN_CAD_CACHE_DIR")
+    # A complete hit requires only host Python. Skip the DMG and native wheels.
+    if "$python_command" "$repository_root/Tools/HangboardCAD/prepare_assets.py" \
+        "${prepare_arguments[@]}" "$@" --cache-only > "$build_root/cache-probe.log" 2>&1; then
+        cache_ready=true
+        echo "Restored complete validated board assets; native toolchain setup skipped."
+    else
+        echo "Native compilation is needed; cache probe summary:"
+        tail -n 6 "$build_root/cache-probe.log"
+    fi
+fi
+
+if [[ "$cache_ready" == false ]]; then
 if [[ ! -x "$freecad_command" ]]; then
     if [[ "$(uname -s)" != Darwin ]]; then
         echo "Set HANGTEN_FREECAD_CMD to a pinned FreeCAD 1.1.3 executable." >&2
@@ -57,9 +73,10 @@ fi
     -r "$repository_root/Tools/HangboardCAD/rope_solver_requirements.txt"
 
 "$python_command" "$repository_root/Tools/HangboardCAD/prepare_assets.py" \
-    --out "$build_root/compiled" \
+    "${prepare_arguments[@]}" \
     --freecad "$freecad_command" \
     --extra-python-path "$build_root/usd" "$@"
+fi
 
 # These exact runtime paths are workspace-owned build outputs, ignored by Git.
 # Consumers retain their existing package paths on both app platforms.

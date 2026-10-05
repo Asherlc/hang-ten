@@ -133,10 +133,13 @@ against the new base.
 Required-check summaries reject cancelled or unexpectedly skipped prerequisites;
 they report success only after all required validation has completed.
 
-The runtime-asset producer uses `.github/actions/compile-board-assets` to build
-from the checked-out sources. It uploads an artifact for that revision; Python,
-native, and Xcode consumers download the generated files before validation or
-staging. Release builds generate the same runtime files before archiving.
+The runtime-asset producer uses `.github/workflows/runtime-assets.yml` to build
+from the checked-out sources. It validates per-board caches and compiles misses
+in bounded parallel shards, then uploads a complete artifact for that revision.
+Python, native, and Xcode consumers download it before validation or staging.
+Automatic releases reuse the catalog tested by main CI and verify its source
+revision and output hashes before archiving. Manual releases use the same
+compiler workflow.
 
 Running main CI jobs finish when newer commits arrive; only the pending run is
 replaced by the newest commit. Superseded revisions cancel their own PR checks

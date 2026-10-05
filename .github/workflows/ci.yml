@@ -100,34 +100,9 @@ jobs:
       needs.changes.outputs.cad == 'true' ||
       needs.changes.outputs.shared_board_content == 'true' ||
       needs.changes.outputs.workflow == 'true'
-    runs-on: macos-26
-    timeout-minutes: 360
-    outputs:
-      artifact-name: ${{ steps.compile.outputs.owner }}-board-assets-${{ github.run_id }}-${{ github.run_attempt }}
-    steps:
-      - name: Check out CAD sources
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-          lfs: true
-
-      - name: Compile from authored sources
-        id: compile
-        uses: ./.github/actions/compile-board-assets
-
-      - name: Upload compiled catalog
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: ${{ steps.compile.outputs.owner }}-board-assets-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            Hangboards/*/assets/*.usdz
-            Hangboards/*/assets/*.model.json
-            Hangboards/*/assets/*.physics.json
-            Hangboards/*/assets/suspension.json
-            HangTen/Resources/GripHand/hand-mesh.json
-            HangTen/Resources/PlanLibrary.json
-          if-no-files-found: error
-          retention-days: 7
+    uses: ./.github/workflows/runtime-assets.yml
+    with:
+      source-ref: ${{ github.sha }}
 
   python:
     name: Test (Python)
@@ -239,6 +214,7 @@ jobs:
           ../HangboardCAD/tests/test_board_manifest.py
           ../HangboardCAD/tests/test_embedded_authoring.py
           ../HangboardCAD/tests/test_prepare_assets.py
+          ../HangboardCAD/tests/test_runtime_asset_catalog.py
           ../HangboardCAD/tests/test_compile_suspension.py
           ../HangboardCAD/tests/test_cad_consumers.py
           ../HangboardCAD/tests/test_cad_sidecars.py

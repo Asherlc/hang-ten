@@ -25,10 +25,27 @@ before installing a complete package and removes superseded generated
 configurations. Package generation rejects missing or stale suspension artifacts,
 including an artifact whose authoring inputs differ from the current source.
 
-CI generates these resources once and distributes them to package tests,
-platform staging, and app builds. Release compilation runs against the tested
-commit before signing and uploading. Both app platforms keep their existing
+CI materializes the complete catalog and distributes it to package tests,
+platform staging, and app builds. Automatic releases download the exact catalog
+from the successful triggering main CI run. Manual releases compile the selected
+commit through the same workflow before signing and uploading. Both app platforms keep their existing
 package paths; iOS still places only the USDZ in On-Demand Resources.
+
+Board compilation uses eight stable SHA-256 package shards, at most four Mac
+jobs, and two independent native processes per job. A per-board cache records
+the FCStd digest, all compiler inputs (including depth audits and package/model
+helpers), pinned dependencies/toolchain, platform, and every generated file's
+hash. Cache hits must match current CAD-derived inventory and bindings. Changes,
+missing files, malformed descriptors, and corrupt entries rebuild only the
+affected boards; compiler changes invalidate all affected cache entries. A full
+hit skips native toolchain setup. Generated files remain outside Git.
+
+The assembled `.context/<owner>-runtime-assets/catalog.json` records the exact
+revision, CAD source hashes, and complete delivered file hashes. Assembly rejects
+missing or overlapping shards, failed builds, mixed revisions, and obsolete
+packages. Releases check the manifest again against the tested checkout. Artifact
+names stay stable within a CI run, so rerunning failed jobs preserves successful
+shards and rerunning tests preserves the tested catalog.
 
 Use `scripts/build-board-assets.sh --package <slug>` for a board-only rebuild.
 Set `HANGTEN_FREECAD_CMD` or `HANGTEN_BLENDER_CMD` to installed pinned tools, or

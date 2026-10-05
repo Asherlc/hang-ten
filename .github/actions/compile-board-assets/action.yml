@@ -1,9 +1,19 @@
-name: Compile runtime assets
-description: Generate board, hand, and routine resources from retained authored sources before packaging.
+name: Compile board shard
+description: Restore validated board caches and compile only missing current CAD sources.
+inputs:
+  shard-index:
+    description: Stable board shard index.
+    required: true
+  shard-count:
+    description: Total number of stable board shards.
+    required: true
 outputs:
   owner:
     description: Workspace owner used in the CI artifact name.
-    value: ${{ steps.compile.outputs.owner }}
+    value: ${{ steps.keys.outputs.owner }}
+  report-path:
+    description: Complete source-bound shard report.
+    value: ${{ steps.compile.outputs.report-path }}
 runs:
   using: composite
   steps:
@@ -11,11 +21,36 @@ runs:
       uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
       with:
         python-version: '3.11'
-    - name: Compile runtime resources
+    - name: Compute source and compiler cache keys
+      id: keys
+      shell: bash
+      env:
+        SHARD_INDEX: ${{ inputs.shard-index }}
+        SHARD_COUNT: ${{ inputs.shard-count }}
+      run: |
+        set -euo pipefail
+        python3 Tools/HangboardCAD/prepare_assets.py --out .context/unused \
+          --shard-index "$SHARD_INDEX" --shard-count "$SHARD_COUNT" --cache-key >> "$GITHUB_OUTPUT"
+
+    - name: Restore per-board runtime cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+      with:
+        path: .context/${{ steps.keys.outputs.owner }}-board-cache-${{ inputs.shard-index }}
+        key: ${{ steps.keys.outputs.cache-key }}
+        restore-keys: ${{ steps.keys.outputs.cache-prefix }}
+
+    - name: Compile missing board resources
       id: compile
       shell: bash
+      env:
+        SHARD_INDEX: ${{ inputs.shard-index }}
+        SHARD_COUNT: ${{ inputs.shard-count }}
+        HANGTEN_CAD_JOBS: '2'
+        HANGTEN_CAD_CACHE_DIR: ${{ github.workspace }}/.context/${{ steps.keys.outputs.owner }}-board-cache-${{ inputs.shard-index }}
       run: |
         set -euo pipefail
         owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
-        echo "owner=$owner" >> "$GITHUB_OUTPUT"
-        scripts/build-runtime-assets.sh
+        report_path=".context/$owner-board-reports/shard-$SHARD_INDEX.json"
+        scripts/build-board-assets.sh --shard-index "$SHARD_INDEX" \
+          --shard-count "$SHARD_COUNT" --report "$report_path"
+        echo "report-path=$report_path" >> "$GITHUB_OUTPUT"

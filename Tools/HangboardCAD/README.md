@@ -44,9 +44,21 @@ selects the host Python.
 Before Xcode or a full fresh-checkout app build, use
 `rtk proxy bash scripts/build-runtime-assets.sh`. It also exports the grip hand
 mesh with Blender 5.2.0 and the plan library from Swift. CI's
-`.github/actions/compile-board-assets` runs the full producer and uploads an
-artifact that validation and app-build jobs download before staging. See
-[generated artifacts](../../docs/GENERATED_ARTIFACTS.md).
+`.github/workflows/runtime-assets.yml` runs eight stable board shards, with at
+most four Mac runners and two independent native processes per runner. It
+assembles the complete catalog and exports the hand and plans once. Validation
+and app-build jobs download that catalog before staging. Automatic releases
+reuse the exact successful main CI artifact; manual releases invoke the same
+compiler workflow. See [generated artifacts](../../docs/GENERATED_ARTIFACTS.md).
+
+CI caches each board's complete runtime set against the current FCStd, compiler
+inputs, pinned toolchain, and platform. Every hit checks the current presentation
+inventory, source/model/physics/suspension bindings, and all output hashes.
+Changed or damaged entries rebuild through the native compiler. A complete
+cache hit skips FreeCAD download and native dependency installation. Local
+builds can opt in with `HANGTEN_CAD_CACHE_DIR` pointing to a workspace-owned
+directory under `.context`; omit it for a fresh native build. `--jobs <count>`
+sets the number of independent board workers.
 
 ## Board metadata: board.json is generated at build time
 
