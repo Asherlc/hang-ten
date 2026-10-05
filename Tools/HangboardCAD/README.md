@@ -51,6 +51,8 @@ and app-build jobs download that catalog before staging. Automatic releases
 reuse the immutable catalog available to the successful main CI attempt;
 manual releases invoke the same compiler workflow. Failed-job retries retain
 successful shards, and test-only retries retain their catalog producer.
+Release selection groups copied job records by execution times and runner to
+identify the original producer attempt; it rejects missing or expired catalogs.
 See [generated artifacts](../../docs/GENERATED_ARTIFACTS.md).
 
 CI caches each board's complete runtime set against the current FCStd, compiler

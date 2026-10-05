@@ -215,6 +215,7 @@ jobs:
           ../HangboardCAD/tests/test_embedded_authoring.py
           ../HangboardCAD/tests/test_prepare_assets.py
           ../HangboardCAD/tests/test_runtime_asset_catalog.py
+          ../../scripts/tests/test_runtime_catalog_selection.py
           ../HangboardCAD/tests/test_compile_suspension.py
           ../HangboardCAD/tests/test_cad_consumers.py
           ../HangboardCAD/tests/test_cad_sidecars.py

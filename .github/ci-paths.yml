@@ -12,6 +12,7 @@ python:
   - 'scripts/tests/**'
   - 'scripts/hangboard-packages.sh'
   - 'scripts/run-supported-python.sh'
+  - 'scripts/select-runtime-catalog.py'
 shared_board_content:
   - 'Tools/HangboardPackages/**'
   - 'Hangboards/**'

@@ -46,14 +46,24 @@ missing or overlapping shards, failed builds, mixed revisions, and obsolete
 packages. Releases check the manifest again against the tested checkout. Shard
 artifact names stay stable within a CI run, so failed-job retries preserve
 successful shards. Complete catalogs are immutable and include their producer
-attempt. An automatic release uses job history to identify the newest successful
-producer at or before its successful CI attempt, then selects its artifact ID.
+attempt. An automatic release uses complete job history to identify the newest
+successful assembly execution at or before its successful CI attempt, then
+selects its artifact ID. GitHub copies retained jobs into later attempts with new
+job IDs and attempt numbers. `scripts/select-runtime-catalog.py` groups copies
+by their original execution times and runner, retaining the earliest attempt
+for each execution. Release selection is separate from native compilation, so
+changes to that script do not invalidate board caches.
 Missing or expired artifacts fail release preparation. Test-only retries reuse their retained
 catalog, and a later compilation cannot replace an earlier release's tested bytes.
 
 Use `scripts/build-board-assets.sh --package <slug>` for a board-only rebuild.
 Set `HANGTEN_FREECAD_CMD` or `HANGTEN_BLENDER_CMD` to installed pinned tools, or
 let the scripts install checksum-verified toolchains into workspace scratch.
+FreeCAD's macOS download supports both Apple silicon and Intel. The hand export
+automatically downloads Blender only on Apple silicon macOS. On Intel macOS or
+another platform, provide a working Blender 5.2.0 executable through
+`HANGTEN_BLENDER_CMD`; an installed executable at the standard macOS application
+path is also accepted.
 Temporary tools, mounts, and configuration directories have recorded workspace
 ownership and cleanup traps. Compiled resources installed in the ignored app
 and package paths remain available for local builds.

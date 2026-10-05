@@ -83,7 +83,7 @@ jobs:
           mkdir -p "$(dirname "$artifact_pages")"
           gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs/$CI_RUN_ID/artifacts?per_page=100" > "$artifact_pages"
           gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs/$CI_RUN_ID/jobs?filter=all&per_page=100" > "$job_pages"
-          artifact_id=$(python3 Tools/HangboardCAD/runtime_asset_catalog.py \
+          artifact_id=$(python3 scripts/select-runtime-catalog.py \
             --artifact-pages "$artifact_pages" --job-pages "$job_pages" --owner "$owner" \
             --run-id "$CI_RUN_ID" --run-attempt "$CI_RUN_ATTEMPT")
           echo "artifact-id=$artifact_id" >> "$GITHUB_OUTPUT"
