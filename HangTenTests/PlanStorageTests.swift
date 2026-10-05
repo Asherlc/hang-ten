@@ -3,6 +3,114 @@ import XCTest
 
 final class PlanStorageTests: XCTestCase {
 
+    func testPublishedHangboardPresetsAreSourceLinkedAndDistinct() throws {
+        let ids: Set<String> = [
+            "beastmaker-max-hangs", "beastmaker-repeaters",
+            "tension-6-and-10", "tension-6-6-6-plus", "tension-single-hangs", "tension-long-hangs",
+            "cameron-horst-two-handed-7-53", "cameron-horst-one-arm", "rei-hangboard-training-101",
+            "rock-prodigy.original-beginner", "rock-prodigy.rptc-intermediate", "rock-prodigy.original-advanced",
+            "rock-prodigy.pivot-introductory", "rock-prodigy.pivot-intermediate"
+        ]
+        let plans = PlanCatalog.all.filter { ids.contains($0.id) }
+        XCTAssertEqual(Set(plans.map(\.id)), ids)
+        for plan in plans {
+            XCTAssertEqual(plan.provenance, .adapted)
+            XCTAssertNotNil(plan.sourceURL)
+            XCTAssertFalse(plan.steps.isEmpty)
+            let metadata = try XCTUnwrap(PlanCatalog.metadata(for: plan.id))
+            XCTAssertTrue(metadata.notes.contains { $0.contains("2026-10-05") })
+        }
+        XCTAssertNotNil(PlanCatalog.plan(id: "coach.horst-seven-fifty-three"))
+        XCTAssertNotNil(PlanCatalog.plan(id: "rptc.seven-three-repeaters"))
+        XCTAssertNotNil(PlanCatalog.plan(id: "rei.hangboard-sample-workout"))
+    }
+
+    func testPublishedPresetsPreserveSourceCountsAndWorkRestBoundaries() throws {
+        let expected: [(String, Int, TimeInterval)] = [
+            ("beastmaker-max-hangs", 3, 10), ("beastmaker-repeaters", 6, 7),
+            ("tension-6-and-10", 20, 6), ("tension-single-hangs", 4, 4),
+            ("cameron-horst-two-handed-7-53", 9, 7), ("cameron-horst-one-arm", 10, 5),
+            ("rei-hangboard-training-101", 16, 10),
+            ("rock-prodigy.original-beginner", 30, 10), ("rock-prodigy.original-advanced", 108, 7),
+            ("rock-prodigy.rptc-intermediate", 85, 7)
+        ]
+        for (id, count, duration) in expected {
+            let plan = try XCTUnwrap(PlanCatalog.plan(id: id))
+            let work = plan.steps.flatMap(\.segments).filter { $0.kind == .work }
+            XCTAssertEqual(work.count, count, id)
+            XCTAssertTrue(work.allSatisfy { $0.timing == .fixed && $0.duration == duration }, id)
+            XCTAssertTrue(plan.steps.flatMap(\.segments).filter { $0.kind == .rest }.allSatisfy { $0.target == nil }, id)
+        }
+        let oneArm = try XCTUnwrap(PlanCatalog.plan(id: "cameron-horst-one-arm"))
+        XCTAssertEqual(oneArm.steps.filter { $0.phase == .hang }.map(\.side),
+                       (0..<5).flatMap { _ in [WorkoutSide.left, .right] })
+        XCTAssertEqual(oneArm.steps.filter { $0.phase == .rest }.map(\.duration), [180, 180, 180, 180])
+    }
+
+    func testFailurePresetsUseObservedStopwatchWorkRatherThanFixedHangClaims() throws {
+        for (id, count) in [("tension-6-6-6-plus", 4), ("tension-long-hangs", 3)] {
+            let plan = try XCTUnwrap(PlanCatalog.plan(id: id))
+            let work = plan.steps.flatMap(\.segments).filter { $0.kind == .work }
+            XCTAssertEqual(work.count, count)
+            XCTAssertTrue(work.allSatisfy { $0.timing == .stopwatch && $0.duration == nil })
+            XCTAssertTrue(plan.steps.filter { $0.phase == .hang }.allSatisfy { $0.instruction.contains("Pause") })
+        }
+    }
+
+    func testPivotPresetsKeepSourceRotationBreaksAndFinalRecovery() throws {
+        for (id, rotations, lastRest) in [
+            ("rock-prodigy.pivot-introductory", 3, 10.0),
+            ("rock-prodigy.pivot-intermediate", 4, 5.0)
+        ] {
+            let seed = try XCTUnwrap(LegacyPlanSeedCatalog.all.first { $0.id == id })
+            XCTAssertEqual(seed.boardID, "trango.rock-prodigy-pivot")
+            let breaks = seed.steps.filter { $0.id.contains("-rotate-") }
+            XCTAssertEqual(breaks.count, rotations)
+            XCTAssertTrue(breaks.allSatisfy { $0.duration == 120 && $0.phase == .rest })
+            let plan = try XCTUnwrap(PlanCatalog.plan(id: id))
+            XCTAssertEqual(plan.steps.last?.phase, .rest)
+            XCTAssertEqual(plan.steps.last?.duration, lastRest)
+        }
+    }
+
+    @MainActor
+    func testPublishedPresetsResolveOnEveryCompatibleBoardAndKeepPackageRestrictions() throws {
+        let ids = Set((LegacyPlanSeedCatalog.publishedHangboardPlans
+                       + LegacyPlanSeedCatalog.publishedRockProdigyPlans).map(\.id))
+        let suiteName = "PlanStorageTests.publishedCompatibility.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        var compatibleIDs = Set<String>()
+        for board in BoardCatalog.all {
+            store.selectBoard(board)
+            for plan in PlanCatalog.all where ids.contains(plan.id) {
+                XCTAssertEqual(store.plans.contains { $0.id == plan.id },
+                               plan.boardID == nil || plan.boardID == board.id,
+                               "\(plan.id) availability on \(board.id)")
+                guard plan.boardID == nil || plan.boardID == board.id,
+                      !store.isIncompatible(plan, on: board) else { continue }
+                compatibleIDs.insert(plan.id)
+                for step in plan.steps where !step.workRequirements.isEmpty {
+                    let materialized = WorkoutSessionHandResolver.materialized(
+                        step, preference: .both, boardIsOneHanded: board.isOneHanded)
+                    let contacts = try ContactResolver.resolve(materialized.workRequirements, step: materialized, board: board)
+                    XCTAssertFalse(contacts.isEmpty, "\(plan.id) / \(step.id) on \(board.id)")
+                    XCTAssertTrue(Set(contacts.map(\.id)).isSubset(of: Set(board.contacts.map(\.id))))
+                    if step.handUse == .single {
+                        XCTAssertEqual(contacts.count, 1, "Single-hand work must select one contact")
+                    }
+                }
+                if plan.id.hasPrefix("rock-prodigy.pivot-") {
+                    XCTAssertEqual(board.id, "trango.rock-prodigy-pivot")
+                    XCTAssertTrue(plan.steps.allSatisfy { $0.workRequirements.isEmpty },
+                                  "Manual orientation prescriptions must not invent highlights")
+                }
+            }
+        }
+        XCTAssertEqual(compatibleIDs, ids, "Every new preset must have a supported board")
+    }
+
     func testHoldDepthMatchesOnlySupportedEvidencePairs() {
         let large = HoldDepth.category(.large)
         let medium = HoldDepth.category(.medium)
@@ -2094,7 +2202,8 @@ final class PlanStorageTests: XCTestCase {
         let terminalSteps = try LegacyPlanSeedCatalog.all
             .filter {
                 $0.id != LegacyPlanSeedCatalog.rptcRepeaters.id &&
-                    $0.id != LegacyPlanSeedCatalog.megoOneArmSevenThree.id
+                    $0.id != LegacyPlanSeedCatalog.megoOneArmSevenThree.id &&
+                    !["beastmaker-repeaters", "tension-6-and-10", "rock-prodigy.pivot-introductory", "rock-prodigy.pivot-intermediate"].contains($0.id)
             }
             .map { plan in
                 try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)

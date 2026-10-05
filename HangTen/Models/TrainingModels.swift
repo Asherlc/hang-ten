@@ -3825,7 +3825,7 @@ enum LegacyPlanSeedCatalog {
             methodRepeaters,
             methodEMOM,
             reiHangboardSample
-        ]
+        ] + publishedHangboardPlans + publishedRockProdigyPlans
 
         #if DEBUG
         assert(metoliusPlans.count == 3, "The Metolius guide has three routines")

@@ -1225,7 +1225,15 @@ enum PlanLibraryValidator {
     private static let plansAllowingExplicitSelfSelectedWork: Set<String> = [
         "rptc.seven-three-repeaters",
         "coach.bechtel-three-six-nine",
-        "research.eva-int-hangs"
+        "research.eva-int-hangs",
+        "beastmaker-max-hangs",
+        "beastmaker-repeaters",
+        "rei-hangboard-training-101",
+        "rock-prodigy.original-beginner",
+        "rock-prodigy.original-advanced",
+        "rock-prodigy.rptc-intermediate",
+        "rock-prodigy.pivot-introductory",
+        "rock-prodigy.pivot-intermediate"
     ]
 
     /// Whether catalog validation may accept `.selfSelected` work (or compact
@@ -1262,6 +1270,22 @@ enum PlanLibraryValidator {
         in plan: PlanDefinition,
         terminalStep: WorkoutStepDefinition
     ) -> Bool {
+        // These source tables explicitly retain recovery on their final cycle.
+        // Limit the exception to the audited terminal identity and duration.
+        let publishedTerminalRests: [String: (id: String, duration: TimeInterval)] = [
+            "beastmaker-repeaters": ("beastmaker-repeaters.grip-rest", 180),
+            "tension-6-and-10": ("tension-6-and-10.set-4.rest-5", 10),
+            "rock-prodigy.pivot-introductory": ("rp-pivot-intro-6-3", 10),
+            "rock-prodigy.pivot-intermediate": ("rp-pivot-intermediate-10-5", 5)
+        ]
+        if let expected = publishedTerminalRests[plan.id],
+           plan.metadata.provenance == .adapted,
+           terminalStep.id == expected.id,
+           let rest = terminalStep.segments.last,
+           rest.kind == .rest, rest.timing == .fixed,
+           rest.duration == expected.duration {
+            return true
+        }
         guard plan.id == "research.megos-one-arm-7-3",
               plan.metadata.provenance == .adapted,
               plan.metadata.sourceURL == URL(string: "https://trainingforclimbing.com/alex-megos-finger-training-power-endurance-protocol/"),
@@ -1610,7 +1634,21 @@ private enum PlanWorkoutLabelAudit {
         "method.intermediate-hangboarding.repeaters": ["repeaters"],
         "method.intermediate-hangboarding.emom": ["max-effort", "pull-ups", "core"],
         "rei.hangboard-sample-workout": ["warm-up", "pull-ups"],
-        "metolius.rock-rings.ten-minute": ["pull-ups", "core"]
+        "metolius.rock-rings.ten-minute": ["pull-ups", "core"],
+        "beastmaker-max-hangs": ["max-effort"],
+        "beastmaker-repeaters": ["repeaters"],
+        "tension-6-and-10": ["repeaters"],
+        "tension-6-6-6-plus": ["repeaters", "endurance"],
+        "tension-single-hangs": ["max-effort"],
+        "tension-long-hangs": ["max-effort"],
+        "cameron-horst-two-handed-7-53": ["max-effort"],
+        "cameron-horst-one-arm": ["max-effort"],
+        "rei-hangboard-training-101": ["repeaters"],
+        "rock-prodigy.original-beginner": ["repeaters"],
+        "rock-prodigy.original-advanced": ["repeaters"],
+        "rock-prodigy.rptc-intermediate": ["repeaters", "warm-up"],
+        "rock-prodigy.pivot-introductory": ["repeaters"],
+        "rock-prodigy.pivot-intermediate": ["repeaters"]
     ]
 }
 
@@ -1674,7 +1712,7 @@ enum BuiltInPlanLibraryDefinition {
             metadata: PlanLibraryMetadata(
                 id: "hang-ten.built-in",
                 title: "Hang Ten training plans",
-                generatedAt: "2026-08-01",
+                generatedAt: "2026-10-05",
                 defaultPlanID: LegacyPlanSeedCatalog.metoliusTenMinute.id,
                 notes: [
                     "Generic Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
@@ -1695,7 +1733,11 @@ enum BuiltInPlanLibraryDefinition {
         existingBlockIDs: Set<String>
     ) -> (PlanDefinition, [WorkoutBlockDefinition]) {
         let category: String
-        if plan.id.hasPrefix("research.") {
+        if plan.id.hasPrefix("cameron-horst-") || plan.id.hasPrefix("tension-") || plan.id.hasPrefix("rock-prodigy.original-") {
+            category = "coach"
+        } else if plan.id.hasPrefix("rei-") {
+            category = "retailer"
+        } else if plan.id.hasPrefix("research.") {
             category = "research"
         } else if plan.id.hasPrefix("coach.") {
             category = "coach"
@@ -1714,7 +1756,10 @@ enum BuiltInPlanLibraryDefinition {
         }
 
         let notes: [String]
-        if plan.id.hasPrefix("metolius.generic-ten-minute.") {
+        if let note = LegacyPlanSeedCatalog.publishedHangboardNotes[plan.id]
+            ?? LegacyPlanSeedCatalog.rockProdigyPublishedNotes[plan.id] {
+            notes = [note, "Primary source checked 2026-10-05. Guided preset; see the linked source for the full protocol."]
+        } else if plan.id.hasPrefix("metolius.generic-ten-minute.") {
             notes = [
                 "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
                 "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
