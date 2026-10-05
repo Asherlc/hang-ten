@@ -37,7 +37,9 @@ HangTen/Models/PitchSixProtocol.swift
 HangTen/Models/PlanFilters.swift
 HangTen/Models/PlanStorage.swift
 HangTen/Models/ProgressorProtocol.swift
+HangTen/Models/PublishedHangboardPlans.swift
 HangTen/Models/PurchaseManager.swift
+HangTen/Models/RockProdigyPlans.swift
 HangTen/Models/RopeBandedSystem.swift
 HangTen/Models/RopeContactSystem.swift
 HangTen/Models/RopeCordContacts.swift

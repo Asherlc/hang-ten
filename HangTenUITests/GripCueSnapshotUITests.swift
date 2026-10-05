@@ -163,6 +163,102 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         add(attachment)
     }
 
+    func testPublishedLongHangStopwatchRunsBeyondEstimateWithRoutinePaused() throws {
+        app.terminate()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
+            "HANGTEN_REVIEW_BOARD_ID": "metolius.wood-grips-compact-ii",
+            "HANGTEN_REVIEW_LANDSCAPE": "1"
+        ]
+        app.launch()
+        waitForTrainShellReady(timeout: 20)
+        app.open(URL(string: "hangten://plan/tension-long-hangs/workout")!)
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 20))
+        pause.tap()
+        // SwiftUI propagates the containing stopwatch identifier to the button.
+        let stopwatch = app.buttons["workout.stopwatch"]
+        XCTAssertTrue(stopwatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(stopwatch.label, "Start stopwatch")
+        stopwatch.tap()
+        let stopwatchRunning = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@", "Stop stopwatch"),
+            object: stopwatch
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [stopwatchRunning], timeout: 10), .completed)
+        let stopwatchElapsed = app.staticTexts.matching(identifier: "workout.stopwatch").firstMatch
+        let beyondEstimate = XCTNSPredicateExpectation(
+            predicate: NSPredicate { object, _ in
+                guard let element = object as? XCUIElement, element.exists else { return false }
+                let components = element.label.split(separator: ":")
+                guard components.count == 2,
+                      let minutes = Int(components[0]),
+                      let seconds = Int(components[1]) else { return false }
+                return minutes * 60 + seconds >= 16
+            },
+            object: stopwatchElapsed
+        )
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [beyondEstimate], timeout: 30), .completed,
+            "The independent stopwatch must visibly exceed the 15-second estimate."
+        )
+        XCTAssertTrue(app.buttons["Resume"].exists)
+        XCTAssertEqual(stopwatch.label, "Stop stopwatch")
+        XCTAssertTrue(app.staticTexts["Long hang 1 of 3"].exists)
+        let image = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        image.name = "Published Tension long hang beyond 15-second estimate"
+        image.lifetime = .keepAlways
+        add(image)
+        stopwatch.tap()
+        app.buttons["workout.skipStep"].tap()
+        XCTAssertTrue(app.staticTexts["Rest"].waitForExistence(timeout: 10))
+    }
+
+    func testPublishedPresetVisualCheckpoints() throws {
+        let cases = [
+            ("tension-6-and-10", "metolius.wood-grips-compact-ii", "1", "Tension matched edge and half-crimp cue"),
+            ("cameron-horst-one-arm", "metolius.wood-grips-compact-ii", "1", "Cameron Horst single-hand strength cue"),
+            ("rock-prodigy.rptc-intermediate", "trango.rock-prodigy-training-center", "1", "RPTC warm-up jug highlight"),
+            ("rock-prodigy.pivot-intermediate", "trango.rock-prodigy-pivot", "1", "Pivot manual orientation instruction")
+        ]
+        for (plan, board, step, name) in cases {
+            app.terminate()
+            app.launchEnvironment = [
+                "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0", "HANGTEN_REVIEW_BOARD_ID": board,
+                "HANGTEN_REVIEW_LANDSCAPE": "1", "HANGTEN_REVIEW_STEP": step
+            ]
+            app.launch()
+            waitForTrainShellReady(timeout: 20)
+            app.open(URL(string: "hangten://plan/\(plan)/workout")!)
+            let pause = app.buttons["Pause"]
+            XCTAssertTrue(pause.waitForExistence(timeout: 20), plan)
+            pause.tap()
+            XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10), plan)
+            let audioOff = app.buttons["Turn off spoken cues"]
+            if audioOff.exists {
+                audioOff.tap()
+                XCTAssertTrue(app.buttons["Turn on spoken cues"].waitForExistence(timeout: 5))
+                app.buttons["Turn on spoken cues"].tap()
+            }
+            let image = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+            image.name = name
+            image.lifetime = .keepAlways
+            add(image)
+        }
+        app.terminate()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0", "HANGTEN_REVIEW_BOARD_ID": "trango.rock-prodigy-pivot",
+            "HANGTEN_REVIEW_PORTRAIT": "1", "HANGTEN_REVIEW_PLAN": "1",
+            "HANGTEN_REVIEW_PLAN_ID": "rock-prodigy.pivot-introductory"
+        ]
+        app.launch()
+        XCTAssertTrue(app.otherElements["plan.initialWeight.setup"].waitForExistence(timeout: 20))
+        let detail = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        detail.name = "Pivot introductory plan detail"
+        detail.lifetime = .keepAlways
+        add(detail)
+    }
+
     func testLandscapePreStartHasNoLegacyLoadAdjustment() throws {
         openPlanDetail()
         selectManualWeightSourceIfNeeded()

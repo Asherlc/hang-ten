@@ -1,4 +1,13 @@
 import Foundation
+import simd
+
+// Keep the pure suspension validator available without compiling UIKit and
+// RealityKit rendering. These are the same result cases used by the app solver.
+enum BoardModelSolvedSuspension {
+    case single(SuspendedSolvedPresentation)
+    case pairedLead(SuspendedPairedLeadSolvedPresentation)
+    case twoBranch(SuspendedTwoBranchSolvedPresentation)
+}
 
 // The exporter compiles the plan resolver without the app's force-sensor
 // module. This preserves the small measurement surface referenced by

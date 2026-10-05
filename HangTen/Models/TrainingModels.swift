@@ -2359,9 +2359,13 @@ enum MetoliusCycleBuilder {
     }
 }
 
-/// Source-audited factual requirements for Metolius's numbered routines.
+/// Source-audited factual requirements and package restrictions for bundled routines.
 /// The plan guide and official numbered/depth diagrams establish every field.
 enum BundledPlanContactRequirements {
+    // Source-specific package restrictions belong with canonical seeds.
+    static let publishedRockProdigyTrainingCenterBoardID = "trango.rock-prodigy-training-center"
+    static let publishedRockProdigyPivotBoardID = "trango.rock-prodigy-pivot"
+
     static let metoliusContactBoardID = "metolius.contact"
     static let metoliusSimulator3DBoardID = "metolius.simulator-3d"
 
@@ -4149,7 +4153,7 @@ enum LegacyPlanSeedCatalog {
             methodRepeaters,
             methodEMOM,
             reiHangboardSample
-        ]
+        ] + publishedHangboardPlans + publishedRockProdigyPlans
 
         #if DEBUG
         assert(metoliusPlans.count == 3, "The Metolius guide has three routines")
