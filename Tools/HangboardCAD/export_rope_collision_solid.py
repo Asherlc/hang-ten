@@ -15,7 +15,11 @@ from __future__ import annotations
 import json
 import hashlib
 import os
+import sys
 from pathlib import Path
+
+# FreeCAD executes this through a temporary wrapper outside the tools directory.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import FreeCAD as App
 

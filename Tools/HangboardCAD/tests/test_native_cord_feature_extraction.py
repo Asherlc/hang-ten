@@ -1,11 +1,14 @@
 """Exercise cord feature binding against actual native FreeCAD solids."""
 import os
 import json
+import hashlib
 from pathlib import Path
 import signal
 import subprocess
 import sys
 import tempfile
+import xml.etree.ElementTree as ET
+from zipfile import ZipFile
 
 import pytest
 
@@ -65,6 +68,92 @@ def test_native_cord_feature_extraction():
         if ownership is not None:
             ownership.write_text(json.dumps(record, indent=2) + "\n")
     assert process.returncode == 0, stdout + stderr
+
+
+@pytest.mark.skipif(not FREECAD.is_file(), reason="native FreeCAD toolchain unavailable")
+def test_collision_export_loads_authored_groove_features_through_wrapper():
+    source = ROOT / "Hangboards/nature-stone-hanger.FCStd"
+    source_bytes = source.read_bytes()
+    if source_bytes.startswith(b"version https://git-lfs.github.com/spec/v1"):
+        pytest.skip("FCStd sources are Git LFS pointers; run `git lfs pull` first")
+    source_hash = hashlib.sha256(source_bytes).hexdigest()
+    with ZipFile(source) as archive:
+        document = ET.fromstring(archive.read("Document.xml"))
+    authoring = json.loads(document.find(
+        "./Properties/Property[@name='HangTenSuspensionAuthoring']/String",
+    ).get("value"))
+    selections = [selection for pose in authoring["ropeSolver"]["grooveGuides"]["byPoseID"].values()
+                  for selection in pose.values()]
+    grooves = sorted({selection["feature"] for selection in selections})
+    bores = sorted({selection["boreFeature"] for selection in selections})
+    body_id = authoring["suspension"]["bodyNodeID"]
+    bodies = [obj.get("name") for obj in document.findall("./ObjectData/Object")
+              if (node := obj.find("./Properties/Property[@name='NodeID']/String")) is not None
+              and node.get("value") == body_id]
+    assert len(bodies) == 1
+    context = ROOT / ".context" / ROOT.name
+    context.mkdir(parents=True, exist_ok=True)
+    process = None
+    temp = None
+    ownership = None
+    record = {"workspaceOwner": ROOT.name, "sourceSHA256": source_hash}
+    try:
+        with tempfile.TemporaryDirectory(prefix=f"{ROOT.name}-cord-export-tests-", dir=context) as temp:
+            output = Path(temp) / "nature-collision.json"
+            env = dict(os.environ, TMPDIR=temp, XDG_CACHE_HOME=temp,
+                       HANGTEN_ROPE_PACKAGE=source.stem, HANGTEN_ROPE_SOLID_FEATURE=bodies[0],
+                       HANGTEN_ROPE_SOLID_OUTPUT=str(output),
+                       HANGTEN_ROPE_GROOVE_FEATURES=",".join(grooves),
+                       HANGTEN_ROPE_BORE_FEATURES=",".join(bores))
+            env.pop("HANGTEN_CAD_PYTHONPATH", None)
+            env.pop("PYTHONPATH", None)
+            ownership = context / (Path(temp).name + "-ownership.json")
+            record["temporaryDirectory"] = temp
+            try:
+                process = subprocess.Popen(
+                    [sys.executable, str(ROOT / "Tools/HangboardCAD/run_freecad.py"),
+                     "--freecad", str(FREECAD),
+                     str(ROOT / "Tools/HangboardCAD/export_rope_collision_solid.py")],
+                    cwd=ROOT, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                    start_new_session=True,
+                )
+                record["ownedProcessGroup"] = process.pid
+                ownership.write_text(json.dumps(record, indent=2) + "\n")
+                stdout, stderr = process.communicate(timeout=120)
+            finally:
+                if process is not None:
+                    try:
+                        os.killpg(process.pid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+                    process.wait()
+                    try:
+                        os.killpg(process.pid, 0)
+                        group_absent = False
+                    except ProcessLookupError:
+                        group_absent = True
+                    record.update(processGroupAbsent=group_absent, exitCode=process.returncode)
+                    assert group_absent
+            assert process.returncode == 0, stdout + stderr
+            payload = json.loads(output.read_text())
+            assert payload["sourcePackage"] == source.stem
+            assert payload["sourceFeature"] == bodies[0]
+            assert payload["sourceSHA256"] == source_hash
+            assert payload["vertices"] and payload["triangles"]
+            features = payload["nativeCordFeatures"]
+            assert set(features) == set(grooves + bores)
+            for kind, names in (("groove", grooves), ("bore", bores)):
+                for name in names:
+                    assert features[name]["kind"] == kind
+                    assert features[name]["wallFaces"]
+                    assert features[name]["radius"] > 0
+            assert hashlib.sha256(source.read_bytes()).hexdigest() == source_hash
+    finally:
+        if temp is not None:
+            record["temporaryDirectoryAbsent"] = not Path(temp).exists()
+            assert record["temporaryDirectoryAbsent"]
+        if ownership is not None:
+            ownership.write_text(json.dumps(record, indent=2) + "\n")
 
 
 def test_failed_ownership_write_still_cleans_native_process(monkeypatch, tmp_path):
