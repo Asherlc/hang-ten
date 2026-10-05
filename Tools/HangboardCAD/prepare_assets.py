@@ -58,7 +58,7 @@ def source_backed_packages() -> list[str]:
 
 def compiler_fingerprint() -> str:
     """Hash every retained compiler input, including non-Python depth audits."""
-    paths = [REPOSITORY / "scripts/build-board-assets.sh"]
+    paths = [REPOSITORY / "scripts/build-board-assets.sh", REPOSITORY / "scripts/install-freecad.sh"]
     for directory in ("Tools/HangboardCAD", "Tools/HangboardModels", "Tools/HangboardPackages/src"):
         paths.extend(path for path in (REPOSITORY / directory).rglob("*")
                      if path.suffix in {".py", ".json", ".txt"}

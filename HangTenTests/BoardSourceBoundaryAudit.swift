@@ -1,8 +1,6 @@
 import Foundation
 
 enum BoardSourceBoundaryAudit {
-    private static let planRequirementOwnerPath = "HangTen/Models/TrainingModels.swift"
-    private static let planRequirementOwnerDeclaration = "enum BundledPlanContactRequirements {"
     private static let genericPresentationVocabularyOwnerPaths: Set<String> = [
         "HangTen/Models/BoardPackageStore.swift",
         "HangTen/Models/TrainingModels.swift"
@@ -82,15 +80,10 @@ enum BoardSourceBoundaryAudit {
             "HangTen/Models/TrainingModels.swift"
         ]
         var findings: [String] = []
-        let sourceWithoutOwnedPlanRequirements = removingLegacyPlateauMigrationIDs(
+        let auditedSource = removingLegacyPlateauMigrationIDs(
             from: removingCatalogDefaultBoardID(
                 from: removingDisplayModelBoardID(
-                    from: removingOwnedDeclaration(
-                        from: source,
-                        relativePath: relativePath,
-                        ownerPath: planRequirementOwnerPath,
-                        declaration: planRequirementOwnerDeclaration
-                    ),
+                    from: source,
                     relativePath: relativePath
                 ),
                 relativePath: relativePath
@@ -112,7 +105,7 @@ enum BoardSourceBoundaryAudit {
         }
         // Index all consecutive quote pairs once. Quotes are raw UTF-8 bytes so
         // escaped quotes and quote-adjacent combining marks remain candidates.
-        let quotedSegments = Set(sourceWithoutOwnedPlanRequirements.utf8
+        let quotedSegments = Set(auditedSource.utf8
             .split(separator: 34, omittingEmptySubsequences: false)
             .dropFirst().dropLast()
             .map { String(decoding: $0, as: UTF8.self) })
@@ -121,10 +114,10 @@ enum BoardSourceBoundaryAudit {
             && (quotedSegments.contains(literal) || literal.utf8.contains(34))
             // Retain the original search for candidates and quote-bearing
             // literals, including its Unicode/grapheme-boundary semantics.
-            && sourceWithoutOwnedPlanRequirements.contains("\"\(literal)\"") {
+            && auditedSource.contains("\"\(literal)\"") {
             findings.append("\(relativePath): package-owned literal \(literal)")
         }
-        if sourceWithoutOwnedPlanRequirements.range(
+        if auditedSource.range(
             of: semanticMappingPattern,
             options: .regularExpression
         ) != nil {
@@ -220,38 +213,5 @@ enum BoardSourceBoundaryAudit {
             auditedSource.replaceSubrange(methodRange, with: method)
         }
         return auditedSource
-    }
-
-    private static func removingOwnedDeclaration(
-        from source: String,
-        relativePath: String,
-        ownerPath: String,
-        declaration: String
-    ) -> String {
-        guard relativePath == ownerPath,
-              let declarationRange = source.range(of: declaration) else {
-            return source
-        }
-        let openingBrace = source.index(before: declarationRange.upperBound)
-        var index = openingBrace
-        var depth = 0
-        while index < source.endIndex {
-            switch source[index] {
-            case "{":
-                depth += 1
-            case "}":
-                depth -= 1
-                if depth == 0 {
-                    let end = source.index(after: index)
-                    var auditedSource = source
-                    auditedSource.removeSubrange(declarationRange.lowerBound..<end)
-                    return auditedSource
-                }
-            default:
-                break
-            }
-            index = source.index(after: index)
-        }
-        return source
     }
 }

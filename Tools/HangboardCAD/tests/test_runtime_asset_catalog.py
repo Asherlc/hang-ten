@@ -48,6 +48,49 @@ def test_complete_shards_produce_a_verifiable_release_catalog(catalog):
     _, reports, manifest = catalog
     runtime_asset_catalog.create_catalog(manifest, reports, 2, "tested-commit")
     runtime_asset_catalog.validate_catalog(manifest, "tested-commit")
+    recorded = json.loads(manifest.read_text())
+    assert recorded["sources"] == {
+        "Hangboards/first.FCStd": hashlib.sha256(b"first").hexdigest(),
+        "Hangboards/second.FCStd": hashlib.sha256(b"second").hexdigest(),
+        "HangTen/Resources/PlanLibrary.json": hashlib.sha256(b"{}").hexdigest(),
+    }
+    assert set(recorded["files"]) == {
+        "Hangboards/first/assets/primary.usdz",
+        "Hangboards/first/assets/primary.model.json",
+        "Hangboards/second/assets/primary.usdz",
+        "Hangboards/second/assets/primary.model.json",
+        "HangTen/Resources/GripHand/hand-mesh.json",
+    }
+
+
+def test_catalog_rejects_retained_plan_in_generated_file_inventory(catalog):
+    _, reports, manifest = catalog
+    runtime_asset_catalog.create_catalog(manifest, reports, 2, "tested-commit")
+    recorded = json.loads(manifest.read_text())
+    recorded["files"]["HangTen/Resources/PlanLibrary.json"] = hashlib.sha256(b"{}").hexdigest()
+    manifest.write_text(json.dumps(recorded))
+    with pytest.raises(ValueError, match="source or output hashes"):
+        runtime_asset_catalog.validate_catalog(manifest, "tested-commit")
+
+
+@pytest.mark.parametrize("operation", ["create", "validate"])
+@pytest.mark.parametrize("damage", ["missing", "symlink"])
+def test_catalog_requires_a_regular_retained_plan_source(catalog, operation, damage):
+    repository, reports, manifest = catalog
+    if operation == "validate":
+        runtime_asset_catalog.create_catalog(manifest, reports, 2, "tested-commit")
+        runtime_asset_catalog.validate_catalog(manifest, "tested-commit")
+    source = repository / "HangTen/Resources/PlanLibrary.json"
+    source.unlink()
+    if damage == "symlink":
+        replacement = repository / ".context/plan-copy.json"
+        replacement.write_text("{}")
+        source.symlink_to(replacement)
+    with pytest.raises(ValueError):
+        if operation == "create":
+            runtime_asset_catalog.create_catalog(manifest, reports, 2, "tested-commit")
+        else:
+            runtime_asset_catalog.validate_catalog(manifest, "tested-commit")
 
 
 @pytest.mark.parametrize("damage", ["missing", "duplicate", "overlap", "wrong_revision", "wrong_compiler", "failed", "wrong_source"])
@@ -81,9 +124,10 @@ def test_incomplete_or_mixed_shards_cannot_publish_a_catalog(catalog, damage):
 def test_release_rejects_changed_sources_or_delivered_bytes(catalog, damage):
     repository, reports, manifest = catalog
     runtime_asset_catalog.create_catalog(manifest, reports, 2, "tested-commit")
+    runtime_asset_catalog.validate_catalog(manifest, "tested-commit")
     if damage == "asset": (repository / "Hangboards/first/assets/primary.usdz").write_bytes(b"modified")
     elif damage == "hand": (repository / "HangTen/Resources/GripHand/hand-mesh.json").write_text("changed")
-    elif damage == "plan": (repository / "HangTen/Resources/PlanLibrary.json").write_text("changed")
+    elif damage == "plan": (repository / "HangTen/Resources/PlanLibrary.json").write_text('{"changed":true}')
     elif damage == "cad": (repository / "Hangboards/first.FCStd").write_bytes(b"modified source")
     elif damage == "extra_board":
         path = repository / "Hangboards/deleted/assets/primary.usdz"

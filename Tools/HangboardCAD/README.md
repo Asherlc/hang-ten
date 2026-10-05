@@ -22,7 +22,11 @@ audits. All runtime exports, including solved suspension, remain ignored.
 ## Build from a fresh checkout
 
 Fetch the retained Git LFS sources, then compile and install every ignored board
-asset before package validation:
+asset before package validation.
+
+On Ubuntu 24.04, install `libegl1 libgl1 libglu1-mesa libopengl0 squashfs-tools`
+first. The installer extracts the pinned AppImage and runs its bundled
+`freecadcmd` without a FUSE mount.
 
 ```sh
 rtk git lfs pull
@@ -43,11 +47,13 @@ selects the host Python.
 
 Before Xcode or a full fresh-checkout app build, use
 `rtk proxy bash scripts/build-runtime-assets.sh`. It also exports the grip hand
-mesh with Blender 5.2.0 and the plan library from Swift. CI's
-`.github/workflows/runtime-assets.yml` runs eight stable board shards, with at
-most five Mac runners and two independent native processes per runner. It
-assembles the complete catalog and exports the hand and plans once. Validation
-and app-build jobs download that catalog before staging. Automatic releases
+mesh with Blender 5.2.0. Audited plans live in the checked-in canonical
+`HangTen/Resources/PlanLibrary.json`. CI's
+`.github/workflows/runtime-assets.yml` runs eight stable board shards on
+Ubuntu 24.04, with up to eight Linux runners and two independent native processes
+per runner. One Linux job assembles the complete catalog and exports the hand
+once. Validation and app-build jobs download that catalog before staging.
+Automatic releases
 reuse the immutable catalog available to the successful main CI attempt;
 manual releases invoke the same compiler workflow. Failed-job retries retain
 successful shards, and test-only retries retain their catalog producer.

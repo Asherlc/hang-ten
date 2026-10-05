@@ -21,7 +21,7 @@ and do not guess which is authoritative.
 A board-flexible routine names semantic holds such as “Jug,” “Round Sloper,” or
 “Large Edge.” It can use `boardID: nil` if every required feature resolves on
 the selected board. `AppStore` hides a plan when even one of its targets does
-not resolve; DEBUG catalog assertions require semantic targets and at least one
+not resolve; catalog tests require semantic targets and at least one
 fully compatible registered board.
 
 A board-specific routine refers to numbered holds, a board diagram, or unique
@@ -70,25 +70,22 @@ manufacturer's prescription.
 
 ## 4. Model intervals according to the source
 
-The app reads runtime plans from the schema-versioned
-generated, ignored `HangTen/Resources/PlanLibrary.json`. Add the audited plan to
-`LegacyPlanSeedCatalog` in `TrainingModels.swift`, where it acts as the export
-fixture, then build the board resources needed by the exporter's staging step
-and regenerate the library:
+Both apps read the checked-in canonical `HangTen/Resources/PlanLibrary.json`.
+Add the audited plan directly to its reusable block definitions and plan
+references, retaining source metadata and provenance. Build board resources
+before validating factual board compatibility, and validate the work targets:
 
 ```sh
 rtk proxy bash scripts/build-board-assets.sh
-rtk scripts/export-plan-library.sh
-rtk scripts/export-plan-library.sh --check
+rtk scripts/validate-plan-work-targets.sh
 ```
 
-`PlanStorage.swift` turns the fixture into reusable block definitions,
-semantic targets, source metadata, and provenance, then validates the bundled
-JSON before the UI can use it. DEBUG builds compare every resolved JSON plan
-against the fixture.
+`PlanStorage.swift` decodes and validates the bundled JSON, then resolves its
+blocks into runtime steps. Source-prescription tests inspect the canonical
+definitions before segment expansion and verify the resulting runtime plans.
 
-Commit the audited Swift definitions and source mappings. The JSON is rebuilt
-from those sources locally and in CI; it is not a second editable plan source.
+Commit the canonical JSON and source mappings for every changed field. There
+is no separate Swift authoring catalog or plan export step.
 For a complete fresh-checkout app build run `scripts/build-runtime-assets.sh`
 before Xcode. See [generated artifacts](GENERATED_ARTIFACTS.md).
 
@@ -202,7 +199,7 @@ steps for Entry, 26 for Intermediate, and 27 for Advanced; these generated
 counts differ from the ten source cycles. The source explicitly says to
 complete the task or tasks within each minute and use the remaining time to
 rest.
-DEBUG builds validate the current adapted Metolius audit with assertions for
+Catalog tests validate the current adapted Metolius audit with assertions for
 step order, target mapping, timing, generated numbering, and the 60-second
 cycle structure.
 
@@ -225,6 +222,6 @@ Preview representative steps with the DEBUG routes documented in
 - Every simultaneous task resolves to factual hold contacts on each compatible board.
 - Board-specific plans are hidden from other boards.
 - Source link is visible in the app.
-- `PlanLibrary.json` was regenerated and passes the exporter's `--check` mode.
+- Canonical `PlanLibrary.json` changes and their source mappings are committed.
 - `scripts/validate-plan-work-targets.sh` validates every bundled work target.
 - Representative timer, audio, text, and highlight states reviewed.

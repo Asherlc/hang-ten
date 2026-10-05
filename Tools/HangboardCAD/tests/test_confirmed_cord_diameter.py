@@ -46,7 +46,10 @@ def test_exported_contact_regions_leave_the_native_cord_mouths_open():
     assert all(point[2] < mouths[ray, 2] - depth / 2 for point, ray in zip(hits, rays)), "Contact overlays must not cap the actual bore openings"
 
 
-@pytest.mark.skipif(not FREECAD.is_file(),reason="FreeCAD unavailable")
+@pytest.mark.skipif(
+    not FREECAD.is_file() and os.environ.get("HANGTEN_REQUIRE_NATIVE_CAD", "").lower() != "true",
+    reason="native FreeCAD unavailable outside the required native lane",
+)
 def test_curved_channel_section_recovers_a_connected_bearing_outline(tmp_path):
     pytest.importorskip("trimesh")
     pytest.importorskip("rtree")
@@ -70,7 +73,10 @@ def test_curved_channel_section_recovers_a_connected_bearing_outline(tmp_path):
     assert outline.is_valid and outline.geom_type == "Polygon" and not outline.interiors
     assert not outline.contains(Point(.024,.067183))
 
-@pytest.mark.skipif(not FREECAD.is_file(),reason="FreeCAD unavailable")
+@pytest.mark.skipif(
+    not FREECAD.is_file() and os.environ.get("HANGTEN_REQUIRE_NATIVE_CAD", "").lower() != "true",
+    reason="native FreeCAD unavailable outside the required native lane",
+)
 def test_mini_bar_native_passages_fit_seven_mm_without_changing_board_scale(tmp_path):
     script=tmp_path/"confirmed-diameter.py"
     script.write_text('''import FreeCAD as App

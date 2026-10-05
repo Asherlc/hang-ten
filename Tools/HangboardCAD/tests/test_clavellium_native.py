@@ -10,7 +10,10 @@ import pytest
 ROOT = Path(__file__).resolve().parents[3]
 TOOLS = ROOT / "Tools/HangboardCAD"
 FREECAD = Path(os.environ.get("HANGTEN_FREECAD_CMD", "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd"))
-pytestmark = pytest.mark.skipif(not FREECAD.is_file(), reason="native FreeCAD unavailable")
+pytestmark = pytest.mark.skipif(
+    not FREECAD.is_file() and os.environ.get("HANGTEN_REQUIRE_NATIVE_CAD", "").lower() != "true",
+    reason="native FreeCAD unavailable outside the required native lane",
+)
 
 
 def test_all_three_sling_channels_are_open_and_contacts_stay_valid(tmp_path):

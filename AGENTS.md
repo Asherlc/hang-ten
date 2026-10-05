@@ -68,9 +68,11 @@ Generated board USDZ, `*.model.json`, `*.physics.json`, and
 `rtk proxy bash scripts/build-board-assets.sh` with pinned
 FreeCAD 1.1.3/OpenUSD 26.8 before package validation. For a fresh checkout or
 Xcode build, run `rtk proxy bash scripts/build-runtime-assets.sh`; it also
-exports the grip hand using Blender 5.2.0 and the plan library from Swift.
+exports the grip hand using Blender 5.2.0. The checked-in
+`HangTen/Resources/PlanLibrary.json` is the canonical training-plan source;
+edit that audited data directly and preserve its source mappings.
 Commit source documents and source audits. Keep generated
-`PlanLibrary.json` and grip hand mesh JSON out of Git. CI compiles from sources
+grip hand mesh JSON out of Git. CI compiles from sources
 once and delivers its artifact to the validation and app-build consumers.
 See [`docs/GENERATED_ARTIFACTS.md`](docs/GENERATED_ARTIFACTS.md).
 

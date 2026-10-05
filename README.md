@@ -37,11 +37,10 @@ rendering, highlighting, and interaction data.
   physical-device validation requirements.
 - A source-linked plan library and lightweight local session progress.
 
-Runtime routine definitions are generated as
-`HangTen/Resources/PlanLibrary.json` from the audited Swift definitions in
-`TrainingModels.swift`. `HangTen/Models/PlanStorage.swift` decodes and validates
-the bundled schema-versioned document; DEBUG builds compare it with those
-definitions. Board sources live in directly discovered
+Audited routine definitions live in the checked-in canonical
+`HangTen/Resources/PlanLibrary.json`, shared by both apps.
+`HangTen/Models/PlanStorage.swift` decodes and validates the bundled document.
+Board sources live in directly discovered
 `Hangboards/<slug>.FCStd` files. Generated package assets remain under
 `Hangboards/<slug>/assets/`. The grip hand retains
 its editable `Art/GripHand/GripHand.blend` and licensed upstream source; its
@@ -67,11 +66,11 @@ rtk xcodebuild -project HangTen.xcodeproj \
 All Paseo/local-agent builds must use a workspace-local DerivedData path so
 indexes and build output disappear with the workspace.
 
-The runtime build uses pinned FreeCAD 1.1.3/OpenUSD 26.8 for board exports,
-Blender 5.2.0 for the grip hand export, and Swift for the plan library. Generated
-USDZ, descriptors, `assets/suspension.json`, hand mesh JSON, and plan JSON are
-ignored by Git. Commit their
-authoring sources and evidence. For board-only work use
+The runtime build uses pinned FreeCAD 1.1.3/OpenUSD 26.8 for board exports and
+Blender 5.2.0 for the grip hand export. Generated USDZ, descriptors,
+`assets/suspension.json`, and hand mesh JSON are ignored by Git. Commit their
+authoring sources and evidence, plus the canonical plan JSON and its source
+audits. For board-only work use
 `rtk proxy bash scripts/build-board-assets.sh`; see
 [generated artifacts](docs/GENERATED_ARTIFACTS.md) for the full build boundary.
 
@@ -240,15 +239,16 @@ outputs. Authored suspension contains topology, dimensions, solver settings,
 evidence, pose rotations/cameras, and optional `offsetXZ: [x, z]`; hashes,
 settled heights, and solved routes are generated.
 
-Regenerate the bundled routine document after an audited plan change:
+Edit the canonical routine document after a source audit, then validate its
+work targets:
 
 ```sh
-rtk scripts/export-plan-library.sh
-rtk scripts/export-plan-library.sh --check
+rtk scripts/validate-plan-work-targets.sh
 ```
 
-The generated plan JSON is a build output. Commit the audited Swift definitions
-and source mappings that produce it.
+Commit `HangTen/Resources/PlanLibrary.json` and the source mappings for every
+changed plan field. Plan tests validate the document and its resolved routines;
+there is no separate Swift authoring catalog or plan exporter.
 
 ## Routine scope
 

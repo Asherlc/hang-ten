@@ -8,6 +8,8 @@ and visible stdout/stderr.
 
     python3 Tools/HangboardCAD/run_freecad.py <script.py> [args...]
 
+Set HANGTEN_FREECAD_CMD to the pinned executable or pass --freecad explicitly.
+
 FreeCAD's interpreter also does not inherit PYTHONPATH. Set
 HANGTEN_CAD_PYTHONPATH to any extra site directory (for example one containing
 `pxr`), and the script under test is responsible for injecting it into
@@ -43,7 +45,14 @@ def run(script: Path, arguments: list[str], freecad: Path, extra_path: str) -> i
         print(f"pinned FreeCAD is not installed at {freecad}", file=sys.stderr)
         return 2
 
-    with tempfile.TemporaryDirectory(prefix="hangten-freecad-") as scratch:
+    workspace = Path(os.environ.get("PASEO_WORKTREE_PATH", str(Path.cwd()))).resolve()
+    scratch_root = workspace / ".context"
+    if os.environ.get("TMPDIR"):
+        requested = Path(os.environ["TMPDIR"]).resolve()
+        if requested.is_relative_to(workspace):
+            scratch_root = requested
+    scratch_root.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=f"{workspace.name}-freecad-", dir=scratch_root) as scratch:
         wrapper = Path(scratch) / "run.py"
         # FreeCAD's embedded interpreter block-buffers stdout when it is a pipe
         # and discards the buffer when a script exits through SystemExit, so a
@@ -97,7 +106,7 @@ def main(argv: list[str] | None = None) -> int:
     reorder or reject the script's own options.
     """
     arguments = list(sys.argv[1:] if argv is None else argv)
-    freecad = DEFAULT_FREECAD
+    freecad = Path(os.environ.get("HANGTEN_FREECAD_CMD", str(DEFAULT_FREECAD)))
     extra_path = os.environ.get("HANGTEN_CAD_PYTHONPATH", "")
     script: Path | None = None
 

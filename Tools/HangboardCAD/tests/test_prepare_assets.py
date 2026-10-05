@@ -241,6 +241,35 @@ def test_compiler_and_audit_changes_invalidate_cached_models(compiler, tmp_path,
     assert report["cacheHit"] is False
 
 
+@pytest.mark.parametrize("relative", [
+    "scripts/install-freecad.sh",
+    "Tools/HangboardCAD/rope_solver_requirements.txt",
+])
+def test_changed_native_toolchain_input_rebuilds_cached_models(compiler, tmp_path, relative):
+    package, _, _, _ = compiler
+    toolchain = prepare_assets.REPOSITORY / relative
+    toolchain.parent.mkdir(parents=True, exist_ok=True)
+    toolchain.write_text("original pinned toolchain\n")
+    cache = tmp_path / "cache"
+    prepare_assets.prepare(package.name, tmp_path / "first", Path("freecad"), "", cache_dir=cache)
+    toolchain.write_text("changed pinned toolchain\n")
+    report = prepare_assets.prepare(package.name, tmp_path / "second", Path("freecad"), "", cache_dir=cache)
+    assert report["cacheHit"] is False
+
+
+@pytest.mark.parametrize("field,value", [(0, "other-os"), (1, "other-architecture")])
+def test_cache_from_another_native_platform_is_rebuilt(compiler, tmp_path, field, value):
+    package, _, _, _ = compiler
+    cache = tmp_path / "cache"
+    prepare_assets.prepare(package.name, tmp_path / "first", Path("freecad"), "", cache_dir=cache)
+    path = cache / "fixture/manifest.json"
+    recorded = json.loads(path.read_text())
+    recorded["platform"][field] = value
+    path.write_text(json.dumps(recorded))
+    report = prepare_assets.prepare(package.name, tmp_path / "second", Path("freecad"), "", cache_dir=cache)
+    assert report["cacheHit"] is False
+
+
 def test_fingerprint_includes_helpers_under_a_tests_parent_and_ignores_installed_metadata(tmp_path, monkeypatch):
     repository = tmp_path / "tests/repository"
     helper = repository / "Tools/HangboardCAD/helper.py"

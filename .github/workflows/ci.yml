@@ -214,6 +214,7 @@ jobs:
           ../HangboardCAD/tests/test_board_manifest.py
           ../HangboardCAD/tests/test_embedded_authoring.py
           ../HangboardCAD/tests/test_prepare_assets.py
+          ../HangboardCAD/tests/test_freecad_launcher.py
           ../HangboardCAD/tests/test_runtime_asset_catalog.py
           ../../scripts/tests/test_runtime_catalog_selection.py
           ../HangboardCAD/tests/test_compile_suspension.py
@@ -247,7 +248,7 @@ jobs:
       github.event_name != 'pull_request' ||
       needs.changes.outputs.cad == 'true' ||
       needs.changes.outputs.workflow == 'true'
-    runs-on: macos-26
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Check out source
@@ -267,39 +268,41 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install pinned FreeCAD 1.1.3
+      - name: Install headless native CAD system libraries
         run: |
           set -euo pipefail
-          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
-          cad_root="$PWD/.context/$owner-transgression-native-ci"
-          mkdir -p "$cad_root/mount"
-          cleanup_mount() {
-            if mount | grep -Fq " on $cad_root/mount "; then
-              hdiutil detach "$cad_root/mount"
-            fi
-            if mount | grep -Fq " on $cad_root/mount "; then exit 1; fi
-          }
-          trap cleanup_mount EXIT
-          case "$(uname -m)" in
-            arm64) digest=f5c0ece7cd7c932466d6effadc0fc6e179b0538a9d9a6a77a6769eae3af2667c ;;
-            x86_64) digest=8434bd6ad32f597605d184e5b996f496e9cbc7e6d8ffb6db4dbd6e2ce6d1612b ;;
-            *) exit 1 ;;
-          esac
-          curl --fail --location --retry 3 \
-            "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-macOS-$(uname -m)-py311.dmg" \
-            --output "$cad_root/FreeCAD.dmg"
-          echo "$digest  $cad_root/FreeCAD.dmg" | shasum -a 256 -c -
-          # Record ownership before mounting; the trap deletes only this mount.
-          echo "$cad_root/mount" > "$cad_root/owned-mount"
-          hdiutil attach "$cad_root/FreeCAD.dmg" -nobrowse -readonly -mountpoint "$cad_root/mount"
-          ditto "$cad_root/mount/FreeCAD.app" "$cad_root/FreeCAD.app"
-          echo "HANGTEN_FREECAD_CMD=$cad_root/FreeCAD.app/Contents/Resources/bin/freecadcmd" >> "$GITHUB_ENV"
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y libegl1 libgl1 libglu1-mesa libopengl0 squashfs-tools
 
       - name: Run native CAD, cord and YY persisted-edit regressions
         run: |
           set -euo pipefail
           owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
           cad_root="$PWD/.context/$owner-transgression-native-ci"
+          if [[ -e "$cad_root" ]]; then
+            echo "error: refusing to reuse an existing native CAD toolchain directory: $cad_root" >&2
+            exit 1
+          fi
+          mkdir -p "$cad_root"
+          # Record ownership before installing the extracted AppImage and USD staging.
+          printf '%s\n' "$cad_root" "$cad_root/freecad" "$cad_root/usd" > "$cad_root/owned-resources"
+          cleanup_cad() {
+            local result=$?
+            trap - EXIT
+            rm -rf "$cad_root"
+            if [[ -e "$cad_root" ]]; then
+              echo "error: workspace-owned native CAD toolchain was not removed: $cad_root" >&2
+              exit 1
+            fi
+            return "$result"
+          }
+          trap cleanup_cad EXIT
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+          HANGTEN_FREECAD_CMD=$(scripts/install-freecad.sh "$cad_root/freecad")
+          export HANGTEN_FREECAD_CMD
+          export QT_QPA_PLATFORM=offscreen
+          export HANGTEN_REQUIRE_NATIVE_CAD=true
           # Preserve upstream cord-regression pins alongside owned USD compiler staging.
           install_native_dependencies() {
             local attempt="$1"
@@ -319,10 +322,11 @@ jobs:
           fi
           python -m pip install --target "$cad_root/usd" 'usd-core==26.8'
           export HANGTEN_CAD_PYTHONPATH="$cad_root/usd"
-          # Fail instead of silently skipping the required YY native checks.
+          # Fail instead of silently skipping the required native checks.
           test -f "$HANGTEN_FREECAD_CMD"
           test -x "$HANGTEN_FREECAD_CMD"
           test -f "$HANGTEN_CAD_PYTHONPATH/pxr/__init__.py"
+          python -c 'import numpy, pxr, trimesh, shapely, rtree, scipy, networkx'
           python -m pytest \
             Tools/HangboardCAD/tests/test_transgression_packages.py \
             Tools/HangboardCAD/tests/test_clavellium_native.py \
@@ -342,11 +346,12 @@ jobs:
           set -euo pipefail
           owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
           cad_root="$PWD/.context/$owner-transgression-native-ci"
-          if mount | grep -Fq " on $cad_root/mount "; then
-            hdiutil detach "$cad_root/mount"
+          if [[ -e "$cad_root" ]]; then
+            # Failsafe for a cancelled shell: delete only the exact recorded owner.
+            test -f "$cad_root/owned-resources"
+            grep -Fxq "$cad_root" "$cad_root/owned-resources"
+            rm -rf "$cad_root"
           fi
-          if mount | grep -Fq " on $cad_root/mount "; then exit 1; fi
-          rm -rf "$cad_root"
           test ! -e "$cad_root"
 
   workflow-lint:

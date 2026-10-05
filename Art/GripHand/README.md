@@ -11,14 +11,18 @@ in `LICENSE.md` and the repository third-party notices.
 ## Authoring and reproduction
 
 The app's `HangTen/Resources/GripHand/hand-mesh.json` is an ignored build output.
-Export the retained editable source with pinned Blender 5.2.0:
+Export the retained editable source with pinned Blender 5.2.0.
+
+On Ubuntu 24.04, install
+`libegl1 libgl1 libxi6 libxfixes3 libxrender1 libsm6 libxxf86vm1 libxkbcommon0 xz-utils`
+first. The script can download the pinned Linux x86_64 toolchain automatically.
 
 ```sh
 rtk proxy bash scripts/export-grip-hand.sh
 ```
 
 The full `scripts/build-runtime-assets.sh` entrypoint runs this export together
-with native board compilation and Swift plan export. CI delivers the generated
+with native board compilation. CI delivers the generated
 JSON in its runtime artifact. Commit the editable Blender source and evidence,
 not the exported JSON; `SourceHand.glb` and its license remain retained inputs.
 
