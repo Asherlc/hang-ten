@@ -1,0 +1,9 @@
+{
+  "status": "pass",
+  "commit": "9399160729fcc418cedf47344b41163d244b5d96",
+  "committedModelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+  "committedDescriptorSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
+  "existingNativeAndExportComparisonsUseExactCommittedModel": true,
+  "beforeSourceMetadataSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+  "clarification": "The previous review source includes uncommitted metadata corrections; its geometry asset and descriptor are byte-identical to HEAD. Existing front/side/top/oblique comparisons already use the committed model geometry. No rerender needed."
+}

@@ -1,0 +1,463 @@
+{
+  "owner": "placid-badger",
+  "purpose": "Immutable3mm-diameter before state for manufacturer6mm cord correction",
+  "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+  "sidecarSHA256": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088",
+  "beforeCordDiameterMM": 3,
+  "sourceSpecifiedAfterCordDiameterMM": 6,
+  "poseIDs": [
+    "front-25",
+    "front-inverted-20",
+    "reverse-13",
+    "reverse-inverted-8",
+    "outer-upper",
+    "outer-lower"
+  ],
+  "strandIDs": [
+    "left-front",
+    "left-rear",
+    "right-front",
+    "right-rear"
+  ],
+  "immutablePackageFiles": {
+    "frictitious-nug.FCStd": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+    "assets/primary.usdz": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+    "assets/primary.model.json": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d"
+  },
+  "gitModelIdentity": {
+    "frictitious-nug.FCStd": {
+      "gitContentKind": "LFS pointer",
+      "expectedMaterializedSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+      "gitBlobBytesSHA256": "4f4533bc24a78f56415e6915c14469198bfde9f3f7c80221a077a8c536bd591d"
+    },
+    "assets/primary.usdz": {
+      "gitContentKind": "LFS pointer",
+      "expectedMaterializedSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+      "gitBlobBytesSHA256": "e5594541790484bb2ced188b2ca00dd60b7f49199fe398f91bbea3c4aac5f610"
+    },
+    "assets/primary.model.json": {
+      "gitContentKind": "ordinary blob",
+      "expectedMaterializedSHA256": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+      "gitBlobBytesSHA256": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d"
+    }
+  },
+  "retainedFiles": [
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "Hangboards/frictitious-nug/suspension.json",
+      "retainedPath": "before/suspension.json",
+      "sha256": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088",
+      "bytes": 34233,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/contact-selection-accessibility.json",
+      "retainedPath": "before/app-review/contact-selection-accessibility.json",
+      "sha256": "8097be0a6f10345eb962dab572fe1c0131ff6269049b736185576bf73c51ae2d",
+      "bytes": 11091,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/contact-selection.png",
+      "retainedPath": "before/app-review/contact-selection.png",
+      "sha256": "be2a4ba02b47db6e1b32065267f7a49211348a9f1941a0722f7556ace89db5b1",
+      "bytes": 444095,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/default-accessibility.json",
+      "retainedPath": "before/app-review/default-accessibility.json",
+      "sha256": "6bbc750a30f93b5931620431bc7f9fcaa809383e49dc43ec002b2c904ceebce7",
+      "bytes": 11027,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/default.png",
+      "retainedPath": "before/app-review/default.png",
+      "sha256": "dc75b0b5119f9d928c95fe95c3f3ae6585402695c6c11b18b8d5055c5fdb1941",
+      "bytes": 448772,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/index.html",
+      "retainedPath": "before/app-review/index.html",
+      "sha256": "2ac15e3b1225b2361448de427f64bfd6dc23395161f826d1c48204c77fa68c87",
+      "bytes": 684,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/index.md",
+      "retainedPath": "before/app-review/index.md",
+      "sha256": "b8ac51bf828ec5e1d6f02cfe3c2a8d6d27515deed3d4080a38d89a6986f6a8d8",
+      "bytes": 345,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/validation.json",
+      "retainedPath": "before/app-review/validation.json",
+      "sha256": "bb56559cb50a21dab424b43df920e36e0d391abc1bfdef9e1eb4e6aa2d866bec",
+      "bytes": 1106,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/camera-correction-proof.json",
+      "retainedPath": "before/camera-correction-proof.json",
+      "sha256": "61db100232d5ee1faa7fa82cb0f6987d1c812a5af09e53411533f65f46213303",
+      "bytes": 1616,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/compile.json",
+      "retainedPath": "before/compile.json",
+      "sha256": "682e49dbc48f187105af83ceb7bd0374412da91c2038b74e5c09d177d94b6deb",
+      "bytes": 1362,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/contact-contract.json",
+      "retainedPath": "before/contact-contract.json",
+      "sha256": "339827bb49120ac74649c5d15360d7320b99def6f8e5d6b18bcec3d7ea2ae451",
+      "bytes": 1295,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-continuous-clearance.json",
+      "retainedPath": "before/cord-continuous-clearance.json",
+      "sha256": "44aa024c6cbaa3842b5b64d69953b307f0b89a5b2612b770d8c4df83cc4ec9d2",
+      "bytes": 8023,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-primary-check.json",
+      "retainedPath": "before/cord-primary-check.json",
+      "sha256": "fe8235da96ff229162047f6f193b3524f039a64f5c71d4a29a5fd65805c6cd35",
+      "bytes": 29123,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/front.jpg",
+      "retainedPath": "before/evidence/front.jpg",
+      "sha256": "7c476ab558d6defdacf4d4105e09cbffe99edaf5455c6ea04e5f00b812f2a384",
+      "bytes": 244601,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/in-use.jpg",
+      "retainedPath": "before/evidence/in-use.jpg",
+      "sha256": "146cbf91b840b7e6ae2063877c08729ae869bbb07da5e478300f9fdbeffd9ecd",
+      "bytes": 339181,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/product-page-current.html",
+      "retainedPath": "before/evidence/product-page-current.html",
+      "sha256": "fc5517626285368b665c37139a52657133400bc8cf1ef0b4c54b3d1eac490f78",
+      "bytes": 455600,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/reverse.jpg",
+      "retainedPath": "before/evidence/reverse.jpg",
+      "sha256": "c3e36dc47c9e4542321d155c337d91a3511ef6d6f9dfbcd0bd40100ce26f8202",
+      "bytes": 239523,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/metadata-diff.json",
+      "retainedPath": "before/metadata-diff.json",
+      "sha256": "7b2d98add33a97b0d32fb7ab2f5ba51785337b8cc5055055af0c11158d0c21b2",
+      "bytes": 1284,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/mouth-well-export-rays.json",
+      "retainedPath": "before/mouth-well-export-rays.json",
+      "sha256": "4b6b9160d75b6397563d010ac780ce4e83bbd6dc8547ae3d27ee28942c349d39",
+      "bytes": 31656,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/mouth-well-export-review.md",
+      "retainedPath": "before/mouth-well-export-review.md",
+      "sha256": "92bba0ba34a754b6e6ecf23e1b7576a20c1f3cffe5000f3a2e4c2b1433ad86ad",
+      "bytes": 870,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/native-authoring.md",
+      "retainedPath": "before/native-authoring.md",
+      "sha256": "305245eea1347fca1999b860c32c10de5c4c1b000e10f69b437fa927f724e202",
+      "bytes": 4309,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/native-checks.json",
+      "retainedPath": "before/native-checks.json",
+      "sha256": "43c30a8529c2311dfeb96dc414b430c218a58ee21a34facb56f5ae2b203fd5a8",
+      "bytes": 604,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/native-cord-evidence.json",
+      "retainedPath": "before/native-cord-evidence.json",
+      "sha256": "bac5cefa455045d3383e653da500738a2275b087aa06149ad0b02ff87e928289",
+      "bytes": 2618,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/reproducibility.json",
+      "retainedPath": "before/reproducibility.json",
+      "sha256": "cf9637c639834c8c935dcc4665b4a2748eee57b4be521074862ace59dc84f776",
+      "bytes": 1521,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-25-front.png",
+      "retainedPath": "before/review/cord-primary-front-25-front.png",
+      "sha256": "3b9157fde07439c6cc1620426744ed8191dcccd5627469370403a03a1c65e374",
+      "bytes": 17557,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-25-side.png",
+      "retainedPath": "before/review/cord-primary-front-25-side.png",
+      "sha256": "2aa79aab38633f0ef0f77ec20e3907a3d214c2948da38ad8784ea7c859b66a37",
+      "bytes": 11037,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-25-top.png",
+      "retainedPath": "before/review/cord-primary-front-25-top.png",
+      "sha256": "88c8680064c108d5ee19c4e04195f058422f226c2f621d66104ac8935cb18858",
+      "bytes": 19232,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-inverted-20-corrected-camera.png",
+      "retainedPath": "before/review/cord-primary-front-inverted-20-corrected-camera.png",
+      "sha256": "13c3064bcfee75fb643fc81ad318f1305ea040e8f4ac5badd228d1eb16924beb",
+      "bytes": 20949,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-inverted-20-front.png",
+      "retainedPath": "before/review/cord-primary-front-inverted-20-front.png",
+      "sha256": "ba298efba564f04eeb0beee2495b216a868fbaca847a36372e91cffa545828c6",
+      "bytes": 17701,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-outer-lower-front.png",
+      "retainedPath": "before/review/cord-primary-outer-lower-front.png",
+      "sha256": "3b9157fde07439c6cc1620426744ed8191dcccd5627469370403a03a1c65e374",
+      "bytes": 17557,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-outer-upper-front.png",
+      "retainedPath": "before/review/cord-primary-outer-upper-front.png",
+      "sha256": "3b9157fde07439c6cc1620426744ed8191dcccd5627469370403a03a1c65e374",
+      "bytes": 17557,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-reverse-13-corrected-camera.png",
+      "retainedPath": "before/review/cord-primary-reverse-13-corrected-camera.png",
+      "sha256": "d87eb96f32ed23efea4f1456f2231138400bbcb6831055b36dd7e376cad263cc",
+      "bytes": 20818,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-reverse-13-front.png",
+      "retainedPath": "before/review/cord-primary-reverse-13-front.png",
+      "sha256": "aba8a2c68c714cfac489604f011ba271c52b6fb07b326a03d2c6c8b8e34773e9",
+      "bytes": 17576,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-reverse-inverted-8-corrected-camera.png",
+      "retainedPath": "before/review/cord-primary-reverse-inverted-8-corrected-camera.png",
+      "sha256": "1626f6645e41a09e7f28b5b2001e6902d7c158a9caf85b57310f5a06e61e411a",
+      "bytes": 20931,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-reverse-inverted-8-front.png",
+      "retainedPath": "before/review/cord-primary-reverse-inverted-8-front.png",
+      "sha256": "e7decf8b40cf8ec6f5238cac0ef4a6300e8618cf83b653ccaa0a14930237bcc1",
+      "bytes": 17497,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/index.html",
+      "retainedPath": "before/review/index.html",
+      "sha256": "72dfca44f92dbd74c50d11a5f20b6a5d89dc7852fc39aa6eb88ca8a863f6b660",
+      "bytes": 3757,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/mouth-well-native-export-sections.png",
+      "retainedPath": "before/review/mouth-well-native-export-sections.png",
+      "sha256": "e274cdee4552f12d6a9e82c2c9ff567f0eb86d0f94084b17838e297325773ca8",
+      "bytes": 19290,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-front.png",
+      "retainedPath": "before/review/primary-front.png",
+      "sha256": "7e908f28a80c04600b761d73eab69ca55ed71e18f762a2a57ba220588f13bd38",
+      "bytes": 32229,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-oblique.png",
+      "retainedPath": "before/review/primary-oblique.png",
+      "sha256": "bcc9e601a70b5a69cccc8381634f8cf77fe8ca998761843bba3a91e58e2fc63e",
+      "bytes": 48889,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-rear.png",
+      "retainedPath": "before/review/primary-rear.png",
+      "sha256": "dc65fe3af77bbacd43f489f0dddd9f6bc731459588219566c4b8f5ec187b3c57",
+      "bytes": 32608,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-side.png",
+      "retainedPath": "before/review/primary-side.png",
+      "sha256": "04f36f22bb3f09cc0c79f7bbfadff0ef873afe603aed0d8305978175a5508780",
+      "bytes": 25725,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-top.png",
+      "retainedPath": "before/review/primary-top.png",
+      "sha256": "c0add84559c5a97ade306ff52953969dc05d5cd891d801e0a09875ae8790dd70",
+      "bytes": 9281,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/prior-primary.png",
+      "retainedPath": "before/review/prior-primary.png",
+      "sha256": "77cd06f2a369249020bcf5a6f1ce5917b5d3d6827f191d348e16391cd6382683",
+      "bytes": 2002949,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/prior-reverse.png",
+      "retainedPath": "before/review/prior-reverse.png",
+      "sha256": "06cd84b284e68b3bbe4ba2af7bec8d0315f84cb11e770ab2f81082fcf16edea3",
+      "bytes": 2370916,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/sources.json",
+      "retainedPath": "before/sources.json",
+      "sha256": "8b9d849e5681d734ac3fdf6601ea0ccf5acd552a952e6b5131fea2eb4ea33a4e",
+      "bytes": 5068,
+      "retentionMethod": "git show exact commit:path"
+    },
+    {
+      "sourceCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/validation.json",
+      "retainedPath": "before/validation.json",
+      "sha256": "9fb4bc024b15f84c075d41f4943078e46a9be4f76e6dd7148590c09638ad88ef",
+      "bytes": 966,
+      "retentionMethod": "git show exact commit:path"
+    }
+  ],
+  "existingAuditSHA256": {
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/contact-selection-accessibility.json": "8097be0a6f10345eb962dab572fe1c0131ff6269049b736185576bf73c51ae2d",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/contact-selection.png": "be2a4ba02b47db6e1b32065267f7a49211348a9f1941a0722f7556ace89db5b1",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/default-accessibility.json": "6bbc750a30f93b5931620431bc7f9fcaa809383e49dc43ec002b2c904ceebce7",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/default.png": "dc75b0b5119f9d928c95fe95c3f3ae6585402695c6c11b18b8d5055c5fdb1941",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/index.html": "2ac15e3b1225b2361448de427f64bfd6dc23395161f826d1c48204c77fa68c87",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/index.md": "b8ac51bf828ec5e1d6f02cfe3c2a8d6d27515deed3d4080a38d89a6986f6a8d8",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/app-review/validation.json": "bb56559cb50a21dab424b43df920e36e0d391abc1bfdef9e1eb4e6aa2d866bec",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/camera-correction-proof.json": "61db100232d5ee1faa7fa82cb0f6987d1c812a5af09e53411533f65f46213303",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/compile.json": "682e49dbc48f187105af83ceb7bd0374412da91c2038b74e5c09d177d94b6deb",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/contact-contract.json": "339827bb49120ac74649c5d15360d7320b99def6f8e5d6b18bcec3d7ea2ae451",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-continuous-clearance.json": "44aa024c6cbaa3842b5b64d69953b307f0b89a5b2612b770d8c4df83cc4ec9d2",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/cord-primary-check.json": "fe8235da96ff229162047f6f193b3524f039a64f5c71d4a29a5fd65805c6cd35",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/front.jpg": "7c476ab558d6defdacf4d4105e09cbffe99edaf5455c6ea04e5f00b812f2a384",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/in-use.jpg": "146cbf91b840b7e6ae2063877c08729ae869bbb07da5e478300f9fdbeffd9ecd",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/product-page-current.html": "fc5517626285368b665c37139a52657133400bc8cf1ef0b4c54b3d1eac490f78",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/reverse.jpg": "c3e36dc47c9e4542321d155c337d91a3511ef6d6f9dfbcd0bd40100ce26f8202",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/metadata-diff.json": "7b2d98add33a97b0d32fb7ab2f5ba51785337b8cc5055055af0c11158d0c21b2",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/mouth-well-export-rays.json": "4b6b9160d75b6397563d010ac780ce4e83bbd6dc8547ae3d27ee28942c349d39",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/mouth-well-export-review.md": "92bba0ba34a754b6e6ecf23e1b7576a20c1f3cffe5000f3a2e4c2b1433ad86ad",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/native-authoring.md": "305245eea1347fca1999b860c32c10de5c4c1b000e10f69b437fa927f724e202",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/native-checks.json": "43c30a8529c2311dfeb96dc414b430c218a58ee21a34facb56f5ae2b203fd5a8",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/native-cord-evidence.json": "bac5cefa455045d3383e653da500738a2275b087aa06149ad0b02ff87e928289",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/reproducibility.json": "cf9637c639834c8c935dcc4665b4a2748eee57b4be521074862ace59dc84f776",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-25-front.png": "3b9157fde07439c6cc1620426744ed8191dcccd5627469370403a03a1c65e374",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-25-side.png": "2aa79aab38633f0ef0f77ec20e3907a3d214c2948da38ad8784ea7c859b66a37",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-25-top.png": "88c8680064c108d5ee19c4e04195f058422f226c2f621d66104ac8935cb18858",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-inverted-20-corrected-camera.png": "13c3064bcfee75fb643fc81ad318f1305ea040e8f4ac5badd228d1eb16924beb",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-front-inverted-20-front.png": "ba298efba564f04eeb0beee2495b216a868fbaca847a36372e91cffa545828c6",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-outer-lower-front.png": "3b9157fde07439c6cc1620426744ed8191dcccd5627469370403a03a1c65e374",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-outer-upper-front.png": "3b9157fde07439c6cc1620426744ed8191dcccd5627469370403a03a1c65e374",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-reverse-13-corrected-camera.png": "d87eb96f32ed23efea4f1456f2231138400bbcb6831055b36dd7e376cad263cc",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-reverse-13-front.png": "aba8a2c68c714cfac489604f011ba271c52b6fb07b326a03d2c6c8b8e34773e9",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-reverse-inverted-8-corrected-camera.png": "1626f6645e41a09e7f28b5b2001e6902d7c158a9caf85b57310f5a06e61e411a",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/cord-primary-reverse-inverted-8-front.png": "e7decf8b40cf8ec6f5238cac0ef4a6300e8618cf83b653ccaa0a14930237bcc1",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/index.html": "72dfca44f92dbd74c50d11a5f20b6a5d89dc7852fc39aa6eb88ca8a863f6b660",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/mouth-well-native-export-sections.png": "e274cdee4552f12d6a9e82c2c9ff567f0eb86d0f94084b17838e297325773ca8",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-front.png": "7e908f28a80c04600b761d73eab69ca55ed71e18f762a2a57ba220588f13bd38",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-oblique.png": "bcc9e601a70b5a69cccc8381634f8cf77fe8ca998761843bba3a91e58e2fc63e",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-rear.png": "dc65fe3af77bbacd43f489f0dddd9f6bc731459588219566c4b8f5ec187b3c57",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-side.png": "04f36f22bb3f09cc0c79f7bbfadff0ef873afe603aed0d8305978175a5508780",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/primary-top.png": "c0add84559c5a97ade306ff52953969dc05d5cd891d801e0a09875ae8790dd70",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/prior-primary.png": "77cd06f2a369249020bcf5a6f1ce5917b5d3d6827f191d348e16391cd6382683",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/review/prior-reverse.png": "06cd84b284e68b3bbe4ba2af7bec8d0315f84cb11e770ab2f81082fcf16edea3",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/sources.json": "8b9d849e5681d734ac3fdf6601ea0ccf5acd552a952e6b5131fea2eb4ea33a4e",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/validation.json": "9fb4bc024b15f84c075d41f4943078e46a9be4f76e6dd7148590c09638ad88ef"
+  },
+  "candidateStatus": "No final after sidecar supplied or rendered; waiting for frozen approved apply",
+  "appCaptureProvenance": "Exact committed app captures and proofs retained byte-for-byte, without new current-binary claims."
+}

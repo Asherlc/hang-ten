@@ -1,0 +1,38 @@
+{
+  "arm": "image",
+  "runtimeValid": true,
+  "allWholeImagesReviewed": true,
+  "wholeImages": 45,
+  "visualResult": "FAIL",
+  "nextArmAuthorized": null,
+  "comparisonStopped": true,
+  "binarySHA256": "f6cf757759394fb5386eb78b8ce4d9360e21075096911526313c0ff3524d7709",
+  "findings": [
+    "Initial Hang at003 has no board or hand output.",
+    "004\u2013010 red Hang with visible image hands.",
+    "011\u2013018 red during Rest, incorrect.",
+    "090 and183\u2013189 blue Rest.",
+    "190\u2013196 blue throughout following Hang, incorrect.",
+    "197\u2013207 blue Rest."
+  ],
+  "limits": [
+    "External capture times do not establish app mutation times or CPU brackets.",
+    "Muted awake Simulator protocol only.",
+    "Hand image lighting is a declared warmer/darker neutral-environment adaptation.",
+    "Failed workaround; no production adoption, reversal, camera tuning, or automatic startup retry."
+  ],
+  "reviewReports": [
+    {
+      "path": "image-first-independent.json",
+      "sha256": "2be96e16db1cd1c158f14046ab74ed3fa75c933650be29ab7a94ed965e137de4"
+    },
+    {
+      "path": "image-tail-independent.json",
+      "sha256": "52dfbc2114713e30a30f999a9bd0fe50c1bdcd925d3a7f1415515cc0b85a4a75"
+    },
+    {
+      "path": "image-root-visual.json",
+      "sha256": "70b5512555c83a96e461ce9c3347ef712be458860ec6d542870277539d12117b"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "b22531a5d3a9e4f6c62555912e2c988c4cb39ded999ed50aed462aeb588cccc9",
+  "boardFieldChanges": {},
+  "changedContacts": {},
+  "humanAcceptance": "pending one-by-one review",
+  "package": "captain-fingerfood-unlevel",
+  "positionsAfter": [
+    {
+      "contactIDs": [
+        "curved-edge-20"
+      ],
+      "id": "edge20-front",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "curved-edge-25"
+      ],
+      "id": "edge25-inverted",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "outer-jug"
+      ],
+      "id": "jug-reverse",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "pocket-end-wall-20-25"
+      ],
+      "id": "pocket-right-end",
+      "presentationID": "primary"
+    }
+  ],
+  "positionsBefore": [
+    {
+      "contactIDs": [
+        "curved-edge-20"
+      ],
+      "id": "edge20-front",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "curved-edge-25"
+      ],
+      "id": "edge25-inverted",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "outer-jug"
+      ],
+      "id": "jug-reverse",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "pocket-end-wall-20-25"
+      ],
+      "id": "pocket-right-end",
+      "presentationID": "primary"
+    }
+  ],
+  "removedContacts": [],
+  "sourceAudit": "captain-fingerfood-unlevel/README.md",
+  "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df"
+}

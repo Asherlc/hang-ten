@@ -1,0 +1,76 @@
+{
+  "status": "pass",
+  "sourceFrozen": true,
+  "independentCompilerRuns": "check-only and export in isolated assets/TMPDIR directories",
+  "modelByteReproducibility": true,
+  "descriptorByteReproducibility": true,
+  "completedCandidateCompilerRuns": 3,
+  "twoNormalExportsByteIdentical": true,
+  "files": {
+    "candidate/metolius-simulator-3d.FCStd": {
+      "sha256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+      "bytes": 6805100
+    },
+    "candidate/assets/primary.usdz": {
+      "sha256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+      "bytes": 5705584
+    },
+    "candidate/assets/primary.model.json": {
+      "sha256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d",
+      "bytes": 13970
+    }
+  },
+  "triangles": 254961,
+  "nodes": 31,
+  "contacts": 30,
+  "tessellationDeflectionMM": 0.28,
+  "estimatedNativeThicknessMM": 94.11832462653064,
+  "publishedFaceMM": [
+    711,
+    222
+  ],
+  "nativeReports": "../independent-validation/",
+  "surfaceContinuityLimit": "G1 silhouette; positionally continuous roof bridges with endpoint normal changes up to 6.77 degrees",
+  "humanAcceptance": false,
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "candidateCompilerSeconds": {
+    "compile-check": 383.2438087919727,
+    "compile": 382.17040037497645,
+    "reproduce": 379.3675922920229
+  },
+  "baselineDefaultFalseExact": true,
+  "finalNormalComparison": {
+    "triangles": 71,
+    "corners": 213,
+    "maximumAngleDegrees": 8.537736462515939e-07,
+    "allPositionsExact": true
+  },
+  "reports": [
+    "root-cause.md",
+    "source-audit.md",
+    "authored-design.json",
+    "uv-source-preservation.json",
+    "uv-metadata-reproducibility.json",
+    "compile-check.json",
+    "compile.json",
+    "reproduce.json",
+    "baseline-default-false-reproducibility.json",
+    "final-normal-comparison.json",
+    "package-verification.json",
+    "visual-review.json",
+    "cleanup.json"
+  ],
+  "independentValidation": "../independent-validation/",
+  "reviewViews": [
+    "review/comparison-front.png",
+    "review/comparison-side.png",
+    "review/comparison-top.png",
+    "review/comparison-oblique.png",
+    "review/comparison-raking.png"
+  ],
+  "pendingParentWork": [
+    "Integrate final source/assets and audit evidence",
+    "Fresh actual-app loading, selection and orbit review",
+    "Human acceptance of board #8"
+  ]
+}

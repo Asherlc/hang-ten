@@ -1,0 +1,12 @@
+{
+  "physicalOpenCount": 1,
+  "openCompleted": {
+    "epoch": 1791074784.9909592,
+    "monotonic": 136429.182095875
+  },
+  "noRetries": true,
+  "setupVerifiedFromWholeImages": true,
+  "AXQueriesUsed": false,
+  "noRoutePhaseInference": true,
+  "allSetupBeforeMeasurement": true
+}

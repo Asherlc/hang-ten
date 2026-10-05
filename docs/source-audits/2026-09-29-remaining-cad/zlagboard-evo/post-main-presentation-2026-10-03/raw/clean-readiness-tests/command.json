@@ -1,0 +1,28 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=E0AC7F37-369F-414E-B407-353435A0BE03",
+    "-derivedDataPath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/DerivedData-placid-badger-cad-second-half",
+    "-resultBundlePath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/tests-placid-badger-cad-second-half.xcresult",
+    "-only-testing:HangTenTests/WorkoutDrawablePresentationTests",
+    "-only-testing:HangTenTests/WorkoutRendererPreferenceTests",
+    "-only-testing:HangTenTests/WorkoutRendererReadinessTests",
+    "-only-testing:HangTenTests/WorkoutRendererStartGateTests",
+    "-only-testing:HangTenTests/WorkoutTimelineTests",
+    "test"
+  ],
+  "pid": 36303,
+  "boundSeconds": 600,
+  "startedEpoch": 1791055588.931424
+}

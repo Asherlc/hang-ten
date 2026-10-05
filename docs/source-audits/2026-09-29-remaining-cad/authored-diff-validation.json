@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "retainedVerbatimEvidenceFilesWithOriginalWhitespace": 19,
+  "onlyVerbatimEvidenceDiagnostics": true,
+  "authoredFilesCheckExitCode": 0,
+  "unexpectedPaths": [],
+  "scope": "Authored source and documentation pass whitespace checks. Original HTML and PDF manufacturer evidence is retained byte-for-byte, including its original whitespace."
+}

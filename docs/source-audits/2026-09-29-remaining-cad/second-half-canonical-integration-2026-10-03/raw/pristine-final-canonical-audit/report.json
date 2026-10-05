@@ -1,0 +1,355 @@
+{
+  "status": "CANONICAL_BYTE_PRESERVATION_PASS_NOT_PR_READY",
+  "timestampUTC": "2026-10-03T10:07:39.183007+00:00",
+  "ownHEAD": "405a4530ab3a26496cf4e44fb59917e5befd7af8",
+  "publishedOwn": "405a4530ab3a26496cf4e44fb59917e5befd7af8",
+  "publishedParent": "9b0a371f72216ab7746d876c141f834f815ffc34",
+  "parentObjectAlreadyLocal": true,
+  "fetchOrMergePerformed": false,
+  "canonicalFiles": [
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.model.json",
+      "sha256": "75be5cf44e996606261dfd942f3004058d6cc9cd5bfe66e1c159ceaf1578f934",
+      "bytes": 2788,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-baguette/assets/primary.usdz",
+      "sha256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea",
+      "bytes": 1552947,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-baguette/suspension.json",
+      "sha256": "c69c11dc9708bc1e2dc9f235004f55a7c0ecd524fdf5b073c40dda1d9b0c956f",
+      "bytes": 114727,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-baguette/yy-baguette.FCStd",
+      "sha256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "bytes": 231688,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.model.json",
+      "sha256": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927",
+      "bytes": 9232,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/assets/primary.usdz",
+      "sha256": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+      "bytes": 636587,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/suspension.json",
+      "sha256": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282",
+      "bytes": 74670,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd",
+      "sha256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "bytes": 4904495,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.model.json",
+      "sha256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+      "bytes": 3408,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/assets/primary.usdz",
+      "sha256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+      "bytes": 1531074,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/suspension.json",
+      "sha256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97",
+      "bytes": 84593,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+      "sha256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "bytes": 1224598,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.model.json",
+      "sha256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+      "bytes": 2866,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/assets/primary.usdz",
+      "sha256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+      "bytes": 1432139,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/suspension.json",
+      "sha256": "7af15a7f897baa87a4da89fcf62c8123dbb7544d8c3cb0bced71474bf9d044e4",
+      "bytes": 31173,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/yy-travelboard.FCStd",
+      "sha256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "bytes": 223596,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.model.json",
+      "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+      "bytes": 10140,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/assets/primary.usdz",
+      "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+      "bytes": 1020310,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/zlagboard-evo.FCStd",
+      "sha256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+      "bytes": 1000365,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+      "bytes": 13417,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.usdz",
+      "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+      "bytes": 1284438,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
+      "sha256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "bytes": 1412874,
+      "equalRetainedBaseline": true,
+      "equalHEADDataOrLFSPointerOID": true
+    }
+  ],
+  "realNativeLFS": [
+    {
+      "path": "Hangboards/yy-baguette/yy-baguette.FCStd",
+      "committedLFSPointerOID": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "size": 231688,
+      "actualZIP": true,
+      "nativeBRepMembers": 47,
+      "embeddedManifestPresent": true,
+      "documentXMLSHA256": "c9dcf8e64da06d8f5f7c3ca0a42621a4de4b7458d07148e80e78a3ccc5879e71",
+      "localLFSObjectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/49/70/49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "localLFSObjectSHA256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+      "localObjectExactBytes": true,
+      "archiveCRCValid": true
+    },
+    {
+      "path": "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd",
+      "committedLFSPointerOID": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "size": 4904495,
+      "actualZIP": true,
+      "nativeBRepMembers": 195,
+      "embeddedManifestPresent": true,
+      "documentXMLSHA256": "5beed13ff75c7eba10e7410c28151bd03c93110f4a8d642610d346f1128a852b",
+      "localLFSObjectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/0c/e8/0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "localLFSObjectSHA256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+      "localObjectExactBytes": true,
+      "archiveCRCValid": true
+    },
+    {
+      "path": "Hangboards/yy-penta-evo/yy-penta-evo.FCStd",
+      "committedLFSPointerOID": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "size": 1224598,
+      "actualZIP": true,
+      "nativeBRepMembers": 139,
+      "embeddedManifestPresent": true,
+      "documentXMLSHA256": "203b1409f2a0776b50c9dace884438a30d96f5ff62b9ca72f3a06ab4a7a6304a",
+      "localLFSObjectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/5c/c4/5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "localLFSObjectSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "localObjectExactBytes": true,
+      "archiveCRCValid": true
+    },
+    {
+      "path": "Hangboards/yy-travelboard/yy-travelboard.FCStd",
+      "committedLFSPointerOID": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "size": 223596,
+      "actualZIP": true,
+      "nativeBRepMembers": 47,
+      "embeddedManifestPresent": true,
+      "documentXMLSHA256": "507c2886f30bb4c73eb72a036dc46c94bc1e4ac8f9a8fcf90bd07018e4a7fcd3",
+      "localLFSObjectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/62/0d/620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "localLFSObjectSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "localObjectExactBytes": true,
+      "archiveCRCValid": true
+    },
+    {
+      "path": "Hangboards/zlagboard-evo/zlagboard-evo.FCStd",
+      "committedLFSPointerOID": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+      "size": 1000365,
+      "actualZIP": true,
+      "nativeBRepMembers": 207,
+      "embeddedManifestPresent": true,
+      "documentXMLSHA256": "6658b8e3fa5db1e1e21e5e449d8166358b86acc510a4c30ae631dcf6b126b500",
+      "localLFSObjectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/6f/44/6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+      "localLFSObjectSHA256": "6f44115b879b6a2214dff04f13477ec1bf949627dfccc4319f1f9da6ec28b58c",
+      "localObjectExactBytes": true,
+      "archiveCRCValid": true
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
+      "committedLFSPointerOID": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "size": 1412874,
+      "actualZIP": true,
+      "nativeBRepMembers": 291,
+      "embeddedManifestPresent": true,
+      "documentXMLSHA256": "2183f2eb6e068706fa4466a282a5628b774c87f05085203ae49c2a0fecaba334",
+      "localLFSObjectPath": "/Users/asherlc/src/hang-ten/.git/lfs/objects/44/02/44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "localLFSObjectSHA256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+      "localObjectExactBytes": true,
+      "archiveCRCValid": true
+    }
+  ],
+  "queueLockHumanRecords": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+      "sha256": "e259be7d20700af24a253606a51b7b28e0d0c83ce221e863cf0383e935a2ffb3",
+      "exactRetainedBaselineAndHEAD": true
+    },
+    {
+      "path": "docs/model-delivery-lock.json",
+      "sha256": "17696157bb63337cfa50f1ba096a93c0dfeaabd74ef0a17c02dc16fa3c7f6028",
+      "exactRetainedBaselineAndHEAD": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/human-review.json",
+      "sha256": "729b6682a1ac1e88503896aa9891557c2b3321832a8066909ef690e445a25574",
+      "exactRetainedBaselineAndHEAD": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/human-review.json",
+      "sha256": "6a1d33cf2b640aaa57a0c7e48047791514d88a995c1b76ac24fb521a09a09dfc",
+      "exactRetainedBaselineAndHEAD": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/human-review.json",
+      "sha256": "13f52a27399dd97fd079839cce7bd5028a8f8d3e5dd6ff0f0fbe08a632838baf",
+      "exactRetainedBaselineAndHEAD": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/human-review.json",
+      "sha256": "e8c571f913892a862b873eeed5c3873b7ea5e887e5d4ce2b2ef6e5f45ea59eae",
+      "exactRetainedBaselineAndHEAD": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/human-review.json",
+      "sha256": "cbd7b03e4f88c439def1ef699fba49df4b37a5e727cae314a5451d33c26d55ba",
+      "exactRetainedBaselineAndHEAD": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/human-review.json",
+      "sha256": "6d3b112acd91ade64ed4e37142da45d0430ecd58d0056ea5e194c1baeb67f625",
+      "exactRetainedBaselineAndHEAD": true
+    }
+  ],
+  "allHangboardsUnchangedSinceCanonicalBaseline": true,
+  "canonicalBaseline": "f15623ea65761a769460379afcf5bacfd5cc762b",
+  "trackedWorkingTreeClean": true,
+  "untrackedHangboards": "",
+  "queueOwnershipChecks": {
+    "accepted1to8ExactBaselineBoth": true,
+    "own1to15ExactBaseline": true,
+    "parent16to21ExactBaseline": true
+  },
+  "parentChangesToOwnedSixPackages": [],
+  "historyPreservation": [
+    {
+      "commit": "e60142f3ef60456248054bf3cf917c7ab81bf5e6",
+      "ancestorOf": {
+        "own": true,
+        "parent": true
+      }
+    },
+    {
+      "commit": "1e09ed9be2c690fe98c0a69aa92125a66127f9e0",
+      "ancestorOf": {
+        "own": true,
+        "parent": true
+      }
+    },
+    {
+      "commit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+      "ancestorOf": {
+        "own": true,
+        "parent": true
+      }
+    }
+  ],
+  "parentDeltaSincePriorIntegrationSnapshot": [
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+    "Hangboards/nature-stone-hanger-mini/suspension.json",
+    "docs/model-delivery-lock.json",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json"
+  ],
+  "sharedCodeInputsEqualPriorTestedPreview": {
+    "Tools/HangboardCAD/native_cord_routes.py": {
+      "ownUnchangedSinceTestedPreview": true,
+      "parentUnchangedSinceTestedPreview": true
+    },
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": {
+      "ownUnchangedSinceTestedPreview": true,
+      "parentUnchangedSinceTestedPreview": true
+    },
+    "docs/HANGBOARD_CORD_AUTHORING.md": {
+      "ownUnchangedSinceTestedPreview": true,
+      "parentUnchangedSinceTestedPreview": true
+    }
+  },
+  "integrationAssessment": "Shared solver/parser/doc inputs retain the previously tested bytes on each side, but branch integration has not been performed. Latest parent adds Nature Stone Hanger Mini assets and queue/lock records relative to prior preview. Old static merged queue/lock must not overwrite those records; regenerate full owner-record resolution at actual integration. Known native_cord_routes.py and delivery-lock conflict resolution remains required.",
+  "remainingBoundaries": [
+    "Pristine production runtime validation is still pending; muted awake DEBUG Train-unmount control PASS is not production repair. Audio-on startup RPC abort and historical highlight failures are not cleared by this byte audit.",
+    "#21 fresh app human acceptance remains pending; native geometry approval for all six remains intact.",
+    "Exact latest-parent integration, substantive record preservation and scoped integrated validation remain outstanding; no integration readiness claim.",
+    "Root retains Simulator/DerivedData ownership until final validation and cleanup; this audit does not inspect or clean them."
+  ],
+  "areAllRemainingBlockersPurelyRuntime": false,
+  "reason": "No new canonical/package or shared-code regression found, but integration and scoped human review/cleanup remain separate readiness boundaries. External PR comments/CI were not inspected.",
+  "limits": [
+    "Hashes/ZIP/LFS identities only; no native re-export, geometry recompute, package tests, build/device access, parent workspace read or historical proof-tree rehash.",
+    "No new acceptance or whole-task completion claim."
+  ]
+}

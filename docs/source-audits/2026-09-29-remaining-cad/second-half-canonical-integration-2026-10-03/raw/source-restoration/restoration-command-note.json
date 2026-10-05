@@ -1,0 +1,6 @@
+{
+  "restorationPassed": true,
+  "trailingDirectoryListingFailed": true,
+  "error": "FileNotFoundError for neutral-build-command directory; actual build record has .json suffix. No restoration step failed.",
+  "sourceVerification": "restoration-verification.json"
+}

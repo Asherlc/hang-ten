@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "export-grasp",
+  "script": ".context/placid-badger/metolius-simulator-3d-front-fairing/render_export_grasp.py",
+  "timeoutSeconds": 300,
+  "startedUTC": "2026-10-01T18:55:59.520980+00:00",
+  "ownedProcessGroup": 22883,
+  "elapsedSeconds": 1.8287267080158927,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

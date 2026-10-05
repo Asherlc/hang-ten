@@ -1,0 +1,256 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "app"
+    ],
+    "startEpoch": 1790990230.4624908,
+    "endEpoch": 1790990230.635112,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "data"
+    ],
+    "startEpoch": 1790990230.665148,
+    "endEpoch": 1790990230.841574,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1790990230.842004,
+    "endEpoch": 1790990231.201188,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "openurl",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "hangten://plan/research.max-hangs/workout"
+    ],
+    "startEpoch": 1790990231.2011971,
+    "endEpoch": 1790990234.48475,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/launch-initial.png"
+    ],
+    "startEpoch": 1790990234.484777,
+    "endEpoch": 1790990234.9742458,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-0-active-plus-0.25.png"
+    ],
+    "startEpoch": 1790990238.453634,
+    "endEpoch": 1790990238.9081259,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-0-active-plus-1.png"
+    ],
+    "startEpoch": 1790990239.217928,
+    "endEpoch": 1790990239.661393,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-0-active-plus-3.png"
+    ],
+    "startEpoch": 1790990241.181756,
+    "endEpoch": 1790990241.6274061,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-0-active-plus-5.png"
+    ],
+    "startEpoch": 1790990243.182129,
+    "endEpoch": 1790990244.3899221,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-1-preview-plus-0.25.png"
+    ],
+    "startEpoch": 1790990245.482256,
+    "endEpoch": 1790990246.071149,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-1-preview-plus-1.png"
+    ],
+    "startEpoch": 1790990246.235698,
+    "endEpoch": 1790990246.736609,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-1-preview-plus-3.png"
+    ],
+    "startEpoch": 1790990248.222952,
+    "endEpoch": 1790990248.8031518,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-1-preview-plus-5.png"
+    ],
+    "startEpoch": 1790990250.22083,
+    "endEpoch": 1790990250.659342,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-2-active-plus-0.25.png"
+    ],
+    "startEpoch": 1790990425.532594,
+    "endEpoch": 1790990426.2975922,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-2-active-plus-1.png"
+    ],
+    "startEpoch": 1790990426.366046,
+    "endEpoch": 1790990426.862071,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-2-active-plus-3.png"
+    ],
+    "startEpoch": 1790990428.2968771,
+    "endEpoch": 1790990428.768519,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/phase-2-active-plus-5.png"
+    ],
+    "startEpoch": 1790990430.299647,
+    "endEpoch": 1790990430.7689679,
+    "exitStatus": 0
+  }
+]

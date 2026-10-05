@@ -1,0 +1,27 @@
+{
+  "originalManifest": "retained-sha256.json",
+  "originalFilesUnchanged": true,
+  "files": {
+    "execution-status.json": "4ad90610abf71bbbfd74f2994707ddfcec750ddc4e0123f3c2e678d09637b2be",
+    "front.png": "defce476dc9ba408f65499b1e985ce8e9f3c31860326d94583bf275332579688",
+    "maker-native-angles.png": "066cf57e00b5a862ff7a9fc09ed52f4e54483fef771cf593109a9168d6fe453c",
+    "native-front-side-top.png": "4af99637a3d300f122cac598d17d5fa6479843ae0fe643841a0d4dc14402d5ee",
+    "oblique.png": "dbf9cb35a1c5b3101f90de76c68709151e41e9cf7743187c7d5514720b7846f7",
+    "original-raster-native-front-rear.png": "4b9397ebfad34e4f8ad3f8ae2a19aca12cae3f3cc147a96236bdfa6549b2a979",
+    "rear-depth-cue-comparison.png": "fac8d1946a30cad3a30c479dd5f589790f3bf95bb45a971518dff5b8fdaf0cb8",
+    "rear-depth-cue-final.png": "9c0f54bc8b0a494609cbd317dfcdda1b834baf42d79edac3c93c991550ae33e5",
+    "rear-depth-provenance.json": "62be42fe16ff6982b6f897afaa9787b07e195435898b75af5e1b749c0656e7c7",
+    "rear-oblique-depth-buffered.png": "7ba6be8cd1f46bd2973a822cfe50135cd5d969907c554f9604009e0d6d1cc08e",
+    "rear-oblique-painter-limitation.json": "8060c211537a14efecfd81f2b4506ce6fef23a2f6076d5fae11651d29f98db38",
+    "rear-oblique-provenance.json": "080324703daab5f6f6a830ecda940a3399be756d298627896212f39efac98ec1",
+    "rear-oblique-raking.png": "667cbb7dfe87f8ffb71125fbedde83a0bca1c343c1f8e2037652372ced4631e4",
+    "rear.png": "b8253509c1daa7dd6a2f30bf3d8fc594b2bcda8c015d454023333e0215afa668",
+    "render-provenance.json": "b3c9e5731f33ff9229aec4cd9e53d5fd9a2580ecca05ee0f5bc76564194a1036",
+    "render_actual_usdz.py": "9f78fd6dc56c3558526f59397f13f0bcf3511bbdb103380add86210060883834",
+    "render_rear_depth.py": "bf7f38416232fd01e954a6e013adad42f94a498eb2e13525ac365dcd93f624e8",
+    "render_rear_oblique.py": "c9273975ee8d241604227c0ad9b5a7f599b874b852681e42b6caccb080e860d8",
+    "retained-sha256.json": "df5f6c68b9ab61b2a5169cdd5da16b39c204a408ca2a2f232a5e3947b1d40076",
+    "side.png": "ad07f7249ab458f1abd3d1b7cbba7c26f07f00c124faffe4dac4008c55fb0867",
+    "top.png": "47fd051ad9629c457a567ce5c0cccbaa9bac433aa4e51720896b4c73aeed2bfe"
+  }
+}

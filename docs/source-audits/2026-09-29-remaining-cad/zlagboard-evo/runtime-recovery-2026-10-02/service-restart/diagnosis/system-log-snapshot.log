@@ -1,0 +1,4 @@
+Sep 26 14:39:23 MacBook-Pro bootlog[0]: BOOT_TIME 1790458763 613250
+Oct  1 21:09:58 MacBook-Pro syslogd[11642]: Configuration Notice:
+	ASL Module "com.apple.contacts.ContactsAutocomplete" claims selected messages.
+	Those messages may not appear in standard system log files or in the ASL database.

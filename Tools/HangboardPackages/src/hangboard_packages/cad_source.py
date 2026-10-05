@@ -25,6 +25,7 @@ FreeCAD's ``freecadcmd``.
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path, PurePosixPath
 import re
 import stat
@@ -366,15 +367,138 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
         document = loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
         raise ManifestError(f"suspension.json is unreadable or invalid: {error}") from error
-    if not isinstance(document, dict) or set(document) != {
-        "schemaVersion", "presentationID", "modelSHA256", "suspension"
-    } or document["schemaVersion"] != 1:
+    if isinstance(document, dict) and document.get("schemaVersion") == 2 and "entries" in document:
+        if set(document) != {"schemaVersion", "entries"} or not isinstance(document["entries"], list) or not document["entries"]:
+            raise ManifestError("suspension.json schema 2 requires a nonempty entries array")
+        seen = set()
+        for entry in document["entries"]:
+            if not isinstance(entry, dict) or "schemaVersion" in entry \
+                    or not isinstance(entry.get("presentationID"), str) \
+                    or not entry["presentationID"] \
+                    or ("equipmentObjectID" in entry and (
+                        not isinstance(entry["equipmentObjectID"], str) or not entry["equipmentObjectID"])):
+                raise ManifestError("suspension.json entries require presentation/instance identifiers and no schemaVersion")
+            identity = (entry.get("presentationID"), entry.get("equipmentObjectID"))
+            if identity in seen:
+                raise ManifestError("suspension.json has duplicate presentation/instance entries")
+            seen.add(identity)
+            board = _merge_suspension_entry(board, package_root, {"schemaVersion": 1, **entry})
+        return board
+    return _merge_suspension_entry(board, package_root, document)
+
+
+def _validate_suspension_solver(solver: dict, document: dict) -> None:
+    if isinstance(solver, dict) and solver.get("method") == "nativeRoutes" and "terminalsByPoseID" in solver:
+        overrides = solver["terminalsByPoseID"]
+        suspension = document.get("suspension")
+        poses = suspension.get("canonicalPoses") if isinstance(suspension, dict) else None
+        if not isinstance(overrides, dict) or not overrides or not isinstance(poses, dict) \
+                or any(not isinstance(key, str) or not key or key not in poses for key in overrides):
+            raise ManifestError("nativeRoutes terminalsByPoseID must identify existing canonical poses")
+        if "grooveGuides" in solver:
+            raise ManifestError("nativeRoutes pose terminals cannot be combined with grooveGuides")
+        # Validate each effective station map against this instance's topology.
+        # These authoring-only settings never enter the generated board.
+        base_solver = {key: value for key, value in solver.items() if key != "terminalsByPoseID"}
+        for terminals in overrides.values():
+            _validate_suspension_solver({**base_solver, "terminalsByStrandID": terminals}, document)
+        solver = base_solver
+    if isinstance(solver, dict) and solver.get("method") == "nativeRoutes":
+        if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening", "pathSearch", "grooveGuides"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
+                or isinstance(solver["clearance"], bool) \
+                or not isinstance(solver["clearance"], (int,float)) or not math.isfinite(solver["clearance"]) \
+                or not 0 < solver["clearance"] <= .01 \
+                or not isinstance(solver["terminalsByStrandID"], dict) or not solver["terminalsByStrandID"] \
+                or isinstance(solver.get("supportDirection", 1), bool) or solver.get("supportDirection", 1) not in (-1,1) \
+                or solver.get("sectionPlane", "fixed") not in ("fixed", "anchor"):
+            raise ManifestError("suspension.json nativeRoutes solver settings are invalid")
+        if "pathSearch" in solver and solver["pathSearch"] != "aStar":
+            raise ManifestError("nativeRoutes pathSearch must be aStar when present")
+        if "tightening" in solver and solver["tightening"] != "coupled3D":
+            raise ManifestError("nativeRoutes tightening must be coupled3D when present")
+        for entry in solver["terminalsByStrandID"].values():
+            if not isinstance(entry, dict) or not {"points", "planeNormal"} <= set(entry) \
+                    or set(entry) - {"points", "planeNormal", "planeAxis", "mouthAxis"}:
+                raise ManifestError("nativeRoutes requires terminal stations and section normals")
+            def finite_vector(value):
+                return isinstance(value, list) and len(value) == 3 and all(
+                    isinstance(component, (int, float)) and not isinstance(component, bool)
+                    and math.isfinite(component) for component in value)
+            if not isinstance(entry["points"], list) or len(entry["points"]) not in (1, 2) \
+                    or not all(finite_vector(point) for point in entry["points"]) \
+                    or not finite_vector(entry["planeNormal"]) \
+                    or math.hypot(*entry["planeNormal"]) <= 1e-12 \
+                    or ("planeAxis" in entry and (not finite_vector(entry["planeAxis"])
+                        or math.hypot(*entry["planeAxis"]) <= 1e-12)) \
+                    or ("mouthAxis" in entry and (not finite_vector(entry["mouthAxis"])
+                        or math.hypot(*entry["mouthAxis"]) <= 1e-12)):
+                raise ManifestError("nativeRoutes stations and nonzero plane normals must be finite 3D vectors")
+        suspension = document.get("suspension")
+        strands = suspension.get("strands") if isinstance(suspension, dict) else None
+        if not isinstance(suspension, dict) or suspension.get("type") != "cadRoutedCord" \
+                or not isinstance(strands, list) or not strands \
+                or any(not isinstance(strand, dict) or not isinstance(strand.get("id"), str)
+                    or not strand["id"] or strand.get("kind") not in ("lead", "loop", "segment") for strand in strands) \
+                or len({strand["id"] for strand in strands}) != len(strands) \
+                or set(solver["terminalsByStrandID"]) != {strand["id"] for strand in strands}:
+            raise ManifestError("nativeRoutes terminals must exactly match cadRoutedCord strands")
+        if any(len(solver["terminalsByStrandID"][strand["id"]]["points"]) != (1 if strand["kind"] == "lead" else 2)
+               for strand in strands):
+            raise ManifestError("nativeRoutes needs one terminal per lead and two stations per loop or segment")
+        if "grooveGuides" in solver:
+            guides=solver["grooveGuides"]
+            poses=suspension.get("canonicalPoses",{})
+            if not isinstance(guides,dict) or set(guides)!={"sourceSHA256","byPoseID"} \
+                    or not isinstance(guides.get("sourceSHA256"),str) or not re.fullmatch(r"[0-9a-f]{64}",guides["sourceSHA256"]) \
+                    or not isinstance(guides.get("byPoseID"),dict) or set(guides["byPoseID"])!=set(poses) \
+                    or solver.get("sectionPlane")!="anchor" or solver.get("supportDirection",1)!=1 \
+                    or "tightening" in solver or any(x["kind"]!="lead" for x in strands):
+                raise ManifestError("native grooveGuides requires exact source/pose bindings and independent anchor-plane leads")
+            identifiers={x["id"] for x in strands}
+            for selections in guides["byPoseID"].values():
+                if not isinstance(selections,dict) or set(selections)!=identifiers:
+                    raise ManifestError("native grooveGuides must select every strand in every pose")
+                for identifier,selection in selections.items():
+                    if not isinstance(selection,dict) or set(selection)!={"feature","boreFeature","exitSign"} \
+                            or any(not isinstance(selection.get(key),str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*",selection[key]) for key in ("feature","boreFeature")) \
+                            or isinstance(selection.get("exitSign"),bool) or selection.get("exitSign") not in (-1,1) \
+                            or "mouthAxis" not in solver["terminalsByStrandID"][identifier]:
+                        raise ManifestError("native grooveGuides requires native feature names, finite exit choice and mouth axes")
+        if "tightening" in solver and (solver.get("sectionPlane", "fixed") != "anchor" or any(
+                strand["kind"] != "lead" or "mouthAxis" not in solver["terminalsByStrandID"][strand["id"]]
+                for strand in strands)):
+            raise ManifestError("nativeRoutes tightening requires anchor sections and front-entry leads only")
+        if any("mouthAxis" in solver["terminalsByStrandID"][strand["id"]]
+               and (strand["kind"] != "lead" or solver.get("sectionPlane", "fixed") != "anchor") for strand in strands):
+            raise ManifestError("nativeRoutes mouthAxis requires a lead in an anchor section plane")
+    elif not isinstance(solver, dict) or "sectionPlane" not in solver \
+            or set(solver) - {"sectionPlane", "channelProfile"} \
+            or solver["sectionPlane"] not in ("mouth-x", "anchor") \
+            or ("channelProfile" in solver and (solver["channelProfile"] != "rectangular" or solver["sectionPlane"] != "mouth-x")):
+        raise ManifestError("suspension.json ropeSolver requires mouth-x or anchor; rectangular channelProfile requires mouth-x")
+
+
+def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> dict:
+    instance_setup = isinstance(document, dict) and document.get("schemaVersion") == 2
+    payload_key = "instanceSuspensions" if instance_setup else "suspension"
+    required = {"schemaVersion", "presentationID", "modelSHA256", payload_key}
+    optional = {"ropeSolver"} if instance_setup else {"ropeSolver", "equipmentObjectID"}
+    if not isinstance(document, dict) or not required <= set(document) \
+            or set(document) - required - optional or document["schemaVersion"] not in (1, 2):
         raise ManifestError("suspension.json has invalid schema or members")
+    # Authoring-only settings for Tools/HangboardCAD/solve_threaded_rope.py;
+    # never merged into board.json.
+    solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
+    if not isinstance(document[payload_key], dict):
+        raise ManifestError("suspension.json suspension payload must be an object")
+    setups = document[payload_key].values() if instance_setup else [document["suspension"]]
+    for setup in setups:
+        _validate_suspension_solver(solver, {"suspension": setup})
     presentation_id = document["presentationID"]
     model_hash = document["modelSHA256"]
     if not isinstance(presentation_id, str) or not isinstance(model_hash, str) \
             or not re.fullmatch(r"[0-9a-f]{64}", model_hash) \
-            or not isinstance(document["suspension"], dict):
+            or not isinstance(document[payload_key], dict):
         raise ManifestError("suspension.json has invalid presentationID, modelSHA256, or suspension")
     presentations = board.get("presentations")
     if not isinstance(presentations, list):
@@ -383,8 +507,18 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
     if len(selected) != 1:
         raise ManifestError("suspension.json presentationID must identify one CAD presentation")
     media = selected[0].get("media")
-    if not isinstance(media, dict) or media.get("type") != "model" or "suspension" in media:
+    if not isinstance(media, dict) or media.get("type") != "model" :
         raise ManifestError("suspension.json requires a model presentation without embedded suspension")
+    equipment_id = document.get("equipmentObjectID")
+    instance = None
+    if equipment_id is not None:
+        matches = [item for item in media.get("instances", []) if item.get("equipmentObjectID") == equipment_id]
+        if len(matches) != 1:
+            raise ManifestError("suspension.json equipmentObjectID must identify one model instance")
+        instance = matches[0]
+    target = instance if instance is not None else media
+    if "suspension" in target:
+        raise ManifestError("suspension.json requires a target without embedded suspension")
     descriptor_path = media.get("descriptorPath")
     if not isinstance(descriptor_path, str) or safe_member(descriptor_path) != descriptor_path \
             or not descriptor_path.startswith("assets/"):
@@ -398,6 +532,24 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
         raise ManifestError(f"suspension.json descriptor is unreadable or invalid: {error}") from error
     if not isinstance(descriptor, dict) or descriptor.get("modelSHA256") != model_hash:
         raise ManifestError("suspension.json modelSHA256 does not match its descriptor")
+    if instance_setup:
+        import copy
+        instances = media.get("instances")
+        setups = document["instanceSuspensions"]
+        if not isinstance(instances, list) or len(instances) != 2 or not all(
+            isinstance(item, dict) and isinstance(item.get("equipmentObjectID"), str)
+            and item["equipmentObjectID"] for item in instances
+        ):
+            raise ManifestError("instanceSuspensions requires exactly two reusable instances with valid equipment IDs")
+        if len(setups) != len(instances) or set(setups) != {item["equipmentObjectID"] for item in instances}:
+            raise ManifestError("instanceSuspensions must identify every reusable instance exactly once")
+        if any("suspension" in item for item in instances) or not all(isinstance(value, dict) for value in setups.values()):
+            raise ManifestError("instanceSuspensions cannot replace embedded suspension")
+        merged = copy.deepcopy(board)
+        target = next(item for item in merged["presentations"] if item["id"] == presentation_id)
+        for instance in target["media"]["instances"]:
+            instance["suspension"] = copy.deepcopy(setups[instance["equipmentObjectID"]])
+        return merged
     merged = dict(board)
     merged_presentations = []
     for presentation in presentations:
@@ -405,10 +557,14 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
             updated = dict(presentation)
             updated_media = {}
             for key, value in media.items():
-                if key == "orientation":
+                if key == "instances" and instance is not None:
+                    updated_media[key] = [dict(item, suspension=document["suspension"]) if item is instance else item for item in value]
+                elif key == "orientation" and instance is None:
                     updated_media["suspension"] = document["suspension"]
-                updated_media[key] = value
-            if "suspension" not in updated_media:
+                    updated_media[key] = value
+                else:
+                    updated_media[key] = value
+            if instance is None and "suspension" not in updated_media:
                 updated_media["suspension"] = document["suspension"]
             updated["media"] = updated_media
             merged_presentations.append(updated)

@@ -1,0 +1,15 @@
+{
+  "reviewer": "root Astra",
+  "file": "HangTen/Views/BoardModelView.swift",
+  "sha256": "ab9578a97fcbc204bfe9883fcc36adab58dca42c450fcdbd3172708f706e78d9",
+  "change": "Equatable contact IDs, highlight mode and position ID observed with onChange; current applySync runs on retained scene when any changes. Existing RealityView make/update continue initial/resizing synchronization.",
+  "preserved": [
+    "RealityView identity remains ObjectIdentifier(model)",
+    "No RootView or scene material/cache/loader changes",
+    "Camera orbit is preserved by existing frame/select behavior when viewport and position are unchanged",
+    "CAD package and sourced dimensions unchanged"
+  ],
+  "evidenceBasis": "Four actual pre-fix stale highlight captures across active/rest directions and both orientations. Passing hosted diagnostics did not reproduce those intermittent app failures.",
+  "pending": "Green focused tests and actual app A/B transition sequences before completion",
+  "humanAccepted": false
+}

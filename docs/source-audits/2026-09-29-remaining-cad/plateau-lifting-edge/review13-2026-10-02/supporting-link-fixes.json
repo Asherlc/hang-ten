@@ -1,0 +1,12 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "retainedPreflightHashesSHA256": "24de16da3a62ea08b17dc0717fa6b555be12bd6843c328b70a02c14bcfe5371d",
+  "preflightHashesExactlyOriginal": true,
+  "originalReviewHTMLSHA256": "62d60431667d7d04667fc88a1ae21ebe4edbd2b7b6cc7e015542224e0e281456",
+  "retainedReviewHTMLSHA256": "5229634f8bc0c9f9b57c066ed6f86e18ce1704a2bd50a076500838bd1c42d0f7",
+  "onlyHTMLChange": "Rebind ../native-shape-2026-10-02/ to retained ../native-shape/ image paths",
+  "wholeImageLinksChecked": 24,
+  "imageBytesChanged": false,
+  "canonicalChanges": false
+}

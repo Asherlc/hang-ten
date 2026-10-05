@@ -1,0 +1,24 @@
+{
+  "owner": "placid-badger",
+  "processGroups": [
+    {
+      "pgid": 10844,
+      "absent": true
+    }
+  ],
+  "resources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-final-previews3-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-final-previews3-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/placid-badger-final-previews3-tmp",
+      "absent": true
+    }
+  ],
+  "exitCode": 0
+}

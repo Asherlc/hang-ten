@@ -1,0 +1,465 @@
+{
+  "generatedManifestOnlyDifference": [
+    {
+      "path": "/presentations/0/media/display/surfaceFinish",
+      "before": null,
+      "after": "wood"
+    }
+  ],
+  "allOtherManifestFieldsEqual": true,
+  "all34IDsAndFourPositionsRotationsUnchanged": true,
+  "objectInventoryUnchanged": true,
+  "changedSketches": [
+    {
+      "feature": "S_b_leftProfile",
+      "differentProperties": [
+        "Geometry"
+      ]
+    },
+    {
+      "feature": "S_b_leftBearing",
+      "differentProperties": [
+        "Geometry"
+      ]
+    },
+    {
+      "feature": "S_b_leftEndProfile",
+      "differentProperties": [
+        "Geometry"
+      ]
+    },
+    {
+      "feature": "S_b_rightProfile",
+      "differentProperties": [
+        "Geometry"
+      ]
+    },
+    {
+      "feature": "S_b_rightBearing",
+      "differentProperties": [
+        "Geometry"
+      ]
+    },
+    {
+      "feature": "S_b_rightEndProfile",
+      "differentProperties": [
+        "Geometry"
+      ]
+    }
+  ],
+  "allOtherSketchGeometryConstraintsPlacementsExpressionsEqualWithinRoundTripTolerance": true,
+  "roundTripTolerance": 1e-10,
+  "roundTripChanges": [
+    {
+      "path": "BeamSection/Geometry/Property/0/GeometryList/7/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 7.105427357601002e-15
+    },
+    {
+      "path": "BeamSection/Geometry/Property/0/GeometryList/7/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 7.105427357601002e-15
+    },
+    {
+      "path": "P_a_left_outer_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_a_left_outer_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_a_left_outer_slotSection1/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_a_left_outer_slotSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_a_left_outer_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_a_left_outer_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_a_right_outer_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_a_right_outer_slotSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_a_right_outer_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_a_left_dual_pocketSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 2.842170943040401e-14
+    },
+    {
+      "path": "P_a_left_dual_pocketSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_a_left_dual_pocketSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_a_left_dual_pocketSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 2.842170943040401e-14
+    },
+    {
+      "path": "P_a_left_dual_pocketSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_a_left_dual_pocketSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 2.842170943040401e-14
+    },
+    {
+      "path": "P_a_right_dual_pocketSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_a_right_dual_pocketSection1/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_a_right_dual_pocketSection1/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_a_right_dual_pocketSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_a_right_dual_pocketSection4/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_a_right_dual_pocketSection4/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_a_center_pull_up_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_a_center_pull_up_slotSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_a_center_pull_up_slotSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_a_center_pull_up_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_b_left_outer_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_b_left_outer_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_b_left_outer_slotSection1/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_b_left_outer_slotSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_b_left_outer_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_b_left_outer_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_b_right_outer_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_b_right_outer_slotSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_b_right_outer_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_b_left_dual_pocketSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 2.842170943040401e-14
+    },
+    {
+      "path": "P_b_left_dual_pocketSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_b_left_dual_pocketSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_b_left_dual_pocketSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 2.842170943040401e-14
+    },
+    {
+      "path": "P_b_left_dual_pocketSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_b_left_dual_pocketSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 2.842170943040401e-14
+    },
+    {
+      "path": "P_b_right_dual_pocketSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_b_right_dual_pocketSection1/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_b_right_dual_pocketSection1/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_b_right_dual_pocketSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_b_right_dual_pocketSection4/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_b_right_dual_pocketSection4/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_b_center_pull_up_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_b_center_pull_up_slotSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_b_center_pull_up_slotSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_b_center_pull_up_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_c_left_outer_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_c_left_outer_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_c_left_outer_slotSection1/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_c_left_outer_slotSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_c_left_outer_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_c_left_outer_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_c_right_outer_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_c_right_outer_slotSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_c_right_outer_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_c_left_dual_pocketSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 2.842170943040401e-14
+    },
+    {
+      "path": "P_c_left_dual_pocketSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_c_left_dual_pocketSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_c_left_dual_pocketSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 2.842170943040401e-14
+    },
+    {
+      "path": "P_c_left_dual_pocketSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_c_left_dual_pocketSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 2.842170943040401e-14
+    },
+    {
+      "path": "P_c_right_dual_pocketSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_c_right_dual_pocketSection1/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_c_right_dual_pocketSection1/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_c_right_dual_pocketSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_c_right_dual_pocketSection4/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_c_right_dual_pocketSection4/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_c_center_pull_up_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_c_center_pull_up_slotSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_c_center_pull_up_slotSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_c_center_pull_up_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_d_left_outer_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_d_left_outer_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_d_left_outer_slotSection1/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_d_left_outer_slotSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_d_left_outer_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_d_left_outer_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_d_right_outer_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_d_right_outer_slotSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_d_right_outer_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": "P_d_left_dual_pocketSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 2.842170943040401e-14
+    },
+    {
+      "path": "P_d_left_dual_pocketSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_d_left_dual_pocketSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_d_left_dual_pocketSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 2.842170943040401e-14
+    },
+    {
+      "path": "P_d_left_dual_pocketSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_d_left_dual_pocketSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 2.842170943040401e-14
+    },
+    {
+      "path": "P_d_right_dual_pocketSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_d_right_dual_pocketSection1/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_d_right_dual_pocketSection1/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_d_right_dual_pocketSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_d_right_dual_pocketSection4/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterX",
+      "delta": 5.684341886080802e-14
+    },
+    {
+      "path": "P_d_right_dual_pocketSection4/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_d_center_pull_up_slotSection0/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_d_center_pull_up_slotSection2/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_d_center_pull_up_slotSection3/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    },
+    {
+      "path": "P_d_center_pull_up_slotSection5/Geometry/Property/0/GeometryList/5/Geometry/1/ArcOfCircle/@CenterY",
+      "delta": 3.552713678800501e-15
+    }
+  ],
+  "maximumRoundTripNumericDelta": 5.684341886080802e-14,
+  "pocketSketchesUnchangedWithinTolerance": true,
+  "cdSketchesUnchanged": true
+}

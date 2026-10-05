@@ -1,0 +1,49 @@
+[
+  {
+    "label": "readiness-01-ax",
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A"
+    ],
+    "exitStatus": 1,
+    "timedOut": false,
+    "interruptedBySignal": null,
+    "elapsedSeconds": 4.157411916996352
+  },
+  {
+    "label": "readiness-02-ax",
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "interruptedBySignal": null,
+    "elapsedSeconds": 3.2645164169953205
+  },
+  {
+    "label": "readiness-02-screen",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/ios/home-candidate.png"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "interruptedBySignal": null,
+    "elapsedSeconds": 0.8200444170070114
+  }
+]

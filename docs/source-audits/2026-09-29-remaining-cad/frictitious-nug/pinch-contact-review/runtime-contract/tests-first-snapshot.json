@@ -1,0 +1,17 @@
+{
+  "phase": "tests written; production unchanged pending root red run",
+  "createdAt": "2026-09-30T22:36:08.348100+00:00",
+  "selectors": [
+    "BoardPackageStoreTests/testSharedContactMembershipBuildsBothContactInventories",
+    "BoardPackageStoreTests/testSharedContactMembershipRejectsMalformedOrUnboundDeclarations",
+    "BoardModelRealityTests/testSharedContactMeshUsesPrimaryPickingAndUnionHighlight"
+  ],
+  "fileSHA256": {
+    "HangTen/Models/TrainingModels.swift": "d043221a1c67ef0320bf5365edfb0d042137cdcc057e3fd206044d9e8fcf0f75",
+    "HangTen/Models/BoardPackageStore.swift": "51a71065999171c0b6820e0dae4bf53784f4e85746c68203400081074f97da59",
+    "HangTen/Models/BoardModelRealityTypes.swift": "b2c7f78c6c7fd6c996bf76214e550dcd7b413dab8746245be9f2b9315d16c515",
+    "HangTenTests/BoardPackageStoreTests.swift": "4e13744d829dec1a9a8fac71530c7cce7464aada5d9f070b12a1d83ea3b8565e",
+    "HangTenTests/BoardModelRealityTests.swift": "478dd2fe9d4f7f3b522135d442e9087fe43677c6dab4bd3b60f66a8ba3a1da45"
+  },
+  "Android": "No Kotlin, Java or Gradle runtime sources in checkout; shared Python staging supports target android and is owned by Python lane."
+}

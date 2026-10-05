@@ -1,0 +1,56 @@
+{
+  "checks": {
+    "readinessLoopByteExact": true,
+    "passiveCaptureLoopByteExact": true,
+    "cpuCheckerByteExact": true,
+    "frameCheckerByteExact": true,
+    "oneFixedRun": true,
+    "strictSuppressionAssignmentRemoved": true,
+    "retentionForbidden": true,
+    "frozenOrdinaryGateRequired": true,
+    "fullBinarySHAExact": true
+  },
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-real-hands-prep/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-real-hands-prep/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-real-hands-prep/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-real-hands-prep/check-navigation.py",
+      "sha256": "cefe1d72225c96a81d1e5a03a91445ec969317afe9b7be501aa3a1c825ce133a",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-real-hands-prep/check-ownership.py",
+      "sha256": "857993e063ec1c987bf84cefa6e143828071f10fa0b1028fb3af58774174a7e0",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-real-hands-prep/check-real-hands.py",
+      "sha256": "09b113ea0c57fc14a5952cf188a5c2931c3592b91451ce2027a8638291a4a0c9",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-real-hands-prep/compare-prior-ordinary.py",
+      "sha256": "3dced381437499899e2e8c1e88e837e00194e77fb3c0036bd4953d9938b42b94",
+      "ASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-real-hands-prep/workout-real-hands.py",
+      "sha256": "277e94838fecf62f7b839f4f2e1625b04cf2bd712d8a24c97a466741f5d92d70",
+      "ASTPassed": true
+    }
+  ],
+  "execution": "AST/static only; no helper execution or source/build/device mutation"
+}

@@ -1,0 +1,78 @@
+{
+  "approvalRecord": "docs/superpowers/specs/2026-09-20-hangboards-batch-03-3d-migration-design.md#appendix-a-approved-exact-revision-manufacturer-evidence",
+  "sources": [
+    {
+      "ref": "NU-1",
+      "publisher": "Frictitious Climbing \u2014 product page",
+      "url": "https://frictitiousclimbing.com/products/the-nug",
+      "snapshotSHA256": "eb44cc7bf24b53b721183cae2c42542863299c4ab193171a8d3be5ea6b9444de",
+      "supportClaim": "Exact product identity, 25/20/13/8 mm edges, 40 mm jug, 60 mm pinch, material, and gallery provenance.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/frictitious-nug/product-page.html",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/frictitious-nug/product-page.html",
+      "actualSHA256": "fc5517626285368b665c37139a52657133400bc8cf1ef0b4c54b3d1eac490f78",
+      "approvedHashMatches": false,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/product-page-current.html",
+      "humanApproval": {
+        "approved": false,
+        "researchAuthorized": true,
+        "authorizationDate": "2026-09-29",
+        "notes": "Exact September20 HTML bytes were unavailable; this current primary HTML snapshot differs from the approved historical SHA. User expressly authorized additional primary research on September29. Approval of the exact unchanged visual sources is separate."
+      }
+    },
+    {
+      "ref": "NU-2",
+      "publisher": "Frictitious Climbing \u2014 front visual",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/NUG-Front-1.jpg?v=1780420316&width=3840",
+      "snapshotSHA256": "7c476ab558d6defdacf4d4105e09cbffe99edaf5455c6ea04e5f00b812f2a384",
+      "supportClaim": "25 and 20 mm face orientations, recesses, rounded body, and two suspension passages.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/frictitious-nug/front.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/frictitious-nug/front.jpg",
+      "actualSHA256": "7c476ab558d6defdacf4d4105e09cbffe99edaf5455c6ea04e5f00b812f2a384",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/front.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "NU-3",
+      "publisher": "Frictitious Climbing \u2014 reverse visual",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/NUG-Front_3aac9546-2dcb-447e-bb5a-4dea686e2818.jpg?v=1780420315&width=3840",
+      "snapshotSHA256": "c3e36dc47c9e4542321d155c337d91a3511ef6d6f9dfbcd0bd40100ce26f8202",
+      "supportClaim": "13 and 8 mm reverse orientations and their relationship to the same body and paired passages.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/frictitious-nug/reverse.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/frictitious-nug/reverse.jpg",
+      "actualSHA256": "c3e36dc47c9e4542321d155c337d91a3511ef6d6f9dfbcd0bd40100ce26f8202",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/reverse.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "NU-4",
+      "publisher": "Frictitious Climbing \u2014 in-use visual",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/NUG-Product-4.jpg?v=1716309065&width=3840",
+      "snapshotSHA256": "146cbf91b840b7e6ae2063877c08729ae869bbb07da5e478300f9fdbeffd9ecd",
+      "supportClaim": "Portable/loading use, scale in hand, outer-body grip context, and paired lead-cord behavior.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/frictitious-nug/in-use.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/frictitious-nug/in-use.jpg",
+      "actualSHA256": "146cbf91b840b7e6ae2063877c08729ae869bbb07da5e478300f9fdbeffd9ecd",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/in-use.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    }
+  ],
+  "topologyClarification": "Historical source claim wording such as passages means visible entrances only. The retained views do not establish the hidden connection graph. Current CAD models shallow entrance wells, with all external routing governed by native-cord-evidence.json; no hidden join is inferred."
+}

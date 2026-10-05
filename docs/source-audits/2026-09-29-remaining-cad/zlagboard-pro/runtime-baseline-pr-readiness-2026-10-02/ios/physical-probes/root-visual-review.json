@@ -1,0 +1,31 @@
+{
+  "reviewer": "Astra primary agent",
+  "result": "Whole views visually confirm orbit change, restored canonical view and correct selected/highlighted jug, flat15, incut15 and center incut10. AX validation independently records projected-frame restoration.",
+  "humanAcceptance": false,
+  "images": [
+    {
+      "path": "02-orbit/view.png",
+      "sha256": "68896864c83d2ea485e4ecfa3d52399bea901f10c547d256ea21a31b5feccb78"
+    },
+    {
+      "path": "03-reset/view.png",
+      "sha256": "aa588d3e6a0b2d15fefa2f8cc001ad415854550a32862e8e885b0fd7d7ea6aec"
+    },
+    {
+      "path": "04-pick-jug-right/view.png",
+      "sha256": "8b697e7cd71280b3389cf71b705989157ce3754eb32beccf12b2699565ac24d4"
+    },
+    {
+      "path": "05-pick-flat15/view.png",
+      "sha256": "7d56a95f3dddf4ea392d7a67b354321f1a149720b4d3079a51a1777c8e398c90"
+    },
+    {
+      "path": "06-pick-incut15/view.png",
+      "sha256": "173fdb3487a94c4b18e094dbb9de35000142a829ac094f6dfa796c3cb47959a4"
+    },
+    {
+      "path": "07-pick-center-incut10/view.png",
+      "sha256": "a037e133dc97e4a536b99cb52b43d026e0e54a55bfa066aa2aa2115bbf6a5908"
+    }
+  ]
+}

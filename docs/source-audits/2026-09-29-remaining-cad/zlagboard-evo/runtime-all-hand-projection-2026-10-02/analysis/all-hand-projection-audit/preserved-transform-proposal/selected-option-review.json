@@ -1,0 +1,54 @@
+{
+  "status": "SELECTED_OPTION_MATH_PASS_PROSPECTIVE_SCRATCH_PATCH_ONLY",
+  "decision": "Parent selects unchanged camera transform/offset at existing resets, with FOV derived from current posed camera-space vertices; FOV fixed through orbit, not globally fixed across poses/viewports. This supersedes only the earlier globally-fixed-FOV framing question.",
+  "formula": {
+    "inputs": "Existing points, unchanged camera transform, validated current aspect (same .85 fallback if viewport invalid).",
+    "depth": "For q=inverse(cameraTransform)*point, d=-q.z; require every q.x,q.y,d finite and .1<d<100.",
+    "tangent": "t=1.08*max_i(abs(q.y)/d, abs(q.x)/(aspect*d))",
+    "fieldOfView": "verticalDegrees=2*atan(t)*180/pi; require finite t>0 and 0<degrees<180.",
+    "proof": "Vertical normalized coordinate is q.y/(d*t), horizontal is q.x/(aspect*d*t); both magnitudes <=1/1.08 for all framing vertices. No camera translation/orientation or clip-plane change is required.",
+    "orbit": "Keep canonical fitted perspective component FOV unchanged. Existing camera offset/zoom supplies perspective magnification once; do not scale FOV as well. Rotation changes foreshortening and may change clipping/framing; canonical fit is not a full-orbit guarantee."
+  },
+  "proposal": {
+    "status": "SCRATCH_ONLY_NOT_APPLIED_NOT_BUILT",
+    "files": [
+      {
+        "path": "HangTen/Views/GripHandModelView.swift",
+        "beforeSHA256": "b47b76a780061f291a2e32b888e00adfba6b1dcc6a157d5f73df36a5d1797f15",
+        "proposedSHA256": "845b7805a5a7f68d4d89a69ce1eaad4902e22093a7821004e9f028363350ddf2"
+      },
+      {
+        "path": "HangTen/Models/BoardModelRealityTypes.swift",
+        "beforeSHA256": "6f9fcd3da0677d79c411cf4cf053ae06a88b60f58f2b37522924f91570c3be25",
+        "proposedSHA256": "eb00001d1215aa25f02f62e80340bc905203f0deecd730fbff02fd276fc638e6"
+      }
+    ],
+    "patchSHA256": "103c25dd368f4a819f6cd84f289d577e68154d5741d8e44090e81243a3b2c9e4",
+    "applyCheckExit": 0
+  },
+  "changes": [
+    "Both single and pair constructors choose one camera component under the immutable DEBUG HANGTEN_REVIEW_ALL_HAND_PERSPECTIVE flag. Perspective placeholder60deg is an explicitly labeled rendering adaptation until first valid existing reset.",
+    "Both existing resets branch before camera assignment: perspective computes/guards fitted FOV and updates component; orthographic statement sequence retained. Existing canonical center/offset, transforms, scale bookkeeping and orbit state reset remain unchanged.",
+    "Both orbit methods retain existing transform/zoom calculations and bypass only orthographic component unwrap/scale update in perspective mode. All four prior forced unwrap paths remain reachable only in orthographic branches.",
+    "Existing recorder emits sparse hand-camera records only at configuration/reset (plus fit rejection), with actual component presence, FOV or scale, near/far, transform and per-vertex depth range. No body logging, observer, periodic sampler, state write or new runtime resource.",
+    "Release and diagnostic-orthographic branches retain existing camera behavior; all source changes are a temporary diagnostic proposal, not a production repair."
+  ],
+  "runtimeGateIfAuthorized": [
+    "Do not combine strict suppression with perspective; hands must remain enabled and constructor/make positive. Scrub inherited flags in both fresh processes.",
+    "Same built binary, same direct natural workout and actual host/viewport/root/camera layout history; first establish orthographic failure, then perspective comparison only under parent gate.",
+    "Exactly one hand camera component of intended type; every exercised reset emits reset-fitted with valid near/far depth and no fit-rejected event. Placeholder configuration is not a successful fit.",
+    "Match existing camera transform reset values and host/lifecycle inputs across arms. Actual perspective hand pixels will differ because foreshortening is intentional; board geometry/materials must remain unchanged.",
+    "Full whole-image and CPU brackets decide rendered behavior; FOV arithmetic and component metadata cannot establish a repair."
+  ],
+  "verification": {
+    "gitApplyCheckExit": 0,
+    "scratchSwiftDebugParseExit": 0,
+    "trackedInputsStillExact": true
+  },
+  "limits": [
+    "No application, typecheck, build, Simulator run, test or hand geometry change.",
+    "Diagnostic placeholder60degrees is explicit and temporary; fitted FOV comes from source vertices, never pixels or anatomical/manufacturer claims.",
+    "The two nominal orbit paths are covered by branching, but no gesture validation has been performed; untouched clipping at extreme orbit needs prospective coverage if that behavior becomes part of the task.",
+    "Original audit, source excerpts and previous decision context remain unchanged."
+  ]
+}

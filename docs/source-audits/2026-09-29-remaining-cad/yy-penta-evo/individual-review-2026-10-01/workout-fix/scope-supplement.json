@@ -1,0 +1,40 @@
+{
+  "timestampUTC": "2026-10-02T00:14:35.939050+00:00",
+  "supplements": "package-checks/final/scope-final.json",
+  "additionalTrackedChanges": [
+    "HangTen/Models/WorkoutActivityRecording.swift",
+    "HangTenTests/BoardTargetSubstitutionTests.swift"
+  ],
+  "additionalFilesExactlyAuthorizedSwiftPair": true,
+  "filesSHA256": {
+    "HangTen/Models/WorkoutActivityRecording.swift": "3ccf1cb1678c2bfdb2b2963aef5d7a18ac5fb5f4dbba6c712c47d30cb7cbe924",
+    "HangTenTests/BoardTargetSubstitutionTests.swift": "b11d6fea355add7aff252966831f7ed1734959182cc43716e259ee41268ef9dc"
+  },
+  "finalPackageHashes": {
+    "Hangboards/yy-penta-evo/yy-penta-evo.FCStd": {
+      "priorSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "currentSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+      "unchanged": true
+    },
+    "Hangboards/yy-penta-evo/assets/primary.usdz": {
+      "priorSHA256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+      "currentSHA256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+      "unchanged": true
+    },
+    "Hangboards/yy-penta-evo/assets/primary.model.json": {
+      "priorSHA256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+      "currentSHA256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+      "unchanged": true
+    },
+    "Hangboards/yy-penta-evo/suspension.json": {
+      "priorSHA256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97",
+      "currentSHA256": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97",
+      "unchanged": true
+    }
+  },
+  "allPackageHashesUnchanged": true,
+  "coordination": "Parent authorized exact two-instance/two-candidate branch after no-overlap confirmation; main independently reviewed production diff PASS.",
+  "tests": "Targeted red25 tests:22 pass,3 expected failures. Fresh green suites delegated to owned iOS worker; no additional test run here.",
+  "docsReviewPacketEditedByThisWorker": false,
+  "scopePass": true
+}

@@ -1,0 +1,110 @@
+{
+  "scope": "Focused read-only initial resize audit. No implementation, BoardMapView mutation, device operation or proposed production fix.",
+  "trace": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/events-6687B648-CAF3-4912-ADFC-30621807CF2B.jsonl",
+    "sha256": "cb44bcfd3e31afd779ad87867c094759c5af54504edff708cd4e64cc34938b14",
+    "rows": 65,
+    "retainedExactRawSequences": [
+      9,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "excerptSHA256": "e01547dbbe813f71d72f99f8ddaef3545a1a5ad32dce606a3a0470916efe419a"
+  },
+  "observations": [
+    "Workout view-make seq9 reports 410 x 70.2857142857 points, empty IDs; seq11 same scene has visible UIKit ARView frame [232,182.3333,410,70]. The ARView shown in seq9 census is still the prior scene, so seq11 is the correct initial workout-frame evidence.",
+    "seq12/13 apply bilateral20 active materials; seq14 at uptime58624.838937 reports new leaf viewport210 x36. seq16 at58625.046599 reports that leaf size but the same actual workout ARView frame is [306.1821289,225.1116943,261.6357422,44.7780762]. seq17 at58626.087177 settles [332,240,210,36]. Exact sceneID/root/camera/ARView identities persist.",
+    "Both endpoints have the same410/70.285714 =210/36 =700/120 aspect ratio. The camera transform retained in these rows is identical; this is viewport scale/placement change, not demonstrated change of framing angle or selected presentation.",
+    "seq16 also adds a separate paired-hand ARView at [78,152.6667,718,68]. Its appearance coincides with the layout change, but prior hands-OFF failures mean this is not evidence that the hand rendering host itself is necessary for failure."
+  ],
+  "concreteLayoutPath": [
+    {
+      "refs": "RootView.swift:1873\u20131876,2382\u20132442,2512\u20132513",
+      "fact": "Landscape cue container is VStack(spacing2) capped at149 high. Once showsPairedHandCue becomes true, it inserts a68-high pair strip; the remaining HStack contains fixed142-wide left/right slots with12 spacing and a flexible central board column. The column has preview label minHeight13 +spacing4 +board maxHeight132. This change in proposed vertical space can constrain aspect-fit board size even though available column width stays larger."
+    },
+    {
+      "refs": "RootView.swift:2359\u20132367,2383\u20132401,2496\u20132509; GripDiagramView.swift:143\u2013181",
+      "fact": "The paired strip and side-card content are conditional on cue/countdown. Cards switch to shared-pair preview with28-min-height button plus text/padding. Hand suppression replaces the strip with Color.clear but preserves its68-point frame; it does not suppress this layout transition."
+    },
+    {
+      "refs": "BoardMapView.swift:668\u2013670",
+      "fact": "BoardModelSurface is aspect-fit inside BoardMapView; its animation modifier is easeInOut0.18 keyed to highlightedHoldIDs. Empty->bilateral20 IDs occurs in the same update as shrink and creates an animation transaction in this subtree. This is the closest explicit animation source found; the sparse trace cannot prove that this modifier alone caused the interpolated UIKit frame or that animation caused the later color defect."
+    },
+    {
+      "refs": "RootView.swift:2403\u20132429; trace seq16",
+      "fact": "Observed content width718 minus two142 slots minus two12 gaps equals410, explaining the original width-limited size. After layout starts supplying36 height, aspect-fit makes width210. Source constraints explain width-limited to height-limited behavior; exact internal SwiftUI proposal leading to36 was not instrumented, so149-minus-components alone is not claimed to derive it."
+    }
+  ],
+  "minimalControlledReproductionIfAuthorized": {
+    "base": "Reuse passing isolated E unchanged except a dedicated dynamic viewport wrapper; same single scene, IDs/mode schedule, camera, environment, caption, no hands/nav/newhost. Start410 x70.285714 and shrink210 x36 at clear->active transition, then leave final size fixed through active->preview->active->preview. Preserve root/view identity; no remount or production modifier edits.",
+    "twoArms": [
+      "Instant resize: apply identical size and initial selection transition with animation disabled at the owned probe boundary; record actual UIKit frame to verify no interpolated sizes.",
+      "Animated resize: identical inputs/timing but explicit easeInOut0.18 around that same transition; retain intermediate actual UIKit sizes and settled frame. A supplied SwiftUI target viewport is insufficient to classify animation."
+    ],
+    "interpretation": [
+      "Instant passes/animated fails: narrows to animated resize/transaction interaction in isolated context; does not alone select a production fix.",
+      "Both fail: resize/initial selection coincidence is sufficient candidate independent of explicit animation.",
+      "Both pass: do not remove production animation on hypothesis; remaining difference includes actual parent layout/navigation/context.",
+      "If either fails, only then separate timing by completing the same resize while IDs remain empty and selecting after settlement; this distinguishes resize damage from material-change/resize overlap."
+    ],
+    "placement": "First isolate size centered at a fixed center. Production additionally moves vertical position/changes center while scaling; if pure size arms pass, optionally add the measured placement change as a separate discriminator. Do not add size+translation+hand/nav changes together and call it a resize-only test.",
+    "evidence": "Retain actual frame sequence and stable scene/root/camera identities, target viewport, requested/cached/material IDs/mode, and full settled screenshot at each subsequent phase. No claim from CPU RGBA alone; retain both directions and no hidden repeated scene recreation. Existing passing E is the fixed-size control."
+  },
+  "sources": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "ce690c12d0182a57c659f3e4f01bf4b25c37c2dc6d98fbe9dafaa57686f4152f",
+      "lineRanges": [
+        [
+          1872,
+          1877
+        ],
+        [
+          2359,
+          2442
+        ],
+        [
+          2484,
+          2514
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "911fba863c2b7dbc66a48c9c70937fb47ecd422e83e761751e662d756aac6b95",
+      "lineRanges": [
+        [
+          650,
+          684
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Views/GripDiagramView.swift",
+      "sha256": "8c6ce950541f536a7f26b4bda6759dbf78f4c6eceeb2d07a0b0745090c3ffa06",
+      "lineRanges": [
+        [
+          130,
+          181
+        ]
+      ]
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+      "lineRanges": [
+        [
+          265,
+          282
+        ]
+      ]
+    }
+  ],
+  "limits": "No runtime is launched here. Sparse samples cannot establish animation duration, exact layout proposal stack, or causal relation to stale pixels. Proposed arms are diagnostic preparation only."
+}

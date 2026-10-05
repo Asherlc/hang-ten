@@ -1,0 +1,285 @@
+{
+  "status": "passed",
+  "sidecarSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+  "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+  "modelSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+  "descriptorSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+  "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "sourceBoundSolidSHA256": "645fd4ec9124c7bcb32d305da42cd56df6eb7d5f660425fa79b9467f28e00780",
+  "oldRestLengthMM": 300,
+  "newRestLengthMM": 110,
+  "oldAnchorOffsetMM": [
+    0,
+    100,
+    0
+  ],
+  "newAnchorOffsetMM": [
+    0,
+    50,
+    0
+  ],
+  "cordDiameterMM": 6,
+  "routeCertificates": 24,
+  "livePackageUnchanged": true,
+  "poses": {
+    "front-25": {
+      "height": -0.004185507,
+      "verticalSupportToBoardTopGapMM": 54.185507,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-front": {
+          "routeVerticesIncludingSupport": 32,
+          "certifiedClearance": 0.002992299329720091,
+          "length": 0.10999999889653667,
+          "lengthRatio": 0.9999999899685151,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "left-rear": {
+          "routeVerticesIncludingSupport": 32,
+          "certifiedClearance": 0.0029922993297200845,
+          "length": 0.11000000062839399,
+          "lengthRatio": 1.0000000057126726,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-front": {
+          "routeVerticesIncludingSupport": 35,
+          "certifiedClearance": 0.0029922993297200893,
+          "length": 0.1100000006283939,
+          "lengthRatio": 1.000000005712672,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-rear": {
+          "routeVerticesIncludingSupport": 33,
+          "certifiedClearance": 0.0029926283301611872,
+          "length": 0.1100000006283989,
+          "lengthRatio": 1.0000000057127172,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "front-inverted-20": {
+      "height": -0.004185507,
+      "verticalSupportToBoardTopGapMM": 54.185507,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-front": {
+          "routeVerticesIncludingSupport": 31,
+          "certifiedClearance": 0.0029926283301611916,
+          "length": 0.11000000062839366,
+          "lengthRatio": 1.0000000057126697,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "left-rear": {
+          "routeVerticesIncludingSupport": 33,
+          "certifiedClearance": 0.002992628330161198,
+          "length": 0.10999999889653422,
+          "lengthRatio": 0.9999999899684929,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-front": {
+          "routeVerticesIncludingSupport": 31,
+          "certifiedClearance": 0.0029922993297200897,
+          "length": 0.10999999889653422,
+          "lengthRatio": 0.9999999899684929,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-rear": {
+          "routeVerticesIncludingSupport": 32,
+          "certifiedClearance": 0.002992628330161198,
+          "length": 0.10999999889653198,
+          "lengthRatio": 0.9999999899684725,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "reverse-13": {
+      "height": -0.004185507,
+      "verticalSupportToBoardTopGapMM": 54.185507,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-front": {
+          "routeVerticesIncludingSupport": 32,
+          "certifiedClearance": 0.002992299329720091,
+          "length": 0.10999999889653667,
+          "lengthRatio": 0.9999999899685151,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "left-rear": {
+          "routeVerticesIncludingSupport": 32,
+          "certifiedClearance": 0.0029922993297200845,
+          "length": 0.11000000062839399,
+          "lengthRatio": 1.0000000057126726,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-front": {
+          "routeVerticesIncludingSupport": 35,
+          "certifiedClearance": 0.0029922993297200893,
+          "length": 0.1100000006283939,
+          "lengthRatio": 1.000000005712672,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-rear": {
+          "routeVerticesIncludingSupport": 33,
+          "certifiedClearance": 0.0029926283301611872,
+          "length": 0.1100000006283989,
+          "lengthRatio": 1.0000000057127172,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "reverse-inverted-8": {
+      "height": -0.004185507,
+      "verticalSupportToBoardTopGapMM": 54.185507,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-front": {
+          "routeVerticesIncludingSupport": 31,
+          "certifiedClearance": 0.0029926283301611916,
+          "length": 0.11000000062839366,
+          "lengthRatio": 1.0000000057126697,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "left-rear": {
+          "routeVerticesIncludingSupport": 33,
+          "certifiedClearance": 0.002992628330161198,
+          "length": 0.10999999889653422,
+          "lengthRatio": 0.9999999899684929,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-front": {
+          "routeVerticesIncludingSupport": 31,
+          "certifiedClearance": 0.0029922993297200897,
+          "length": 0.10999999889653422,
+          "lengthRatio": 0.9999999899684929,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-rear": {
+          "routeVerticesIncludingSupport": 32,
+          "certifiedClearance": 0.002992628330161198,
+          "length": 0.10999999889653198,
+          "lengthRatio": 0.9999999899684725,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "outer-upper": {
+      "height": -0.004185507,
+      "verticalSupportToBoardTopGapMM": 54.185507,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-front": {
+          "routeVerticesIncludingSupport": 32,
+          "certifiedClearance": 0.002992299329720091,
+          "length": 0.10999999889653667,
+          "lengthRatio": 0.9999999899685151,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "left-rear": {
+          "routeVerticesIncludingSupport": 32,
+          "certifiedClearance": 0.0029922993297200845,
+          "length": 0.11000000062839399,
+          "lengthRatio": 1.0000000057126726,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-front": {
+          "routeVerticesIncludingSupport": 35,
+          "certifiedClearance": 0.0029922993297200893,
+          "length": 0.1100000006283939,
+          "lengthRatio": 1.000000005712672,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-rear": {
+          "routeVerticesIncludingSupport": 33,
+          "certifiedClearance": 0.0029926283301611872,
+          "length": 0.1100000006283989,
+          "lengthRatio": 1.0000000057127172,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "outer-lower": {
+      "height": -0.004185507,
+      "verticalSupportToBoardTopGapMM": 54.185507,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-front": {
+          "routeVerticesIncludingSupport": 32,
+          "certifiedClearance": 0.002992299329720091,
+          "length": 0.10999999889653667,
+          "lengthRatio": 0.9999999899685151,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "left-rear": {
+          "routeVerticesIncludingSupport": 32,
+          "certifiedClearance": 0.0029922993297200845,
+          "length": 0.11000000062839399,
+          "lengthRatio": 1.0000000057126726,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-front": {
+          "routeVerticesIncludingSupport": 35,
+          "certifiedClearance": 0.0029922993297200893,
+          "length": 0.1100000006283939,
+          "lengthRatio": 1.000000005712672,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        },
+        "right-rear": {
+          "routeVerticesIncludingSupport": 33,
+          "certifiedClearance": 0.0029926283301611872,
+          "length": 0.1100000006283989,
+          "lengthRatio": 1.0000000057127172,
+          "freeSupportToFirstRoutePointMM": 80.36597427701012,
+          "outwardMouthEntryDot": 0.0017778250000000002,
+          "actualMouthPreserved": true
+        }
+      }
+    }
+  },
+  "limits": "Shorter length and support offset are user-requested display estimates. Unknown hidden joins remain unspecified. Deterministic native section solution with continuous tube/solid and intersection checks; no physical-equilibrium or global-shortest-route claim."
+}

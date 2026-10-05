@@ -1,0 +1,198 @@
+{
+  "actualSidecarSHA256": "17f43ff4192692756de0023f66091562032884cf49868c79498d01b33e827dc7",
+  "beforeSidecarSHA256": "b2f47d3c3a036b942554c030dba9941e8254b270b29d520159a091f6fa62acd7",
+  "changedPaths": [
+    {
+      "path": "/suspension/canonicalPoses/central-20-6/camera/viewDirection/1",
+      "before": -0.342020143,
+      "after": -0.939692621
+    },
+    {
+      "path": "/suspension/canonicalPoses/central-20-6/camera/viewDirection/2",
+      "before": -0.939692621,
+      "after": 0.342020143
+    },
+    {
+      "path": "/suspension/canonicalPoses/central-30-25/camera/viewDirection/1",
+      "before": -0.342020143,
+      "after": 0.342020143
+    },
+    {
+      "path": "/suspension/canonicalPoses/central-30-25/camera/viewDirection/2",
+      "before": -0.939692621,
+      "after": 0.939692621
+    },
+    {
+      "path": "/suspension/canonicalPoses/central-6/camera/viewDirection/1",
+      "before": -0.342020143,
+      "after": -0.939692621
+    },
+    {
+      "path": "/suspension/canonicalPoses/central-6/camera/viewDirection/2",
+      "before": 0.939692621,
+      "after": -0.342020143
+    },
+    {
+      "path": "/suspension/canonicalPoses/paired-12-8-6/camera/viewDirection/1",
+      "before": -0.342020143,
+      "after": -0.939692621
+    },
+    {
+      "path": "/suspension/canonicalPoses/paired-12-8-6/camera/viewDirection/2",
+      "before": -0.939692621,
+      "after": 0.342020143
+    },
+    {
+      "path": "/suspension/canonicalPoses/paired-25-20-15-10/camera/viewDirection/1",
+      "before": -0.342020143,
+      "after": 0.342020143
+    },
+    {
+      "path": "/suspension/canonicalPoses/paired-25-20-15-10/camera/viewDirection/2",
+      "before": 0.939692621,
+      "after": -0.939692621
+    },
+    {
+      "path": "/suspension/canonicalPoses/paired-8-6/camera/viewDirection/1",
+      "before": -0.342020143,
+      "after": -0.939692621
+    },
+    {
+      "path": "/suspension/canonicalPoses/paired-8-6/camera/viewDirection/2",
+      "before": 0.939692621,
+      "after": -0.342020143
+    },
+    {
+      "path": "/suspension/canonicalPoses/rounded-tray/camera/viewDirection/1",
+      "before": -0.5,
+      "after": 0.5
+    },
+    {
+      "path": "/suspension/canonicalPoses/rounded-tray/camera/viewDirection/2",
+      "before": -0.866025404,
+      "after": 0.866025404
+    }
+  ],
+  "checks": [
+    {
+      "positionID": "paired-25-20-15-10",
+      "localMatchesInversePosePrediction": true,
+      "rotationUnchanged": true,
+      "routesUnchanged": true,
+      "heightUnchanged": true,
+      "predictedMapHeightAt334pt": 214.0552817222555,
+      "worldViewDirection": [
+        0.0,
+        -0.34202014296928834,
+        0.9396926209156204
+      ]
+    },
+    {
+      "positionID": "paired-10-15",
+      "localMatchesInversePosePrediction": true,
+      "rotationUnchanged": true,
+      "routesUnchanged": true,
+      "heightUnchanged": true,
+      "predictedMapHeightAt334pt": 214.0552817222555,
+      "worldViewDirection": [
+        0.0,
+        -0.34202014296928834,
+        -0.9396926209156204
+      ]
+    },
+    {
+      "positionID": "paired-12-8-6",
+      "localMatchesInversePosePrediction": true,
+      "rotationUnchanged": true,
+      "routesUnchanged": true,
+      "heightUnchanged": true,
+      "predictedMapHeightAt334pt": 185.94720331676925,
+      "worldViewDirection": [
+        0.0,
+        -0.34202014296928823,
+        -0.9396926209156202
+      ]
+    },
+    {
+      "positionID": "paired-8-6",
+      "localMatchesInversePosePrediction": true,
+      "rotationUnchanged": true,
+      "routesUnchanged": true,
+      "heightUnchanged": true,
+      "predictedMapHeightAt334pt": 231.3656171602419,
+      "worldViewDirection": [
+        0.0,
+        -0.34202014296928823,
+        0.9396926209156202
+      ]
+    },
+    {
+      "positionID": "central-30-25",
+      "localMatchesInversePosePrediction": true,
+      "rotationUnchanged": true,
+      "routesUnchanged": true,
+      "heightUnchanged": true,
+      "predictedMapHeightAt334pt": 214.0552817222555,
+      "worldViewDirection": [
+        0.0,
+        -0.34202014296928834,
+        -0.9396926209156204
+      ]
+    },
+    {
+      "positionID": "central-25",
+      "localMatchesInversePosePrediction": true,
+      "rotationUnchanged": true,
+      "routesUnchanged": true,
+      "heightUnchanged": true,
+      "predictedMapHeightAt334pt": 214.0552817222555,
+      "worldViewDirection": [
+        0.0,
+        -0.34202014296928834,
+        0.9396926209156204
+      ]
+    },
+    {
+      "positionID": "central-20-6",
+      "localMatchesInversePosePrediction": true,
+      "rotationUnchanged": true,
+      "routesUnchanged": true,
+      "heightUnchanged": true,
+      "predictedMapHeightAt334pt": 185.94720331676925,
+      "worldViewDirection": [
+        0.0,
+        -0.34202014296928823,
+        -0.9396926209156202
+      ]
+    },
+    {
+      "positionID": "central-6",
+      "localMatchesInversePosePrediction": true,
+      "rotationUnchanged": true,
+      "routesUnchanged": true,
+      "heightUnchanged": true,
+      "predictedMapHeightAt334pt": 231.3656171602419,
+      "worldViewDirection": [
+        0.0,
+        -0.34202014296928823,
+        0.9396926209156202
+      ]
+    },
+    {
+      "positionID": "rounded-tray",
+      "localMatchesInversePosePrediction": true,
+      "rotationUnchanged": true,
+      "routesUnchanged": true,
+      "heightUnchanged": true,
+      "predictedMapHeightAt334pt": 200.24175642903734,
+      "worldViewDirection": [
+        0.0,
+        -0.4999999999066592,
+        -0.866025403838329
+      ]
+    }
+  ],
+  "onlyCameraViewDirectionEdits": true,
+  "cameraOpenSideVerification": "Actual local directions match inverse-pose directions from independent source-backed orientation recommendations. Applying each unchanged pose restores intended world pitch and opening-facing direction; visual cavity visibility still requires app review.",
+  "passed": true
+}

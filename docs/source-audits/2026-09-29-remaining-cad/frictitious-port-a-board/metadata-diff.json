@@ -1,0 +1,62 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "42394863a4c527f8d3641113b08697b6aa39ad762b75352b5fab64173950d044",
+  "boardFieldChanges": {},
+  "changedContacts": {},
+  "humanAcceptance": "pending one-by-one review",
+  "package": "frictitious-port-a-board",
+  "positionsAfter": [
+    {
+      "contactIDs": [
+        "edge-30",
+        "edge-25"
+      ],
+      "id": "front-upright",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-20"
+      ],
+      "id": "front-inverted",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-12",
+        "edge-10"
+      ],
+      "id": "reverse-upright",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-15",
+        "edge-8"
+      ],
+      "id": "reverse-inverted",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "jug-outer-rim"
+      ],
+      "id": "outer-upper",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "pinch-body"
+      ],
+      "id": "pinch-side",
+      "presentationID": "primary"
+    }
+  ],
+  "positionsBefore": [],
+  "removedContacts": [
+    "pocket-30-two-finger-mono"
+  ],
+  "sourceAudit": "frictitious-port-a-board/native-authoring.md",
+  "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26"
+}

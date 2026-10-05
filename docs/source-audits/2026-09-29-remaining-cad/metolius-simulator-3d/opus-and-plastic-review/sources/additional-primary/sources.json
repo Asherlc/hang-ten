@@ -1,0 +1,31 @@
+{
+  "owner": "placid-badger",
+  "retrievedAtUTC": "2026-10-01T16:08:06.293134+00:00",
+  "productPage": "https://www.metoliusclimbing.com/products/simulator-training-board",
+  "approval": "User authorized manufacturer packet and more individual-board searches as needed.",
+  "use": "Whole primary gallery photographs for human visual judgment; no pixel measurement or tracing.",
+  "sources": [
+    {
+      "file": "product-blue-white.jpg",
+      "url": "https://www.metoliusclimbing.com/cdn/shop/files/Simulator-Board-blue-white.jpg?v=1759460263",
+      "manufacturer": "Metolius",
+      "sha256": "1c856a0cb9b4c47f40f421c96abc2c6cf50222aa8a17df46d74bbc24b3cf6fc8",
+      "bytes": 310084
+    },
+    {
+      "file": "training-board-comparison.jpg",
+      "url": "https://www.metoliusclimbing.com/cdn/shop/files/Training-Board-comparison.jpg?v=1762201505",
+      "manufacturer": "Metolius",
+      "sha256": "7ca8b427b6efe55a9b60cb3cc00c93f4775dcd640ded495cd58fea400366ef4a",
+      "bytes": 238582
+    },
+    {
+      "file": "Training-Board-instructions.pdf",
+      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826",
+      "manufacturer": "Metolius",
+      "sha256": "32d8edecde62767b25ea266704a11a0a065cc610e39817963fa91a55d0775911",
+      "bytes": 440009,
+      "use": "Read-only full-page inspection for board side/back illustrations; no geometry measurements."
+    }
+  ]
+}

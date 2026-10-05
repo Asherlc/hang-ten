@@ -1,0 +1,5 @@
+{
+  "source": ".context/placid-badger/poker-review12/root/run_owned_job.py",
+  "sourceSHA256": "49820958ef097fafaf2ffb745979ae7a9357a49a6230792d1ebefff9688b4e73",
+  "adaptations": "Register resources before creation; exact owner-prefixed TMP/config/cache/data and export-stage directories; no shared resources."
+}

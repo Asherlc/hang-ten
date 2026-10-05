@@ -1,0 +1,51 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "6969EFC0-48DE-459D-8186-057E71B7A95B",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half Review Zlagboard Evo",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "HangTen · Built with macOS 27.0",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1790910340.158,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1790910006.38,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Testing was canceled",
+      "targetName" : "HangTenTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "HangTen encountered an error",
+      "testName" : "HangTen encountered an error"
+    }
+  ],
+  "title" : "Test - HangTen",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 1
+}

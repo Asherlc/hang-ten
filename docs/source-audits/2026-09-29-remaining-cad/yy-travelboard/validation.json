@@ -1,0 +1,19 @@
+{
+  "package": "yy-travelboard",
+  "currentSourceSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "nativeReopenEditSourceSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "modelSHA256ByPresentation": {
+    "primary": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f"
+  },
+  "fullPackageSchemaPassed": true,
+  "nativeCordCacheCheckPassed": true,
+  "minimumNativeCordClearanceMM": 1.6937871893757108,
+  "metadataOnlyCompileRebindings": [],
+  "humanCADReview": "pending requested one-at-a-time review after whole batch",
+  "externalResourcesCreated": false,
+  "continuousRoundedRuntimeCordClearancePassed": true,
+  "minimumCertifiedRuntimeCordClearanceMM": 1.4960326404645394,
+  "continuousClearanceReport": "cord-continuous-clearance.json",
+  "sidecarSHA256": "4dc0a687d4f7bd336cf40985bace19f09e92c80b5eb3753037125e0f0bce701b",
+  "cameraOnlyRebindingProof": "camera-correction-proof.json"
+}

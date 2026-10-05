@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "python3",
+    "Tools/HangboardCAD/run_freecad.py",
+    "Tools/HangboardCAD/compile_board.py",
+    "--package",
+    "mammut-diamond-finger",
+    "--source",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-geometry-revision/native-author/candidate/mammut-diamond-finger.FCStd",
+    "--assets",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-geometry-revision/native-author/partition-compile-check/assets",
+    "--check",
+    "--report",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-geometry-revision/native-author/partition-compile-check/report.json"
+  ],
+  "sourceSHA256": "5e06a1e7ae4f6bee8391605f61395ff86807e4234a54d6b8b2d46c015fa4ddd8",
+  "exitCode": 0,
+  "elapsedSeconds": 385.29396937502315
+}

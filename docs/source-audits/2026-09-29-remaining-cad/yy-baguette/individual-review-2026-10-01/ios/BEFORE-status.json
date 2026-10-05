@@ -1,0 +1,22 @@
+{
+  "status": "superseded-before-user-cord-correction",
+  "reason": "User states cords go around sides, not front. Runtime capture halted for native correction.",
+  "retainedFailure": "Contact tap probe produced no projected-frame change; not claimed as reset control.",
+  "completed": [
+    "Fresh build",
+    "All six contact selections",
+    "Default capture",
+    "Actual orbit",
+    "Built installed binary parity",
+    "Staged and installed generated board model descriptor byte parity"
+  ],
+  "partial": [
+    "Workout route opened research.max-hangs; retained first screenshot/AX may be rest state, no active highlight pass claimed."
+  ],
+  "notCompleted": [
+    "Cord nonpickability screen probe",
+    "Clear-selection reselect (detail UI exposes no clear control)",
+    "Reset (no separate reset control)"
+  ],
+  "humanGeometryAcceptance": false
+}

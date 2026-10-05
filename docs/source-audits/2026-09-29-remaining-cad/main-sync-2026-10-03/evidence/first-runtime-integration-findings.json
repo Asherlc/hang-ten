@@ -1,0 +1,39 @@
+{
+  "totalTests": 527,
+  "assertionFailures": 66,
+  "failedCases": [
+    {
+      "class": "BoardModelRealityTests",
+      "method": "testBoardPitchUsesPairedAttachmentsBoreMouthsAndIndependentInstancePivots"
+    },
+    {
+      "class": "BoardModelRealityTests",
+      "method": "testLiveScenePausesThenPublishesAcceptedSettledFrame"
+    },
+    {
+      "class": "BoardModelRealityTests",
+      "method": "testNativeCADModelsCreateNonPickableCordSegmentsInEveryPosition"
+    },
+    {
+      "class": "BoardModelRealityTests",
+      "method": "testNativePairedLeadAndTwoBranchModelsCreateNonPickableCordSegments"
+    },
+    {
+      "class": "BoardModelRealityTests",
+      "method": "testNUGPinchHighlightsBothOpposingSurfacesAndKeepsJugPicking"
+    },
+    {
+      "class": "BoardModelRealityTests",
+      "method": "testSharedContactMeshUsesPrimaryPickingAndUnionHighlight"
+    },
+    {
+      "class": "SuspendedBoardPresentationTests",
+      "method": "testSeatedPentaSourceLoadsInTheProductionScene"
+    },
+    {
+      "class": "WorkoutActivityRecordingTests",
+      "method": "testRockProdigyReusableFramesResolveToDistinctPhysicalSides"
+    }
+  ],
+  "originalRunPreserved": true
+}

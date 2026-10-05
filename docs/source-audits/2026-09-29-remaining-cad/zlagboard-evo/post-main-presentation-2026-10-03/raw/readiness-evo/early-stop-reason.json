@@ -1,0 +1,7 @@
+{
+  "reason": "Board/hands visible but workout remains Preparing at005s and015s; no countdown. Stop after22s startup window, preserve partial trial, investigate readiness propagation before long color test.",
+  "owner": "placid-badger-cad-second-half",
+  "helperPID": 9779,
+  "command": "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python .context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-capture-prep/capture.py .context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-evo-release.json",
+  "epoch": 1791054533.93806
+}

@@ -1,0 +1,165 @@
+{
+  "timestampUTC": "2026-10-01T22:32:30.578069+00:00",
+  "package": "yy-baguette-evo",
+  "filesBefore": {
+    "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+    "Hangboards/yy-baguette-evo/suspension.json": "4d0aa10c8914bd41fd79cc825d094ffc5a785aae64aef5406ade19778102a282",
+    "Hangboards/yy-baguette-evo/assets/primary.usdz": "c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf",
+    "Hangboards/yy-baguette-evo/assets/primary.model.json": "e19b9018feec89ddfe343f0f84bb49a86fc66abbfb6ef70e947d5e70e0bfc927"
+  },
+  "schemaPassed": true,
+  "boardID": "yy.baguette-evo",
+  "usd": {
+    "version": [
+      0,
+      26,
+      8
+    ],
+    "meshes": [
+      {
+        "name": "body_mesh_001",
+        "faces": 24511
+      },
+      {
+        "name": "hold_edge_10mm_left_mesh_001",
+        "faces": 77
+      },
+      {
+        "name": "hold_edge_20mm_left_mesh_001",
+        "faces": 78
+      },
+      {
+        "name": "hold_edge_15mm_left_mesh_001",
+        "faces": 78
+      },
+      {
+        "name": "hold_edge_25mm_left_mesh_001",
+        "faces": 82
+      },
+      {
+        "name": "hold_edge_06mm_left_mesh_001",
+        "faces": 136
+      },
+      {
+        "name": "hold_edge_12mm_left_mesh_001",
+        "faces": 70
+      },
+      {
+        "name": "hold_edge_08mm_left_mesh_001",
+        "faces": 70
+      },
+      {
+        "name": "hold_rounded_left_mesh_001",
+        "faces": 84
+      },
+      {
+        "name": "hold_edge_10mm_right_mesh_001",
+        "faces": 78
+      },
+      {
+        "name": "hold_edge_20mm_right_mesh_001",
+        "faces": 78
+      },
+      {
+        "name": "hold_edge_15mm_right_mesh_001",
+        "faces": 78
+      },
+      {
+        "name": "hold_edge_25mm_right_mesh_001",
+        "faces": 82
+      },
+      {
+        "name": "hold_edge_06mm_right_mesh_001",
+        "faces": 136
+      },
+      {
+        "name": "hold_edge_12mm_right_mesh_001",
+        "faces": 70
+      },
+      {
+        "name": "hold_edge_08mm_right_mesh_001",
+        "faces": 70
+      },
+      {
+        "name": "hold_rounded_right_mesh_001",
+        "faces": 84
+      },
+      {
+        "name": "hold_central_20mm_mesh_001",
+        "faces": 84
+      },
+      {
+        "name": "hold_central_06mm_mesh_001",
+        "faces": 94
+      },
+      {
+        "name": "hold_central_30mm_mesh_001",
+        "faces": 74
+      },
+      {
+        "name": "hold_central_25mm_mesh_001",
+        "faces": 74
+      }
+    ],
+    "materialsOrShaders": [],
+    "materialBindings": [],
+    "members": [
+      "stage.usdc"
+    ],
+    "exactDescriptorNodes": true,
+    "modelHashMatches": true,
+    "unbound": true
+  },
+  "manifest": {
+    "woodFinish": true,
+    "suspensionType": "cadRoutedCord",
+    "contactIDs": [
+      "edge-10-left",
+      "edge-10-right",
+      "edge-12-left",
+      "edge-12-right",
+      "edge-15-left",
+      "edge-15-right",
+      "edge-20-left",
+      "edge-20-right",
+      "edge-25-left",
+      "edge-25-right",
+      "edge-6-lower",
+      "edge-6-upper",
+      "edge-8-left",
+      "edge-8-right",
+      "edge-central-20",
+      "edge-central-25",
+      "edge-central-30",
+      "edge-central-6",
+      "rounded-tray"
+    ]
+  },
+  "staging": {
+    "ios": {
+      "generatedBoardMatchesSource": true,
+      "descriptorBytesMatch": true,
+      "modelBytesMatch": true,
+      "authoringFilesOmitted": true,
+      "usdzDeliveryLocationCorrect": true,
+      "stagedFiles": [
+        "assets/primary.model.json",
+        "board.json"
+      ]
+    },
+    "android": {
+      "generatedBoardMatchesSource": true,
+      "descriptorBytesMatch": true,
+      "modelBytesMatch": true,
+      "authoringFilesOmitted": true,
+      "usdzDeliveryLocationCorrect": true,
+      "stagedFiles": [
+        "assets/primary.model.json",
+        "assets/primary.usdz",
+        "board.json"
+      ]
+    }
+  },
+  "sourceFilesUnchanged": true,
+  "passed": true
+}

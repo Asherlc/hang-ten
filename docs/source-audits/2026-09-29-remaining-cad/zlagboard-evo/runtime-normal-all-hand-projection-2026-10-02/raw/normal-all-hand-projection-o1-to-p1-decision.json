@@ -1,0 +1,114 @@
+{
+  "recordedBeforePLaunchEpoch": 1790985640.6257138,
+  "O1VisualFailure": true,
+  "allStructuralCameraLifecycleHostChecksPass": true,
+  "intendedCameraFitsBeforeFailingRest": true,
+  "fitRecords": [
+    {
+      "allDepthsFinite": true,
+      "allDepthsInsideUnchangedClips": true,
+      "cameraEvent": "reset-fitted",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.959770917892456,
+        -0.28078407049179077,
+        0,
+        0,
+        0.28078407049179077,
+        0.959770917892456,
+        0,
+        0,
+        3.961261034011841,
+        9.515283584594727,
+        1
+      ],
+      "complete": true,
+      "epoch": 1790985393.431404,
+      "event": "hand-camera",
+      "far": 100,
+      "framingVertexCount": 37284,
+      "handCameraID": "ObjectIdentifier(0x0000000145d7b440)",
+      "handKind": "pair",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 1,
+        "pair.make-entry": 1,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "maximumDepth": 10.936546325683594,
+      "minimumDepth": 8.617655754089355,
+      "near": 0.10000000149011612,
+      "orthographicPresent": true,
+      "orthographicScale": 1.7647740840911865,
+      "perspectivePresent": false,
+      "sequence": 6,
+      "uptime": 68467.93104979167
+    },
+    {
+      "allDepthsFinite": true,
+      "allDepthsInsideUnchangedClips": true,
+      "cameraEvent": "reset-fitted",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.959770917892456,
+        -0.28078407049179077,
+        0,
+        0,
+        0.28078407049179077,
+        0.959770917892456,
+        0,
+        0,
+        3.961261034011841,
+        9.515283584594727,
+        1
+      ],
+      "complete": true,
+      "epoch": 1790985395.8925738,
+      "event": "hand-camera",
+      "far": 100,
+      "framingVertexCount": 37284,
+      "handCameraID": "ObjectIdentifier(0x00000001133ab760)",
+      "handKind": "pair",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 2,
+        "pair.make-entry": 2,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "maximumDepth": 10.936546325683594,
+      "minimumDepth": 8.617655754089355,
+      "near": 0.10000000149011612,
+      "orthographicPresent": true,
+      "orthographicScale": 1.7647740840911865,
+      "perspectivePresent": false,
+      "sequence": 30,
+      "uptime": 68470.39222933333
+    }
+  ],
+  "handVisibilityAtFailingRestAndNextHang": true,
+  "handActivePropertyDirectlyInstrumented": false,
+  "limitation": "Hand component/reset evidence and visible rendered hands corroborate intended camera use by Rest; no hand Entity.isActive field exists in retained instrumentation. Initial two absent hand images retained as separate presentation defect.",
+  "normalEndpoints": [
+    [
+      232,
+      182.33333333333331,
+      410,
+      70
+    ],
+    [
+      332,
+      240,
+      210,
+      36
+    ]
+  ],
+  "decision": "Proceed exactly one P1 as authorized; stop if evidence or visual gate fails."
+}

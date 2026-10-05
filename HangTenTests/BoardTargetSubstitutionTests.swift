@@ -2,6 +2,87 @@ import XCTest
 @testable import HangTen
 
 final class ContactResolverTests: XCTestCase {
+    func testLopezMaxHangsOffersBothBeastmakersAndRecordsChosenEdges() throws {
+        for (boardID, depth, ids, expectedCue) in [
+            ("beastmaker-1000", 20.0, Set(["pocket-bottom-outer-left", "pocket-bottom-outer-right"]),
+             "20 mm 4 Finger Edge Left, 20 mm 4 Finger Edge Right"),
+            ("beastmaker-1000", 15.0, Set(["pocket-top-outer-left", "pocket-top-outer-right"]),
+             "15 mm 4 Finger Edge Left, 15 mm 4 Finger Edge Right"),
+            ("beastmaker-2000", 15.0, Set(["front-lower-1", "front-lower-9"]),
+             "15 mm 4 Finger Edge Left, 15 mm 4 Finger Edge Right")
+        ] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            let plan = PlanCatalog.maxHangs
+            XCTAssertTrue(MaxHangsEdgeSelection.availableDepths(for: plan, on: board).contains(depth))
+            let selected = try XCTUnwrap(MaxHangsEdgeSelection.resolvedPlans(for: plan, on: board)[depth])
+            let accessibleCue = try XCTUnwrap(BoardModelSurface.highlightedContactCue(
+                for: board.contacts,
+                highlightedContactIDs: ids
+            ))
+            XCTAssertEqual(accessibleCue, expectedCue, "\(boardID) / \(depth) mm")
+            for step in selected.steps where !step.isRestStep {
+                XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)), ids)
+            }
+            let recorded = try WorkoutActivityRecorder().segments(for: selected, on: board)
+            let work = recorded.filter { $0.kind == .work }
+            XCTAssertEqual(work.count, 5)
+            XCTAssertTrue(work.allSatisfy { $0.durationSeconds == 10 })
+            for segment in work {
+                guard case .resolvedContacts(let snapshot) = segment.target else {
+                    return XCTFail("Selected edges must be recorded as resolved contacts")
+                }
+                XCTAssertEqual(Set(snapshot.contactIDs), ids)
+            }
+        }
+    }
+
+    func testLopezMaxHangsRejectsUnsupportedAndOutOfRangeEdgeSelections() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-2000"))
+        XCTAssertNil(MaxHangsEdgeSelection.selecting(20, in: PlanCatalog.maxHangs, on: board))
+        XCTAssertNil(MaxHangsEdgeSelection.selecting(22, in: PlanCatalog.maxHangs, on: board))
+        XCTAssertNil(MaxHangsEdgeSelection.selecting(7, in: PlanCatalog.maxHangs, on: board))
+        XCTAssertTrue(MaxHangsEdgeSelection.availableDepths(for: PlanCatalog.abrahangs, on: board).isEmpty)
+    }
+
+    func testCatalogSevenThreeCueUsesTwoHandsOnCompactBoard() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.seven-three-repeaters"))
+        let step = try XCTUnwrap(plan.steps.first { $0.phase == .hang && $0.title.contains("29 mm") })
+        let tasks = try XCTUnwrap(step.segments.first?.target?.planTasks)
+        XCTAssertEqual(tasks.first?.count, 2)
+        XCTAssertEqual(
+            Set(try ContactResolver.resolve(tasks[0], step: step, board: board).map(\.id)),
+            ["edge-29-left", "edge-29-right"]
+        )
+    }
+
+    func testEveryBoardSpecificCatalogTaskResolves() throws {
+        for plan in PlanCatalog.all where plan.boardID != nil {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: plan.boardID!))
+            for step in plan.steps {
+                for segment in step.segments where segment.kind == .work {
+                    guard let tasks = segment.target?.planTasks else { continue }
+                    XCTAssertNoThrow(
+                        try ContactResolver.resolve(tasks, step: step, board: board),
+                        "\(plan.id) / \(step.id)"
+                    )
+                }
+            }
+        }
+    }
+
+    func testRepeatersFirstCueHighlightsBothCompactTwentyNineMillimeterEdges() throws {
+        let board = try XCTUnwrap(
+            BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii")
+        )
+        let step = try XCTUnwrap(LegacyPlanSeedCatalog.repeaters.steps.first)
+
+        XCTAssertEqual(
+            Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)),
+            ["edge-29-left", "edge-29-right"]
+        )
+    }
+
     func testResolutionFailuresDescribeSelectionOrGeometricPairingFailures() {
         XCTAssertEqual(
             ContactResolutionError.noMatches.errorDescription,
@@ -314,6 +395,119 @@ final class ContactResolverTests: XCTestCase {
         XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: fixtureStep(target: requirement), board: board)) {
             XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 1))
         }
+    }
+
+    func testMaxHangsResolvesPentaReusableTwentyMillimeterPairAndPose() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
+        // The source plan offers 8–20 mm; the athlete chooses the exact edge
+        // through the production plan-page path before a session is resolved.
+        let selected = try XCTUnwrap(MaxHangsEdgeSelection.resolvedPlans(
+            for: PlanCatalog.maxHangs, on: board)[20])
+        let step = try XCTUnwrap(selected.steps.first { !$0.isRestStep })
+        let target = try XCTUnwrap(step.segments.first { $0.kind == .work }?.target)
+        let resolved = try XCTUnwrap(ContactResolver.resolve(target, step: step, board: board).first)
+        let expected: Set<String> = ["edge-20-left", "edge-20-right"]
+        XCTAssertEqual(Set(resolved.map(\.id)), expected)
+        XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)), expected)
+        for contact in resolved {
+            XCTAssertEqual(contact.depth, .range(.init(minimum: 20, maximum: 20)))
+            XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(
+                board: board, presentationID: board.defaultPresentation.id, activeHoldID: contact.id
+            ), "edge-20")
+        }
+    }
+
+    func testExactPentaTasksUseAuthoredUnitPlacementInsteadOfInstanceArrayOrder() throws {
+        let original = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
+        guard case .model(let media) = original.defaultPresentation.media else { return XCTFail("Native model expected") }
+        let instances = try XCTUnwrap(media.instances)
+        let target = PlanContactPredicate(kind: .edge, depth: .measured(.init(minimum: 20, maximum: 20)))
+        let step = try XCTUnwrap(PlanCatalog.maxHangs.steps.first { !$0.isRestStep })
+        for order in [instances, Array(instances.reversed())] {
+            let reorderedMedia = BoardModelMedia(assetPath: media.assetPath, descriptorPath: media.descriptorPath,
+                descriptor: media.descriptor, display: media.display, suspension: media.suspension,
+                orientation: media.orientation, instances: order, physicsDescriptorPath: media.physicsDescriptorPath)
+            let presentation = BoardPresentation(id: original.defaultPresentation.id,
+                name: original.defaultPresentation.name, aspectRatio: original.defaultPresentation.aspectRatio,
+                isDefault: true, media: .model(reorderedMedia))
+            let board = BoardRevision(id: original.id, revisionID: original.revisionID,
+                manufacturer: original.manufacturer, name: original.name, subtitle: original.subtitle,
+                dimensions: original.dimensions, aspectRatio: original.aspectRatio,
+                equipmentObjects: original.equipmentObjects, contacts: original.contacts,
+                productURL: original.productURL, photoAssetName: nil,
+                presentations: [presentation], positions: original.positions)
+            for (sides, ids) in [
+                ([WorkoutSide.left, .right], ["edge-20-left", "edge-20-right"]),
+                ([WorkoutSide.right, .left], ["edge-20-right", "edge-20-left"])
+            ] {
+                let task = sides.map { PlanHandTarget(target: target, side: $0) }
+                let selection = try ContactResolver.resolveSelection(task, step: step, board: board)
+                XCTAssertEqual(selection.contacts.map(\.id), ids)
+                XCTAssertEqual(selection.positionID, "edge-20")
+            }
+        }
+    }
+
+    func testPentaLegacyPairRequiresAnExactAthleteSelectedDepth() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
+        let step = try XCTUnwrap(LegacyPlanSeedCatalog.maxHangs.steps.first { $0.id == "max-hangs-1" })
+        // The broad source range matches three physical pairs. Do not invent
+        // an automatic size choice or combine different reusable-unit slots.
+        XCTAssertThrowsError(try ContactResolver.resolve(step.workRequirements, step: step, board: board)) {
+            XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 6))
+        }
+        let exact = ContactRequirement.edge(depth: .range(.init(minimum: 20, maximum: 20)),
+                                            selection: .bilateralPair)
+        XCTAssertEqual(Set(try ContactResolver.resolve(exact, step: step, board: board).map(\.id)),
+                       ["edge-20-left", "edge-20-right"])
+    }
+
+    func testReusablePairRejectsDifferentSlotsEvenWhenUnitFramesStraddleMidpoint() throws {
+        let board = try reusablePairFixture(ids: ["edge-25-left", "edge-20-right"])
+        try assertReusablePairRejected(board)
+    }
+
+    func testReusablePairRejectsSameInstanceEvenWhenUnitFramesStraddleMidpoint() throws {
+        let board = try reusablePairFixture(ids: ["edge-25-left", "edge-20-left"])
+        try assertReusablePairRejected(board)
+    }
+
+    func testReusablePairRejectsUnequalContactFacts() throws {
+        for difference in ["kind", "shape", "depth", "fingerCapacity", "handCapacity"] {
+            let board = try reusablePairFixture(ids: ["edge-20-left", "edge-20-right"], difference: difference)
+            try assertReusablePairRejected(board)
+        }
+    }
+
+    private func assertReusablePairRejected(_ board: BoardRevision) throws {
+        // Both synthetic contacts match this broad requirement; the pairing
+        // rules must reject them rather than silently choosing per-unit extrema.
+        let requirement = ContactRequirement(selection: .bilateralPair)
+        XCTAssertThrowsError(try ContactResolver.resolve(
+            requirement, step: fixtureStep(target: requirement), board: board
+        )) { XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 2)) }
+    }
+
+    private func reusablePairFixture(ids: [String], difference: String? = nil) throws -> BoardRevision {
+        let original = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
+        let contacts = try ids.enumerated().map { index, id in
+            let source = try XCTUnwrap(original.contacts.first { $0.id == id })
+            let changed = index == 1 ? difference : nil
+            // Synthetic facts isolate each pairing rule; production package
+            // facts, mappings and per-unit descriptor frames remain untouched.
+            return PhysicalContact(id: source.id, equipmentObjectID: source.equipmentObjectID,
+                name: source.name, kind: changed == "kind" ? .jug : .edge,
+                shape: changed == "shape" ? .round : .flat,
+                fingerCapacity: changed == "fingerCapacity" ? 3 : 4,
+                handCapacity: changed == "handCapacity" ? 2 : 1,
+                depth: .range(.init(minimum: changed == "depth" ? 21 : 20,
+                                   maximum: changed == "depth" ? 21 : 20)))
+        }
+        return BoardRevision(id: "fixture.reusable-pair", revisionID: "fixture",
+            manufacturer: "Fixture", name: "Reusable pair", subtitle: "", dimensions: nil,
+            aspectRatio: original.aspectRatio, equipmentObjects: original.equipmentObjects,
+            contacts: contacts, productURL: original.productURL, photoAssetName: nil,
+            presentations: original.presentations, positions: original.positions)
     }
 
     private func fixtureStep(

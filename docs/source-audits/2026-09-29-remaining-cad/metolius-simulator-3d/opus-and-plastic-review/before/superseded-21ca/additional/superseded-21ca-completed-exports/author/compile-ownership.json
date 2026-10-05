@@ -1,0 +1,21 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "compile",
+  "startedUTC": "2026-10-01T15:54:42.641102+00:00",
+  "timeoutSeconds": 900,
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "args": [
+    "--package",
+    "metolius-simulator-3d",
+    "--source",
+    ".context/placid-badger/metolius-simulator-3d-opus-corrections/candidate/metolius-simulator-3d.FCStd",
+    "--assets",
+    ".context/placid-badger/metolius-simulator-3d-opus-corrections/candidate/assets"
+  ],
+  "ownedProcessGroup": 38450,
+  "compilerSHA256After": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "compilerBytesUnchanged": true,
+  "elapsedSeconds": 867.5651709589874,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

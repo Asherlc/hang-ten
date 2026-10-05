@@ -1,0 +1,110 @@
+{
+  "ForwardCenterJug": {
+    "orientation": "Forward",
+    "volume": 114064.00021366263,
+    "solids": [
+      [
+        "Forward",
+        114064.00021366263
+      ]
+    ],
+    "insideCenter": true,
+    "insideSky": false
+  },
+  "CenterJugFrontNose": {
+    "orientation": "Forward",
+    "volume": 37041.061967205555,
+    "solids": [
+      [
+        "Forward",
+        37041.061967205555
+      ]
+    ],
+    "insideCenter": false,
+    "insideSky": false
+  },
+  "FunctionalShellBeforeBlends": {
+    "orientation": "Forward",
+    "volume": 6332063.324327534,
+    "solids": [
+      [
+        "Forward",
+        6332063.324327534
+      ]
+    ],
+    "insideCenter": true,
+    "insideSky": false
+  },
+  "FunctionalShellWithRolledNose": {
+    "orientation": "Forward",
+    "volume": 6333682.151260496,
+    "solids": [
+      [
+        "Forward",
+        6333682.151260496
+      ]
+    ],
+    "insideCenter": true,
+    "insideSky": false
+  },
+  "CenterShoulderBoundedTransition": {
+    "orientation": "Forward",
+    "volume": 55221.70036598988,
+    "solids": [
+      [
+        "Forward",
+        55221.70036598988
+      ]
+    ],
+    "insideCenter": false,
+    "insideSky": false
+  },
+  "RoundFlatBoundedTransition": {
+    "orientation": "Forward",
+    "volume": 238769.01853606344,
+    "solids": [
+      [
+        "Forward",
+        238769.01853606344
+      ]
+    ],
+    "insideCenter": false,
+    "insideSky": false
+  },
+  "OuterShoulderBoundedTransition": {
+    "orientation": "Forward",
+    "volume": 97648.45587611588,
+    "solids": [
+      [
+        "Forward",
+        97648.45587611588
+      ]
+    ],
+    "insideCenter": false,
+    "insideSky": false
+  },
+  "ShellWithContinuousShoulders": {
+    "orientation": "Forward",
+    "volume": 6352119.244617142,
+    "solids": [
+      [
+        "Forward",
+        6352119.244617142
+      ]
+    ],
+    "insideCenter": true,
+    "insideSky": false
+  },
+  "BodySolid": {
+    "orientation": "Forward",
+    "volume": 5737738.351101727,
+    "solids": [
+      [
+        "Forward",
+        5737738.351101727
+      ]
+    ],
+    "insideCenter": true,
+    "insideSky": false
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "scope": "Read-only source review of v2 and v3; no source edit, build, typecheck, runtime, or patch application",
+  "result": "NO_MATERIAL_SOURCE_ISSUE_IDENTIFIED",
+  "inputs": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-prep/patch-v2/startup-observation.patch",
+      "sha256": "6fc896c9ee56b9f8ecbbe4078ce923148ba6725eb25f400f44f53b8b73b42c3c"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-prep/patch-v2/source/HangTen/Views/RootView.swift",
+      "sha256": "03b0a639edd9ccf71fa2930951aa28952639fa1db3cdf03d53a3b25968654f57"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-prep/patch-v2/source/HangTen/Views/BoardModelView.swift",
+      "sha256": "b4ae8af4abc9564dfd2ea445236fa3eacfe31f2c38e14131ada61b8bb3bbad44"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-prep/patch-v2/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "a75b0fe069f6f8d03f0ecd21bf18f001d83e5d4c7ac173abd4809d3fba910b9b"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-prep/patch-v3/startup-observation.patch",
+      "sha256": "c53b409f878296d440c9eb567163a7afcb0c8c2c9be3a1288995411008d8241d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-prep/patch-v3/source/HangTen/Views/RootView.swift",
+      "sha256": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-prep/patch-v3/source/HangTen/Views/BoardModelView.swift",
+      "sha256": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-prep/patch-v3/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "a75b0fe069f6f8d03f0ecd21bf18f001d83e5d4c7ac173abd4809d3fba910b9b"
+    }
+  ],
+  "checks": [
+    "Existing actors, task creation, await/sleep, cancellation calls, guards and application state writes remain in their original order; added scopes/maps are DEBUG diagnostics.",
+    "Deferred request association is consumed after existing consumePendingCountdown; visible fallback uses its parent ID, re-request creates an explicitly linked child ID. Synchronous diagnostic scopes do not cross await.",
+    "Each existing arm task captures its own scalar attempt ID. A canceled old task cannot clear a new task association through its catch marker. Completed-task mismatch marks ambiguity without changing production control flow.",
+    "Context combines the shared coach identity and plan. Single appearance/context and no ambiguity are required for attribution; this is not a unique per-instance identity in unrestricted usage.",
+    "v3 returned scene token is an existing DEBUG internal stored UUID (BoardModelRealityScene.diagnosticLifecycleToken), not entity traversal or a strong registry reference. Before/after prepare markers wrap the unchanged call.",
+    "No concrete compile error found by reading. No compilation or runtime correctness claim is made."
+  ],
+  "limits": [
+    "Synchronous UUID/dictionary/JSON/file-I/O overhead can change wall timing around the existing arm deadline; unchanged scheduling constructs do not prove unchanged timing.",
+    "The catch marker name says cancelled, but its Task.isCancelled value and catch context must be retained; not every caught sleep error can be assumed cancellation.",
+    "associationValid is context/registry attribution validity only, not proof that an individual event had a nonnil attempt or that an armed task completed. Consumers must retain missing IDs, ambiguity markers, event limit and right-censoring.",
+    "No cause, fix, production recommendation or new experiment selected."
+  ]
+}

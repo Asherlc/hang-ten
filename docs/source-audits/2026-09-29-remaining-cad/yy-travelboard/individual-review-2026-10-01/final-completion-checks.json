@@ -1,0 +1,13 @@
+{
+  "queueChangedBoardNumbers": [
+    19
+  ],
+  "lockChangedPackages": [
+    "yy-travelboard"
+  ],
+  "allFinalIndexLinksExist": true,
+  "assetsStillFrozen": true,
+  "iosCopyExact": true,
+  "independentCleanupVerified": true,
+  "humanReview": "pending"
+}

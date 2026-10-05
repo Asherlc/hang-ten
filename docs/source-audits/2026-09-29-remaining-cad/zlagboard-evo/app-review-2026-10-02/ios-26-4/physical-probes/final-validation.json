@@ -1,0 +1,13 @@
+{
+  "checks": {
+    "readyCanonicalHas21Contacts": true,
+    "actualOrbitDiffersFromReadyCanonical": true,
+    "actualContactTapRestoresReadyCanonical": true
+  },
+  "allPassed": true,
+  "canonicalReference": "../captures/edge-20-left-accessibility.json",
+  "priorFailure": "validation.json incorrectly used01-canonical AX while boardModel.loading (zero contacts). Raw failure remains unchanged.",
+  "rawOrbit": "02-orbit/accessibility.json",
+  "rawReset": "03-contact-reset/accessibility.json",
+  "pickChecks": "validation.json physicalright/jug/center IDs alltrue"
+}

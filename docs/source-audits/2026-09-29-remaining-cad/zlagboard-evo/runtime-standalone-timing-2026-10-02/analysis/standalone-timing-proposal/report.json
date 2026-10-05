@@ -1,0 +1,130 @@
+{
+  "scope": "Scratch-only timing design after source/helper audit. Implementation and runtime remain gated until current unchanged actual-direct repeat completes. No app source/build/device/plan changes.",
+  "existingHardcodedAssumptions": [
+    {
+      "source": "RootView.swift:3911\u20133918",
+      "issue": "derivedPhase uses fixed thresholds8/16/24/32. It must share one phase-duration table with script rather than change only task timing."
+    },
+    {
+      "source": "RootView.swift:4002\u20134025",
+      "issue": "runScript uses index*8, final42 tail and offsets6.85/7.75. Offset7.75 would run beyond7-second Hang, contaminate nextphase and delay intended markers. Replace table-driven timing and bounded offsets for both new arms."
+    },
+    {
+      "source": "BoardModelRealityTypes.swift:1503\u20131519",
+      "issue": "standaloneSchedule advertises scalar phaseSeconds8 and captureOffsets including7. Host cannot schedule7s Hang correctly with this record. Emit exact duration/start arrays and total/tail durations from the same source values."
+    },
+    {
+      "source": "evo/sibling-capture.py",
+      "issue": "Host currently hardcodes i*8 and base+43. Must use emitted phaseStartOffsets and captureOffsets, then completion-tail gate; env driver must remain E, new timing-profile flag differs onlyshort/long."
+    },
+    {
+      "source": "evo/check-resize-surface.py",
+      "issue": "Hardcodes41snapshot count and base+8/+9 split; unsuitable for this fixed-viewport test. Use emitted count/timing and all-phase fixed210x36 placement. Existing check-standalone can provide scene/material bracket logic but add actual event/matrix validation."
+    }
+  ],
+  "minimalSourceAmendments": {
+    "RootView.swift": "In DEBUG standalone harness add immutable HANGTEN_REVIEW_STANDALONE_TIMING_PROFILE enum-like value short/long allowed only driverE. Durations short[8,7,8,7,8], long[8,7,180,7,8]. Prefer existing legacy[8,8,8,8,8] when flagabsent so previous arms remain unaffected. Derive phase from cumulative ends and current monotonic uptime; runScript uses cumulative starts from same table. Board/caption/layout/observer calls unchanged. Validate profile/driver/viewport210x36 and counteroff before scheduling.",
+    "BoardModelRealityTypes.swift": "Extend standaloneSchedule with explicit phaseDurations,captureOffsets,snapshotOffsets and tailOffset parameters (defaults preserve old callers ifneeded). Emit phaseDurations,phaseStartOffsets,totalDuration,completionTailOffset,captureOffsets,snapshotOffsets and timingProfileLabel. Do not keep misleading scalar phaseSeconds8 for variable phases; optional legacyfield only when uniform. No SceneEvents.Update subscription for thesearms.",
+    "NoOtherSource": "No BoardMapView, renderer/material/camera, hand host, workout/session, package or plan edits. E branch itself remains same single stable host. No new observable state, Timeline, cadencechange or GeometryReader callback; scriptEpoch setonce beforemeasurement, then observer task only sleeps and records."
+  },
+  "schedule": {
+    "short": {
+      "durations": [
+        8,
+        7,
+        8,
+        7,
+        8
+      ],
+      "starts": [
+        0,
+        8,
+        15,
+        23,
+        30
+      ],
+      "total": 38,
+      "tail": 40
+    },
+    "long": {
+      "durations": [
+        8,
+        7,
+        180,
+        7,
+        8
+      ],
+      "starts": [
+        0,
+        8,
+        15,
+        195,
+        202
+      ],
+      "total": 210,
+      "tail": 212
+    },
+    "captureOffsets": [
+      0.25,
+      1,
+      3,
+      5
+    ],
+    "sparseSnapshotOffsets": [
+      0.15,
+      0.85,
+      1.75,
+      2.85,
+      3.75,
+      4.85,
+      5.85,
+      6.75
+    ],
+    "tail": "One final snapshot at total+2, then script-complete and deferred observation-end. Both arms use same count/relative offsets. No repeated/mid-rest snapshots beyond first6.75 of the preview interval; longinterval waits until nextphase. This changes time elapsed, not diagnosticobserverfrequency within repeatedRest.",
+    "interpretation": "Diagnostic timing adaptation of isolated phase fixture, not a new training plan. Long180-second preview matches only one duration of production; isolated E lacks changing workout UI/real session/layout/startup and total process age differs172s by nextactive. No sleep/idle mechanism is inferred."
+  },
+  "hostCaptureChanges": [
+    "Clone helper to new owner-scoped file; preserve all historical scripts. Keep existing exactownedUUID registration/lifecycle constraints and do not introduce resource creation. Function must accept short/long profile, force driverE, remove inherited reviewflags then set only baseline flags+profile. Explicitly exclude rootworkout/autostart/step/hand/counter/alternatehost flags.",
+    "Read schedule once after bounded readiness; assert exactprofile/table, finitepositivevalues, fivephases, cumulative starts, total and20capturetargets. All targets derive from baseEpoch+phaseStartOffsets[i]+offset. No i*8 or40/43 constants. Enforce maxoffset5<minphase7.",
+    "Keep20PNGcaptures and commandstart/end epochs. Reject any screenshot whoseend crosses phaseend (do not relabel wrongphase); record lateness rather than silently shifting schedule. SourceTiming/hostwallclock bridge can drift, so compare actualsemanticrecords bytimestamp.",
+    "After lastimage wait to emittedtail+1, then bounded check for script-complete AND observation-end records with epoch after final screenshotend. Ifmissing, preserve partialraw/failure, do not call complete. Existing fixedsleep can miss finalCPUbracket and is not a freezeproof.",
+    "Freeze/copy exactcomplete JSONL and SHA onlyafter completion (or retainedboundedfailure). No app/UI gestures duringrun. Host screenshot commands and its own waiting do not mutate semanticstate. Parent user-facing progress remains managed outside this sleepingcaptureprocess."
+  ],
+  "validationGates": [
+    "Pure schedule validation retained here proves arithmetic,20targets, validwithinphase offsets and conceptual pre/postoffsets; it is not a Swiftcompile or runtimebracketpass.",
+    "Exact oneviewmake,one scene/root/view identity,one activeboardhost; no hands/secondhost/sampler/counter; fixed210x36 actualUIKit placement acrossmeasurement. Validate actualcensus scene mapping, notjusttargetviewport.",
+    "Five intendedphase markers at cumulative times; no extraobservedsemanticmutation withinlongRest. Semantic expectedclear/active/preview/active/preview IDs andmodes at each screenshot; actualbefore<=start andafter>=end records must agree AND bracket stays in the same expectedphase.",
+    "Require all20full CPUbrackets includinglastimage and rawcompletecontiguousrecordsequence; missingbracket is limitation/failure, no waiver to makepass.",
+    "Wholeimage visualjudgment20perarm: clear/red/blue/red/blue. No UIphasecaption changes introduced solelytoforceinvalidation. Hashbuilt/installedcode+package andenvironment for samebinarycomparison."
+  ],
+  "boundedOrder": "After rootgate only: samebinaryshortthenlong, one each. Ifshortfails this is a new baselinefailure, not a restdurationeffect. Ifshortpasses/longfails, oneconfirmationpair canestablish duration-sensitiveisolatedreproduction; no causal sleepclaim. Ifbothpass, longerpreviewalone insufficient here and do not broadenmatrixautomatically. Productionnaturalrest180evidence remains distinct.",
+  "limits": [
+    "Screenshot completion duration may outrun sparseafterrecord despite intendedoffsets; validator must retainactualfailure, notfabricate bracket.",
+    "0.25s Timelinephaseevaluation latency can makeearliestcapture bracketcrossoldstate; retainsamegatesbotharms, notrelaxexpectedcolor.",
+    "Longarm laterprocessage and possibleOSresourcechanges arepartoftimeelapsedfactor; no directAPIevidenceofGPUsleep.",
+    "Unchangedactualdirectrepeat maypass orfail; this proposaldoesnot preemptitsoutcome."
+  ],
+  "sourceHashes": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "24a647a6157cec20c15b986cfaafacfd660e190c42880d5facddea4bbc6d23e8"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "89898763d913d908b35abfce0baf4da365efb37aed84c6823d76f0307c5b8ddd"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-capture.py",
+      "sha256": "1da5061efb3841871dc19600c2d528aa4588b75f5d634291da06a06d3c1daccd"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-standalone.py",
+      "sha256": "de6e386016c3b33beafb165d528202d10df06865c6bc5b2e053b28ea25bb5777"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-resize-surface.py",
+      "sha256": "e30a28d34a6c20e673c0eb1b66a41954277979aa2ce17ed97dd5fd4488e76f4c"
+    }
+  ],
+  "staticValidationExit": 0
+}

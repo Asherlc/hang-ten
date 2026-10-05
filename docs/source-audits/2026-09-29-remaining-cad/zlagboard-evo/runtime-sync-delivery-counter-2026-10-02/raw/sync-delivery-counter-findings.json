@@ -1,0 +1,678 @@
+{
+  "status": "VALID_OBSERVATIONAL_RUN_VISUAL_FAILURE",
+  "binarySHA256": "956e0bc100afabc27b101658d99766ecf49f9739861acd07ee61e50f1c778338",
+  "traceRecords": 165,
+  "traceSHA256": "971954c9adef7692941f9c99981ed61eb50c095b5dcdd96d63b38ee30212ccd3",
+  "visual": {
+    "scope": "All12 whole phase images directly opened",
+    "images": [
+      {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-0-active-plus-0.25.png",
+        "sha256": "d953869139b791c9dafb4f0b0b22effad3dad3c4c040ce0693514c93ce8f8674",
+        "observedBoardColor": "red",
+        "expectedBoardColor": "red",
+        "correct": true,
+        "visibleTimer": "00:07",
+        "bothHandsVisible": true,
+        "handPose": "Palmar/front pair with inward thumbs and four red finger tips; no obvious clipping; exact joint angles not established.",
+        "method": "Direct whole-image view, no image analysis/crop/measurement"
+      },
+      {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-0-active-plus-1.png",
+        "sha256": "eaab2508ff7c4563f2d6be8e9ee53de5e0e5ae50913a77bc02fae360fe1f687a",
+        "observedBoardColor": "red",
+        "expectedBoardColor": "red",
+        "correct": true,
+        "visibleTimer": "00:06",
+        "bothHandsVisible": true,
+        "handPose": "Palmar/front pair with inward thumbs and four red finger tips; no obvious clipping; exact joint angles not established.",
+        "method": "Direct whole-image view, no image analysis/crop/measurement"
+      },
+      {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-0-active-plus-3.png",
+        "sha256": "3cf6319961f2d3a47ff3c85b408ea6b350113ead48fbbf7190a6092b4bfbf584",
+        "observedBoardColor": "red",
+        "expectedBoardColor": "red",
+        "correct": true,
+        "visibleTimer": "00:04",
+        "bothHandsVisible": true,
+        "handPose": "Palmar/front pair with inward thumbs and four red finger tips; no obvious clipping; exact joint angles not established.",
+        "method": "Direct whole-image view, no image analysis/crop/measurement"
+      },
+      {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-0-active-plus-5.png",
+        "sha256": "4ca1142e638464f3ad051ff6f3a51f651d72f5ba4db8a1eef21c968d0097319b",
+        "observedBoardColor": "red",
+        "expectedBoardColor": "red",
+        "correct": true,
+        "visibleTimer": "00:02",
+        "bothHandsVisible": true,
+        "handPose": "Palmar/front pair with inward thumbs and four red finger tips; no obvious clipping; exact joint angles not established.",
+        "method": "Direct whole-image view, no image analysis/crop/measurement"
+      },
+      {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-0.25.png",
+        "sha256": "14e7a4f09ecc7870155e58747f5784d8d99fac8e84d40fcd911c255532b6a523",
+        "observedBoardColor": "red",
+        "expectedBoardColor": "blue",
+        "correct": false,
+        "visibleTimer": "03:00",
+        "bothHandsVisible": true,
+        "handPose": "Palmar/front pair with inward thumbs and four red finger tips; no obvious clipping; exact joint angles not established.",
+        "method": "Direct whole-image view, no image analysis/crop/measurement"
+      },
+      {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-1.png",
+        "sha256": "2bd6044efa35979b49ce1013cd2bdc2c33ee858d8202336e67b95b469ee16e26",
+        "observedBoardColor": "red",
+        "expectedBoardColor": "blue",
+        "correct": false,
+        "visibleTimer": "02:59",
+        "bothHandsVisible": true,
+        "handPose": "Palmar/front pair with inward thumbs and four red finger tips; no obvious clipping; exact joint angles not established.",
+        "method": "Direct whole-image view, no image analysis/crop/measurement"
+      },
+      {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-3.png",
+        "sha256": "f6e35cd1991fb0f167ccb0f2b1b3d6688d4ccb33b823995d715921862ddbc9e2",
+        "observedBoardColor": "red",
+        "expectedBoardColor": "blue",
+        "correct": false,
+        "visibleTimer": "02:57",
+        "bothHandsVisible": true,
+        "handPose": "Palmar/front pair with inward thumbs and four red finger tips; no obvious clipping; exact joint angles not established.",
+        "method": "Direct whole-image view, no image analysis/crop/measurement"
+      },
+      {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-5.png",
+        "sha256": "f6e35cd1991fb0f167ccb0f2b1b3d6688d4ccb33b823995d715921862ddbc9e2",
+        "observedBoardColor": "red",
+        "expectedBoardColor": "blue",
+        "correct": false,
+        "visibleTimer": "02:57",
+        "bothHandsVisible": true,
+        "handPose": "Palmar/front pair with inward thumbs and four red finger tips; no obvious clipping; exact joint angles not established.",
+        "method": "Direct whole-image view, no image analysis/crop/measurement"
+      },
+      {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-0.25.png",
+        "sha256": "12e83c841ee8749afc079d74329a54b2a1ca5a597b6290f1636391521ea0d00b",
+        "observedBoardColor": "red",
+        "expectedBoardColor": "red",
+        "correct": true,
+        "visibleTimer": "00:07",
+        "bothHandsVisible": true,
+        "handPose": "Palmar/front pair with inward thumbs and four red finger tips; no obvious clipping; exact joint angles not established.",
+        "method": "Direct whole-image view, no image analysis/crop/measurement"
+      },
+      {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-1.png",
+        "sha256": "6dd3e7a3bbaabede3952e2e2c82fd55ad6e8756abcc99ea801b9e004ef91244c",
+        "observedBoardColor": "red",
+        "expectedBoardColor": "red",
+        "correct": true,
+        "visibleTimer": "00:06",
+        "bothHandsVisible": true,
+        "handPose": "Palmar/front pair with inward thumbs and four red finger tips; no obvious clipping; exact joint angles not established.",
+        "method": "Direct whole-image view, no image analysis/crop/measurement"
+      },
+      {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-3.png",
+        "sha256": "fd95c2c3d91e5ae7a1a5b5fd422ecec232678aadf17a9df9186e7f84012073cb",
+        "observedBoardColor": "red",
+        "expectedBoardColor": "red",
+        "correct": true,
+        "visibleTimer": "00:04",
+        "bothHandsVisible": true,
+        "handPose": "Palmar/front pair with inward thumbs and four red finger tips; no obvious clipping; exact joint angles not established.",
+        "method": "Direct whole-image view, no image analysis/crop/measurement"
+      },
+      {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-5.png",
+        "sha256": "d8cd7fbe91ba2779911ddf1ff0d99ffa599b30f7b97bfb25eb9cec12f31db02d",
+        "observedBoardColor": "red",
+        "expectedBoardColor": "red",
+        "correct": true,
+        "visibleTimer": "00:02",
+        "bothHandsVisible": true,
+        "handPose": "Palmar/front pair with inward thumbs and four red finger tips; no obvious clipping; exact joint angles not established.",
+        "method": "Direct whole-image view, no image analysis/crop/measurement"
+      }
+    ],
+    "correctBoardCaptures": 8,
+    "incorrectBoardCaptures": 4,
+    "visualResult": "FAIL",
+    "limitations": [
+      "Rest+5 scheduled capture visibly reads02:57; command start delay .011s and duration .453s retained. No cause of label lag inferred.",
+      "NextHang is correct in this run, unlike prior O/P; no consistency or repair claim."
+    ]
+  },
+  "proofs": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/structural-correspondence.json",
+      "sha256": "1eb8876ba20dacbcfe6f80fa4ff8e8737bd2640729a967b70067cfa4dfacfe3f",
+      "checks": {
+        "completeContiguous": true,
+        "captures12": true,
+        "allCPUBrackets": true,
+        "sameScene": true,
+        "naturalFirstHang": true,
+        "naturalRest": true,
+        "freshSession": true,
+        "boundaryAppActive": true,
+        "boundaryWindowActive": true,
+        "boundaryLandscape": true,
+        "lateBoundaryCensus": true,
+        "noAXOrTouch": true
+      },
+      "validatorExitStatus": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/normal-host-frame-validation.json",
+      "sha256": "f4de417a3e399f30b3442c8041889862094c51f3fe50c4a19a5a4168f43e4f78",
+      "checks": {
+        "workoutSceneFromCountdown": true,
+        "hostObserved": true,
+        "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+        "sameHost": true,
+        "sameActualScene": true,
+        "rootCameraActiveSameScene": true,
+        "hostVisible": true,
+        "sampledFramesOnMonotoneOwnEndpointPath": true,
+        "allPostFirstCaptureCensusesFinal": true
+      },
+      "validatorExitStatus": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/train-constructor-validation.json",
+      "sha256": "3c60d01644156668e5894d8ad50392809b4589312198c0357ace161cab9a0da0",
+      "checks": {
+        "completeContiguous": true,
+        "openingBeforeConstructors": true,
+        "uniqueConstructorTokens": true,
+        "exactlyOneWorkoutConstructor": true,
+        "exactlyOneWorkoutMake": true,
+        "allSceneRecordsHaveConstructor": true,
+        "markerGateMatches": true,
+        "realHandsNotSuppressed": true,
+        "observedPredecessorConstruction": true
+      },
+      "validatorExitStatus": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/structural-dependency-ownership.json",
+      "sha256": "f19ee00767be89c10891af1cf7066cead25349c6f46246014315d7e33ba21380",
+      "checks": {
+        "completeStream": true,
+        "exactEnvironmentKeys": true,
+        "exactCommonValues": true,
+        "releaseModeMatches": true,
+        "exactRunID": true,
+        "canonicalModelSHA": true,
+        "exactTwoConstructorsAndMakes": true,
+        "oneBeforeAfterTrainOnly": true,
+        "actionFlagCorrect": true,
+        "retentionModeCorrect": true,
+        "allHostsCurrentValid": true,
+        "tagMatchesPredecessor": true,
+        "oneStableOwnerPerHost": true,
+        "exactInitialReadiness": true,
+        "beforeOwnershipObservedOrOrdinaryNaturalLoss": true,
+        "disappearBeforeFirstHang": true,
+        "postEveryTrialKeepsPredecessorRecord": true,
+        "bothRecordsFromFirstHang": true,
+        "workoutAliveAttachedUnchanged": true,
+        "weakCensusRecordAtEveryPostPoint": true,
+        "weakIdentityForEveryLivingEntity": true,
+        "predecessorDisappearedThroughout": true,
+        "zeroExplicitDetachesEntireStream": true,
+        "zeroIntentionalRetentionEntireStream": true,
+        "noUnexpectedOrdinaryOwnershipTransfer": true,
+        "deadEntitiesHaveNoInventedOwnership": true,
+        "throughTail": true
+      },
+      "validatorExitStatus": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/structural-dependency-navigation.json",
+      "sha256": "e21f2c762eb575b3b2d29326bb0b53664cdda1671133172649a23ea810310c7e",
+      "checks": {
+        "readinessPassedWithinBound": true,
+        "readinessEvidenceInCompleteTrace": true,
+        "readinessBeforeOpenURL": true,
+        "initialTrainConstructorAndMakeBeforeOpenURL": true,
+        "exactlyInitialFalseThenTrue": true,
+        "initialBoardMapBeforeOpenURL": true,
+        "navigationTrueAfterOpenURLBeforeFirstHang": true,
+        "requestedBranchMatchesAction": true,
+        "expectedBoardPlanPresentation": true,
+        "navFlagsCorrect": true,
+        "sameReadyPredecessorOwnershipValid": true,
+        "distinctWorkoutExactlyOne": true
+      },
+      "validatorExitStatus": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/real-hand-lifetime-camera-validation.json",
+      "sha256": "ca4716f3bdc97036fc6ec4219399ef69126051b42d0fa97a335abd4b9a4e502d",
+      "checks": {
+        "completeStream": true,
+        "handSuppressionAbsent": true,
+        "perspectiveExperimentAbsent": true,
+        "instrumentationVersion": true,
+        "exactCountsMatchEventsAtEveryRecord": true,
+        "actualCreatedAndMadePath": true,
+        "allMakeRecordsHaveEarlierActualConstructor": true,
+        "oneConfigurationPerCreatedCamera": true,
+        "allFitsHaveEarlierSameCameraConfiguration": true,
+        "everyActuallyMadePathHasFit": true,
+        "actualCameraComponentsOrthographic": true,
+        "actualClipsUnchanged": true,
+        "finitePositiveOrthographicScale": true,
+        "fitGeometryInsideClips": true,
+        "noUnknownLifecycleOrCameraEvent": true,
+        "completeTailAfterAllCaptures": true
+      },
+      "validatorExitStatus": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/weak-hand-census-validation.json",
+      "sha256": "ca506d1b2067686211aeff813ff97b1e513286fd373a9c2413c3fcef7f447992",
+      "checks": {
+        "completeContiguous": true,
+        "censusGateEnabled": true,
+        "realHandsEnabled": true,
+        "actualConstructorsObserved": true,
+        "allConstructedCamerasConfigured": true,
+        "allSchemaIdentityTombstoneAssociationsValid": true,
+        "all12HaveExistingCensusBrackets": true
+      },
+      "validatorExitStatus": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/sync-delivery-counter-validation.json",
+      "sha256": "411f432cb7d6bc6ef420d83351221d945b29e1f88cf31dd40cfab3268c528430",
+      "checks": {
+        "completeContiguous": true,
+        "openingCountersEnabled": true,
+        "nonemptySnapshots": true,
+        "allScalarIdentityTimeAndBalanceChecks": true,
+        "all12CaptureBrackets": true,
+        "completedScopesObserved": true
+      },
+      "validatorExitStatus": 0
+    }
+  ],
+  "comparison": {
+    "checks": {
+      "newInstrumentedBinary": true,
+      "onlyCounterGateAndRunIDEnvironmentDifference": true,
+      "sameNormalFrameEndpoints": true,
+      "sameResolvedWorkoutInputs": true,
+      "sameRootCameraTransformSets": true,
+      "sameConstructorAndMakeCounts": true
+    },
+    "priorOrthographic": {
+      "endpoints": [
+        [
+          232,
+          182.33333333333331,
+          410,
+          70
+        ],
+        [
+          332,
+          240,
+          210,
+          36
+        ]
+      ],
+      "inputs": [
+        "{\"boardID\": \"zlagboard.evo\", \"ids\": [\"edge-20-left\", \"edge-20-right\"], \"isDisplayOnly\": false, \"mode\": \"active\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}",
+        "{\"boardID\": \"zlagboard.evo\", \"ids\": [\"edge-20-left\", \"edge-20-right\"], \"isDisplayOnly\": false, \"mode\": \"preview\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}",
+        "{\"boardID\": \"zlagboard.evo\", \"ids\": [], \"isDisplayOnly\": false, \"mode\": \"active\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}"
+      ],
+      "values": {
+        "rootTransform": [
+          "[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]"
+        ],
+        "cameraTransform": [
+          "[1, 0, 0, 0, 0, 0.9438583850860596, -0.33035042881965637, 0, 0, 0.33035042881965637, 0.9438583850860596, 0, 0, 0.10610384494066238, 0.3241538405418396, 1]"
+        ],
+        "projection": [
+          "{\"far\": 1000, \"near\": 0.0010000000474974513, \"orthographic\": false, \"perspective\": true, \"verticalFOVDegrees\": 30}"
+        ]
+      },
+      "environment": {
+        "HANGTEN_REVIEW_BOARD_ID": "zlagboard.evo",
+        "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+        "HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC": "1",
+        "HANGTEN_REVIEW_DIAGNOSTIC_RUN": "placid-badger-cad-second-half-weak-hand-census",
+        "HANGTEN_REVIEW_LANDSCAPE": "1",
+        "HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS": "1",
+        "HANGTEN_REVIEW_PREDECESSOR_ATTACHMENT_CENSUS": "1",
+        "HANGTEN_REVIEW_BOARD_HOST_OBSERVATION": "1",
+        "HANGTEN_REVIEW_HAND_LIFETIME_CENSUS": "1",
+        "HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT": "1"
+      },
+      "code": "70707e27453ae150763a302152c04e028564dbe97b41bffbcc91c98642f95c94",
+      "constructorCount": 2,
+      "makeCount": 2,
+      "eventOrder": [
+        "board-scene-constructed:predecessor",
+        "view-make:predecessor",
+        "detach-trial-before:predecessor",
+        "detach-trial-after:predecessor",
+        "view-disappear:predecessor",
+        "board-scene-constructed:workout",
+        "view-make:workout"
+      ]
+    },
+    "newCounter": {
+      "endpoints": [
+        [
+          232,
+          182.33333333333331,
+          410,
+          70
+        ],
+        [
+          332,
+          240,
+          210,
+          36
+        ]
+      ],
+      "inputs": [
+        "{\"boardID\": \"zlagboard.evo\", \"ids\": [\"edge-20-left\", \"edge-20-right\"], \"isDisplayOnly\": false, \"mode\": \"active\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}",
+        "{\"boardID\": \"zlagboard.evo\", \"ids\": [\"edge-20-left\", \"edge-20-right\"], \"isDisplayOnly\": false, \"mode\": \"preview\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}",
+        "{\"boardID\": \"zlagboard.evo\", \"ids\": [], \"isDisplayOnly\": false, \"mode\": \"active\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}"
+      ],
+      "values": {
+        "rootTransform": [
+          "[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]"
+        ],
+        "cameraTransform": [
+          "[1, 0, 0, 0, 0, 0.9438583850860596, -0.33035042881965637, 0, 0, 0.33035042881965637, 0.9438583850860596, 0, 0, 0.10610384494066238, 0.3241538405418396, 1]"
+        ],
+        "projection": [
+          "{\"far\": 1000, \"near\": 0.0010000000474974513, \"orthographic\": false, \"perspective\": true, \"verticalFOVDegrees\": 30}"
+        ]
+      },
+      "environment": {
+        "HANGTEN_REVIEW_BOARD_ID": "zlagboard.evo",
+        "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+        "HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC": "1",
+        "HANGTEN_REVIEW_DIAGNOSTIC_RUN": "placid-badger-cad-second-half-sync-delivery-counter",
+        "HANGTEN_REVIEW_LANDSCAPE": "1",
+        "HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS": "1",
+        "HANGTEN_REVIEW_PREDECESSOR_ATTACHMENT_CENSUS": "1",
+        "HANGTEN_REVIEW_BOARD_HOST_OBSERVATION": "1",
+        "HANGTEN_REVIEW_HAND_LIFETIME_CENSUS": "1",
+        "HANGTEN_REVIEW_SYNC_DELIVERY_COUNTERS": "1",
+        "HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT": "1"
+      },
+      "code": "956e0bc100afabc27b101658d99766ecf49f9739861acd07ee61e50f1c778338",
+      "constructorCount": 2,
+      "makeCount": 2,
+      "eventOrder": [
+        "board-scene-constructed:predecessor",
+        "view-make:predecessor",
+        "detach-trial-before:predecessor",
+        "detach-trial-after:predecessor",
+        "view-disappear:predecessor",
+        "board-scene-constructed:workout",
+        "view-make:workout"
+      ]
+    },
+    "eventOrderingEqual": true,
+    "limitations": [
+      "Entity/actual scene IDs naturally differ between fresh processes; compare role and recorded membership, not pointer equality across runs.",
+      "Frame endpoints and sampled path comparison do not assert identical animation timing.",
+      "Lifecycle event ordering retained; init completion is not loader entry or GPU creation."
+    ]
+  },
+  "actualHandCounts": {
+    "single.constructor-entry": 0,
+    "single.make-entry": 0,
+    "pair.constructor-entry": 2,
+    "pair.make-entry": 2
+  },
+  "actualCameraConfiguration": "Every constructed hand camera orthographic only; source transforms/clips unchanged, recorded fits valid.",
+  "lifetimes": {
+    "lifetimes": [
+      {
+        "token": "A3785AB5-C70B-4DF4-A76B-6EBF061A30FA",
+        "constructorSequence": 14,
+        "firstObservedBothDeadSequence": 21,
+        "lastObservation": {
+          "sequence": 164,
+          "epoch": 1790997231.04815,
+          "observation": {
+            "camera": {
+              "alive": false
+            },
+            "configuredObserved": true,
+            "constructedCameraID": "ObjectIdentifier(0x000000014771fc00)",
+            "constructedRootID": "ObjectIdentifier(0x000000014771fba0)",
+            "handLifetimeToken": "A3785AB5-C70B-4DF4-A76B-6EBF061A30FA",
+            "kind": "pair",
+            "registrationIssue": "nil",
+            "root": {
+              "alive": false
+            },
+            "viewObservations": [
+              {
+                "allAssociatedLifetimeTokens": [
+                  "A3785AB5-C70B-4DF4-A76B-6EBF061A30FA"
+                ],
+                "lastSwiftUIEvent": "disappeared",
+                "lastSwiftUIEventSequence": 19,
+                "lastSwiftUIEventUptime": 80109.1007025,
+                "viewToken": "9946B500-1359-4B49-AEB3-12E9EC18F07A"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "token": "F6D2F364-1150-4BDF-BD92-2BF9D96734D5",
+        "constructorSequence": 30,
+        "firstObservedBothDeadSequence": null,
+        "lastObservation": {
+          "sequence": 164,
+          "epoch": 1790997231.04815,
+          "observation": {
+            "camera": {
+              "alive": true,
+              "enabled": true,
+              "entityID": "ObjectIdentifier(0x0000000111ff5220)",
+              "isActive": true,
+              "orthographicComponent": true,
+              "parentEntityID": "ObjectIdentifier(0x0000000111ff5620)",
+              "perspectiveComponent": false,
+              "realitySceneID": "ObjectIdentifier(0x0000000112149c00)"
+            },
+            "configuredObserved": true,
+            "constructedCameraID": "ObjectIdentifier(0x0000000111ff5220)",
+            "constructedRootID": "ObjectIdentifier(0x0000000111ff5620)",
+            "handLifetimeToken": "F6D2F364-1150-4BDF-BD92-2BF9D96734D5",
+            "kind": "pair",
+            "registrationIssue": "nil",
+            "root": {
+              "alive": true,
+              "enabled": true,
+              "entityID": "ObjectIdentifier(0x0000000111ff5620)",
+              "isActive": true,
+              "orthographicComponent": false,
+              "parentEntityID": "ObjectIdentifier(0x0000000148b80f00)",
+              "perspectiveComponent": false,
+              "realitySceneID": "ObjectIdentifier(0x0000000112149c00)"
+            },
+            "viewObservations": [
+              {
+                "allAssociatedLifetimeTokens": [
+                  "F6D2F364-1150-4BDF-BD92-2BF9D96734D5"
+                ],
+                "lastSwiftUIEvent": "appeared",
+                "lastSwiftUIEventSequence": 29,
+                "lastSwiftUIEventUptime": 80111.41393895834,
+                "viewToken": "D286D9D8-B2D9-4BBC-A6E5-999FFD23E078"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "brackets": [
+      {
+        "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-0-active-plus-0.25.png",
+        "beforeSequence": 34,
+        "afterSequence": 35,
+        "beforeEpoch": 1790997036.951205,
+        "afterEpoch": 1790997037.954677,
+        "spanSeconds": 1.003472089767456
+      },
+      {
+        "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-0-active-plus-1.png",
+        "beforeSequence": 34,
+        "afterSequence": 36,
+        "beforeEpoch": 1790997036.951205,
+        "afterEpoch": 1790997039.0213609,
+        "spanSeconds": 2.0701558589935303
+      },
+      {
+        "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-0-active-plus-3.png",
+        "beforeSequence": 36,
+        "afterSequence": 38,
+        "beforeEpoch": 1790997039.0213609,
+        "afterEpoch": 1790997041.066139,
+        "spanSeconds": 2.0447781085968018
+      },
+      {
+        "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-0-active-plus-5.png",
+        "beforeSequence": 38,
+        "afterSequence": 40,
+        "beforeEpoch": 1790997041.066139,
+        "afterEpoch": 1790997043.137412,
+        "spanSeconds": 2.0712730884552
+      },
+      {
+        "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-0.25.png",
+        "beforeSequence": 43,
+        "afterSequence": 46,
+        "beforeEpoch": 1790997043.74586,
+        "afterEpoch": 1790997045.234208,
+        "spanSeconds": 1.4883480072021484
+      },
+      {
+        "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-1.png",
+        "beforeSequence": 45,
+        "afterSequence": 47,
+        "beforeEpoch": 1790997044.199547,
+        "afterEpoch": 1790997046.286694,
+        "spanSeconds": 2.0871469974517822
+      },
+      {
+        "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-3.png",
+        "beforeSequence": 47,
+        "afterSequence": 48,
+        "beforeEpoch": 1790997046.286694,
+        "afterEpoch": 1790997048.292077,
+        "spanSeconds": 2.005383014678955
+      },
+      {
+        "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-1-preview-plus-5.png",
+        "beforeSequence": 48,
+        "afterSequence": 49,
+        "beforeEpoch": 1790997048.292077,
+        "afterEpoch": 1790997049.301124,
+        "spanSeconds": 1.009047031402588
+      },
+      {
+        "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-0.25.png",
+        "beforeSequence": 160,
+        "afterSequence": 162,
+        "beforeEpoch": 1790997224.012631,
+        "afterEpoch": 1790997231.0404239,
+        "spanSeconds": 7.027792930603027
+      },
+      {
+        "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-1.png",
+        "beforeSequence": 160,
+        "afterSequence": 162,
+        "beforeEpoch": 1790997224.012631,
+        "afterEpoch": 1790997231.0404239,
+        "spanSeconds": 7.027792930603027
+      },
+      {
+        "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-3.png",
+        "beforeSequence": 160,
+        "afterSequence": 162,
+        "beforeEpoch": 1790997224.012631,
+        "afterEpoch": 1790997231.0404239,
+        "spanSeconds": 7.027792930603027
+      },
+      {
+        "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/phase-2-active-plus-5.png",
+        "beforeSequence": 160,
+        "afterSequence": 162,
+        "beforeEpoch": 1790997224.012631,
+        "afterEpoch": 1790997231.0404239,
+        "spanSeconds": 7.027792930603027
+      }
+    ],
+    "limitation": "Weak point observations only. Existing board checkpoints are not a complete hand-only lifecycle history or presenting-host/GPU proof."
+  },
+  "phaseCounterSummaryPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-phase-summary.json",
+  "phaseCounterSummarySHA256": "4405f7bedb38cdd9f82285d2623e5ae8392b4bc3ab7ea976a5afbaf74e6289e4",
+  "counterFindings": [
+    "All scene/view counts and first/latest times monotone with exact in-flight depth and zero scope mismatches.",
+    "At first Hang/Rest/nextHang mutations, applySync entries are4/5/6 and RealityView update entries3/4/5; each semantic highlight pass assigns19clear and2selected materials.",
+    "Rest seq42 to157 spans142.103672s with zero additional sync entries, camera assignments, highlight requests or material assignments; only initial in-flight sync completes.",
+    "NextHang fourimages are redcorrect in this run; Rest fourimages are redwrong. Variance from prior O/P is retained, no repair inference."
+  ],
+  "parity27Passed": true,
+  "priorFrozenEvidence": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-frozen-manifest.json",
+      "sha256": "69e302ed00b3b09759799547a95a316b8fc053b616cc964e99b4a77d332b7cb9",
+      "fileCount": 137,
+      "allExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-frozen-manifest.json",
+      "sha256": "c28f39a336000fb76156af64e5d5af9fef7c196ccb004b93af645abaa984a113",
+      "fileCount": 134,
+      "allExact": true
+    }
+  ],
+  "appTermination": {
+    "pid": 17780,
+    "terminateCommand": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "terminate",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training"
+    ],
+    "terminateExitStatus": 0,
+    "verificationExitStatus": 1,
+    "verificationStdout": "",
+    "verificationStderr": "",
+    "absent": true,
+    "epoch": 1790997296.885689
+  },
+  "limitations": [
+    "Scalar counters measure CPU calls/assignments, including identical values; not changed values, renderer commits or GPU work.",
+    "Point lifetime/app/host/counter observations do not establish continuous presenting state; late nextHang brackets span7.027793s.",
+    "Rest+5 screenshot visibly reads02:57 while command started .011s after target and lasted .453s; cause not established.",
+    "New instrumentation/build may alter timing. This single run preserves an observed rest-color failure, not all historical phase failures.",
+    "Unknown DeviceHub/frontend context remains unmodified and unproven; no physical-device claim."
+  ],
+  "productionFix": false,
+  "humanAcceptance": false,
+  "sourceRuntimeDDHandbackToRoot": true
+}

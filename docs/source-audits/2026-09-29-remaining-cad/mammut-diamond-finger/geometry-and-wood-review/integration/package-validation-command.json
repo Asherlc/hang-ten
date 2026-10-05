@@ -1,0 +1,13 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "scripts/hangboard-packages.sh",
+    "validate",
+    "--root",
+    "Hangboards",
+    "--final-inventory"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 2.1994535829871893
+}

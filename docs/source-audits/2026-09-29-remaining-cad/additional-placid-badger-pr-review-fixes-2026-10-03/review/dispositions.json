@@ -1,0 +1,106 @@
+[
+  {
+    "index": 0,
+    "threadID": "PRRT_kwDOTqZRe86ouX8c",
+    "disposition": "unsupported",
+    "explanation": "DUAL descriptor equals the actual USDZ/LFS object; the requested replacement hashes LFS pointer text.",
+    "evidence": "review/dual-lfs-receipt.json",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  },
+  {
+    "index": 1,
+    "threadID": "PRRT_kwDOTqZRe86ouX8l",
+    "disposition": "fixed",
+    "explanation": "Both workout UI regressions now assert viewport intersection width and height above 30 points in Hang and Rest.",
+    "evidence": "validation/green-viewport-ui-summary.json",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  },
+  {
+    "index": 2,
+    "threadID": "PRRT_kwDOTqZRe86ouX8n",
+    "disposition": "fixed",
+    "explanation": "Empty prescribed-contact selections cannot request a configured presentation; legacy and modern nil-target cases failed before the fix and pass after it.",
+    "evidence": "validation/red-selection-summary.json; validation/green-affected-unit-summary.json",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  },
+  {
+    "index": 3,
+    "threadID": "PRRT_kwDOTqZRe86ouX8p",
+    "disposition": "fixed",
+    "explanation": "Cord documentation now preserves evidenced connected-channel or nativeRoutes topology and never requires inventing a hidden connection.",
+    "evidence": "docs/HANGBOARD_CORD_AUTHORING.md; AGENTS.md; both local skills; docs/3D_SUSPENSION_AND_ODR.md",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  },
+  {
+    "index": 4,
+    "threadID": "PRRT_kwDOTqZRe86ouX8q",
+    "disposition": "fixed",
+    "explanation": "Configured-depth toggling compares the resolved contact's effective depth rather than the first position sharing a presentation.",
+    "evidence": "validation/red-selection-summary.json; validation/green-affected-unit-summary.json",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  },
+  {
+    "index": 5,
+    "threadID": "PRRT_kwDOTqZRe86ouX8s",
+    "disposition": "fixed",
+    "explanation": "Drawable tests observe the layer property within the original two-second window; ambiguity uses an inverted expectation.",
+    "evidence": "validation/green-affected-unit-summary.json",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  },
+  {
+    "index": 6,
+    "threadID": "PRRT_kwDOTqZRe86ouX8u",
+    "disposition": "fixed",
+    "explanation": "Native CAD route comparison asserts equal point counts before zip.",
+    "evidence": "validation/green-affected-unit-summary.json",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  },
+  {
+    "index": 7,
+    "threadID": "PRRT_kwDOTqZRe86ouYTR",
+    "disposition": "unsupported",
+    "explanation": "Normal workout calls omit the optional tap callback, preserving boardModel.3d; the actual strengthened Plateau test passes.",
+    "evidence": "review/ui-unit-review.md; validation/green-viewport-ui-summary.json",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  },
+  {
+    "index": 8,
+    "threadID": "PRRT_kwDOTqZRe86ouYTS",
+    "disposition": "unsupported",
+    "explanation": "The same normal workout path preserves boardModel.3d for Mini; its actual strengthened portrait test passes.",
+    "evidence": "review/ui-unit-review.md; validation/green-viewport-ui-summary.json",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  },
+  {
+    "index": 9,
+    "threadID": "PRRT_kwDOTqZRe86ouYTU",
+    "disposition": "unsupported",
+    "explanation": "All 45 preexisting tracked xcresult ZIPs are LFS pointers whose local objects match oid and size; the ignore pattern does not apply to them.",
+    "evidence": "review/xcresult-lfs-receipts.json",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  },
+  {
+    "index": 10,
+    "threadID": "PRRT_kwDOTqZRe86ouYTV",
+    "disposition": "unsupported",
+    "explanation": "Current Nature wood-contact preservation binds native bearing normals; proposed reverse-6 rotation swaps make both rails bear downward. Model-relative camera rotates with the board.",
+    "evidence": "review/nature-camera-and-bearing-review.json; validation/pose-camera-junit.xml",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  },
+  {
+    "index": 11,
+    "threadID": "PRRT_kwDOTqZRe86ouYTY",
+    "disposition": "unsupported",
+    "explanation": "Reusable-pair ordering computes P * B * c, the same centered base-then-canonical transform used by rendering.",
+    "evidence": "review/selection-review.md",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  },
+  {
+    "index": 12,
+    "threadID": "PRRT_kwDOTqZRe86ouYTa",
+    "disposition": "unsupported",
+    "explanation": "BoardMapView derives selectedPositionID from current local content.presentation.id on every evaluation; the review describes BoardDetailMapView's different binding API.",
+    "evidence": "review/selection-review.md",
+    "resolutionRequiresCompletedChangeOrSubstantiveEvidenceReply": true
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "changedPackageFiles": [
+    "Hangboards/captain-fingerfood-dual/suspension.json"
+  ],
+  "changedLockedFiles": [
+    "Hangboards/captain-fingerfood-dual/suspension.json"
+  ],
+  "sha256Manifest": "a3349681809872a6b65205b4da7cb38beaa3b1ed7b246518d4d225bc87702c11",
+  "beforeSuspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+  "afterSuspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+  "preservedPackageFiles": 205,
+  "permittedChanges": "Authoring tightening selector plus native-generated routes and translation Y only"
+}

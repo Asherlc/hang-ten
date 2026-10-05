@@ -1,0 +1,42 @@
+{
+  "checks": {
+    "actualOrbit": true,
+    "physicalContactResetCanonical": true,
+    "physicalContactResetChanged": true,
+    "leftCordSelectionUnchanged": true,
+    "leftCordContactFramesUnchanged": true,
+    "rightCordSelectionUnchanged": true,
+    "rightCordContactFramesUnchanged": true,
+    "noCordAccessibilityElement": true,
+    "physicalEdge15Selected": true,
+    "physicalLeftMonoSelected": true,
+    "physicalRightMonoSelected": true
+  },
+  "observedScreenPoints": {
+    "orbited25": [
+      200,
+      360
+    ],
+    "leftCord": [
+      140,
+      300
+    ],
+    "rightCord": [
+      262,
+      300
+    ],
+    "edge15": [
+      200,
+      391
+    ],
+    "leftMonoLowerSurface": [
+      100,
+      395
+    ],
+    "rightMonoLowerSurface": [
+      302,
+      395
+    ]
+  },
+  "limits": "Screen points target visible app UI only, not manufacturer geometry measurement. No public clear-selection/reset button exists; actual contact tap restores canonical pose. Cord taps leave selection and frames unchanged and no cord AX element is present."
+}

@@ -1,0 +1,36 @@
+{
+  "scope": "Read-only source portion; helper review pending. No source changes, typecheck, build or runtime operations.",
+  "sourceReview": "PASS",
+  "patchSHA256": "4a822157f01763d2ca6975776f02eef55df884afbf9ab998580bbd5403a298cc",
+  "files": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221",
+      "matchesFrozenSnapshot": true
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "008de5d3854b809fb452b9455d3d1d018da8649d48ece7d1d8a7b14120372eb5",
+      "matchesFrozenSnapshot": true
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+      "matchesFrozenSnapshot": true
+    }
+  ],
+  "findings": [
+    "Single immutable phaseDurations table feeds phaseStartOffsets, derivedPhase thresholds, scriptstart and total+2 tail. Short[8,7,8,7,8],long[8,7,180,7,8] preserve allotherdurations.",
+    "New timingprofiles accepted onlydriverE+210x36; standalone counterflag rejected. ExistingE fixedcaption/BoardMap/Timeline/semantic observer and singlehost code unchanged.",
+    "scriptEpoch setonce beforemeasurement. E script neverwritesselection duringphases; same sparseoffsetarrays bothprofiles, no continuous sampler/timer/GeometryReader callback introduced.",
+    "Every new snapshot offset<7; captureoffsets .25/1/3/5 withinallphases. Tail follows finalphaseend+2 and deferred finishStandaloneObservation remains.",
+    "Schedule record receives exactsame arrays fromharness, emits duration/start/total/tail/snapshot/capture fields; legacy scalarphaseSeconds onlyuniform. Onecallsite updated.",
+    "Legacy profile keeps all8seconddurations, oldcaptureoffsets, original41 regular+initialextrasnapshot sequence, tail42 name/time. Existing non-timingdriver behavior remains.",
+    "Changes are within DEBUG harness/recorder, no package/production model/geometry/material/hand/render changes."
+  ],
+  "blockingIssues": [],
+  "remainingGates": [
+    "Helper must scrubflags andvalidate arrays/20actualCPUbrackets/completion afterfinalscreenshot.",
+    "Source staticpass is not compile/runtimepass; earliest Timeline boundaryCPUbracket may still legitimately fail and must remain visible."
+  ]
+}

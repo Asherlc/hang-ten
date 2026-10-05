@@ -1,0 +1,37 @@
+{
+  "asset": ".context/placid-badger/nature-stone-mini-review10/completion/assets-repro/primary.usdz",
+  "assetBytes": 622770,
+  "assetSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+  "board": ".context/placid-badger/nature-stone-mini-review10/completion/native-author/nature-stone-hanger-mini.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "granite-edge-15",
+    "pinch-60",
+    "pull-up-jug",
+    "wood-edge-15-incut"
+  ],
+  "descriptor": ".context/placid-badger/nature-stone-mini-review10/completion/assets-repro/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "granite-edge-15": 15.0,
+    "pinch-60": 60.0,
+    "pull-up-jug": 0.0,
+    "wood-edge-15-incut": 15.0
+  },
+  "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+  "nodes": [
+    "nature_body",
+    "nature_jug",
+    "nature_pinch",
+    "nature_stone",
+    "nature_wood"
+  ],
+  "package": "nature-stone-hanger-mini",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": ".context/placid-badger/nature-stone-mini-review10/completion/native-author/nature-stone-hanger-mini.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 28842
+}

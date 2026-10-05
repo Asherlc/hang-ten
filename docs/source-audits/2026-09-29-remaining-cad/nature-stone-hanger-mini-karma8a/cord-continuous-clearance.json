@@ -1,0 +1,117 @@
+{
+  "package": "nature-stone-hanger-mini-karma8a",
+  "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+  "sidecarSHA256": "8f3b0cefd2f926409e8311d7a5c333d0ef17272c062233c32d7f695fccc6717e",
+  "algorithm": "Tools/HangboardCAD/native_cord_routes.py",
+  "algorithmSHA256": "98f73d58191ef3f99f612222723c7d1d0e59b886de4ad5a833448d788c2f3de7",
+  "method": "adaptive signed-distance 1-Lipschitz lower bound on each complete rounded runtime polyline",
+  "numericalToleranceMM": 0.01,
+  "runtimeSupportReconstructed": true,
+  "presentations": {
+    "primary": {
+      "modelSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46",
+      "collisionFixtureSHA256": "99a9e550ecb31abf275d5a170eadf41158f0686b7d7b49efb03b49d572cb6d24",
+      "poses": {
+        "granite-front": {
+          "strands": {
+            "left-lead": {
+              "certifiedMinimumClearanceMM": 0.9935418935706564,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 199.9999992118675,
+              "restLengthMM": 200.0,
+              "vertexCountWithSupport": 4
+            },
+            "left-cross-return": {
+              "certifiedMinimumClearanceMM": 1.2303762458756367,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 15.0,
+              "restLengthMM": 40.0,
+              "vertexCountWithSupport": 3
+            },
+            "right-lead": {
+              "certifiedMinimumClearanceMM": 0.9930191673023291,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 199.99989743834615,
+              "restLengthMM": 200.0,
+              "vertexCountWithSupport": 4
+            },
+            "right-cross-return": {
+              "certifiedMinimumClearanceMM": 1.2303762458756324,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 15.0,
+              "restLengthMM": 40.0,
+              "vertexCountWithSupport": 3
+            }
+          }
+        },
+        "wood-inverted": {
+          "strands": {
+            "left-lead": {
+              "certifiedMinimumClearanceMM": 0.9935418935706352,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 199.99996777237232,
+              "restLengthMM": 200.0,
+              "vertexCountWithSupport": 4
+            },
+            "left-cross-return": {
+              "certifiedMinimumClearanceMM": 1.2303762458756367,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 15.0,
+              "restLengthMM": 40.0,
+              "vertexCountWithSupport": 3
+            },
+            "right-lead": {
+              "certifiedMinimumClearanceMM": 0.9900321847833009,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 199.99999892417,
+              "restLengthMM": 200.0,
+              "vertexCountWithSupport": 4
+            },
+            "right-cross-return": {
+              "certifiedMinimumClearanceMM": 1.2303762458756324,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 15.0,
+              "restLengthMM": 40.0,
+              "vertexCountWithSupport": 3
+            }
+          }
+        },
+        "pinch-side": {
+          "strands": {
+            "left-lead": {
+              "certifiedMinimumClearanceMM": 0.9935418935706564,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 199.9999992118675,
+              "restLengthMM": 200.0,
+              "vertexCountWithSupport": 4
+            },
+            "left-cross-return": {
+              "certifiedMinimumClearanceMM": 1.2303762458756367,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 15.0,
+              "restLengthMM": 40.0,
+              "vertexCountWithSupport": 3
+            },
+            "right-lead": {
+              "certifiedMinimumClearanceMM": 0.9930191673023291,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 199.99989743834615,
+              "restLengthMM": 200.0,
+              "vertexCountWithSupport": 4
+            },
+            "right-cross-return": {
+              "certifiedMinimumClearanceMM": 1.2303762458756324,
+              "radiusMM": 1.0,
+              "runtimeRouteLengthMM": 15.0,
+              "restLengthMM": 40.0,
+              "vertexCountWithSupport": 3
+            }
+          }
+        }
+      }
+    }
+  },
+  "minimumCertifiedClearanceMM": 0.9900321847833009,
+  "certifiedSidecarSHA256": "d85666f769af3a17cbc05f44e796604f40b1601b5fce7c886ce8016dece245fe",
+  "cameraOnlyRebindingProof": "camera-correction-proof.json"
+}

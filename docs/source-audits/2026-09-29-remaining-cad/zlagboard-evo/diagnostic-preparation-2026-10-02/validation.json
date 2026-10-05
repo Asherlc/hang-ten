@@ -1,0 +1,19 @@
+{
+  "boardID": "zlagboard.evo",
+  "nativeGeometryPreviouslyAccepted": true,
+  "nativeAcceptanceRecord": "../human-review.json",
+  "appWorkflowPassed": false,
+  "highlightDefectResolved": false,
+  "diagnosticPatchSHA256": "401b1084a5f8a072a5ca00f17e5f570adf3725d5140ce3875d28d2fdd76c59f6",
+  "patchApplyCheckPassed": true,
+  "swiftDebugParsePassed": true,
+  "patchApplied": false,
+  "patchTypechecked": false,
+  "patchRuntimeTested": false,
+  "appSourceChanged": false,
+  "geometryChanged": false,
+  "sharedReservationReleased": true,
+  "priorProofsRewritten": false,
+  "newHumanAcceptance": false,
+  "blockedBy": "Isolated Simulator startup; see Pro runtime-uninterrupted-2026-10-02 appendix"
+}

@@ -1,0 +1,18 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "ps",
+    "-p",
+    "1197",
+    "-o",
+    "pid=,args="
+  ],
+  "ownedLaunchPID": 1197,
+  "exitStatus": 1,
+  "stdout": "",
+  "stderr": "",
+  "absent": true,
+  "epoch": 1790990551.477579,
+  "scope": "Exact diagnostic app PID only; device/DD/controller stay live."
+}

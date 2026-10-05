@@ -1,5 +1,84 @@
 import XCTest
 
+final class CustomRoutineEditorUITests: XCTestCase {
+    func testFirstInvalidSaveRevealsValidationFromSteps() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = ["HANGTEN_REVIEW_PLANS": "1", "HANGTEN_REVIEW_PORTRAIT": "1"]
+        defer { app.terminate() }
+        app.launch()
+        let create = app.buttons["customRoutine.create"]
+        XCTAssertTrue(create.waitForExistence(timeout: 30))
+        create.tap()
+        let mode = app.segmentedControls["customRoutine.targetMode"]
+        XCTAssertTrue(mode.waitForExistence(timeout: 10))
+        mode.buttons["Generic"].tap()
+        app.buttons["Add step"].tap()
+        let step = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "New step")).firstMatch
+        XCTAssertTrue(step.waitForExistence(timeout: 5))
+        step.tap()
+        XCTAssertTrue(app.textFields["Step title"].waitForExistence(timeout: 5))
+        let editor = app.collectionViews.firstMatch
+        XCTAssertTrue(editor.waitForExistence(timeout: 5))
+        for _ in 0..<3 { editor.swipeUp() }
+        XCTAssertFalse(app.textFields["customRoutine.name"].isHittable)
+        let beforeSave = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        beforeSave.name = "Editor scrolled into steps before first Save"
+        beforeSave.lifetime = .keepAlways
+        add(beforeSave)
+
+        app.buttons["customRoutine.save"].tap()
+        let issues = app.staticTexts["customRoutine.validationErrors"]
+        let visible = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"), object: issues
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [visible], timeout: 5), .completed,
+                       "The first invalid Save must reveal feedback above the scrolled steps")
+        XCTAssertTrue(issues.label.contains("A routine name is required."))
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "First failed Save reveals validation from scrolled steps"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    func testValidationRemainsVisibleWhileCorrectingRoutine() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchEnvironment = ["HANGTEN_REVIEW_PLANS": "1", "HANGTEN_REVIEW_PORTRAIT": "1"]
+        defer { app.terminate() }
+        app.launch()
+        let create = app.buttons["customRoutine.create"]
+        XCTAssertTrue(create.waitForExistence(timeout: 30))
+        create.tap()
+        let save = app.buttons["customRoutine.save"]
+        XCTAssertTrue(save.waitForExistence(timeout: 10))
+        save.tap()
+        if app.alerts.firstMatch.waitForExistence(timeout: 2) {
+            app.alerts.firstMatch.buttons["OK"].tap()
+        }
+        let issues = app.staticTexts["customRoutine.validationErrors"]
+        XCTAssertTrue(issues.waitForExistence(timeout: 5), "Invalid fields need feedback after any alert closes")
+        XCTAssertTrue(issues.label.contains("A routine name is required."))
+        XCTAssertTrue(issues.label.contains("Add at least one step."))
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "Routine validation persists in editor"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+
+        let name = app.textFields["customRoutine.name"]
+        XCTAssertTrue(name.isHittable)
+        name.tap()
+        name.typeText("My routine")
+        let updated = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label CONTAINS %@ AND NOT label CONTAINS %@",
+                                   "Add at least one step.", "A routine name is required."),
+            object: issues
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [updated], timeout: 5), .completed)
+        XCTAssertTrue(save.exists)
+    }
+}
+
 final class WorkoutPaywallUITests: XCTestCase {
     func testThirdWorkoutLaunchShowsPaywallInsteadOfSession() {
         let app = lockedPlanApp()
@@ -8,7 +87,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         app.buttons["plan.startRoutine"].tap()
 
         XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
         XCTAssertTrue(app.buttons["paywall.restore"].exists)
         XCTAssertTrue(app.staticTexts["Unlock Hang Ten"].exists)
         XCTAssertTrue(app.staticTexts[
@@ -26,7 +105,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         app.buttons["paywall.close"].tap()
 
         XCTAssertTrue(app.buttons["plan.startRoutine"].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testVerifiedFakePurchaseContinuesIntoSession() {
@@ -43,8 +122,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertEqual(purchase.label, "Unlock for $2.99")
         purchase.tap()
 
-        XCTAssertTrue(app.navigationBars["Session"].waitForExistence(timeout: 5))
-        XCTAssertFalse(app.otherElements["paywall.lifetimeUnlock"].exists)
+        assertWorkoutOpened(in: app)
     }
 
     func testVerifiedFakeRestoreContinuesIntoSession() {
@@ -58,8 +136,7 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         app.buttons["paywall.restore"].tap()
 
-        XCTAssertTrue(app.navigationBars["Session"].waitForExistence(timeout: 5))
-        XCTAssertFalse(app.otherElements["paywall.lifetimeUnlock"].exists)
+        assertWorkoutOpened(in: app)
     }
 
     func testVerifiedPurchaseCarriesScaleSnapshotIntoSensorPreparation() {
@@ -67,6 +144,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_VERIFIED_PURCHASE"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_SENSOR_DISCONNECTED"] = "1"
         app.launch()
 
         if app.navigationBars["Settings"].waitForExistence(timeout: 5) {
@@ -75,6 +153,18 @@ final class WorkoutPaywallUITests: XCTestCase {
         let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
         XCTAssertTrue(source.waitForExistence(timeout: 10))
         source.buttons["Scale"].tap()
+        let connect = app.buttons["plan.initialWeight.connect"]
+        XCTAssertTrue(connect.waitForExistence(timeout: 10))
+        connect.tap()
+        let scaleStatus = app.staticTexts["plan.initialWeight.scaleStatus"]
+        let connected = XCTNSPredicateExpectation(
+            predicate: NSPredicate(
+                format: "label == %@",
+                "Your supported scale is connected and ready."
+            ),
+            object: scaleStatus
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [connected], timeout: 10), .completed)
         app.buttons["plan.startRoutine"].tap()
         XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
 
@@ -88,15 +178,35 @@ final class WorkoutPaywallUITests: XCTestCase {
     }
 
     func testVerifiedPurchaseCarriesManualWeightSnapshotIntoSummary() {
+        continueAfterFailure = false
         let app = lockedPlanApp()
         app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_VERIFIED_PURCHASE"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "999"
+        // Match the weight-setup fixture; this case exercises the weight snapshot.
+        app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "tension.grindstone-original"
+        app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "research.max-hangs"
         app.launch()
 
+        XCTAssertTrue(app.staticTexts["Max Hangs"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Grindstone"].exists,
+                      "The weight-flow fixture must resolve to the requested board.")
         let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
         XCTAssertTrue(source.waitForExistence(timeout: 10))
         source.buttons["Manual"].tap()
+
+        // Set the switch before focusing the decimal-pad field. A keyboard-active
+        // tap can leave the switch off even when XCTest reports it as hittable.
+        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
+        XCTAssertEqual(bodyweight.value as? String, "0")
+        bodyweight.tap()
+        let bodyweightEnabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "1"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
+                       "Add bodyweight must be on before purchasing")
 
         let field = app.textFields["workout.initialWeight.manualField"]
         XCTAssertTrue(field.waitForExistence(timeout: 10))
@@ -107,15 +217,8 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [fieldHittable], timeout: 10), .completed)
         let unit = app.staticTexts["lb"].exists ? "lb" : "kg"
         let keyboard = app.keyboards.firstMatch
-        var keyboardPresented = false
-        for _ in 0..<3 {
-            field.tap()
-            if keyboard.waitForExistence(timeout: 2) {
-                keyboardPresented = true
-                break
-            }
-        }
-        XCTAssertTrue(keyboardPresented, "Tapping the manual weight field must present its keyboard")
+        field.tap()
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5), "Tapping the manual weight field must present its keyboard")
         field.typeText(
             String(
                 repeating: XCUIKeyboardKey.delete.rawValue,
@@ -123,21 +226,45 @@ final class WorkoutPaywallUITests: XCTestCase {
             )
         )
         field.typeText("12.5")
-
-        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
         XCTAssertEqual(bodyweight.value as? String, "1")
 
         let start = app.buttons["plan.startRoutine"]
         XCTAssertTrue(start.waitForExistence(timeout: 2))
-        var remainingScrollAttempts = 4
-        while !start.isHittable, remainingScrollAttempts > 0 {
-            app.swipeUp()
+        // A full-screen swipe with the keyboard open can move Start behind
+        // the navigation bar while XCTest still reports it as hittable.
+        let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let navigationBar = app.navigationBars["Plan"]
+        func contentBottom() -> CGFloat {
+            let viewport = screen.frame
+            guard keyboard.exists else { return viewport.maxY }
+            let frame = keyboard.frame
+            guard frame.minY.isFinite, frame.width.isFinite, frame.height.isFinite,
+                  frame.width > 0, frame.height > 0,
+                  frame.minY > navigationBar.frame.maxY,
+                  frame.intersects(viewport) else { return viewport.maxY }
+            return min(frame.minY, viewport.maxY)
+        }
+        func isStartVisible() -> Bool {
+            let frame = start.frame
+            return start.isHittable
+                && frame.minY >= navigationBar.frame.maxY
+                && frame.maxY <= contentBottom()
+        }
+        var remainingScrollAttempts = 8
+        while !isStartVisible(), remainingScrollAttempts > 0 {
+            let viewport = screen.frame
+            let contentTop = navigationBar.frame.maxY
+            let visibleBottom = contentBottom()
+            let origin = screen.coordinate(withNormalizedOffset: .zero).withOffset(
+                CGVector(dx: viewport.width / 2, dy: (contentTop + visibleBottom) / 2 - viewport.minY)
+            )
+            let scrollDelta: CGFloat = start.frame.minY < contentTop ? 100 : -100
+            origin.press(forDuration: 0.05, thenDragTo: origin.withOffset(CGVector(dx: 0, dy: scrollDelta)))
             remainingScrollAttempts -= 1
         }
-        XCTAssertTrue(start.isHittable)
-        start.tap()
-        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
+        XCTAssertTrue(isStartVisible(), "Start must be below the navigation bar and above the keyboard")
+        tapVisibleControl(start, in: app)
+        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 10))
 
         app.buttons["paywall.purchase"].tap()
 
@@ -182,7 +309,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[
             "Purchase pending. Your workout will unlock after the App Store approves it."
         ].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testFailedPurchaseShowsApprovedStatusCopy() {
@@ -196,7 +323,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[
             "We couldn’t complete the purchase. Please try again or restore purchases."
         ].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testCancelledPurchaseShowsApprovedStatusCopy() {
@@ -210,7 +337,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[
             "Purchase cancelled. You weren’t charged."
         ].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testRetryAfterTransientProductLoadFailureMakesBuyAvailable() {
@@ -231,7 +358,7 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         XCTAssertTrue(app.buttons["Unlock for $2.99"].waitForExistence(timeout: 2))
         XCTAssertTrue(purchase.isEnabled)
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testRetryRemainsAvailableAfterProductLoadFailureAndEmptyRestore() {
@@ -240,8 +367,17 @@ final class WorkoutPaywallUITests: XCTestCase {
         app.launchEnvironment["HANGTEN_REVIEW_PRODUCT_LOAD_FAILURES"] = "1"
         app.launch()
 
-        app.buttons["plan.startRoutine"].tap()
-        XCTAssertTrue(app.buttons["paywall.retryProduct"].waitForExistence(timeout: 2))
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        let startReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"),
+            object: start
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [startReady], timeout: 10), .completed)
+        start.tap()
+
+        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["paywall.retryProduct"].waitForExistence(timeout: 10))
 
         app.buttons["paywall.restore"].tap()
 
@@ -257,7 +393,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         let purchase = app.buttons["paywall.purchase"]
         XCTAssertTrue(app.buttons["Unlock for $2.99"].waitForExistence(timeout: 2))
         XCTAssertTrue(purchase.isEnabled)
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testRetryRemainsHittableAfterProductLoadFailureAndRestoreFailure() {
@@ -283,7 +419,7 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         XCTAssertTrue(app.buttons["Unlock for $2.99"].waitForExistence(timeout: 2))
         XCTAssertTrue(app.buttons["paywall.purchase"].isEnabled)
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testRestoreWithoutEntitlementShowsNothingToRestoreFeedback() {
@@ -298,7 +434,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[
             "Nothing to restore. No lifetime unlock purchase was found."
         ].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
     }
 
     func testRestoreFailureUsesRestoreSpecificFeedback() {
@@ -317,7 +453,22 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts[
             "We couldn’t complete the purchase. Please try again or restore purchases."
         ].exists)
-        XCTAssertFalse(app.navigationBars["Session"].exists)
+        XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
+    }
+
+    private func assertWorkoutOpened(
+        in app: XCUIApplication,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        // Verified access opens the session before on-demand 3D preparation finishes.
+        XCTAssertTrue(app.buttons["workout.end"].waitForExistence(timeout: 10), file: file, line: line)
+        XCTAssertTrue(app.staticTexts["workout.timer"].exists, file: file, line: line)
+        XCTAssertFalse(app.otherElements["paywall.lifetimeUnlock"].exists, file: file, line: line)
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "Workout opened after verified access"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     private func lockedPlanApp() -> XCUIApplication {

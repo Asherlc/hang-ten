@@ -1,0 +1,73 @@
+[
+  {
+    "name": "front-chain",
+    "radius": 2,
+    "edges": [
+      11,
+      13,
+      15,
+      17,
+      19,
+      21,
+      23,
+      25,
+      24,
+      22,
+      20,
+      18,
+      16
+    ],
+    "error": "15StdFail_NotDone BRep_API: command not done",
+    "traceback": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/fillet-trials.py\", line 9, in <module>\n    sh=shape.makeFillet(r,[shape.Edges[i-1] for i in ids]);ok=sh.isValid() and len(sh.Solids)==1;row={'name':name,'radius':r,'edges':ids,'valid':ok,'volume':sh.Volume,'seconds':time.monotonic()-t}\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nPart.OCCError: 15StdFail_NotDone BRep_API: command not done\n",
+    "seconds": 0.7781121250009164
+  },
+  {
+    "name": "front-only",
+    "radius": 2,
+    "edges": [
+      15,
+      19,
+      20,
+      23,
+      24
+    ],
+    "valid": true,
+    "volume": 2672351.587108089,
+    "seconds": 0.7130265419837087
+  },
+  {
+    "name": "side-trough",
+    "radius": 2,
+    "edges": [
+      162,
+      167,
+      173,
+      175,
+      174,
+      180
+    ],
+    "valid": true,
+    "volume": 2672784.933673644,
+    "seconds": 0.8824872500263155
+  },
+  {
+    "name": "front-side",
+    "radius": 2,
+    "edges": [
+      15,
+      19,
+      20,
+      23,
+      24,
+      162,
+      167,
+      173,
+      175,
+      174,
+      180
+    ],
+    "error": "15StdFail_NotDone BRep_API: command not done",
+    "traceback": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/shape-audit/fillet-trials.py\", line 9, in <module>\n    sh=shape.makeFillet(r,[shape.Edges[i-1] for i in ids]);ok=sh.isValid() and len(sh.Solids)==1;row={'name':name,'radius':r,'edges':ids,'valid':ok,'volume':sh.Volume,'seconds':time.monotonic()-t}\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nPart.OCCError: 15StdFail_NotDone BRep_API: command not done\n",
+    "seconds": 0.7062875410192646
+  }
+]

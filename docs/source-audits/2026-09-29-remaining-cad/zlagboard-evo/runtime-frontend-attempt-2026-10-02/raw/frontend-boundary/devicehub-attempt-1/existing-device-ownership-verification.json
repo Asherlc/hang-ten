@@ -1,0 +1,11 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "deviceUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "deviceName": "Hang Ten Paseo placid-badger-cad-second-half Review Pro MigrationDiagnosis20261002 96137",
+  "state": "Booted",
+  "mainOwnershipSHA256": "1ace3ca5d4e0dbc4ccbda0bcc3550f1fdcef7925ee3f9f8398c371661de7c490",
+  "registeredManifestSHA256": "00de9fd89c29a0e3e41fcf4bac4f71ff110423a8b235f1ae296cd92ea1ab534f",
+  "pendingManifestSHA256": "00de9fd89c29a0e3e41fcf4bac4f71ff110423a8b235f1ae296cd92ea1ab534f",
+  "verifiedEpoch": 1790986753.849325,
+  "scope": "Read-only exact owned UUID record only; unrelated inventory is never retained"
+}

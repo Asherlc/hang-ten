@@ -1,0 +1,6 @@
+{
+  "derivedDataDeleted": true,
+  "resultBundleDeleted": true,
+  "testResultBundleDeleted": true,
+  "simulatorLifetime": "Original ios-review lifecycle retains and deletes the exact shared owned Simulator."
+}

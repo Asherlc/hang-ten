@@ -1,0 +1,60 @@
+{
+  "owner": "placid-badger",
+  "simulator": "5E4F7561-42C9-488E-A4C2-638A628BE300",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS 26.5",
+  "boardID": "captain-fingerfood.unlevel",
+  "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+  "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+  "presentations": {
+    "primary": {
+      "descriptorSHA256": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89",
+      "modelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47"
+    }
+  },
+  "builtBinarySHA256": "723dc64628c69755cd279f55ab5eacc0e55cbaee6168855d2dd8f129f3259529",
+  "checks": [
+    {
+      "positionID": "edge20-front",
+      "contactID": "curved-edge-20",
+      "front": "edge20-front-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "edge25-inverted",
+      "contactID": "curved-edge-25",
+      "front": "edge25-inverted-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "pocket-right-end",
+      "contactID": "pocket-end-wall-20-25",
+      "front": "pocket-right-end-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "jug-reverse",
+      "contactID": "outer-jug",
+      "front": "jug-reverse-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    }
+  ],
+  "humanGeometryAcceptance": "pending UNLEVEL review",
+  "limits": "App screenshots and accessibility checks establish current-source rendering; manufacturer fidelity remains under individual human review. Physical UNLEVEL orbit capture remains unverified; only these canonical views are claimed.",
+  "captureSHA256": {
+    "edge20-front-front-accessibility.json": "4f2303d69ea0dabab51289cdf6782253b6b88c2147f2c5c23c796df632dee731",
+    "edge20-front-front.png": "0f9ffc9a68879e4ee54bc2d046527f7b7eea1a4ffef027785d65da4bb67055e4",
+    "edge25-inverted-front-accessibility.json": "d09e08381ee8950f3bb74026e22264f8c867817387ccb07ad6dabb3c54aa95eb",
+    "edge25-inverted-front.png": "12fe54551188b90e704586656c57cf7da8fb3ac83247515411b4f5c9d751be4e",
+    "jug-reverse-front-accessibility.json": "3670f4912aac3be8c10d1ef7162f58e2620182531a7b3c6818058ead28306750",
+    "jug-reverse-front.png": "bdcbff9e54f38a72511612a6d740b903d015b23711d04acf1731dc4a07df8623",
+    "pocket-right-end-front-accessibility.json": "0f16a34e87a1f8a051bbac00a7ca9dd5b9f083199ab44c4b392c0f05c169d521",
+    "pocket-right-end-front.png": "9c58da485615a24ea39d058e79f935bc593baa55846a019cbd6a155352040a2e"
+  },
+  "physicalOrbitVerified": false,
+  "orbitCaptureStatus": "Unverified; canonical current-source views only."
+}

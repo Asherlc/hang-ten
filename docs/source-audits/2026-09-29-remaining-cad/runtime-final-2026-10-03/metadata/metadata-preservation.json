@@ -1,0 +1,27 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "mainCommit": "d53c019c43319a70b32e6dc654814de29e87ab89",
+  "upstreamPR": 516,
+  "upstreamMergeCommit": "781e64636eafb382f6ad49cbdf276be354117310",
+  "field": "contacts[round-sloper-3-center].handCapacity",
+  "before": null,
+  "after": 2,
+  "nativeSourceBeforeSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "nativeSourceAfterSHA256": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e",
+  "onlyManifestFieldChanged": true,
+  "changedArchiveMembers": [
+    "Document.xml"
+  ],
+  "brepEntriesByteIdentical": 509,
+  "allOtherArchiveEntriesByteIdentical": true,
+  "modelsAndDescriptorsUnchanged": {
+    "Hangboards/metolius-simulator-3d/assets/primary.usdz": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+    "Hangboards/metolius-simulator-3d/assets/primary.model.json": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb"
+  },
+  "planContentChanged": false,
+  "geometryChanged": false,
+  "regression": "PlanStorageTests.testBundledPlanLibraryValidatesAgainstPackagedBoards",
+  "sourceURL": "https://www.metoliusclimbing.com/collections/training-boards/products/simulator-training-board",
+  "sourceMeaning": "Restored merged-main capacity metadata on the existing shared round sloper; no new source fact or geometry authored."
+}

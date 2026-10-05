@@ -1,0 +1,25 @@
+{
+  "recordedEpoch": 1790984595.1193862,
+  "authorizedBy": "/root bounded continuation task",
+  "appliesProspectivelyTo": [
+    "p2",
+    "o2"
+  ],
+  "auditPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/all-hand-projection-frame-correspondence-audit/report.json",
+  "auditSHA256": "b2babd54017e5be72b45b05e9b83b8b1a4ea25d4d56c83dc6b4618ce5422e666",
+  "rules": {
+    "requiresParentApproval": true,
+    "scope": "Additional explicitly named observed endpoint/path correspondence; do not replace original exact-set checker or retroactively mark it passed.",
+    "endpointEquality": "Require exact initial and settled endpoint tuples equal to both recorded controls; same board root/camera/layout viewport endpoint values, same actual matching ARView identity within each run.",
+    "path": "Every observed matching board ARView frame must lie on A+lambda*(B-A), lambda within[0,1], observed lambda nondecreasing. Use at most1e-5 point component residual solely for floating serialization arithmetic, far below a layout unit. Do not use bounding-box or pixel tolerance to hide geometry changes.",
+    "semanticWindow": "All non-endpoint samples must occur only during the first active-selection startup transition and strictly before the first screenshot command starts. Require B at the first complete board census after that screenshot ends, with that observation no later than the second(+1s) screenshot command end. All later observed board frames through the final tail must remain exactly B. If any of these conditions fails, stop/review; no compensating frames or further heuristic extension.",
+    "unchangedGates": "Preserve all existing CPU brackets, complete trace/tail, actual camera/clip facts, lifecycle order/counts, source/binary/package parity, all whole-image judgments and phase timing gates. No source/validator/runtime edits by this audit.",
+    "why": "Set equality compares time-sampled animation positions from different offsets; endpoint/path/window correspondence tests geometric layout equivalence at the resolution actually observed. It deliberately does not claim temporal equivalence."
+  },
+  "retainedOriginalFailedReport": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o1-p1-gate-report.json",
+    "sha256": "ee37e51a9a19bc27d56b769642ed2d44117f87c610389828608229b3b638ec3c"
+  },
+  "interpretation": "Projection configuration comparison includes initialization/workload timing. No claim of identical animation timing or first capture settled. Original exact-set failure remains failed.",
+  "runtime": "Same eef5a676 binary/source, no build/install/protocol changes; P2 once, O2 only if P2 passes."
+}

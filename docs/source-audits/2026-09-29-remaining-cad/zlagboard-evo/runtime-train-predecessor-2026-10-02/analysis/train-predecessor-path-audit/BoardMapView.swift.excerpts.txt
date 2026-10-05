@@ -1,0 +1,38 @@
+395:                                     entry: entry,
+396:                                     isSelected: selectedHoldID == entry.hold.id
+397:                                 ) {
+398:                                     select(entry.hold.id)
+399:                                 }
+400:                                 .position(markerPosition(for: entry.frame, in: boardBounds, isInverted: map.presentation.isInverted))
+401:                             }
+402:                         }
+403:                     }
+404:                 case .model:
+405:                     BoardModelSurface(
+406:                         board: board,
+407:                         presentation: map.presentation,
+408:                         positionID: positionID,
+409:                         highlightedContactIDs: Set([selectedHoldID].compactMap { $0 }),
+410:                         highlightMode: .active,
+411:                         onContactTap: { select($0.id) }
+412:                     )
+413:                 }
+414:             }
+415:             .modifier(
+
+650:                 case .model:
+651:                     BoardModelSurface(
+652:                         board: board,
+653:                         presentation: content.presentation,
+654:                         positionID: selectedPositionID,
+655:                         highlightedContactIDs: highlightedHoldIDs,
+656:                         highlightMode: highlightMode,
+657:                         onContactTap: onHoldTap.map { callback in
+658:                             { contact in
+659:                                 callback(selectedPositionID.flatMap { positionID in
+660:                                     board.contacts(inPosition: positionID).first { $0.id == contact.id }
+661:                                 } ?? contact)
+662:                             }
+663:                         },
+664:                         isDisplayOnly: isDisplayOnly
+665:                     )

@@ -1,0 +1,54 @@
+{
+  "recordCount": 14,
+  "lastSequence": 14,
+  "readiness": {
+    "publication": {
+      "applicationCensus": {
+        "applicationState": 0,
+        "standaloneGate": false,
+        "windowScenes": [
+          {
+            "activationState": 0,
+            "interfaceOrientation": 1,
+            "sceneID": "ObjectIdentifier(0x0000000105522e00)",
+            "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+            "windows": [
+              {
+                "alpha": 1,
+                "bounds": [
+                  402,
+                  874
+                ],
+                "hidden": false,
+                "key": true,
+                "rendererNamedViewClasses": {},
+                "rendererPlacements": [],
+                "windowID": "ObjectIdentifier(0x0000000103f14800)"
+              }
+            ]
+          }
+        ]
+      },
+      "complete": true,
+      "currentRevision": 2,
+      "epoch": 1791008625.8569942,
+      "event": "hand-image",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 1,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "imageEvent": "published",
+      "pngByteCount": 436999,
+      "pngPath": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/362DF656-0215-4C49-87F4-700B42AEAE96/Documents/HighlightDiagnostic-placid-badger-cad-second-half-hand-image-static-image-dark-e/hand-image-prototype/E3212D3E-F9CE-414F-BF9C-9F5EC013DD1F/revision-2.png",
+      "pngSHA256": "049b78e0e891219e4d03439247179113b071cd5f7f7e81f845a4acfaa8a1919d",
+      "revision": 2,
+      "sequence": 14,
+      "sessionID": "E3212D3E-F9CE-414F-BF9C-9F5EC013DD1F",
+      "uptime": 90424.08487787501
+    },
+    "maximumInFlight": 1
+  },
+  "imageEventCount": 9
+}

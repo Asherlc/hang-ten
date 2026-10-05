@@ -1,0 +1,19 @@
+{
+  "patchSHA256": "72295f398942a26dadfcd7ee7795daca9fb2adfc8139b46ff09294ed4a6313c5",
+  "head": "aeca3a93620e1183ddcc5e68a5c10d69571e52c7",
+  "source": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "086b571f4125321846ab9b52551c33d6a993db9968d44214474f5352d882cc8e"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "48c2b5cc6a5d2c1b1b7912576b71f9ba1fca1e281b9655bdb5a46fa1cc684186"
+    }
+  ],
+  "scope": "DEBUG-only approved initial-resize diagnostic"
+}

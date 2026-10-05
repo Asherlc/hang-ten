@@ -1,0 +1,603 @@
+{
+  "owner": "placid-badger",
+  "beforeCommit": "b3b5fe2b588c74bcb3ddd2d7b43478308f5a5ffb",
+  "committedBeforePackageSHA256": {
+    "frictitious-nug.FCStd": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+    "assets/primary.usdz": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+    "assets/primary.model.json": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+    "suspension.json": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3"
+  },
+  "acceptedPinchPackageSHA256": {
+    "frictitious-nug.FCStd": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+    "assets/primary.usdz": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+    "assets/primary.model.json": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+    "suspension.json": "8a3fdf291c1ef34588425a4a7a73524fab33abdbb5a561456d571ecdd86642fc"
+  },
+  "retainedFiles": [
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/before/package/frictitious-nug.FCStd",
+      "retainedPath": "before/committed-b3b5-package/frictitious-nug.FCStd",
+      "sha256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+      "sourceCommit": "b3b5fe2b588c74bcb3ddd2d7b43478308f5a5ffb"
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/before/package/assets/primary.usdz",
+      "retainedPath": "before/committed-b3b5-package/assets/primary.usdz",
+      "sha256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+      "sourceCommit": "b3b5fe2b588c74bcb3ddd2d7b43478308f5a5ffb"
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/before/package/assets/primary.model.json",
+      "retainedPath": "before/committed-b3b5-package/assets/primary.model.json",
+      "sha256": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+      "sourceCommit": "b3b5fe2b588c74bcb3ddd2d7b43478308f5a5ffb"
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/before/package/suspension.json",
+      "retainedPath": "before/committed-b3b5-package/suspension.json",
+      "sha256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+      "sourceCommit": "b3b5fe2b588c74bcb3ddd2d7b43478308f5a5ffb"
+    },
+    {
+      "sourcePath": "Hangboards/frictitious-nug/suspension.json",
+      "retainedPath": "before/accepted-pinch-package/suspension.json",
+      "sha256": "8a3fdf291c1ef34588425a4a7a73524fab33abdbb5a561456d571ecdd86642fc",
+      "context": "User accepted pinch extent before requesting shorter cord."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/front-25-front-accessibility.json",
+      "retainedPath": "before/accepted-pinch-packet/app-review/front-25-front-accessibility.json",
+      "sha256": "ee2fa5cb31697e145cf491d611eb57609d097f0a338e989a22f69edf9dc8a6e1",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/front-25-front.png",
+      "retainedPath": "before/accepted-pinch-packet/app-review/front-25-front.png",
+      "sha256": "5eb2cf97ad81c88779f1a00f3b12947810c466d63966d01c2feacbe1b28daee3",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/front-inverted-20-front-accessibility.json",
+      "retainedPath": "before/accepted-pinch-packet/app-review/front-inverted-20-front-accessibility.json",
+      "sha256": "54d38846eab59683be2f1b9e217b4e908b6c9bc97cc69bf141c424676108fa99",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/front-inverted-20-front.png",
+      "retainedPath": "before/accepted-pinch-packet/app-review/front-inverted-20-front.png",
+      "sha256": "ddcb4fbb6b7c64955a076f8c64b79734a58dd4fd9df0a61b6bbaa7e9849104e8",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/outer-lower-front-accessibility.json",
+      "retainedPath": "before/accepted-pinch-packet/app-review/outer-lower-front-accessibility.json",
+      "sha256": "0f6e1ae3869a8761e9b44e6fc794c936d6f3e2d1e0d8b5d5ff24f4cc8b5b8213",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/outer-lower-front.png",
+      "retainedPath": "before/accepted-pinch-packet/app-review/outer-lower-front.png",
+      "sha256": "fe409557f2c72f8da64d1434a0a8d7f9c0f614867083cecda19d364f1502209a",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/outer-upper-front-accessibility.json",
+      "retainedPath": "before/accepted-pinch-packet/app-review/outer-upper-front-accessibility.json",
+      "sha256": "dc93c090ee193366db6e4478a6f2470ca8c2c750837f470da26ce7807aa302e8",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/outer-upper-front.png",
+      "retainedPath": "before/accepted-pinch-packet/app-review/outer-upper-front.png",
+      "sha256": "a83e70c0d3b37cb24a3def670592b12d5986a7236366a63b24aefc7b4490205d",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/reverse-13-front-accessibility.json",
+      "retainedPath": "before/accepted-pinch-packet/app-review/reverse-13-front-accessibility.json",
+      "sha256": "cd629327d54369e1effbb063396e73517e52b5dec3a107697c524a796a979dee",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/reverse-13-front.png",
+      "retainedPath": "before/accepted-pinch-packet/app-review/reverse-13-front.png",
+      "sha256": "7a7c493f0e020e231f689262200a0cc20bfbda5b2e6fe2411e9333087c22863d",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/reverse-inverted-8-front-accessibility.json",
+      "retainedPath": "before/accepted-pinch-packet/app-review/reverse-inverted-8-front-accessibility.json",
+      "sha256": "a0c21c768cb921f366b59e8bc12fb9ce2736f16e7396216b8501710ca88ac3d5",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/reverse-inverted-8-front.png",
+      "retainedPath": "before/accepted-pinch-packet/app-review/reverse-inverted-8-front.png",
+      "sha256": "66e00ffd57a388219826de35af47e749b3aae551de20456c22add826415d36dc",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/validation.json",
+      "retainedPath": "before/accepted-pinch-packet/app-review/validation.json",
+      "sha256": "0c17bbcde9d7c9d02ee58d8d250d94216daa1ad44805777053d658e043213674",
+      "context": "Accepted pinch review history; sidecar bound to8a3f capture-time package."
+    }
+  ],
+  "purpose": "Prepare shorter-cord comparison against genuine committed b3b5 package while preserving accepted seamed pinch geometry and review history.",
+  "afterStatus": "Await parent frozen promoted candidate sidecar SHA before rendering.",
+  "preserve": "6mm diameter, six pose rotations/cameras, logical/source graph, published130x60x40mm body, accepted source/model/descriptor bytes.",
+  "referencedAcceptedPinchFiles": [
+    {
+      "sourcePath": "Hangboards/frictitious-nug/frictitious-nug.FCStd",
+      "sha256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "Hangboards/frictitious-nug/assets/primary.usdz",
+      "sha256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "Hangboards/frictitious-nug/assets/primary.model.json",
+      "sha256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/README.md",
+      "sha256": "b944537435ed02ceb01ecd1b7c498085b8e07ce79e0245ce8fad55b077f08b23",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/app-review/index.html",
+      "sha256": "a6ad27a5737bce9b362b918391d194386fc584a4d9d69dfba3e84808aea6874d",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/independent-code-review/python-review.json",
+      "sha256": "160dae38230b0827726d11f0e87cd7b880381c6f0ff5ba59f8b7b5fa1be9a295",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/independent-code-review/python-review.md",
+      "sha256": "d2605d350a20362be8da23c3d5a84d15d4ebefa1e18cf7937a610b4c15cca41c",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/independent-code-review/swift-review.json",
+      "sha256": "7cc5fe0c044a48eb8ef165c7da63adfb94b830ab9352ae67020f5c220ba1e35f",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/independent-code-review/swift-review.md",
+      "sha256": "2f3c8f4ec3eb452d5df82c6810d8a4eead6ef783148cc1271721b32cc28a96d2",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/independent-code-review/unrelated-depth-probe-fixed.json",
+      "sha256": "09de9f029c10bbbdfdefe50247493f6554582d6c4b274e136548116627cee854",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/independent-code-review/unrelated-depth-probe.json",
+      "sha256": "1f4ad4eccb9f7f59519591f3a2f9169f5e0cab0b862cb6cca050b979a9eff5ea",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/independent-geometry-validation/final-coverage-verification.json",
+      "sha256": "07b334df8c9d5a6222084b9fab7b413bd44d632240020158758834f5b6b004cf",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/independent-geometry-validation/initial-overstrict-area-tolerance.log",
+      "sha256": "33c82531e4a0f288674ac76d4e6046099f4ea14a4ceb5f74ca4321da25d7ed74",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/independent-geometry-validation/initial-unrequested-uv-exclusion.log",
+      "sha256": "59ac7995cffe41eca561da3f14a40b0936ac804c9cee39fd1c483524ff02db62",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/independent-geometry-validation/script.log",
+      "sha256": "07b334df8c9d5a6222084b9fab7b413bd44d632240020158758834f5b6b004cf",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/independent-geometry-validation/verify-final-coverage.py",
+      "sha256": "f7aa2d926155d76b87e199e0feebaa65f88d30bb5b4f2965d04d8a2e7fbf0c66",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/index.html",
+      "sha256": "26b9138b8574be3ca27244182b4a02298f9c1dcce3c880c411325daa174f22f1",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/inspection-report.json",
+      "sha256": "e14bfbf957bb0b63a84947df0792008f1befc8438552854f512c112ef71473a5",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/delivery-parity.json",
+      "sha256": "d8ac7b965159aec3a53995fae93b038952f58470191dc86e663349784ad0ba31",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/installed-app-provenance.json",
+      "sha256": "501dab726cc58039744c0988dcaa1fc01a0040ffadae842f0c3e0f4ef0776b0f",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/installed-delivery-validation.json",
+      "sha256": "effc0778c7cb7432236e64e9c0388c436ccd5389dfe243d84d63a5b3f044685c",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/ios-build-command.json",
+      "sha256": "cbbc74e7d4845b24ad0c6a0f7c7f1d76acc02244563209dfe5e68b68ba06febb",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/ios-build.log",
+      "sha256": "6cea2398630ab26ff4e62065690a1102dcf8bacc96ebe7a67b0fe415255f748a",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/ios-summary.json",
+      "sha256": "343ad27aa954ecf927a3e0423c1072347ad39c14c842a856f2cb625cfd8663f5",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/ios-test-command.json",
+      "sha256": "9b320909c22d1fd3ea14a6eea1796e1ec0f1b35c1836e7e2dbc583cc370b249f",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/ios-tests.log",
+      "sha256": "8eb9765bf4b53c34edfe2e5f21d8d96ccc6f284cc4645213b9d7df1fa574edd9",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/meshoptimizer-dependency-proof.json",
+      "sha256": "c9e1353ddc1848c652c3405baed30790d5401c84a41c5dc14680a3ff519c4a2e",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/meshoptimizer-two-tests.log",
+      "sha256": "15c68ce6c0990c127ab70192a9c1d89d8373746169ec74ca5e1bf702f7694b71",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/package-change-proof.json",
+      "sha256": "4b924f75a64c02f779ffffccca2a800f3768a73b9046f6b1533f310a4cea3e46",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/package-validation.log",
+      "sha256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/python-test-report.json",
+      "sha256": "dc7816544ec6bd161f4ece84a8c75922c4cdebbfe7eda02fe12763d1fa724d4f",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/python-tests.log",
+      "sha256": "d94697da3f81db79d620740e83b8e90454536fc5638adad7b2e01dc99b8f7f95",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/staging-command.json",
+      "sha256": "73c1a29215bd41a7c082e344db9c2cd662a9a1b0535f788ad714b26ddf3907b4",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/integration/staging.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/jug-40-front.png",
+      "sha256": "90319586e6268c2b1c4c534bba9ce34be1522cbe01ad2c4962e7cc4b5b76ecde",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/jug-40-oblique.png",
+      "sha256": "cda128c8aef11479064a5f92b27f5ff1acf4ae4b01b3780070bf74acd5d714dc",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/jug-40-overview.png",
+      "sha256": "ed57f4d5d0e05eda79687888de7c2eeef334e8324792797943d0bc336770a4ef",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/jug-40-rear.png",
+      "sha256": "e092e86765353d4407594abf8c38017ee5e57dd824db2994e40f73692ea3ae08",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/jug-40-side.png",
+      "sha256": "637d2c1b8e337f2c7a31786651e5c612b25a7d145df19313160d5bd248d9f8c4",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/jug-40-top.png",
+      "sha256": "50526f5eaaa716ef00e8c29b2ba224d57388f668fc932e6876344963e9f3040c",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-authoring/authoring-provenance.md",
+      "sha256": "d23ca96097b96f774077cddacba5f96ca1c1ef97f4cf05b3961c477b7196a210",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-authoring/boundary-edges.json",
+      "sha256": "c1116051f59a575149190274aa68f2fc085463edecf7b35ac104c51af6e99e9f",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-authoring/final-baseline-preservation.json",
+      "sha256": "041fea1a057563b9bd8426fbc3b48b941bf12e3d909aef1b25c7a7edb10cb220",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-authoring/seam-author-proof.json",
+      "sha256": "d32f54ad15d86e9d874d1f092dfe637b30df8c7bf97af03a3c5e9111fc65843b",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-authoring/seamed-archive-proof.json",
+      "sha256": "794c05cca44dd6dded867ab1ca5e858fd287d5fceeacb04de17ec218756f8754",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-authoring/seamed-native-proof.json",
+      "sha256": "1a00e07b91d3b1bfcaaacbf332487cc5fe2d01c229a02995417bbae86ca7adfc",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-compile/compile-command.json",
+      "sha256": "55c0bf5d3a3deb65278c5604cbe5406b59b44d5914239d6661990e2125209a75",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-compile/compile.log",
+      "sha256": "6b2321b4c1ce3fe40648ab5a635c1e043bc3fe1c733ebc811091aa9faa3c9b48",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-cord/certify-fresh-routes.py",
+      "sha256": "3e91a86a88d7537ed1ea1d0eaad9e23e39bd2149de90f01fc86e38989c29d53f",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-cord/collision-geometry-preservation.json",
+      "sha256": "56adef8059d8e9c2ec888ae0cee92c86ee57106bf9e6ae4ce47562360c3f0c2a",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-cord/commands.json",
+      "sha256": "b0e4e14dc30b31aed3b011038556cc0ca206c522bb31e9af19cd11c92966598f",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-cord/export-collision-solid.log",
+      "sha256": "fb96195d449d7e0a93a94b60eca06a098a72461bb5f94e854c7be1faf1c6924d",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-cord/fresh-native-check-report.json",
+      "sha256": "0cf03b4b05866fd6b77a5ac973dd0615450dbe7f5a2c207d0c7969f73a7b023c",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-cord/fresh-native-check.log",
+      "sha256": "125e5335418ab4b7b908c3800fcddbaa51744b84ffc82d2b8453507ae7e260bc",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-cord/fresh-reproduction.log",
+      "sha256": "b5f2fd3f160716157547552b799d38e2250ab320a3a9745975af43945133109c",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-cord/post-apply-native-certificates.json",
+      "sha256": "1c79cd229ce43f85c230aa45b04274c0862310131afacb21a047a232a62074b7",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/native-cord/solid-primary.json",
+      "sha256": "645fd4ec9124c7bcb32d305da42cd56df6eb7d5f660425fa79b9467f28e00780",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/overview-provenance.json",
+      "sha256": "52cf481e09e714858a384d4589b0a7d489a6cc121618a9f629e78eadb1388bb2",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/pinch-60-front.png",
+      "sha256": "180648ea1773fd5950862d1230fa2d309d42a0d930100251206835b620ffc049",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/pinch-60-oblique.png",
+      "sha256": "8accf04eafdc7ad93a10a43056a5d6db6deacb3c61e9968475dc58326d22ae5c",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/pinch-60-overview.png",
+      "sha256": "bf118202d8021fbbdc53b6bf42f10d77466e0ccf275b110cd7c30b97ad84152a",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/pinch-60-rear.png",
+      "sha256": "9d477521918c82b6073e43e6c3170238a4133e2cf3ff789f25ab3cb8f1157547",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/pinch-60-side.png",
+      "sha256": "d41e21429c98ac32d2b1e6a33cd8b26bda58399a45c1922d8aac98dd288e185c",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/pinch-60-top.png",
+      "sha256": "6c304dd556a4e1897944d99682b2f496485921202c6b4e97aeb5c8ed1c4651d5",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/pinch-60-wraparound-overview.png",
+      "sha256": "dd544b1c4d8e82cf86675c113b4378a5f105e82510bdc910866da218a0d2cbaa",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/python-contract/current-code-hashes.json",
+      "sha256": "f1485a0c29fd137c13c6f4066d53b09f6f8d3fc91250665b9e02cbe2b2c12512",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/python-contract/green-broader.log",
+      "sha256": "dfc11919e3e41a95a618bb6093f959c6482a3230396dbc24b895c9ccb6da8fcc",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/python-contract/green-initial.log",
+      "sha256": "c7cb9d89547bf9ed61602dcad41ee9c8c0f819e62825b20d51c77b4b2ef2f866",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/python-contract/green-unrelated-depth-broader.log",
+      "sha256": "3c59a1f27f754399fad6d4a9c37d02d55297168c615f8da63d2ad619517ffc55",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/python-contract/implementation-verification.json",
+      "sha256": "46e279f03d7e65b46ad3c142054a3d9b7ed2cec83ab6267bdfe5091b966ee901",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/python-contract/native-in-memory-smoke.json",
+      "sha256": "4d4834483c5ace5ab9f700dfb2fc9c26671cc2a4696cc327917e43cd653527f1",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/python-contract/native-in-memory-smoke.py",
+      "sha256": "7b84b132f4e746b7aedcb28b7e43348b54f9f07b66001f6f7c9adcb4d33b96d6",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/python-contract/red-outline.log",
+      "sha256": "655ee6b276d5a4efdbdc0ce03d9380cd7e2ec38d6d35b41bd35b3a88185d9813",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/python-contract/red-unrelated-depth.log",
+      "sha256": "bb4164486491d8f6dca35764eec8d0367f32b68f1bdfe927e522a75f56e8edb4",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/python-contract/red.log",
+      "sha256": "397845bf27d546bc142735d96d826328cf6d8c7f9d3126b77c9ff51e0ed0384e",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/python-contract/unrelated-depth-fix-verification.json",
+      "sha256": "4ef97750816734830782f32451c9e579ee29dd950ab4e916cec71b954f5562d4",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/render-provenance.json",
+      "sha256": "dadc6df654f6e724b507fa37dd40c249e096d6c368127d54d9a06fb6ba03f4fe",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/retained-artifact-sha256.json",
+      "sha256": "8ec96ce7a7468c478bf1da594a7dde4d04f199929fe75890505171a9ce2cabff",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/review.md",
+      "sha256": "74d661d93fa71edc245bbafe57a2acc213f9eff9fdd5ba9f2777a49f7dda7ac4",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/first-full-attempt/ios-build-command.json",
+      "sha256": "cb8263655b93a8c82dc716621fe0d4ac0160ce19d7f7874e4b058838774f1e54",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/first-full-attempt/ios-build.log",
+      "sha256": "50105cd1bc7ec1d8f27cb1f96de9ffef9e90e3921bc4c28aa83e5964d21d7f78",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/first-full-attempt/ios-summary.json",
+      "sha256": "67e8eef4295c57ce846ab981f7707b47bfdbc87547f52b50e5eaaba0dc72e7bb",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/first-full-attempt/ios-test-command.json",
+      "sha256": "262ca0f351ddc2be98877a6eee27321c7277d7209324401d232808eb346beb63",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/first-full-attempt/ios-tests.log",
+      "sha256": "0e469f964685f4faf5b2f4cdf9ab22ba93b8d9f493f4c73ff1357bce2feea725",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/fixture-failure-diagnosis.json",
+      "sha256": "75b20bccc22cde9d2e07788c9a61f55eb9ad75cd58442e18a68eb586b260a078",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/red-ios-build-command.json",
+      "sha256": "16d5a8c81a70bb633cd649291ee5dc48406be4a143d2db17fea893127ddd3baa",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/red-ios-build.log",
+      "sha256": "3c51fe4f437206465d2d2d9d70961954d4bc311c2efb2dbf58c900b90f6b910e",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/red-ios-summary.json",
+      "sha256": "5d6419a10ef54d1015c79e647203be97b61c9905e06da6cc094fb3626aa1e4a4",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/red-ios-test-command.json",
+      "sha256": "45ffc4d0d2cb60367d4f5eb3229c82ec592278b7f8c36d270dfbc952b48a74d3",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/red-ios-tests.log",
+      "sha256": "17f71c73dd8f6b9f6ebde27f61dca0dca42da047605e93e0ff2e1480624c16d2",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/runtime-fixture-review-supplement.json",
+      "sha256": "aefd7168d1c4b519e8b3eb8d3d8e4c190ac622e09dd4e2469fbdf60bc5de3eb7",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/runtime-implementation-review.json",
+      "sha256": "0dce0d4f08096f068fca6f87150528b1b5f0cebdb8c57086476b5e4116ec34f3",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/runtime-contract/tests-first-snapshot.json",
+      "sha256": "97e004b4fcf4231e806d61c04330cf95a57239b1950234ec024adf8166c0c12d",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    },
+    {
+      "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/pinch-contact-review/verification.json",
+      "sha256": "3f3a8e50284e18fc89e756a21e292783feb85f32bf1ec69b0369052a502778ab",
+      "retention": "Referenced accepted sibling packet/current frozen geometry; no redundant short-cord copy."
+    }
+  ],
+  "acceptedPinchHistoryReference": "../pinch-contact-review/README.md",
+  "compactRetention": "Four genuine b3b5 package files; accepted8a sidecar; six prior pinch-package app PNG/AX pairs and capture validation. Other accepted pinch proof remains in sibling packet."
+}

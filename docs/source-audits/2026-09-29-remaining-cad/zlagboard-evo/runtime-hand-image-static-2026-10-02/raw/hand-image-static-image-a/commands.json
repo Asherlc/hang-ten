@@ -1,0 +1,85 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "app"
+    ],
+    "startEpoch": 1791006627.646862,
+    "limitSeconds": 20,
+    "pid": 59296,
+    "exitStatus": 0,
+    "endEpoch": 1791006628.658421
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "data"
+    ],
+    "startEpoch": 1791006628.834174,
+    "limitSeconds": 20,
+    "pid": 59312,
+    "exitStatus": 0,
+    "endEpoch": 1791006629.928739
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791006629.930775,
+    "limitSeconds": 20,
+    "pid": 59322,
+    "exitStatus": 0,
+    "endEpoch": 1791006630.982337
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "terminate",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791006639.5210612,
+    "limitSeconds": 10,
+    "pid": 59413,
+    "exitStatus": 0,
+    "endEpoch": 1791006640.908214
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "59334",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791006640.909881,
+    "limitSeconds": 3,
+    "pid": 59522,
+    "exitStatus": 1,
+    "endEpoch": 1791006641.0018182
+  }
+]

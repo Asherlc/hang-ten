@@ -1,0 +1,23 @@
+[
+  [
+    "launch",
+    "15",
+    "sloper-30-left",
+    "--telephoto"
+  ],
+  [
+    "mesh-tap",
+    "sloper-30-left",
+    "15-sloper-physical-mesh-pick"
+  ],
+  [
+    "legend",
+    "sloper-30-right",
+    "15-left-restored-right-selected-same-scene"
+  ],
+  [
+    "legend",
+    "sloper-30-left",
+    "15-right-restored-left-selected-same-scene"
+  ]
+]

@@ -1,0 +1,5 @@
+{
+  "command": "rtk proxy python3 .context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-normal-projection-comparison.py normal-all-hand-projection-p1-landscape",
+  "exitStatus": 1,
+  "failure": "AssertionError at final assert all(checks.values()); creationOrderEqual false. Tool-returned output retained in conversation; this is a status record, not reconstructed raw stderr."
+}

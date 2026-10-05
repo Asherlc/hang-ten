@@ -1,0 +1,43 @@
+{
+  "scope": "Independent read-only final Swift code and regression review",
+  "reviewedFilesSHA256": {
+    "HangTen/Models/TrainingModels.swift": "c6896ab7b1a3c249a3a4eef73e1624f3bb251e9ad43dcc46b83ed54272aafef1",
+    "HangTen/Models/BoardPackageStore.swift": "af66408a5ea48e0381a5b443790367f7cc2a2712d44dc5c6ecfb992ef797639a",
+    "HangTen/Models/BoardModelRealityTypes.swift": "07cd4392567103ae157c2bea2d5470d45bac8824b3a946911b14a13bbb7c9e7f",
+    "HangTenTests/BoardPackageStoreTests.swift": "395b8e2c4b5a4e3392100806cb63dc6997a876926253fb08fd0d19122ead5e0d",
+    "HangTenTests/BoardModelRealityTests.swift": "87d56aa888d7413c6ac59ddc266965ddde2ef003ce47514c1abee8fc9900d002"
+  },
+  "openFindings": [],
+  "productionChecks": [
+    "Presence-sensitive decoding uses contains + decode, so explicit null is rejected and absence remains compatible",
+    "Optional array is nonempty/sorted/unique valid identifiers and excludes primary; body/attachment reject through closed-key decoding",
+    "Unknown contacts fail exact physical inventory check; every contact node list equals derived union",
+    "Shared-recipient outline rejected; v2 reusable node decoder still rejects the added key",
+    "Node primary contactID controls picking independently of dictionary order and shared membership",
+    "Each ModelEntity enters every derived contact group but collision/input target setup occurs once during traversal",
+    "Highlight uses set union of selected contact entities and applies material once per unique entity; selected sharing cannot be cleared by unselected membership",
+    "Clearing selection restores baseline and prior mode/color logic remains intact",
+    "Missing imported contact nodes still fail through requireDescriptorNodes"
+  ],
+  "regressionAssessment": {
+    "strengths": [
+      "Malformed optional input coverage includes explicit null, scalar, numeric entry, empty identifier, duplicates, primary repeat, unknown identity, and wrong role",
+      "Dedicated sorted-known-secondary test avoids unsorted failure being masked by unknown contacts",
+      "Generic scene test exercises primary picking, collision setup, union highlight, primary-only selection, both-selected, and clear",
+      "Actual packaged NUG regression verifies all six IDs, upper inclusion in pinch, unique entity identities, deterministic jug versus lower picking, and highlight transitions",
+      "Existing whole-catalog picking check now requires explicit additional membership whenever picked ID differs from logical group"
+    ],
+    "nonblockingObservations": [
+      "Generic in-memory scene fixture modifies contacts without adding the corresponding node.additionalContactIDs metadata. It intentionally bypasses package validation to isolate rendering; the actual NUG regression and package fixture tests cover the valid cross-boundary contract. No production defect follows."
+    ]
+  },
+  "validationLimits": [
+    "Static code/test review plus lightweight Python probe only; no Swift build/test was run by this reviewer.",
+    "Root owns current GREEN/full-suite run and simulator screenshots."
+  ],
+  "packageBinding": {
+    "descriptorSHA256": "196dc34b5684723e837c4ae99f2c1e92279be6aa951e3a4022ad34d56da47d7a",
+    "sourceSHA256": "adf0ed67cd2ceab781eb979aa926a0444cc87dd91a039c1070dc4caacb8f47a6",
+    "usdzSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f"
+  }
+}

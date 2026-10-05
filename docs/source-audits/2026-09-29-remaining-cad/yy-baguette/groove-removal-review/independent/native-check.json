@@ -1,0 +1,60 @@
+{
+  "sourceSHA256Before": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+  "checks": {
+    "noGrooveObjects": true,
+    "oneBodySolid": true,
+    "boundShapesValid": true,
+    "noMaterialName": true,
+    "fullyConstrainedSketches": true,
+    "contactsOnActualBodySurface": true,
+    "sourceBytesUnchanged": true
+  },
+  "scope": "Reopen, recompute, inspect, and in-memory parameter edit only; never save.",
+  "sketches": {
+    "BodyOutline": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "LeftSteppedOpening": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "RightSteppedOpening": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "BackOuterLeftOutline": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "BackInnerLeftOutline": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "BackCenterOutline": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "BackInnerRightOutline": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    },
+    "BackOuterRightOutline": {
+      "fullyConstrained": true,
+      "geometryCount": 8
+    }
+  },
+  "contactSurfaceAreaErrorMM2": {
+    "yy_tray": 0.0,
+    "yy_edge_20": 0.0,
+    "yy_edge_25": 0.0,
+    "yy_edge_10": 0.0,
+    "yy_edge_15": 0.0,
+    "yy_edge_30": 0.0
+  },
+  "bodyVolumeBeforeMM3": 489161.8763147574,
+  "error": "AttributeError(\"'Part.Compound' object has no attribute 'CenterOfMass'\")",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/groove-removal-independent/native_check.py\", line 20, in <module>\n    before={o.Name:{'area':o.Shape.Area,'center':list(o.Shape.CenterOfMass),'bbox':[o.Shape.BoundBox.XMin,o.Shape.BoundBox.XMax,o.Shape.BoundBox.YMin,o.Shape.BoundBox.YMax,o.Shape.BoundBox.ZMin,o.Shape.BoundBox.ZMax]} for o in contacts}\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/groove-removal-independent/native_check.py\", line 20, in <dictcomp>\n    before={o.Name:{'area':o.Shape.Area,'center':list(o.Shape.CenterOfMass),'bbox':[o.Shape.BoundBox.XMin,o.Shape.BoundBox.XMax,o.Shape.BoundBox.YMin,o.Shape.BoundBox.YMax,o.Shape.BoundBox.ZMin,o.Shape.BoundBox.ZMax]} for o in contacts}\n                                                      ^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'Part.Compound' object has no attribute 'CenterOfMass'\n",
+  "sourceSHA256After": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+  "passed": false
+}

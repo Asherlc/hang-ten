@@ -1,0 +1,10 @@
+{
+  "atUTC": "2026-10-02T03:19:12.573522+00:00",
+  "simulatorUUID": "F4AB4722-62E5-411D-82B6-11502495F8C2",
+  "launchctlRows": [
+    "44156\t0\tcom.apple.datamigrator",
+    "47904\t0\tcom.apple.addressbooksyncd",
+    "44175\t0\tcom.apple.contactsd"
+  ],
+  "processSnapshot": "  PID ELAPSED      TIME  %CPU STAT COMMAND\n44156   02:44   0:01.37   0.4 Ss   /Library/Developer/CoreSimulator/Volumes/iOS_23D8133/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.3.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/DataMigration.framework/XPCServices/com.apple.datamigrator.xpc/com.apple.datamigrator\n44175   02:43   0:00.53   0.0 Ss   /Library/Developer/CoreSimulator/Volumes/iOS_23D8133/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.3.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/Contacts.framework/Support/contactsd\n47904   01:04   0:00.92   0.0 Ss   /Library/Developer/CoreSimulator/Volumes/iOS_23D8133/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.3.simruntime/Contents/Resources/RuntimeRoot/usr/libexec/addressbooksyncd\n"
+}

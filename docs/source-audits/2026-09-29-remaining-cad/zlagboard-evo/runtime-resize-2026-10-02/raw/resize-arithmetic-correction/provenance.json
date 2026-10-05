@@ -1,0 +1,20 @@
+{
+  "beforeRootSHA256": "086b571f4125321846ab9b52551c33d6a993db9968d44214474f5352d882cc8e",
+  "afterRootSHA256": "c1063ed42a466853d2c69a2df4900f7b5e318886bba4aaf8461d4ca748b3353d",
+  "patchSHA256": "4d151df79078ff1337459ed693ade02c9e07040c02b859b2d81987b55ad52e29",
+  "source": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "c1063ed42a466853d2c69a2df4900f7b5e318886bba4aaf8461d4ca748b3353d"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "48c2b5cc6a5d2c1b1b7912576b71f9ba1fca1e281b9655bdb5a46fa1cc684186"
+    }
+  ],
+  "reason": "Integer arithmetic setup defect; restore exact originally authorized measured initial size, no observed geometry tuning"
+}

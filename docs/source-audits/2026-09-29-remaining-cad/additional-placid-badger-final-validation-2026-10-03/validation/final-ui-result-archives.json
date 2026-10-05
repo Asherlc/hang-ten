@@ -1,0 +1,29 @@
+{
+  "createdAt": "2026-10-04T02:49:09.280490+00:00",
+  "archives": [
+    {
+      "name": "final-ui-regressions",
+      "members": 62,
+      "byteVerified": true,
+      "sha256": "bb263a730e78015763160e135fef18196f9413716de90d1de64cfa8abb149907",
+      "bytes": 3619025
+    },
+    {
+      "name": "final-natural-workflows",
+      "members": 42,
+      "byteVerified": true,
+      "sha256": "2dfd1d8273bce790dd8018aa23d80f1384fdad59791c031eb32639704435e4a8",
+      "bytes": 1925432
+    },
+    {
+      "name": "final-ui-attachments",
+      "copied": true,
+      "byteVerified": true
+    },
+    {
+      "name": "final-natural-attachments",
+      "copied": true,
+      "byteVerified": true
+    }
+  ]
+}

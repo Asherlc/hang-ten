@@ -1,0 +1,32 @@
+{
+  "scope": "Additive clarification only; no helper, schedule, runtime, app, or routine mutation.",
+  "schedulePath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-source-tasks-spaced/schedule.json",
+  "scheduleSHA256": "d1d7acb8e0d2114e322b99f15f6f03ac1abd36608e9cd68c9e5eca83e5d8b678",
+  "authoritativeOffsetsSeconds": [
+    1,
+    6,
+    11,
+    16,
+    21,
+    90,
+    190,
+    195,
+    200,
+    205,
+    210,
+    215,
+    220,
+    225
+  ],
+  "plannedCaptureCount": 14,
+  "inheritedInaccurateProseFields": [
+    "anchor",
+    "measurementAnchor"
+  ],
+  "correction": "Inherited all58 wording is inaccurate for this distinct prospective spaced arm. The frozen offsetSeconds list specifies 14 whole-image captures at 1,6,11,16,21,90,190,195,200,205,210,215,220,225. This is not backfill or reclassification of a previous failed arm.",
+  "samplingQualification": "Five-second cadence around transitions can show actual sampled phase/timer/contact state only; no exact frame-presentation or continuous-visibility claim.",
+  "productionSourceTasks": "Both hands preserved from current MaxHangs. Normal Mini UI explicitly says Use two boards, one hand on each; no manual Left choice or altered plan.",
+  "scheduleBytesUnchanged": true,
+  "hardwareClaimed": false,
+  "CPUOrGPUBracketsClaimed": false
+}

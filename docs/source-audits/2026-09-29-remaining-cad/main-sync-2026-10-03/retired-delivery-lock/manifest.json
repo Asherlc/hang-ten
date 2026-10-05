@@ -1,0 +1,30 @@
+{
+  "active": false,
+  "mainRetirementCommit": "65efe7b77",
+  "rows": [
+    {
+      "path": "docs/model-delivery-lock.json",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/retired-delivery-lock/model-delivery-lock.json",
+      "sha256": "17696157bb63337cfa50f1ba096a93c0dfeaabd74ef0a17c02dc16fa3c7f6028",
+      "sourceCommit": "e1cc8ff270ba1a0b16b621582f2fc8296b5dd64e"
+    },
+    {
+      "path": "scripts/verify-model-delivery.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/retired-delivery-lock/verify-model-delivery.py",
+      "sha256": "66365b80c7f225db81bde60ef21853ad97c2bf33ff5c78a2e2f1e5853c7d15cb",
+      "sourceCommit": "e1cc8ff270ba1a0b16b621582f2fc8296b5dd64e"
+    },
+    {
+      "path": "Tools/HangboardCAD/verify_reproducible.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/retired-delivery-lock/verify_reproducible.py",
+      "sha256": "5dba947d12ad284d286e7c87682d7d09010ae41c4b66e8f96755574b6033690a",
+      "sourceCommit": "e1cc8ff270ba1a0b16b621582f2fc8296b5dd64e"
+    },
+    {
+      "path": "Tools/HangboardPackages/tests/test_model_delivery_lock.py",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/retired-delivery-lock/test_model_delivery_lock.py",
+      "sha256": "eae8e80ffeac3c35518634d129bba6ed7c1872a333ca9f26d7e38ac8c5d0d9aa",
+      "sourceCommit": "e1cc8ff270ba1a0b16b621582f2fc8296b5dd64e"
+    }
+  ]
+}

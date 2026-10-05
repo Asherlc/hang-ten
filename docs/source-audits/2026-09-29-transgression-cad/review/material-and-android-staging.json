@@ -1,0 +1,14 @@
+{
+  "surfaces-for-climbing-transgression-2011": {
+    "unboundModel": true,
+    "androidStagingExact": true,
+    "nativeSourceExcluded": true,
+    "sha256": "5bc89aaee14f81bcd100d1f8d056f6d097e3a44623b0f77d8c281bda06c81b30"
+  },
+  "surfaces-for-climbing-transgression-2013": {
+    "unboundModel": true,
+    "androidStagingExact": true,
+    "nativeSourceExcluded": true,
+    "sha256": "e7d127e72145a93d1ba9eadf2fde53fa2348f2c8afbba2faa69ec0c5ab33f078"
+  }
+}

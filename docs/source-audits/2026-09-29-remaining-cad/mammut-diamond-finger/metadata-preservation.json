@@ -1,0 +1,204 @@
+{
+  "slug": "mammut-diamond-finger",
+  "boardID": "mammut.diamond-finger",
+  "preMigrationBoardSHA256": "2ed1a693febce9a5e4884e95c539c54ae0b2f7f4fb7bc8e587e266db836dbc37",
+  "contactCount": 16,
+  "contacts": [
+    {
+      "contactID": "mam-jug-l",
+      "name": "Jug left",
+      "kind": "jug",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-jug-r",
+      "name": "Jug right",
+      "kind": "jug",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-sloper-c",
+      "name": "Sloper centre",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-mid-edge-c",
+      "name": "Middle edge centre",
+      "kind": "edge",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-mono-l",
+      "name": "Mono pocket left",
+      "kind": "pocket",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-mono-r",
+      "name": "Mono pocket right",
+      "kind": "pocket",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-upper-pocket-l",
+      "name": "Upper pocket left",
+      "kind": "pocket",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-upper-pocket-r",
+      "name": "Upper pocket right",
+      "kind": "pocket",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-lateral-ledge-l",
+      "name": "Lateral ledge left",
+      "kind": "edge",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-lateral-ledge-r",
+      "name": "Lateral ledge right",
+      "kind": "edge",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-upper-pocket-c",
+      "name": "Upper pocket centre",
+      "kind": "pocket",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-lower-edge-c",
+      "name": "Lower edge centre",
+      "kind": "edge",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-upper-open-bay-l",
+      "name": "Upper open bay left",
+      "kind": "edge",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-upper-open-bay-r",
+      "name": "Upper open bay right",
+      "kind": "edge",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-upper-inset-l",
+      "name": "Upper inset step left",
+      "kind": "pocket",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    },
+    {
+      "contactID": "mam-upper-inset-r",
+      "name": "Upper inset step right",
+      "kind": "pocket",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg"
+      ]
+    }
+  ],
+  "metadataPolicy": "Identity, revision, contact order, names, capacities, grip types, dimensions, aspect ratios and model camera retained verbatim. Existing unsupported facts are neither added nor expanded. No training content changes.",
+  "sourceLimitations": "Exact 2060-00020 walnut revision. Product photo supports deliberately sculpted upper channels, three lower lobes, symmetric cavity arrangement, and removal of phone/mount hardware. Manufacturer manual page 1 is a materially distinct drawn topology view; page 2 shows side/mount context. The second gallery photograph differs only by a phone accessory and is not counted as a second geometric view. Preserve the existing 16 contact IDs; the subtitle says 21 surfaces but no contact-inventory change is in scope. Only 33.5 in width is published in current package; other display dimensions stay explicitly estimated.",
+  "embeddedManifestRoundtripExact": true,
+  "generatedBoardJsonRemoved": true
+}

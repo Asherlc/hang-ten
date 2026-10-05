@@ -1,0 +1,44 @@
+[
+  {
+    "stage": "staged",
+    "relativePath": "Hangboards/yy-travelboard/board.json",
+    "sha256": "0edd9afdedc1f7ec66b2e71c115dda81dad4f227ebcb9059a6173fabcc8c85f9",
+    "expectedSHA256": "0edd9afdedc1f7ec66b2e71c115dda81dad4f227ebcb9059a6173fabcc8c85f9",
+    "bytesEqual": true
+  },
+  {
+    "stage": "staged",
+    "relativePath": "Hangboards/yy-travelboard/assets/primary.model.json",
+    "sha256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+    "expectedSHA256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+    "bytesEqual": true
+  },
+  {
+    "stage": "staged",
+    "relativePath": "OnDemandResources/com.hangten.training.hang-ten-model-yy-travelboard-826cc376ece65735dd6228895095b644.assetpack/Hangboards/yy-travelboard/assets/primary.usdz",
+    "sha256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+    "expectedSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "Hangboards/yy-travelboard/board.json",
+    "sha256": "0edd9afdedc1f7ec66b2e71c115dda81dad4f227ebcb9059a6173fabcc8c85f9",
+    "expectedSHA256": "0edd9afdedc1f7ec66b2e71c115dda81dad4f227ebcb9059a6173fabcc8c85f9",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "Hangboards/yy-travelboard/assets/primary.model.json",
+    "sha256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+    "expectedSHA256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+    "bytesEqual": true
+  },
+  {
+    "stage": "installed",
+    "relativePath": "OnDemandResources/com.hangten.training.hang-ten-model-yy-travelboard-826cc376ece65735dd6228895095b644.assetpack/Hangboards/yy-travelboard/assets/primary.usdz",
+    "sha256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+    "expectedSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+    "bytesEqual": true
+  }
+]

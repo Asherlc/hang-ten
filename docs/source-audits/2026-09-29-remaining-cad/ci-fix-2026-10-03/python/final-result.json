@@ -1,0 +1,33 @@
+{
+  "owner": "placid-badger",
+  "status": "fixed locally; remote CI rerun owned by parent",
+  "onlyTrackedPathEdited": "Tools/HangboardPackages/tests/test_trango_mirrored_halves.py",
+  "testFileSHA256": "7942184326169a312ebbf3a1195fb3170df4dbadc7d13b33a74bd544b35a772b",
+  "diffPath": ".context/placid-badger/ci-fix-2026-10-03/python/final-tracked.patch",
+  "diffSHA256": "93dd0bf0f2290c0f8014f6bee0facf1f034d0fc8a0464c2edc2338654af3af68",
+  "baselineFailureReproduced": true,
+  "scratchCandidateModulePassed": 4,
+  "wholePackageSelection": {
+    "testDirectory": "Tools/HangboardPackages/tests",
+    "counts": {
+      "tests": 612,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "pytestSeconds": 68.11,
+    "receipt": ".context/placid-badger/ci-fix-2026-10-03/python/full-package-receipt.json",
+    "receiptSHA256": "acb178335c5fb622047fb67711330a71529018d8e854641e31d9b0688d4819ed",
+    "logSHA256": "9ceddba73259d106479f7d71bac8a40350920c95d6afe7d09f4e668be8b9f913",
+    "junitSHA256": "df11c52dd5aac27198ceba53e2b8f8e9c05a64fb726c4d0e78fe8ba71445c84c"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "pytest": "9.1.1"
+  },
+  "semantics": "Two physical equipment IDs are required independently of the one full native rendering asset. Every left/right contact is asserted against its exact equipment ID; other paired facts remain equal. Native mirror, geometry, binding and frame checks retained.",
+  "productionOrGeometryEdits": false,
+  "testSkipsAdded": false,
+  "stagedOrCommitted": false,
+  "cleanupVerified": true
+}

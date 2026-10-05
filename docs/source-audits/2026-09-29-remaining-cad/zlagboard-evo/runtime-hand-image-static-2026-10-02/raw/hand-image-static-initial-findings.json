@@ -1,0 +1,14 @@
+{
+  "status": "STATIC_IMAGE_SETUP_FAILED_BEFORE_RENDER",
+  "liveReference": "PASS helper and root whole image review",
+  "image": "invalidViewport before scene constructor or render submission",
+  "viewportValuesRecorded": false,
+  "limits": [
+    "Cannot identify zero, nonfinite, oversize or invalid scale from this trace",
+    "No hand PNG or app screenshot in image arm",
+    "No renderer feasibility or workout effect established"
+  ],
+  "rawFailuresPreserved": true,
+  "appCleanupVerified": true,
+  "next": "Minimal viewport readiness handling review; no workout trial"
+}

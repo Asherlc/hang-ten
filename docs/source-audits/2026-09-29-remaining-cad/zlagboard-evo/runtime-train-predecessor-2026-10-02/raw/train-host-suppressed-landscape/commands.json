@@ -1,0 +1,256 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "app"
+    ],
+    "startEpoch": 1790988465.790142,
+    "endEpoch": 1790988465.957491,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "data"
+    ],
+    "startEpoch": 1790988465.986474,
+    "endEpoch": 1790988466.14179,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1790988466.14219,
+    "endEpoch": 1790988466.482485,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "openurl",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "hangten://plan/research.max-hangs/workout"
+    ],
+    "startEpoch": 1790988466.482503,
+    "endEpoch": 1790988469.662246,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/launch-initial.png"
+    ],
+    "startEpoch": 1790988469.662278,
+    "endEpoch": 1790988470.120973,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/phase-0-active-plus-0.25.png"
+    ],
+    "startEpoch": 1790988473.610498,
+    "endEpoch": 1790988474.043582,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/phase-0-active-plus-1.png"
+    ],
+    "startEpoch": 1790988474.354159,
+    "endEpoch": 1790988474.799664,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/phase-0-active-plus-3.png"
+    ],
+    "startEpoch": 1790988476.3440452,
+    "endEpoch": 1790988476.786376,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/phase-0-active-plus-5.png"
+    ],
+    "startEpoch": 1790988478.342207,
+    "endEpoch": 1790988478.822196,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/phase-1-preview-plus-0.25.png"
+    ],
+    "startEpoch": 1790988480.695976,
+    "endEpoch": 1790988481.1896992,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/phase-1-preview-plus-1.png"
+    ],
+    "startEpoch": 1790988481.452804,
+    "endEpoch": 1790988481.957054,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/phase-1-preview-plus-3.png"
+    ],
+    "startEpoch": 1790988483.4664588,
+    "endEpoch": 1790988483.91962,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/phase-1-preview-plus-5.png"
+    ],
+    "startEpoch": 1790988485.465439,
+    "endEpoch": 1790988485.9558861,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/phase-2-active-plus-0.25.png"
+    ],
+    "startEpoch": 1790988660.707018,
+    "endEpoch": 1790988661.195942,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/phase-2-active-plus-1.png"
+    ],
+    "startEpoch": 1790988661.4468029,
+    "endEpoch": 1790988661.909067,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/phase-2-active-plus-3.png"
+    ],
+    "startEpoch": 1790988663.459478,
+    "endEpoch": 1790988663.907725,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/phase-2-active-plus-5.png"
+    ],
+    "startEpoch": 1790988665.4540732,
+    "endEpoch": 1790988665.915049,
+    "exitStatus": 0
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "verification": {
+    "sourceSHA256": "0253224a9df668442a2f925d6b686fce57c4cffd94347954abb7b8b9df4c0cd9",
+    "patchSHA256": "49e59135c34270ed4171170bdacb1ba5a88642cef4cd9a5ffbc9c1489a825d5c",
+    "proposedSHA256": "24a647a6157cec20c15b986cfaafacfd660e190c42880d5facddea4bbc6d23e8",
+    "applyCheckExit": 0,
+    "sourceUnchanged": true,
+    "status": "Scratch-only unapplied; no typecheck/build/runtime"
+  },
+  "source": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "24a647a6157cec20c15b986cfaafacfd660e190c42880d5facddea4bbc6d23e8"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "89898763d913d908b35abfce0baf4da365efb37aed84c6823d76f0307c5b8ddd"
+    }
+  ],
+  "head": "48acf4ceca70f1b047cc9e98f4090d176e94f3a1",
+  "scope": "DEBUG immutable root NavigationStack flag; no other source change"
+}

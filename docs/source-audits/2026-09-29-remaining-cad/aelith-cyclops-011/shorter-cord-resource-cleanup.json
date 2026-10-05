@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "passed": true,
+  "ownedSimulator": "5BC58E20-EDC3-4846-818D-94823B3186CA",
+  "simulatorDeleted": true,
+  "derivedDataRemoved": true,
+  "resultBundlesRemoved": [
+    "HangTenTests-review-01-shorter-cord.xcresult",
+    "HangTenTests-review-01-shorter-cord-retry.xcresult"
+  ],
+  "retainedResults": "shorter-cord-test-results/ios-first-summary.json and ios-final-summary.json",
+  "HTTPServersStarted": 0
+}

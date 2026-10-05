@@ -1,0 +1,27 @@
+{
+  "owner": "placid-badger",
+  "simulator": "B50C9F34-769B-4CBD-A642-F109D3867F69",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=B50C9F34-769B-4CBD-A642-F109D3867F69",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "-parallel-testing-enabled",
+    "NO",
+    "-only-testing:HangTenTests",
+    "-resultBundlePath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/dual-cord-feedback/placid-badger-dual-cord-tests.xcresult",
+    "test-without-building"
+  ],
+  "timeoutSeconds": 540,
+  "resultBundle": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/dual-cord-feedback/placid-badger-dual-cord-tests.xcresult",
+  "exitCode": 0,
+  "elapsedSeconds": 452.2723056669929
+}

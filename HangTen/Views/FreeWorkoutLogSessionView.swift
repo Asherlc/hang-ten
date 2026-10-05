@@ -22,12 +22,14 @@ struct FreeWorkoutLogSessionView: View {
     @State private var showsFinishConfirm = false
     @State private var showsDiscardAlert = false
     @State private var showsTemplatePrompt = false
+    @State private var showsTemplateNamePrompt = false
     @State private var templateName = ""
     @State private var finishedForTemplate: FreeWorkoutLog?
     @State private var didFinish = false
     @State private var showsAddExercise = false
     @State private var guidedHangTarget: FreeWorkoutSetTarget?
     @State private var logSetTarget: FreeWorkoutSetTarget?
+    @FocusState private var focusedSetField: String?
 
     init(onFinished: (() -> Void)? = nil, onClose: (() -> Void)? = nil) {
         self.onFinished = onFinished
@@ -72,10 +74,15 @@ struct FreeWorkoutLogSessionView: View {
                 header(at: now)
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
-                        BoardMapView(board: board, highlightedHoldIDs: highlightedHoldIDs)
-                            .frame(minHeight: 180)
+                        if !log.exercises.isEmpty {
+                            BoardMapView(
+                                board: board,
+                                highlightedHoldIDs: highlightedHoldIDs,
+                                maximumMapHeight: 160
+                            )
                             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                             .accessibilityIdentifier("freeWorkout.boardMap")
+                        }
 
                         if showsRestBar {
                             restBar(at: now)
@@ -86,7 +93,7 @@ struct FreeWorkoutLogSessionView: View {
                         Button {
                             showsAddExercise = true
                         } label: {
-                            Label("Add Exercise", systemImage: "plus.circle.fill")
+                            Label("Add exercise", systemImage: "plus.circle.fill")
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.bordered)
@@ -96,6 +103,8 @@ struct FreeWorkoutLogSessionView: View {
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)
                 }
+                .scrollDismissesKeyboard(.immediately)
+                .accessibilityIdentifier("freeWorkout.log.scroll")
             }
             .background(Color.hangBackground)
             .onChange(of: now) { _, date in
@@ -110,6 +119,11 @@ struct FreeWorkoutLogSessionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") { focusedSetField = nil }
+                    .accessibilityIdentifier("freeWorkout.keyboard.done")
+            }
             ToolbarItem(placement: .cancellationAction) {
                 Button("Close") {
                     if let onClose {
@@ -123,6 +137,8 @@ struct FreeWorkoutLogSessionView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Finish") { showsFinishConfirm = true }
                     .fontWeight(.semibold)
+                    .buttonStyle(.borderedProminent)
+                    .tint(.hangGreenDark)
                     .accessibilityIdentifier("freeWorkout.finish")
             }
         }
@@ -147,7 +163,7 @@ struct FreeWorkoutLogSessionView: View {
             isPresented: $showsFinishConfirm,
             titleVisibility: .visible
         ) {
-            Button("Finish", role: .destructive) {
+            Button("Finish") {
                 confirmFinish()
             }
             .accessibilityIdentifier("freeWorkout.finish.confirm")
@@ -164,7 +180,18 @@ struct FreeWorkoutLogSessionView: View {
         } message: {
             Text("Finish needs at least one completed set. Discard this workout without saving history?")
         }
-        .alert("Save as Template?", isPresented: $showsTemplatePrompt) {
+        .alert("Save as template?", isPresented: $showsTemplatePrompt) {
+            Button("Save as template") {
+                showsTemplateNamePrompt = true
+            }
+            Button("Skip", role: .cancel) {
+                dismissAfterFinish()
+            }
+            .accessibilityIdentifier("freeWorkout.template.skip")
+        } message: {
+            Text("Save completed sets as a reusable unchecked template.")
+        }
+        .alert("Name template", isPresented: $showsTemplateNamePrompt) {
             TextField("Template name", text: $templateName)
             Button("Save") {
                 saveTemplateAndDismiss()
@@ -174,9 +201,7 @@ struct FreeWorkoutLogSessionView: View {
             Button("Skip", role: .cancel) {
                 dismissAfterFinish()
             }
-            .accessibilityIdentifier("freeWorkout.template.skip")
-        } message: {
-            Text("Save completed sets as a reusable unchecked template.")
+            .accessibilityIdentifier("freeWorkout.template.name.skip")
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("freeWorkout.log")
@@ -247,23 +272,12 @@ struct FreeWorkoutLogSessionView: View {
     // MARK: - Header / rest
 
     private func header(at date: Date) -> some View {
-        HStack(alignment: .firstTextBaseline) {
-            VStack(alignment: .leading, spacing: 4) {
-                SectionLabel(title: "Session")
-                Text("Free workout")
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                Text(elapsedLabel(at: date))
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-                    .accessibilityIdentifier("freeWorkout.elapsed")
-            }
-            Spacer(minLength: 12)
-            Button("Finish") { showsFinishConfirm = true }
-                .buttonStyle(.borderedProminent)
-                .tint(.hangGreenDark)
-                .accessibilityIdentifier("freeWorkout.finish.header")
-        }
+        Text(elapsedLabel(at: date))
+            .font(.system(.subheadline, design: .rounded, weight: .medium))
+            .foregroundStyle(Color.hangMuted)
+            .monospacedDigit()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityIdentifier("freeWorkout.elapsed")
         .padding(.horizontal, 20)
         .padding(.top, 12)
         .padding(.bottom, 8)
@@ -273,34 +287,55 @@ struct FreeWorkoutLogSessionView: View {
         let remaining = restTimer.remaining(at: now)
         return VStack(alignment: .leading, spacing: 10) {
             HStack {
-                SectionLabel(title: "Rest", tint: .restBlueDeep)
+                SectionLabel(title: restTimer.isCompleted ? "Rest complete" : "Rest", tint: .restBlueDeep)
                 Spacer()
-                Text(countdownLabel(remaining))
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.restBlueDeep)
-                    .monospacedDigit()
-                    .accessibilityIdentifier("freeWorkout.rest.remaining")
+                if restTimer.isActive {
+                    Text(countdownLabel(remaining))
+                        .font(.system(.title, design: .rounded, weight: .bold))
+                        .foregroundStyle(Color.restBlueDeep)
+                        .monospacedDigit()
+                        .accessibilityIdentifier("freeWorkout.rest.remaining")
+                } else {
+                    restDismissButton
+                }
             }
-            HStack(spacing: 8) {
-                Button("−30") { adjustRest(by: -30, at: now) }
-                    .accessibilityIdentifier("freeWorkout.rest.minus30")
-                Button("+30") { adjustRest(by: 30, at: now) }
-                    .accessibilityIdentifier("freeWorkout.rest.plus30")
-                Button("+1m") { adjustRest(by: 60, at: now) }
-                    .accessibilityIdentifier("freeWorkout.rest.plus60")
-                Spacer()
-                Button("Skip") { skipRest() }
-                    .accessibilityIdentifier("freeWorkout.rest.skip")
-                Button("Dismiss") { dismissRest() }
-                    .accessibilityIdentifier("freeWorkout.rest.dismiss")
+            if restTimer.isActive {
+                HStack(spacing: 8) {
+                    restAdjustmentButton("−30s", seconds: -30, at: now)
+                        .accessibilityIdentifier("freeWorkout.rest.minus30")
+                    restAdjustmentButton("+30s", seconds: 30, at: now)
+                        .accessibilityIdentifier("freeWorkout.rest.plus30")
+                    restAdjustmentButton("+1m", seconds: 60, at: now)
+                        .accessibilityIdentifier("freeWorkout.rest.plus60")
+                    Spacer()
+                    restDismissButton
+                }
+                .buttonStyle(.bordered)
+                .tint(.restBlueDeep)
             }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
-            .tint(.restBlueDeep)
         }
         .hangCard(padding: 14)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("freeWorkout.restBar")
+    }
+
+    private var restDismissButton: some View {
+        Button(action: dismissRest) {
+            Text(restTimer.isCompleted ? "Dismiss" : "Skip rest")
+                .frame(minHeight: 32)
+        }
+        .buttonStyle(.bordered)
+        .tint(.restBlueDeep)
+        .accessibilityIdentifier(restTimer.isCompleted ? "freeWorkout.rest.dismiss" : "freeWorkout.rest.skip")
+    }
+
+    private func restAdjustmentButton(_ title: String, seconds: TimeInterval, at now: Date) -> some View {
+        Button {
+            adjustRest(by: seconds, at: now)
+        } label: {
+            Text(title).frame(minWidth: 30, minHeight: 32)
+        }
+        .accessibilityLabel("\(seconds < 0 ? "Subtract" : "Add") \(Int(abs(seconds))) seconds of rest")
     }
 
     // MARK: - Exercises
@@ -310,7 +345,7 @@ struct FreeWorkoutLogSessionView: View {
             SectionLabel(title: "Exercises")
             if log.exercises.isEmpty {
                 Text("Add a hang or pull-up to start logging sets.")
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
                     .hangCard(padding: 14)
             } else {
@@ -327,26 +362,28 @@ struct FreeWorkoutLogSessionView: View {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(exercise.title)
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(.system(.body, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
                     Text(holdSubtitle(exercise.holdSelection))
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .font(.system(.caption, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                 }
                 Spacer()
                 Menu {
                     if index > 0 {
-                        Button("Move Up") { moveExercise(exercise.id, toOffset: index - 1) }
+                        Button("Move up") { moveExercise(exercise.id, toOffset: index - 1) }
                     }
                     if index < log.exercises.count - 1 {
-                        Button("Move Down") { moveExercise(exercise.id, toOffset: index + 1) }
+                        Button("Move down") { moveExercise(exercise.id, toOffset: index + 1) }
                     }
                     Button("Delete", role: .destructive) { deleteExercise(exercise.id) }
                 } label: {
                     Image(systemName: "ellipsis.circle")
                         .font(.system(size: 20, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
+                        .frame(minWidth: 44, minHeight: 44)
                 }
+                .accessibilityLabel("Options for \(exercise.title)")
                 .accessibilityIdentifier("freeWorkout.exercise.menu.\(exercise.id.uuidString)")
             }
 
@@ -366,7 +403,7 @@ struct FreeWorkoutLogSessionView: View {
                 Button {
                     addSet(to: exercise.id)
                 } label: {
-                    Label("Add Set", systemImage: "plus")
+                    Label("Add set", systemImage: "plus")
                 }
                 .accessibilityIdentifier("freeWorkout.addSet.\(exercise.id.uuidString)")
 
@@ -391,7 +428,8 @@ struct FreeWorkoutLogSessionView: View {
     private func setHeaderRow(for exercise: FreeExercise) -> some View {
         HStack(spacing: 8) {
             Text("#")
-                .frame(width: 28, alignment: .leading)
+                .fixedSize(horizontal: true, vertical: false)
+                .frame(minWidth: 28, alignment: .leading)
             Text("kg")
                 .frame(maxWidth: .infinity)
             if exercise.type == .hang {
@@ -402,9 +440,9 @@ struct FreeWorkoutLogSessionView: View {
                     .frame(maxWidth: .infinity)
             }
             Text("✓")
-                .frame(width: 36, alignment: .center)
+                .frame(width: 44, alignment: .center)
         }
-        .font(.system(size: 11, weight: .bold, design: .rounded))
+        .font(.system(.caption2, design: .rounded, weight: .bold))
         .foregroundStyle(Color.hangMuted)
     }
 
@@ -416,9 +454,10 @@ struct FreeWorkoutLogSessionView: View {
     ) -> some View {
         HStack(spacing: 8) {
             Text("\(number)")
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
                 .foregroundStyle(isFocused ? Color.hangGreenDark : Color.hangInk)
-                .frame(width: 28, alignment: .leading)
+                .fixedSize(horizontal: true, vertical: false)
+                .frame(minWidth: 28, alignment: .leading)
 
             TextField(
                 "kg",
@@ -427,11 +466,13 @@ struct FreeWorkoutLogSessionView: View {
             )
             .keyboardType(.decimalPad)
             .multilineTextAlignment(.center)
-            .font(.system(size: 15, weight: .medium, design: .rounded))
+            .font(.system(.subheadline, design: .rounded, weight: .medium))
             .padding(.vertical, 6)
             .padding(.horizontal, 4)
             .background(Color.hangBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .accessibilityLabel("\(exercise.title), set \(number), weight in kilograms")
             .accessibilityIdentifier("freeWorkout.set.weight.\(set.id.uuidString)")
+            .focused($focusedSetField, equals: "weight.\(set.id.uuidString)")
 
             if exercise.type == .hang {
                 TextField(
@@ -441,11 +482,13 @@ struct FreeWorkoutLogSessionView: View {
                 )
                 .keyboardType(.numberPad)
                 .multilineTextAlignment(.center)
-                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .medium))
                 .padding(.vertical, 6)
                 .padding(.horizontal, 4)
                 .background(Color.hangBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .accessibilityLabel("\(exercise.title), set \(number), duration in seconds")
                 .accessibilityIdentifier("freeWorkout.set.duration.\(set.id.uuidString)")
+                .focused($focusedSetField, equals: "duration.\(set.id.uuidString)")
             } else {
                 TextField(
                     "reps",
@@ -454,11 +497,13 @@ struct FreeWorkoutLogSessionView: View {
                 )
                 .keyboardType(.numberPad)
                 .multilineTextAlignment(.center)
-                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .medium))
                 .padding(.vertical, 6)
                 .padding(.horizontal, 4)
                 .background(Color.hangBackground, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .accessibilityLabel("\(exercise.title), set \(number), repetitions")
                 .accessibilityIdentifier("freeWorkout.set.reps.\(set.id.uuidString)")
+                .focused($focusedSetField, equals: "reps.\(set.id.uuidString)")
             }
 
             Button {
@@ -467,10 +512,12 @@ struct FreeWorkoutLogSessionView: View {
                 Image(systemName: set.isCompleted ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundStyle(set.isCompleted ? Color.hangGreenDark : Color.hangMuted)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .frame(width: 36)
-            .accessibilityLabel(set.isCompleted ? "Completed" : "Mark set complete")
+            .accessibilityLabel("\(exercise.title), set \(number), \(set.isCompleted ? "mark incomplete" : "mark complete")")
+            .accessibilityValue(set.isCompleted ? "Completed" : "Not completed")
             // Focused row keeps a stable id for UITests; others retain per-set ids.
             .accessibilityIdentifier(
                 isFocused
@@ -481,6 +528,7 @@ struct FreeWorkoutLogSessionView: View {
         .padding(.vertical, 2)
         .background(isFocused ? Color.hangGreen.opacity(0.12) : Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("freeWorkout.set.\(set.id.uuidString)")
     }
 
@@ -488,7 +536,7 @@ struct FreeWorkoutLogSessionView: View {
     private func focusedSetActions(exercise: FreeExercise, setID: UUID) -> some View {
         switch exercise.type {
         case .hang:
-            Button("Start Set") {
+            Button("Start set") {
                 ensureHangDuration(exerciseID: exercise.id, setID: setID)
                 guidedHangTarget = FreeWorkoutSetTarget(exerciseID: exercise.id, setID: setID)
             }
@@ -496,20 +544,13 @@ struct FreeWorkoutLogSessionView: View {
             .tint(.hangGreenDark)
             .accessibilityIdentifier("freeWorkout.startSet")
 
-            Button("Log Set") {
+            Button("Log set") {
                 logSetTarget = FreeWorkoutSetTarget(exerciseID: exercise.id, setID: setID)
             }
             .accessibilityIdentifier("freeWorkout.logSet")
 
         case .pullUp:
-            Button("Mark done") {
-                completeSet(exerciseID: exercise.id, setID: setID, mode: .manual)
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(.hangGreenDark)
-            .accessibilityIdentifier("freeWorkout.markDone")
-
-            Button("Log Set") {
+            Button("Log set") {
                 logSetTarget = FreeWorkoutSetTarget(exerciseID: exercise.id, setID: setID)
             }
             .accessibilityIdentifier("freeWorkout.logSet")
@@ -696,10 +737,6 @@ struct FreeWorkoutLogSessionView: View {
 
     private func adjustRest(by delta: TimeInterval, at now: Date) {
         restTimer.adjust(by: delta, at: now)
-    }
-
-    private func skipRest() {
-        restTimer.skip()
     }
 
     private func dismissRest() {

@@ -1,0 +1,9 @@
+{
+  "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+  "priorSourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+  "freshPriorColliderSHA256": "2f6e138a1cd751e64d754dadbcda85940b9ce761830e88a2f543717c5026febc",
+  "currentColliderSHA256": "a41949a3f96f56fd0d5d0ea98caa61c28188481420bb0a9669a2060959c6b7d2",
+  "collisionGeometryAndNativeCordFeaturesIdentical": true,
+  "retainedPriorColliderHadNoFeatureInventory": true,
+  "collisionAuthority": "FinalSolid closed valid one-solid; export body is a surface compound"
+}

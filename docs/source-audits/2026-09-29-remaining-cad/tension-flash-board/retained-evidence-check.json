@@ -1,0 +1,36 @@
+{
+  "package": "tension-flash-board",
+  "allRetainedBytesAndHashesMatch": true,
+  "sources": [
+    {
+      "path": "evidence/tension-flash-product.html",
+      "bytes": 386560,
+      "sha256": "f2e1c2474d7c29b069a6061b04524a2b7df61e33dedbbcb0cd8111b0b7bafca1"
+    },
+    {
+      "path": "evidence/tension-flash-training-blog.html",
+      "bytes": 331037,
+      "sha256": "c9692ca8f898ae65449aa2340d82e9040ed77d643b618217bd7c287ac737ff28"
+    },
+    {
+      "path": "evidence/FlashBoard1.png",
+      "bytes": 1469015,
+      "sha256": "aa00ab77e04c685acc4dee0e0704d25fd3165810387649a4e924bf3f7bfff148"
+    },
+    {
+      "path": "evidence/FlashBoard2.png",
+      "bytes": 685328,
+      "sha256": "ae84f7d58def1c2f4e3b14c2e98ddf8e332b7f48e6c774312744b792d4ab97b4"
+    },
+    {
+      "path": "evidence/FlashBoard3.png",
+      "bytes": 2197828,
+      "sha256": "5753461d938adb19655556e8070f7361a0f9a1697752a861bacde4d240f0f63d"
+    },
+    {
+      "path": "evidence/FlashBoard4.png",
+      "bytes": 2088678,
+      "sha256": "7c078225890ae6d6975bff865e706e8858e7a56c3edc8df572637241ca6df200"
+    }
+  ]
+}

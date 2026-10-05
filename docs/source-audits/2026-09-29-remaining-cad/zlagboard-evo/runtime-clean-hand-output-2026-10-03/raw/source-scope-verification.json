@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "changedPaths": [
+    "HangTen/Views/GripHandModelView.swift",
+    "HangTen/Views/TrainView.swift"
+  ],
+  "checks": [
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "equalApproved": true,
+      "sha256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "equalApproved": true,
+      "sha256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "equalApproved": true,
+      "sha256": "b37ab303d8637519fe4bcd0f2b3a0569cbb13ca0bcaeecf6d7af9200b9759b98"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "equalApproved": true,
+      "sha256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "equalApproved": true,
+      "sha256": "7937b3fdd976749eaa5493a4063058b5b9af439a3ec380f7aeff74041ca7dd43"
+    },
+    {
+      "path": "HangTen/Models/AppStore.swift",
+      "equalApproved": true,
+      "sha256": "45cb3ec1e065dcf9e08a65e9c16727c4dc79f99a7bc50d48da6a97df06d3c5db"
+    },
+    {
+      "path": "HangTen/Resources/PlanLibrary.json",
+      "equalApproved": true,
+      "sha256": "b203917f19e792e2d39abf15bbac96a6119ca0a7aa5384618fd1bb3978de2c6b"
+    }
+  ],
+  "onlyTemporaryDEBUGPrototype": true,
+  "noCanonicalChanges": true,
+  "sourceCommit": "eceef9bd40859cb3b323e86c507ad8574d591b4b"
+}

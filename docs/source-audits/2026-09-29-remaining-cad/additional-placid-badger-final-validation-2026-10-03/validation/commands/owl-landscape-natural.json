@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "label": "owl-landscape-natural",
+  "command": [
+    "python3",
+    ".context/placid-badger/combined-runtime-final-2026-10-03/workout_capture_natural.py",
+    "12",
+    "landscape"
+  ],
+  "timeoutSeconds": 300.0,
+  "ownedProcessGroup": 28065,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 62.288666417007335
+}

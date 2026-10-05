@@ -1,0 +1,41 @@
+{
+  "owner": "placid-badger",
+  "status": "passed",
+  "runtimeSourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+  "modelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+  "descriptorSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
+  "nativeGeometrySourceSHA256": "5e06a1e7ae4f6bee8391605f61395ff86807e4234a54d6b8b2d46c015fa4ddd8",
+  "freshNativeAndMetadataOnlyCompilesMatch": true,
+  "onlyBoardMetadataChange": "presentations[primary].media.display.surfaceFinish: wood",
+  "contacts": 16,
+  "meshes": 17,
+  "triangles": 106272,
+  "mergedVertices": 53138,
+  "actualUSDZMatchesEveryExpectedNativeFacet": true,
+  "matchingCoordinateNoiseQuantizationM": 1e-12,
+  "maximumMatchedCoordinateDifferenceM": 9.999986949615902e-13,
+  "coordinateMatchingToleranceM": 2e-12,
+  "duplicateFacets": 0,
+  "watertight": true,
+  "windingConsistent": true,
+  "eulerNumber": 2,
+  "materials": 0,
+  "shaders": 0,
+  "materialBindings": 0,
+  "archiveMembers": [
+    "stage.usdc"
+  ],
+  "runtimeBoundsM": {
+    "minimum": [
+      -0.42500001192092896,
+      -0.09600000083446504,
+      -2.1316282258091463e-17
+    ],
+    "maximum": [
+      0.42500001192092896,
+      0.10000000149011612,
+      0.07800000160932541
+    ]
+  },
+  "expectedNativeTessellationSHA256": "772e6f93e106ad7a9d9f4c88cd38374a533bc1754e34ff1f0b223217fac448eb"
+}

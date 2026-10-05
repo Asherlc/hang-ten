@@ -1,0 +1,16 @@
+{
+  "status": "candidate-code-freeze",
+  "files": {
+    "Tools/HangboardCAD/native_cord_guides.py": "4ee1da3077b9e07abf564799b0f02e94f77cb73eb7abdaa6dc301c80900a79df",
+    "Tools/HangboardCAD/native_cord_features.py": "dbf57a10bef757087ee263fef7b883ec660c5d2e45655dab1f98e40e8b4971c4",
+    "Tools/HangboardCAD/native_cord_routes.py": "307a4db1b44c80396f2e42638f0fbc0ff6ea588d9b96829bebce9c014da45e5a",
+    "Tools/HangboardCAD/solve_threaded_rope.py": "bcd7531950cc198ce8e5ad146d999dca3b11e7901076a8af2d08b5b1bf638f71",
+    "Tools/HangboardCAD/export_rope_collision_solid.py": "b0ccac8584d701c645befb8d049c8e0202326a43e906a603f0ddba8f0bda3152",
+    "Tools/HangboardCAD/tests/test_native_cord_guides.py": "ab4a90c05b2c18b281519be82d6ac8741e9194c796d472c3503665041328a91e",
+    "Tools/HangboardCAD/tests/native_cord_feature_checks.py": "50c360624c021da6b55001a8ac4aa5dca2cef801160e6265228201f020ea4743"
+  },
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "colliderSHA256": "9f1c7afee52db277aaef76ea3c92fcc8ceae8223b95fd43847314a9545466d77",
+  "scope": "Authoring only. Default route solver unchanged. Native coplanar branch constrains search, not certification.",
+  "validation": "13 targeted tests passed; adjacent tests running; actual all-pose gate pending."
+}

@@ -1,0 +1,16 @@
+{
+  "preparedOnly": true,
+  "scriptExecuted": false,
+  "docsWritten": false,
+  "sourceRuntimeGitMutations": false,
+  "syntax": "AST parse PASS only",
+  "scriptSHA256": "646c138f9b033632ad2b632381db24ada14355978f8c64fd0f921f214b381fea",
+  "draftSHA256": "504a532fc4154977a7f29241050358d1e894520634ad790f1ce3355b0ccc4c3e",
+  "exclusions": [
+    "Owned DerivedData-* directories",
+    "Unpacked *.xcresult bundles; later exact ZIP+verification retained",
+    "Entire ios controller tree until --final cleanup proof passes",
+    "Any run without completion.json and passed cleanup.json, explicitly hand-policy-control"
+  ],
+  "copyProtocol": "Default prints inventory only; --copy-plan verifies all frozen source/existing target hashes before copying, creates exclusively, never overwrites mismatches. New content-addressed manifest each snapshot; prior manifests remain unchanged."
+}

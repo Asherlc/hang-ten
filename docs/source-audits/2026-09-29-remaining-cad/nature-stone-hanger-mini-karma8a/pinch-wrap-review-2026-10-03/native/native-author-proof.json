@@ -1,0 +1,587 @@
+{
+  "passed": true,
+  "bodyEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "exportSurfaceEquality": {
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0,
+    "faceMapping": [
+      {
+        "exportFace": 1,
+        "originalFace": 1,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 2,
+        "originalFace": 2,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 3,
+        "originalFace": 3,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 4,
+        "originalFace": 4,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 5,
+        "originalFace": 5,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 6,
+        "originalFace": 7,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 7,
+        "originalFace": 8,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 8,
+        "originalFace": 9,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 9,
+        "originalFace": 10,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 10,
+        "originalFace": 7,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 11,
+        "originalFace": 5,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 12,
+        "originalFace": 11,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 13,
+        "originalFace": 12,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 14,
+        "originalFace": 13,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 15,
+        "originalFace": 18,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 16,
+        "originalFace": 26,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 17,
+        "originalFace": 27,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 18,
+        "originalFace": 22,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 19,
+        "originalFace": 23,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 20,
+        "originalFace": 24,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 21,
+        "originalFace": 17,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 22,
+        "originalFace": 28,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 23,
+        "originalFace": 29,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 24,
+        "originalFace": 30,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 25,
+        "originalFace": 38,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 26,
+        "originalFace": 39,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 27,
+        "originalFace": 40,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 28,
+        "originalFace": 25,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 29,
+        "originalFace": 34,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 30,
+        "originalFace": 35,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 31,
+        "originalFace": 36,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 32,
+        "originalFace": 37,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 33,
+        "originalFace": 56,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 34,
+        "originalFace": 58,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 35,
+        "originalFace": 57,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 36,
+        "originalFace": 46,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 37,
+        "originalFace": 76,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 38,
+        "originalFace": 55,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 39,
+        "originalFace": 66,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 40,
+        "originalFace": 64,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 41,
+        "originalFace": 47,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 42,
+        "originalFace": 67,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 43,
+        "originalFace": 54,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 44,
+        "originalFace": 78,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 45,
+        "originalFace": 63,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 46,
+        "originalFace": 48,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 47,
+        "originalFace": 72,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 48,
+        "originalFace": 75,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 49,
+        "originalFace": 68,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 50,
+        "originalFace": 53,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 51,
+        "originalFace": 62,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 52,
+        "originalFace": 49,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 53,
+        "originalFace": 74,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 54,
+        "originalFace": 61,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 55,
+        "originalFace": 50,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 56,
+        "originalFace": 70,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 57,
+        "originalFace": 77,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 58,
+        "originalFace": 60,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 59,
+        "originalFace": 51,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 60,
+        "originalFace": 73,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 61,
+        "originalFace": 71,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 62,
+        "originalFace": 14,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 63,
+        "originalFace": 31,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 64,
+        "originalFace": 44,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 65,
+        "originalFace": 21,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 66,
+        "originalFace": 43,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 67,
+        "originalFace": 69,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 68,
+        "originalFace": 17,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 69,
+        "originalFace": 18,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 70,
+        "originalFace": 34,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 71,
+        "originalFace": 40,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 72,
+        "originalFace": 60,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 73,
+        "originalFace": 63,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 74,
+        "originalFace": 66,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 75,
+        "originalFace": 68,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 76,
+        "originalFace": 7,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 77,
+        "originalFace": 70,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 78,
+        "originalFace": 71,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 79,
+        "originalFace": 74,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 80,
+        "originalFace": 17,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 81,
+        "originalFace": 18,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 82,
+        "originalFace": 37,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 83,
+        "originalFace": 38,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 84,
+        "originalFace": 48,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 85,
+        "originalFace": 5,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 86,
+        "originalFace": 51,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 87,
+        "originalFace": 53,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 88,
+        "originalFace": 55,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 89,
+        "originalFace": 6,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 90,
+        "originalFace": 7,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 91,
+        "originalFace": 70,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 92,
+        "originalFace": 71,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 93,
+        "originalFace": 74,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 94,
+        "originalFace": 15,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 95,
+        "originalFace": 16,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 96,
+        "originalFace": 19,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 97,
+        "originalFace": 20,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 98,
+        "originalFace": 32,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 99,
+        "originalFace": 33,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 100,
+        "originalFace": 41,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 101,
+        "originalFace": 42,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 102,
+        "originalFace": 45,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 103,
+        "originalFace": 52,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 104,
+        "originalFace": 59,
+        "offOriginalArea": 0.0
+      },
+      {
+        "exportFace": 105,
+        "originalFace": 65,
+        "offOriginalArea": 0.0
+      }
+    ],
+    "originalFaceCount": 78,
+    "exportFaceCount": 105
+  },
+  "exportComponentsOverlapArea": 0.0,
+  "pressureAreaMm2": 5267.4871382356805,
+  "pressureBounds": [
+    -53.15913760233915,
+    53.15913760233915,
+    -15.0,
+    15.000000000000014,
+    -30.659137602339154,
+    30.65913760233916
+  ],
+  "pressureFaceCount": 38,
+  "cutoffMm": 19.5,
+  "lowerCutoffMm": -18.0,
+  "maskExpression": "[('.Placement.Base.z', 'UpperRailMouthLipReference.Shape.BoundBox.ZMax')]",
+  "originalContactEquality": {
+    "nature_wood": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    },
+    "nature_stone": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    },
+    "nature_pinch": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    }
+  },
+  "newContactOverlapArea": {
+    "nature_wood": 0.0,
+    "nature_stone": 0.0,
+    "nature_pinch": 0.0
+  },
+  "pressureOffBodyArea": 0.0,
+  "manifestIdentical": true,
+  "badStates": {},
+  "exportValid": true,
+  "nativeBodySolids": 1,
+  "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f"
+}

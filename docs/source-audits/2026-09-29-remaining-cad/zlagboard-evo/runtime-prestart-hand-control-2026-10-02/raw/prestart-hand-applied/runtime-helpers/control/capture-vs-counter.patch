@@ -1,0 +1,47 @@
+--- counter
++++ prestart-hand-control
+@@ -1,7 +1,7 @@
+ from pathlib import Path
+ import os,sys,json,time,subprocess,hashlib,traceback
+ base=Path('.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo')
+-arm='sync-delivery-counter'
++arm='prestart-hand-control'
+ # This file is preparation only until the parent supplies a reviewed release record.
+ releasePath=Path(sys.argv[1]);release=json.loads(releasePath.read_text())
+ assert release['runtimeAuthorized'] is True and release['arm']==arm
+@@ -13,7 +13,7 @@
+ assert release['postbootConfirmationPassed'] is True
+ assert release['retainedDetachIntervention'] is False
+ assert len(release['binarySHA256'])==64
+-assert release['binarySHA256']!='70707e27453ae150763a302152c04e028564dbe97b41bffbcc91c98642f95c94'
++assert release['binarySHA256']!='956e0bc100afabc27b101658d99766ecf49f9739861acd07ee61e50f1c778338'
+ parityPath=Path(release['codePackageParityPath']);parityRaw=parityPath.read_bytes()
+ assert hashlib.sha256(parityRaw).hexdigest()==release['codePackageParitySHA256']
+ parity=json.loads(parityRaw);assert parity['allEqual'] and all(x['equal'] for x in parity['checks'])
+@@ -22,7 +22,7 @@
+ assert hashlib.sha256(priorRaw).hexdigest()==release['priorFrozenManifestSHA256']
+ for proof in json.loads(priorRaw)['files']:
+  assert hashlib.sha256(Path(proof['path']).read_bytes()).hexdigest()==proof['sha256']
+-out=base/('sync-delivery-counter-landscape');out.mkdir(exist_ok=False)
++out=base/('prestart-hand-control-landscape');out.mkdir(exist_ok=False)
+ (out/'runtime-release.json').write_bytes(releasePath.read_bytes())
+ uid=release['simulatorUUID'];commands=[];captures=[];transitions=[];tracefolder=None
+ start=time.monotonic();deadline=start+300;pending=[];known=set();scene=None
+@@ -56,7 +56,7 @@
+  (out/'installed-binary-gate.json').write_text(json.dumps({'path':str(binary),'sha256':actualBinarySHA,'expected':release['binarySHA256']},indent=2)+'\n')
+  assert actualBinarySHA==release['binarySHA256'],'Installed binary mismatch; no launch permitted'
+  data=Path(run('xcrun','simctl','get_app_container',uid,'com.hangten.training','data'))
+- flags={'HANGTEN_REVIEW_BOARD_ID':'zlagboard.evo','HANGTEN_REVIEW_PLAN_ID':'research.max-hangs','HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC':'1','HANGTEN_REVIEW_DIAGNOSTIC_RUN':'placid-badger-cad-second-half-sync-delivery-counter','HANGTEN_REVIEW_LANDSCAPE':'1','HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS':'1'}
++ flags={'HANGTEN_REVIEW_BOARD_ID':'zlagboard.evo','HANGTEN_REVIEW_PLAN_ID':'research.max-hangs','HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC':'1','HANGTEN_REVIEW_DIAGNOSTIC_RUN':'placid-badger-cad-second-half-prestart-hand-control','HANGTEN_REVIEW_LANDSCAPE':'1','HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS':'1'}
+  flags['HANGTEN_REVIEW_PREDECESSOR_ATTACHMENT_CENSUS']='1'
+  flags['HANGTEN_REVIEW_BOARD_HOST_OBSERVATION']='1'
+  flags['HANGTEN_REVIEW_HAND_LIFETIME_CENSUS']='1'
+@@ -69,7 +69,7 @@
+  flags['HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT']='1'
+  env={k:v for k,v in os.environ.items() if not k.startswith('SIMCTL_CHILD_HANGTEN_REVIEW_')};env.update({'SIMCTL_CHILD_'+k:v for k,v in flags.items()})
+  (out/'launch-review-environment.json').write_text(json.dumps(flags,indent=2)+'\n')
+- (out/'protocol.json').write_text(json.dumps({'hardBoundSeconds':300,'plannedPhases':['active','preview','active'],'captureOffsetsAfterActualMutation':[.25,1,3,5],'afterLaunchUIAccess':'screenshots only; no AX queries/taps/Skip','externalTracePollingSeconds':.03,'routineUnchanged':True,'samplerLimit':'Existing120-iteration sampler remains; new identical both-arm boundary census on actual highlight-before/after supplies sparse late-phase app/window/placement evidence, not every capture instant','arm':arm,'startup':'One counter observational orthographic reproduction. Same prior O normal route, actual hands, UNMOUNT, weak hand and board census, ordinary ownership, external20s Train attachment readiness and natural7/180/7 passive12captures+tail. Only SYNC_DELIVERY_COUNTERS and fresh run ID differ in environment; new binary adds scalar counts/times at existing calls without new observer or mutation. No projection/retention/detach/other experimental flags. Counter values represent CPU calls and assignments, not changed values or GPU commits. No additional arm authorized.'},indent=2)+'\n')
++ (out/'protocol.json').write_text(json.dumps({'hardBoundSeconds':300,'plannedPhases':['active','preview','active'],'captureOffsetsAfterActualMutation':[.25,1,3,5],'afterLaunchUIAccess':'screenshots only; no AX queries/taps/Skip','externalTracePollingSeconds':.03,'routineUnchanged':True,'samplerLimit':'Existing120-iteration sampler remains; new identical both-arm boundary census on actual highlight-before/after supplies sparse late-phase app/window/placement evidence, not every capture instant','arm':arm,'startup':'Prestart-hand control arm. Same new binary; normal Train structural unmount, ordinary ownership, real orthographic hands, weak lifetime census and sync counters. Original external20s Train attachment readiness and passive natural7/180/7 with12captures plus following-preview tail unchanged. Control flag absent; action alone adds SUPPRESS_PRESTART_HAND_HOSTS. Common source environment and bounded countdown records retained. No strict all-hand suppression, perspective or other experimental gates. Root must hash-gate valid failing control with earlier startup hand history before action; no reversal authorized. Sparse countdown callback is state evidence, not exact permission-edge timestamp. No training source timing or content changes.'},indent=2)+'\n')
+  tracefolder=data/'Documents'/('HighlightDiagnostic-'+flags['HANGTEN_REVIEW_DIAGNOSTIC_RUN']);assert not tracefolder.exists()
+  run('xcrun','simctl','launch','--terminate-running-process',uid,'com.hangten.training',env=env)
+  # New shared startup protocol: observe existing events only; no AX/touch or UI write.

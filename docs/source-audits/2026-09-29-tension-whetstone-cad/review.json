@@ -1,0 +1,47 @@
+{
+  "owner": "rugged-chipmunk",
+  "package": "tension-whetstone",
+  "approvalStatus": "approved",
+  "productURL": "https://tensionclimbing.com/products/whetstone",
+  "productPageSHA256": "6642a9ba6f1fc9a67bc750ae751503330a4e4df703b7aff83bf6a775dee92720",
+  "publishedFacts": {
+    "dimensionsInches": [
+      25,
+      6,
+      2
+    ],
+    "edgeDepthsMm": [
+      40,
+      30,
+      25,
+      20
+    ],
+    "centerEdgeIncutDegrees": 10,
+    "twoFingerPocketDepthMm": 40
+  },
+  "visualSources": [
+    {
+      "file": "Whetstone1.png",
+      "url": "https://cdn.shopify.com/s/files/1/0653/3706/5653/files/Whetstone1.png?v=1726542637",
+      "publisher": "Tension Climbing",
+      "sha256": "e2a130f3ee6d94685e01da1195c54127c47dca51e3558dcdc8b0446640768327",
+      "supports": "Front silhouette, symmetric hold layout, split-depth slot labels, ergo-bump locations."
+    },
+    {
+      "file": "Whetstone5.jpg",
+      "url": "https://cdn.shopify.com/s/files/1/0653/3706/5653/files/Whetstone5.jpg?v=1726542637",
+      "publisher": "Tension Climbing",
+      "sha256": "30122b44592cd3246cecc315c0e64e9455113c267b710dc85550a319e53d4b6a",
+      "supports": "Right oblique end profile, jug curvature, center-edge incut and pocket relief."
+    },
+    {
+      "file": "Whetstone6.jpg",
+      "url": "https://cdn.shopify.com/s/files/1/0653/3706/5653/files/Whetstone6.jpg?v=1726542637",
+      "publisher": "Tension Climbing",
+      "sha256": "d878a295b61bc2d05e35500d261c21cf76ee746a12c2c45fa8679d6913bbb18d",
+      "supports": "Left oblique end profile, two-finger cavity relief and stepped slot floors."
+    }
+  ],
+  "scope": "Native parametric FreeCAD source; preserve all 12 contact IDs; generated manifest; unbound USDZ; no mounting hardware. Unpublished display geometry will be labeled estimates.",
+  "approval": "User answered y to the exact three-image evidence set on 2026-09-29."
+}

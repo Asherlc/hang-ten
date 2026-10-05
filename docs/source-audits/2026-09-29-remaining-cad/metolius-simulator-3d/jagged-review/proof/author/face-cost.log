@@ -1,0 +1,438 @@
+{"estimatedOwnFaceCentroidSeconds": 532.0339294002042, "triangleCount": 254770}
+[
+  {
+    "face": 45,
+    "surface": "<class 'Part.BSplineSurface'>",
+    "triangles": 52580,
+    "tessellateSeconds": 0.5860702500212938,
+    "parameterMedianSeconds": 0.0019232920021750033,
+    "parameterMaxSeconds": 0.0020872080349363387,
+    "bounds": [
+      129.99999999999997,
+      -90.0165793945166,
+      134.97332577079712,
+      166.00000000000233,
+      0.05368662781705584,
+      179.78217821782178
+    ],
+    "optimalBounds": [
+      129.52403066164294,
+      -90.49254873287364,
+      134.49735643244009,
+      166.47596933835936,
+      0.5296559661740953,
+      180.2581475561788
+    ],
+    "UDegree": 8,
+    "VDegree": 3,
+    "NbUPoles": 245,
+    "NbVPoles": 4,
+    "NbUKnots": 34,
+    "NbVKnots": 2
+  },
+  {
+    "face": 26,
+    "surface": "<class 'Part.BSplineSurface'>",
+    "triangles": 28217,
+    "tessellateSeconds": 0.37095399998361245,
+    "parameterMedianSeconds": 0.0035794589784927666,
+    "parameterMaxSeconds": 0.0037762499996460974,
+    "bounds": [
+      -65.0000000000043,
+      -94.06449478056362,
+      144.987652143884,
+      -35.0,
+      4.3e-14,
+      195.19810567827054
+    ],
+    "optimalBounds": [
+      -65.68823468556084,
+      -94.75272946612016,
+      144.29941745832744,
+      -34.31176531444346,
+      0.6882346855565804,
+      195.8863403638271
+    ],
+    "UDegree": 8,
+    "VDegree": 3,
+    "NbUPoles": 486,
+    "NbVPoles": 4,
+    "NbUKnots": 69,
+    "NbVKnots": 2
+  },
+  {
+    "face": 47,
+    "surface": "<class 'Part.BSplineSurface'>",
+    "triangles": 28281,
+    "tessellateSeconds": 0.35216766700614244,
+    "parameterMedianSeconds": 0.0035642500151880085,
+    "parameterMaxSeconds": 0.004385792009998113,
+    "bounds": [
+      34.999999999999986,
+      -94.06449478056362,
+      144.987652143884,
+      65.0000000000043,
+      4.3e-14,
+      195.19810567827057
+    ],
+    "optimalBounds": [
+      34.30470573606647,
+      -94.75978904449714,
+      144.2923578799505,
+      65.69529426393783,
+      0.6952942639335598,
+      195.89339994220407
+    ],
+    "UDegree": 8,
+    "VDegree": 3,
+    "NbUPoles": 486,
+    "NbVPoles": 4,
+    "NbUKnots": 69,
+    "NbVKnots": 2
+  },
+  {
+    "face": 27,
+    "surface": "<class 'Part.BSplineSurface'>",
+    "triangles": 52572,
+    "tessellateSeconds": 0.5652716670301743,
+    "parameterMedianSeconds": 0.001846000028308481,
+    "parameterMaxSeconds": 0.0019982910016551614,
+    "bounds": [
+      -166.00000000000227,
+      -90.0165793945166,
+      134.97332577079712,
+      -129.99999999999997,
+      0.05368662781705584,
+      179.78217821782178
+    ],
+    "optimalBounds": [
+      -166.47587859664796,
+      -90.49245799116227,
+      134.49744717415143,
+      -129.5241214033543,
+      0.5295652244627324,
+      180.25805681446747
+    ],
+    "UDegree": 8,
+    "VDegree": 3,
+    "NbUPoles": 245,
+    "NbVPoles": 4,
+    "NbUKnots": 34,
+    "NbVKnots": 2
+  },
+  {
+    "face": 42,
+    "surface": "<class 'Part.BSplineSurface'>",
+    "triangles": 29234,
+    "tessellateSeconds": 0.326555208011996,
+    "parameterMedianSeconds": 0.002177917049266398,
+    "parameterMaxSeconds": 0.0022562919766642153,
+    "bounds": [
+      237.99999999999807,
+      -94.01362156448458,
+      134.97019028773659,
+      278.00000000000006,
+      3.9e-14,
+      174.72844188472266
+    ],
+    "optimalBounds": [
+      237.59769825698734,
+      -94.41592330749532,
+      134.56788854472586,
+      278.4023017430108,
+      0.4023017430107738,
+      175.13074362773338
+    ],
+    "UDegree": 8,
+    "VDegree": 3,
+    "NbUPoles": 283,
+    "NbVPoles": 4,
+    "NbUKnots": 40,
+    "NbVKnots": 2
+  },
+  {
+    "face": 30,
+    "surface": "<class 'Part.BSplineSurface'>",
+    "triangles": 29328,
+    "tessellateSeconds": 0.3198326249839738,
+    "parameterMedianSeconds": 0.0021425840095616877,
+    "parameterMaxSeconds": 0.0025741669815033674,
+    "bounds": [
+      -278.0,
+      -94.01362156448478,
+      134.97019028773659,
+      -238.0,
+      3.9e-14,
+      174.7284418848351
+    ],
+    "optimalBounds": [
+      -278.3985898839772,
+      -94.412211448462,
+      134.57160040375936,
+      -237.60141011602278,
+      0.3985898839772592,
+      175.12703176881232
+    ],
+    "UDegree": 8,
+    "VDegree": 3,
+    "NbUPoles": 283,
+    "NbVPoles": 4,
+    "NbUKnots": 40,
+    "NbVKnots": 2
+  },
+  {
+    "face": 65,
+    "surface": "<class 'Part.SurfaceOfExtrusion'>",
+    "triangles": 4044,
+    "tessellateSeconds": 0.0515947500243783,
+    "parameterMedianSeconds": 0.00031224999111145735,
+    "parameterMaxSeconds": 0.0003779580001719296,
+    "bounds": [
+      -320.5638820844136,
+      -44.0,
+      29.0,
+      320.56388208441365,
+      -32.0,
+      59.0
+    ],
+    "optimalBounds": [
+      -320.85222132120987,
+      -44.288339236796276,
+      28.711660763203724,
+      320.8522213212099,
+      -31.711660763203724,
+      59.288339236796276
+    ]
+  },
+  {
+    "face": 53,
+    "surface": "<class 'Part.SurfaceOfExtrusion'>",
+    "triangles": 3208,
+    "tessellateSeconds": 0.031699958024546504,
+    "parameterMedianSeconds": 0.0003541670157574117,
+    "parameterMaxSeconds": 0.00042754202149808407,
+    "bounds": [
+      -355.5,
+      -76.0,
+      117.0,
+      355.5,
+      -65.0,
+      147.0
+    ],
+    "optimalBounds": [
+      -355.7509321818647,
+      -76.2509321818647,
+      116.7490678181353,
+      355.7509321818647,
+      -64.7490678181353,
+      147.2509321818647
+    ]
+  },
+  {
+    "face": 66,
+    "surface": "<class 'Part.SurfaceOfExtrusion'>",
+    "triangles": 2725,
+    "tessellateSeconds": 0.03492845897562802,
+    "parameterMedianSeconds": 0.00028420903254300356,
+    "parameterMaxSeconds": 0.0003372090286575258,
+    "bounds": [
+      -337.59260541776456,
+      -55.0,
+      59.0,
+      337.5926054177646,
+      -44.0,
+      87.0
+    ],
+    "optimalBounds": [
+      -337.7747258062008,
+      -55.18212038843629,
+      58.81787961156371,
+      337.7747258062009,
+      -43.81787961156371,
+      87.18212038843629
+    ]
+  },
+  {
+    "face": 97,
+    "surface": "<class 'Part.SurfaceOfExtrusion'>",
+    "triangles": 2897,
+    "tessellateSeconds": 0.028962165990378708,
+    "parameterMedianSeconds": 0.00025387504138052464,
+    "parameterMaxSeconds": 0.00029841699870303273,
+    "bounds": [
+      -270.5933680163845,
+      -65.0,
+      87.0,
+      270.5933680163846,
+      -55.0,
+      117.0
+    ],
+    "optimalBounds": [
+      -270.86457164396967,
+      -65.27120362758517,
+      86.72879637241483,
+      270.8645716439698,
+      -54.72879637241483,
+      117.27120362758517
+    ]
+  },
+  {
+    "face": 64,
+    "surface": "<class 'Part.SurfaceOfExtrusion'>",
+    "triangles": 1519,
+    "tessellateSeconds": 0.012156457989476621,
+    "parameterMedianSeconds": 0.00017662503523752093,
+    "parameterMaxSeconds": 0.00024275004398077726,
+    "bounds": [
+      -298.28092443415863,
+      -32.0,
+      -2e-15,
+      298.2809244341586,
+      -18.56721484820658,
+      29.0
+    ],
+    "optimalBounds": [
+      -298.5612991154076,
+      -32.28037468124899,
+      -0.2803746812489977,
+      298.56129911540756,
+      -18.28684016695758,
+      29.280374681248997
+    ]
+  },
+  {
+    "face": 50,
+    "surface": "<class 'Part.SurfaceOfExtrusion'>",
+    "triangles": 1552,
+    "tessellateSeconds": 0.01074904203414917,
+    "parameterMedianSeconds": 0.00014366698451340199,
+    "parameterMaxSeconds": 0.00020479195518419147,
+    "bounds": [
+      -35.00000000000001,
+      -87.0,
+      191.0,
+      35.0,
+      -15.000000000001041,
+      222.0
+    ],
+    "optimalBounds": [
+      -35.356755907544176,
+      -87.35675590754417,
+      190.64324409245583,
+      35.35675590754417,
+      -14.643244092456873,
+      222.35675590754417
+    ]
+  },
+  {
+    "face": 52,
+    "surface": "<class 'Part.SurfaceOfExtrusion'>",
+    "triangles": 646,
+    "tessellateSeconds": 0.006492540996987373,
+    "parameterMedianSeconds": 0.00013629102613776922,
+    "parameterMaxSeconds": 0.00016024999786168337,
+    "bounds": [
+      -35.0,
+      -94.00000005,
+      147.0,
+      35.0,
+      -76.0,
+      170.00001788882824
+    ],
+    "optimalBounds": [
+      -35.168982413840716,
+      -94.1689824638407,
+      146.83101758615928,
+      35.168982413840716,
+      -75.83101758615929,
+      170.16900030266896
+    ]
+  },
+  {
+    "face": 32,
+    "surface": "<class 'Part.BSplineSurface'>",
+    "triangles": 592,
+    "tessellateSeconds": 0.005349459010176361,
+    "parameterMedianSeconds": 0.0001419169711880386,
+    "parameterMaxSeconds": 0.0001836249721236527,
+    "bounds": [
+      -355.5,
+      -94.0,
+      134.0,
+      -294.0,
+      -6.0,
+      180.0
+    ],
+    "optimalBounds": [
+      -355.78011690732046,
+      -94.28011690732045,
+      133.71988309267954,
+      -293.71988309267954,
+      -5.719883092679546,
+      180.28011690732046
+    ],
+    "UDegree": 3,
+    "VDegree": 1,
+    "NbUPoles": 4,
+    "NbVPoles": 2,
+    "NbUKnots": 2,
+    "NbVKnots": 2
+  },
+  {
+    "face": 41,
+    "surface": "<class 'Part.BSplineSurface'>",
+    "triangles": 578,
+    "tessellateSeconds": 0.005795624980237335,
+    "parameterMedianSeconds": 0.0001445409725420177,
+    "parameterMaxSeconds": 0.00019062496721744537,
+    "bounds": [
+      294.0,
+      -94.0,
+      134.0,
+      355.5,
+      -6.0,
+      180.0
+    ],
+    "optimalBounds": [
+      293.71664255670487,
+      -94.2833574432951,
+      133.7166425567049,
+      355.78335744329513,
+      -5.716642556704895,
+      180.2833574432951
+    ],
+    "UDegree": 3,
+    "VDegree": 1,
+    "NbUPoles": 4,
+    "NbVPoles": 2,
+    "NbUKnots": 2,
+    "NbVKnots": 2
+  },
+  {
+    "face": 70,
+    "surface": "<class 'Part.SurfaceOfExtrusion'>",
+    "triangles": 653,
+    "tessellateSeconds": 0.003935833054129034,
+    "parameterMedianSeconds": 0.00011016603093594313,
+    "parameterMaxSeconds": 0.00014100002590566874,
+    "bounds": [
+      278.0,
+      -94.0,
+      147.0,
+      351.91719547957587,
+      -76.0,
+      170.00002106142753
+    ],
+    "optimalBounds": [
+      277.72288893961183,
+      -94.27711106038815,
+      146.72288893961183,
+      352.19430653996403,
+      -75.72288893961185,
+      170.2771321218157
+    ]
+  }
+]
+
+								
+								

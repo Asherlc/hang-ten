@@ -3,7 +3,7 @@ import Metal
 import SwiftUI
 
 /// Rendering parameters, not anatomical measurements or training prescriptions.
-/// Finger membership always comes from the routine's explicit configuration.
+/// Explicit finger selections take precedence; otherwise the display assumes four fingers.
 struct GripHandPose: Equatable {
     let posture: GripType?
     let highlightedFingers: Set<FingerSlot>
@@ -11,7 +11,7 @@ struct GripHandPose: Equatable {
 
     init(posture: GripType?, fingerConfiguration: FingerConfiguration?) {
         self.posture = posture
-        highlightedFingers = fingerConfiguration?.engagedFingers ?? []
+        highlightedFingers = fingerConfiguration?.engagedFingers ?? Set(FingerSlot.allCases)
         hasExplicitFingers = fingerConfiguration != nil
     }
 
@@ -30,6 +30,14 @@ struct GripHandPose: Equatable {
         case nil: return "Neutral"
         }
     }
+}
+
+private struct GripHandPreparation: Equatable {
+    let id: UUID
+    let size: CGSize
+    let pose: GripHandPose
+    let isLeft: Bool?
+    let resetToken: Int
 }
 
 /// Displays the evaluated surfaces authored in Art/GripHand/GripHand.blend.
@@ -86,6 +94,9 @@ struct GripHandModelView: View {
     @State private var dragState = GripHandDragState()
     @State private var lastMagnification: CGFloat = 1
     @State private var cameraRevision = 0
+    @State private var preparationHostID = UUID()
+    @State private var synchronizedPreparation: GripHandPreparation?
+    @Environment(\.workoutRendererPreparationID) private var preparationID
 
     private var scene: GripHandRealityScene { sceneStorage.scene }
 
@@ -118,12 +129,19 @@ struct GripHandModelView: View {
                 content.add(scene.root)
                 syncScene(in: size)
                 updateUnavailableState()
+                reportPreparation(in: size)
             } update: { _ in
                 syncScene(in: size)
                 updateUnavailableState()
+                reportPreparation(in: size)
             }
             .simultaneousGesture(orbitGesture(size: size))
             .simultaneousGesture(magnifyGesture)
+            #if targetEnvironment(simulator)
+            .background {
+                SimulatorDrawablePresentation().allowsHitTesting(false)
+            }
+            #endif
             .overlay {
                 if isUnavailable {
                     Text("3D hand unavailable")
@@ -135,7 +153,25 @@ struct GripHandModelView: View {
                 }
             }
             .accessibilityHidden(true)
+            .preference(key: WorkoutRendererReadinessKey.self, value: preparationID == nil
+                        ? .init() : .init(renderers: [preparationHostID: .init(
+                            kind: .hand, status: isUnavailable ? .unavailable
+                                : synchronizedPreparation == currentPreparation(in: size) ? .ready : .loading,
+                            preparationID: preparationID)]))
         }
+    }
+
+    private func currentPreparation(in size: CGSize) -> GripHandPreparation? {
+        preparationID.map { GripHandPreparation(id: $0, size: size,
+            pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
+            isLeft: side == .left, resetToken: resetToken) }
+    }
+
+    private func reportPreparation(in size: CGSize) {
+        guard let preparation = currentPreparation(in: size), synchronizedPreparation != preparation,
+              size.width.isFinite, size.height.isFinite, size.width > 0, size.height > 0,
+              !scene.isUnavailable else { return }
+        Task { @MainActor in synchronizedPreparation = preparation }
     }
 
     func syncScene(in size: CGSize) {
@@ -230,6 +266,31 @@ struct GripHandRealityMeshBuilder {
     private static let baseColor = SIMD4<Float>(0.687, 0.392, 0.242, 1)
     private static let highlightColor = SIMD4<Float>(0.966, 0.0615, 0.0108, 1)
 
+    struct Geometry {
+        let positions: [SIMD3<Float>]
+        let normals: [SIMD3<Float>]
+        let indices: [UInt32]
+    }
+
+    static func geometry(asset: GripHandAsset, action: String, mirrored: Bool) throws -> Geometry {
+        guard let source = asset.poses[action] else { throw GripHandAsset.AssetError.invalidMesh }
+        let positions = stride(from: 0, to: source.positions.count, by: 3).map { offset in
+            SIMD3(mirrored ? -source.positions[offset] : source.positions[offset],
+                  source.positions[offset + 1], source.positions[offset + 2])
+        }
+        let normals = stride(from: 0, to: source.normals.count, by: 3).map { offset in
+            SIMD3(mirrored ? -source.normals[offset] : source.normals[offset],
+                  source.normals[offset + 1], source.normals[offset + 2])
+        }
+        var indices: [UInt32] = asset.indices
+        if mirrored {
+            for offset in stride(from: 0, to: indices.count, by: 3) {
+                indices.swapAt(offset + 1, offset + 2)
+            }
+        }
+        return Geometry(positions: positions, normals: normals, indices: indices)
+    }
+
     static func vertexColors(
         asset: GripHandAsset,
         action: GripHandPose,
@@ -270,6 +331,7 @@ final class GripHandRealitySurface {
     private struct MeshKey: Hashable {
         let action: String
         let fingers: Set<FingerSlot>
+        let mirrored: Bool
     }
 
     let root = Entity()
@@ -278,6 +340,7 @@ final class GripHandRealitySurface {
     private(set) var triangleCount = 0
     private(set) var appliedPose: GripHandPose?
     private(set) var appliedVertexColors: [SIMD4<Float>] = []
+    private(set) var appliedMirrored = false
 
     private let asset: GripHandAsset
     private let material: CustomMaterial
@@ -308,8 +371,8 @@ final class GripHandRealitySurface {
         root.addChild(modelEntity)
     }
 
-    func apply(_ pose: GripHandPose) throws {
-        let key = MeshKey(action: pose.action(), fingers: pose.highlightedFingers)
+    func apply(_ pose: GripHandPose, mirrored: Bool = false) throws {
+        let key = MeshKey(action: pose.action(), fingers: pose.highlightedFingers, mirrored: mirrored)
         guard asset.poses[key.action] != nil else { throw GripHandAsset.AssetError.invalidMesh }
         let builtMesh: BuiltMesh
         if let cached = meshes[key] {
@@ -327,6 +390,7 @@ final class GripHandRealitySurface {
         currentAction = key.action
         appliedPose = pose
         appliedVertexColors = builtMesh.vertexColors
+        appliedMirrored = mirrored
         vertexCount = asset.vertexCount
         triangleCount = asset.indices.count / 3
     }
@@ -335,18 +399,21 @@ final class GripHandRealitySurface {
     func posedVerticesForFraming() -> [SIMD3<Float>] {
         guard let positions = asset.poses[currentAction]?.positions else { return [] }
         return stride(from: 0, to: positions.count, by: 3).map {
-            SIMD3(positions[$0], positions[$0 + 1], positions[$0 + 2])
+            SIMD3(appliedMirrored ? -positions[$0] : positions[$0],
+                  positions[$0 + 1], positions[$0 + 2])
         }
     }
 
     private func makeMesh(for key: MeshKey, pose: GripHandPose) throws -> BuiltMesh {
-        let source = asset.poses[key.action]!
+        let geometry = try GripHandRealityMeshBuilder.geometry(
+            asset: asset, action: key.action, mirrored: key.mirrored
+        )
         let colors = try GripHandRealityMeshBuilder.vertexColors(
             asset: asset, action: pose, selectedFingers: key.fingers
         )
         let vertices = (0..<asset.vertexCount).map { i in
-            Vertex(position: SIMD3(source.positions[i * 3], source.positions[i * 3 + 1], source.positions[i * 3 + 2]),
-                   normal: SIMD3(source.normals[i * 3], source.normals[i * 3 + 1], source.normals[i * 3 + 2]),
+            Vertex(position: geometry.positions[i],
+                   normal: geometry.normals[i],
                    color: colors[i])
         }
         let bounds = vertices.reduce(BoundingBox.empty) { box, vertex in
@@ -360,16 +427,16 @@ final class GripHandRealitySurface {
                 .init(semantic: .color, format: .float4, offset: MemoryLayout<Vertex>.offset(of: \.color)!)
             ],
             vertexLayouts: [.init(bufferIndex: 0, bufferStride: MemoryLayout<Vertex>.stride)],
-            indexCapacity: asset.indices.count
+            indexCapacity: geometry.indices.count
         )
         let lowLevelMesh = try LowLevelMesh(descriptor: descriptor)
         lowLevelMesh.withUnsafeMutableBytes(bufferIndex: 0) { destination in
             vertices.withUnsafeBytes { source in destination.copyBytes(from: source) }
         }
         lowLevelMesh.withUnsafeMutableIndices { destination in
-            asset.indices.withUnsafeBytes { source in destination.copyBytes(from: source) }
+            geometry.indices.withUnsafeBytes { source in destination.copyBytes(from: source) }
         }
-        lowLevelMesh.parts.append(.init(indexCount: asset.indices.count, bounds: bounds))
+        lowLevelMesh.parts.append(.init(indexCount: geometry.indices.count, bounds: bounds))
         return BuiltMesh(resource: try MeshResource(from: lowLevelMesh), vertexColors: colors)
     }
 }
@@ -384,6 +451,7 @@ final class GripHandRealityScene {
     private(set) var isUnavailable = false
 
     private var surface: GripHandRealitySurface?
+    var isMirrored: Bool { surface?.appliedMirrored ?? false }
     private(set) var currentPose: GripHandPose?
     private var currentSide: GripCueSide?
     private var currentViewportSize: CGSize = .zero
@@ -422,9 +490,9 @@ final class GripHandRealityScene {
         let poseChanged = currentPose != pose
         let sideChanged = currentSide != side
         let viewportChanged = currentViewportSize != viewportSize
-        if poseChanged {
+        if poseChanged || sideChanged {
             do {
-                try surface?.apply(pose)
+                try surface?.apply(pose, mirrored: side == .left)
             } catch {
                 surface?.root.removeFromParent()
                 surface = nil
@@ -432,7 +500,6 @@ final class GripHandRealityScene {
             }
         }
         if sideChanged {
-            hand.scale.x = side == .left ? -1 : 1
             orientLights(for: side)
         }
         let needsReset = poseChanged || sideChanged || viewportChanged || currentResetToken != resetToken
@@ -445,9 +512,7 @@ final class GripHandRealityScene {
 
     func resetCamera() {
         guard let surface else { return }
-        let points = surface.posedVerticesForFraming().map { point in
-            SIMD4<Float>(point.x * hand.scale.x, point.y, point.z, 1)
-        }
+        let points = surface.posedVerticesForFraming().map { SIMD4<Float>($0, 1) }
         guard !points.isEmpty else { return }
         var low = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
         var high = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
@@ -542,10 +607,10 @@ final class GripHandRealityScene {
         // hand so each key stays beside its camera and in front of the palm.
         let lateral: Float = side == .left ? 1 : -1
         keyLight.components.set(DirectionalLightComponent(
-            color: .white, intensity: side == .left ? 4_500 : 2_800
+            color: .white, intensity: 2_800
         ))
         fillLight.components.set(DirectionalLightComponent(
-            color: .white, intensity: side == .left ? 4_000 : 250
+            color: .white, intensity: 250
         ))
         keyLight.look(at: .zero, from: SIMD3(lateral * 5.8, 8, 7), relativeTo: root)
         fillLight.look(at: .zero, from: SIMD3(-lateral * 2, 2, -5), relativeTo: root)
@@ -570,7 +635,7 @@ final class GripHandRealityPairScene {
     private(set) var currentViewportSize: CGSize = .zero
     private(set) var currentResetToken: Int?
 
-    private let slotOffset: Float = 0.82
+    private let handGap: Float = 0.55
     private var canonicalCenter = SIMD3<Float>.zero
     private var canonicalOffset = SIMD3<Float>(0, 0, 1)
     private var canonicalOrthographicScale: Float = 1
@@ -581,9 +646,9 @@ final class GripHandRealityPairScene {
     init(assetResult: Result<GripHandAsset, Error> = GripHandAsset.bundled) {
         root.addChild(leftHand)
         root.addChild(rightHand)
-        leftHand.position.x = -slotOffset
-        rightHand.position.x = slotOffset
-        leftHand.scale.x = -1
+        // Show the palm and the inward curl of each half-crimp finger.
+        leftHand.orientation = simd_quatf(angle: 0.85, axis: SIMD3(0, 1, 0))
+        rightHand.orientation = simd_quatf(angle: -0.85, axis: SIMD3(0, 1, 0))
         var orthographicCamera = OrthographicCameraComponent()
         orthographicCamera.near = 0.1
         orthographicCamera.far = 100
@@ -618,7 +683,7 @@ final class GripHandRealityPairScene {
         let viewportChanged = currentViewportSize != viewportSize
         if poseChanged {
             do {
-                try leftSurface?.apply(pose)
+                try leftSurface?.apply(pose, mirrored: true)
                 try rightSurface?.apply(pose)
             } catch {
                 if let leftSurface { leftHand.removeChild(leftSurface.root) }
@@ -637,6 +702,13 @@ final class GripHandRealityPairScene {
 
     func resetCamera() {
         guard let leftSurface, let rightSurface else { return }
+        let leftLocal = leftSurface.posedVerticesForFraming()
+        let rightLocal = rightSurface.posedVerticesForFraming()
+        guard let leftInnerEdge = leftLocal.map({ leftHand.orientation.act($0).x }).max(),
+              let rightInnerEdge = rightLocal.map({ rightHand.orientation.act($0).x }).min() else { return }
+        let slotOffset = max(0, (leftInnerEdge - rightInnerEdge + handGap) / 2)
+        leftHand.position.x = -slotOffset
+        rightHand.position.x = slotOffset
         let points = framedPoints(for: leftSurface, under: leftHand)
             + framedPoints(for: rightSurface, under: rightHand)
         guard !points.isEmpty else { return }
@@ -747,6 +819,9 @@ struct GripHandPairModelView: View {
     @State private var dragState = GripHandDragState()
     @State private var lastMagnification: CGFloat = 1
     @State private var cameraRevision = 0
+    @State private var preparationHostID = UUID()
+    @State private var synchronizedPreparation: GripHandPreparation?
+    @Environment(\.workoutRendererPreparationID) private var preparationID
 
     private var scene: GripHandRealityPairScene { sceneStorage.scene }
 
@@ -776,12 +851,19 @@ struct GripHandPairModelView: View {
                 content.add(scene.root)
                 syncScene(in: size)
                 updateUnavailableState()
+                reportPreparation(in: size)
             } update: { _ in
                 syncScene(in: size)
                 updateUnavailableState()
+                reportPreparation(in: size)
             }
             .simultaneousGesture(orbitGesture(size: size))
             .simultaneousGesture(magnifyGesture)
+            #if targetEnvironment(simulator)
+            .background {
+                SimulatorDrawablePresentation().allowsHitTesting(false)
+            }
+            #endif
             .overlay {
                 if isUnavailable {
                     Text("3D hands unavailable")
@@ -793,7 +875,25 @@ struct GripHandPairModelView: View {
                 }
             }
             .accessibilityHidden(true)
+            .preference(key: WorkoutRendererReadinessKey.self, value: preparationID == nil
+                        ? .init() : .init(renderers: [preparationHostID: .init(
+                            kind: .hand, status: isUnavailable ? .unavailable
+                                : synchronizedPreparation == currentPreparation(in: size) ? .ready : .loading,
+                            preparationID: preparationID)]))
         }
+    }
+
+    private func currentPreparation(in size: CGSize) -> GripHandPreparation? {
+        preparationID.map { GripHandPreparation(id: $0, size: size,
+            pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
+            isLeft: nil, resetToken: resetToken) }
+    }
+
+    private func reportPreparation(in size: CGSize) {
+        guard let preparation = currentPreparation(in: size), synchronizedPreparation != preparation,
+              size.width.isFinite, size.height.isFinite, size.width > 0, size.height > 0,
+              scene.isAvailable else { return }
+        Task { @MainActor in synchronizedPreparation = preparation }
     }
 
     func syncScene(in size: CGSize) {
@@ -831,73 +931,13 @@ struct GripHandPairModelView: View {
     }
 }
 
-struct GripHandModelInspector: View {
-    let posture: GripType?
-    let fingerConfiguration: FingerConfiguration?
-    let side: GripCueSide
-    @Environment(\.dismiss) private var dismiss
-    @State private var resetToken = 0
-
-    var body: some View {
-        NavigationStack {
-            GeometryReader { geometry in
-                if geometry.size.width > geometry.size.height {
-                    HStack(spacing: 24) {
-                        model
-                        controls.frame(width: min(260, geometry.size.width * 0.34))
-                    }
-                } else {
-                    VStack(spacing: 16) {
-                        model
-                        controls
-                    }
-                }
-            }
-            .padding(20)
-            .background(Color.hangCream)
-            .navigationTitle(posture?.label ?? "Grip not specified")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
-                }
-            }
-        }
-    }
-
-    private var model: some View {
-        GripHandModelView(posture: posture, fingerConfiguration: fingerConfiguration,
-                          side: side, resetToken: resetToken)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .accessibilityLabel("Rotatable 3D \(side.accessibilityIdentifier) hand")
-    }
-
-    private var controls: some View {
-        VStack(spacing: 16) {
-            Text(fingerConfiguration.map { "Highlighted: " + $0.orderedFingers.map(\.rawValue).joined(separator: ", ") }
-                 ?? "Fingers not specified")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Color.hangInk)
-            Text("Drag to rotate · Pinch to zoom")
-                .font(.footnote)
-                .foregroundStyle(Color.hangMuted)
-            Button("Reset view") { resetToken += 1 }
-                .buttonStyle(.bordered)
-                .accessibilityIdentifier("gripModel.reset")
-            Text("Schematic grip illustration")
-                .font(.caption2)
-                .foregroundStyle(Color.hangMuted)
-        }
-        .multilineTextAlignment(.center)
-    }
-}
-
 #if DEBUG
 /// Isolated visual QA; choices here never modify a workout or its prescriptions.
 struct GripHandModelReviewView: View {
     @State private var posture: GripType = .halfCrimp
     @State private var fingers: Set<FingerSlot> = [.index, .middle, .ring, .pinky]
     @State private var resetToken = 0
+    @State private var layoutOrientation = "unknown"
 
     var body: some View {
         NavigationStack {
@@ -918,8 +958,10 @@ struct GripHandModelReviewView: View {
                 }
                 GripHandPairModelView(posture: posture, fingerConfiguration: configuration,
                                       resetToken: resetToken)
-                Text(fingers.isEmpty ? "Fingers not specified" : "Highlighted: " + FingerSlot.allCases.filter(fingers.contains).map(\.rawValue).joined(separator: ", "))
+                Text(fingers.isEmpty ? "4 fingers (assumed)" : "Highlighted: " + FingerSlot.allCases.filter(fingers.contains).map(\.rawValue).joined(separator: ", "))
                     .font(.caption)
+                    .accessibilityIdentifier("gripModel.review.fingerSummary")
+                    .accessibilityValue(layoutOrientation)
                 Button("Reset view") { resetToken += 1 }
                 Text("Drag to rotate · Pinch to zoom")
                     .font(.caption)
@@ -928,6 +970,14 @@ struct GripHandModelReviewView: View {
             .background(Color.hangCream)
             .navigationTitle("3D hand review")
         }
+        // XCTest's SpringBoard frame does not track the foreground app's rotation.
+        // Report the actual review layout so screenshots wait for SwiftUI to resize.
+        .onGeometryChange(for: String.self) { geometry in
+            let size = geometry.size
+            guard size.width.isFinite, size.height.isFinite,
+                  size.width > 0, size.height > 0 else { return "unknown" }
+            return size.width > size.height ? "landscape" : "portrait"
+        } action: { layoutOrientation = $0 }
         .onAppear {
             let environment = ProcessInfo.processInfo.environment
             if let requested = environment["HANGTEN_REVIEW_GRIP_POSE"].flatMap(GripType.init(rawValue:)) { posture = requested }

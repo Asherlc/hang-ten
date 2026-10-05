@@ -1,0 +1,100 @@
+{
+  "planLibraryPath": "HangTen/Resources/PlanLibrary.json",
+  "planLibrarySHA256": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1",
+  "provenance": "Exact existing packaged task metadata; source URL retained from plan; no new routine content or external source interpretation",
+  "contactID": "round-sloper-3-center",
+  "tasks": [
+    {
+      "validationPath": "plans[6].blocks[1].steps[6].segments[0].target.tasks[0]",
+      "planID": "metolius.simulator-3d.entry",
+      "blockID": "metolius.simulator-3d.entry.main",
+      "stepID": "metolius.simulator-3d.entry.minute-8",
+      "taskIndex": 0,
+      "existingTask": [
+        {
+          "target": {
+            "kind": "sloper",
+            "shape": "round"
+          }
+        },
+        {
+          "target": {
+            "kind": "sloper",
+            "shape": "round"
+          }
+        }
+      ],
+      "sourceURL": "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide",
+      "sourceLabel": "Metolius Simulator 3D Training Guide"
+    },
+    {
+      "validationPath": "plans[7].blocks[1].steps[2].segments[0].target.tasks[1]",
+      "planID": "metolius.simulator-3d.intermediate",
+      "blockID": "metolius.simulator-3d.intermediate.main",
+      "stepID": "metolius.simulator-3d.intermediate.minute-4",
+      "taskIndex": 1,
+      "existingTask": [
+        {
+          "target": {
+            "kind": "sloper",
+            "shape": "round"
+          }
+        },
+        {
+          "target": {
+            "kind": "sloper",
+            "shape": "round"
+          }
+        }
+      ],
+      "sourceURL": "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide",
+      "sourceLabel": "Metolius Simulator 3D Training Guide"
+    },
+    {
+      "validationPath": "plans[7].blocks[1].steps[8].segments[0].target.tasks[1]",
+      "planID": "metolius.simulator-3d.intermediate",
+      "blockID": "metolius.simulator-3d.intermediate.main",
+      "stepID": "metolius.simulator-3d.intermediate.minute-10",
+      "taskIndex": 1,
+      "existingTask": [
+        {
+          "target": {
+            "kind": "sloper",
+            "shape": "round"
+          }
+        },
+        {
+          "target": {
+            "kind": "sloper",
+            "shape": "round"
+          }
+        }
+      ],
+      "sourceURL": "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide",
+      "sourceLabel": "Metolius Simulator 3D Training Guide"
+    },
+    {
+      "validationPath": "plans[8].blocks[1].steps[8].segments[0].target.tasks[1]",
+      "planID": "metolius.simulator-3d.advanced",
+      "blockID": "metolius.simulator-3d.advanced.main",
+      "stepID": "metolius.simulator-3d.advanced.minute-10",
+      "taskIndex": 1,
+      "existingTask": [
+        {
+          "target": {
+            "kind": "sloper",
+            "shape": "round"
+          }
+        },
+        {
+          "target": {
+            "kind": "sloper",
+            "shape": "round"
+          }
+        }
+      ],
+      "sourceURL": "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide",
+      "sourceLabel": "Metolius Simulator 3D Training Guide"
+    }
+  ]
+}

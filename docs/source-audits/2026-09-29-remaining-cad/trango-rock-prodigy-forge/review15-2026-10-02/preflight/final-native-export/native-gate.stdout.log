@@ -1,0 +1,21 @@
+{"phase": "finite contact coverage", "contact": "closed-crimp-left", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "closed-crimp-right", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "im-deep-left", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "im-deep-right", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "im-shallow-left", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "im-shallow-right", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "large-flat-edge-left", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "large-flat-edge-right", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "mr-deep-left", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "mr-deep-right", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "mr-shallow-left", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "mr-shallow-right", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "sloper-30-left", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "sloper-30-right", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "sloper-40-left", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "sloper-40-right", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "slopey-crimper-left", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "slopey-crimper-right", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "variable-edge-rail-left", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"phase": "finite contact coverage", "contact": "variable-edge-rail-right", "missingBodyAreaMM2": 0.0, "excessBodyAreaMM2": 0.0, "baselineExact": true, "rearPlaneFaces": []}
+{"passed": true, "report": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-check.json", "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e"}

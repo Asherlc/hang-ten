@@ -1,0 +1,338 @@
+[
+  {
+    "type": "Application",
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 0,
+      "height": 874,
+      "x": 0,
+      "width": 402
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "Train",
+    "AXValue": null,
+    "frame": {
+      "x": 0,
+      "width": 402,
+      "height": 54,
+      "y": 62
+    }
+  },
+  {
+    "type": "Heading",
+    "AXLabel": "Train",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 181,
+      "width": 39.66666666666666,
+      "height": 20.66666666666667,
+      "y": 73.66666666666666
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Settings",
+    "AXUniqueId": "train.settings",
+    "AXValue": null,
+    "frame": {
+      "x": 342.6666666666667,
+      "width": 39.333333333333314,
+      "height": 36,
+      "y": 66
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Settings",
+    "AXUniqueId": "train.settings",
+    "AXValue": null,
+    "frame": {
+      "x": 342.6666666666667,
+      "width": 39.333333333333314,
+      "height": 36,
+      "y": 66
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": "Poker hangboard",
+    "AXUniqueId": "train.board",
+    "AXValue": "",
+    "frame": {
+      "x": 38,
+      "width": 326,
+      "height": 49.333333333333314,
+      "y": 152
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": "Board renderer diagnostic",
+    "AXUniqueId": "boardModel.renderDiagnostic",
+    "AXValue": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=;tapRevision=0;pickedContact=",
+    "frame": {
+      "x": 38,
+      "width": 1,
+      "height": 1,
+      "y": 152
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "YOUR BOARD",
+    "AXUniqueId": "train.board",
+    "AXValue": null,
+    "frame": {
+      "x": 38,
+      "width": 89.33333333333333,
+      "height": 13.333333333333314,
+      "y": 228.72727150056102
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Product page",
+    "AXUniqueId": "train.board",
+    "AXValue": null,
+    "frame": {
+      "x": 261.66666666666663,
+      "width": 102.33333333333331,
+      "height": 44,
+      "y": 213.33333333333331
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "arrow.up.right",
+    "AXUniqueId": "arrow.up.right",
+    "AXValue": null,
+    "frame": {
+      "x": 263.3333333333333,
+      "width": 9.666666984558105,
+      "height": 9.666666984558105,
+      "y": 230.33333333333331
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Product page",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 261.66666666666663,
+      "width": 102.33333333333331,
+      "height": 44,
+      "y": 213.33333333333331
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Poker",
+    "AXUniqueId": "train.board",
+    "AXValue": null,
+    "frame": {
+      "x": 38,
+      "width": 54,
+      "height": 24,
+      "y": 262.3939381672277
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Change board",
+    "AXUniqueId": "train.board",
+    "AXValue": null,
+    "frame": {
+      "x": 38,
+      "width": 139.33333333333331,
+      "height": 48,
+      "y": 298.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "View hold specs",
+    "AXUniqueId": "train.board",
+    "AXValue": null,
+    "frame": {
+      "x": 189.33333333333331,
+      "width": 154,
+      "height": 48,
+      "y": 298.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Start free workout",
+    "AXUniqueId": "train.freeWorkout",
+    "AXValue": null,
+    "frame": {
+      "x": 20,
+      "width": 362,
+      "height": 50.333333333333314,
+      "y": 386.3333333333333
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "Add",
+    "AXUniqueId": "plus",
+    "AXValue": null,
+    "frame": {
+      "x": 121.33333333333333,
+      "width": 13.999999999999986,
+      "height": 14,
+      "y": 404.66666666666663
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Start free workout",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 20,
+      "width": 362,
+      "height": 50.333333333333314,
+      "y": 386.3333333333333
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "FAVORITES",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 38,
+      "width": 75.33333333333333,
+      "height": 13.333333333333314,
+      "y": 476.727271500561
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "No favorites yet",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 38,
+      "width": 123,
+      "height": 20.333333333333258,
+      "y": 507.06060483389433
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Star a plan to keep it handy here.",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 38,
+      "width": 217.33333333333331,
+      "height": 18,
+      "y": 544.3939381672276
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Browse plans",
+    "AXUniqueId": "train.browsePlans",
+    "AXValue": null,
+    "frame": {
+      "x": 38,
+      "width": 141.33333333333331,
+      "height": 50.33333333333337,
+      "y": 579.3333333333333
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Tab Bar",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 0,
+      "height": 83,
+      "width": 402,
+      "y": 791
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "Train",
+    "AXUniqueId": null,
+    "AXValue": 1,
+    "frame": {
+      "x": 68,
+      "width": 94,
+      "height": 54,
+      "y": 795
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "figure.climbing",
+    "AXUniqueId": "figure.climbing",
+    "AXValue": null,
+    "frame": {
+      "x": 100,
+      "width": 30,
+      "height": 35.66666666666663,
+      "y": 797
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "Plans",
+    "AXUniqueId": null,
+    "AXValue": 0,
+    "frame": {
+      "x": 154,
+      "width": 94,
+      "height": 54,
+      "y": 795
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "list.bullet.rectangle.portrait.fill",
+    "AXUniqueId": "list.bullet.rectangle.portrait.fill",
+    "AXValue": null,
+    "frame": {
+      "x": 188,
+      "width": 25.333333333333343,
+      "height": 28.66666666666663,
+      "y": 800.6666666666666
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "History",
+    "AXUniqueId": null,
+    "AXValue": 0,
+    "frame": {
+      "x": 240,
+      "width": 94,
+      "height": 54,
+      "y": 795
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "clock.arrow.trianglehead.counterclockwise.rotate.90",
+    "AXUniqueId": "clock.arrow.trianglehead.counterclockwise.rotate.90",
+    "AXValue": null,
+    "frame": {
+      "x": 272.66666666666663,
+      "height": 27.33333333333337,
+      "width": 27.666666666666686,
+      "y": 801.3333333333334
+    }
+  }
+]

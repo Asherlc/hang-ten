@@ -1,0 +1,14 @@
+{
+  "status": "expected_missing_feature_failures",
+  "failed": 3,
+  "passed": 17,
+  "elapsedSeconds": 2.56,
+  "testsSHA256": "50b0a03952e4b80ee28956c1894d9509ddb09cfc49a2545c092e45d863e876e6",
+  "rawLogSHA256": "137a4f1b2517c3935ece53a6c701042ca31a0a6de977f26c1687bd01ffc6badd",
+  "sharedFilesEdited": false,
+  "observedFailures": [
+    "parser rejects authoring field",
+    "default Dijkstra ignores shifted stations",
+    "AStar reuses original result for identical frame despite distinct stations"
+  ]
+}

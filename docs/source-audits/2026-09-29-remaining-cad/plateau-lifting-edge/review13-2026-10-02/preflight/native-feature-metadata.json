@@ -1,0 +1,506 @@
+[
+  {
+    "name": "Depth18BackPlate",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"62.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"-22.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18BackPlate.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"3.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth18CurlBridge",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"3.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-12.0000000000000000\" Pz=\"-25.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18CurlBridge.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"15.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth18CurlOuter",
+    "type": "Part::Cylinder",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-12.0000000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.7071067811865475\" Q2=\"0.0000000000000000\" Q3=\"0.7071067811865476\" A=\"1.5707963267948966\" Ox=\"0.0000000000000000\" Oy=\"1.0000000000000000\" Oz=\"0.0000000000000000\" />\n                </Property>",
+      "Radius": "<Property name=\"Radius\" type=\"App::PropertyLength\">\n                    <Float value=\"9.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18CurlOuter.Shape.brp\" />\n                    <ElementMap />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth18CurlInnerVoid",
+    "type": "Part::Cylinder",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"102.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-51.0000000000000000\" Py=\"-12.0000000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.7071067811865475\" Q2=\"0.0000000000000000\" Q3=\"0.7071067811865476\" A=\"1.5707963267948966\" Ox=\"0.0000000000000000\" Oy=\"1.0000000000000000\" Oz=\"0.0000000000000000\" />\n                </Property>",
+      "Radius": "<Property name=\"Radius\" type=\"App::PropertyLength\">\n                    <Float value=\"6.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18CurlInnerVoid.Shape.brp\" />\n                    <ElementMap />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth18CurlTube",
+    "type": "Part::Cut",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth18CurlOuter\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18CurlTube.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth18CurlTube.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth18CurlInnerVoid\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth18CurlOpening",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"102.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-51.0000000000000000\" Py=\"-12.0000000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18CurlOpening.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth18OpenCurl",
+    "type": "Part::Cut",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth18CurlTube\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18OpenCurl.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth18OpenCurl.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth18CurlOpening\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth18MetalBacking",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth18BackPlate\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18MetalBacking.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth18MetalBacking.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth18CurlBridge\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth18MetalCurl",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth18MetalBacking\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18MetalCurl.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth18MetalCurl.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth18OpenCurl\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth18OakRail",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-18.0000000000000000\" Pz=\"20.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18OakRail.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"18.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth18OakRound",
+    "type": "Part::Fillet",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth18OakRail\" />\n                </Property>",
+      "Edges": "<Property name=\"Edges\" type=\"Part::PropertyFilletEdges\">\n                    <FilletEdges file=\"Edges\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18OakRound.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth18OakRound.Shape.Map.txt\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth18WoodAndBacking",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth18MetalCurl\" />\n                </Property>",
+      "HangTenPresentationID": "<Property name=\"HangTenPresentationID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"depth-18mm\" />\n                </Property>",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"plateau_body\" />\n                </Property>",
+      "NodeRole": "<Property name=\"NodeRole\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"body\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18WoodAndBacking.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth18WoodAndBacking.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth18OakRound\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth18OakContact",
+    "type": "PartDesign::SubShapeBinder",
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"edge-18\" />\n                </Property>",
+      "HangTenPresentationID": "<Property name=\"HangTenPresentationID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"depth-18mm\" />\n                </Property>",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"plateau_edge_18\" />\n                </Property>",
+      "NodeRole": "<Property name=\"NodeRole\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth18OakContact.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth18OakContact.Shape.Map.txt\" />\n                </Property>",
+      "Support": "<Property name=\"Support\" type=\"App::PropertyXLinkSubList\" status=\"4\">\n                    <XLinkSubList count=\"1\">\n                        <XLink file=\"\" stamp=\"\" name=\"Depth18WoodAndBacking\" count=\"2\">\n                            <Sub value=\"Face9\" shadow=\";Face5;:M;FLT;:Ha92:7,F;:M;FUS;:Ha93:7,F.Face9\" />\n                            <Sub value=\"Face11\" shadow=\";Edge9;:G;FLT;:Ha92:7,F;:Ha93,F.Face11\" />\n                        </XLink>\n                    </XLinkSubList>\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15BackPlate",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"62.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"-22.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15BackPlate.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"3.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15CurlBridge",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"3.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-12.0000000000000000\" Pz=\"-25.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15CurlBridge.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"15.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15CurlOuter",
+    "type": "Part::Cylinder",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-12.0000000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.7071067811865475\" Q2=\"0.0000000000000000\" Q3=\"0.7071067811865476\" A=\"1.5707963267948966\" Ox=\"0.0000000000000000\" Oy=\"1.0000000000000000\" Oz=\"0.0000000000000000\" />\n                </Property>",
+      "Radius": "<Property name=\"Radius\" type=\"App::PropertyLength\">\n                    <Float value=\"9.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15CurlOuter.Shape.brp\" />\n                    <ElementMap />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15CurlInnerVoid",
+    "type": "Part::Cylinder",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"102.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-51.0000000000000000\" Py=\"-12.0000000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.7071067811865475\" Q2=\"0.0000000000000000\" Q3=\"0.7071067811865476\" A=\"1.5707963267948966\" Ox=\"0.0000000000000000\" Oy=\"1.0000000000000000\" Oz=\"0.0000000000000000\" />\n                </Property>",
+      "Radius": "<Property name=\"Radius\" type=\"App::PropertyLength\">\n                    <Float value=\"6.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15CurlInnerVoid.Shape.brp\" />\n                    <ElementMap />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15CurlTube",
+    "type": "Part::Cut",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15CurlOuter\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15CurlTube.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth15CurlTube.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15CurlInnerVoid\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15CurlOpening",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"102.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-51.0000000000000000\" Py=\"-12.0000000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15CurlOpening.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15OpenCurl",
+    "type": "Part::Cut",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15CurlTube\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15OpenCurl.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth15OpenCurl.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15CurlOpening\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15MetalBacking",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15BackPlate\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15MetalBacking.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth15MetalBacking.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15CurlBridge\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15MetalCurl",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15MetalBacking\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15MetalCurl.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth15MetalCurl.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15OpenCurl\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15OakRail",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-18.0000000000000000\" Pz=\"20.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15OakRail.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"18.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15OakRound",
+    "type": "Part::Fillet",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15OakRail\" />\n                </Property>",
+      "Edges": "<Property name=\"Edges\" type=\"Part::PropertyFilletEdges\">\n                    <FilletEdges file=\"Edges1\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15OakRound.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth15OakRound.Shape.Map.txt\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15WoodAndBacking",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15MetalCurl\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15WoodAndBacking.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth15WoodAndBacking.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15OakRound\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15ReversibleBlockerUpper",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"15.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-3.0000000000000000\" Pz=\"5.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15ReversibleBlockerUpper.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"3.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15ReversibleBlockerLower",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"15.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-8.0000000000000000\" Pz=\"-10.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15ReversibleBlockerLower.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"8.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15BlockerUpperAttached",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15WoodAndBacking\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15BlockerUpperAttached.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth15BlockerUpperAttached.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15ReversibleBlockerUpper\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15BlockerAttached",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15BlockerUpperAttached\" />\n                </Property>",
+      "HangTenPresentationID": "<Property name=\"HangTenPresentationID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"depth-15mm\" />\n                </Property>",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"plateau_body\" />\n                </Property>",
+      "NodeRole": "<Property name=\"NodeRole\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"body\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15BlockerAttached.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth15BlockerAttached.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth15ReversibleBlockerLower\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth15OakContact",
+    "type": "PartDesign::SubShapeBinder",
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"edge-18\" />\n                </Property>",
+      "HangTenPresentationID": "<Property name=\"HangTenPresentationID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"depth-15mm\" />\n                </Property>",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"plateau_edge_18\" />\n                </Property>",
+      "NodeRole": "<Property name=\"NodeRole\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth15OakContact.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth15OakContact.Shape.Map.txt\" />\n                </Property>",
+      "Support": "<Property name=\"Support\" type=\"App::PropertyXLinkSubList\" status=\"4\">\n                    <XLinkSubList count=\"1\">\n                        <XLink file=\"\" stamp=\"\" name=\"Depth15BlockerAttached\" count=\"2\">\n                            <Sub value=\"Face16\" shadow=\";Face5;:M;FLT;:Ha9f:7,F;:M;FUS;:Haa0:7,F;:M;FUS;:Haa1:7,F;:Haa4,F.Face16\" />\n                            <Sub value=\"Face18\" shadow=\";Edge9;:G;FLT;:Ha9f:7,F;:Haa0,F;:Haa1,F;:Haa4,F.Face18\" />\n                        </XLink>\n                    </XLinkSubList>\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10BackPlate",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"62.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"-22.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10BackPlate.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"3.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10CurlBridge",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"3.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-12.0000000000000000\" Pz=\"-25.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10CurlBridge.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"15.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10CurlOuter",
+    "type": "Part::Cylinder",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-12.0000000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.7071067811865475\" Q2=\"0.0000000000000000\" Q3=\"0.7071067811865476\" A=\"1.5707963267948966\" Ox=\"0.0000000000000000\" Oy=\"1.0000000000000000\" Oz=\"0.0000000000000000\" />\n                </Property>",
+      "Radius": "<Property name=\"Radius\" type=\"App::PropertyLength\">\n                    <Float value=\"9.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10CurlOuter.Shape.brp\" />\n                    <ElementMap />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10CurlInnerVoid",
+    "type": "Part::Cylinder",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"102.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-51.0000000000000000\" Py=\"-12.0000000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.7071067811865475\" Q2=\"0.0000000000000000\" Q3=\"0.7071067811865476\" A=\"1.5707963267948966\" Ox=\"0.0000000000000000\" Oy=\"1.0000000000000000\" Oz=\"0.0000000000000000\" />\n                </Property>",
+      "Radius": "<Property name=\"Radius\" type=\"App::PropertyLength\">\n                    <Float value=\"6.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10CurlInnerVoid.Shape.brp\" />\n                    <ElementMap />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10CurlTube",
+    "type": "Part::Cut",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10CurlOuter\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10CurlTube.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth10CurlTube.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10CurlInnerVoid\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10CurlOpening",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"102.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-51.0000000000000000\" Py=\"-12.0000000000000000\" Pz=\"-31.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10CurlOpening.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10OpenCurl",
+    "type": "Part::Cut",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10CurlTube\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10OpenCurl.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth10OpenCurl.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10CurlOpening\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10MetalBacking",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10BackPlate\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10MetalBacking.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth10MetalBacking.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10CurlBridge\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10MetalCurl",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10MetalBacking\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10MetalCurl.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth10MetalCurl.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10OpenCurl\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10OakRail",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"20.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-18.0000000000000000\" Pz=\"20.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10OakRail.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"18.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10OakRound",
+    "type": "Part::Fillet",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10OakRail\" />\n                </Property>",
+      "Edges": "<Property name=\"Edges\" type=\"Part::PropertyFilletEdges\">\n                    <FilletEdges file=\"Edges2\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10OakRound.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth10OakRound.Shape.Map.txt\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10WoodAndBacking",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10MetalCurl\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10WoodAndBacking.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth10WoodAndBacking.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10OakRound\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10ReversibleBlockerUpper",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"15.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-8.0000000000000000\" Pz=\"5.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10ReversibleBlockerUpper.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"8.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10ReversibleBlockerLower",
+    "type": "Part::Box",
+    "properties": {
+      "Height": "<Property name=\"Height\" type=\"App::PropertyLength\">\n                    <Float value=\"15.0000000000000000\" />\n                </Property>",
+      "Length": "<Property name=\"Length\" type=\"App::PropertyLength\">\n                    <Float value=\"100.0000000000000000\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"-50.0000000000000000\" Py=\"-3.0000000000000000\" Pz=\"-10.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10ReversibleBlockerLower.Shape.brp\" />\n                    <ElementMap />\n                </Property>",
+      "Width": "<Property name=\"Width\" type=\"App::PropertyLength\">\n                    <Float value=\"3.0000000000000000\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10BlockerUpperAttached",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10WoodAndBacking\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10BlockerUpperAttached.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth10BlockerUpperAttached.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10ReversibleBlockerUpper\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10BlockerAttached",
+    "type": "Part::Fuse",
+    "properties": {
+      "Base": "<Property name=\"Base\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10BlockerUpperAttached\" />\n                </Property>",
+      "HangTenPresentationID": "<Property name=\"HangTenPresentationID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"depth-10mm\" />\n                </Property>",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"plateau_body\" />\n                </Property>",
+      "NodeRole": "<Property name=\"NodeRole\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"body\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10BlockerAttached.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth10BlockerAttached.Shape.Map.txt\" />\n                </Property>",
+      "Tool": "<Property name=\"Tool\" type=\"App::PropertyLink\">\n                    <Link value=\"Depth10ReversibleBlockerLower\" />\n                </Property>"
+    }
+  },
+  {
+    "name": "Depth10OakContact",
+    "type": "PartDesign::SubShapeBinder",
+    "properties": {
+      "ContactID": "<Property name=\"ContactID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"edge-18\" />\n                </Property>",
+      "HangTenPresentationID": "<Property name=\"HangTenPresentationID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"depth-10mm\" />\n                </Property>",
+      "NodeID": "<Property name=\"NodeID\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"plateau_edge_18\" />\n                </Property>",
+      "NodeRole": "<Property name=\"NodeRole\" type=\"App::PropertyString\" group=\"HangTen\" doc=\"\" attr=\"0\" ro=\"0\" hide=\"0\" status=\"2097152\">\n                    <String value=\"contact\" />\n                </Property>",
+      "Placement": "<Property name=\"Placement\" type=\"App::PropertyPlacement\" status=\"8388608\">\n                    <PropertyPlacement Px=\"0.0000000000000000\" Py=\"0.0000000000000000\" Pz=\"0.0000000000000000\" Q0=\"0.0000000000000000\" Q1=\"0.0000000000000000\" Q2=\"0.0000000000000000\" Q3=\"1.0000000000000000\" A=\"0.0000000000000000\" Ox=\"0.0000000000000000\" Oy=\"0.0000000000000000\" Oz=\"1.0000000000000000\" />\n                </Property>",
+      "Shape": "<Property name=\"Shape\" type=\"Part::PropertyPartShape\">\n                    <Part ElementMap=\"15.70200.5\" file=\"Depth10OakContact.Shape.brp\" />\n                    <ElementMap new=\"1\" count=\"1\"><Element key=\"Dummy\" value=\"Dummy\" /></ElementMap>\n                    <ElementMap2 file=\"Depth10OakContact.Shape.Map.txt\" />\n                </Property>",
+      "Support": "<Property name=\"Support\" type=\"App::PropertyXLinkSubList\" status=\"4\">\n                    <XLinkSubList count=\"1\">\n                        <XLink file=\"\" stamp=\"\" name=\"Depth10BlockerAttached\" count=\"2\">\n                            <Sub value=\"Face16\" shadow=\";Face5;:M;FLT;:Hab0:7,F;:M;FUS;:Hab1:7,F;:M;FUS;:Hab2:7,F;:Hab5,F.Face16\" />\n                            <Sub value=\"Face18\" shadow=\";Edge9;:G;FLT;:Hab0:7,F;:Hab1,F;:Hab2,F;:Hab5,F.Face18\" />\n                        </XLink>\n                    </XLinkSubList>\n                </Property>"
+    }
+  }
+]

@@ -1,0 +1,111 @@
+  @available(visionOS, introduced: 1.0, deprecated: 1.0, renamed: "init(named:in:)")
+  @available(tvOS, unavailable)
+  @_Concurrency::MainActor @preconcurrency public static func loadAsync(named name: Swift::String, in bundle: Foundation::Bundle? = nil) -> RealityFoundation::LoadRequest<RealityFoundation::EnvironmentResource>
+  @_Concurrency::MainActor @preconcurrency public static func __load(contentsOf url: Foundation::URL, withName resourceName: Swift::String? = nil) throws -> RealityFoundation::EnvironmentResource
+  @available(visionOS, introduced: 1.0, deprecated: 2.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macOS, unavailable, introduced: 15.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(iOS, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+
+  @available(tvOS, unavailable)
+  @_Concurrency::MainActor @preconcurrency public static func loadAsync(named name: Swift::String, in bundle: Foundation::Bundle? = nil) -> RealityFoundation::LoadRequest<RealityFoundation::EnvironmentResource>
+  @_Concurrency::MainActor @preconcurrency public static func __load(contentsOf url: Foundation::URL, withName resourceName: Swift::String? = nil) throws -> RealityFoundation::EnvironmentResource
+  @available(visionOS, introduced: 1.0, deprecated: 2.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macOS, unavailable, introduced: 15.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(iOS, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macCatalyst, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+
+  @_Concurrency::MainActor @preconcurrency public static func loadAsync(named name: Swift::String, in bundle: Foundation::Bundle? = nil) -> RealityFoundation::LoadRequest<RealityFoundation::EnvironmentResource>
+  @_Concurrency::MainActor @preconcurrency public static func __load(contentsOf url: Foundation::URL, withName resourceName: Swift::String? = nil) throws -> RealityFoundation::EnvironmentResource
+  @available(visionOS, introduced: 1.0, deprecated: 2.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macOS, unavailable, introduced: 15.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(iOS, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macCatalyst, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(tvOS, unavailable)
+
+  @_Concurrency::MainActor @preconcurrency public static func __load(contentsOf url: Foundation::URL, withName resourceName: Swift::String? = nil) throws -> RealityFoundation::EnvironmentResource
+  @available(visionOS, introduced: 1.0, deprecated: 2.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macOS, unavailable, introduced: 15.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(iOS, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macCatalyst, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(tvOS, unavailable)
+  @available(watchOS, unavailable)
+
+  @available(macCatalyst, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(tvOS, unavailable)
+  @available(watchOS, unavailable)
+  @_Concurrency::MainActor @preconcurrency public static func generate(fromEquirectangular cgImage: CoreGraphics::CGImage, withName resourceName: Swift::String? = nil) throws -> RealityFoundation::EnvironmentResource
+  @available(visionOS, introduced: 1.0, deprecated: 2.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macOS, unavailable, introduced: 15.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(iOS, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+
+  @available(tvOS, unavailable)
+  @available(watchOS, unavailable)
+  @_Concurrency::MainActor @preconcurrency public static func generate(fromEquirectangular cgImage: CoreGraphics::CGImage, withName resourceName: Swift::String? = nil) throws -> RealityFoundation::EnvironmentResource
+  @available(visionOS, introduced: 1.0, deprecated: 2.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macOS, unavailable, introduced: 15.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(iOS, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macCatalyst, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+
+  @available(watchOS, unavailable)
+  @_Concurrency::MainActor @preconcurrency public static func generate(fromEquirectangular cgImage: CoreGraphics::CGImage, withName resourceName: Swift::String? = nil) throws -> RealityFoundation::EnvironmentResource
+  @available(visionOS, introduced: 1.0, deprecated: 2.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macOS, unavailable, introduced: 15.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(iOS, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macCatalyst, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(tvOS, unavailable)
+
+  @_Concurrency::MainActor @preconcurrency public static func generate(fromEquirectangular cgImage: CoreGraphics::CGImage, withName resourceName: Swift::String? = nil) throws -> RealityFoundation::EnvironmentResource
+  @available(visionOS, introduced: 1.0, deprecated: 2.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macOS, unavailable, introduced: 15.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(iOS, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(macCatalyst, unavailable, introduced: 18.0, renamed: "EnvironmentResource.init(equirectangular:withName:)")
+  @available(tvOS, unavailable)
+  @available(watchOS, unavailable)
+
+}
+@available(visionOS 2.0, macOS 15.0, iOS 18.0, macCatalyst 18.0, tvOS 26.0, *)
+extension RealityFoundation::EnvironmentResource {
+  @_Concurrency::MainActor @preconcurrency convenience public init(cube cubeTexture: RealityFoundation::TextureResource, options: RealityFoundation::EnvironmentResource.RealityFoundation::CreateOptions) throws
+  @available(anyAppleOS, deprecated: 100000.0, message: "Use `init(equirectangular:options:)` instead. Will be deprecated to support skybox-free EnvironmentResource.")
+  @_Concurrency::MainActor @preconcurrency convenience public init(equirectangular cgImage: CoreGraphics::CGImage, withName resourceName: Swift::String? = nil) throws
+  @available(anyAppleOS, deprecated: 100000.0, message: "Use `init(equirectangular:options:)` instead. Will be deprecated to support skybox-free EnvironmentResource.")
+
+@available(visionOS 2.0, macOS 15.0, iOS 18.0, macCatalyst 18.0, tvOS 26.0, *)
+extension RealityFoundation::EnvironmentResource {
+  @_Concurrency::MainActor @preconcurrency convenience public init(cube cubeTexture: RealityFoundation::TextureResource, options: RealityFoundation::EnvironmentResource.RealityFoundation::CreateOptions) throws
+  @available(anyAppleOS, deprecated: 100000.0, message: "Use `init(equirectangular:options:)` instead. Will be deprecated to support skybox-free EnvironmentResource.")
+  @_Concurrency::MainActor @preconcurrency convenience public init(equirectangular cgImage: CoreGraphics::CGImage, withName resourceName: Swift::String? = nil) throws
+  @available(anyAppleOS, deprecated: 100000.0, message: "Use `init(equirectangular:options:)` instead. Will be deprecated to support skybox-free EnvironmentResource.")
+  @_Concurrency::MainActor @preconcurrency convenience public init(equirectangular cgImage: CoreGraphics::CGImage, withName resourceName: Swift::String? = nil) async throws
+
+extension RealityFoundation::EnvironmentResource {
+  @_Concurrency::MainActor @preconcurrency convenience public init(cube cubeTexture: RealityFoundation::TextureResource, options: RealityFoundation::EnvironmentResource.RealityFoundation::CreateOptions) throws
+  @available(anyAppleOS, deprecated: 100000.0, message: "Use `init(equirectangular:options:)` instead. Will be deprecated to support skybox-free EnvironmentResource.")
+  @_Concurrency::MainActor @preconcurrency convenience public init(equirectangular cgImage: CoreGraphics::CGImage, withName resourceName: Swift::String? = nil) throws
+  @available(anyAppleOS, deprecated: 100000.0, message: "Use `init(equirectangular:options:)` instead. Will be deprecated to support skybox-free EnvironmentResource.")
+  @_Concurrency::MainActor @preconcurrency convenience public init(equirectangular cgImage: CoreGraphics::CGImage, withName resourceName: Swift::String? = nil) async throws
+  @_Concurrency::MainActor @preconcurrency convenience public init(cube cubeTexture: RealityFoundation::TextureResource, options: RealityFoundation::EnvironmentResource.RealityFoundation::CreateOptions) async throws
+
+  @_Concurrency::MainActor @preconcurrency convenience public init(cube cubeTexture: RealityFoundation::TextureResource, options: RealityFoundation::EnvironmentResource.RealityFoundation::CreateOptions) throws
+  @available(anyAppleOS, deprecated: 100000.0, message: "Use `init(equirectangular:options:)` instead. Will be deprecated to support skybox-free EnvironmentResource.")
+  @_Concurrency::MainActor @preconcurrency convenience public init(equirectangular cgImage: CoreGraphics::CGImage, withName resourceName: Swift::String? = nil) throws
+  @available(anyAppleOS, deprecated: 100000.0, message: "Use `init(equirectangular:options:)` instead. Will be deprecated to support skybox-free EnvironmentResource.")
+  @_Concurrency::MainActor @preconcurrency convenience public init(equirectangular cgImage: CoreGraphics::CGImage, withName resourceName: Swift::String? = nil) async throws
+  @_Concurrency::MainActor @preconcurrency convenience public init(cube cubeTexture: RealityFoundation::TextureResource, options: RealityFoundation::EnvironmentResource.RealityFoundation::CreateOptions) async throws
+}
+
+extension RealityFoundation::EnvironmentResource {
+  @available(macOS 27.0, macCatalyst 27.0, iOS 27.0, visionOS 27.0, tvOS 27.0, *)
+  @_Concurrency::MainActor @preconcurrency convenience public init(named name: Swift::String, in bundle: Foundation::Bundle? = nil, skyboxMode: RealityFoundation::EnvironmentResource.RealityFoundation::SkyboxMode) async throws
+  @available(macOS 27.0, macCatalyst 27.0, iOS 27.0, visionOS 27.0, tvOS 27.0, *)
+  @_Concurrency::MainActor convenience public init(equirectangular cgImage: CoreGraphics::CGImage, options: RealityFoundation::EnvironmentResource.RealityFoundation::CreateOptions) throws
+  @available(macOS 27.0, macCatalyst 27.0, iOS 27.0, visionOS 27.0, tvOS 27.0, *)
+  @_Concurrency::MainActor convenience public init(equirectangular cgImage: CoreGraphics::CGImage, options: RealityFoundation::EnvironmentResource.RealityFoundation::CreateOptions) async throws
+
+  @_Concurrency::MainActor @preconcurrency convenience public init(named name: Swift::String, in bundle: Foundation::Bundle? = nil, skyboxMode: RealityFoundation::EnvironmentResource.RealityFoundation::SkyboxMode) async throws
+  @available(macOS 27.0, macCatalyst 27.0, iOS 27.0, visionOS 27.0, tvOS 27.0, *)
+  @_Concurrency::MainActor convenience public init(equirectangular cgImage: CoreGraphics::CGImage, options: RealityFoundation::EnvironmentResource.RealityFoundation::CreateOptions) throws
+  @available(macOS 27.0, macCatalyst 27.0, iOS 27.0, visionOS 27.0, tvOS 27.0, *)
+  @_Concurrency::MainActor convenience public init(equirectangular cgImage: CoreGraphics::CGImage, options: RealityFoundation::EnvironmentResource.RealityFoundation::CreateOptions) async throws
+  @available(macOS 27.0, macCatalyst 27.0, iOS 27.0, visionOS 27.0, tvOS 27.0, *)
+  @_Concurrency::MainActor convenience public init(skybox skyboxTexture: RealityFoundation::TextureResource?, specular specularTexture: RealityFoundation::TextureResource, diffuse diffuseTexture: RealityFoundation::TextureResource) throws

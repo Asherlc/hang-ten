@@ -1,0 +1,37 @@
+{
+  "preparedOnly": true,
+  "pythonASTSyntaxPassed": true,
+  "noBuildInstallDeviceOrControllerCommandExecuted": true,
+  "references": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prep/bounded-command.py",
+      "sha256": "1f7ade47210369847e42440d449e6b9b8071437f7a8f857468d3d371fd691505"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prep/lifecycle.zsh",
+      "sha256": "8e029d328072fa258877b88cec3bfe1ca19f6b2960d3b1b9239a59f714fdeb3b"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/ownership.json",
+      "sha256": "1ace3ca5d4e0dbc4ccbda0bcc3550f1fdcef7925ee3f9f8398c371661de7c490"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-build-command.json",
+      "sha256": "cbfeeeb0b257e9dcae746d02393d8722bae7f154dc97bf5a4f65ceb973feca96"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-install-command.json",
+      "sha256": "8116e7cb72c996ea084543ec8023a72c116b69a29cf5b8ab49d8c1778b2c5bc0"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-applied/package-parity.json",
+      "sha256": "9e67ad37d5e4c45be07e0c777ff932d61da70555659c8ac542d9741077dcae31"
+    }
+  ],
+  "helperSHA256": "6bdd787db40f9583c8e3a2d92b9da690ecae1da8e60f1192cad2c52eda0dc5a0",
+  "sourceFreezeFiles": 5,
+  "sourceGateTemplateAuthorized": false,
+  "packageExpectations": 6,
+  "finalParityCount": 27,
+  "livePrerequisites": "deferred until root execution; exact controller/device and source hashes required"
+}

@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger",
+  "name": "export-rear-correspondence-b722-v2",
+  "timeoutSeconds": 120,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_rear_correspondence.py",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/assets/primary.usdz",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/final-native-body-mesh.json",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/export-rear-correspondence-b722-v2.json"
+  ],
+  "ownedProcessGroup": 24597,
+  "exitCode": 0,
+  "elapsedSeconds": 0.5349869169876911,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

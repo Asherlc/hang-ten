@@ -1,0 +1,36 @@
+{
+  "uuid": "CEC83800-5035-404E-B5A2-E40B826FE00E",
+  "reason": "guest automatically Shutdown after test-runner launcher failure; boot same owned UUID for ordinary control",
+  "commands": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "boot",
+        "CEC83800-5035-404E-B5A2-E40B826FE00E"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "perl",
+        "-e",
+        "alarm 25; exec @ARGV",
+        "xcrun",
+        "simctl",
+        "bootstatus",
+        "CEC83800-5035-404E-B5A2-E40B826FE00E",
+        "-b"
+      ],
+      "exitCode": 142,
+      "stdout": "Monitoring boot status for Hang Ten Paseo placid-badger Review Mini Completion Retry1 (CEC83800-5035-404E-B5A2-E40B826FE00E).\n[2026-10-02 04:14:44 +0000] Status=2, isTerminal=NO, Elapsed=00:01.\n\tWaiting on Data Migration\n\t\tReason:(null)\n\t\tMigration Elapsed:00:00 seconds\n\n[2026-10-02 04:14:44 +0000] Status=2, isTerminal=NO, Elapsed=00:02.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.MobileContainerManager.ContainerMigrator (ContainerMigrator.migrator, user-agnostic)\n\t\tMigration Elapsed:00:00 seconds\n\n[2026-10-02 04:14:45 +0000] Status=2, isTerminal=NO, Elapsed=00:03.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.managedconfiguration.migrator (MCProfile.migrator, user-agnostic)\n\t\tMigration Elapsed:00:01 seconds\n\n[2026-10-02 04:14:46 +0000] Status=2, isTerminal=NO, Elapsed=00:04.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.managedconfiguration.migrator (MCProfile.migrator, user-agnostic)\n\t\tMigration Elapsed:00:02 seconds\n\n[2026-10-02 04:14:47 +0000] Status=2, isTerminal=NO, Elapsed=00:05.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:03 seconds\n\n[2026-10-02 04:14:48 +0000] Status=2, isTerminal=NO, Elapsed=00:06.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:04 seconds\n\n[2026-10-02 04:14:49 +0000] Status=2, isTerminal=NO, Elapsed=00:07.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:05 seconds\n\n[2026-10-02 04:14:50 +0000] Status=2, isTerminal=NO, Elapsed=00:08.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:06 seconds\n\n[2026-10-02 04:14:51 +0000] Status=2, isTerminal=NO, Elapsed=00:09.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:07 seconds\n\n[2026-10-02 04:14:52 +0000] Status=2, isTerminal=NO, Elapsed=00:10.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:08 seconds\n\n[2026-10-02 04:14:53 +0000] Status=2, isTerminal=NO, Elapsed=00:11.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:09 seconds\n\n[2026-10-02 04:14:54 +0000] Status=2, isTerminal=NO, Elapsed=00:12.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:10 seconds\n\n[2026-10-02 04:14:55 +0000] Status=2, isTerminal=NO, Elapsed=00:13.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:11 seconds\n\n[2026-10-02 04:14:56 +0000] Status=2, isTerminal=NO, Elapsed=00:14.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:12 seconds\n\n[2026-10-02 04:14:57 +0000] Status=2, isTerminal=NO, Elapsed=00:15.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:13 seconds\n\n[2026-10-02 04:14:58 +0000] Status=2, isTerminal=NO, Elapsed=00:16.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:14 seconds\n\n[2026-10-02 04:14:59 +0000] Status=2, isTerminal=NO, Elapsed=00:17.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:15 seconds\n\n[2026-10-02 04:15:00 +0000] Status=2, isTerminal=NO, Elapsed=00:18.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:16 seconds\n\n[2026-10-02 04:15:01 +0000] Status=2, isTerminal=NO, Elapsed=00:19.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:17 seconds\n\n[2026-10-02 04:15:02 +0000] Status=2, isTerminal=NO, Elapsed=00:20.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:18 seconds\n\n[2026-10-02 04:15:03 +0000] Status=2, isTerminal=NO, Elapsed=00:21.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:19 seconds\n\n[2026-10-02 04:15:04 +0000] Status=2, isTerminal=NO, Elapsed=00:22.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:20 seconds\n\n[2026-10-02 04:15:05 +0000] Status=2, isTerminal=NO, Elapsed=00:23.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:21 seconds\n\n[2026-10-02 04:15:06 +0000] Status=2, isTerminal=NO, Elapsed=00:24.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:22 seconds\n\n[2026-10-02 04:15:07 +0000] Status=2, isTerminal=NO, Elapsed=00:25.\n\tWaiting on Data Migration\n\t\tReason:Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)\n\t\tMigration Elapsed:00:23 seconds\n\n",
+      "stderr": "[rtk] perl: process terminated by signal 14\n"
+    }
+  ]
+}

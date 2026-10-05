@@ -9,6 +9,15 @@
 /* Begin PBXBuildFile section */
 		FE2026100500000000000002 /* RockProdigyPlans.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2026100500000000000102 /* RockProdigyPlans.swift */; };
 		FE2026100500000000000001 /* PublishedHangboardPlans.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2026100500000000000101 /* PublishedHangboardPlans.swift */; };
+		AE034E2B4778CFF045AA2F42 /* WorkoutCueCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BB087DEE4043CE4D71BBC1 /* WorkoutCueCard.swift */; };
+		D124854F1524ED273B860027 /* WorkoutControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1561CC9F49A8482434431C1D /* WorkoutControls.swift */; };
+		E12D3C8673A4330F01E4329C /* WorkoutTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF851F490988BBF1DC74E31 /* WorkoutTimerView.swift */; };
+		1FA42E3BA262FD5F860FDD87 /* WorkoutPresentationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA4FE4FCE8D84C5B733C8CCE /* WorkoutPresentationContent.swift */; };
+		89F55463D090314CD394F45A /* WorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280981D68BAEDAE6071622C2 /* WorkoutView.swift */; };
+		876CF8149B56E504650BEB86 /* WorkoutSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2C8B2702AF877EC0A9457 /* WorkoutSessionState.swift */; };
+		5666BC4BFB710FEDA2BB1488 /* PlanDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D692AE3B1846C8951E234D90 /* PlanDetailView.swift */; };
+		CB707FE2387AC0729033FBAF /* PlansView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F75E43E3A9E27C57CE4FD4 /* PlansView.swift */; };
+		A4D000000000000000000001 /* BoardWoodSurfaceShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A4D000000000000000000002 /* BoardWoodSurfaceShader.metal */; };
 		00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C810A83CBE426896962023 /* DeepLinkManager.swift */; settings = {ATTRIBUTES = (); }; };
 		36C9B0D20A18D7D5A46A4A67 /* FreeWorkoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A564BC280D6FB491874B17 /* FreeWorkoutTests.swift */; };
 		5F8F1B1E5F16242FFEF5C807 /* FreeWorkoutUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */; };
@@ -155,6 +164,17 @@
 		D1000000000000000000000C /* nature-stone-hanger Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000C /* nature-stone-hanger Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stone-hanger", ); }; };
 		D1000000000000000000000D /* tension-flash-board Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000D /* tension-flash-board Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-flash-board", ); }; };
 		D1000000000000000000002E /* tension-grindstone Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002E /* tension-grindstone Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-grindstone", ); }; };
+		D10000000000000000000031 /* tension-whetstone Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000031 /* tension-whetstone Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-whetstone", ); }; };
+		D10000000000000000000039 /* yy-travelboard Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000039 /* yy-travelboard Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-travelboard", ); }; };
+		D10000000000000000000038 /* yy-baguette Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000038 /* yy-baguette Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-baguette", ); }; };
+		D10000000000000000000037 /* plateau-lifting-edge Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000037 /* plateau-lifting-edge Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-plateau-lifting-edge", ); }; };
+		D10000000000000000000036 /* nature-stone-hanger-mini-karma8a Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000036 /* nature-stone-hanger-mini-karma8a Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stone-hanger-mini-karma8a", ); }; };
+		D10000000000000000000035 /* nature-stone-hanger-mini Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000035 /* nature-stone-hanger-mini Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stone-hanger-mini", ); }; };
+		D10000000000000000000034 /* frictitious-port-a-board Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000034 /* frictitious-port-a-board Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-frictitious-port-a-board", ); }; };
+		D10000000000000000000033 /* frictitious-nug Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000033 /* frictitious-nug Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-frictitious-nug", ); }; };
+		D10000000000000000000032 /* aelith-cyclops-011 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000032 /* aelith-cyclops-011 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-aelith-cyclops-011", ); }; };
+		D10000000000000000000040 /* surfaces-for-climbing-transgression-2011 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000040 /* surfaces-for-climbing-transgression-2011 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-surfaces-for-climbing-transgression-2011", ); }; };
+		D10000000000000000000041 /* surfaces-for-climbing-transgression-2013 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000041 /* surfaces-for-climbing-transgression-2013 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-surfaces-for-climbing-transgression-2013", ); }; };
 		D1000000000000000000002F /* tension-grindstone-pro Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002F /* tension-grindstone-pro Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-grindstone-pro", ); }; };
 		D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000E /* yy-baguette-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-baguette-evo", ); }; };
 		D1000000000000000000000F /* metolius-climbers-edge Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000F /* metolius-climbers-edge Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-climbers-edge", ); }; };
@@ -197,6 +217,36 @@
 		E31000000000000000000005 /* SuspensionProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000005 /* SuspensionProfiles.swift */; };
 		E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000006 /* OrbitPanGestureDelegate.swift */; };
 		JB0000000000000000000001 /* j-bryant-ftg-32 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = JB0000000000000000000002 /* j-bryant-ftg-32 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-j-bryant-ftg-32", ); }; };
+		D10000000000000000000045 /* yy-verticalboard-first Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000045 /* yy-verticalboard-first Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-verticalboard-first", ); }; };
+		D10000000000000000000046 /* yy-verticalboard-light Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000046 /* yy-verticalboard-light Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-verticalboard-light", ); }; };
+		D10000000000000000000047 /* yy-verticalboard-one Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000047 /* yy-verticalboard-one Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-verticalboard-one", ); }; };
+		F12900000000000000000001 /* RopePhysicsDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000001 /* RopePhysicsDescriptor.swift */; };
+		F12900000000000000000003 /* RopeTriangleCollider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000003 /* RopeTriangleCollider.swift */; };
+		F12900000000000000000005 /* RopeSimulationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000005 /* RopeSimulationState.swift */; };
+		F12900000000000000000006 /* RopeThreadedSeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000006 /* RopeThreadedSeed.swift */; };
+		F12900000000000000000002 /* RopePhysicsDescriptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000002 /* RopePhysicsDescriptorTests.swift */; };
+		F12900000000000000000004 /* RopeTriangleColliderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000004 /* RopeTriangleColliderTests.swift */; };
+		F12900000000000000000007 /* RopeThreadedSeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000007 /* RopeThreadedSeedTests.swift */; };
+		F12900000000000000000008 /* RopeDynamicsSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000008 /* RopeDynamicsSolver.swift */; };
+		F12900000000000000000009 /* RopeSimulationMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000009 /* RopeSimulationMetrics.swift */; };
+		F1290000000000000000000A /* RopeBandedSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000A /* RopeBandedSystem.swift */; };
+		F13000000000000000000001 /* RopeContactSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23000000000000000000001 /* RopeContactSystem.swift */; };
+		F1290000000000000000000B /* RopeDynamicsSolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000B /* RopeDynamicsSolverTests.swift */; };
+		F1290000000000000000000C /* ClavelliumRopePhysicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000C /* ClavelliumRopePhysicsTests.swift */; };
+		F1290000000000000000000D /* RopeBandedSystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000D /* RopeBandedSystemTests.swift */; };
+		F13000000000000000000002 /* RopeContactSystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23000000000000000000002 /* RopeContactSystemTests.swift */; };
+		F1290000000000000000000E /* LiveRopeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000E /* LiveRopeController.swift */; };
+		F1290000000000000000000F /* LiveRopeControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000F /* LiveRopeControllerTests.swift */; };
+		F12900000000000000000010 /* LiveRopeMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000010 /* LiveRopeMesh.swift */; };
+		F12900000000000000000011 /* LiveRopeMeshTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000011 /* LiveRopeMeshTests.swift */; };
+		F12900000000000000000012 /* RopeCordContacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000012 /* RopeCordContacts.swift */; };
+		F12900000000000000000013 /* RopeInterContactTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000013 /* RopeInterContactTests.swift */; };
+		D10000000000000000000042 /* yy-verticalboard-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000042 /* yy-verticalboard-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-verticalboard-evo", ); }; };
+		D10000000000000000000043 /* tension-honestone Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000043 /* tension-honestone Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-honestone", ); }; };
+		D10000000000000000000044 /* tension-grindstone-original Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000044 /* tension-grindstone-original Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-grindstone-original", ); }; };
+		F8BB00000000000000000001 /* PlanFlowPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000002 /* PlanFlowPresentation.swift */; };
+		F8BB00000000000000000003 /* PlanFlowPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000004 /* PlanFlowPresentationTests.swift */; };
+		F8BB00000000000000000005 /* PlanFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000006 /* PlanFlowUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -219,6 +269,15 @@
 /* Begin PBXFileReference section */
 		FE2026100500000000000102 /* RockProdigyPlans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RockProdigyPlans.swift; sourceTree = "<group>"; };
 		FE2026100500000000000101 /* PublishedHangboardPlans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedHangboardPlans.swift; sourceTree = "<group>"; };
+		73BB087DEE4043CE4D71BBC1 /* WorkoutCueCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutCueCard.swift; sourceTree = "<group>"; };
+		1561CC9F49A8482434431C1D /* WorkoutControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutControls.swift; sourceTree = "<group>"; };
+		ECF851F490988BBF1DC74E31 /* WorkoutTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimerView.swift; sourceTree = "<group>"; };
+		DA4FE4FCE8D84C5B733C8CCE /* WorkoutPresentationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPresentationContent.swift; sourceTree = "<group>"; };
+		280981D68BAEDAE6071622C2 /* WorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutView.swift; sourceTree = "<group>"; };
+		2CF2C8B2702AF877EC0A9457 /* WorkoutSessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSessionState.swift; sourceTree = "<group>"; };
+		D692AE3B1846C8951E234D90 /* PlanDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanDetailView.swift; sourceTree = "<group>"; };
+		96F75E43E3A9E27C57CE4FD4 /* PlansView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlansView.swift; sourceTree = "<group>"; };
+		A4D000000000000000000002 /* BoardWoodSurfaceShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = BoardWoodSurfaceShader.metal; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F708192A3B4D /* FreeWorkoutStartSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutStartSheet.swift; path = FreeWorkoutStartSheet.swift; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F708192A3B4F /* FreeWorkoutLogSessionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutLogSessionView.swift; path = FreeWorkoutLogSessionView.swift; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F708192A3B51 /* FreeWorkoutAddExerciseSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutAddExerciseSheet.swift; path = FreeWorkoutAddExerciseSheet.swift; sourceTree = "<group>"; };
@@ -367,6 +426,17 @@
 		D2000000000000000000000C /* nature-stone-hanger Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stone-hanger Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stone-hanger/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000D /* tension-flash-board Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-flash-board Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-flash-board/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000002E /* tension-grindstone Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-grindstone Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-grindstone/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000031 /* tension-whetstone Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-whetstone Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-whetstone/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000039 /* yy-travelboard Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-travelboard Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-travelboard/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000038 /* yy-baguette Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-baguette Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-baguette/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000037 /* plateau-lifting-edge Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "plateau-lifting-edge Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/plateau-lifting-edge/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000036 /* nature-stone-hanger-mini-karma8a Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stone-hanger-mini-karma8a Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stone-hanger-mini-karma8a/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000035 /* nature-stone-hanger-mini Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stone-hanger-mini Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stone-hanger-mini/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000034 /* frictitious-port-a-board Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "frictitious-port-a-board Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/frictitious-port-a-board/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000033 /* frictitious-nug Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "frictitious-nug Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/frictitious-nug/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000032 /* aelith-cyclops-011 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "aelith-cyclops-011 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/aelith-cyclops-011/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000040 /* surfaces-for-climbing-transgression-2011 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "surfaces-for-climbing-transgression-2011 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/surfaces-for-climbing-transgression-2011/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000041 /* surfaces-for-climbing-transgression-2013 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "surfaces-for-climbing-transgression-2013 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/surfaces-for-climbing-transgression-2013/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000002F /* tension-grindstone-pro Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-grindstone-pro Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-grindstone-pro/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000E /* yy-baguette-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-baguette-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-baguette-evo/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000F /* metolius-climbers-edge Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-climbers-edge Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-climbers-edge/Hangboards"; sourceTree = "<absolute>"; };
@@ -409,6 +479,36 @@
 		E32000000000000000000006 /* OrbitPanGestureDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitPanGestureDelegate.swift; sourceTree = "<group>"; };
 		E5C810A83CBE426896962023 /* DeepLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTen/Models/DeepLinkManager.swift; sourceTree = "<group>"; };
 		JB0000000000000000000002 /* j-bryant-ftg-32 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "j-bryant-ftg-32 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/j-bryant-ftg-32/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000045 /* yy-verticalboard-first Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-verticalboard-first Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-verticalboard-first/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000046 /* yy-verticalboard-light Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-verticalboard-light Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-verticalboard-light/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000047 /* yy-verticalboard-one Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-verticalboard-one Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-verticalboard-one/Hangboards"; sourceTree = "<absolute>"; };
+		F22900000000000000000001 /* RopePhysicsDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopePhysicsDescriptor.swift; sourceTree = "<group>"; };
+		F22900000000000000000003 /* RopeTriangleCollider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeTriangleCollider.swift; sourceTree = "<group>"; };
+		F22900000000000000000005 /* RopeSimulationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeSimulationState.swift; sourceTree = "<group>"; };
+		F22900000000000000000006 /* RopeThreadedSeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeThreadedSeed.swift; sourceTree = "<group>"; };
+		F22900000000000000000002 /* RopePhysicsDescriptorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopePhysicsDescriptorTests.swift; sourceTree = "<group>"; };
+		F22900000000000000000004 /* RopeTriangleColliderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeTriangleColliderTests.swift; sourceTree = "<group>"; };
+		F22900000000000000000007 /* RopeThreadedSeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeThreadedSeedTests.swift; sourceTree = "<group>"; };
+		F22900000000000000000008 /* RopeDynamicsSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeDynamicsSolver.swift; sourceTree = "<group>"; };
+		F22900000000000000000009 /* RopeSimulationMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeSimulationMetrics.swift; sourceTree = "<group>"; };
+		F2290000000000000000000A /* RopeBandedSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeBandedSystem.swift; sourceTree = "<group>"; };
+		F23000000000000000000001 /* RopeContactSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeContactSystem.swift; sourceTree = "<group>"; };
+		F2290000000000000000000B /* RopeDynamicsSolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeDynamicsSolverTests.swift; sourceTree = "<group>"; };
+		F2290000000000000000000C /* ClavelliumRopePhysicsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClavelliumRopePhysicsTests.swift; sourceTree = "<group>"; };
+		F2290000000000000000000D /* RopeBandedSystemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeBandedSystemTests.swift; sourceTree = "<group>"; };
+		F23000000000000000000002 /* RopeContactSystemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeContactSystemTests.swift; sourceTree = "<group>"; };
+		F2290000000000000000000E /* LiveRopeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRopeController.swift; sourceTree = "<group>"; };
+		F2290000000000000000000F /* LiveRopeControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRopeControllerTests.swift; sourceTree = "<group>"; };
+		F22900000000000000000010 /* LiveRopeMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRopeMesh.swift; sourceTree = "<group>"; };
+		F22900000000000000000011 /* LiveRopeMeshTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRopeMeshTests.swift; sourceTree = "<group>"; };
+		F22900000000000000000012 /* RopeCordContacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeCordContacts.swift; sourceTree = "<group>"; };
+		F22900000000000000000013 /* RopeInterContactTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeInterContactTests.swift; sourceTree = "<group>"; };
+		D20000000000000000000042 /* yy-verticalboard-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-verticalboard-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-verticalboard-evo/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000043 /* tension-honestone Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-honestone Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-honestone/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000044 /* tension-grindstone-original Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-grindstone-original Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-grindstone-original/Hangboards"; sourceTree = "<absolute>"; };
+		F8BB00000000000000000002 /* PlanFlowPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowPresentation.swift; sourceTree = "<group>"; };
+		F8BB00000000000000000004 /* PlanFlowPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowPresentationTests.swift; sourceTree = "<group>"; };
+		F8BB00000000000000000006 /* PlanFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowUITests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -450,6 +550,7 @@
 				BF0000000000000000000005 /* WorkoutPaywallUITests.swift */,
 				C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */,
 				6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */,
+				F8BB00000000000000000006 /* PlanFlowUITests.swift */,
 			);
 			path = HangTenUITests;
 			sourceTree = "<group>";
@@ -476,11 +577,28 @@
 				D20000000000000000000012 /* soill-training-tiles Hangboards */,
 				D2000000000000000000000D /* tension-flash-board Hangboards */,
 				D2000000000000000000002E /* tension-grindstone Hangboards */,
+				D20000000000000000000031 /* tension-whetstone Hangboards */,
+				D20000000000000000000039 /* yy-travelboard Hangboards */,
+				D20000000000000000000038 /* yy-baguette Hangboards */,
+				D20000000000000000000037 /* plateau-lifting-edge Hangboards */,
+				D20000000000000000000036 /* nature-stone-hanger-mini-karma8a Hangboards */,
+				D20000000000000000000035 /* nature-stone-hanger-mini Hangboards */,
+				D20000000000000000000034 /* frictitious-port-a-board Hangboards */,
+				D20000000000000000000033 /* frictitious-nug Hangboards */,
+				D20000000000000000000032 /* aelith-cyclops-011 Hangboards */,
+				D20000000000000000000040 /* surfaces-for-climbing-transgression-2011 Hangboards */,
+				D20000000000000000000041 /* surfaces-for-climbing-transgression-2013 Hangboards */,
 				D2000000000000000000002F /* tension-grindstone-pro Hangboards */,
 				D20000000000000000000013 /* the-hangboard Hangboards */,
 				D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */,
 				D20000000000000000000015 /* clavellium-training-block Hangboards */,
 				D2000000000000000000000E /* yy-baguette-evo Hangboards */,
+				D20000000000000000000047 /* yy-verticalboard-one Hangboards */,
+				D20000000000000000000046 /* yy-verticalboard-light Hangboards */,
+				D20000000000000000000045 /* yy-verticalboard-first Hangboards */,
+				D20000000000000000000044 /* tension-grindstone-original Hangboards */,
+				D20000000000000000000043 /* tension-honestone Hangboards */,
+				D20000000000000000000042 /* yy-verticalboard-evo Hangboards */,
 				D20000000000000000000022 /* zlagboard-evo Hangboards */,
 				JB0000000000000000000002 /* j-bryant-ftg-32 Hangboards */,
 				D20000000000000000000028 /* crimptonite-helium-mobile Hangboards */,
@@ -532,6 +650,7 @@
 			isa = PBXGroup;
 			children = (
 				A3D000000000000000000006 /* GripHandSurfaceShader.metal */,
+				A4D000000000000000000002 /* BoardWoodSurfaceShader.metal */,
 			);
 			path = Rendering;
 			sourceTree = "<group>";
@@ -576,6 +695,17 @@
 				BB0000000000000000000071 /* BoardStorage.swift */,
 				BB0000000000000000000086 /* BoardPackageStore.swift */,
 				E32000000000000000000005 /* SuspensionProfiles.swift */,
+				F22900000000000000000001 /* RopePhysicsDescriptor.swift */,
+				F22900000000000000000003 /* RopeTriangleCollider.swift */,
+				F22900000000000000000005 /* RopeSimulationState.swift */,
+				F22900000000000000000006 /* RopeThreadedSeed.swift */,
+				F2290000000000000000000A /* RopeBandedSystem.swift */,
+				F23000000000000000000001 /* RopeContactSystem.swift */,
+				F22900000000000000000009 /* RopeSimulationMetrics.swift */,
+				F22900000000000000000008 /* RopeDynamicsSolver.swift */,
+				F22900000000000000000012 /* RopeCordContacts.swift */,
+				F22900000000000000000010 /* LiveRopeMesh.swift */,
+				F2290000000000000000000E /* LiveRopeController.swift */,
 				AC0000000000000000000001 /* Telemetry.swift */,
 				AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */,
 				AC0000000000000000000003 /* SentryDiagnostics.swift */,
@@ -601,6 +731,15 @@
 				E32000000000000000000002 /* SuspendedBoardPresentation.swift */,
 				E32000000000000000000006 /* OrbitPanGestureDelegate.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
+				73BB087DEE4043CE4D71BBC1 /* WorkoutCueCard.swift */,
+				1561CC9F49A8482434431C1D /* WorkoutControls.swift */,
+				ECF851F490988BBF1DC74E31 /* WorkoutTimerView.swift */,
+				DA4FE4FCE8D84C5B733C8CCE /* WorkoutPresentationContent.swift */,
+				280981D68BAEDAE6071622C2 /* WorkoutView.swift */,
+				2CF2C8B2702AF877EC0A9457 /* WorkoutSessionState.swift */,
+				D692AE3B1846C8951E234D90 /* PlanDetailView.swift */,
+				F8BB00000000000000000002 /* PlanFlowPresentation.swift */,
+				96F75E43E3A9E27C57CE4FD4 /* PlansView.swift */,
 				BB0000000000000000000091 /* TrainView.swift */,
 				BB00000000000000000000E8 /* ReportProblemView.swift */,
 				BF0000000000000000000006 /* WorkoutAccessGate.swift */,
@@ -669,6 +808,7 @@
 				BB0000000000000000000057 /* HealthKitServiceTests.swift */,
 				BB0000000000000000000058 /* WorkoutHistoryServiceTests.swift */,
 				BB0000000000000000000060 /* WorkoutStepNormalizationTests.swift */,
+				F8BB00000000000000000004 /* PlanFlowPresentationTests.swift */,
 				BB0000000000000000000061 /* CustomRoutineStoreTests.swift */,
 				BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */,
 				BB0000000000000000000065 /* CustomRoutineDraftTests.swift */,
@@ -677,6 +817,16 @@
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
 				E32000000000000000000003 /* BoardModelTests.swift */,
 				64167E2C3DD944D794B61EBF /* BoardModelRealityTests.swift */,
+				F22900000000000000000002 /* RopePhysicsDescriptorTests.swift */,
+				F22900000000000000000004 /* RopeTriangleColliderTests.swift */,
+				F22900000000000000000007 /* RopeThreadedSeedTests.swift */,
+				F2290000000000000000000D /* RopeBandedSystemTests.swift */,
+				F23000000000000000000002 /* RopeContactSystemTests.swift */,
+				F2290000000000000000000C /* ClavelliumRopePhysicsTests.swift */,
+				F2290000000000000000000B /* RopeDynamicsSolverTests.swift */,
+				F22900000000000000000013 /* RopeInterContactTests.swift */,
+				F22900000000000000000011 /* LiveRopeMeshTests.swift */,
+				F2290000000000000000000F /* LiveRopeControllerTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
 				AD0000000000000000000002 /* GripHandCueCardTests.swift */,
@@ -831,11 +981,28 @@
 				D10000000000000000000012 /* soill-training-tiles Hangboards in Resources */,
 				D1000000000000000000000D /* tension-flash-board Hangboards in Resources */,
 				D1000000000000000000002E /* tension-grindstone Hangboards in Resources */,
+				D10000000000000000000031 /* tension-whetstone Hangboards in Resources */,
+				D10000000000000000000039 /* yy-travelboard Hangboards in Resources */,
+				D10000000000000000000038 /* yy-baguette Hangboards in Resources */,
+				D10000000000000000000037 /* plateau-lifting-edge Hangboards in Resources */,
+				D10000000000000000000036 /* nature-stone-hanger-mini-karma8a Hangboards in Resources */,
+				D10000000000000000000035 /* nature-stone-hanger-mini Hangboards in Resources */,
+				D10000000000000000000034 /* frictitious-port-a-board Hangboards in Resources */,
+				D10000000000000000000033 /* frictitious-nug Hangboards in Resources */,
+				D10000000000000000000032 /* aelith-cyclops-011 Hangboards in Resources */,
+				D10000000000000000000040 /* surfaces-for-climbing-transgression-2011 Hangboards in Resources */,
+				D10000000000000000000041 /* surfaces-for-climbing-transgression-2013 Hangboards in Resources */,
 				D1000000000000000000002F /* tension-grindstone-pro Hangboards in Resources */,
 				D10000000000000000000013 /* the-hangboard Hangboards in Resources */,
 				D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */,
 				D10000000000000000000015 /* clavellium-training-block Hangboards in Resources */,
 				D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */,
+				D10000000000000000000047 /* yy-verticalboard-one Hangboards in Resources */,
+				D10000000000000000000046 /* yy-verticalboard-light Hangboards in Resources */,
+				D10000000000000000000045 /* yy-verticalboard-first Hangboards in Resources */,
+				D10000000000000000000044 /* tension-grindstone-original Hangboards in Resources */,
+				D10000000000000000000043 /* tension-honestone Hangboards in Resources */,
+				D10000000000000000000042 /* yy-verticalboard-evo Hangboards in Resources */,
 				D10000000000000000000021 /* dewoodstok-woodbord Hangboards in Resources */,
 				D10000000000000000000022 /* zlagboard-evo Hangboards in Resources */,
 				JB0000000000000000000001 /* j-bryant-ftg-32 Hangboards in Resources */,
@@ -855,7 +1022,6 @@
 				D10000000000000000000025 /* frictitious-megalith Hangboards in Resources */,
 				D10000000000000000000027 /* trango-rock-prodigy-natural Hangboards in Resources */,
 				D10000000000000000000026 /* trango-rock-prodigy-forge Hangboards in Resources */,
-				D10000000000000000000022 /* zlagboard-evo Hangboards in Resources */,
 				D10000000000000000000028 /* crimptonite-helium-mobile Hangboards in Resources */,
 				D10000000000000000000029 /* metolius-light-rail-2 Hangboards in Resources */,
 				D1000000000000000000002A /* metolius-rock-rings-3d Hangboards in Resources */,
@@ -894,6 +1060,7 @@
 			outputPaths = (
 				"${DERIVED_FILE_DIR}/HangTenModelODR",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HangTenDebugSimulatorModels",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -927,6 +1094,7 @@
 				AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */,
 				C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */,
 				5F8F1B1E5F16242FFEF5C807 /* FreeWorkoutUITests.swift in Sources */,
+				F8BB00000000000000000005 /* PlanFlowUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -945,13 +1113,34 @@
 				5107F3BB9E9E4481B0F91D12 /* BoardModelRealityTypes.swift in Sources */,
 				E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */,
 				E31000000000000000000005 /* SuspensionProfiles.swift in Sources */,
+				F12900000000000000000001 /* RopePhysicsDescriptor.swift in Sources */,
+				F12900000000000000000003 /* RopeTriangleCollider.swift in Sources */,
+				F12900000000000000000005 /* RopeSimulationState.swift in Sources */,
+				F12900000000000000000006 /* RopeThreadedSeed.swift in Sources */,
+				F1290000000000000000000A /* RopeBandedSystem.swift in Sources */,
+				F13000000000000000000001 /* RopeContactSystem.swift in Sources */,
+				F12900000000000000000009 /* RopeSimulationMetrics.swift in Sources */,
+				F12900000000000000000008 /* RopeDynamicsSolver.swift in Sources */,
+				F12900000000000000000012 /* RopeCordContacts.swift in Sources */,
+				F12900000000000000000010 /* LiveRopeMesh.swift in Sources */,
+				F1290000000000000000000E /* LiveRopeController.swift in Sources */,
 				E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */,
 				AA0000000000000000000006 /* RootView.swift in Sources */,
+				AE034E2B4778CFF045AA2F42 /* WorkoutCueCard.swift in Sources */,
+				D124854F1524ED273B860027 /* WorkoutControls.swift in Sources */,
+				E12D3C8673A4330F01E4329C /* WorkoutTimerView.swift in Sources */,
+				1FA42E3BA262FD5F860FDD87 /* WorkoutPresentationContent.swift in Sources */,
+				89F55463D090314CD394F45A /* WorkoutView.swift in Sources */,
+				876CF8149B56E504650BEB86 /* WorkoutSessionState.swift in Sources */,
+				5666BC4BFB710FEDA2BB1488 /* PlanDetailView.swift in Sources */,
+				F8BB00000000000000000001 /* PlanFlowPresentation.swift in Sources */,
+				CB707FE2387AC0729033FBAF /* PlansView.swift in Sources */,
 				AA0000000000000000000091 /* TrainView.swift in Sources */,
 				AA0000000000000000000092 /* AppSettingsView.swift in Sources */,
 				AA0000000000000000000008 /* GripDiagramView.swift in Sources */,
 				A3D000000000000000000001 /* GripHandModelView.swift in Sources */,
 				A3D000000000000000000005 /* GripHandSurfaceShader.metal in Sources */,
+				A4D000000000000000000001 /* BoardWoodSurfaceShader.metal in Sources */,
 				AA0000000000000000000009 /* HealthKitService.swift in Sources */,
 				AA0000000000000000000014 /* PlanStorage.swift in Sources */,
 				AA0000000000000000000071 /* BoardStorage.swift in Sources */,
@@ -1047,6 +1236,7 @@
 				AA0000000000000000000057 /* HealthKitServiceTests.swift in Sources */,
 				AA0000000000000000000058 /* WorkoutHistoryServiceTests.swift in Sources */,
 				AA0000000000000000000060 /* WorkoutStepNormalizationTests.swift in Sources */,
+				F8BB00000000000000000003 /* PlanFlowPresentationTests.swift in Sources */,
 				AA0000000000000000000061 /* CustomRoutineStoreTests.swift in Sources */,
 				AA0000000000000000000063 /* CustomRoutineAppStoreTests.swift in Sources */,
 				AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */,
@@ -1055,6 +1245,16 @@
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
 				E31000000000000000000003 /* BoardModelTests.swift in Sources */,
 				EEC6A92B0E7E4CDD9C965B84 /* BoardModelRealityTests.swift in Sources */,
+				F12900000000000000000002 /* RopePhysicsDescriptorTests.swift in Sources */,
+				F12900000000000000000004 /* RopeTriangleColliderTests.swift in Sources */,
+				F12900000000000000000007 /* RopeThreadedSeedTests.swift in Sources */,
+				F1290000000000000000000D /* RopeBandedSystemTests.swift in Sources */,
+				F13000000000000000000002 /* RopeContactSystemTests.swift in Sources */,
+				F1290000000000000000000C /* ClavelliumRopePhysicsTests.swift in Sources */,
+				F1290000000000000000000B /* RopeDynamicsSolverTests.swift in Sources */,
+				F12900000000000000000013 /* RopeInterContactTests.swift in Sources */,
+				F12900000000000000000011 /* LiveRopeMeshTests.swift in Sources */,
+				F1290000000000000000000F /* LiveRopeControllerTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,
@@ -1129,6 +1329,7 @@
 		FF0000000000000000000011 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xcc -DACCELERATE_NEW_LAPACK";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1169,6 +1370,7 @@
 		FF0000000000000000000012 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xcc -DACCELERATE_NEW_LAPACK";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;

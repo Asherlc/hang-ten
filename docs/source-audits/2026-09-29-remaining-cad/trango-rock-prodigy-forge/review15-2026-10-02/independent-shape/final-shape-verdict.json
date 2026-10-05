@@ -1,0 +1,201 @@
+{
+  "status": "pass",
+  "blockers": [],
+  "scope": "Final native physical-shape/contact and actual-USDZ visual/export gate. Ready for human review; current app runtime and human acceptance pending.",
+  "candidatePackage": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-final-package/Hangboards/trango-rock-prodigy-forge",
+  "files": {
+    "trango-rock-prodigy-forge.FCStd": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+    "assets/primary.usdz": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "assets/primary.model.json": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
+  },
+  "sourceImages": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-01.jpg",
+      "sha256": "838e2a95316508157a6f85c12c665511e797ae5bfb21e9917e3ed67c92ed80c4"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-03.png",
+      "sha256": "a2a4e18e3fe3c716c171f2726fe0b3d9ef653cc77ad7c30b56e304476cec1914"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-04.png",
+      "sha256": "678688bbf11a66fc5d77961e80d5af6b5a35548548c69bbd25588389f6fba136"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-05.png",
+      "sha256": "ce64d24741944997302ad503882eeaee958cca57a5cf4f80b23a6436bad6487f"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-06.png",
+      "sha256": "de38abd8ebf79dda10a2f3e9f7f0a77a34f81a314d3e3afa02b69eb7e6bc80c2"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/hold-chart-page-1.png",
+      "sha256": "eb51572eee1034b774872e44ded8bd3bdf20a0e023e0dc0673f5c75afb263c66"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/depth-guide-page-1.png",
+      "sha256": "b3ba2fab2375f30d2f1c60cabcc30ce77241313d02824288adbf5301d64b2808"
+    }
+  ],
+  "viewedRenderFiles": [
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-front.png",
+      "sha256": "9c6029be098330c4b51b652faf16179c73ef7284f2c4395dd61241a46157e4a5"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-side.png",
+      "sha256": "e27f857ab47463de48bd05df56b9d362db6f4f2936744d38970a7117b2737bce"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-top.png",
+      "sha256": "392ce11893b46e2dc6f4bf1b1485669e2c4a515083909d34ff5a507cbe04d7f2"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/current-oblique.png",
+      "sha256": "d23a02ed3722f65cf0090469f3a362083bddc87ea0a34080b9711391725dbac3"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-oblique.png",
+      "sha256": "3e03057919a1adcbdc3e47a089ad82a0a4c8ccace12d1b58c7ec9717eeba0cdb"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-front-side-top.png",
+      "sha256": "5825f930e0e1d19b490effbbf4e1ac4ce7157e8d080a5c4d8a819f22a1f94499"
+    }
+  ],
+  "reports": [
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/native-shape-handoff.json",
+      "sha256": "c70616117e46a7540bb94ad0648e416b04930f37cfa4b41d20e347ea7fa11e50"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/author-report.json",
+      "sha256": "7ef37944ba21c5d48645c270e854197878fc72d822b5f932e006585058508a3e"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/fresh-native-check.json",
+      "sha256": "0144f0c3e81a2a69d41fcfc60891396a1222c3875748dc5caf923751310799ec"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/finish-metadata-proof.json",
+      "sha256": "18b9e4a6de0cc99f7416da84fd0c16a49a5f101a71e6af948f758fd7addf7b6f"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/render-provenance.json",
+      "sha256": "3f54498e7a00687033d5a73cb5c3ea4495a15b8d61bb2c4fcbb1bd56f98239b7"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-depth-render.py",
+      "sha256": "8010160c9f686524f45fafe23c4f9a8b7719cc627fe831027f86bc46c20909ab"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/final-lifecycle-verification.json",
+      "sha256": "4366ab7d1aedb5f71dfbe048fe0177162e33897e79c746ab6007e9e4e108c898"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-check.json",
+      "sha256": "2429d2682b4459bb7ae7ee618cea3452ae5c6b01bf9dcd427755656ecaf3896c"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/deterministic-export.json",
+      "sha256": "aadcb33caa9ff1eb241901fd46f7629a7aa3d38463aac16ec6fdbe51dc0d5ee2"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/reimport-check.json",
+      "sha256": "17b9090b0da67705efca42336f20c09dfddd6c8a990cd66e86aa8d2c710f3a93"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/metadata-proof.json",
+      "sha256": "73e3fe8361e94954f9fe9fb958c4b00a157d2497ed70d74b024413437290b55b"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/native-normal-check.json",
+      "sha256": "46a4ccceb2d7c4c3424f3e2beb14859a8eb54b52fdff13ae409fa836217c373d"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/cleanup-receipt.json",
+      "sha256": "57fe4873bc21ae5595ff403d74a4bf2ab921c6aee4576aaaffc0f8523dbd9dd8"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/flagged-native-normal-diagnostic.json",
+      "sha256": "4e2fda16c258d4099ae955bdc8aef874a585f1244edc19c6dfdc2479c60ad662"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/cleanup-receipt.json",
+      "sha256": "0e9112a2670bfe9dfe31f4a752d7cfd7103fcbd8f34a1faa8944fa1e3949c036"
+    }
+  ],
+  "physicalDisposition": {
+    "outerWing": "Pass: whole side/front/top/oblique exports show the source-supported open recessed band and distinct lower projecting lip, set back behind the upper outer wing; both units mirror.",
+    "existingGrips": "Broad 30/40 degree surfaces, inner large-flat-edge and slopey-crimper, central closed crimp and pocket arrangement retained. Twenty unchanged logical IDs/facts; no new pinch contact.",
+    "contactGeometry": "Independent final native check confirms complete finite final-body membership and bidirectional baseline preservation of all twenty surfaces at unchanged 1e-4 mm\u00b2 tolerance. Fresh forced recompute and meaningful recess/depth edit-and-restore retain full surfaces. No detached sheets.",
+    "sourceLimits": "Primary whole photographs/charts reviewed by eye only; no source pixel measurement, cropping, tracing or hidden-geometry inference. New recess dimensions and rolls are display estimates."
+  },
+  "factsAndEstimates": {
+    "published": [
+      "12.75 by 5.25 inches per unit",
+      "30 and 40 degree slopers",
+      "7\u201320 mm variable rail",
+      "7.5 mm closed crimp",
+      "25 and 15 mm MR pockets",
+      "19\u201331 mm IMR range in depth guide; existing IM metadata intentionally retains no structured numeric depth"
+    ],
+    "estimated": [
+      "Unpublished opening dimensions and roundovers",
+      "Wing transitions, contour radii and unit spacing",
+      "Rail opening angle",
+      "Large-flat-edge 8 mm and slopey-crimper 4 mm model extents",
+      "Outer recess opening 25 mm, back inset 46 mm, back rolls 6 mm, mouth rolls 2.5 mm, lower-lip setback 11.5 mm"
+    ],
+    "limits": "Depth-like compiler extents for slopers are geometric axis extents, not new manufacturer depth facts. Missing mounting hardware follows project display policy. Source pinch widths/names do not authorize adding contacts during this review."
+  },
+  "material": {
+    "surfaceFinish": "plastic",
+    "soleManifestDiff": "/presentations/0/media/display/surfaceFinish: absent -> plastic",
+    "provenance": "Root-authorized generic appearance inference from approved molded textured manufacturer photos; no polymer chemistry or exact manufacturer color fact.",
+    "unboundUSDZ": true,
+    "materials": 0,
+    "shaders": 0,
+    "boundMeshes": 0
+  },
+  "exportDisposition": {
+    "status": "pass",
+    "nodeCount": 21,
+    "contactCount": 20,
+    "triangleCount": 20748,
+    "repeatCompileByteIdentical": true,
+    "emptyStageReimportPassed": true,
+    "completeDescriptorRebuiltExactly": true,
+    "normals": "Original rounded-point inverse-projection checker reported 28 flags and is retained. Exact serialized facet-corner ownership resolves all 28 using full-native-point AND native UV normal witnesses at the unchanged 5e-6 vector tolerance. No source, compiler or asset change.",
+    "normalWitnesses": 106,
+    "normalDistinctTriangles": 90,
+    "normalMaximumVectorError": 3.026965410505641e-08,
+    "normalTolerance": 5e-06,
+    "normalUnresolved": []
+  },
+  "historicalFailures": {
+    "originalShape": "Original canonical outer wing omitted the source-supported recess/lip; initial failed verdict retained.",
+    "superseded3befSource": "Fresh recompute lost the main 30-degree contact face. Final 4f970 uses stable editable native upper references, with complete final-body membership and preservation checked after reopen and both edits. No preservation tolerance relaxed.",
+    "priorInverseNormalCheck": "46a4ccceb2d7c4c3424f3e2beb14859a8eb54b52fdff13ae409fa836217c373d retained; superseding exact-point/UV witness 4e2fda16c258d4099ae955bdc8aef874a585f1244edc19c6dfdc2479c60ad662 resolves all flags."
+  },
+  "cameraAndRendering": {
+    "front": "eye +Z",
+    "side": "eye +X",
+    "top": "eye +Y",
+    "oblique": "yaw -25 degrees then pitch +22 degrees",
+    "framing": "whole union of prior/current projections, identical camera and scale",
+    "method": "whole actual triangles; barycentric per-pixel orthographic depth; no source-image processing",
+    "shade": "neutral diagnostic CAD shading; not app plastic appearance",
+    "combinedSheet": "Three whole original comparison frames pasted without crop or resize."
+  },
+  "appFrames": 0,
+  "currentRuntimeVerified": false,
+  "humanAcceptance": "pending",
+  "oldAppCaptureScope": "Historical captures bind original 8376/4b70/9f5 asset only. They cannot certify final 4f970/6af109/ec716 or current parent-tip runtime.",
+  "canonicalOrSharedEditsByThisAgent": false,
+  "resourceLifecycle": {
+    "path": ".context/placid-badger/forge-review15/native-author/final-lifecycle-verification.json",
+    "sha256": "4366ab7d1aedb5f71dfbe048fe0177162e33897e79c746ab6007e9e4e108c898"
+  }
+}

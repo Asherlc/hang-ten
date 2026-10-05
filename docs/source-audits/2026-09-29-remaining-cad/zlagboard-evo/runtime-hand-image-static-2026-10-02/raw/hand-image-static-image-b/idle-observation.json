@@ -1,0 +1,112 @@
+{
+  "noNewImageEvents": true,
+  "before": {
+    "recordCount": 12,
+    "lastSequence": 12,
+    "readiness": {
+      "publication": {
+        "applicationCensus": {
+          "applicationState": 0,
+          "standaloneGate": false,
+          "windowScenes": [
+            {
+              "activationState": 0,
+              "interfaceOrientation": 1,
+              "sceneID": "ObjectIdentifier(0x0000000103541a00)",
+              "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+              "windows": [
+                {
+                  "alpha": 1,
+                  "bounds": [
+                    402,
+                    874
+                  ],
+                  "hidden": false,
+                  "key": true,
+                  "rendererNamedViewClasses": {},
+                  "rendererPlacements": [],
+                  "windowID": "ObjectIdentifier(0x0000000101f60800)"
+                }
+              ]
+            }
+          ]
+        },
+        "complete": true,
+        "currentRevision": 2,
+        "epoch": 1791006987.131933,
+        "event": "hand-image",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 0,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "imageEvent": "published",
+        "pngByteCount": 473269,
+        "pngPath": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/32510E73-0746-48D3-A667-49DE91901DA4/Documents/HighlightDiagnostic-placid-badger-cad-second-half-hand-image-static-image-b/hand-image-prototype/3CE675E0-0ED1-4D94-9DDA-03D3D022F3F1/revision-2.png",
+        "pngSHA256": "5659af63210e11ac8f3e51c90b69b86e85a3771677254dac6357da129911d995",
+        "revision": 2,
+        "sequence": 12,
+        "sessionID": "3CE675E0-0ED1-4D94-9DDA-03D3D022F3F1",
+        "uptime": 88785.35514508333
+      },
+      "maximumInFlight": 1
+    },
+    "imageEventCount": 7
+  },
+  "after": {
+    "recordCount": 12,
+    "lastSequence": 12,
+    "readiness": {
+      "publication": {
+        "applicationCensus": {
+          "applicationState": 0,
+          "standaloneGate": false,
+          "windowScenes": [
+            {
+              "activationState": 0,
+              "interfaceOrientation": 1,
+              "sceneID": "ObjectIdentifier(0x0000000103541a00)",
+              "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+              "windows": [
+                {
+                  "alpha": 1,
+                  "bounds": [
+                    402,
+                    874
+                  ],
+                  "hidden": false,
+                  "key": true,
+                  "rendererNamedViewClasses": {},
+                  "rendererPlacements": [],
+                  "windowID": "ObjectIdentifier(0x0000000101f60800)"
+                }
+              ]
+            }
+          ]
+        },
+        "complete": true,
+        "currentRevision": 2,
+        "epoch": 1791006987.131933,
+        "event": "hand-image",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 0,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "imageEvent": "published",
+        "pngByteCount": 473269,
+        "pngPath": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/32510E73-0746-48D3-A667-49DE91901DA4/Documents/HighlightDiagnostic-placid-badger-cad-second-half-hand-image-static-image-b/hand-image-prototype/3CE675E0-0ED1-4D94-9DDA-03D3D022F3F1/revision-2.png",
+        "pngSHA256": "5659af63210e11ac8f3e51c90b69b86e85a3771677254dac6357da129911d995",
+        "revision": 2,
+        "sequence": 12,
+        "sessionID": "3CE675E0-0ED1-4D94-9DDA-03D3D022F3F1",
+        "uptime": 88785.35514508333
+      },
+      "maximumInFlight": 1
+    },
+    "imageEventCount": 7
+  },
+  "scope": "App event counts only; not GPU-idle proof"
+}

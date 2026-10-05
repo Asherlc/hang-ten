@@ -1,0 +1,44 @@
+{
+  "status": "complete",
+  "ownedPackage": "frictitious-nug",
+  "changedPackageFiles": [
+    "Hangboards/frictitious-nug/suspension.json"
+  ],
+  "unchangedPackageFiles": 205,
+  "authoringChanges": [
+    "Four lead radius values: 0.0015 m to manufacturer-published 0.003 m",
+    "Four provenance strings identify maker 6 mm diameter and retain estimated 300 mm length"
+  ],
+  "generatedChanges": [
+    "wrappedRoutes",
+    "canonical pose translationY"
+  ],
+  "currentPackageHashes": {
+    "assets/primary.model.json": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+    "assets/primary.usdz": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+    "frictitious-nug.FCStd": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+    "suspension.json": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3"
+  },
+  "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "evidenceSHA256": "fc5517626285368b665c37139a52657133400bc8cf1ef0b4c54b3d1eac490f78",
+  "reports": {
+    "fresh-native-apply-report.json": "79977e53fccaad059af8ca003b99e0e866fce608f669011e127679100df27194",
+    "fresh-native-check-report.json": "79977e53fccaad059af8ca003b99e0e866fce608f669011e127679100df27194",
+    "fresh-reproducibility-result.json": "255673b33585bf105b7daddd74489356320c8a57bbaf81b7332e8dad98a3dd98",
+    "post-apply-native-certificates.json": "f5fa3ab21ae361af93ef5d8e921d1485020d411e3306b283118b44f67f50e626"
+  },
+  "processCleanup": {
+    "applyToolSessionID": 10458,
+    "applyRecordedPIDs": [
+      9924,
+      9925
+    ],
+    "checkToolSessionID": 66084,
+    "checkPIDNote": "Completed before read-only process inventory; tool session confirmed exit0.",
+    "certificateToolSessionID": 47128,
+    "allToolSessionsExited": true,
+    "matchingOwnedNativeProcesses": [],
+    "externalResourcesCreated": []
+  },
+  "limits": "Cord lengths remain display estimates and hidden connections remain unknown. No full equilibrium claim. Root owns app review, delivery lock, docs, Git."
+}

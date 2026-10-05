@@ -1,0 +1,17 @@
+{
+  "head": "069f24da9a2d0a0f66fd6f4feb2ffe9bf9460af5",
+  "reviewer": "/root/cad_inventory",
+  "independentlyBoundBy": "placid-badger",
+  "sourceSHA256": "3165dc49577a93e82cd2b1ec3f8ea4a24965b89ac0b2d4c00ccfb7a36c8c7ff6",
+  "modelSHA256": "cea629d95bcef7fe9270a2b44114588193fb136706d1bfc17b3276437d9f45c9",
+  "descriptorSHA256": "4d85ca566ef83d8dbad2b6e5f9677f98e5e4559fe1e2b20f0152450f51747b28",
+  "committedBoardJSON": false,
+  "suspensionSidecar": false,
+  "embeddedLegacyTopology": "pairedLeadCord",
+  "orderedLeadCount": 2,
+  "canonicalPoseCount": 4,
+  "nativeRoutesCache": false,
+  "classificationCorrectionOnly": true,
+  "nativeUNLEVELContract": "cadRoutedCord/nativeRoutes",
+  "nativeOrInProgressPackagesModified": false
+}

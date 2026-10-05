@@ -1,0 +1,40 @@
+{
+  "status": "pass",
+  "humanAcceptance": false,
+  "canonicalPromotionPerformed": false,
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+  "modelBytes": 1908779,
+  "triangles": 75174,
+  "twoNormalExportsByteIdentical": true,
+  "checkMatchesExports": true,
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "sourceUnchanged": true,
+  "rawPlasticManifestAndNormalFlagsPreserved": true,
+  "tessellationDeflectionMM": 0.28,
+  "jobs": {
+    "compile": {
+      "report": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/compile.json",
+      "reportSHA256": "4f1843e5628207c84ff8e95531467bb2e518f462a3c4277bac39fc83cf45e6f6",
+      "ownership": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/compile-ownership.json",
+      "elapsedSeconds": 493.47689883300336
+    },
+    "compile-check": {
+      "report": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/compile-check.json",
+      "reportSHA256": "efcfeaffa87e51b5b36fdc8871eec5e61793281dec34df682fad59676e164349",
+      "ownership": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/compile-check-ownership.json",
+      "elapsedSeconds": 491.26385437499266
+    },
+    "reproduce": {
+      "report": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/reproduce.json",
+      "reportSHA256": "612c3df26663c9e9a091e6bcf976b961e420a06cbf66e54bceffb4770916f2d1",
+      "ownership": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/reproduce-ownership.json",
+      "elapsedSeconds": 491.6652905420051
+    }
+  },
+  "limits": [
+    "Actual-app visual/selection and human approval are separate pending gates.",
+    "Overall thickness is an explicit display estimate; no blanket G1 claim across every roof join."
+  ]
+}

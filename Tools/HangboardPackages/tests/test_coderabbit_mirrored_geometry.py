@@ -125,6 +125,22 @@ def test_coderabbit_flagged_pairs_preserve_mirrored_geometry(board_id: str) -> N
         descriptor = json.loads(
             (REPO_ROOT / "Hangboards" / board_id / media["descriptorPath"]).read_text(encoding="utf-8")
         )
+        if descriptor["schemaVersion"] == 2:
+            left_instance, right_instance = media["instances"]
+            assert left_instance["baseTransform"].get("reflection") is None
+            assert right_instance["baseTransform"]["reflection"] == "x"
+            bounds = descriptor["modelBounds"]
+            assert right_instance["baseTransform"]["translation"][0] == pytest.approx(
+                -(bounds["min"][0] + bounds["max"][0]), abs=1e-9
+            )
+            for left_id, right_id in MIRRORED_PAIRS[board_id]:
+                left_slot = next(slot for slot, cid in left_instance["contactIDsBySlotID"].items()
+                                 if cid == left_id)
+                right_slot = next(slot for slot, cid in right_instance["contactIDsBySlotID"].items()
+                                  if cid == right_id)
+                assert left_slot == right_slot
+                assert descriptor["contactSlots"][left_slot]["nodeIDs"]
+            return
         contacts = descriptor["contacts"]
         for left_id, right_id in MIRRORED_PAIRS[board_id]:
             left = contacts[left_id]

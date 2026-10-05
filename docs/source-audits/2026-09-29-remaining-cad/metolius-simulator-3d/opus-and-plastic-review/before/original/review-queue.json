@@ -1,0 +1,573 @@
+{
+  "schemaVersion": 1,
+  "owner": "placid-badger",
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "reviewState": "one-by-one review in progress: first seven shown revisions accepted; Metolius Simulator 3-D review #8 is being refined after jagged feedback",
+  "boards": [
+    {
+      "number": 1,
+      "package": "aelith-cyclops-011",
+      "boardID": "aelith.cyclops-011",
+      "name": "Aelith Equipment Cyclops #011 Blue x Black",
+      "humanReview": "reviewed; shorter display cord accepted",
+      "sourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+      "reviewPage": "aelith-cyclops-011/review/index.html",
+      "sourceAudit": "aelith-cyclops-011/native-authoring.md",
+      "comparisons": [
+        "aelith-cyclops-011/review/prior-primary.png",
+        "aelith-cyclops-011/review/primary-front.png",
+        "aelith-cyclops-011/review/primary-side.png",
+        "aelith-cyclops-011/review/primary-top.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7",
+          "modelSHA256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d"
+        }
+      },
+      "appReview": "aelith-cyclops-011/app-review/validation.json",
+      "appReviewPage": "aelith-cyclops-011/app-review/index.html",
+      "suspensionSHA256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+      "reviewFeedback": [
+        "cord is way too long"
+      ],
+      "latestRevision": "aelith-cyclops-011/cord-shortening-review.md",
+      "humanReviewRecord": "aelith-cyclops-011/human-review.json"
+    },
+    {
+      "number": 2,
+      "package": "captain-fingerfood-dual",
+      "boardID": "captain-fingerfood.dual",
+      "name": "Captain Fingerfood DUAL",
+      "humanReview": "reviewed; revised displayed cord routing accepted",
+      "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+      "reviewPage": "captain-fingerfood-dual/geometry-review.html",
+      "sourceAudit": "captain-fingerfood-dual/README.md",
+      "comparisons": [
+        "captain-fingerfood-dual/comparison-sheet.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+          "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe"
+        }
+      },
+      "appReview": "captain-fingerfood-dual/vertical-tightening-review/app-review/validation.json",
+      "appReviewPage": "captain-fingerfood-dual/vertical-tightening-review/app-review/index.html",
+      "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+      "reviewFeedback": [
+        "Cord doesn\u2019t go through holes",
+        "the 90 degree position tho, why does the bottom cord jut out to the side?"
+      ],
+      "latestRevision": "captain-fingerfood-dual/vertical-tightening-review/review.md",
+      "runtimeRevision": "captain-fingerfood-dual/vertical-tightening-review/runtime-validation.json",
+      "cordComparisons": "captain-fingerfood-dual/vertical-tightening-review/index.html",
+      "humanReviewRecord": "captain-fingerfood-dual/human-review.json",
+      "acceptedScope": "Revised displayed 90 degree cord routing shown in the inline front, side and top before/after comparisons. General front-hole entry was accepted earlier with y.",
+      "reviewAnswer": "lgtm"
+    },
+    {
+      "number": 3,
+      "package": "captain-fingerfood-unlevel",
+      "boardID": "captain-fingerfood.unlevel",
+      "name": "Captain Fingerfood UNLEVEL",
+      "humanReview": "reviewed; shown native body and revised displayed cords accepted",
+      "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+      "reviewPage": "captain-fingerfood-unlevel/geometry-review.html",
+      "sourceAudit": "captain-fingerfood-unlevel/README.md",
+      "comparisons": [
+        "captain-fingerfood-unlevel/comparison-sheet.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89",
+          "modelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47"
+        }
+      },
+      "appReview": "captain-fingerfood-unlevel/front-entry-review/app-review/validation.json",
+      "appReviewPage": "captain-fingerfood-unlevel/front-entry-review/app-review/index.html",
+      "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+      "reviewFeedback": [
+        "Manufacturer reference audit: visible leads must approach the front floor holes; the prior route entered from the rear in three poses."
+      ],
+      "latestRevision": "captain-fingerfood-unlevel/front-entry-review/review.md",
+      "cordComparisons": "captain-fingerfood-unlevel/front-entry-review/index.html",
+      "runtimeRevision": "captain-fingerfood-unlevel/front-entry-review/runtime-validation.json",
+      "humanReviewRecord": "captain-fingerfood-unlevel/human-review.json",
+      "acceptedScope": "Displayed native CAD body in the front/side/top comparison and revised display cord entry in the default and 90 degree pocket comparisons.",
+      "reviewAnswer": "Y"
+    },
+    {
+      "number": 4,
+      "package": "frictitious-nug",
+      "boardID": "frictitious.nug",
+      "name": "Frictitious Climbing The NUG",
+      "humanReview": "reviewed; wraparound pinch and shorter display cord accepted",
+      "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+      "reviewPage": "frictitious-nug/review/index.html",
+      "sourceAudit": "frictitious-nug/README.md",
+      "comparisons": [
+        "frictitious-nug/cord-shortening-review/default-inverted-cord-overview.png",
+        "frictitious-nug/pinch-contact-review/pinch-60-overview.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+          "modelSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800"
+        }
+      },
+      "appReview": "frictitious-nug/cord-shortening-review/app-review/validation.json",
+      "appReviewPage": "frictitious-nug/cord-shortening-review/app-review/index.html",
+      "suspensionSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+      "latestRevision": "frictitious-nug/cord-shortening-review/review.md",
+      "cordComparisons": "frictitious-nug/cord-shortening-review/index.html",
+      "runtimeRevision": "frictitious-nug/cord-shortening-review/verification.json",
+      "reviewFeedback": [
+        "Upper and lower rims onto front/back",
+        "looks good, cord is too long tho"
+      ],
+      "humanReviewRecord": "frictitious-nug/human-review.json"
+    },
+    {
+      "number": 5,
+      "package": "frictitious-port-a-board",
+      "boardID": "frictitious.port-a-board",
+      "name": "Frictitious Climbing Port-A-Board",
+      "humanReview": "reviewed; revised displayed cord routing accepted",
+      "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+      "reviewPage": "frictitious-port-a-board/cord-physics-review/index.html",
+      "sourceAudit": "frictitious-port-a-board/native-authoring.md",
+      "comparisons": [
+        "frictitious-port-a-board/cord-physics-review/app-before-after.png",
+        "frictitious-port-a-board/cord-physics-review/front-side-top-comparison.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+          "modelSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273"
+        }
+      },
+      "appReview": "frictitious-port-a-board/cord-physics-review/after-app/validation.json",
+      "appReviewPage": "frictitious-port-a-board/cord-physics-review/index.html",
+      "humanReviewRecord": "frictitious-port-a-board/human-review.json",
+      "suspensionSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+      "revisionBaseCommit": "3fd0418d9a66d489cdb515ca3a3e82b4ec52121e",
+      "revisionCommit": "7a81dcf5af5f79fe3a5b419749dd30bff0f0a32d",
+      "answer": "Y"
+    },
+    {
+      "number": 6,
+      "package": "mammut-diamond-finger",
+      "boardID": "mammut.diamond-finger",
+      "name": "Mammut Diamond Finger Hangboard",
+      "humanReview": "reviewed; shown revised geometry and wood finish accepted",
+      "sourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "reviewPage": "mammut-diamond-finger/geometry-and-wood-review/index.html",
+      "sourceAudit": "mammut-diamond-finger/source-audit.md",
+      "comparisons": [
+        "mammut-diamond-finger/geometry-and-wood-review/app/after-app/wood-unselected.png",
+        "mammut-diamond-finger/geometry-and-wood-review/front-side-top-comparison.png",
+        "mammut-diamond-finger/geometry-and-wood-review/compiled-previews/comparison-raking.png",
+        "mammut-diamond-finger/geometry-and-wood-review/native-final/previews/native-central-and-lateral-sections.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
+          "modelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12"
+        }
+      },
+      "appReview": "mammut-diamond-finger/geometry-and-wood-review/app/after-app/validation.json",
+      "appReviewPage": "mammut-diamond-finger/geometry-and-wood-review/index.html",
+      "humanReviewRecord": "mammut-diamond-finger/human-review.json",
+      "answer": "Good enough",
+      "revisionCommit": "e60142f3ef60456248054bf3cf917c7ab81bf5e6"
+    },
+    {
+      "number": 7,
+      "package": "metolius-contact",
+      "boardID": "metolius.contact",
+      "name": "Metolius Contact",
+      "humanReview": "reviewed; projecting pinch rails and highlights accepted",
+      "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+      "reviewPage": "metolius-contact/pinch-rails-review/index.html",
+      "sourceAudit": "metolius-contact/source-audit.md",
+      "comparisons": [
+        "metolius-contact/pinch-rails-review/front-side-top-comparison.png",
+        "metolius-contact/pinch-rails-review/app-before-after.png",
+        "metolius-contact/pinch-rails-review/previews/comparison-oblique.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+          "modelSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07"
+        }
+      },
+      "appReview": "metolius-contact/pinch-rails-review/app/validation.json",
+      "appReviewPage": "metolius-contact/pinch-rails-review/index.html",
+      "historicalAppReview": "metolius-contact/app-review/validation.json",
+      "historicalAppReviewPage": "metolius-contact/app-review/index.html",
+      "humanReviewRecord": "metolius-contact/human-review.json",
+      "latestRevision": "metolius-contact/pinch-rails-review/review.md",
+      "runtimeRevision": "metolius-contact/pinch-rails-review/runtime-validation.json",
+      "revisionBaseCommit": "5cfd5b6386b283b2eb8daefc054a42823fdf852b",
+      "reviewFeedback": [
+        "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch"
+      ],
+      "priorIndividualReview": "metolius-contact/individual-review/index.html",
+      "reviewAnswer": "Y",
+      "acceptedScope": "Displayed forward-projecting Contact pinch rails and their highlights in the prior-versus-revised front/side/top and actual-app images.",
+      "revisionCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890"
+    },
+    {
+      "number": 8,
+      "package": "metolius-simulator-3d",
+      "boardID": "metolius.simulator-3d",
+      "name": "Metolius Simulator 3-D",
+      "humanReview": "awaiting revision for one-by-one review #8: jagged geometry feedback",
+      "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+      "reviewPage": "metolius-simulator-3d/source-audit.md",
+      "sourceAudit": "metolius-simulator-3d/source-audit.md",
+      "comparisons": [
+        "metolius-simulator-3d/review/comparison-side.png",
+        "metolius-simulator-3d/review/comparison-top.png",
+        "metolius-simulator-3d/review/comparison-front.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e",
+          "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16"
+        }
+      },
+      "appReview": "metolius-simulator-3d/app-review/validation.json",
+      "appReviewPage": "metolius-simulator-3d/app-review/index.html",
+      "humanReviewRecord": "metolius-simulator-3d/human-review.json",
+      "reviewFeedback": [
+        "Jagged"
+      ]
+    },
+    {
+      "number": 9,
+      "package": "nature-stone-hanger",
+      "boardID": "nature.stone-hanger",
+      "name": "Nature Climbing Stone Hanger",
+      "humanReview": "pending",
+      "sourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+      "reviewPage": "nature-stone-hanger/geometry-review.html",
+      "sourceAudit": "nature-stone-hanger/README.md",
+      "comparisons": [
+        "nature-stone-hanger/comparison-sheet.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c",
+          "modelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf"
+        }
+      },
+      "appReview": "nature-stone-hanger/app-review/validation.json",
+      "appReviewPage": "nature-stone-hanger/app-review/index.html"
+    },
+    {
+      "number": 10,
+      "package": "nature-stone-hanger-mini",
+      "boardID": "nature.stone-hanger-mini",
+      "name": "Nature Climbing Stone Hanger Mini",
+      "humanReview": "pending",
+      "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+      "reviewPage": "nature-stone-hanger-mini/review/index.html",
+      "sourceAudit": "nature-stone-hanger-mini/native-authoring.md",
+      "comparisons": [
+        "nature-stone-hanger-mini/review/prior-side.png",
+        "nature-stone-hanger-mini/review/prior-primary.png",
+        "nature-stone-hanger-mini/review/primary-front.png",
+        "nature-stone-hanger-mini/review/prior-side.png",
+        "nature-stone-hanger-mini/review/primary-side.png",
+        "nature-stone-hanger-mini/review/primary-top.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
+          "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30"
+        }
+      },
+      "appReview": "nature-stone-hanger-mini/app-review/validation.json",
+      "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
+    },
+    {
+      "number": 11,
+      "package": "nature-stone-hanger-mini-karma8a",
+      "boardID": "nature.stone-hanger-mini-karma8a",
+      "name": "Nature Climbing Stone Hanger Mini x KARMA8A",
+      "humanReview": "pending",
+      "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+      "reviewPage": "nature-stone-hanger-mini-karma8a/review/index.html",
+      "sourceAudit": "nature-stone-hanger-mini-karma8a/native-authoring.md",
+      "comparisons": [
+        "nature-stone-hanger-mini-karma8a/review/prior-primary.png",
+        "nature-stone-hanger-mini-karma8a/review/primary-front.png",
+        "nature-stone-hanger-mini-karma8a/review/primary-side.png",
+        "nature-stone-hanger-mini-karma8a/review/primary-top.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
+          "modelSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46"
+        }
+      },
+      "appReview": "nature-stone-hanger-mini-karma8a/app-review/validation.json",
+      "appReviewPage": "nature-stone-hanger-mini-karma8a/app-review/index.html"
+    },
+    {
+      "number": 12,
+      "package": "owl-climb-poker",
+      "boardID": "owl-climb.poker",
+      "name": "Owl Climb Poker",
+      "humanReview": "pending",
+      "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+      "reviewPage": "owl-climb-poker/geometry-review.html",
+      "sourceAudit": "owl-climb-poker/README.md",
+      "comparisons": [
+        "owl-climb-poker/comparison-sheet.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac",
+          "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874"
+        }
+      },
+      "appReview": "owl-climb-poker/app-review/validation.json",
+      "appReviewPage": "owl-climb-poker/app-review/index.html"
+    },
+    {
+      "number": 13,
+      "package": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "name": "Plateau Climbing Lifting Edge",
+      "humanReview": "pending",
+      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+      "reviewPage": "plateau-lifting-edge/review/index.html",
+      "sourceAudit": "plateau-lifting-edge/native-authoring.md",
+      "comparisons": [
+        "plateau-lifting-edge/review/prior-primary.png",
+        "plateau-lifting-edge/review/depth-15mm-front.png",
+        "plateau-lifting-edge/review/depth-10mm-front.png",
+        "plateau-lifting-edge/review/primary-front.png",
+        "plateau-lifting-edge/review/depth-10mm-side.png",
+        "plateau-lifting-edge/review/depth-15mm-side.png",
+        "plateau-lifting-edge/review/primary-side.png",
+        "plateau-lifting-edge/review/depth-15mm-top.png",
+        "plateau-lifting-edge/review/depth-10mm-top.png",
+        "plateau-lifting-edge/review/primary-top.png"
+      ],
+      "presentations": {
+        "depth-18mm": {
+          "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee",
+          "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
+        },
+        "depth-15mm": {
+          "descriptorSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477",
+          "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53"
+        },
+        "depth-10mm": {
+          "descriptorSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e",
+          "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41"
+        }
+      },
+      "appReview": "plateau-lifting-edge/app-review/validation.json",
+      "appReviewPage": "plateau-lifting-edge/app-review/index.html"
+    },
+    {
+      "number": 14,
+      "package": "tension-flash-board",
+      "boardID": "tension.flash-board",
+      "name": "Tension Climbing Flash Board",
+      "humanReview": "pending",
+      "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+      "reviewPage": "tension-flash-board/geometry-review.html",
+      "sourceAudit": "tension-flash-board/README.md",
+      "comparisons": [
+        "tension-flash-board/comparison-sheet.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
+          "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97"
+        }
+      },
+      "appReview": "tension-flash-board/app-review/validation.json",
+      "appReviewPage": "tension-flash-board/app-review/index.html"
+    },
+    {
+      "number": 15,
+      "package": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "name": "Trango Rock Prodigy Forge",
+      "humanReview": "pending",
+      "sourceSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+      "reviewPage": "trango-rock-prodigy-forge/source-audit.md",
+      "sourceAudit": "trango-rock-prodigy-forge/source-audit.md",
+      "comparisons": [
+        "trango-rock-prodigy-forge/review/comparison-side.png",
+        "trango-rock-prodigy-forge/review/comparison-top.png",
+        "trango-rock-prodigy-forge/review/comparison-front.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef",
+          "modelSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4"
+        }
+      },
+      "appReview": "trango-rock-prodigy-forge/app-review/validation.json",
+      "appReviewPage": "trango-rock-prodigy-forge/app-review/index.html"
+    },
+    {
+      "number": 16,
+      "package": "yy-baguette",
+      "boardID": "yy.baguette",
+      "name": "YY Vertical La Baguette",
+      "humanReview": "pending",
+      "sourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+      "reviewPage": "yy-baguette/review/index.html",
+      "sourceAudit": "yy-baguette/native-authoring.md",
+      "comparisons": [
+        "yy-baguette/review/prior-reverse-face.png",
+        "yy-baguette/review/prior-stepped-face.png",
+        "yy-baguette/review/primary-front.png",
+        "yy-baguette/review/primary-side.png",
+        "yy-baguette/review/primary-top.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5",
+          "modelSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2"
+        }
+      },
+      "appReview": "yy-baguette/app-review/validation.json",
+      "appReviewPage": "yy-baguette/app-review/index.html"
+    },
+    {
+      "number": 17,
+      "package": "yy-baguette-evo",
+      "boardID": "yy.baguette-evo",
+      "name": "YY Vertical Baguette Evo",
+      "humanReview": "pending",
+      "sourceSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+      "reviewPage": "yy-baguette-evo/geometry-review.html",
+      "sourceAudit": "yy-baguette-evo/README.md",
+      "comparisons": [
+        "yy-baguette-evo/comparison-sheet.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921",
+          "modelSHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3"
+        }
+      },
+      "appReview": "yy-baguette-evo/app-review/validation.json",
+      "appReviewPage": "yy-baguette-evo/app-review/index.html"
+    },
+    {
+      "number": 18,
+      "package": "yy-penta-evo",
+      "boardID": "yy.penta-evo",
+      "name": "YY Vertical Penta Evo",
+      "humanReview": "pending",
+      "sourceSHA256": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+      "reviewPage": "yy-penta-evo/geometry-review.html",
+      "sourceAudit": "yy-penta-evo/README.md",
+      "comparisons": [
+        "yy-penta-evo/comparison-sheet.png"
+      ],
+      "presentations": {
+        "front-pair": {
+          "descriptorSHA256": "b0cd578994a9290d8bd52441ac615c3d8b20b059144b2dadcb85b733c566d764",
+          "modelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787"
+        }
+      },
+      "appReview": "yy-penta-evo/app-review/validation.json",
+      "appReviewPage": "yy-penta-evo/app-review/index.html"
+    },
+    {
+      "number": 19,
+      "package": "yy-travelboard",
+      "boardID": "yy.travelboard",
+      "name": "YY Vertical TravelBoard",
+      "humanReview": "pending",
+      "sourceSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+      "reviewPage": "yy-travelboard/review/index.html",
+      "sourceAudit": "yy-travelboard/native-authoring.md",
+      "comparisons": [
+        "yy-travelboard/review/prior-front-25-15.png",
+        "yy-travelboard/review/prior-reverse-10.png",
+        "yy-travelboard/review/primary-front.png",
+        "yy-travelboard/review/primary-side.png",
+        "yy-travelboard/review/primary-top.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+          "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f"
+        }
+      },
+      "appReview": "yy-travelboard/app-review/validation.json",
+      "appReviewPage": "yy-travelboard/app-review/index.html"
+    },
+    {
+      "number": 20,
+      "package": "zlagboard-evo",
+      "boardID": "zlagboard.evo",
+      "name": "Zlagboard Zlagboard.Evo",
+      "humanReview": "pending",
+      "sourceSHA256": "8a8e4957b044d01c76c49ee1b0c07f88f388bac05cff36b31d655c0e6d4ae8fb",
+      "reviewPage": "zlagboard-evo/source-audit.md",
+      "sourceAudit": "zlagboard-evo/source-audit.md",
+      "comparisons": [
+        "zlagboard-evo/review/comparison-side.png",
+        "zlagboard-evo/review/comparison-top.png",
+        "zlagboard-evo/review/comparison-front.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "54a24c155967b3349be34fb3918e1c22be8acc8f7117772a15b347e251d99383",
+          "modelSHA256": "92e0e754d888a5ab6976f22197b11f9f55353309ef6648a9307c45c404d4dabe"
+        }
+      },
+      "appReview": "zlagboard-evo/app-review/validation.json",
+      "appReviewPage": "zlagboard-evo/app-review/index.html"
+    },
+    {
+      "number": 21,
+      "package": "zlagboard-pro",
+      "boardID": "zlagboard.pro",
+      "name": "Zlagboard Zlagboard.Pro 2.0",
+      "humanReview": "pending",
+      "sourceSHA256": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+      "reviewPage": "zlagboard-pro/source-audit.md",
+      "sourceAudit": "zlagboard-pro/source-audit.md",
+      "comparisons": [
+        "zlagboard-pro/review/comparison-side.png",
+        "zlagboard-pro/review/comparison-top.png",
+        "zlagboard-pro/review/comparison-front.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "5e3ea9a135173ec6730b0d5e145cc098a8b2e6a54f1cf50bc9df982248711b82",
+          "modelSHA256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7"
+        }
+      },
+      "appReview": "zlagboard-pro/app-review/validation.json",
+      "appReviewPage": "zlagboard-pro/app-review/index.html"
+    }
+  ],
+  "reviewScope": {
+    "userInstruction": "I only want to review the ones we\u2019re migrating",
+    "eligibility": "Only packages first given a native CAD source by this task; existing CAD packages and externally claimed migrations are excluded.",
+    "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+    "migrationCommit": "583a2d08ec45909d62c426c0e7f3f7ec4384c7c7",
+    "newCADPackages": 21,
+    "queueMatchesAddedFCStdPackages": true,
+    "existingCADPackagesExcluded": 36,
+    "activeMigrationPackagesExcluded": 7,
+    "metoliusContact": "The baseline had board.json and USDZ, but no FCStd. Its native CAD source was first added by this task in the migration commit.",
+    "humanAcceptanceUnchanged": true
+  }
+}

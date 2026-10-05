@@ -1,0 +1,17 @@
+{
+  "diagnosticCompleted": true,
+  "strictNativeFlagsResolved": true,
+  "report": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/flagged-native-normal-diagnostic.json",
+    "sha256": "4e2fda16c258d4099ae955bdc8aef874a585f1244edc19c6dfdc2479c60ad662"
+  },
+  "inputsUnchanged": {
+    "source": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+    "model": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "descriptor": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+    "mesh": "22ab4af94efaca7f8b457fc0dc68f6c4363c76f84b7027f9d7450f411c83281b",
+    "failed": "46a4ccceb2d7c4c3424f3e2beb14859a8eb54b52fdff13ae409fa836217c373d"
+  },
+  "sourceCompilerOrAssetMutation": false,
+  "rootOwnsTechnicalDisposition": true
+}

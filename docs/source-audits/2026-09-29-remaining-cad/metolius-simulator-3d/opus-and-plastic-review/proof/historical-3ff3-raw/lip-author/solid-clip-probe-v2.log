@@ -1,0 +1,5 @@
+[{"label": "jug", "valid": true, "solidCount": 0, "bounds": "None", "faces": []}, {"label": "roundright", "valid": true, "solidCount": 1, "bounds": "BoundBox (47, -94, 145, 148, -29, 215)", "faces": [{"bounds": "BoundBox (47, -94, 145, 61, -75.8599, 182.235)", "surface": "BSplineSurface"}, {"bounds": "BoundBox (47, -94, 159.132, 148, -94, 215)", "surface": "Plane"}, {"bounds": "BoundBox (61, -94, 145, 110, -75.8599, 169.614)", "surface": "BSplineSurface"}, {"bounds": "BoundBox (47, -78.899, 145, 148, -29, 145)", "surface": "Plane"}, {"bounds": "BoundBox (47, -94, 145, 47, -29, 215)", "surface": "Plane"}, {"bounds": "BoundBox (148, -94, 159.132, 148, -29, 215)", "surface": "Plane"}, {"bounds": "BoundBox (47, -94, 215, 148, -29, 215)", "surface": "Plane"}, {"bounds": "BoundBox (110, -94, 145, 148, -75.8582, 164.762)", "surface": "BSplineSurface"}, {"bounds": "BoundBox (47, -29, 145, 148, -29, 188.129)", "surface": "Plane"}, {"bounds": "BoundBox (148, -94, 145, 148, -29, 174.757)", "surface": "Plane"}, {"bounds": "BoundBox (47, -29, 174.757, 148, -29, 215)", "surface": "Plane"}]}]
+
+								
+								
+								

@@ -1,0 +1,2 @@
+aStar {"seconds": 5.394714916008525, "expandedBoundaryVertices": 261, "totalBoundaryVertices": 933, "length": 0.2988649545778937, "certifiedClearance": 0.001495511797899493}
+dijkstra {"seconds": 12.944779708981514, "expandedBoundaryVertices": 650, "totalBoundaryVertices": 933, "length": 0.2988649545778937, "certifiedClearance": 0.001495511797899493}

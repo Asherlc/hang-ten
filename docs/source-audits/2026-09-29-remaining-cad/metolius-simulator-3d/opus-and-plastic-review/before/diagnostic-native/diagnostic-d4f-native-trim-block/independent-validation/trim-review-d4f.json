@@ -1,0 +1,22 @@
+{
+  "status": "blocked",
+  "sourceSHA256": "d4f4c07d5c17afce79350100c3f694ce30043a97ce45a9920e8654355cdb1692",
+  "blockingFindings": [
+    "ShellWithContinuousShoulders/BodySolid rear rootface4 fails strict BOP InvalidCurveOnSurface."
+  ],
+  "evidence": [
+    "Source CenterShoulderBoundedTransition rear roof passes strict BOP and all sampled curve/pcurve points coincide exactly.",
+    "Failure appears after fusion, unchanged by author RefineFalse experiment.",
+    "Rear X45.5 trim edge has maximum same-parameter curve/pcurve discrepancy0.0000343325489784mm at201 samples; other tested edges near machine precision.",
+    "Individual edge BOP passes; the failure requires its face context."
+  ],
+  "interpretation": "The Boolean-created X45.5 rear-root trim is the isolated repair target; exact shared surface isocurves are a credible narrow correction. Finite witnesses do not prove the full cause or waive strict BOP.",
+  "nextGate": "Immutable repaired source must pass strict face BOP, exact X47 clips and off-station Y\u221280 seam probes before contact-complete validation.",
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/trim-curve-diagnosis.json": "a38cf924c7833d4ad0334b83afc0111ddc9811675010be930d6880aab20bbfeb",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/trim-curve-diagnosis-dense.json": "29ccc6480f3b4ceb231f784e59d6abf030812e8c48f98a4f4b9f4b39f603cc6d",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/trim-curve-diagnosis-ownership.json": "55a5603248468903a830b21b26984999091125d57698291f7417c79a88bba0d2",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/trim-curve-diagnosis-dense-ownership.json": "16b4f18244f1c74772ad7063ef8057d7644099ec35ea635b65a83e3b5b48b147"
+  },
+  "ownedResourcesCleaned": true
+}

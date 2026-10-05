@@ -81,13 +81,16 @@ enum BoardSourceBoundaryAudit {
             "HangTen/Models/TrainingModels.swift"
         ]
         var findings: [String] = []
-        let sourceWithoutOwnedPlanRequirements = removingCatalogDefaultBoardID(
-            from: removingDisplayModelBoardID(
-                from: removingOwnedDeclaration(
-                    from: source,
-                    relativePath: relativePath,
-                    ownerPath: planRequirementOwnerPath,
-                    declaration: planRequirementOwnerDeclaration
+        let sourceWithoutOwnedPlanRequirements = removingLegacyPlateauMigrationIDs(
+            from: removingCatalogDefaultBoardID(
+                from: removingDisplayModelBoardID(
+                    from: removingOwnedDeclaration(
+                        from: source,
+                        relativePath: relativePath,
+                        ownerPath: planRequirementOwnerPath,
+                        declaration: planRequirementOwnerDeclaration
+                    ),
+                    relativePath: relativePath
                 ),
                 relativePath: relativePath
             ),
@@ -169,6 +172,53 @@ enum BoardSourceBoundaryAudit {
             with: "$1",
             options: .regularExpression
         )
+    }
+
+    /// Persisted pre-native selections need a compatibility binding, not a
+    /// second board definition. Exempt only the two exact migration expressions
+    /// in their owning methods; every other literal and artifact stays audited.
+    private static func removingLegacyPlateauMigrationIDs(
+        from source: String,
+        relativePath: String
+    ) -> String {
+        guard relativePath == "HangTen/Models/CustomRoutineStore.swift" else { return source }
+        let bindings = [
+            (
+                declaration: #"private\s+static\s+func\s+normalize\(_ definition: CustomRoutineDefinition\)\s*->\s*CustomRoutineDefinition\s*\{"#,
+                expression: #"(if case let \.boardSpecific\(boardID\) = definition\.targetMode,\s*boardID == )"plateau\.lifting-edge"(\s*\{\s*return migratingLegacyPlateauTargets\(in: step\))"#
+            ),
+            (
+                declaration: #"private\s+static\s+func\s+migratingLegacyPlateauRequirement\(\s*_ requirement: ContactRequirement\s*\)\s*->\s*ContactRequirement\s*\{"#,
+                expression: #"(return ContactRequirement\(\s*contactID:\s*)"edge-18"(\s*,)"#
+            )
+        ]
+        var auditedSource = source
+        for binding in bindings {
+            guard let declaration = auditedSource.range(
+                of: binding.declaration, options: .regularExpression
+            ) else { continue }
+            var index = auditedSource.index(before: declaration.upperBound)
+            var depth = 0
+            var end: String.Index?
+            while index < auditedSource.endIndex {
+                if auditedSource[index] == "{" { depth += 1 }
+                if auditedSource[index] == "}" {
+                    depth -= 1
+                    if depth == 0 {
+                        end = auditedSource.index(after: index)
+                        break
+                    }
+                }
+                index = auditedSource.index(after: index)
+            }
+            guard let end else { continue }
+            let methodRange = declaration.lowerBound..<end
+            let method = String(auditedSource[methodRange]).replacingOccurrences(
+                of: binding.expression, with: "$1$2", options: .regularExpression
+            )
+            auditedSource.replaceSubrange(methodRange, with: method)
+        }
+        return auditedSource
     }
 
     private static func removingOwnedDeclaration(

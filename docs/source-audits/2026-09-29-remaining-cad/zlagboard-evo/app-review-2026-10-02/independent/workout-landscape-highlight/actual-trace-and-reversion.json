@@ -1,0 +1,28 @@
+{
+  "timestampUTC": "2026-10-02T05:52:44.613419+00:00",
+  "diagnosticResult": "PASS for observed first landscape active/rest run; earlier defect not reproduced. No production fix established.",
+  "observations": [
+    "Same scene received preview mode in surface body and applySync.",
+    "After applySync both selected contacts had RGBA approximately(0.305,0.545,0.74,0.6), the expected blue.",
+    "Whole settled02:51 screenshot visually shows blue bilateral20 pockets."
+  ],
+  "originalFailuresRetained": [
+    "workout-landscape/following-rest-settled.png",
+    "workout-landscape-longer-settle/following-rest-settled.png"
+  ],
+  "diagnosticRun": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/trace-runtime-2",
+  "rawConsoleSHA256": "7eac650497730f3d7d3eea3cc02d9f9a072a105d656d6a02587388d9feda173e",
+  "settledScreenshotSHA256": "c35976e9e9323721723a3d125a4962f0d1fd41b4259642253dae8a72aee0c032",
+  "productionSources": {
+    "HangTen/Views/BoardModelView.swift": {
+      "sha256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+      "exactHEAD": true
+    },
+    "HangTen/Views/RootView.swift": {
+      "sha256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+      "exactHEAD": true
+    }
+  },
+  "currentChangeScope": "Focused hosted tests only. Updated monotonic-clock test awaits execution; no production renderer, workout or package fix.",
+  "retainedDiagnosticPatch": "temporary-actual-workout-trace.patch"
+}

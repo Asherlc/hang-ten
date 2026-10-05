@@ -1,0 +1,34 @@
+{
+  "createdAt": "2026-10-01T03:30:41.027506+00:00",
+  "status": "minimal R1 fix implemented; parent-owned green/full XCTest pending",
+  "fix": "Material traversal now begins separately at each instance root. Existing name-first/relative-path-second descriptor lookup is generic over map values and shared by materials and contact binding. Unnamed children still inherit parent finish; attachment paths resolve to forced-neutral finish.",
+  "test": "testNestedSurfaceSelectorsPreserveAttachmentNeutralityAndInheritedWood",
+  "redVerified": {
+    "result": "Failed",
+    "failedTests": 1,
+    "source": "Actual parent-owned iOS26.5 simulator run before semantic fix; report and command hashes pinned."
+  },
+  "green": "pending root rebuild/run after native promotion",
+  "localChecks": {
+    "swiftSyntaxParse": "passed",
+    "scopedDiffWhitespace": "passed",
+    "legacyFactoriesByteIdentical": {
+      "woodMaterial": true,
+      "plasticMaterial": true,
+      "graniteMaterial": true
+    }
+  },
+  "unchanged": "Shared contact union/highlight logic, primary picking logic, native CAD routes, material factory bodies, all packages and schema files. Contact lookup body is unchanged except generic map name/value type.",
+  "fileSHA256": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTenTests/BoardModelRealityTests.swift": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+    ".context/placid-badger/mammut-wood-integration/selector-red.log": "7ab0c93eb2cefe72d498cd67dc46cb7d8ad906055a51f4ef56e9f0cc3c140252",
+    ".context/placid-badger/mammut-wood-integration/selector-red-summary.json": "addde2ca70279d55ff0cd7170b6456d73766859736b5d1c9f4118565072361fb",
+    ".context/placid-badger/mammut-wood-integration/selector-red-command.json": "b12e04cc677fe19d8b8ca9c7dcdeaf339b0edb5dc7c2b9d7f71676eb79e9f819",
+    ".context/placid-badger/mammut-wood-integration/selector-fix/tests-first-snapshot.json": "d557ec18583c5c12a90945867e7620899a8bb098803116e9b76989383613763e"
+  },
+  "limits": [
+    "No test execution or simulator operation by this worker.",
+    "Red snapshot and independent pre-fix review retained as historical evidence."
+  ]
+}

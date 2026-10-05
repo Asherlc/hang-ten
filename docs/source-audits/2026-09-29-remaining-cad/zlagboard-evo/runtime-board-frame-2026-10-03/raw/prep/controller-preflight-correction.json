@@ -1,0 +1,6 @@
+{
+  "originalFailedBeforeAnyAppOrAwakeCreation": true,
+  "reason": "Stored lifecycle path absolute; controller argv used the identical relative path.",
+  "correction": "Normalize only lifecycle argv path before exact path comparison.",
+  "originalFailureRetained": true
+}

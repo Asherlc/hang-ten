@@ -1,0 +1,63 @@
+{
+  "source": "Actual committed USDZ read directly through existing usdz_writer.read_usdz / preview._triangles; no export or package write.",
+  "packageHashesBefore": {
+    "Hangboards/yy-travelboard/assets/primary.usdz": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+    "Hangboards/yy-travelboard/assets/primary.model.json": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69"
+  },
+  "packageHashesAfter": {
+    "Hangboards/yy-travelboard/assets/primary.usdz": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+    "Hangboards/yy-travelboard/assets/primary.model.json": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69"
+  },
+  "packageBytesUnchanged": true,
+  "coordinates": "Existing preview converts runtime to native (x right, y depth front-negative, z up). Rear rotates 180 degrees about native vertical; oblique rotates whole mesh only.",
+  "rearViewMatrix": [
+    [
+      -1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      -1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "obliqueViewMatrix": [
+    [
+      0.9271838545667874,
+      -0.374606593415912,
+      0.0
+    ],
+    [
+      0.3562720417153323,
+      0.8818042466894012,
+      -0.3090169943749474
+    ],
+    [
+      0.11575980357042309,
+      0.286515567971207,
+      0.9510565162951535
+    ]
+  ],
+  "images": {
+    "front.png": "defce476dc9ba408f65499b1e985ce8e9f3c31860326d94583bf275332579688",
+    "maker-native-angles.png": "066cf57e00b5a862ff7a9fc09ed52f4e54483fef771cf593109a9168d6fe453c",
+    "native-front-side-top.png": "4af99637a3d300f122cac598d17d5fa6479843ae0fe643841a0d4dc14402d5ee",
+    "oblique.png": "dbf9cb35a1c5b3101f90de76c68709151e41e9cf7743187c7d5514720b7846f7",
+    "original-raster-native-front-rear.png": "4b9397ebfad34e4f8ad3f8ae2a19aca12cae3f3cc147a96236bdfa6549b2a979",
+    "rear.png": "b8253509c1daa7dd6a2f30bf3d8fc594b2bcda8c015d454023333e0215afa668",
+    "side.png": "ad07f7249ab458f1abd3d1b7cbba7c26f07f00c124faffe4dac4008c55fb0867",
+    "top.png": "47fd051ad9629c457a567ce5c0cccbaa9bac433aa4e51720896b4c73aeed2bfe"
+  },
+  "limits": [
+    "Original board was raster, not a display mesh. No original CAD side/top views exist.",
+    "Lambert diagnostic views use uniform neutral shading; wood/cord display remains app validation.",
+    "Whole inputs are only uniformly resized/letterboxed for comparison, never cropped or measured.",
+    "No shape judgment or human acceptance implied."
+  ]
+}

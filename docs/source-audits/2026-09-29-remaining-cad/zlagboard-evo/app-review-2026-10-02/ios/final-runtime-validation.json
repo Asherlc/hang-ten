@@ -1,0 +1,192 @@
+{
+  "boardID": "zlagboard.evo",
+  "runtime": "iOS26.5",
+  "status": "INCOMPLETE: CAD selection/shape review captured; intermittent workout highlight transition failures unresolved on this runtime",
+  "humanAcceptance": "pending; not accepted by validation worker",
+  "package": "Frozen final-ready package retained; native/descriptor/model unchanged throughout renderer experiments",
+  "initialPackageParity": "captures/package-parity.json",
+  "codeParityLimit": "Early binary-parity reports checked launcher only. Later candidate2/3/4 and scene-trace all-Mach-O reports include debugdylib and establish exact installed code identity for those runs.",
+  "contactCoverage": {
+    "count": 21,
+    "fullViews": "captures-after-reboot/validation.json",
+    "orbits": 5,
+    "coverage": "capture-coverage.json",
+    "physicalProbes": "physical-probes/validation.json",
+    "cords": "not applicable; fixed board has no suspension"
+  },
+  "visualProof": {
+    "default": "captures-after-reboot/default.png",
+    "wholeSelections": "review-montages/",
+    "jugLeft": "elevated-jugs-gentle/left-elevated.png",
+    "jugRight": "elevated-jugs-gentle/right-elevated.png",
+    "judgment": "Root inspected all21 selections and5orbits; Astra passed whole gentle elevated jug crest coverage. Earlier clippedorbits remainraw."
+  },
+  "workout": {
+    "unchangedRoutine": "research.max-hangs; runtime integration only",
+    "initialPortraitPass": [
+      "workout-correct-route/active-settled.png",
+      "workout-correct-route/following-rest-settled.png"
+    ],
+    "baselineFailures": [
+      "workout-landscape/following-rest-settled.png",
+      "workout-landscape-longer-settle/following-rest-settled.png",
+      "highlight-regression/runtime-landscape/next-active-settled.png",
+      "highlight-regression/runtime-portrait/following-rest-settled.png"
+    ],
+    "laterRestBlue": "landscape-rest-update-probe/interpretation.json",
+    "candidateFailures": {
+      "candidate1": "highlight-regression/after-fix-landscape-2/following-rest-settled.png",
+      "candidate2": "highlight-regression/candidate2-a-landscape/next-active-timed-2.png",
+      "candidate3": "highlight-regression/candidate3-a-landscape/next-active-timed-2.png",
+      "candidate4": "highlight-regression/candidate4-a-landscape/next-active-timed-2.png"
+    },
+    "candidate3WorkerMisreadCorrection": "highlight-regression/candidate3-visual-interpretation-correction.json",
+    "sceneDiagnostic": "highlight-regression/scene-trace-a-landscape/console-stdout.log records attached blue CPUmaterials while following-rest-settled.png staysred. No rootcause proven.",
+    "outcome": "All experimental production changes reverted exactly to HEAD; only two hosted diagnostic tests retained. Passing hostedtests did not reproduce or fix actual screen failures."
+  },
+  "tests": [
+    {
+      "path": "test-results-summary.json",
+      "result": "Failed",
+      "passedTests": 0,
+      "failedTests": 1,
+      "totalTestCount": 1
+    },
+    {
+      "path": "tests-retry-summary.json",
+      "result": "Passed",
+      "passedTests": 2,
+      "failedTests": 0,
+      "totalTestCount": 2
+    },
+    {
+      "path": "highlight-regression/candidate2/summary.json",
+      "result": "Passed",
+      "passedTests": 4,
+      "failedTests": 0,
+      "totalTestCount": 4
+    },
+    {
+      "path": "highlight-regression/candidate3/summary.json",
+      "result": "Passed",
+      "passedTests": 4,
+      "failedTests": 0,
+      "totalTestCount": 4
+    },
+    {
+      "path": "highlight-regression/candidate4/summary.json",
+      "result": "Passed",
+      "passedTests": 4,
+      "failedTests": 0,
+      "totalTestCount": 4
+    },
+    {
+      "path": "highlight-regression/green/summary.json",
+      "result": "Passed",
+      "passedTests": 4,
+      "failedTests": 0,
+      "totalTestCount": 4
+    },
+    {
+      "path": "highlight-regression/normal-monotonic/summary.json",
+      "result": "Passed",
+      "passedTests": 1,
+      "failedTests": 0,
+      "totalTestCount": 1
+    },
+    {
+      "path": "highlight-regression/red/summary.json",
+      "result": "Passed",
+      "passedTests": 1,
+      "failedTests": 0,
+      "totalTestCount": 1
+    },
+    {
+      "path": "highlight-regression/red-timeline/summary.json",
+      "result": "Passed",
+      "passedTests": 1,
+      "failedTests": 0,
+      "totalTestCount": 1
+    }
+  ],
+  "historicalFailures": {
+    "initialCanceledStartup": "test-results-summary.json (raw Failed1/Passed0 preserved)",
+    "initialAX": "captures/failure.txt",
+    "wrongRoutineHarness": "workout-settled/validation.json",
+    "diagnosticWrongLaunchFlags": "highlight-regression/trace-runtime/failure.txt",
+    "candidate1AXTimeout": "highlight-regression/after-fix-landscape-1/failure.txt",
+    "rawFailureFiles": [
+      "captures/failure.txt",
+      "highlight-regression/after-fix-landscape-1/failure.txt",
+      "highlight-regression/trace-runtime/failure.txt"
+    ]
+  },
+  "baselineHandoff": {
+    "appBuild": "highlight-regression/baseline-restored-build/build-summary.json",
+    "nextPacket": "../ios-26-4",
+    "sequence": "Baseline app byte-exact copied under next lifecycle traps before old cleanup; old cleanup verified before new Simulator creation"
+  },
+  "cleanup": {
+    "proof": "cleanup-verification.json",
+    "uuid": "1684856E-FC2D-4407-8063-9B343B99CAD6",
+    "simulatorDeleted": true,
+    "derivedDataDeleted": true,
+    "resultBundleDeleted": true,
+    "testResultBundleDeleted": true,
+    "supplementalResults": [
+      {
+        "proof": "highlight-regression/baseline-restored-build/cleanup.json",
+        "deleted": true
+      },
+      {
+        "proof": "highlight-regression/candidate2/cleanup.json",
+        "deleted": true
+      },
+      {
+        "proof": "highlight-regression/candidate3/cleanup.json",
+        "deleted": true
+      },
+      {
+        "proof": "highlight-regression/candidate4/cleanup.json",
+        "deleted": true
+      },
+      {
+        "proof": "highlight-regression/green/cleanup.json",
+        "deleted": true
+      },
+      {
+        "proof": "highlight-regression/normal-monotonic/cleanup.json",
+        "deleted": true
+      },
+      {
+        "proof": "highlight-regression/red/cleanup.json",
+        "deleted": true
+      },
+      {
+        "proof": "highlight-regression/red-timeline/cleanup.json",
+        "deleted": true
+      },
+      {
+        "proof": "highlight-regression/trace-build/cleanup.json",
+        "deleted": true
+      },
+      {
+        "proof": "highlight-regression/trace2-build/cleanup.json",
+        "deleted": true
+      },
+      {
+        "proof": "highlight-regression/trace3-build/cleanup.json",
+        "deleted": true
+      },
+      {
+        "proof": "test-retry-cleanup.json",
+        "deleted": true
+      }
+    ]
+  },
+  "limits": [
+    "Display geometry and software visualization only; no factory or ergonomic accuracy claim.",
+    "No final workout pass or codefix claimed for iOS26.5.",
+    "Raw failures, earlier passes and corrections retained without rewriting original files."
+  ]
+}

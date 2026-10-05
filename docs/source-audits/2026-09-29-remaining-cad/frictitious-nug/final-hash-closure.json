@@ -1,0 +1,21 @@
+{
+  "package": "frictitious-nug",
+  "date": "2026-09-30",
+  "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+  "modelSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+  "descriptorSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+  "sidecarSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+  "generatedManifestSHA256": "6ad516d15e1ecb839c3e57f3e2476866b83347cfdca18c70a44f79a5416c5303",
+  "physicalWoodUnchanged": true,
+  "bodySourceAndModelUnchanged": false,
+  "bodyReproduction": "pinch-contact-review/native-cord/fresh-reproduction.log",
+  "currentCordVerification": "cord-shortening-review/verification.json",
+  "currentCordRuntimeVerification": "cord-shortening-review/app-review/validation.json",
+  "continuousCordCertificate": "cord-shortening-review/native-cord/root-24-route-certificates.json",
+  "continuousCordCertificateSHA256": "fede9a31453382e4985f724de8fd16ced524516d4a87ca30bcfcf28b3eb68674",
+  "pinchReview": "pinch-contact-review/review.md",
+  "pinchAcceptance": "Shown upper/lower wraparound highlight accepted.",
+  "priorCordAndAppReportsAreHistorical": true,
+  "humanGeometryAcceptance": "reviewed; wraparound pinch and shorter display cord accepted",
+  "humanReview": "human-review.json"
+}

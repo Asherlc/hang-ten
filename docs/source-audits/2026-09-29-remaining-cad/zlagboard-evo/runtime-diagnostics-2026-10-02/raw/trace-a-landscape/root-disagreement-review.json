@@ -1,0 +1,24 @@
+{
+  "reviewer": "Astra primary agent",
+  "traceSHA256": "3d55d9374c793de726f20b0ab43930b4ba9b8eb83263fdf64aca5db60323e3dc",
+  "traceRecords": 138,
+  "sequenceContiguous": true,
+  "eventLimitReached": false,
+  "screenshot": "next-active-timed-2.png",
+  "screenshotSHA256": "35ca39729cc36688469d4b3cfdbb30b40ae67f573519bff90999bbd3ea60ac00",
+  "screenshotBracket": {
+    "capture": "next-active-timed-2",
+    "startEpoch": 1790967473.3785741,
+    "endEpoch": 1790967473.874717
+  },
+  "beforeSequence": 73,
+  "afterSequence": 74,
+  "sceneLifecycleToken": "BF184D2F-6FF2-41CC-853A-9BF59264970C",
+  "rootID": "ObjectIdentifier(0x0000000148782180)",
+  "surfaceIDs": [
+    "ObjectIdentifier(0x000000014a476060)",
+    "ObjectIdentifier(0x0000000115af42a0)"
+  ],
+  "visualFinding": "Whole screenshot shows Step3 Hang00:05 with blue board pockets, while selected materials remain red before/after capture. No observed intervening scene replacement or selection write.",
+  "limit": "This localizes disagreement after scene material state; does not yet prove which renderer host or scheduling mechanism causes it. AX timeout after screenshots is retained separately. No fix or human acceptance claimed."
+}

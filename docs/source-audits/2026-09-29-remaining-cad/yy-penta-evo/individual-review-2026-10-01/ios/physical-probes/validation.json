@@ -1,0 +1,37 @@
+{
+  "checks": {
+    "actualOrbit": true,
+    "physicalContactResetCanonical": true,
+    "physicalContactResetChanged": true,
+    "leftCordSelectionUnchanged": true,
+    "leftCordContactFramesUnchanged": true,
+    "rightCordSelectionUnchanged": true,
+    "rightCordContactFramesUnchanged": true,
+    "noCordAccessibilityElement": true,
+    "physicalRightInstanceSelected": true,
+    "physicalLeftInstanceSelected": true
+  },
+  "observedScreenPoints": {
+    "orbitedLeft20": [
+      100,
+      417
+    ],
+    "leftCord": [
+      92,
+      302
+    ],
+    "rightCord": [
+      205,
+      302
+    ],
+    "right20": [
+      203,
+      409
+    ],
+    "left20": [
+      102,
+      409
+    ]
+  },
+  "limits": "Screen points target visible app UI only. No manufacturer pixel measurement. Both cord taps leave contacts and pose unchanged; no cord AX element. No public clear-selection or reset button; actual contact tap restores canonical pose. Separate left/right physical picks validate instance identity."
+}

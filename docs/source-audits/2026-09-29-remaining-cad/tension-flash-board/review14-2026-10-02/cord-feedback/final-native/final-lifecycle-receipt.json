@@ -1,0 +1,94 @@
+{
+  "owner": "placid-badger",
+  "recordedAt": "2026-10-03T00:36:39.327279+00:00",
+  "status": "all exact recorded owned process groups and temporary directories absent",
+  "processGroups": [
+    {
+      "job": "default",
+      "pid": 11970,
+      "pgid": 11970,
+      "absent": true
+    },
+    {
+      "job": "final",
+      "pid": 35606,
+      "pgid": 35606,
+      "absent": true
+    },
+    {
+      "job": "final",
+      "pid": 39632,
+      "pgid": 39632,
+      "absent": true
+    },
+    {
+      "job": "final",
+      "pid": 39636,
+      "pgid": 39636,
+      "absent": true
+    },
+    {
+      "job": "final",
+      "pid": 44829,
+      "pgid": 44829,
+      "absent": true
+    }
+  ],
+  "temporaryPaths": [
+    {
+      "job": "default",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-20261002T234319/placid-badger-config",
+      "absent": true
+    },
+    {
+      "job": "default",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-20261002T234319/placid-badger-cache",
+      "absent": true
+    },
+    {
+      "job": "default",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-20261002T234319/placid-badger-tmp",
+      "absent": true
+    },
+    {
+      "job": "final",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-config",
+      "absent": true
+    },
+    {
+      "job": "final",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-cache",
+      "absent": true
+    },
+    {
+      "job": "final",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-tmp",
+      "absent": true
+    },
+    {
+      "job": "final-owned-bytecode-cache",
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-candidate-repository/Tools/HangboardPackages/src/hangboard_packages/__pycache__",
+      "absent": true
+    }
+  ],
+  "signalsSentByCloseout": false,
+  "unknownOrSharedProcessesInspectedOrStopped": false,
+  "sharedDependenciesChanged": false,
+  "newExternalResources": [],
+  "originalOwnership": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/ownership.json",
+    "sha256": "1b3661fdc948318c158f6bbcd2d1c59139d1b33bb2ad8725284849195ae0f20a"
+  },
+  "mainCleanup": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/cleanup-receipt.json",
+    "sha256": "7c2b6f9173aa6956c43ffd6984afb682c4cc41ce5cead4a55f17d6b8f0dfc471"
+  },
+  "ownedBytecodeCleanup": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/owned-bytecode-cache-cleanup.json",
+    "sha256": "e3124fe535802f3f75608f804e2ec934f4b1fdaf312fafd553bf525ab5117338"
+  },
+  "defaultCleanup": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-20261002T234319/provisional-cleanup-receipt.json",
+    "sha256": "cf11d666b453d9326b5dcb2f013d2a67a51eac3b79ffbbc39079ec56ed6bdcbd"
+  }
+}

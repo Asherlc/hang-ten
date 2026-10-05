@@ -1,0 +1,36 @@
+{
+  "package": "yy-baguette-evo",
+  "allRetainedBytesAndHashesMatch": true,
+  "sources": [
+    {
+      "path": "evidence/yy-baguette.html",
+      "bytes": 994805,
+      "sha256": "23ea747dda552429fe9bb1606e47812113ae062b0457941634a37831eeff3af1"
+    },
+    {
+      "path": "evidence/yy-baguette-evo-image.webp",
+      "bytes": 122458,
+      "sha256": "c42f96ebed2b58d1a287f5b125fd3607cc9244a651a92e2731fe4b589e80ea3e"
+    },
+    {
+      "path": "evidence/YY_BAGUETTE_EVO_07_FG.webp",
+      "bytes": 93549,
+      "sha256": "4e06a28092af6e4d2f8f37e244ea2d39816c37182cf6a78375d68ba126851983"
+    },
+    {
+      "path": "evidence/YY_BAGUETTE_EVO_03_FG.webp",
+      "bytes": 111642,
+      "sha256": "5e73306d55787af679e3423f98bf7a0e673bc5bc1a7d83a7cd3381c8d56d0c54"
+    },
+    {
+      "path": "evidence/YY_BAGUETTE_EVO_10_FG.webp",
+      "bytes": 166079,
+      "sha256": "4444b62d227c185ad62cfe355bf88b9f2feb367acce0b3095756e36ff03c8de0"
+    },
+    {
+      "path": "evidence/yy-vertical-escalade-agres-nomade-entrainement-nomadic-tool-gear-equipment-training-baguette-evo-utilisation-22.webp",
+      "bytes": 533275,
+      "sha256": "694b540679dee86021a8567a273ba2d5d0fa23430a2893bf12a07057ff69d646"
+    }
+  ]
+}

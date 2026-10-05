@@ -1,0 +1,314 @@
+[
+  {
+    "type": "Application",
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 0,
+      "height": 874,
+      "x": 0,
+      "width": 402
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "_TtGC7SwiftUI32NavigationStackHosting",
+    "AXValue": null,
+    "frame": {
+      "y": 62,
+      "height": 54,
+      "x": 0,
+      "width": 402
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Settings",
+    "AXUniqueId": "train.settings",
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "height": 36,
+      "x": 342.6666666666667,
+      "width": 39.333333333333314
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Settings",
+    "AXUniqueId": "train.settings",
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "height": 36,
+      "x": 342.6666666666667,
+      "width": 39.333333333333314
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": "Downloading 3D model\u2026",
+    "AXUniqueId": "train.board",
+    "AXValue": null,
+    "frame": {
+      "y": 163.66666666666666,
+      "height": 52,
+      "x": 79.66666666666666,
+      "width": 242.99999999999997
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Downloading 3D model\u2026",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 180.60553007747308,
+      "height": 18,
+      "x": 131.5,
+      "width": 171
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "YOUR BOARD",
+    "AXUniqueId": "train.board",
+    "AXValue": null,
+    "frame": {
+      "y": 243.21106015494613,
+      "height": 13.333333333333343,
+      "x": 38,
+      "width": 89.33333333333333
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Diamond Finger Hangboard",
+    "AXUniqueId": "train.board",
+    "AXValue": null,
+    "frame": {
+      "y": 261.54439348827947,
+      "height": 25.333333333333314,
+      "x": 38,
+      "width": 270.3333333333333
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "33.5 in wide",
+    "AXUniqueId": "train.board",
+    "AXValue": null,
+    "frame": {
+      "y": 291.8777268216128,
+      "height": 15.666666666666686,
+      "x": 38,
+      "width": 75
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Product page",
+    "AXUniqueId": "train.board",
+    "AXValue": null,
+    "frame": {
+      "y": 323.66666666666663,
+      "height": 31.33333333333337,
+      "x": 38,
+      "width": 75
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "arrow.up.right",
+    "AXUniqueId": "arrow.up.right",
+    "AXValue": null,
+    "frame": {
+      "y": 325.66666666666663,
+      "height": 10.333333969116211,
+      "x": 39.333333333333336,
+      "width": 10.333333969116211
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Product page",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 323.66666666666663,
+      "height": 31.33333333333337,
+      "x": 38,
+      "width": 75
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Change board",
+    "AXUniqueId": "train.board",
+    "AXValue": null,
+    "frame": {
+      "y": 331.3333333333333,
+      "height": 15.666666666666686,
+      "x": 154.66666666666666,
+      "width": 89.66666666666666
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "View hold specs",
+    "AXUniqueId": "train.board",
+    "AXValue": null,
+    "frame": {
+      "y": 331.3333333333333,
+      "height": 15.666666666666686,
+      "x": 260.3333333333333,
+      "width": 103.66666666666669
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "FAVORITES",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 412.8777268216128,
+      "height": 13.333333333333314,
+      "width": 75.33333333333333,
+      "x": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Favorite routines from Plans to keep them handy here.",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 443.2110601549461,
+      "width": 320,
+      "height": 38.333333333333314,
+      "x": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Your favorites will appear here when they are compatible with your selected board.",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 498.5443934882794,
+      "height": 31.333333333333258,
+      "width": 273.66666666666663,
+      "x": 38
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Browse plans",
+    "AXUniqueId": "train.browsePlans",
+    "AXValue": null,
+    "frame": {
+      "y": 547,
+      "width": 125.33333333333331,
+      "height": 34.33333333333326,
+      "x": 38
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Start Free Workout",
+    "AXUniqueId": "train.freeWorkout",
+    "AXValue": null,
+    "frame": {
+      "y": 598.3333333333333,
+      "height": 34.33333333333337,
+      "width": 167.66666666666666,
+      "x": 38
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Tab Bar",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 791,
+      "height": 83,
+      "width": 402,
+      "x": 0
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "Train",
+    "AXUniqueId": null,
+    "AXValue": 1,
+    "frame": {
+      "y": 795,
+      "height": 54,
+      "width": 94,
+      "x": 68
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "figure.climbing",
+    "AXUniqueId": "figure.climbing",
+    "AXValue": null,
+    "frame": {
+      "y": 797,
+      "width": 30,
+      "height": 35.66666666666663,
+      "x": 100
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "Plans",
+    "AXUniqueId": null,
+    "AXValue": 0,
+    "frame": {
+      "y": 795,
+      "height": 54,
+      "width": 94,
+      "x": 154
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "list.bullet.rectangle.portrait.fill",
+    "AXUniqueId": "list.bullet.rectangle.portrait.fill",
+    "AXValue": null,
+    "frame": {
+      "y": 800.6666666666666,
+      "height": 28.66666666666663,
+      "width": 25.333333333333343,
+      "x": 188
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "History",
+    "AXUniqueId": null,
+    "AXValue": 0,
+    "frame": {
+      "y": 795,
+      "width": 94,
+      "height": 54,
+      "x": 240
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "clock.arrow.trianglehead.counterclockwise.rotate.90",
+    "AXUniqueId": "clock.arrow.trianglehead.counterclockwise.rotate.90",
+    "AXValue": null,
+    "frame": {
+      "y": 801.3333333333334,
+      "width": 27.666666666666686,
+      "height": 27.33333333333337,
+      "x": 272.66666666666663
+    }
+  }
+]

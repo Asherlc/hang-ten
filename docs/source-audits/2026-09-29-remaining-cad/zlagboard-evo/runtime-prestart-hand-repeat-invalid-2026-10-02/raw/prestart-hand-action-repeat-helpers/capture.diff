@@ -1,0 +1,33 @@
+--- original-action
++++ one-unchanged-repeat
+@@ -1,10 +1,11 @@
+ from pathlib import Path
+ import os,sys,json,time,subprocess,hashlib,traceback
+ base=Path('.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo')
+-arm='prestart-hand-action'
++arm='prestart-hand-action-repeat'
+ # This file is preparation only until the parent supplies a reviewed release record.
+ releasePath=Path(sys.argv[1]);release=json.loads(releasePath.read_text())
+ assert release['runtimeAuthorized'] is True and release['arm']==arm
++assert release['oneUnchangedRepeatAuthorized'] is True
+ assert release['helperSHA256']==hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+ assert release['constructorMarkerAuditReady'] is True
+ assert release['structuralNavEventAuditReady'] is True
+@@ -32,7 +33,7 @@
+ assert controlGate['visualResult']=='FAIL'
+ assert controlGate['startupFirstHandHistoryReproduced'] is True
+ assert controlGate['binarySHA256']==release['binarySHA256'] and controlGate['actionAuthorized'] is True
+-out=base/('prestart-hand-action-landscape');out.mkdir(exist_ok=False)
++out=base/('prestart-hand-action-repeat-landscape');out.mkdir(exist_ok=False)
+ (out/'runtime-release.json').write_bytes(releasePath.read_bytes())
+ uid=release['simulatorUUID'];commands=[];captures=[];transitions=[];tracefolder=None
+ start=time.monotonic();deadline=start+300;pending=[];known=set();scene=None
+@@ -66,7 +67,7 @@
+  (out/'installed-binary-gate.json').write_text(json.dumps({'path':str(binary),'sha256':actualBinarySHA,'expected':release['binarySHA256']},indent=2)+'\n')
+  assert actualBinarySHA==release['binarySHA256'],'Installed binary mismatch; no launch permitted'
+  data=Path(run('xcrun','simctl','get_app_container',uid,'com.hangten.training','data'))
+- flags={'HANGTEN_REVIEW_BOARD_ID':'zlagboard.evo','HANGTEN_REVIEW_PLAN_ID':'research.max-hangs','HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC':'1','HANGTEN_REVIEW_DIAGNOSTIC_RUN':'placid-badger-cad-second-half-prestart-hand-action','HANGTEN_REVIEW_LANDSCAPE':'1','HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS':'1'}
++ flags={'HANGTEN_REVIEW_BOARD_ID':'zlagboard.evo','HANGTEN_REVIEW_PLAN_ID':'research.max-hangs','HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC':'1','HANGTEN_REVIEW_DIAGNOSTIC_RUN':'placid-badger-cad-second-half-prestart-hand-action-repeat','HANGTEN_REVIEW_LANDSCAPE':'1','HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS':'1'}
+  flags['HANGTEN_REVIEW_PREDECESSOR_ATTACHMENT_CENSUS']='1'
+  flags['HANGTEN_REVIEW_BOARD_HOST_OBSERVATION']='1'
+  flags['HANGTEN_REVIEW_HAND_LIFETIME_CENSUS']='1'

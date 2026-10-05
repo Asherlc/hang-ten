@@ -1,0 +1,23 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "hangboard_packages.cli",
+    "validate",
+    "--root",
+    "Hangboards",
+    "--final-inventory"
+  ],
+  "startedUTC": "2026-10-02T03:33:43.338131+00:00",
+  "timeoutSeconds": 600,
+  "ownedTemporaryDirectory": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-package-validation-venv-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 69310,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 2.3941925420076586
+}

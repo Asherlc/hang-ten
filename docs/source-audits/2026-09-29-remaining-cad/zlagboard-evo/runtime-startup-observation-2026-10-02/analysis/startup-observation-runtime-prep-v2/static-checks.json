@@ -1,0 +1,7 @@
+{
+  "AST": true,
+  "syntheticRightCensoredSpanAccepted": true,
+  "syntheticUnknownAttemptRejected": true,
+  "syntheticNonfiniteScalarRejected": true,
+  "noRuntimeExecution": true
+}

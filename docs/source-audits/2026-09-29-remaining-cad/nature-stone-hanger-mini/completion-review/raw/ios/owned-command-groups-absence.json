@@ -1,0 +1,40 @@
+{
+  "owner": "placid-badger",
+  "groups": [
+    {
+      "receipt": "ios-build-command.json",
+      "processGroup": 43532,
+      "freshlyVerifiedAbsent": true
+    },
+    {
+      "receipt": "retired-device-ios-build-command.json",
+      "processGroup": 71229,
+      "freshlyVerifiedAbsent": true
+    },
+    {
+      "receipt": "retired-ios26.5-retry1-ios-build-command.json",
+      "processGroup": 3154,
+      "freshlyVerifiedAbsent": true
+    },
+    {
+      "receipt": "cold-attempt-ios-tests-command.json",
+      "processGroup": 83280,
+      "freshlyVerifiedAbsent": true
+    },
+    {
+      "receipt": "retired-ios26.5-retry1-ios-tests-command.json",
+      "processGroup": 3948,
+      "freshlyVerifiedAbsent": true
+    },
+    {
+      "receipt": "xcode-first-launch-status.json",
+      "processGroup": 51119,
+      "freshlyVerifiedAbsent": true
+    },
+    {
+      "receipt": "ios26.4-final-bootstatus.json",
+      "processGroup": 51118,
+      "freshlyVerifiedAbsent": true
+    }
+  ]
+}

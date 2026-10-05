@@ -1,0 +1,56 @@
+{
+  "timestampUTC": "2026-10-02T15:05:52.634900+00:00",
+  "passed": true,
+  "packet": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/diagnostic-preparation-2026-10-02",
+  "proofEntries": 25,
+  "manifestSHA256": "11b1df288e8ebb6aded33250a66529a15ed3ba2074d03b263c9afd0502b6de6d",
+  "copiedRawFilesExact": 22,
+  "preservationCounts": {
+    "canonical": 359,
+    "queueLock": 2,
+    "acceptance": 6,
+    "zlagboard-evo": 2637,
+    "zlagboard-pro": 227
+  },
+  "cleanup": {
+    "uuid": "87CE3964-139D-4FAE-B121-AB12237401DB",
+    "exactUUIDAbsent": true,
+    "resourcePathsAbsent": {
+      "derivedData": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/runtime-resume-2026-10-02/ios-uninterrupted/DerivedData-placid-badger-cad-second-half",
+      "resultBundle": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/runtime-resume-2026-10-02/ios-uninterrupted/build-placid-badger-cad-second-half.xcresult",
+      "testResultBundle": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/runtime-resume-2026-10-02/ios-uninterrupted/tests-placid-badger-cad-second-half.xcresult"
+    },
+    "helperPIDs": [
+      {
+        "pid": 84840,
+        "absent": true,
+        "queryExit": 1
+      },
+      {
+        "pid": 84841,
+        "absent": true,
+        "queryExit": 1
+      },
+      {
+        "pid": 84842,
+        "absent": true,
+        "queryExit": 1
+      },
+      {
+        "pid": 84843,
+        "absent": true,
+        "queryExit": 1
+      }
+    ],
+    "rawValidationSHA256": "207375f3cd0523f66bc2bc8c6e60c2955c5daed6694728fdf8e787ea81ae6ef6",
+    "rawValidationUnmodified": true,
+    "interpretation": "No Home/build/install;0/28. Raw fresh-app humanAccepted:false does not revoke prior native geometry acceptance."
+  },
+  "acceptanceRecordsUnchanged": true,
+  "queueLockUnchanged": true,
+  "canonicalAppAndPackageBytesUnchanged": true,
+  "noBuildNoInstallThisAttempt": true,
+  "humanGeometryApprovalPreserved": true,
+  "sourcePatchApplied": false,
+  "limitations": "Checks copy/hash/scope/resource facts only; not a new app validation or geometry judgment. New root notes are included in manifest; raw failure evidence remains unchanged."
+}

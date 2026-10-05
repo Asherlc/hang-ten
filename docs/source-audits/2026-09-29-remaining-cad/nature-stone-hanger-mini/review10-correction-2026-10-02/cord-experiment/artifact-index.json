@@ -1,0 +1,454 @@
+{
+  "owner": "placid-badger",
+  "status": "bounded nativeRoutes display feasibility passed above and below; ROOT owns canonical integration and independent final gates",
+  "handoff": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/final-experiment-handoff.json",
+    "sha256": "7b369a8a065a046cc6db0770156b10859fe09c8e4d75bdb88cbaf41f1a70e092"
+  },
+  "producerScopeAndCleanup": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/final-scope-and-lifecycle.json",
+    "sha256": "9174f8a20812a32592413a5b21e0b298111528bb1c29d0f9dfc9a36974033122"
+  },
+  "readyBelowAuthoringInput": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/immutable-authoring-input.json",
+    "sha256": "bf4d24e0d2a72c1e94f718985450476231271198346fe28ea9be3dcc9574f60a"
+  },
+  "artifacts": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/analytic-input-proof.json",
+      "sha256": "b00e5e58a3fe4b9b5b345e9a3b63e41ebe501c9dfb88b450a0361839c3b108bf"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/experiment-outcomes.json",
+      "sha256": "1be44672024b700883d404fe5aac7f8c26e8cc15ef3725e37f438e15510e8f19"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/lifecycle.json",
+      "sha256": "f67818f12fcb189e45d583bd6575ae87f3213383d41565d629ce0206be9402a3"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/suspension.json",
+      "sha256": "849d75d14287b6eefb6657fa6ec132af3e121b1f7a95c4027877206d310fb35f"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/apply-command.json",
+      "sha256": "46bb4ce45bc2fd557d2178d2c09c0508fc623de611d9944397724d69f3430494"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/apply-execution.json",
+      "sha256": "8f10ee3ab834c3e193ab4de438b5ad63a1482163ba4c11ade13ea16df78fe86f"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/apply-process-ownership.json",
+      "sha256": "1f4a7187cff6f8911256f4b62514fd31408b6cd28c04de522e316c8e316a510d"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/apply.log",
+      "sha256": "6ce4a95b8194391e5411cb0bffea949a23521f4c7dc0d862dd1eb828bbfe8f8b"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/immutable-authoring-input.json",
+      "sha256": "849d75d14287b6eefb6657fa6ec132af3e121b1f7a95c4027877206d310fb35f"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/input-identity.json",
+      "sha256": "a4f39be121bef1a62141a06aeba097b65a7e8f6ae47d7f4f975aa64f51ee79f4"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-above/resources-before-launch.json",
+      "sha256": "13e9408316293aaef92184856bdbedb51c872e70a72def81de458eb9d47bcffb"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/suspension.json",
+      "sha256": "da557918d474c84745cca063f1ddbd4b3b9f22ae7548684f48add6c897fadaf4"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/apply-command.json",
+      "sha256": "0b3f696df2936a9bc6f7b0e8b8ce02efded60f3977c8e11d31f94c644d556491"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/apply-execution.json",
+      "sha256": "ee5e5b853a1673ba5be5c83561b5bada8f470ddf1f62b8661391f2688b92fd12"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/apply-process-ownership.json",
+      "sha256": "6fedb8ab332fdc7705746c0a7f7c6224b8787a5214bf748c4acd57d796563580"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/apply.log",
+      "sha256": "6ce4a95b8194391e5411cb0bffea949a23521f4c7dc0d862dd1eb828bbfe8f8b"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/immutable-authoring-input.json",
+      "sha256": "da557918d474c84745cca063f1ddbd4b3b9f22ae7548684f48add6c897fadaf4"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/input-identity.json",
+      "sha256": "1695fcef032ebd963caba6f66384d47711b883d41e653ad900040ae8da8e0676"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/placid-badger-mini10-below/resources-before-launch.json",
+      "sha256": "d154fa8425decce52290a5b24498c2f82ef154f45c89e6f3d89ee7035e9d371f"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/command.json",
+      "sha256": "be596e04676aed4fa968fe3119ad91506954cd4b2513b5c93e37459e8db35594"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/diagnostic.log",
+      "sha256": "092e2890a645a3d5f589917a72e3d39d41488a9de811c1bd4e05d0f585617d4f"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/execution.json",
+      "sha256": "6cbe32ec311d942f4610f475eb2497f6b8c8968525a478cf0b8d33f3ffb78ee0"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/lifecycle.json",
+      "sha256": "6fc025a4378bf60e622eabec5730989032c60187aea19395c1303faec946fa0c"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/process-ownership.json",
+      "sha256": "afbbb41897d127005e75da2220005b11f5ffd40a84e7a3d3b074548f345dd0b6"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/station-boundary-diagnosis.json",
+      "sha256": "b4733fbc20c3bd8c7bbc0ba32e6a66441e30de02f948fa51979bb2015fb47549"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/diagnose-boundary.py",
+      "sha256": "9c93ac964a3ef013845116f1f63b2f466e8032ee1190d14175504a2e08ae4e87"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/final-experiment-handoff.json",
+      "sha256": "7b369a8a065a046cc6db0770156b10859fe09c8e4d75bdb88cbaf41f1a70e092"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/final-scope-and-lifecycle.json",
+      "sha256": "9174f8a20812a32592413a5b21e0b298111528bb1c29d0f9dfc9a36974033122"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/finalize-experiment.py",
+      "sha256": "c7dc2df40143fea6a34d258a127b7ae683a15d0d4243e96bc2d7c6b2fcd3c324"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/native-collider.json",
+      "sha256": "b73af61a65e79ed989434bcb0ea734d4bcd10f9d33b289c33c3536b5dc48d62e"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/nature-stone-hanger-mini/suspension.json",
+      "sha256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/initial-input-guard-stop/guard-execution.json",
+      "sha256": "91473e83540f0d39900d64548898c118ebd395c04a1849cd394f85e61bcadf7b"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/initial-input-guard-stop/lifecycle.json",
+      "sha256": "ebe533ede33c8f4fc24566532488df6ff8d027dbf1b7f2848442137fd78124d1"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/analytic-input-proof.json",
+      "sha256": "cb29b366351ea4089da848d004e9c82e9c6593092328541059ef8d03ed00f92b"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/experiment-outcomes.json",
+      "sha256": "73b13c5e2ed678d554408d017827f9d55bc65cb39ecedabeaf431f4ef658b74f"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/lifecycle.json",
+      "sha256": "1f8837c419b99ce193fd92cbdd8052939862d9786ce7dd0602cc9173b312e55b"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/suspension.json",
+      "sha256": "f6ae5d8549d0423b3faacb9f180e5b9150c1033ca82bce237032cc56195fb215"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/apply-command.json",
+      "sha256": "567addc0aa800065b36851ad883c2dd2489d75669adc940b961b9595fbeb039e"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/apply-execution.json",
+      "sha256": "6333e1b86df4ee8e6e201b71369d43ad1df6040f24681ddba1af7b0e8a049479"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/apply-process-ownership.json",
+      "sha256": "00b5a2efb39a5d3526116aa1eea0ae8ab454dbd93241ed6bde0efbb75729a2e1"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/apply.log",
+      "sha256": "c1d9cb635dd2b84e9f1cf4a92a3638ff503ed83205e253e6df8b6b9ca510f532"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/immutable-authoring-input.json",
+      "sha256": "f6ae5d8549d0423b3faacb9f180e5b9150c1033ca82bce237032cc56195fb215"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/input-identity.json",
+      "sha256": "7926df78bcfe5fc6e08adb1cfc22bd68c132e971a38d68a16dece0f8806e4ecb"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-above/resources-before-launch.json",
+      "sha256": "b44085a5b4cb8f5e170386bffd7348d406747c9ddd9183822e9be817b7e260f5"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/suspension.json",
+      "sha256": "adefb981ae9e0f5fed042c7c32a07429781def6c3cbe3c3b3183042d64a481e6"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/apply-command.json",
+      "sha256": "97e2b17ed77b1adb2f0a64e75305711ef917748ccc38e5c84c3f2c418c066eb6"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/apply-execution.json",
+      "sha256": "088f1b76de48c4033e2b1d8b0db91b622679151036c0f05bc00ec8c5a68672a8"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/apply-process-ownership.json",
+      "sha256": "e219365ad1d58f763e44c7bd606077829ded8a1456d4ba8c3db1685b02dc3283"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/apply.log",
+      "sha256": "c1d9cb635dd2b84e9f1cf4a92a3638ff503ed83205e253e6df8b6b9ca510f532"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/immutable-authoring-input.json",
+      "sha256": "adefb981ae9e0f5fed042c7c32a07429781def6c3cbe3c3b3183042d64a481e6"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/input-identity.json",
+      "sha256": "843dc31c7f3a3eff4c89df0d261744144c525e852e69c0b46c9c3976df6f1fb8"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/placid-badger-mini10-below/resources-before-launch.json",
+      "sha256": "534858926aea19e094322b2799a3ea04a747731a35dba171c6cb019bb568358f"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/ownership.json",
+      "sha256": "d49dd8e1fd3368e3df96f544bad3e02cbfece55fe23ddb890282dbed7e922038"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/run-boundary-diagnostic.py",
+      "sha256": "b0984fa1e6bb2f61b923dcba484f05134b4515173a7045a2e3defc2dafbb5cc4"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/run-existing-native.py",
+      "sha256": "e05c0d977b112777acfb417bb4757ea89213f65184f18e3544bb1e7b0f31c8d3"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/run-experiment-baseline-margin20.executed.py",
+      "sha256": "d07464445d2a2b8b827b1c60c611856de832ac255393e0327f77357358f7419e"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/run-experiment.py",
+      "sha256": "61211dc806896e9d802b39438ec3b365bf03f515a16af8d910deae74774e1fab"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/analytic-input-proof.json",
+      "sha256": "f37a6191a85851ea7139ef3b7fe9f4d651aa63d3ef92ab36ec658b280ef29b11"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/experiment-outcomes.json",
+      "sha256": "44ada2ae6361777fac678a5fa9abdef2419104e5f063a3f6e6909de7298551a0"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/lifecycle.json",
+      "sha256": "d29544bc990180dc4342d7056404eeab0ae746f47120e49a49ac83c0b4201fb6"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/suspension.json",
+      "sha256": "94dbcb67159a28447229a7d356523f875d7de133e073e7adc33294560182f316"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/apply-command.json",
+      "sha256": "a3d80151d34b58c7df0efcf1a7c5398959210ed90714cf7dc355c136030fbb61"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/apply-execution.json",
+      "sha256": "7a1251f8fda5a65aada40793e81cb9b6147b8beec80a85358e9c8c3804ae4566"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/apply-process-ownership.json",
+      "sha256": "14d778b835745ad4faff99096dd2ca359403d8c3cb0429d226ab0450f3100f5d"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/apply-report.json",
+      "sha256": "21607ea2ab1dca4f2dcdfaa6c313d9cc93841eb905290e2dbeda93fe709bbaff"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/apply.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/check-command.json",
+      "sha256": "e917c7d279e791a8fededdeac50c97fc6adc8181013767067ef9a9683af633af"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/check-execution.json",
+      "sha256": "fd938ecc14a619e4b6a79c04ce8ccb662e4ade1cea23926f56f9bb8cee315ec5"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/check-process-ownership.json",
+      "sha256": "0098106b75acd36b8c43c401712ffd1a580ff4e408f4d0ae40b1cbea0c88e5c2"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/check-report.json",
+      "sha256": "21607ea2ab1dca4f2dcdfaa6c313d9cc93841eb905290e2dbeda93fe709bbaff"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/immutable-authoring-input.json",
+      "sha256": "f9a6295944040990176d233c5d15593ec2aa325da8b2194a3ec6c35c367d5d28"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/input-identity.json",
+      "sha256": "4c9f29ae65bf8b60991757aa9d22871cb7d8aa89e2a47e6c763e8ab014d09510"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/resources-before-launch.json",
+      "sha256": "f1ced30047ceb0b92b9c765d2aa0df73ddf65523b13079682ca1b1bd8597e01e"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/suspension.json",
+      "sha256": "688b6c5407264453b818d78d6aea28734d72c418987288893faec505599b279b"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/apply-command.json",
+      "sha256": "2d0bfd3e9620856e5e96e48e1accba48d6e89a7d55e10efdf369137475624379"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/apply-execution.json",
+      "sha256": "756a34848a37cec2575aa3edecf53fcd88c03eea82aa6b8a6b1f6cc112c3d2e3"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/apply-process-ownership.json",
+      "sha256": "72b886a41992a15065846fad36a85239204a1c32a190c3e01f61b47aa13fb671"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/apply-report.json",
+      "sha256": "9395bcd55846bbcbe23dde78db16c8e10f511623d253fc27fb5d34e9f1a62b82"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/apply.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/check-command.json",
+      "sha256": "40b0f5256372ea90447e18a858bb952cad7c306b37b71149413d03b97eb2748a"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/check-execution.json",
+      "sha256": "87bf96af12f091f2a6d296526a63fbd494a92a418600067dccc455b4198285b8"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/check-process-ownership.json",
+      "sha256": "c0612e2f9a8b6c11e82da57b17240d42e0acc39768775ba3f33553404ec03e4a"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/check-report.json",
+      "sha256": "9395bcd55846bbcbe23dde78db16c8e10f511623d253fc27fb5d34e9f1a62b82"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/immutable-authoring-input.json",
+      "sha256": "bf4d24e0d2a72c1e94f718985450476231271198346fe28ea9be3dcc9574f60a"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/input-identity.json",
+      "sha256": "39734bc55db87ea345a238028ae55e0b0849694ec0daffed1f8c65ee7f4c0c64"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/resources-before-launch.json",
+      "sha256": "73cc4024855acb12886026b20ef4d75f82b0b57516ffc5d0c2a2da94817cec7e"
+    }
+  ]
+}

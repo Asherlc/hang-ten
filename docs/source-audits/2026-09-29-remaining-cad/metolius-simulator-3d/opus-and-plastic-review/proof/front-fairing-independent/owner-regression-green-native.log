@@ -1,0 +1,17 @@
+test_ambiguous_exact_face_ownership_uses_legacy_evaluator (__main__.UVNodeNormalTests.test_ambiguous_exact_face_ownership_uses_legacy_evaluator) ... ok
+test_curved_normals_preserve_geometry_winding_and_avoid_inverse_queries (__main__.UVNodeNormalTests.test_curved_normals_preserve_geometry_winding_and_avoid_inverse_queries) ... ok
+test_default_mesh_path_does_not_read_uv_api (__main__.UVNodeNormalTests.test_default_mesh_path_does_not_read_uv_api) ... ok
+test_exact_native_facet_owner_takes_precedence_over_nearby_centroid_plane (__main__.UVNodeNormalTests.test_exact_native_facet_owner_takes_precedence_over_nearby_centroid_plane) ... ok
+test_internal_c0_knot_vertices_keep_the_legacy_derivative_side (__main__.UVNodeNormalTests.test_internal_c0_knot_vertices_keep_the_legacy_derivative_side) ... ok
+test_invalid_coincident_uv_candidate_cannot_create_false_uniqueness (__main__.UVNodeNormalTests.test_invalid_coincident_uv_candidate_cannot_create_false_uniqueness) ... ok
+test_mesh_builder_dispatches_the_explicit_opt_in (__main__.UVNodeNormalTests.test_mesh_builder_dispatches_the_explicit_opt_in) ... ok
+test_missing_uv_api_and_unmatched_uv_nodes_preserve_exact_fallback (__main__.UVNodeNormalTests.test_missing_uv_api_and_unmatched_uv_nodes_preserve_exact_fallback) ... ok
+test_opt_in_requires_true_analytic_normal_policy_and_boolean_property (__main__.UVNodeNormalTests.test_opt_in_requires_true_analytic_normal_policy_and_boolean_property) ... ok
+test_shared_face_vertices_do_not_claim_an_unrelated_triangle (__main__.UVNodeNormalTests.test_shared_face_vertices_do_not_claim_an_unrelated_triangle) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.663s
+
+OK
+
+

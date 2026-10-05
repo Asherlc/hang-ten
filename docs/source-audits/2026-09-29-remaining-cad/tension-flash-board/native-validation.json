@@ -1,0 +1,10 @@
+{
+  "reopenRecompute": "passed",
+  "singleValidSolid": true,
+  "contacts": 7,
+  "fullyConstrainedSketches": true,
+  "meaningfulEdit": "PocketDepthScale 1 -> 1.04 reduces volume and increases all three front pocket depths; restoring recovers original volume",
+  "restoredVolumeDifferenceMM3": -6.984919309616089e-10,
+  "restoredContactDepthToleranceMM": 1e-06,
+  "sourceBytesUnchanged": true
+}

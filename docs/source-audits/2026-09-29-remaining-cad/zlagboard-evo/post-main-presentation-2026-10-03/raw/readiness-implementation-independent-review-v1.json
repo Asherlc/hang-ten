@@ -1,0 +1,100 @@
+{
+  "createdUTC": "2026-10-03T19:01:44.484651+00:00",
+  "scope": "Read-only review of snapshotted first-start readiness implementation; no source, build, Simulator or protected-test operations.",
+  "sourceInventory": {
+    "createdUTC": "2026-10-03T19:00:27.610237+00:00",
+    "files": [
+      {
+        "path": "HangTen/Views/BoardModelView.swift",
+        "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v1-source/BoardModelView.swift",
+        "sha256": "32e0e1c689028e8030125e0ed2a5b5527cdf05d860860934629e4f04558faaeb"
+      },
+      {
+        "path": "HangTen/Views/GripHandModelView.swift",
+        "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v1-source/GripHandModelView.swift",
+        "sha256": "df9cf7cf00936f26927a5818d17301db570a344958a06e233c2867f561a6212b"
+      },
+      {
+        "path": "HangTen/Views/WorkoutView.swift",
+        "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v1-source/WorkoutView.swift",
+        "sha256": "6e0ad3360cefc260b32fd72cf29e8ec96a0de01291d1903ec0f6a6ccc594f752"
+      },
+      {
+        "path": "HangTenTests/WorkoutTimelineTests.swift",
+        "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v1-source/WorkoutTimelineTests.swift",
+        "sha256": "69496f3a72b870d5977bef60c2daafa9eaaa71ca30ee09e28fd5c0f1e46564b1"
+      }
+    ]
+  },
+  "materialFindings": [
+    {
+      "id": "request-token-not-carried",
+      "priority": "correctness",
+      "paths": [
+        "WorkoutView.swift:WorkoutRendererReadiness.Renderer",
+        "WorkoutView.swift:WorkoutRendererStartGate.consume"
+      ],
+      "finding": "Renderer records carry kind and isReady but no preparation request ID. consume checks only isPending and booleans. A ready snapshot created for request A satisfies request B after cancel and requestFirstStart; child environment comparisons do not make the parent gate itself reject an old snapshot.",
+      "suggestion": "Carry the preparation ID with each record and require exact current-request equality at consume. Include cancel/new-request plus old ready snapshot regression. Scheduled child publication should also verify current generation where possible; never let a late stale assignment certify a new request."
+    },
+    {
+      "id": "same-token-content-change",
+      "priority": "correctness",
+      "paths": [
+        "WorkoutView.swift:applyHandPreference",
+        "WorkoutView.swift:taskControls",
+        "BoardModelView.swift:applySync",
+        "GripHandModelView.swift:reportPreparation"
+      ],
+      "finding": "The synchronized ID is a one-way latch for a start request. Readiness is not invalidated when the same mounted host changes pose/fingers/side, board position/contact selection or viewport. Hand choice and task controls remain available before routineStartedAt. A new value can therefore inherit a true readiness record before its new synchronization completes.",
+      "suggestion": "Invalidate/reissue pending preparation on a resolved cue/presentation/layout signature change, or carry and verify each current input signature in host readiness. Preserve intent and Main hand choice rather than disabling required selection. Test same-host side/pose/viewport change while another host remains pending."
+    }
+  ],
+  "boundedAdditionalRisks": [
+    {
+      "id": "actual-selected-presentation",
+      "finding": "Parent computes requiresBoard by constructing a fresh BoardMapPresentationSelection, while BoardMapView retains its own presentationSelection and permits surface/position selection. A mixed raster/model package switched during preparation can disagree with this inferred requirement. Current-renderer preference presence helps reject unready models but does not make the required kind identical to displayed state.",
+      "suggestion": "Derive readiness requirements from actual displayed map content or prevent stale inferred requirements; validate mixed-media/presentation change, not only default Evo."
+    },
+    {
+      "id": "debug-frame-path",
+      "finding": "BoardFrameImageView has no readiness publication. BoardModelSurface emits empty pendingPreparation once .ready. Thus requiresBoard=true never completes under usesFrameRenderer; this remains disabled-by-default DEBUG path, not the normal live candidate.",
+      "suggestion": "Explicitly retain this as unsupported until a completed-frame readiness signal exists; do not silently release it as ready."
+    },
+    {
+      "id": "attachment-observation",
+      "finding": "Readiness requires root.scene inside make/update. If content.add has not yet attached on make, no readiness is emitted until a later update. Existing camera invalidation can trigger updates, but pure aggregation tests do not establish this lifecycle path or parent/child preference propagation.",
+      "suggestion": "Actual hosted startup proof must show load to attached/synchronized readiness reaches the parent and releases. Do not infer it from dictionary tests alone; no runtime defect asserted here."
+    },
+    {
+      "id": "opacity-limit",
+      "finding": "Opacity zero retains SwiftUI structural hand identity and avoids the prior conditional deletion, but cannot prove RealityKit continues drawing or that a visible frame exists before Hang. The candidate still needs first-Hang whole-image evidence."
+    },
+    {
+      "id": "hidden-accessibility",
+      "finding": "Initial countdown now keeps portrait cue cards and landscape single-hand cue cards at opacity zero and hit testing disabled; their text/accessibility elements are not explicitly hidden by this change. Paired RealityView is already AX-hidden, but cue card text may remain discoverable.",
+      "suggestion": "Keep countdown hidden-cue accessibility consistent with former absent subtree if testing confirms exposure."
+    }
+  ],
+  "positiveChecks": [
+    "Loader loading/unavailable contributes false board readiness; hand availability participates, so neither is deliberately treated as success.",
+    "Finite positive viewport and actual attached scene are checked before publication; this is stronger than resource-cache/prewarm readiness, without claiming displayed-frame proof.",
+    "Initial-only request hook leaves resume and skip request paths separate. Existing audio preparation/arm logic follows gate release rather than running before visual preparation.",
+    "Cancellation is integrated into pending-start toggle, interruption/end helper and disappearance. Root already owns explicit cancelCountdown reset and empty-preference start fixes, so those known items are not duplicated as new findings.",
+    "Current hand construction still uses Main task/selected-side and portrait single-side logic. Pair and single hosts remain actual normal renderer types; no mesh/material/camera replacement.",
+    "Keeping the same branch via mountedCueCountdown should avoid countdown-driven removal of the existing hand State storage; actual renderer lifetime still needs validation."
+  ],
+  "testScope": {
+    "inspectedClass": "WorkoutRendererReadinessTests appended in HangTenTests/WorkoutTimelineTests.swift",
+    "existingCoverage": "Missing/ready board and hand entries, all mounted records, replacement dictionary, unavailable hand, empty non-model state.",
+    "missingMeaningfulBoundaries": [
+      "request A ready snapshot rejected after cancel/new request B",
+      "same-host resolved-content change invalidates prior readiness",
+      "hosted child preference propagation/loading-to-ready and cancellation",
+      "actual no-host startup event (root handling)",
+      "hidden countdown host identity retained through Hang"
+    ],
+    "executed": false
+  },
+  "conclusion": "Resolve request/input freshness before treating the gate as robust. These findings do not establish a GPU-frame guarantee or a fix to historical late-color failures. No acceptance or runtime outcome inferred."
+}

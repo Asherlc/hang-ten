@@ -1,0 +1,158 @@
+[
+  {
+    "sequence": 3,
+    "event": "startup-board-load-call",
+    "epoch": 1791002736.668606,
+    "hostFirstObservedEpoch": 1791002737.587848
+  },
+  {
+    "sequence": 5,
+    "event": "startup-board-load-return",
+    "epoch": 1791002737.360174,
+    "hostFirstObservedEpoch": 1791002737.587848
+  },
+  {
+    "sequence": 6,
+    "event": "startup-board-ready-published",
+    "epoch": 1791002737.360341,
+    "hostFirstObservedEpoch": 1791002737.587848
+  },
+  {
+    "sequence": 16,
+    "event": "startup-context-appear",
+    "epoch": 1791002737.9431272,
+    "hostFirstObservedEpoch": 1791002737.9464908
+  },
+  {
+    "sequence": 17,
+    "event": "workout-probe-appear-before-autostart",
+    "epoch": 1791002737.943974,
+    "hostFirstObservedEpoch": 1791002737.9464908
+  },
+  {
+    "sequence": 18,
+    "event": "startup-request-entry",
+    "epoch": 1791002737.9515948,
+    "hostFirstObservedEpoch": 1791002737.980472
+  },
+  {
+    "sequence": 19,
+    "event": "startup-audio-prepare-before",
+    "epoch": 1791002737.95176,
+    "hostFirstObservedEpoch": 1791002737.980472
+  },
+  {
+    "sequence": 20,
+    "event": "startup-audio-prepare-after",
+    "epoch": 1791002738.0855489,
+    "hostFirstObservedEpoch": 1791002738.112687
+  },
+  {
+    "sequence": 21,
+    "event": "startup-audio-arm-before",
+    "epoch": 1791002738.085832,
+    "hostFirstObservedEpoch": 1791002738.112687
+  },
+  {
+    "sequence": 22,
+    "event": "startup-audio-arm-after",
+    "epoch": 1791002738.100432,
+    "hostFirstObservedEpoch": 1791002738.112687
+  },
+  {
+    "sequence": 23,
+    "event": "startup-cancellation-requested",
+    "epoch": 1791002738.100617,
+    "hostFirstObservedEpoch": 1791002738.112687
+  },
+  {
+    "sequence": 24,
+    "event": "startup-board-load-call",
+    "epoch": 1791002738.1007628,
+    "hostFirstObservedEpoch": 1791002738.112687
+  },
+  {
+    "sequence": 30,
+    "event": "startup-audio-preparation-change",
+    "epoch": 1791002738.951323,
+    "hostFirstObservedEpoch": 1791002738.9760509
+  },
+  {
+    "sequence": 31,
+    "event": "startup-arm-task-enter",
+    "epoch": 1791002739.018518,
+    "hostFirstObservedEpoch": 1791002739.059964
+  },
+  {
+    "sequence": 32,
+    "event": "startup-arm-task-resumed",
+    "epoch": 1791002739.026618,
+    "hostFirstObservedEpoch": 1791002739.059964
+  },
+  {
+    "sequence": 33,
+    "event": "startup-visible-countdown-before",
+    "epoch": 1791002739.0268059,
+    "hostFirstObservedEpoch": 1791002739.059964
+  },
+  {
+    "sequence": 34,
+    "event": "startup-visible-countdown-after",
+    "epoch": 1791002739.031739,
+    "hostFirstObservedEpoch": 1791002739.059964
+  },
+  {
+    "sequence": 38,
+    "event": "startup-board-load-return",
+    "epoch": 1791002739.125986,
+    "hostFirstObservedEpoch": 1791002739.142832
+  },
+  {
+    "sequence": 39,
+    "event": "startup-board-ready-published",
+    "epoch": 1791002739.1261501,
+    "hostFirstObservedEpoch": 1791002739.142832
+  },
+  {
+    "sequence": 58,
+    "event": "startup-audio-preparation-change",
+    "epoch": 1791002742.2163959,
+    "hostFirstObservedEpoch": 1791002742.239878
+  },
+  {
+    "sequence": 61,
+    "event": "startup-audio-preparation-change",
+    "epoch": 1791002744.249247,
+    "hostFirstObservedEpoch": 1791002744.2803771
+  },
+  {
+    "sequence": 70,
+    "event": "startup-audio-preparation-change",
+    "epoch": 1791002748.28301,
+    "hostFirstObservedEpoch": 1791002748.289088
+  },
+  {
+    "sequence": 184,
+    "event": "startup-audio-preparation-change",
+    "epoch": 1791002924.7724571,
+    "hostFirstObservedEpoch": 1791002924.817688
+  },
+  {
+    "sequence": 189,
+    "event": "startup-audio-preparation-change",
+    "epoch": 1791002928.806602,
+    "hostFirstObservedEpoch": 1791002928.8398368
+  },
+  {
+    "sequence": 190,
+    "event": "startup-audio-preparation-change",
+    "epoch": 1791002931.8008962,
+    "hostFirstObservedEpoch": 1791002931.8440378
+  },
+  {
+    "sequence": 195,
+    "event": "startup-audio-preparation-change",
+    "epoch": 1791002935.824593,
+    "hostFirstObservedEpoch": 1791002935.875408
+  }
+]

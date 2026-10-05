@@ -1,0 +1,198 @@
+{
+  "owner": "placid-badger",
+  "reviewNumber": 11,
+  "boardID": "nature.stone-hanger-mini-karma8a",
+  "preparedUTC": "2026-10-03T14:28:17.073132+00:00",
+  "status": "CAD contact/export/package checks pass; human review pending; current app appearance unverified",
+  "baselineCommit": "f6c3e2299734f141a19187924ad9e0fed7eab8d0",
+  "identity": {
+    "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+    "modelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+    "descriptorSHA256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+    "sidecarSHA256": "901edd326cd872de28cb8a8721c308049c1ff5c5a11da16ff225ddc9643f09bc"
+  },
+  "generatedManifestSHA256": "024c2c5df652271ae699487abfc963c33761a18e0c3dbd5d43aff0ac3cfe16a4",
+  "nativeClosedCollisionBodyUnchanged": true,
+  "fullExteriorSurfaceUnchanged": true,
+  "nativeExportFacePartitionChanged": true,
+  "actualUSDZTriangleCount": 27628,
+  "allExportedTrianglePositionsUnchanged": false,
+  "duplicateGeometricTriangles": 0,
+  "unboundMeshes": 5,
+  "factualContactCount": 3,
+  "originalPinchFaces": [
+    14,
+    21,
+    31,
+    43,
+    44,
+    69
+  ],
+  "originalPinchPhysicalAndExportedRegionPreserved": true,
+  "upperBandNativeZMinMM": 19.5,
+  "lowerBandNativeZMaxMM": -18,
+  "bandWitnesses": "Existing upper cavity-mouth lip and GraniteInsert lower boundary; deliberate display-contact extents, not manufacturer finger-depth measurements.",
+  "allFourActualExportedFingerPadProbesCovered": true,
+  "middleWoodPanelGraniteAndRecessInteriorExcluded": true,
+  "woodAndGraniteGeometryAndExportedPositionsExactPrior": true,
+  "embeddedManifestExactPrior": true,
+  "publishedDepthsMM": [
+    15,
+    15,
+    60
+  ],
+  "nativePhysicalPinchSpanMM": 60,
+  "depthWitnessesOnActualSelectedSurfaces": true,
+  "nativeReopenRecomputeDimensionEditRestorePassed": true,
+  "twoDeterministicExportsPassed": true,
+  "freshUSDZReimportDescriptorRebuildPassed": true,
+  "sourceBRepCachesReserialized": [
+    "FinalSolid.Shape.brp",
+    "GraniteFittedSeat.Shape.brp",
+    "WoodWithGraniteLowerRail.Shape.brp",
+    "nature_pinch.Shape.brp",
+    "nature_stone.Shape.brp",
+    "nature_wood.Shape.brp"
+  ],
+  "allOriginalNativeShapesGeometricallyExactPrior": true,
+  "cordSourceBoundCacheCheckPassed": true,
+  "nativePoseCount": 3,
+  "nativeRouteCount": 12,
+  "cordTopologyStationsDimensionsPosesAndCachesUnchanged": true,
+  "sidecarOnlyChangedField": "/modelSHA256",
+  "nativeClearanceToleranceMM": 0.01,
+  "priorContinuousCertificatesRemainApplicableBecauseSolidAndRoutesAreIdentical": true,
+  "pythonTests": {
+    "tests": 67,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "passed": 67
+  },
+  "catalogBoards": 64,
+  "platformStagingPassed": [
+    "xcode",
+    "android"
+  ],
+  "deliveryLockPassed": true,
+  "deliverySHA256": "fb4b7c7fcfa2fd1041ed1f97faad0f001c09866935834568d74af87ae573d845",
+  "preservation": {
+    "otherPackages": {
+      "fileCount": 202,
+      "allSHA256Unchanged": true
+    },
+    "reservedSharedPaths": {
+      "fileCount": 5,
+      "allSHA256Unchanged": true
+    },
+    "immutablePriorReviews": {
+      "fileCount": 243,
+      "allSHA256Unchanged": true
+    },
+    "acceptedMiniReview": {
+      "fileCount": 2,
+      "allSHA256Unchanged": true
+    }
+  },
+  "allExactOwnedResourcesDeletedAndVerified": true,
+  "sharedCodeChanged": false,
+  "runtimeVerified": false,
+  "usableAppFrames": 0,
+  "newSimulatorAttempt": false,
+  "views": [
+    {
+      "sha256": "0a2b459d2b5450b266ffeb1ad236e8f20c5cccd4e41db6805ae3fdeae1da090a",
+      "poseID": "pinch-side",
+      "selectedContactID": "pinch-60",
+      "selectedNodeIDs": [
+        "nature_pinch",
+        "nature_pinch_pressure"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-loaded-front.png"
+    },
+    {
+      "sha256": "2299578946a81644caba19036a1610b6413ac008c41ee893d604186492b69ca7",
+      "poseID": "pinch-side",
+      "selectedContactID": "pinch-60",
+      "selectedNodeIDs": [
+        "nature_pinch",
+        "nature_pinch_pressure"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-loaded-back.png"
+    },
+    {
+      "sha256": "4a750ce71de3cf060c7782a7e7d32e80760786d6423d80077bd8f64f112bf37c",
+      "poseID": "granite-front",
+      "selectedContactID": "granite-edge-15",
+      "selectedNodeIDs": [
+        "nature_stone"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-granite-loaded.png"
+    },
+    {
+      "sha256": "17289e62ffc6870819336fa58c21fb4f9efc87f31cb215c1588b6ed7eac74e21",
+      "poseID": "wood-inverted",
+      "selectedContactID": "wood-edge-15",
+      "selectedNodeIDs": [
+        "nature_wood"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-wood-loaded.png"
+    },
+    {
+      "sha256": "108da7944607234af17528ae330b548916a8470cbb0fad8646f7a9e96e9fac71",
+      "poseID": null,
+      "selectedContactID": "pinch-60",
+      "selectedNodeIDs": [
+        "nature_pinch",
+        "nature_pinch_pressure"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-front.png"
+    },
+    {
+      "sha256": "8574ceaab4ec3fe85056173bcaf8e2cfa09f11aa5a97296873f57ee5fac266e9",
+      "poseID": null,
+      "selectedContactID": "pinch-60",
+      "selectedNodeIDs": [
+        "nature_pinch",
+        "nature_pinch_pressure"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-back.png"
+    },
+    {
+      "sha256": "b29dda4e02f2a28125e052e78d94eece9cc531062601ba467d5cc02d8ecad4da",
+      "poseID": null,
+      "selectedContactID": "pinch-60",
+      "selectedNodeIDs": [
+        "nature_pinch",
+        "nature_pinch_pressure"
+      ],
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/karma-pinch-wrap-front-back.png"
+    }
+  ],
+  "wholePriorCurrentComparisons": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/pinch-wrap-review-2026-10-03/views/prior-current-pinch-front-side-top.png",
+      "sha256": "dd31f4d5c193f65cddef240db78d157e8677063143d26b094879018dcb1346e3"
+    }
+  ],
+  "rootVisualReview": {
+    "croppedOrMeasuredPixels": false,
+    "wholeViewsInspected": [
+      "pinch front/back",
+      "prior/current front-side-top",
+      "pinch loaded front/back",
+      "wood and granite saved poses"
+    ],
+    "finding": "Upper/lower red finger-contact bands wrap continuously over front/back rails and rounded end shoulders. Center panels, groove walls, cavity interior and granite stay excluded. Original wood/granite selections remain."
+  },
+  "attemptNotes": [
+    "Initial native bounding-box expression used a length unit where the field requires a scalar; corrected without a geometry change.",
+    "First two exports hit a conservative torus bounding-box depth overestimate. Native on-surface depth witnesses and zero area outside the physical60-mm slab establish the exact contact span; final deterministic exports pass. Raw failures and exact cleanup receipts retained."
+  ],
+  "limits": [
+    "Existing dimensions, groove fit and cord representation estimates remain.",
+    "Neutral exact CAD previews are not runtime finish/interaction evidence.",
+    "Pinch wrap and overall #11 human acceptance remain pending."
+  ]
+}

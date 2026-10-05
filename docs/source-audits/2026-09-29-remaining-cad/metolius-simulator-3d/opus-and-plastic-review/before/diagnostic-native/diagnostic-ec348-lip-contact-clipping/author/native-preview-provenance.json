@@ -1,0 +1,22 @@
+{
+  "original-9449": {
+    "triangleCount": 34634,
+    "nodeCount": 31
+  },
+  "intermediate-21ca3": {
+    "triangleCount": 252466,
+    "nodeCount": 31
+  },
+  "native-correction": {
+    "triangleCount": 103198,
+    "nodeCount": 1
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top",
+    "oblique",
+    "raking"
+  ],
+  "renderer": "Shared preview.py Lambert triangle-face rendering at matching view and size; oblique applies fixed orthographic rotation."
+}

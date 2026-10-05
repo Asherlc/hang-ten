@@ -1,0 +1,28 @@
+{
+  "verification": "Fresh pinned FreeCAD process compiled each presentation from current native source; runtime output compared against checked-in package assets.",
+  "sourceSHA256Before": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "sourceSHA256After": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "sourceUnchanged": true,
+  "command": "Tools/HangboardCAD/verify_reproducible.py --package yy-travelboard --freecad /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd --extra-python-path .context/placid-badger/pxr311 --keep-rebuild .context/placid-badger/cad-raster-boards/reproducibility",
+  "verifierSHA256": "5dba947d12ad284d286e7c87682d7d09010ae41c4b66e8f96755574b6033690a",
+  "result": {
+    "assetMatches": true,
+    "bytes": 1432139,
+    "committedAssetSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+    "descriptorBindsCommittedAsset": true,
+    "descriptorMatches": true,
+    "package": "yy-travelboard",
+    "presentations": [
+      {
+        "assetMatches": true,
+        "bytes": 1432139,
+        "committedAssetSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+        "descriptorBindsCommittedAsset": true,
+        "descriptorMatches": true,
+        "presentationID": "primary",
+        "rebuiltAssetSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f"
+      }
+    ],
+    "rebuiltAssetSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f"
+  }
+}

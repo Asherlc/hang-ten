@@ -1,0 +1,24 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/583488A7-29D8-4AFE-A358-A0BD739178CC/Documents/HighlightDiagnostic-placid-badger-cad-second-half-caption-normal-workout/events-6687B648-CAF3-4912-ADFC-30621807CF2B.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-normal-workout-landscape/events-6687B648-CAF3-4912-ADFC-30621807CF2B.jsonl",
+      "sha256": "cb44bcfd3e31afd779ad87867c094759c5af54504edff708cd4e64cc34938b14"
+    }
+  ],
+  "records": 65,
+  "completeContiguous": true,
+  "copyStartEpoch": 1790975596.4927602,
+  "copyEndEpoch": 1790975596.6625438,
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "get_app_container",
+    "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "com.hangten.training",
+    "data"
+  ],
+  "traceStillLiveUntilBoundedSamplerEnds": true
+}

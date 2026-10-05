@@ -1,0 +1,7 @@
+{
+  "owner": "placid-badger",
+  "reason": "Root started next launch before mesh-pick ready check finished; this attempt is invalid and will be retried sequentially.",
+  "ownedProcesses": [],
+  "noPickingPassClaimed": true,
+  "ownedHelperProcessesAbsent": true
+}

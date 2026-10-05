@@ -1,0 +1,44 @@
+{
+  "createdUTC": "2026-10-02T22:34:03.735106+00:00",
+  "reviewer": "/root",
+  "recordedBy": "/root/baguette_review_prep",
+  "basis": "Parent explicitly reported opening these four whole images and instructed creation of this separate hash-bound review. Recorder makes no independent visual-review claim.",
+  "scope": "Only four following-Hang frames in unchanged direct repeat B.",
+  "images": [
+    {
+      "path": "phase-2-active-plus-0.25.png",
+      "sha256": "6d76db2c1787d86276a9fc5b4f745686dc34874405740b315949f2c303af4b10",
+      "observedBoardColor": "blue",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:07",
+      "correctActiveColor": false
+    },
+    {
+      "path": "phase-2-active-plus-1.png",
+      "sha256": "364cd276f2559ce7a3ec9f42575e0b3c2e6435e799ea79ea4a93f47128217b98",
+      "observedBoardColor": "blue",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:06",
+      "correctActiveColor": false
+    },
+    {
+      "path": "phase-2-active-plus-3.png",
+      "sha256": "78b89ad7e33a263312861733f90a421ac8d4448c8ee335fc732218ca00570e92",
+      "observedBoardColor": "red",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:04",
+      "correctActiveColor": true
+    },
+    {
+      "path": "phase-2-active-plus-5.png",
+      "sha256": "8db8ba26ce302e577195d44342818aeec2bf0c364eda79c7a74d0ffd543fbd3a",
+      "observedBoardColor": "red",
+      "visiblePhase": "Hang",
+      "visibleTimer": "00:02",
+      "correctActiveColor": true
+    }
+  ],
+  "finding": "First two captured following-Hang frames are incorrectly blue; later two red. No exact recovery timestamp between +1 and +3 inferred.",
+  "rootNavigationArmRan": false,
+  "productionFix": false
+}

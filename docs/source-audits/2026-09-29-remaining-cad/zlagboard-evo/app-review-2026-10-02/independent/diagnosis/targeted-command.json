@@ -1,0 +1,19 @@
+{
+  "atUTC": "2026-10-02T05:19:32.740597+00:00",
+  "command": [
+    "xcrun",
+    "simctl",
+    "spawn",
+    "1684856E-FC2D-4407-8063-9B343B99CAD6",
+    "log",
+    "show",
+    "--last",
+    "5m",
+    "--style",
+    "compact",
+    "--predicate",
+    "(process == \"com.apple.datamigrator\" OR process == \"com.apple.migrationpluginwrapper\" OR process == \"SpringBoard\" OR process == \"locationd\") AND (messageType == 16 OR messageType == 17 OR eventMessage CONTAINS[c] \"migrat\" OR eventMessage CONTAINS[c] \"waiting\" OR eventMessage CONTAINS[c] \"failed\" OR eventMessage CONTAINS[c] \"timeout\")"
+  ],
+  "exitCode": 0,
+  "bytes": 1810510
+}

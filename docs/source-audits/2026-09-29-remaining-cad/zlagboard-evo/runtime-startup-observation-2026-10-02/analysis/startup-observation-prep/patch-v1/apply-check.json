@@ -1,0 +1,6 @@
+{
+  "command": "rtk proxy git apply --check .context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-prep/patch-v1/startup-observation.patch",
+  "exitCode": 0,
+  "stdout": "",
+  "stderr": ""
+}

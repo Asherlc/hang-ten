@@ -1,0 +1,89 @@
+{
+  "recordCount": 7,
+  "lastSequence": 7,
+  "readiness": {
+    "make": {
+      "complete": true,
+      "epoch": 1791006935.547001,
+      "event": "hand-lifecycle",
+      "handCameraID": "ObjectIdentifier(0x0000000115052880)",
+      "handKind": "pair",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 1,
+        "pair.make-entry": 1,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "handLifetimeToken": "88F579C4-F87D-4BE1-AE60-F050880C817C",
+      "handRootID": "ObjectIdentifier(0x0000000115052840)",
+      "lifecycleEvent": "make-entry",
+      "sequence": 5,
+      "uptime": 88733.77107479167,
+      "viewToken": "CCADF886-9037-4AE2-AB99-6903AF6DB979"
+    },
+    "fit": {
+      "allDepthsFinite": true,
+      "allDepthsInsideUnchangedClips": true,
+      "cameraEvent": "reset-fitted",
+      "cameraTransform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.959770917892456,
+        -0.28078407049179077,
+        0,
+        0,
+        0.28078407049179077,
+        0.959770917892456,
+        0,
+        0,
+        3.961261034011841,
+        9.515283584594727,
+        1
+      ],
+      "complete": true,
+      "epoch": 1791006935.740615,
+      "event": "hand-camera",
+      "far": 100,
+      "framingVertexCount": 37284,
+      "handCameraID": "ObjectIdentifier(0x0000000115052880)",
+      "handKind": "pair",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 1,
+        "pair.make-entry": 1,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "handLifetimeToken": "88F579C4-F87D-4BE1-AE60-F050880C817C",
+      "maximumDepth": 10.936546325683594,
+      "minimumDepth": 8.617655754089355,
+      "near": 0.10000000149011612,
+      "orthographicPresent": true,
+      "orthographicScale": 2.5384838581085205,
+      "perspectivePresent": false,
+      "sequence": 7,
+      "uptime": 88733.96469050001
+    },
+    "constructor": {
+      "complete": true,
+      "epoch": 1791006935.48086,
+      "event": "hand-lifecycle",
+      "handCameraID": "ObjectIdentifier(0x0000000115052880)",
+      "handKind": "pair",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 1,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "handLifetimeToken": "88F579C4-F87D-4BE1-AE60-F050880C817C",
+      "handRootID": "ObjectIdentifier(0x0000000115052840)",
+      "lifecycleEvent": "constructor-entry",
+      "sequence": 3,
+      "uptime": 88733.70493375
+    }
+  },
+  "imageEventCount": 0
+}

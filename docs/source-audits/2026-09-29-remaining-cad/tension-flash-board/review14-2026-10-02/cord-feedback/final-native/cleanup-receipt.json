@@ -1,0 +1,41 @@
+{
+  "owner": "placid-badger",
+  "deleted": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-tmp",
+      "absent": true
+    }
+  ],
+  "processGroups": [
+    {
+      "pid": 35606,
+      "pgid": 35606,
+      "absent": true
+    },
+    {
+      "pid": 39632,
+      "pgid": 39632,
+      "absent": true
+    },
+    {
+      "pid": 39636,
+      "pgid": 39636,
+      "absent": true
+    },
+    {
+      "pid": 44829,
+      "pgid": 44829,
+      "absent": true
+    }
+  ],
+  "exitCode": 0,
+  "completedAt": "2026-10-03T00:23:14.424909+00:00"
+}

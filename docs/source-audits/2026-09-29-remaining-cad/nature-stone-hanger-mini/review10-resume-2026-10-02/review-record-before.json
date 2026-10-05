@@ -1,0 +1,179 @@
+{
+  "owner": "placid-badger",
+  "humanReview": {
+    "reviewNumber": 10,
+    "boardID": "nature.stone-hanger-mini",
+    "status": "Overall Mini shape accepted with Lgtm; final seat, finishes, shorter cords and jug pose review pending; app appearance unverified due simulator startup failure",
+    "answer": "Lgtm",
+    "acceptedDate": "2026-10-01",
+    "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views.",
+    "shownAssetCommit": "ac077ec832d99471bbbebb4199ca810308c32140",
+    "priorShapeIdentity": {
+      "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+      "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+      "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35"
+    },
+    "identity": {
+      "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+      "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+      "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+      "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+    },
+    "history": [
+      {
+        "owner": "placid-badger",
+        "reviewNumber": 10,
+        "boardID": "nature.stone-hanger-mini",
+        "answer": "Lgtm",
+        "date": "2026-10-01",
+        "status": "Overall displayed shape accepted; disclosed seam, finish and cord cleanup pending.",
+        "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views.",
+        "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+        "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+        "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
+        "shownImages": {
+          "review/primary-oblique.png": "3cbd42831b6bd5fb3a98a81620ced5939b8cad257f86f30694058d6716d7bd98",
+          "app-review/default.png": "23b063b8bc4655fb6daaf0508964417becee7123e27592d35762a8689e996867"
+        },
+        "question": "Anything else in the shape you want corrected?",
+        "disclosedPendingItems": [
+          "Gap beneath granite to check against primary photographs",
+          "Existing plain finish",
+          "Existing long visual cord"
+        ],
+        "laterTechnicalFinding": "Native inspection identifies old jug region as a wall in the upright pose; positive-grip presentation being checked without redoing accepted body."
+      }
+    ],
+    "completedTechnicalScope": "Fitted granite seat, metadata for existing runtime wood/granite rendering, four freshly solved compact cord poses, and opening-up display jug pose. App appearance remains unverified.",
+    "runtimeGate": "blocked-environment",
+    "completionHumanAcceptance": "pending",
+    "completionQuestion": null,
+    "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/index.html",
+    "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
+    "postIntegrationTests": {
+      "pythonPassed": 284,
+      "pythonSkipped": 0,
+      "iOSPassed": 0,
+      "iOSSkipped": 0,
+      "failures": 1,
+      "iOSRuntimeStatus": "not run; simulator startup blocked",
+      "iOSLauncherFailures": 1,
+      "iOSFailed": 1,
+      "iOSUnitCasesExecuted": 0,
+      "iOSExecutedCaseFailures": 0
+    },
+    "approvalLimit": "Prior overall shape approval does not establish final pose/finish acceptance; geometry, rope lengths, surface finish and jug angle are display estimates, not manufacturing or real-load certification.",
+    "runtimeAttemptHistory": [
+      {
+        "date": "2026-10-02",
+        "runtimeGate": "blocked-environment",
+        "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
+        "buildPassed": true,
+        "installedBytesVerified": true,
+        "currentAppFrames": 0,
+        "unitCasesExecuted": 0,
+        "readinessHarnessFailures": 1,
+        "acceptanceExtended": false
+      }
+    ],
+    "postIntegrationTestsScope": "Historical October 1 completion attempt; these counts do not describe the October 2 retry.",
+    "latestRuntimeTests": {
+      "date": "2026-10-02",
+      "unitCasesExecuted": 0,
+      "passedCases": 0,
+      "failedCases": 0,
+      "nativeTestHarnessRuns": 0,
+      "readinessHarnessFailures": 1,
+      "usableAppFrames": 0
+    }
+  },
+  "queueRow": {
+    "number": 10,
+    "package": "nature-stone-hanger-mini",
+    "boardID": "nature.stone-hanger-mini",
+    "name": "Nature Climbing Stone Hanger Mini",
+    "humanReview": "Overall Mini shape accepted with Lgtm; final seat, finishes, shorter cords and jug pose review pending; app appearance unverified due simulator startup failure",
+    "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "reviewPage": "nature-stone-hanger-mini/completion-review/index.html",
+    "sourceAudit": "nature-stone-hanger-mini/native-authoring.md",
+    "comparisons": [
+      "nature-stone-hanger-mini/completion-review/comparison-front.png",
+      "nature-stone-hanger-mini/completion-review/comparison-side.png",
+      "nature-stone-hanger-mini/completion-review/comparison-top.png",
+      "nature-stone-hanger-mini/completion-review/comparison-oblique.png"
+    ],
+    "presentations": {
+      "primary": {
+        "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+        "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57"
+      }
+    },
+    "appReview": "nature-stone-hanger-mini/completion-review/runtime-validation.json",
+    "appReviewPage": "nature-stone-hanger-mini/completion-review/index.html",
+    "suspensionSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+    "humanReviewRecord": "nature-stone-hanger-mini/human-review.json",
+    "latestRevision": "nature-stone-hanger-mini/completion-review/review.md",
+    "runtimeRevision": "nature-stone-hanger-mini/runtime-retry-2026-10-02/runtime-validation.json",
+    "acceptedScope": "Overall Stone Hanger Mini solid silhouette and hold layout shown in existing migration views.",
+    "reviewAnswer": "Lgtm",
+    "historicalMigrationReview": {
+      "number": 10,
+      "package": "nature-stone-hanger-mini",
+      "boardID": "nature.stone-hanger-mini",
+      "name": "Nature Climbing Stone Hanger Mini",
+      "humanReview": "pending",
+      "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+      "reviewPage": "nature-stone-hanger-mini/review/index.html",
+      "sourceAudit": "nature-stone-hanger-mini/native-authoring.md",
+      "comparisons": [
+        "nature-stone-hanger-mini/review/prior-side.png",
+        "nature-stone-hanger-mini/review/prior-primary.png",
+        "nature-stone-hanger-mini/review/primary-front.png",
+        "nature-stone-hanger-mini/review/prior-side.png",
+        "nature-stone-hanger-mini/review/primary-side.png",
+        "nature-stone-hanger-mini/review/primary-top.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
+          "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30"
+        }
+      },
+      "appReview": "nature-stone-hanger-mini/app-review/validation.json",
+      "appReviewPage": "nature-stone-hanger-mini/app-review/index.html"
+    },
+    "latestRuntimeAttempt": "nature-stone-hanger-mini/runtime-retry-2026-10-02/review.md"
+  },
+  "deliveryRow": {
+    "source": "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+    "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "boardMetadata": "Generated at build time from the embedded HangTenBoardManifest; exact metadata changes and source mappings retained in the review packet.",
+    "assetSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+    "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+    "assets": {
+      "assets/primary.usdz": {
+        "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+        "descriptorPath": "assets/primary.model.json",
+        "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71"
+      }
+    },
+    "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 and OCCT 7.8.1; unbound meshes.",
+    "provenance": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/native-authoring.md",
+    "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/index.html",
+    "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/manifest-preservation.json",
+    "nativeValidation": "Fresh native reopen/edit/restore, exact source-bound double compile, independent actual mesh ownership and vertex checks, all four native cord solves and sixteen continuous route certificates; reports in completion-review.",
+    "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/completion-review/runtime-validation.json",
+    "geometryAcceptance": "Overall Mini shape accepted with Lgtm; final seat, finishes, shorter cords and jug pose review pending; app appearance unverified due simulator startup failure",
+    "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+    "suspensionSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+    "historicalMigrationReview": {
+      "comparison": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/review/index.html",
+      "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/metadata-diff.json",
+      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/app-review/validation.json",
+      "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+      "assetSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+      "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35",
+      "suspensionSHA256": "3ededde32246c2b90cbf89dbb28ec26f362f387ae60f5f3f22dff2c76f115325"
+    }
+  }
+}

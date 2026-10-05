@@ -1,0 +1,15 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "strings",
+    "-a",
+    "/Applications/Xcode.app/Contents/Applications/DeviceHub.app/Contents/MacOS/DevicesTrampoline"
+  ],
+  "exitStatus": 0,
+  "selectedStaticOutput": [
+    "DeviceHub"
+  ],
+  "stderr": "",
+  "executedTarget": false
+}

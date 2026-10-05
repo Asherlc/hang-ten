@@ -1,0 +1,25 @@
+{
+  "timestampUTC": "2026-10-02T01:33:01.954701+00:00",
+  "sourceBeforeSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "sourceAfterSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+  "sourceHashesMatchDeclared": true,
+  "archiveMemberNamesExact": true,
+  "changedArchiveMembers": [
+    "Document.xml"
+  ],
+  "allNonDocumentArchiveMemberBytesExact": true,
+  "objectDataExact": true,
+  "objectListExact": true,
+  "changedDocumentProperties": [
+    "HangTenBoardManifest"
+  ],
+  "allOtherDocumentPropertiesExact": true,
+  "onlyManifestSemanticChangeIsWoodFinish": true,
+  "contactFactsExact": true,
+  "modelAndDescriptorExact": true,
+  "historicalNativeProofBoundToPreservedGeometry": true,
+  "historicalCompileProofBoundToPreservedGeometry": true,
+  "finalSourceRealZIP": true,
+  "scope": "Independent archive and XML byte/value verification only; final sidecar and staging intentionally await freeze.",
+  "passed": true
+}

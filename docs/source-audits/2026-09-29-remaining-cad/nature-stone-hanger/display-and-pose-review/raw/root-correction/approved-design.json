@@ -1,0 +1,26 @@
+{
+  "ownerClarification": "there is 1 vertical groove on either side that the cord nestles into",
+  "sourceDisposition": "Complete manufacturer photo 3 and technical diagram show one longitudinal center groove plus three transverse adjustment notches per side. Preserve the six transverse cuts.",
+  "geometry": {
+    "newVerticalCylinders": 2,
+    "nativeAxis": [
+      0,
+      0,
+      1
+    ],
+    "centerYMM": 0,
+    "centerAbsXMM": 52.5,
+    "radiusMM": 1.75,
+    "toolZRangeMM": [
+      -55,
+      55
+    ],
+    "dimensionsAreDisplayEstimates": true,
+    "existingBores": "unchanged; no hidden connection"
+  },
+  "posePlan": "First test prior correctly weightable unpitched eight-pose frames with centered support and unchanged 120 mm / radius 1.5 mm leads. Transverse-specific 30 degree pitch and 50 mm forward support were estimates and are not forced onto the corrected longitudinal seat.",
+  "sourceCurrentSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+  "priorCommittedHEAD": "9399160729fcc418cedf47344b41163d244b5d96",
+  "priorCommittedModelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+  "canonicalMutation": false
+}

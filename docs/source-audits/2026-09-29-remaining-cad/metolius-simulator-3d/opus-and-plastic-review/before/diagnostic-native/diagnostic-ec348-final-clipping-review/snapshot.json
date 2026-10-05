@@ -1,0 +1,75 @@
+{
+  "owner": "placid-badger",
+  "recordedAtUTC": "2026-10-01T17:05:38.517936+00:00",
+  "status": "rejected diagnostic native source; C0 carrier/contact clipping failure; not final validation",
+  "sourceSHA256": "ec348cea477014f3594d586438d1094c7fb8eeb4516f7c44e28b7d57989faa2d",
+  "humanAcceptance": "pending review #8",
+  "reason": "Independent clipping-review blocks the ec348 carrier at the exact X47 contact split. Correction, exact clipping and all final native/export/app/Opus gates are still pending. No tolerance/ROI expansion or blanket orientation reversal accepted.",
+  "blockingFindings": [
+    "Native root faces4/12 fail stricter BOP check with BOPAlgo GeomAbs_C0",
+    "Jug Common empty despite4boxintersectionedges; pairedroundcut breaches intendedX47split"
+  ],
+  "logsMayBePartialAtFreeze": false,
+  "rawCopies": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/diagnostic-ec348.FCStd",
+      "retained": "independent-validation/diagnostic-ec348.FCStd",
+      "sha256": "ec348cea477014f3594d586438d1094c7fb8eeb4516f7c44e28b7d57989faa2d",
+      "bytes": 8949697
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/clipping-review.json",
+      "retained": "independent-validation/clipping-review.json",
+      "sha256": "f96f72b227be510ad9f3a608615fcd95689525c7ade3b30fc68add740a3be9c1",
+      "bytes": 2537
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/clipping-review.md",
+      "retained": "independent-validation/clipping-review.md",
+      "sha256": "f73328157c494f16fc1bd19878b910d0c16011a86f3886fda99af9db16813000",
+      "bytes": 786
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/root-classification-diagnosis.json",
+      "retained": "independent-validation/root-classification-diagnosis.json",
+      "sha256": "90ffbfa503b3d8f1c4685986dc3de16540b472d69aaf7655c4b1bfdd24ec94c2",
+      "bytes": 12969
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/root-classification-diagnosis.log",
+      "retained": "independent-validation/root-classification-diagnosis.log",
+      "sha256": "53757c52eeed5193baef83791fc56f8d84ade731740b790d3d26121972da10df",
+      "bytes": 823
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/root-classification-diagnosis-v2.log",
+      "retained": "independent-validation/root-classification-diagnosis-v2.log",
+      "sha256": "e078d5c39eb43f51aa3d8e3f7ca112e0a3d5d91ff54b1937cf37d89ff7da274b",
+      "bytes": 13095
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/root-classification-diagnosis-ownership.json",
+      "retained": "independent-validation/root-classification-diagnosis-ownership.json",
+      "sha256": "e1c5aa454cf5c3023f4ad326750196e9e01bf896c07ad2373947025f0e9e54c2",
+      "bytes": 390
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/root-classification-diagnosis-v2-ownership.json",
+      "retained": "independent-validation/root-classification-diagnosis-v2-ownership.json",
+      "sha256": "03d5bad0388ed57eea6582e8020c3949f79e71688ee3e5350ab87f6b5b18da92",
+      "bytes": 391
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/diagnose_root_classification.py",
+      "retained": "independent-validation/diagnose_root_classification.py",
+      "sha256": "5c5a48a03476d7b33528ab6907ef16e026e88d1ebf830f5a15e9d851be5118ca",
+      "bytes": 2076
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/run_bounded.py",
+      "retained": "independent-validation/run_bounded.py",
+      "sha256": "a9ad7fe3f2a838c14f341e0726b0004e794cbf05d4e9a279e21b3a90b7e37b98",
+      "bytes": 1160
+    }
+  ]
+}

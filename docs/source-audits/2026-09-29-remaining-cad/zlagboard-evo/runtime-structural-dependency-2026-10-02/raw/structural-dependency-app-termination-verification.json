@@ -1,0 +1,18 @@
+{
+  "pid": 53312,
+  "command": [
+    "rtk",
+    "proxy",
+    "ps",
+    "-p",
+    "53312",
+    "-o",
+    "pid=,args="
+  ],
+  "exitStatus": 1,
+  "stdout": "",
+  "stderr": "",
+  "absent": true,
+  "epoch": 1790993563.38305,
+  "scope": "Exact diagnostic app only; root retains registered Simulator/DD lifecycle."
+}

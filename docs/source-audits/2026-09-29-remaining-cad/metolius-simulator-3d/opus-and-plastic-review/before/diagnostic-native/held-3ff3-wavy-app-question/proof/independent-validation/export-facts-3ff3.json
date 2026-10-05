@@ -1,0 +1,329 @@
+{
+  "status": "fail",
+  "blockingFindings": [
+    "edge-11-left descriptor normalized bounds mismatch",
+    "edge-11-right descriptor normalized bounds mismatch",
+    "edge-5-left descriptor normalized bounds mismatch",
+    "edge-5-right descriptor normalized bounds mismatch",
+    "edge-6-left descriptor normalized bounds mismatch",
+    "edge-6-right descriptor normalized bounds mismatch",
+    "edge-7-left descriptor normalized bounds mismatch",
+    "edge-7-right descriptor normalized bounds mismatch",
+    "flat-sloper-2-left descriptor normalized bounds mismatch",
+    "flat-sloper-2-right descriptor normalized bounds mismatch",
+    "jug-1-left descriptor normalized bounds mismatch",
+    "jug-1-right descriptor normalized bounds mismatch",
+    "jug-14-center descriptor normalized bounds mismatch",
+    "pocket-10-left descriptor normalized bounds mismatch",
+    "pocket-10-right descriptor normalized bounds mismatch",
+    "pocket-12-left descriptor normalized bounds mismatch",
+    "pocket-12-right descriptor normalized bounds mismatch",
+    "pocket-13-left descriptor normalized bounds mismatch",
+    "pocket-13-right descriptor normalized bounds mismatch",
+    "pocket-15-center descriptor normalized bounds mismatch",
+    "pocket-16-center descriptor normalized bounds mismatch",
+    "pocket-17-center descriptor normalized bounds mismatch",
+    "pocket-18-center descriptor normalized bounds mismatch",
+    "pocket-4-left descriptor normalized bounds mismatch",
+    "pocket-4-right descriptor normalized bounds mismatch",
+    "pocket-8-left descriptor normalized bounds mismatch",
+    "pocket-8-right descriptor normalized bounds mismatch",
+    "pocket-9-left descriptor normalized bounds mismatch",
+    "pocket-9-right descriptor normalized bounds mismatch",
+    "round-sloper-3-center descriptor normalized bounds mismatch"
+  ],
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+  "faceEnvelopeMM": [
+    711.0000252723694,
+    221.99988365173337
+  ],
+  "publishedDepths": [
+    {
+      "contactID": "pocket-4-left",
+      "expectedDepthMM": 30,
+      "actualMeshDepthMM": 29.99957650899887,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "edge-5-left",
+      "expectedDepthMM": 25,
+      "actualMeshDepthMM": 24.999909102916725,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "edge-6-left",
+      "expectedDepthMM": 19,
+      "actualMeshDepthMM": 18.9993865787983,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "edge-7-left",
+      "expectedDepthMM": 36,
+      "actualMeshDepthMM": 35.99995374679566,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-8-left",
+      "expectedDepthMM": 15,
+      "actualMeshDepthMM": 14.999918639659889,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-9-left",
+      "expectedDepthMM": 35,
+      "actualMeshDepthMM": 34.99999828636647,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-10-left",
+      "expectedDepthMM": 17,
+      "actualMeshDepthMM": 16.999892890453346,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "edge-11-left",
+      "expectedDepthMM": 14,
+      "actualMeshDepthMM": 13.999976217746738,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-12-left",
+      "expectedDepthMM": 30,
+      "actualMeshDepthMM": 29.999834485352046,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-13-left",
+      "expectedDepthMM": 14,
+      "actualMeshDepthMM": 13.999911025166519,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-15-center",
+      "expectedDepthMM": 50,
+      "actualMeshDepthMM": 49.99999701976777,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-16-center",
+      "expectedDepthMM": 37,
+      "actualMeshDepthMM": 37.00000047683716,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-17-center",
+      "expectedDepthMM": 28,
+      "actualMeshDepthMM": 27.999999001622207,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-18-center",
+      "expectedDepthMM": 32,
+      "actualMeshDepthMM": 32.000000588595874,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-13-right",
+      "expectedDepthMM": 14,
+      "actualMeshDepthMM": 13.999989256262786,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-12-right",
+      "expectedDepthMM": 30,
+      "actualMeshDepthMM": 29.999976046383388,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "edge-11-right",
+      "expectedDepthMM": 14,
+      "actualMeshDepthMM": 13.999771326780323,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-10-right",
+      "expectedDepthMM": 17,
+      "actualMeshDepthMM": 17.000000923872,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-9-right",
+      "expectedDepthMM": 35,
+      "actualMeshDepthMM": 34.999987110495574,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-8-right",
+      "expectedDepthMM": 15,
+      "actualMeshDepthMM": 14.999974519014366,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "edge-7-right",
+      "expectedDepthMM": 36,
+      "actualMeshDepthMM": 35.99993139505387,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "edge-6-right",
+      "expectedDepthMM": 19,
+      "actualMeshDepthMM": 18.99994537234307,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "edge-5-right",
+      "expectedDepthMM": 25,
+      "actualMeshDepthMM": 24.999909102916725,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "pocket-4-right",
+      "expectedDepthMM": 30,
+      "actualMeshDepthMM": 29.99957650899887,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "flat-sloper-2-left",
+      "expectedDepthMM": 55,
+      "actualMeshDepthMM": 54.999995976686485,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "flat-sloper-2-right",
+      "expectedDepthMM": 55,
+      "actualMeshDepthMM": 54.999995976686485,
+      "passesUnchanged002MMGate": true
+    },
+    {
+      "contactID": "round-sloper-3-center",
+      "expectedDepthMM": 65,
+      "actualMeshDepthMM": 64.99999761581421,
+      "passesUnchanged002MMGate": true
+    }
+  ],
+  "descriptorContactBounds": [
+    {
+      "contactID": "edge-11-left",
+      "maximumNormalizedBoundsError": 0.7567552809203982
+    },
+    {
+      "contactID": "edge-11-right",
+      "maximumNormalizedBoundsError": 0.7567569840451223
+    },
+    {
+      "contactID": "edge-5-left",
+      "maximumNormalizedBoundsError": 0.10643616433832914
+    },
+    {
+      "contactID": "edge-5-right",
+      "maximumNormalizedBoundsError": 0.10643616433832914
+    },
+    {
+      "contactID": "edge-6-left",
+      "maximumNormalizedBoundsError": 0.018013802121980116
+    },
+    {
+      "contactID": "edge-6-right",
+      "maximumNormalizedBoundsError": 0.018018131566400086
+    },
+    {
+      "contactID": "edge-7-left",
+      "maximumNormalizedBoundsError": 0.10910441246379415
+    },
+    {
+      "contactID": "edge-7-right",
+      "maximumNormalizedBoundsError": 0.10910424509664546
+    },
+    {
+      "contactID": "flat-sloper-2-left",
+      "maximumNormalizedBoundsError": 0.437044373348521
+    },
+    {
+      "contactID": "flat-sloper-2-right",
+      "maximumNormalizedBoundsError": 0.437044373348521
+    },
+    {
+      "contactID": "jug-1-left",
+      "maximumNormalizedBoundsError": 0.427928683968662
+    },
+    {
+      "contactID": "jug-1-right",
+      "maximumNormalizedBoundsError": 0.427928683968662
+    },
+    {
+      "contactID": "jug-14-center",
+      "maximumNormalizedBoundsError": 0.8234238322047823
+    },
+    {
+      "contactID": "pocket-10-left",
+      "maximumNormalizedBoundsError": 0.24251186086976118
+    },
+    {
+      "contactID": "pocket-10-right",
+      "maximumNormalizedBoundsError": 0.24250957878925183
+    },
+    {
+      "contactID": "pocket-12-left",
+      "maximumNormalizedBoundsError": 0.6476669523013311
+    },
+    {
+      "contactID": "pocket-12-right",
+      "maximumNormalizedBoundsError": 0.6476655930730775
+    },
+    {
+      "contactID": "pocket-13-left",
+      "maximumNormalizedBoundsError": 0.5970194474412249
+    },
+    {
+      "contactID": "pocket-13-right",
+      "maximumNormalizedBoundsError": 0.5970174334412249
+    },
+    {
+      "contactID": "pocket-15-center",
+      "maximumNormalizedBoundsError": 0.531532350392274
+    },
+    {
+      "contactID": "pocket-16-center",
+      "maximumNormalizedBoundsError": 0.09102066949864951
+    },
+    {
+      "contactID": "pocket-17-center",
+      "maximumNormalizedBoundsError": 0.28576992106600557
+    },
+    {
+      "contactID": "pocket-18-center",
+      "maximumNormalizedBoundsError": 0.6564676444504502
+    },
+    {
+      "contactID": "pocket-4-left",
+      "maximumNormalizedBoundsError": 0.25225333197970756
+    },
+    {
+      "contactID": "pocket-4-right",
+      "maximumNormalizedBoundsError": 0.25225541297970755
+    },
+    {
+      "contactID": "pocket-8-left",
+      "maximumNormalizedBoundsError": 0.47747782321759996
+    },
+    {
+      "contactID": "pocket-8-right",
+      "maximumNormalizedBoundsError": 0.4774771352516016
+    },
+    {
+      "contactID": "pocket-9-left",
+      "maximumNormalizedBoundsError": 0.33796312795878697
+    },
+    {
+      "contactID": "pocket-9-right",
+      "maximumNormalizedBoundsError": 0.33796504038618996
+    },
+    {
+      "contactID": "round-sloper-3-center",
+      "maximumNormalizedBoundsError": 0.5699405165939848
+    }
+  ],
+  "toleranceMM": 0.02
+}

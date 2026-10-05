@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "boardID": "nature.stone-hanger-mini",
+  "number": 10,
+  "appWorkflowPassed": false,
+  "sourcePlanID": "research.abrahangs",
+  "sourceWorkStep": 17,
+  "sourceRestStep": 18,
+  "issue": "Landscape next-hold preview retains red work highlight during rest with unchanged granite-edge-15 ID",
+  "wholeWorkFrame": "app-captures/10-workout-landscape-work-highlight.png",
+  "wholeRestFrame": "app-captures/10-workout-landscape-rest-preview.png",
+  "nativeGeometryChanged": false,
+  "productionViewChanges": false,
+  "reservation": "Shared view/renderer work owned separately; no overlapping edit attempted"
+}

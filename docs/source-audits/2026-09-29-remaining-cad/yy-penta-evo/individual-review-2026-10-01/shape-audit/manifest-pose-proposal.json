@@ -1,0 +1,329 @@
+{
+  "canonicalPoses": {
+    "duo": {
+      "camera": {
+        "fitPadding": 0.1,
+        "viewDirection": [
+          -0.3252804860140796,
+          -0.10569003670618689,
+          -0.9396926207859084
+        ]
+      },
+      "rotation": [
+        0.0,
+        0.0,
+        0.5877852522924731,
+        0.8090169943749475
+      ]
+    },
+    "edge-15": {
+      "camera": {
+        "fitPadding": 0.1,
+        "viewDirection": [
+          0.3252804860140796,
+          -0.10569003670618679,
+          -0.9396926207859084
+        ]
+      },
+      "rotation": [
+        0.0,
+        0.0,
+        0.5877852522924732,
+        -0.8090169943749473
+      ]
+    },
+    "edge-20": {
+      "camera": {
+        "fitPadding": 0.1,
+        "viewDirection": [
+          0.2198463103929542,
+          0.26200263022938497,
+          -0.9396926207859084
+        ]
+      },
+      "rotation": [
+        0.0,
+        0.0,
+        0.9396926207859084,
+        -0.3420201433256687
+      ]
+    },
+    "mono": {
+      "camera": {
+        "fitPadding": 0.1,
+        "viewDirection": [
+          -0.3420201433256687,
+          -7.594372760115069e-17,
+          -0.9396926207859084
+        ]
+      },
+      "rotation": [
+        0.0,
+        0.0,
+        0.7071067811865475,
+        0.7071067811865476
+      ]
+    },
+    "primary": {
+      "camera": {
+        "fitPadding": 0.1,
+        "viewDirection": [
+          -0.21984631039295427,
+          0.2620026302293849,
+          -0.9396926207859086
+        ]
+      },
+      "rotation": [
+        0.0,
+        0.0,
+        0.9396926207859084,
+        0.3420201433256689
+      ]
+    },
+    "reverse": {
+      "camera": {
+        "fitPadding": 0.1,
+        "viewDirection": [
+          0.3252804860140797,
+          -0.10569003670618689,
+          0.9396926207859084
+        ]
+      },
+      "rotation": [
+        -0.5877852522924731,
+        0.8090169943749475,
+        3.599146639029983e-17,
+        4.953800363085458e-17
+      ]
+    },
+    "tray": {
+      "camera": {
+        "fitPadding": 0.1,
+        "viewDirection": [
+          0.0,
+          -0.3420201433256687,
+          -0.9396926207859084
+        ]
+      },
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  },
+  "notes": [
+    "All rotations and numeric station locations are native-derived display adaptations, not manufacturer angles or coordinates.",
+    "Camera directions are stored in unposed model space so the posed world camera remains above the selected opening.",
+    "Pinch contacts are not added: neither retained source image identifies an additional pinch grip; the existing seven documented types and14 physical contact IDs are preserved."
+  ],
+  "positions": [
+    {
+      "contactIDs": [
+        "edge-25-left",
+        "edge-25-right"
+      ],
+      "id": "primary",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "duo-left",
+        "duo-right"
+      ],
+      "id": "duo",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "id": "edge-15",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "id": "edge-20",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "mono-left",
+        "mono-right"
+      ],
+      "id": "mono",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "edge-10-left",
+        "edge-10-right"
+      ],
+      "id": "reverse",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "tray-left",
+        "tray-right"
+      ],
+      "id": "tray",
+      "presentationID": "front-pair"
+    }
+  ],
+  "sourceSHA256": "4fe277d3fedd3252a28d8c6b752eda98cd3c8740bf27167cc5db645c7603a69e",
+  "terminalsByPoseID": {
+    "duo": {
+      "upper-band-loop": {
+        "planeNormal": [
+          -0.30901699437494745,
+          0.9510565162951536,
+          0
+        ],
+        "points": [
+          [
+            0.06398002773395543,
+            0.02041472522548572,
+            0.01
+          ],
+          [
+            0.06398002773395543,
+            0.02041472522548572,
+            -0.01
+          ]
+        ]
+      }
+    },
+    "edge-15": {
+      "upper-band-loop": {
+        "planeNormal": [
+          -0.3090169943749472,
+          -0.9510565162951536,
+          0
+        ],
+        "points": [
+          [
+            -0.06398002773395543,
+            0.020414725225485694,
+            0.01
+          ],
+          [
+            -0.06398002773395543,
+            0.020414725225485694,
+            -0.01
+          ]
+        ]
+      }
+    },
+    "edge-20": {
+      "upper-band-loop": {
+        "planeNormal": [
+          -0.33790816157021447,
+          0.9411790872858565,
+          0
+        ],
+        "points": [
+          [
+            -0.044366425415887215,
+            -0.054598087537046675,
+            0.01
+          ],
+          [
+            -0.044366425415887215,
+            -0.054598087537046675,
+            -0.01
+          ]
+        ]
+      }
+    },
+    "mono": {
+      "upper-band-loop": {
+        "planeNormal": [
+          -2.220446049250313e-16,
+          1.0,
+          0
+        ],
+        "points": [
+          [
+            0.0612892016493796,
+            0.0007071057147969823,
+            0.01
+          ],
+          [
+            0.0612892016493796,
+            0.0007071057147969823,
+            -0.01
+          ]
+        ]
+      }
+    },
+    "primary": {
+      "upper-band-loop": {
+        "planeNormal": [
+          -0.3379081615702148,
+          -0.9411790872858564,
+          0
+        ],
+        "points": [
+          [
+            0.044366425415887235,
+            -0.05459808753704667,
+            0.01
+          ],
+          [
+            0.044366425415887235,
+            -0.05459808753704667,
+            -0.01
+          ]
+        ]
+      }
+    },
+    "reverse": {
+      "upper-band-loop": {
+        "planeNormal": [
+          -0.30901699437494745,
+          -0.9510565162951536,
+          0
+        ],
+        "points": [
+          [
+            -0.06398002773395543,
+            0.020414725225485715,
+            0.01
+          ],
+          [
+            -0.06398002773395543,
+            0.020414725225485715,
+            -0.01
+          ]
+        ]
+      }
+    },
+    "tray": {
+      "upper-band-loop": {
+        "planeNormal": [
+          -1.0,
+          0.0,
+          0
+        ],
+        "points": [
+          [
+            1.601622772315298e-19,
+            0.06374555153342572,
+            0.01
+          ],
+          [
+            1.601622772315298e-19,
+            0.06374555153342572,
+            -0.01
+          ]
+        ]
+      }
+    }
+  }
+}

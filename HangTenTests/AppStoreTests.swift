@@ -11,6 +11,12 @@ final class AppStoreTests: XCTestCase {
 
     deinit {}
 
+    #if DEBUG
+    func testUnitTestHostDetectedInHostedUnitTestRun() {
+        XCTAssertTrue(HangTenApp.isUnitTestHost)
+    }
+    #endif
+
     func testSelectingBoardUpdatesSelectionAndEmitsOnlyBoardFamily() {
         let telemetry = RecordingTelemetry()
         let store = AppStore(
@@ -25,6 +31,27 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(telemetry.events, [
             .boardSelected(family: .compactII)
         ])
+    }
+
+    func testMetoliusIntermediateIsCompatibleWithWoodGripsCompactII() throws {
+        let store = AppStore(defaults: makeDefaults())
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let plan = try XCTUnwrap(
+            store.plans.first { $0.id == "metolius.generic-ten-minute.intermediate" }
+        )
+
+        let unresolvedSteps = plan.steps.compactMap { step -> String? in
+            let hasUnresolvedTask = step.segments.contains { segment in
+                guard segment.kind == .work,
+                      case let .tasks(tasks)? = segment.target else { return false }
+                return (try? ContactResolver.resolve(tasks, step: step, board: board)) == nil
+            }
+            return hasUnresolvedTask ? step.id : nil
+        }
+        XCTAssertFalse(
+            store.isIncompatible(plan, on: board),
+            "Unresolved task steps: \(unresolvedSteps); one-handed board: \(board.isOneHanded)"
+        )
     }
 
     func testSelectedBoardPersistsAndRestoresByStableID() throws {
@@ -47,6 +74,27 @@ final class AppStoreTests: XCTestCase {
         let store = AppStore(defaults: defaults)
 
         XCTAssertEqual(store.selectedBoard.id, BoardCatalog.defaultBoard.id)
+    }
+
+    func testPlanPreviewHighlightsUnspecifiedOneArmTaskBeforeSideChoice() throws {
+        let board = try XCTUnwrap(BoardCatalog.all.first { board in
+            board.contacts.contains { $0.handCapacity == 1 }
+        })
+        let hold = try XCTUnwrap(board.contacts.first { $0.handCapacity == 1 })
+        let step = WorkoutStep(
+            id: "preview-one-arm", number: 1, title: "One arm", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .tasks([[
+                    PlanHandTarget(target: PlanContactPredicate(kind: hold.kind))
+                ]]),
+                timing: .fixed, duration: 10
+            )]
+        )
+        let store = AppStore(defaults: makeDefaults())
+
+        XCTAssertFalse(store.contactIDs(for: step, on: board).isEmpty)
     }
 
     func testMostRecentSavedLoadAdjustmentUsesLatestLocalSessionRegardlessOfPlan() {
@@ -940,7 +988,7 @@ final class AppStoreTests: XCTestCase {
         )
     }
 
-    func testActivityRecordingFailureKeepsLocalHistoryAndDoesNotSaveIncompleteHealthWorkout() {
+    func testActivityRecordingFailureKeepsLocalHistoryAndDoesNotSaveIncompleteHealthWorkout() async {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -962,6 +1010,13 @@ final class AppStoreTests: XCTestCase {
             segmentIndex: stopwatchIndex
         )
 
+        let historyRecorded = expectation(description: "local history published after recording failure")
+        let historyObservation = appStore.$workoutHistory
+            .filter { $0.sessionCount == 1 }
+            .prefix(1)
+            .sink { _ in historyRecorded.fulfill() }
+        defer { historyObservation.cancel() }
+
         appStore.markSessionComplete(
             plan,
             board: appStore.board(for: plan),
@@ -969,7 +1024,7 @@ final class AppStoreTests: XCTestCase {
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_600)
         )
-        waitForHistory(in: appStore)
+        await fulfillment(of: [historyRecorded], timeout: 5)
 
         XCTAssertEqual(appStore.workoutHistory.sessionCount, 1)
         XCTAssertEqual(historyStore.load().count, 1)
@@ -1027,7 +1082,7 @@ final class AppStoreTests: XCTestCase {
         )
     }
 
-    func testAuthorizationRequestResetsCompletionErrorPriorityBeforeRefreshFailure() {
+    func testAuthorizationRequestResetsCompletionErrorPriorityBeforeRefreshFailure() async {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -1040,16 +1095,37 @@ final class AppStoreTests: XCTestCase {
             defaults: defaults
         )
 
+        // Await published events so the main queue can deliver history callbacks
+        // even while a cold simulator is initializing the app's rendering services.
+        // CI took 10 s here while cold graphics startup delayed the callback.
+        let completionFailed = expectation(description: "completion sync error published")
+        let completionObservation = appStore.$healthAuthorizationError
+            .filter { $0 == "Session was saved locally and will retry Apple Health sync." }
+            .prefix(1)
+            .sink { _ in completionFailed.fulfill() }
+        defer { completionObservation.cancel() }
+
         appStore.markSessionComplete(
             activityPlan(requirement: nil),
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_600)
         )
-        waitUntil { appStore.healthAuthorizationError != nil }
+        await fulfillment(of: [completionFailed], timeout: 15)
+        XCTAssertEqual(
+            appStore.healthAuthorizationError,
+            "Session was saved locally and will retry Apple Health sync."
+        )
         healthStore.fetchResult = .failure(FakeHealthError.failed)
 
+        let refreshFailed = expectation(description: "history refresh error published")
+        let refreshObservation = appStore.$healthAuthorizationError
+            .filter { $0 == "Apple Health history could not sync. Local history remains available." }
+            .prefix(1)
+            .sink { _ in refreshFailed.fulfill() }
+        defer { refreshObservation.cancel() }
+
         appStore.requestHealthAuthorization()
-        waitUntil { appStore.healthAuthorizationError != nil }
+        await fulfillment(of: [refreshFailed], timeout: 5)
 
         XCTAssertEqual(
             appStore.healthAuthorizationError,
@@ -1344,10 +1420,19 @@ final class AppStoreTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let deadline = Date().addingTimeInterval(1)
-        while appStore.workoutHistory.sessionCount == 0, Date() < deadline {
-            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
-        }
+        let historyPublished = XCTestExpectation(description: "Completed session published to workout history")
+        let subscription = appStore.$workoutHistory
+            .first { $0.sessionCount == 1 }
+            .sink { _ in historyPublished.fulfill() }
+        defer { subscription.cancel() }
+
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [historyPublished], timeout: 10),
+            .completed,
+            "Workout history did not publish the completed session",
+            file: file,
+            line: line
+        )
         XCTAssertEqual(appStore.workoutHistory.sessionCount, 1, file: file, line: line)
     }
 
@@ -1356,10 +1441,18 @@ final class AppStoreTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let deadline = Date().addingTimeInterval(1)
-        while !condition(), Date() < deadline {
-            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
-        }
+        guard !condition() else { return }
+        let conditionMet = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in condition() },
+            object: nil
+        )
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [conditionMet], timeout: 10),
+            .completed,
+            "Asynchronous AppStore condition was not satisfied",
+            file: file,
+            line: line
+        )
         XCTAssertTrue(condition(), file: file, line: line)
     }
 private enum FakeHealthError: Error {
@@ -1666,7 +1759,8 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         XCTAssertEqual(store.workoutLaunchDecision, .allowed)
     }
 
-    func testSuccessfulSessionPersistenceConsumesCreditOnlyAfterCompletion() {
+    /// Verifies that a successful append consumes a free-workout credit only after persistence completes.
+    func testSuccessfulSessionPersistenceConsumesCreditOnlyAfterCompletion() async {
         let defaults = makeDefaults()
         let accessStore = WorkoutAccessStore(defaults: defaults)
         let sessionStore = ControllableAppendWorkoutSessionStore()
@@ -1688,11 +1782,12 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         XCTAssertEqual(accessStore.freeWorkoutsUsed, 0)
 
         sessionStore.completeAppend(.success(()))
-        waitUntil { accessStore.freeWorkoutsUsed == 1 }
+        await waitForSessionPersistence { accessStore.freeWorkoutsUsed == 1 }
 
         XCTAssertEqual(accessStore.freeWorkoutsUsed, 1)
     }
 
+    /// Verifies that a failed append reports its error without consuming a free-workout credit.
     func testFailedSessionPersistenceDoesNotConsumeCredit() async {
         let defaults = makeDefaults()
         let accessStore = WorkoutAccessStore(defaults: defaults)
@@ -1704,11 +1799,6 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             purchaseManager: PurchaseManager(client: FakeStoreKitClient())
         )
         let record = workoutSessionRecord()
-        let persistenceFailed = expectation(description: "persistence failure recorded")
-        let observation = store.$sessionPersistenceError.dropFirst().sink { error in
-            guard error != nil else { return }
-            persistenceFailed.fulfill()
-        }
 
         store.markSessionComplete(
             PlanCatalog.metoliusTenMinute,
@@ -1717,10 +1807,31 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             session: record
         )
         sessionStore.completeAppend(.failure(SessionAppendTestError.failed))
-        await fulfillment(of: [persistenceFailed], timeout: 1)
+        // Match the success-path test: keep the store alive while its weak
+        // main-actor callback publishes the persistence result.
+        await waitForSessionPersistence { store.sessionPersistenceError != nil }
 
         XCTAssertEqual(accessStore.freeWorkoutsUsed, 0)
-        withExtendedLifetime(observation) {}
+    }
+
+    /// Suspends main-actor polling for up to one second so the persistence completion task can run.
+    private func waitForSessionPersistence(
+        _ condition: @escaping () -> Bool,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) async {
+        let deadline = ContinuousClock.now.advanced(by: .seconds(1))
+        // Append completion schedules a main-actor Task. Suspend this main-actor
+        // test so that task can finish before checking the persisted result.
+        while !condition(), ContinuousClock.now < deadline {
+            do {
+                try await Task.sleep(for: .milliseconds(10))
+            } catch {
+                XCTFail("Persistence wait was cancelled", file: file, line: line)
+                return
+            }
+        }
+        XCTAssertTrue(condition(), file: file, line: line)
     }
 
     func testLoadingHistoricSessionsDoesNotConsumeCredits() {
@@ -1938,11 +2049,12 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
 
             let resolvesAPair = compatibleBoards.contains { board in
                 plan.steps.filter { !$0.isRestStep }.allSatisfy { step in
-                    ((try? ContactResolver.resolve(
-                        step.workRequirements,
-                        step: step,
-                        board: board
-                    )) ?? []).count == 2
+                    step.segments.filter { $0.kind == .work }.allSatisfy { segment in
+                        guard let tasks = segment.target?.planTasks, !tasks.isEmpty else { return false }
+                        return tasks.allSatisfy { task in
+                            ((try? ContactResolver.resolve(task, step: step, board: board)) ?? []).count == 2
+                        }
+                    }
                 }
             }
             XCTAssertTrue(resolvesAPair, "\(planID) should resolve a two-hold pair on a compatible board")
@@ -2220,7 +2332,9 @@ private final class ControllableAppendWorkoutSessionStore: WorkoutSessionStoring
     func completeAppend(_ result: Result<Void, Error>) {
         let completion = appendCompletion
         appendCompletion = nil
-        completion?(result)
+        DispatchQueue.main.async {
+            completion?(result)
+        }
     }
 }
 

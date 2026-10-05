@@ -1,0 +1,222 @@
+[
+  {
+    "AXLabel": " ",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 874,
+      "width": 402,
+      "y": 0,
+      "x": 0
+    }
+  },
+  {
+    "AXLabel": null,
+    "AXUniqueId": "SBSwitcherWindow:Main",
+    "AXValue": null,
+    "frame": {
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "x": 0
+    }
+  },
+  {
+    "AXLabel": null,
+    "AXUniqueId": "AppSwitcherContentView",
+    "AXValue": null,
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874
+    }
+  },
+  {
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": "card:com.hangten.training:sceneID:com.hangten.training-1A38E1B5-902C-4435-AF3B-EE9E3024CAD6",
+    "AXValue": null,
+    "frame": {
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "x": 0
+    }
+  },
+  {
+    "AXLabel": "6:46\u202fPM",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 55,
+      "y": 22.333333333333314,
+      "width": 38,
+      "height": 20.33333333333333
+    }
+  },
+  {
+    "AXLabel": "Cellular",
+    "AXUniqueId": null,
+    "AXValue": "No signal",
+    "frame": {
+      "x": 288.3333333333333,
+      "y": 26.333333333333314,
+      "width": 19.333333333333314,
+      "height": 12.333333333333336
+    }
+  },
+  {
+    "AXLabel": null,
+    "AXUniqueId": "3 of 3 Wi-Fi bars",
+    "AXValue": "SSID, 3 of 3 Wi-Fi bars",
+    "frame": {
+      "x": 315,
+      "y": 26.333333333333314,
+      "width": 17,
+      "height": 12.333333333333336
+    }
+  },
+  {
+    "AXLabel": "100% battery power",
+    "AXUniqueId": null,
+    "AXValue": "Not charging",
+    "frame": {
+      "x": 339.3333333333333,
+      "y": 26,
+      "width": 27.333333333333314,
+      "height": 13
+    }
+  },
+  {
+    "AXLabel": "Open in \u201cHang Ten\u201d?",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 320,
+      "height": 126,
+      "x": 41,
+      "y": 388
+    }
+  },
+  {
+    "AXLabel": "Open in \u201cHang Ten\u201d?",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 20.333333333333314,
+      "x": 71,
+      "y": 409.6666666666667,
+      "width": 260
+    }
+  },
+  {
+    "AXLabel": "Vertical scroll bar, 2 pages",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "y": 388,
+      "height": 46,
+      "width": 30,
+      "x": 328
+    }
+  },
+  {
+    "AXLabel": "Horizontal scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "x": 41,
+      "height": 23,
+      "width": 320,
+      "y": 408
+    }
+  },
+  {
+    "AXLabel": "Vertical scroll bar, 2 pages",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "y": 388,
+      "height": 46,
+      "width": 30,
+      "x": 328
+    }
+  },
+  {
+    "AXLabel": "Horizontal scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "y": 408,
+      "height": 23,
+      "width": 320,
+      "x": 41
+    }
+  },
+  {
+    "AXLabel": "Cancel",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 57,
+      "height": 48,
+      "width": 140,
+      "y": 450
+    }
+  },
+  {
+    "AXLabel": "Open",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 450,
+      "height": 48,
+      "width": 140,
+      "x": 205
+    }
+  },
+  {
+    "AXLabel": "Vertical scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "y": 434,
+      "height": 80,
+      "width": 30,
+      "x": 328
+    }
+  },
+  {
+    "AXLabel": "Horizontal scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "y": 481,
+      "height": 30,
+      "width": 320,
+      "x": 41
+    }
+  },
+  {
+    "AXLabel": "Vertical scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "y": 434,
+      "height": 80,
+      "width": 30,
+      "x": 328
+    }
+  },
+  {
+    "AXLabel": "Horizontal scroll bar, 1 page",
+    "AXUniqueId": null,
+    "AXValue": "0%",
+    "frame": {
+      "y": 481,
+      "height": 30,
+      "width": 320,
+      "x": 41
+    }
+  }
+]

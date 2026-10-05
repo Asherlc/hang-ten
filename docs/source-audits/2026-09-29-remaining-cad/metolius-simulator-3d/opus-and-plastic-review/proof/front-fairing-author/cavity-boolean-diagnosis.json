@@ -1,0 +1,31 @@
+{
+  "body": {
+    "valid": true,
+    "solids": 1,
+    "bop": "BOP check found the following errors:\nError in Face: BOPAlgo GeomAbs_C0\nError in Face: BOPAlgo GeomAbs_C0\n",
+    "afterIsolatedCut": {
+      "valid": true,
+      "solids": 1,
+      "remainingCutterVolume": 0.0,
+      "volumeRemoved": 6233.075785148889,
+      "faces": 361
+    }
+  },
+  "base": {
+    "valid": true,
+    "solids": 1,
+    "bop": "BOP check found the following errors:\nError in Face: BOPAlgo GeomAbs_C0\nError in Face: BOPAlgo GeomAbs_C0\nError in Edge: BOPAlgo_InvalidCurveOnSurface\nError in Face: BOPAlgo_InvalidCurveOnSurface\nError in Edge: BOPAlgo_InvalidCurveOnSurface\nError in Face: BOPAlgo_InvalidCurveOnSurface\n",
+    "afterIsolatedCut": {
+      "valid": true,
+      "solids": 1,
+      "remainingCutterVolume": 0.0,
+      "volumeRemoved": 6834.29836521484,
+      "faces": 87
+    }
+  },
+  "cutter": {
+    "valid": true,
+    "solids": 1,
+    "bop": "pass"
+  }
+}

@@ -1,0 +1,593 @@
+{
+  "owner": "placid-badger",
+  "method": "actual USDZ triangles and cached metadata cord tubes; barycentric per-pixel orthographic depth; no photo processing/cropping/geometry inference",
+  "inputManifest": {
+    "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/render-inputs.json",
+    "sha256": "ed04ad07b6032723b5f4d7662e1d9d8cf3bfa31fd649ffdcbb30b93953d07cc5"
+  },
+  "inputsBefore": {
+    "prior": {
+      "path": ".context/placid-badger/flash-board-review14/root/prior-canonical",
+      "files": {
+        "tension-flash-board.FCStd": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+        "assets/primary.usdz": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+        "assets/primary.model.json": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e",
+        "suspension.json": "25830bef1ac6409ec5f1d7ac5e13317de974f96f1fa1037947554d64cbf5fc0b"
+      }
+    },
+    "rejected": {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-final-package/Hangboards/tension-flash-board",
+      "files": {
+        "tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+        "assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+        "assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+        "suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17"
+      }
+    },
+    "current": {
+      "path": ".context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-final-package/Hangboards/tension-flash-board",
+      "files": {
+        "tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+        "assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+        "assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+        "suspension.json": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9"
+      }
+    }
+  },
+  "filesAfter": {
+    "prior": {
+      "suspension.json": "25830bef1ac6409ec5f1d7ac5e13317de974f96f1fa1037947554d64cbf5fc0b",
+      "tension-flash-board.FCStd": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+      "assets/primary.usdz": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+      "assets/primary.model.json": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e"
+    },
+    "rejected": {
+      "suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+      "tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+      "assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+      "assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
+    },
+    "current": {
+      "suspension.json": "73d29a328cd20dfe9dd304cb5775d1992b48e9c7fe68dce1400ad115e3ce3ce9",
+      "tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+      "assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+      "assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755"
+    }
+  },
+  "packageBytesUnchanged": true,
+  "rendererSHA256": "b6158261a0e9e1f0f16f68a599106e3a7fd3fe9f17d14a95b9b47a2f3c190d4c",
+  "sceneScript": {
+    "path": ".context/placid-badger/flash-board-review14/post-handoff-preparation/render-cord-views.py",
+    "sha256": "48d44cbee7d98156866e2602c6193145584b6b638b8b0c6b4ec2a7fb940888b4"
+  },
+  "camera": {
+    "front": "world XYZ projected; eye +Z",
+    "side": "world ZYX projected; eye +X",
+    "top": "world XZY projected; eye +Y",
+    "reverse-oblique": "original30degreeYprojection followed by X/Z sign reversal; eye [0.5,0,-0.8660254]",
+    "matching": "common projected full-scene union per comparison sheet, same scale and center both columns; upright inline fixed original bounds"
+  },
+  "images": [
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-front-prior-current.png",
+      "sha256": "78dc82dd2ac3c8fac10b51c32e6fede7d33c2dd8a1af3012fd54d563dd543233",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "three-edge-upright",
+      "view": "front",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          0.0,
+          -0.101594265
+        ],
+        [
+          0.5,
+          0.576689394451508
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-side-prior-current.png",
+      "sha256": "60e4540922471753d76fd1f55b12af7d9f4f6727afe15b3e2e6f24853a01a1b5",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "three-edge-upright",
+      "view": "side",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          -0.004193530999999999,
+          -0.101594265
+        ],
+        [
+          0.08018903698807733,
+          0.576689394451508
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-top-prior-current.png",
+      "sha256": "5fb7607b4e586c5c0778342e1cb2548428dda4a0c58e2c28112ef06972592cdb",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "three-edge-upright",
+      "view": "top",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          0.0,
+          -0.004193530999999999
+        ],
+        [
+          0.5,
+          0.08018903698807733
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-reverse-oblique-prior-current.png",
+      "sha256": "d1c82e382a809b6faa085fb8b62ea8f66e4e09fb440421bc1a4d271ed93e34a3",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "three-edge-upright",
+      "view": "reverse-oblique",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          -0.47100679535030787,
+          -0.101594265
+        ],
+        [
+          -5.904807018272672e-06,
+          0.576689394451508
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-inverted-front-prior-current.png",
+      "sha256": "11215903d5e3ab0e2093a6c9cb2cefd2462d9209c69f73a7645b5cd93ea4971a",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "three-edge-inverted",
+      "view": "front",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          0.0,
+          -0.101595398
+        ],
+        [
+          0.5,
+          0.5766893945797973
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-inverted-side-prior-current.png",
+      "sha256": "2c36c95c946801ed63e503c72754d515108f121d7273d29f9f55fe4fb47c18ef",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "three-edge-inverted",
+      "view": "side",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          -0.004189040988077304,
+          -0.101595398
+        ],
+        [
+          0.080193529,
+          0.5766893945797973
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-inverted-top-prior-current.png",
+      "sha256": "47f4101cb16bd1ee773ebd1fb77d79dd2876469b3faf58d77d00332baff3ff2c",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "three-edge-inverted",
+      "view": "top",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          0.0,
+          -0.004189040988077304
+        ],
+        [
+          0.5,
+          0.080193529
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-inverted-reverse-oblique-prior-current.png",
+      "sha256": "7ed00d49647a4a783aa04ffe3133c785d7526440f4e8843ab0ab0cf172af6d76",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "three-edge-inverted",
+      "view": "reverse-oblique",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          -0.4710067960852011,
+          -0.101595398
+        ],
+        [
+          -5.905541911492512e-06,
+          0.5766893945797973
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-front-prior-current.png",
+      "sha256": "272189ffe827b6074a0ba88b65f0774893cc87f2fe72adc2692cf8d4500b0479",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "two-edge-upright",
+      "view": "front",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          0.0,
+          -0.12166649800000001
+        ],
+        [
+          0.5,
+          0.576677899594065
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-side-prior-current.png",
+      "sha256": "5553aa95694339dda3d77197ba9896bc9a59fafb66b58c46aec6543395004122",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "two-edge-upright",
+      "view": "side",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          -0.002860605999976237,
+          -0.12166649800000001
+        ],
+        [
+          0.07806703793617631,
+          0.576677899594065
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-top-prior-current.png",
+      "sha256": "11c01b6e7268e3747ba46e29f16b789a7e91fbfda5585d24eb021a9116240a07",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "two-edge-upright",
+      "view": "top",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          0.0,
+          -0.002860605999976237
+        ],
+        [
+          0.5,
+          0.07806703793617631
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-reverse-oblique-prior-current.png",
+      "sha256": "58e89aec9c3ae4fe03bf69ccf684f23326a291577a0c306a3d788bbdbc5d0556",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "two-edge-upright",
+      "view": "reverse-oblique",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          -0.4710067960852011,
+          -0.12166649800000001
+        ],
+        [
+          -5.905541911492512e-06,
+          0.576677899594065
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-inverted-front-prior-current.png",
+      "sha256": "0270e9d8eb02e39b4232d59e3aed0cb37b8983141b19ccaacf5214d37a48135e",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "two-edge-inverted",
+      "view": "front",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          0.0,
+          -0.12166662200000002
+        ],
+        [
+          0.5,
+          0.5766778994790198
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-inverted-side-prior-current.png",
+      "sha256": "80507571cd55f9456db61e897041d25ec829b3c328a32ba2c14de2f288c10434",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "two-edge-inverted",
+      "view": "side",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          -0.0020670410422240176,
+          -0.12166662200000002
+        ],
+        [
+          0.07886060399997624,
+          0.5766778994790198
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-inverted-top-prior-current.png",
+      "sha256": "3e8d9a86cb910c96636f89b41cf1ef00ca16e4d5895788466a85eed3e60358e7",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "two-edge-inverted",
+      "view": "top",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          0.0,
+          -0.0020670410422240176
+        ],
+        [
+          0.5,
+          0.07886060399997624
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-inverted-reverse-oblique-prior-current.png",
+      "sha256": "9be5e94cb89e9cda2d19deafb5e0160647ae7cdd9a781946ac6816c42d585162",
+      "roles": [
+        "prior",
+        "current"
+      ],
+      "pose": "two-edge-inverted",
+      "view": "reverse-oblique",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          -0.47100679535030787,
+          -0.12166662200000002
+        ],
+        [
+          -5.904807018272672e-06,
+          0.5766778994790198
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-current-inline.png",
+      "sha256": "434698306c42b0c4509d9873ae98f51e87bc6abbcd0e4d91761744211b90f8e5",
+      "roles": [
+        "current"
+      ],
+      "pose": "three-edge-upright",
+      "view": "reverse-oblique",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          -0.5,
+          -0.142
+        ],
+        [
+          0.03,
+          0.306
+        ]
+      ],
+      "canvasPixels": [
+        1000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/three-edge-upright-rejected-current.png",
+      "sha256": "6decca5b6ad4e4e2449c83a0153bd2c4846bf8063aa5b2ee6a25f366a702d001",
+      "roles": [
+        "rejected",
+        "current"
+      ],
+      "pose": "three-edge-upright",
+      "view": "reverse-oblique",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          -0.47100679535030787,
+          -0.101594265
+        ],
+        [
+          -5.904807018272672e-06,
+          0.2771196525099602
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-current-inline.png",
+      "sha256": "2eadaee78638a6a5135060fb0fc5dbb249c3f1dda40c21d65a1e4bd2c8184fd8",
+      "roles": [
+        "current"
+      ],
+      "pose": "two-edge-upright",
+      "view": "reverse-oblique",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          -0.5,
+          -0.142
+        ],
+        [
+          0.03,
+          0.306
+        ]
+      ],
+      "canvasPixels": [
+        1000,
+        700
+      ]
+    },
+    {
+      "path": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/final/two-edge-upright-rejected-current.png",
+      "sha256": "f7c44ac9767e7cefcd1cd444f259227f56e2e4a34945e8618182ed55b2aeff98",
+      "roles": [
+        "rejected",
+        "current"
+      ],
+      "pose": "two-edge-upright",
+      "view": "reverse-oblique",
+      "wholeBoardAndSupport": true,
+      "sameCameraAndScale": true,
+      "projectedBoundsM": [
+        [
+          -0.4710067960852011,
+          -0.11890548000000001
+        ],
+        [
+          -5.905541911492512e-06,
+          0.2771155234596851
+        ]
+      ],
+      "canvasPixels": [
+        2000,
+        700
+      ]
+    }
+  ],
+  "appFrames": 0,
+  "manufacturerAccuracyClaim": false,
+  "humanAcceptance": "pending"
+}

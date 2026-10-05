@@ -1,0 +1,75 @@
+{
+  "createdUTC": "2026-10-03T19:11:58.728710+00:00",
+  "scope": "Read-only source/API review following stopped partial readiness-evo; no source, test, Simulator or build action.",
+  "sourceSnapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-propagation-stall-source",
+  "sourceHashes": [
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "ade41f67877d8c6c19083b36587aa82489d5debd98eef17881d9b527cdca4d75"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "2af37de375d637f12418a77749f78ff92bb00048915695f62f233baedc474abb"
+    },
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "sha256": "417a4b27d7ae0ce1d1fa7f4dee440fadcea12d7a8c1b7a33a285edac61709e8f"
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "738908c478aa2303f8b399d94292ae7aa6b2179de2a26e68a58c3b41af176aca"
+    }
+  ],
+  "observedRun": {
+    "completionSHA256": "5b02736a46d1909dc7b4c0b7834af20f1459fda2e0100e7ace0431bbd3064a39",
+    "captureCompleted": false,
+    "actualCaptures": 22,
+    "plannedCaptures": 58,
+    "wholeImageIndividuallyReviewed": {
+      "path": "readiness-evo/elapsed-022s.png",
+      "sha256": "874d1ad88e1afc037db8f894ff1bcc740fbae05a4ffaf7d512edf9c79776922f",
+      "observation": "Preparing at00:10, board with bilateral red edges and both hands visible. This is not an active-Hang frame."
+    },
+    "causalLimit": "This screenshot cannot identify which readiness preference/guard blocked startup; no per-host readiness telemetry in this review."
+  },
+  "findings": [
+    {
+      "boundary": "BoardModelSurface outer preference",
+      "source": "Surface sets WorkoutRendererReadinessKey to pendingPreparation. Once ready that value is empty, while the child supplies the same key.",
+      "interpretation": "This is an explicit parent preference write where pass-through/merge is intended; it can mask descendant readiness. Apple documents preference as setting a value and transformPreference as modifying the existing value. Treat replacing it as correction of the composition contract, not proof it was the sole observed blocker.",
+      "minimalCorrection": "Use transformPreference and merge the Surface false record only for loading/unavailable. When ready leave incoming child value unchanged. Preserve false for unavailable and all request IDs. Do not set an empty preference at the ready parent."
+    },
+    {
+      "boundary": "root.scene sampled during make/update",
+      "source": "Board make adds root/camera then calls applySync; hands add root then sync/report. Reporting guards require scene membership inside those closures. There is no readiness attachment subscription; unchanged hands need not schedule a subsequent update after attachment.",
+      "interpretation": "The readiness latch depends on a later attachment state without a guaranteed observation event. Apple describes RealityView update as responding to view state changes, not a per-frame or guaranteed post-attachment notification. Exact nil membership at the failed make was not recorded, so this remains a source-supported failure path rather than a measured cause.",
+      "minimalCorrection": "Define this gate as completed CPU host configuration: actual make invoked content.add, then successful sync/fit at finite positive viewport. Remove Scene-membership checks from that preparation milestone; keep token/model/input signature matching, valid selection and asset availability. Both private board applySync call sites are actual make/update; hand report also follows make/update sync. No timer, forced camera invalidation, SceneEvents polling or redraw loop is required."
+    }
+  ],
+  "preserve": [
+    "Request-generation and synchronized semantic/viewport/model identity keys; stale mismatches must still fail.",
+    "Unavailable content remains not ready. Do not convert load-ready alone into host-ready.",
+    "Original compile failure,22-frame stopped trial and its PENDING visual status remain untouched.",
+    "No GPU presentation or frame-completion claim from CPU make/sync. Existing three-second countdown can follow preparation, but whole first-Hang proof remains necessary.",
+    "The modelID addition addresses the prior same-input replacement concern; no source identity concern remains for that key."
+  ],
+  "minimalVerification": [
+    "A hosted preference composition check should prove a ready child survives its ready Surface parent, while loading/unavailable contributes false. Pure gate dictionary tests do not exercise this.",
+    "Then fresh normal workflow must leave Preparing and show the full board and required hands at the earliest active checkpoint, followed by correct natural active/rest/next-active colors. Stalled22frames are no repair proof."
+  ],
+  "primaryReferences": [
+    {
+      "url": "https://developer.apple.com/documentation/swiftui/view/preference(key:value:)",
+      "support": "API sets a preference value."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/swiftui/view/transformpreference(_:_:)",
+      "support": "API transforms an existing preference through an inout value."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/realitykit/realityview",
+      "support": "make configures content; optional update responds to view state. Per-frame work uses a separate mechanism."
+    }
+  ],
+  "referenceAccess": "Apple Markdown endpoints for preference APIs retrieved via bounded urllib after web Markdown click content-type failures. No full Apple text copied into evidence."
+}

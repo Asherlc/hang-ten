@@ -1,0 +1,11 @@
+{
+  "option": [
+    "-collect-test-diagnostics",
+    "never"
+  ],
+  "verifiedByLocalXcodeHelp": "xcodebuild-help-diagnostic-options.txt",
+  "reason": "Avoid the observed ten-minute verbose post-test Simulator diagnostic collection; functional XCTest logs, assertions, attachments and result bundle remain collected.",
+  "onlyFutureUITestCommand": true,
+  "activeFullUnitCommandUnchanged": true,
+  "noTestOrProductionSourceChanges": true
+}

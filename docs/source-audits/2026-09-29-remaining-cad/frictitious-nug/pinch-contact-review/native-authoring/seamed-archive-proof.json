@@ -1,0 +1,36 @@
+{
+  "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+  "sourceBeforeSHA256": "9c4a28fd1263d21b62412dfa16393a856e81d859ec9bd0e8e2255fe458efee20",
+  "changedOriginalArchiveMembers": [
+    "Document.xml",
+    "StringHasher.Table.txt"
+  ],
+  "newArchiveMembers": [
+    "PinchNonRegionWood.Shape.Map.txt",
+    "PinchNonRegionWood.Shape.brp",
+    "PinchPartitionedWood.Shape.Map.txt",
+    "PinchPartitionedWood.Shape.brp",
+    "PinchRegionWood.Shape.Map.txt",
+    "PinchRegionWood.Shape.brp",
+    "PinchReturnPrismTools.Shape.Map.txt",
+    "PinchReturnPrismTools.Shape.brp"
+  ],
+  "newNativeObjects": [
+    "PinchNonRegionWood",
+    "PinchPartitionedWood",
+    "PinchRegionWood",
+    "PinchReturnPrismTools"
+  ],
+  "authorizedExistingObjectPropertyChanges": {
+    "RightBackEntryCut": [
+      "removeNodeID",
+      "removeNodeRole"
+    ],
+    "pinch_60": [
+      "addHangTenUseBodyTrianglesTrue"
+    ]
+  },
+  "all39PriorShapeArchiveMembersBytePreserved": true,
+  "originalStringHasherEntriesPreserved": 2161,
+  "newStringHasherEntries": 817
+}

@@ -1,0 +1,391 @@
+{
+  "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+  "objects": 427,
+  "bodyFeature": "Cut33",
+  "bodyType": "Part::Cut",
+  "valid": true,
+  "solidCount": 1,
+  "volume": 5323666.102382597,
+  "bounds": [
+    660.0,
+    100.00000000000001,
+    100.00000000000014
+  ],
+  "contacts": [
+    {
+      "id": "face-a-left-outer-slot",
+      "nativeFeature": "Contact_face_a_left_outer_slot",
+      "type": "Part::Common",
+      "area": 6118.636177367231,
+      "center": [
+        -265.0,
+        -39.0,
+        14.0
+      ]
+    },
+    {
+      "id": "face-a-right-outer-slot",
+      "nativeFeature": "Contact_face_a_right_outer_slot",
+      "type": "Part::Common",
+      "area": 6118.636177367231,
+      "center": [
+        265.0,
+        -39.0,
+        14.0
+      ]
+    },
+    {
+      "id": "face-a-left-single-pocket",
+      "nativeFeature": "Contact_face_a_left_single_pocket",
+      "type": "Part::Common",
+      "area": 1242.7913250163092,
+      "center": [
+        -301.0,
+        -41.5,
+        -20.0
+      ]
+    },
+    {
+      "id": "face-a-left-dual-pocket",
+      "nativeFeature": "Contact_face_a_left_dual_pocket",
+      "type": "Part::Common",
+      "area": 2396.0587064147503,
+      "center": [
+        -244.0,
+        -41.5,
+        -20.0
+      ]
+    },
+    {
+      "id": "face-a-right-single-pocket",
+      "nativeFeature": "Contact_face_a_right_single_pocket",
+      "type": "Part::Common",
+      "area": 1242.7913250163092,
+      "center": [
+        229.0,
+        -41.5,
+        -20.0
+      ]
+    },
+    {
+      "id": "face-a-right-dual-pocket",
+      "nativeFeature": "Contact_face_a_right_dual_pocket",
+      "type": "Part::Common",
+      "area": 2396.0587064147458,
+      "center": [
+        286.0,
+        -41.5,
+        -20.0
+      ]
+    },
+    {
+      "id": "face-a-center-pull-up-slot",
+      "nativeFeature": "Contact_face_a_center_pull_up_slot",
+      "type": "Part::Common",
+      "area": 4799.999771075662,
+      "center": [
+        0.0,
+        -41.5,
+        -25.0
+      ]
+    },
+    {
+      "id": "face-b-left-outer-slot",
+      "nativeFeature": "Contact_face_b_left_outer_slot",
+      "type": "Part::Common",
+      "area": 5344.109301911649,
+      "center": [
+        -265.0,
+        14.0,
+        41.0
+      ]
+    },
+    {
+      "id": "face-b-right-outer-slot",
+      "nativeFeature": "Contact_face_b_right_outer_slot",
+      "type": "Part::Common",
+      "area": 5344.1093019116515,
+      "center": [
+        265.0,
+        14.0,
+        41.0
+      ]
+    },
+    {
+      "id": "face-b-left-single-pocket",
+      "nativeFeature": "Contact_face_b_left_single_pocket",
+      "type": "Part::Common",
+      "area": 1353.881446860489,
+      "center": [
+        -301.0,
+        -20.0,
+        40.5
+      ]
+    },
+    {
+      "id": "face-b-left-dual-pocket",
+      "nativeFeature": "Contact_face_b_left_dual_pocket",
+      "type": "Part::Common",
+      "area": 2592.1164095805952,
+      "center": [
+        -244.0,
+        -20.0,
+        40.5
+      ]
+    },
+    {
+      "id": "face-b-right-single-pocket",
+      "nativeFeature": "Contact_face_b_right_single_pocket",
+      "type": "Part::Common",
+      "area": 1353.881446860489,
+      "center": [
+        229.0,
+        -20.0,
+        40.5
+      ]
+    },
+    {
+      "id": "face-b-right-dual-pocket",
+      "nativeFeature": "Contact_face_b_right_dual_pocket",
+      "type": "Part::Common",
+      "area": 2592.1164095805907,
+      "center": [
+        286.0,
+        -20.0,
+        40.5
+      ]
+    },
+    {
+      "id": "face-b-center-pull-up-slot",
+      "nativeFeature": "Contact_face_b_center_pull_up_slot",
+      "type": "Part::Common",
+      "area": 5168.101297028972,
+      "center": [
+        0.0,
+        -25.0,
+        40.5
+      ]
+    },
+    {
+      "id": "face-c-left-outer-slot",
+      "nativeFeature": "Contact_face_c_left_outer_slot",
+      "type": "Part::Common",
+      "area": 4587.236273600029,
+      "center": [
+        -265.0,
+        43.0,
+        -14.0
+      ]
+    },
+    {
+      "id": "face-c-right-outer-slot",
+      "nativeFeature": "Contact_face_c_right_outer_slot",
+      "type": "Part::Common",
+      "area": 4587.236273600029,
+      "center": [
+        265.0,
+        43.0,
+        -14.0
+      ]
+    },
+    {
+      "id": "face-c-left-single-pocket",
+      "nativeFeature": "Contact_face_c_left_single_pocket",
+      "type": "Part::Common",
+      "area": 1187.7337708351565,
+      "center": [
+        -301.0,
+        42.0,
+        20.0
+      ]
+    },
+    {
+      "id": "face-c-left-dual-pocket",
+      "nativeFeature": "Contact_face_c_left_dual_pocket",
+      "type": "Part::Common",
+      "area": 2298.9092018081938,
+      "center": [
+        -244.0,
+        42.0,
+        20.0
+      ]
+    },
+    {
+      "id": "face-c-right-single-pocket",
+      "nativeFeature": "Contact_face_c_right_single_pocket",
+      "type": "Part::Common",
+      "area": 1187.7337708351565,
+      "center": [
+        229.0,
+        42.0,
+        20.0
+      ]
+    },
+    {
+      "id": "face-c-right-dual-pocket",
+      "nativeFeature": "Contact_face_c_right_dual_pocket",
+      "type": "Part::Common",
+      "area": 2298.9092018081888,
+      "center": [
+        286.0,
+        42.0,
+        20.0
+      ]
+    },
+    {
+      "id": "face-c-center-pull-up-slot",
+      "nativeFeature": "Contact_face_c_center_pull_up_slot",
+      "type": "Part::Common",
+      "area": 4617.621759936105,
+      "center": [
+        0.0,
+        42.0,
+        25.0
+      ]
+    },
+    {
+      "id": "face-d-left-outer-slot",
+      "nativeFeature": "Contact_face_d_left_outer_slot",
+      "type": "Part::Common",
+      "area": 3857.7318720244302,
+      "center": [
+        -265.0,
+        -14.0,
+        -45.0
+      ]
+    },
+    {
+      "id": "face-d-right-outer-slot",
+      "nativeFeature": "Contact_face_d_right_outer_slot",
+      "type": "Part::Common",
+      "area": 3857.7318720244325,
+      "center": [
+        265.0,
+        -14.0,
+        -45.0
+      ]
+    },
+    {
+      "id": "face-d-left-single-pocket",
+      "nativeFeature": "Contact_face_d_left_single_pocket",
+      "type": "Part::Common",
+      "area": 1298.1848699491327,
+      "center": [
+        -301.0,
+        20.0,
+        -41.0
+      ]
+    },
+    {
+      "id": "face-d-left-dual-pocket",
+      "nativeFeature": "Contact_face_d_left_dual_pocket",
+      "type": "Part::Common",
+      "area": 2493.8140678953205,
+      "center": [
+        -244.0,
+        20.0,
+        -41.0
+      ]
+    },
+    {
+      "id": "face-d-right-single-pocket",
+      "nativeFeature": "Contact_face_d_right_single_pocket",
+      "type": "Part::Common",
+      "area": 1298.1848699491327,
+      "center": [
+        229.0,
+        20.0,
+        -41.0
+      ]
+    },
+    {
+      "id": "face-d-right-dual-pocket",
+      "nativeFeature": "Contact_face_d_right_dual_pocket",
+      "type": "Part::Common",
+      "area": 2493.814067895316,
+      "center": [
+        286.0,
+        20.0,
+        -41.0
+      ]
+    },
+    {
+      "id": "face-d-center-pull-up-slot",
+      "nativeFeature": "Contact_face_d_center_pull_up_slot",
+      "type": "Part::Common",
+      "area": 4983.530068663977,
+      "center": [
+        0.0,
+        25.0,
+        -41.0
+      ]
+    },
+    {
+      "id": "face-b-left-deep-sloper",
+      "nativeFeature": "Contact_face_b_left_deep_sloper",
+      "type": "Part::Common",
+      "area": 15798.707074082395,
+      "center": [
+        -132.0,
+        -7.0,
+        29.64665000000003
+      ]
+    },
+    {
+      "id": "face-c-left-shallow-half-round",
+      "nativeFeature": "Contact_face_c_left_shallow_half_round",
+      "type": "Part::Common",
+      "area": 8528.595599731803,
+      "center": [
+        -132.00000000000003,
+        44.453219972934875,
+        -22.3221
+      ]
+    },
+    {
+      "id": "face-d-left-deep-rounded-recess",
+      "nativeFeature": "Contact_face_d_left_deep_rounded_recess",
+      "type": "Part::Common",
+      "area": 13035.366320155212,
+      "center": [
+        -132.0,
+        10.685249999999995,
+        -36.93803098280513
+      ]
+    },
+    {
+      "id": "face-b-right-deep-sloper",
+      "nativeFeature": "Contact_face_b_right_deep_sloper",
+      "type": "Part::Common",
+      "area": 15798.707074082395,
+      "center": [
+        132.0,
+        -7.0,
+        29.646650000000058
+      ]
+    },
+    {
+      "id": "face-c-right-shallow-half-round",
+      "nativeFeature": "Contact_face_c_right_shallow_half_round",
+      "type": "Part::Common",
+      "area": 8528.595599731801,
+      "center": [
+        132.0,
+        44.453219972934875,
+        -22.3221
+      ]
+    },
+    {
+      "id": "face-d-right-deep-rounded-recess",
+      "nativeFeature": "Contact_face_d_right_deep_rounded_recess",
+      "type": "Part::Common",
+      "area": 13035.366320155212,
+      "center": [
+        132.0,
+        10.685249999999995,
+        -36.93803098280513
+      ]
+    }
+  ],
+  "sourceUnchanged": true
+}

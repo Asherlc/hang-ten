@@ -1,0 +1,8 @@
+ M Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json
+ M Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz
+ M Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json
+ M Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz
+ M Hangboards/plateau-lifting-edge/assets/primary.model.json
+ M Hangboards/plateau-lifting-edge/assets/primary.usdz
+ M Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd
+ M Hangboards/plateau-lifting-edge/suspension.json

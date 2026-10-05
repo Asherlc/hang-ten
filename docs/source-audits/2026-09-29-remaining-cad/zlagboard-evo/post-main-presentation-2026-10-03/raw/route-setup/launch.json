@@ -1,0 +1,16 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "launch",
+    "--terminate-running-process",
+    "E0AC7F37-369F-414E-B407-353435A0BE03",
+    "com.hangten.training",
+    "-workoutAudioCuesEnabled",
+    "NO"
+  ],
+  "exitStatus": 0,
+  "phase": "setup only; not measured"
+}

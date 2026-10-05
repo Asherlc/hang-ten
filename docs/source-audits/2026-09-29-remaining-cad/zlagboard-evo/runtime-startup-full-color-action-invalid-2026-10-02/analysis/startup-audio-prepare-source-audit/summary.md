@@ -1,0 +1,3 @@
+`prepareCountdownAudio` is synchronous on MainActor. Its lazy default scheduler path opens/decodes three bundled MP3s, creates and attaches an audio engine/player, then connects and prepares the engine before a synchronous completion. There is no obvious app-owned semaphore/group wait, dispatch-sync, sleep or busy loop in that preferred path.
+
+The speech fallback has short NSLock state sections and asynchronous callbacks; its `wait` resolution returns immediately. No source-evidenced lock cycle was found. AVFoundation operations are synchronous boundaries of unknown runtime latency. The missing outer after-marker does not localize a stall or establish deadlock. No source/runtime/build changes or next-run proposal.

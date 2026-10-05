@@ -1,0 +1,6 @@
+{
+  "exitStatus": 1,
+  "rawError": ".context/placid-badger-cad-second-half/zlagboard-evo/prep/highlight-trace-build.zsh:25: read-only variable: status",
+  "buildAttempted": false,
+  "interpretation": "zsh reserved variable name corrected to build_status; raw failure preserved"
+}

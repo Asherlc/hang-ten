@@ -1,0 +1,17 @@
+{
+  "package": "aelith-cyclops-011",
+  "sourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+  "editedFeature": "CupFloorOutline",
+  "reopenRecompute": true,
+  "fullyConstrainedSketches": true,
+  "validBoundShapes": true,
+  "contactVerticesOnActualBodySurface": true,
+  "dimensionalEditChangesSolid": true,
+  "dimensionalEditChangesContacts": [
+    "MonoContact"
+  ],
+  "bodyVolumeBeforeMM3": 26402.722913912217,
+  "bodyVolumeAfterMM3": 26092.66689508067,
+  "sourceBytesUnchanged": true,
+  "note": "Native source acceptance only. Suspension and app acceptance remain separate."
+}

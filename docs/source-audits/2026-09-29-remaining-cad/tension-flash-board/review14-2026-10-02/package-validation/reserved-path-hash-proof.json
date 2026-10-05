@@ -1,0 +1,27 @@
+{
+  "expected": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "HangTen/Views/RootView.swift": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "HangTenTests/BoardModelRealityTests.swift": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+    "HangTenTests/BoardModelTests.swift": "89d5778a9b85181315bf281921f493ec771c6c8ddd92ef1106ec643fd6ec1fd7",
+    "HangTen/Views/GripHandModelView.swift": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc"
+  },
+  "actual": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "HangTen/Views/RootView.swift": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "HangTenTests/BoardModelRealityTests.swift": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+    "HangTenTests/BoardModelTests.swift": "89d5778a9b85181315bf281921f493ec771c6c8ddd92ef1106ec643fd6ec1fd7",
+    "HangTen/Views/GripHandModelView.swift": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc"
+  },
+  "HEAD": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "HangTen/Views/RootView.swift": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "HangTenTests/BoardModelRealityTests.swift": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+    "HangTenTests/BoardModelTests.swift": "89d5778a9b85181315bf281921f493ec771c6c8ddd92ef1106ec643fd6ec1fd7",
+    "HangTen/Views/GripHandModelView.swift": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc"
+  },
+  "method": "hash only; no reserved code retained or inspected"
+}

@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "native-contacts",
+  "script": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/finish_native_contacts.py",
+  "timeoutSeconds": 600,
+  "startedUTC": "2026-10-01T16:48:21.427447+00:00",
+  "ownedProcessGroup": 11557,
+  "elapsedSeconds": 54.466238374996465,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

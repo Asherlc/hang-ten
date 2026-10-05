@@ -1,0 +1,1458 @@
+{
+  "results": {
+    "planID": "research.max-hangs",
+    "mode": "landscape",
+    "activeStateCaptured": false,
+    "followingRestCaptured": false,
+    "nextActiveTimedSeriesCaptured": false,
+    "routine": "Existing bundled routine unchanged; Rest skipped via visible UI only after settled preview capture",
+    "visualHighlightReview": "Timed next-active images require visible Hang timer and red bilateral surfaces; AX may describe a later state. Inspect all screenshots before claiming red/blue/red."
+  },
+  "events": [
+    {
+      "capture": "open-confirmation",
+      "epoch": 1790922324.618148
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "launch",
+        "--terminate-running-process",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+        "com.hangten.training"
+      ],
+      "startEpoch": 1790922319.1410189,
+      "endEpoch": 1790922319.448786,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "openurl",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+        "hangten://plan/research.max-hangs/workout"
+      ],
+      "startEpoch": 1790922319.4490921,
+      "endEpoch": 1790922319.6231658,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922319.623467,
+      "endEpoch": 1790922323.661851,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922323.923157,
+      "endEpoch": 1790922324.6170208,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/baseline-a-landscape/open-confirmation.png"
+      ],
+      "startEpoch": 1790922324.618452,
+      "endEpoch": 1790922325.057259,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "tap",
+        "--label",
+        "Open",
+        "--tap-style",
+        "physical",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922325.057554,
+      "endEpoch": 1790922326.459431,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922326.460025,
+      "endEpoch": 1790922327.077982,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922327.3393679,
+      "endEpoch": 1790922327.9761438,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922328.228565,
+      "endEpoch": 1790922328.86783,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922329.1285582,
+      "endEpoch": 1790922329.7682009,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922330.0287502,
+      "endEpoch": 1790922330.6607842,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922330.922139,
+      "endEpoch": 1790922331.569159,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922331.830388,
+      "endEpoch": 1790922332.433182,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922332.694402,
+      "endEpoch": 1790922333.3069508,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922333.56688,
+      "endEpoch": 1790922334.1970282,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922334.458507,
+      "endEpoch": 1790922335.091158,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922335.343642,
+      "endEpoch": 1790922335.989863,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922336.2487931,
+      "endEpoch": 1790922336.89241,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922337.1475441,
+      "endEpoch": 1790922337.784102,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922338.045469,
+      "endEpoch": 1790922338.67768,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922338.939039,
+      "endEpoch": 1790922339.546936,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922339.808238,
+      "endEpoch": 1790922340.433825,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922340.6951969,
+      "endEpoch": 1790922341.3282812,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922341.581577,
+      "endEpoch": 1790922342.2153971,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922342.4693172,
+      "endEpoch": 1790922343.0996108,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922343.36021,
+      "endEpoch": 1790922343.987478,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922344.243615,
+      "endEpoch": 1790922344.875627,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922345.1361752,
+      "endEpoch": 1790922345.763652,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922346.0250418,
+      "endEpoch": 1790922346.6677482,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922346.929099,
+      "endEpoch": 1790922347.5572171,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922347.8172002,
+      "endEpoch": 1790922348.442987,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922348.697149,
+      "endEpoch": 1790922349.315639,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922349.577085,
+      "endEpoch": 1790922350.204421,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922350.465753,
+      "endEpoch": 1790922351.0994592,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922351.360665,
+      "endEpoch": 1790922351.965705,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922352.2209191,
+      "endEpoch": 1790922352.8484411,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922353.109695,
+      "endEpoch": 1790922353.720812,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922353.982143,
+      "endEpoch": 1790922354.617066,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922354.878608,
+      "endEpoch": 1790922355.5293329,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922355.7851782,
+      "endEpoch": 1790922356.427026,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922356.6810791,
+      "endEpoch": 1790922357.3293781,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922357.586577,
+      "endEpoch": 1790922358.229455,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922358.4911869,
+      "endEpoch": 1790922359.1263769,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922359.384257,
+      "endEpoch": 1790922360.021247,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922360.272637,
+      "endEpoch": 1790922360.899501,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922361.160915,
+      "endEpoch": 1790922361.801122,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922362.0625658,
+      "endEpoch": 1790922362.696403,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922362.958029,
+      "endEpoch": 1790922363.611274,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922363.866871,
+      "endEpoch": 1790922364.49946,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922364.760819,
+      "endEpoch": 1790922365.3954968,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922365.656825,
+      "endEpoch": 1790922366.298016,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922366.5594828,
+      "endEpoch": 1790922367.188629,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922367.443368,
+      "endEpoch": 1790922368.051,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922368.3123999,
+      "endEpoch": 1790922368.946393,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922369.207702,
+      "endEpoch": 1790922369.8423,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922370.0972958,
+      "endEpoch": 1790922370.746977,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922371.0015628,
+      "endEpoch": 1790922371.6378329,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922371.899144,
+      "endEpoch": 1790922372.534121,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922372.795486,
+      "endEpoch": 1790922373.4286919,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922373.689932,
+      "endEpoch": 1790922374.302104,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922374.5616488,
+      "endEpoch": 1790922375.2214882,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922375.482977,
+      "endEpoch": 1790922376.131854,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922376.3873,
+      "endEpoch": 1790922377.021277,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922377.282445,
+      "endEpoch": 1790922377.914863,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922378.166791,
+      "endEpoch": 1790922378.8055942,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922379.0667388,
+      "endEpoch": 1790922379.700428,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922379.961736,
+      "endEpoch": 1790922380.5990489,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922380.8604622,
+      "endEpoch": 1790922381.491585,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922381.762113,
+      "endEpoch": 1790922382.405431,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922382.666424,
+      "endEpoch": 1790922383.2937229,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922383.545609,
+      "endEpoch": 1790922384.184557,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922384.446053,
+      "endEpoch": 1790922385.076753,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922385.335885,
+      "endEpoch": 1790922385.9995048,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922386.260767,
+      "endEpoch": 1790922386.907271,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922387.166498,
+      "endEpoch": 1790922387.788705,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922388.044924,
+      "endEpoch": 1790922388.6669388,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922388.92832,
+      "endEpoch": 1790922389.5482519,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922389.809684,
+      "endEpoch": 1790922390.4383638,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922390.695022,
+      "endEpoch": 1790922391.3315141,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922391.593117,
+      "endEpoch": 1790922392.2262678,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922392.478359,
+      "endEpoch": 1790922393.109813,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922393.366477,
+      "endEpoch": 1790922394.003306,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922394.26463,
+      "endEpoch": 1790922394.8856452,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922395.148614,
+      "endEpoch": 1790922395.77634,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922396.0376241,
+      "endEpoch": 1790922396.6627798,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922396.924185,
+      "endEpoch": 1790922397.5493681,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922397.8018482,
+      "endEpoch": 1790922398.416933,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922398.678218,
+      "endEpoch": 1790922399.305881,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922399.567206,
+      "endEpoch": 1790922400.202973,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922400.458483,
+      "endEpoch": 1790922401.098718,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922401.354389,
+      "endEpoch": 1790922401.9786,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922402.239936,
+      "endEpoch": 1790922402.873248,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922403.128387,
+      "endEpoch": 1790922403.760491,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922404.015543,
+      "endEpoch": 1790922404.663595,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922404.9248152,
+      "endEpoch": 1790922405.536305,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922405.792932,
+      "endEpoch": 1790922406.422187,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922406.678315,
+      "endEpoch": 1790922407.348068,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922407.60945,
+      "endEpoch": 1790922408.251499,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922408.5116868,
+      "endEpoch": 1790922409.153654,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922409.410024,
+      "endEpoch": 1790922410.052671,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922410.3143182,
+      "endEpoch": 1790922410.946932,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922411.208375,
+      "endEpoch": 1790922411.834879,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922412.0948071,
+      "endEpoch": 1790922412.698368,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922412.959966,
+      "endEpoch": 1790922413.5856278,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922413.8379,
+      "endEpoch": 1790922414.471914,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922414.733204,
+      "endEpoch": 1790922415.345593,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922415.607012,
+      "endEpoch": 1790922416.286796,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922416.5488188,
+      "endEpoch": 1790922417.199071,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922417.4604669,
+      "endEpoch": 1790922418.346592,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922418.607838,
+      "endEpoch": 1790922421.2495072,
+      "exitStatus": 0
+    }
+  ]
+}

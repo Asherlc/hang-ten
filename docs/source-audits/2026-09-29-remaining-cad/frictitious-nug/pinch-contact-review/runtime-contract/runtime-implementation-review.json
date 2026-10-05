@@ -1,0 +1,63 @@
+{
+  "createdAt": "2026-09-30T22:44:32.270224+00:00",
+  "status": "verified: final wraparound-pinch full XCTest passed; shorter-cord revision outside this evidence",
+  "scope": "Swift descriptor-v1 shared mesh membership, picking and selection; no source asset or renderer material changes",
+  "contract": {
+    "additionalContactIDs": "Optional sorted nonempty unique identifiers excluding primary contactID; allowed only on contact nodes. Explicit null/malformed rejected.",
+    "memberships": "Full descriptor contact nodeIDs include primary and secondary bindings; inventories equal physical contacts.",
+    "picking": "Primary node.contactID deterministically owns picking. No dictionary-last-wins identity.",
+    "highlighting": "Union selected contacts into a Set of entities; apply once per entity. Unselected membership cannot clear selected shared mesh.",
+    "outlines": "Any explicit outline on secondary membership target is rejected, matching Python reader/compiler.",
+    "legacy": "Single-membership v1 packages retain behavior; reusable v2 binding branch unchanged."
+  },
+  "redEvidence": {
+    "summary": ".context/placid-badger/nug-pinch-review/runtime-contract/red-ios-summary.json",
+    "passed": 1,
+    "failed": 2,
+    "failureScope": [
+      "strict parser rejects new field",
+      "runtime loses shared membership"
+    ]
+  },
+  "localChecks": {
+    "swiftFrontendSyntaxParse": "passed for all5 touched files",
+    "scopedGitDiffWhitespace": "passed"
+  },
+  "Android": {
+    "runtimeSourcesPresent": false,
+    "search": "rg --files for java, kt, kts, gradle, AndroidManifest.xml returned no files",
+    "parity": "This checkout contains shared Python Android staging only. Python contract owner updates validation/compiler; no Android renderer/parser exists here to change or execute."
+  },
+  "fileSHA256": {
+    "HangTen/Models/TrainingModels.swift": "c6896ab7b1a3c249a3a4eef73e1624f3bb251e9ad43dcc46b83ed54272aafef1",
+    "HangTen/Models/BoardPackageStore.swift": "af66408a5ea48e0381a5b443790367f7cc2a2712d44dc5c6ecfb992ef797639a",
+    "HangTen/Models/BoardModelRealityTypes.swift": "07cd4392567103ae157c2bea2d5470d45bac8824b3a946911b14a13bbb7c9e7f",
+    "HangTenTests/BoardPackageStoreTests.swift": "395b8e2c4b5a4e3392100806cb63dc6997a876926253fb08fd0d19122ead5e0d",
+    "HangTenTests/BoardModelRealityTests.swift": "a839cd0a584b3e0cd6dcd25e295fe29a89aba78dc96833b236bc0cdb0ef00fad"
+  },
+  "evidenceSHA256": {
+    ".context/placid-badger/nug-pinch-review/runtime-contract/tests-first-snapshot.json": "97e004b4fcf4231e806d61c04330cf95a57239b1950234ec024adf8166c0c12d",
+    ".context/placid-badger/nug-pinch-review/runtime-contract/red-ios-summary.json": "5d6419a10ef54d1015c79e647203be97b61c9905e06da6cc094fb3626aa1e4a4",
+    ".context/placid-badger/nug-pinch-review/runtime-contract/red-ios-tests.log": "17f71c73dd8f6b9f6ebde27f61dca0dca42da047605e93e0ff2e1480624c16d2"
+  },
+  "ownership": "No Git mutation, simulator operation or external resource by this worker; parent owns build/tests/runtime captures.",
+  "verifiedAt": "2026-09-30T23:50:41.870131+00:00",
+  "greenEvidence": {
+    "result": "Passed",
+    "passed": 1264,
+    "failed": 0,
+    "skipped": 3,
+    "total": 1267,
+    "scope": "Final wraparound pinch shared-contact implementation and corrected generic fixture, before the separate shorter-cord change.",
+    "testFileSHA256": "a839cd0a584b3e0cd6dcd25e295fe29a89aba78dc96833b236bc0cdb0ef00fad",
+    "evidenceSHA256": {
+      ".context/placid-badger/nug-pinch-review/ios-test-command.json": "9b320909c22d1fd3ea14a6eea1796e1ec0f1b35c1836e7e2dbc583cc370b249f",
+      ".context/placid-badger/nug-pinch-review/ios-build-command.json": "cbbc74e7d4845b24ad0c6a0f7c7f1d76acc02244563209dfe5e68b68ba06febb",
+      ".context/placid-badger/nug-pinch-review/ios-summary.json": "343ad27aa954ecf927a3e0423c1072347ad39c14c842a856f2cb625cfd8663f5",
+      ".context/placid-badger/nug-pinch-review/ios-tests.log": "8eb9765bf4b53c34edfe2e5f21d8d96ccc6f284cc4645213b9d7df1fa574edd9"
+    },
+    "verifiedAt": "2026-09-30T23:50:41.870131+00:00"
+  },
+  "fixtureCorrectionReport": ".context/placid-badger/nug-pinch-review/runtime-contract/fixture-failure-diagnosis.json",
+  "verificationLimit": "This run predates the separate shorter-cord change and does not verify that later revision."
+}

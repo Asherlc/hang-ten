@@ -1,0 +1,27 @@
+{
+  "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+  "metadataComparedIgnoringOnlySuspension": true,
+  "differences": [
+    [
+      "/contacts/19/depth",
+      {
+        "range": {
+          "minimum": 100,
+          "maximum": 100
+        }
+      },
+      null
+    ],
+    [
+      "/contacts/21/depth",
+      {
+        "range": {
+          "minimum": 100,
+          "maximum": 100
+        }
+      },
+      null
+    ]
+  ],
+  "boardJSONPhysicallyAbsent": true
+}

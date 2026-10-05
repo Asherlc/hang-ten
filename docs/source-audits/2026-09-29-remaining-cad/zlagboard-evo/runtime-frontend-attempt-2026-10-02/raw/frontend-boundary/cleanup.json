@@ -1,0 +1,9 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "marker": "placid-badger-cad-second-half-frontend-boundary-2026-10-02",
+  "cleanupEpoch": 1790986398.647021,
+  "scope": "Exact spawned frontend PID only; never simulator device/DD/services",
+  "pid": null,
+  "noFrontendCreated": true,
+  "passed": true
+}

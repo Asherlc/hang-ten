@@ -1,0 +1,54 @@
+{
+  "owner": "placid-badger",
+  "recordedAtUTC": "2026-10-01T17:30:30.185837+00:00",
+  "status": "rejected diagnostic: local cubic approximation failed strict native BOP; not final validation",
+  "sourceSHA256": "65e5196aec829a9dff66efadd5b7b9f35fdf140d8355aa8afc0148457e48c5da",
+  "humanAcceptance": "pending review #8",
+  "reason": "Native cubic approximation retained with sampled deviations and exact endpoint/tangent claims, but its repaired-root-check reports BOP InvalidCurveOnSurface. Final construction instead uses connected exact cap/nose profiles as separate native loft faces; no approximation promotion.",
+  "logsMayBePartialAtFreeze": false,
+  "finalAcceptanceCarriedForward": false,
+  "rawCopies": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/rejected-cubic-65e/author_functional_probe.py",
+      "retained": "author/author_functional_probe.py",
+      "sha256": "c688d5ee0146fc46e4301b3d5a09b8b2448dafa8f49bfa6b091c244e397a8e9a",
+      "bytes": 14539
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/rejected-cubic-65e/probe-body-mesh.json",
+      "retained": "author/probe-body-mesh.json",
+      "sha256": "3d5f5875f971da9fdd4cf08ad1e6692bd6730baf0bf188f44762c49e2dd46981",
+      "bytes": 4780415
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/rejected-cubic-65e/probe-body.brep",
+      "retained": "author/probe-body.brep",
+      "sha256": "f1eb52f0ab4a84db86f97eaef1d8ae427153fd3028529c21c2fa08ecf1136b7d",
+      "bytes": 5022865
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/rejected-cubic-65e/probe-design.json",
+      "retained": "author/probe-design.json",
+      "sha256": "c0043d8d383f41017934e6b33fa4fc7a74203617fcce6ee33dd0fe8d4730c058",
+      "bytes": 23548
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/rejected-cubic-65e/probe-source.FCStd",
+      "retained": "author/probe-source.FCStd",
+      "sha256": "65e5196aec829a9dff66efadd5b7b9f35fdf140d8355aa8afc0148457e48c5da",
+      "bytes": 7907147
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/rejected-cubic-65e/repaired-root-check.json",
+      "retained": "author/repaired-root-check.json",
+      "sha256": "fffa458985f748dea4c1a62e5fc61f0c458aad901cfe5b4c6861253c94d5b86a",
+      "bytes": 767
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/rejected-cubic-65e/root-refit-progress.json",
+      "retained": "author/root-refit-progress.json",
+      "sha256": "cfb3548f3c2e54a2cea78bfa9f4b08ac576713f800f3d1c500004e1524343585",
+      "bytes": 13623
+    }
+  ]
+}

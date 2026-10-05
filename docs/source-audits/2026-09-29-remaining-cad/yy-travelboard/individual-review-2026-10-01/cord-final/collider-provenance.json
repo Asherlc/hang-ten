@@ -1,0 +1,9 @@
+{
+  "status": "geometry-byte bridge",
+  "originalColliderSHA256": "ee01dd52d2efc976c58c5bf7b75a09134e2f9232f360b975465d42bb6a43e84c",
+  "originalSourceSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "finalSourceSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+  "derivation": "Exact measured vertices/triangles copied from original collider; only source binding updated after verified manifest-only wood metadata edit. This is not a new native measurement.",
+  "geometryProof": "../metadata/wood-manifest-provenance.json",
+  "independentProof": "../package-checks/wood-bridge.json"
+}

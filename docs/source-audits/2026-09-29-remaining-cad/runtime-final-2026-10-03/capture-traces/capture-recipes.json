@@ -1,0 +1,77 @@
+{
+  "owner": "placid-badger",
+  "scope": "Root accepted boards10-15 only, canonical assets unchanged. Current-source actual app frames; acceptance separate.",
+  "recipes": {
+    "10": {
+      "frontContact": "granite-edge-15",
+      "restoreContact": "wood-edge-15-incut",
+      "orbitContact": "pull-up-jug",
+      "faceContacts": [
+        "granite-edge-15",
+        "wood-edge-15-incut",
+        "pull-up-jug",
+        "pinch-60"
+      ]
+    },
+    "11": {
+      "frontContact": "granite-edge-15",
+      "restoreContact": "wood-edge-15",
+      "orbitContact": "pinch-60",
+      "faceContacts": [
+        "granite-edge-15",
+        "wood-edge-15",
+        "pinch-60"
+      ]
+    },
+    "12": {
+      "frontContact": "face-a-left-outer-slot",
+      "restoreContact": "face-a-right-outer-slot",
+      "orbitContact": "face-b-left-deep-sloper",
+      "faceContacts": [
+        "face-a-left-outer-slot",
+        "face-b-left-deep-sloper",
+        "face-c-left-shallow-half-round",
+        "face-d-left-deep-rounded-recess"
+      ]
+    },
+    "13": {
+      "frontContact": "edge-18",
+      "restoreContact": null,
+      "orbitContact": "edge-18",
+      "faceContacts": [
+        "edge-18"
+      ]
+    },
+    "14": {
+      "frontContact": "three-edge-left",
+      "restoreContact": "three-edge-right",
+      "orbitContact": "two-edge-left",
+      "faceContacts": [
+        "three-edge-left",
+        "three-edge-center",
+        "three-edge-right",
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right"
+      ]
+    },
+    "15": {
+      "frontContact": "sloper-30-left",
+      "restoreContact": "sloper-30-right",
+      "orbitContact": "im-deep-left",
+      "faceContacts": [
+        "sloper-30-left",
+        "sloper-40-right",
+        "large-flat-edge-left",
+        "slopey-crimper-right",
+        "variable-edge-rail-left",
+        "closed-crimp-right",
+        "mr-deep-left",
+        "mr-shallow-right",
+        "im-deep-left",
+        "im-shallow-right"
+      ]
+    }
+  }
+}

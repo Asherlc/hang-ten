@@ -1,0 +1,45 @@
+{
+  "status": "passed",
+  "resolution": "Reuse existing workspace-owned meshoptimizer1.0 Release arm64 dynamic library via existing MESHOPT_LIBRARY override. No rebuild needed.",
+  "environment": {
+    "MESHOPT_LIBRARY": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/deps/meshoptimizer-build/libmeshoptimizer.dylib"
+  },
+  "librarySHA256": "0743a9ce1b521e1eb215964c72016d2a3f1b895f1412bdf2f0e59cefa803b569",
+  "sourceDirectory": ".context/placid-badger/deps/meshoptimizer-1.0",
+  "sourceArchive": ".context/placid-badger/deps/meshoptimizer-v1.0.tar.gz",
+  "sourceArchiveSHA256": "30d1c3651986b2074e847b17223a7269c9612ab7f148b944250f81214fed4993",
+  "sourceArchiveFilesMatched": 104,
+  "sourceArchiveMismatches": [],
+  "sourceVersionEvidence": {
+    "header": "src/meshoptimizer.h:15 MESHOPTIMIZER_VERSION1000 /*1.0*/",
+    "headerSHA256": "20867376a8e83fa7dc2eb3a87770d82a1d7e1e114be7c4ad4845ca9666ba371c",
+    "project": "CMakeLists.txt project(meshoptimizer VERSION1.0 LANGUAGES CXX)",
+    "cmakeSHA256": "a2ac562cf7789c75ec4d0b03f0c3353e08ec2429b1c2f604a276636c3bc79ec2"
+  },
+  "retainedBuildProof": {
+    "configureLog": ".context/placid-badger/test-logs/meshoptimizer-configure.log",
+    "configureLogSHA256": "4a33341a99a066d49bea0c2ff3496be357a6a896999c96801bc2ac267c1332b9",
+    "buildLog": ".context/placid-badger/test-logs/meshoptimizer-build.log",
+    "buildLogSHA256": "a61ea1ce6fd6b49b572272c084b525a0c758aa4f5f457767bec07cae9a7ed5b7",
+    "cacheSHA256": "bbf126c881f23e16ed3498253ddd5d97d075b5936277c606f64c216733e772fc",
+    "compiler": "AppleClang21.0.0.21000334 /usr/bin/c++",
+    "cmake": "4.4.0",
+    "buildType": "Release",
+    "MESHOPT_BUILD_SHARED_LIBS": "ON",
+    "binaryType": ".context/placid-badger/deps/meshoptimizer-build/libmeshoptimizer.dylib: Mach-O 64-bit dynamically linked shared library arm64"
+  },
+  "rerun": {
+    "tests": [
+      "Tools/HangboardModels/tests/test_simplify_display_models.py::test_grid_simplification_preserves_open_border",
+      "Tools/HangboardModels/tests/test_simplify_display_models.py::test_permissive_normal_seams_keep_physical_boundary"
+    ],
+    "result": "2 passed in0.77s",
+    "exitCode": 0,
+    "log": ".context/placid-badger/nug-pinch-review/meshoptimizer-two-tests.log",
+    "logSHA256": "15c68ce6c0990c127ab70192a9c1d89d8373746169ec74ca5e1bf702f7694b71"
+  },
+  "productionEdits": [],
+  "packageEdits": [],
+  "externalResources": [],
+  "ownedProcesses": "Rerun exited0; no persistent process started."
+}

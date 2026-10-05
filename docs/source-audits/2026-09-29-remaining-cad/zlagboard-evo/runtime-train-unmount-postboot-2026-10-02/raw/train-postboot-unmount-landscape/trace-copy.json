@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/8EC63734-D915-4EAC-901F-0313461829BC/Documents/HighlightDiagnostic-placid-badger-cad-second-half-train-postboot-unmount/events-F81DCC81-817F-419F-B6FB-60B4749CF0C4.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-postboot-unmount-landscape/events-F81DCC81-817F-419F-B6FB-60B4749CF0C4.jsonl",
+      "sha256": "40b5f6bd364e7cf889ccb1f07a7c3b62fb10bdd1c17b2ddcf1882c86a70296db"
+    }
+  ],
+  "records": 154,
+  "completeContiguous": true,
+  "copiedEpoch": 1790992471.7250938,
+  "includesSamplerEnd": true
+}

@@ -1,0 +1,12 @@
+{
+  "method": "Complete simulator frames fitted uniformly side by side; no cropping, tracing or geometry inference.",
+  "before": {
+    "path": "app/before-app/inset-right.png",
+    "sha256": "f4ed6d84eba8ff58bf8e193393aa7c0fb9e2b8d25aa6c999b12293c1280ac54e"
+  },
+  "after": {
+    "path": "app/after-app/inset-right.png",
+    "sha256": "61ec0f02e45024e5b769139f0a1471966fc43bc098ca9738360b2f05f120c7ed"
+  },
+  "compositeSHA256": "bfe2d12f2cf7fb05c569e2df6890f279b03387bda84b3f9d8b302f96cd5c232d"
+}

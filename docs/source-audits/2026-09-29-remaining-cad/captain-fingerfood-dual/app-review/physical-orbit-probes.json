@@ -1,0 +1,73 @@
+[
+  {
+    "positionID": "straight-lip-inverted",
+    "contactID": "straight-edge-20",
+    "command": [
+      "/opt/homebrew/bin/axe",
+      "drag",
+      "--udid",
+      "B50C9F34-769B-4CBD-A642-F109D3867F69",
+      "--start-x",
+      "201.00000000000003",
+      "--start-y",
+      "534.3333333333333",
+      "--end-x",
+      "340.0",
+      "--end-y",
+      "500.33333333333326",
+      "--duration",
+      "1.0",
+      "--steps",
+      "90",
+      "--pre-delay",
+      ".2",
+      "--post-delay",
+      ".8"
+    ],
+    "commandOutput": "",
+    "before": {
+      "boardModel.contact.outer-jug": [
+        201.00000000000003,
+        493.66666666666663
+      ],
+      "boardModel.contact.curved-edge-20": [
+        201.00000000000003,
+        507.0
+      ],
+      "boardModel.contact.straight-edge-20": [
+        201.00000000000003,
+        534.3333333333333
+      ],
+      "boardModel.contact.pocket-end-wall-20": [
+        237.0,
+        523.3333333333333
+      ]
+    },
+    "after": {
+      "boardModel.contact.outer-jug": [
+        201.00000000000003,
+        493.66666666666663
+      ],
+      "boardModel.contact.curved-edge-20": [
+        201.00000000000003,
+        507.0
+      ],
+      "boardModel.contact.straight-edge-20": [
+        201.00000000000003,
+        534.3333333333333
+      ],
+      "boardModel.contact.pocket-end-wall-20": [
+        237.0,
+        523.3333333333333
+      ]
+    },
+    "displacementPoints": {
+      "boardModel.contact.outer-jug": 0.0,
+      "boardModel.contact.curved-edge-20": 0.0,
+      "boardModel.contact.straight-edge-20": 0.0,
+      "boardModel.contact.pocket-end-wall-20": 0.0
+    },
+    "selectionPreserved": true,
+    "orbitVerified": false
+  }
+]

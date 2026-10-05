@@ -1,0 +1,20 @@
+{
+  "dateUTC": "2026-10-02T14:54:52.328497+00:00",
+  "reviewer": "root Astra",
+  "patchSHA256": "401b1084a5f8a072a5ca00f17e5f570adf3725d5140ce3875d28d2fdd76c59f6",
+  "scope": "Static diagnostic review only; no authoritative geometry changes",
+  "reviewed": [
+    "Only two reserved production paths proposed; RootView/tests/solver untouched",
+    "Existing highlight cache and material assignment remain; semantic before/after events observe them",
+    "Unique scene lifecycle UUID plus per-view UUID; sampler cancellation keyed to both",
+    "Weak-scene sampler bounded to120seconds at1Hz; complete direct-write JSONL with wallclock and uptime",
+    "No fixed material, camera, timer, selection, or source-geometry changes proposed"
+  ],
+  "limits": [
+    "Patch remains unapplied and has not been typechecked or run in app",
+    "Instrumentation can change timing; a nonreproducing trace is not a fix",
+    "CPU material snapshots alone do not establish visible frame correctness; correlate screenshot brackets and exact scene identity",
+    "The earlier4096-byte truncated stdout cannot rule out a later overwrite or replacement before its screenshot"
+  ],
+  "decision": "Ready for temporary diagnostic experiment only after clean Pro baseline and working isolated Simulator; no fifth production fix authorized by this review"
+}

@@ -39,6 +39,7 @@ struct HangCardModifier: ViewModifier {
             .overlay {
                 RoundedRectangle(cornerRadius: 24, style: .continuous)
                     .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
+                    .allowsHitTesting(false)
             }
     }
 }
@@ -55,7 +56,7 @@ struct SectionLabel: View {
 
     var body: some View {
         Text(title.uppercased())
-            .font(.system(size: 11, weight: .bold, design: .rounded))
+            .font(.system(.caption2, design: .rounded, weight: .bold))
             .tracking(1.4)
             .foregroundStyle(tint)
     }
@@ -68,10 +69,54 @@ struct Pill: View {
 
     var body: some View {
         Text(title)
-            .font(.system(size: 12, weight: .semibold, design: .rounded))
+            .font(.system(.caption, design: .rounded, weight: .semibold))
             .foregroundStyle(tint)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .background(fill, in: Capsule())
+    }
+}
+
+struct CardStatusHeading: View {
+    let title: String
+    let status: String
+    let tint: Color
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    var body: some View {
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                verticalHeading
+            } else {
+                ViewThatFits(in: .horizontal) {
+                    HStack {
+                        headingTitle.fixedSize()
+                        Spacer(minLength: 8)
+                        statusPill.fixedSize()
+                    }
+                    verticalHeading
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var headingTitle: some View {
+        Text(title)
+            .font(.system(.subheadline, design: .rounded, weight: .bold))
+            .foregroundStyle(Color.hangInk)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var statusPill: some View {
+        Pill(title: status, tint: tint, fill: tint.opacity(0.12))
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var verticalHeading: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            headingTitle
+            statusPill
+        }
     }
 }

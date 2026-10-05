@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 3,
+  "id": "trango.rock-prodigy-forge",
+  "manufacturer": "Trango",
+  "name": "Rock Prodigy Forge",
+  "subtitle": "Two-piece training board with variable rails, drafted pockets, crimps, slopers, and flat edges.",
+  "productURL": "https://trango.com/products/rock-prodigy-forge",
+  "dimensions": "12.75 × 5.25 in per side",
+  "aspectRatio": 1.5,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "aspectRatio": 6.019125411102828,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          },
+          "surfaceFinish": "plastic"
+        }
+      }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "sloper-30-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 30-degree sloper",
+      "kind": "sloper",
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "sloper-30-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 30-degree sloper",
+      "kind": "sloper",
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "sloper-40-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 40-degree sloper",
+      "kind": "sloper",
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "sloper-40-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 40-degree sloper",
+      "kind": "sloper",
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "large-flat-edge-left",
+      "equipmentObjectID": "primary",
+      "name": "Left large flat edge",
+      "kind": "edge",
+      "shape": "flat",
+      "depth": {
+        "category": "large"
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "large-flat-edge-right",
+      "equipmentObjectID": "primary",
+      "name": "Right large flat edge",
+      "kind": "edge",
+      "shape": "flat",
+      "depth": {
+        "category": "large"
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "slopey-crimper-left",
+      "equipmentObjectID": "primary",
+      "name": "Left slopey crimper",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "slopey-crimper-right",
+      "equipmentObjectID": "primary",
+      "name": "Right slopey crimper",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "variable-edge-rail-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 7–20 mm variable-depth edge rail",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 7,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "variable-edge-rail-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 7–20 mm variable-depth edge rail",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 7,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "closed-crimp-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 7.5 mm closed crimp with thumb support",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 7.5,
+          "maximum": 7.5
+        }
+      },
+      "gripTypes": [
+        "fullCrimp"
+      ]
+    },
+    {
+      "id": "closed-crimp-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 7.5 mm closed crimp with thumb support",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 7.5,
+          "maximum": 7.5
+        }
+      },
+      "gripTypes": [
+        "fullCrimp"
+      ]
+    },
+    {
+      "id": "mr-deep-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 25 mm MR deep pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "mr-deep-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 25 mm MR deep pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "mr-shallow-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 15 mm MR shallow pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "mr-shallow-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 15 mm MR shallow pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "im-deep-left",
+      "equipmentObjectID": "primary",
+      "name": "Left IM deep pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "im-deep-right",
+      "equipmentObjectID": "primary",
+      "name": "Right IM deep pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "im-shallow-left",
+      "equipmentObjectID": "primary",
+      "name": "Left IM shallow pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "im-shallow-right",
+      "equipmentObjectID": "primary",
+      "name": "Right IM shallow pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    }
+  ]
+}

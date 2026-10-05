@@ -1,0 +1,4259 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-jug-left-0-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-jug-left-0-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058032.926698,
+    "pid": 4055,
+    "exitStatus": 0,
+    "endEpoch": 1791058033.225066
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058034.228847,
+    "pid": 4077,
+    "exitStatus": 0,
+    "endEpoch": 1791058039.103404
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058039.604929,
+    "pid": 4130,
+    "exitStatus": 0,
+    "endEpoch": 1791058040.57984
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "86.0",
+      "-y",
+      "234.66666666666663",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058040.581263,
+    "pid": 4170,
+    "exitStatus": 0,
+    "endEpoch": 1791058041.772893
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058042.281474,
+    "pid": 4185,
+    "exitStatus": 0,
+    "endEpoch": 1791058043.2733922
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058043.876789,
+    "pid": 4190,
+    "exitStatus": 0,
+    "endEpoch": 1791058044.800628
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-jug-left.png"
+    ],
+    "startEpoch": 1791058044.8930671,
+    "pid": 4192,
+    "exitStatus": 0,
+    "endEpoch": 1791058045.410383
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "86.0",
+      "--start-y",
+      "234.66666666666663",
+      "--end-x",
+      "141.0",
+      "--end-y",
+      "234.66666666666663",
+      "--duration",
+      "1.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058045.411853,
+    "pid": 4208,
+    "exitStatus": 0,
+    "endEpoch": 1791058047.438714
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058047.942695,
+    "pid": 4212,
+    "exitStatus": 0,
+    "endEpoch": 1791058048.855284
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058049.46297,
+    "pid": 4217,
+    "exitStatus": 0,
+    "endEpoch": 1791058050.378599
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/jug-orbit.png"
+    ],
+    "startEpoch": 1791058050.466371,
+    "pid": 4222,
+    "exitStatus": 0,
+    "endEpoch": 1791058050.943786
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-jug-left-1-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-jug-left-1-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058050.9455261,
+    "pid": 4232,
+    "exitStatus": 0,
+    "endEpoch": 1791058051.4216802
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058052.423281,
+    "pid": 4245,
+    "exitStatus": 0,
+    "endEpoch": 1791058057.200448
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058057.705355,
+    "pid": 4278,
+    "exitStatus": 0,
+    "endEpoch": 1791058058.634421
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058059.241889,
+    "pid": 4298,
+    "exitStatus": 0,
+    "endEpoch": 1791058060.252665
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/jug-fresh-view-reset.png"
+    ],
+    "startEpoch": 1791058060.343932,
+    "pid": 4452,
+    "exitStatus": 0,
+    "endEpoch": 1791058060.821486
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-jug-right-2-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-jug-right-2-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058060.822979,
+    "pid": 4464,
+    "exitStatus": 0,
+    "endEpoch": 1791058061.228673
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058062.2373602,
+    "pid": 4475,
+    "exitStatus": 0,
+    "endEpoch": 1791058067.1125262
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058067.615232,
+    "pid": 4607,
+    "exitStatus": 0,
+    "endEpoch": 1791058068.590202
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "316.0",
+      "-y",
+      "234.66666666666663",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058068.592094,
+    "pid": 4609,
+    "exitStatus": 0,
+    "endEpoch": 1791058069.726322
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058070.230227,
+    "pid": 4616,
+    "exitStatus": 0,
+    "endEpoch": 1791058071.190337
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058071.798263,
+    "pid": 4619,
+    "exitStatus": 0,
+    "endEpoch": 1791058072.7002501
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-jug-right.png"
+    ],
+    "startEpoch": 1791058072.7898932,
+    "pid": 4621,
+    "exitStatus": 0,
+    "endEpoch": 1791058073.261997
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "316.0",
+      "--start-y",
+      "234.66666666666663",
+      "--end-x",
+      "371.0",
+      "--end-y",
+      "234.66666666666663",
+      "--duration",
+      "1.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058073.26354,
+    "pid": 4633,
+    "exitStatus": 0,
+    "endEpoch": 1791058075.330079
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058075.831831,
+    "pid": 4743,
+    "exitStatus": 0,
+    "endEpoch": 1791058076.883785
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058077.491329,
+    "pid": 4774,
+    "exitStatus": 0,
+    "endEpoch": 1791058078.474138
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/jug-right-orbit.png"
+    ],
+    "startEpoch": 1791058078.562494,
+    "pid": 4787,
+    "exitStatus": 0,
+    "endEpoch": 1791058079.0817962
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-jug-right-3-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-jug-right-3-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058079.083744,
+    "pid": 4805,
+    "exitStatus": 0,
+    "endEpoch": 1791058079.5046809
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058080.515875,
+    "pid": 4826,
+    "exitStatus": 0,
+    "endEpoch": 1791058085.33491
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058085.8390179,
+    "pid": 4938,
+    "exitStatus": 0,
+    "endEpoch": 1791058086.735109
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058087.345738,
+    "pid": 4952,
+    "exitStatus": 0,
+    "endEpoch": 1791058088.2578151
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/jug-right-fresh-view-reset.png"
+    ],
+    "startEpoch": 1791058088.3452852,
+    "pid": 4956,
+    "exitStatus": 0,
+    "endEpoch": 1791058088.836318
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-32-left-4-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-32-left-4-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058088.83835,
+    "pid": 4977,
+    "exitStatus": 0,
+    "endEpoch": 1791058089.300564
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058090.310579,
+    "pid": 5019,
+    "exitStatus": 0,
+    "endEpoch": 1791058095.045565
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "121.66666666666666",
+      "-y",
+      "234.66666666666663",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058095.0476239,
+    "pid": 5045,
+    "exitStatus": 0,
+    "endEpoch": 1791058096.240779
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058096.751711,
+    "pid": 5047,
+    "exitStatus": 0,
+    "endEpoch": 1791058097.721762
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058098.32603,
+    "pid": 5052,
+    "exitStatus": 0,
+    "endEpoch": 1791058099.2537339
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-32-left.png"
+    ],
+    "startEpoch": 1791058099.3424692,
+    "pid": 5055,
+    "exitStatus": 0,
+    "endEpoch": 1791058099.827429
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "121.66666666666666",
+      "--start-y",
+      "234.66666666666663",
+      "--end-x",
+      "176.66666666666666",
+      "--end-y",
+      "234.66666666666663",
+      "--duration",
+      "1.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058099.8304179,
+    "pid": 5066,
+    "exitStatus": 0,
+    "endEpoch": 1791058101.949762
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058102.455067,
+    "pid": 5078,
+    "exitStatus": 0,
+    "endEpoch": 1791058103.437719
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058104.041609,
+    "pid": 5086,
+    "exitStatus": 0,
+    "endEpoch": 1791058104.990504
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-orbit.png"
+    ],
+    "startEpoch": 1791058105.086268,
+    "pid": 5122,
+    "exitStatus": 0,
+    "endEpoch": 1791058105.5639
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-32-left-5-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-32-left-5-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058105.566103,
+    "pid": 5132,
+    "exitStatus": 0,
+    "endEpoch": 1791058105.9826891
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058106.985458,
+    "pid": 5158,
+    "exitStatus": 0,
+    "endEpoch": 1791058111.6772401
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058112.286624,
+    "pid": 5221,
+    "exitStatus": 0,
+    "endEpoch": 1791058113.243124
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-fresh-view-reset.png"
+    ],
+    "startEpoch": 1791058113.3397288,
+    "pid": 5223,
+    "exitStatus": 0,
+    "endEpoch": 1791058113.859342
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-20-left-6-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-20-left-6-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058113.861794,
+    "pid": 5233,
+    "exitStatus": 0,
+    "endEpoch": 1791058114.2718022
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058115.274116,
+    "pid": 5246,
+    "exitStatus": 0,
+    "endEpoch": 1791058119.894092
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "151.66666666666666",
+      "-y",
+      "232.66666666666666",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058119.8959749,
+    "pid": 5261,
+    "exitStatus": 0,
+    "endEpoch": 1791058121.078902
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058121.585441,
+    "pid": 5267,
+    "exitStatus": 0,
+    "endEpoch": 1791058122.6022441
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058123.2045052,
+    "pid": 5277,
+    "exitStatus": 0,
+    "endEpoch": 1791058124.163122
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-20-left.png"
+    ],
+    "startEpoch": 1791058124.254549,
+    "pid": 5282,
+    "exitStatus": 0,
+    "endEpoch": 1791058124.769175
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-jug-center-7-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-jug-center-7-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058124.771138,
+    "pid": 5292,
+    "exitStatus": 0,
+    "endEpoch": 1791058125.1872299
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058126.191871,
+    "pid": 5332,
+    "exitStatus": 0,
+    "endEpoch": 1791058130.960168
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "201.0",
+      "-y",
+      "231.33333333333331",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058130.961997,
+    "pid": 6627,
+    "exitStatus": 0,
+    "endEpoch": 1791058132.156651
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058132.659465,
+    "pid": 7596,
+    "exitStatus": 0,
+    "endEpoch": 1791058133.618599
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058134.230331,
+    "pid": 7606,
+    "exitStatus": 0,
+    "endEpoch": 1791058135.176969
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-jug-center.png"
+    ],
+    "startEpoch": 1791058135.2697542,
+    "pid": 7616,
+    "exitStatus": 0,
+    "endEpoch": 1791058135.777398
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-20-left-8-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-20-left-8-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058135.779445,
+    "pid": 7631,
+    "exitStatus": 0,
+    "endEpoch": 1791058136.199295
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058137.207219,
+    "pid": 7984,
+    "exitStatus": 0,
+    "endEpoch": 1791058141.878807
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "103.33333333333336",
+      "-y",
+      "260.3333333333333",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058141.8808498,
+    "pid": 8413,
+    "exitStatus": 0,
+    "endEpoch": 1791058143.068914
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058143.5700328,
+    "pid": 8418,
+    "exitStatus": 0,
+    "endEpoch": 1791058144.541617
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058145.148293,
+    "pid": 8428,
+    "exitStatus": 0,
+    "endEpoch": 1791058146.071764
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-20-left.png"
+    ],
+    "startEpoch": 1791058146.162814,
+    "pid": 8433,
+    "exitStatus": 0,
+    "endEpoch": 1791058146.623033
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-15-left-9-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-15-left-9-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058146.6253319,
+    "pid": 8443,
+    "exitStatus": 0,
+    "endEpoch": 1791058147.03861
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058148.041038,
+    "pid": 8471,
+    "exitStatus": 0,
+    "endEpoch": 1791058152.704983
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "141.33333333333337",
+      "-y",
+      "273.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058152.707056,
+    "pid": 8481,
+    "exitStatus": 0,
+    "endEpoch": 1791058153.8945532
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058154.404759,
+    "pid": 8485,
+    "exitStatus": 0,
+    "endEpoch": 1791058155.313947
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058155.922524,
+    "pid": 8493,
+    "exitStatus": 0,
+    "endEpoch": 1791058156.901868
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-15-left.png"
+    ],
+    "startEpoch": 1791058156.9976408,
+    "pid": 8496,
+    "exitStatus": 0,
+    "endEpoch": 1791058157.4615319
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "141.33333333333337",
+      "--start-y",
+      "273.0",
+      "--end-x",
+      "196.33333333333337",
+      "--end-y",
+      "273.0",
+      "--duration",
+      "1.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058157.4633012,
+    "pid": 8508,
+    "exitStatus": 0,
+    "endEpoch": 1791058159.435392
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058159.945278,
+    "pid": 8512,
+    "exitStatus": 0,
+    "endEpoch": 1791058160.8562958
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058161.459071,
+    "pid": 8517,
+    "exitStatus": 0,
+    "endEpoch": 1791058162.359829
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/flat-orbit.png"
+    ],
+    "startEpoch": 1791058162.458242,
+    "pid": 8520,
+    "exitStatus": 0,
+    "endEpoch": 1791058162.9432378
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-15-left-10-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-15-left-10-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058162.9455402,
+    "pid": 8530,
+    "exitStatus": 0,
+    "endEpoch": 1791058163.352122
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058164.35918,
+    "pid": 8544,
+    "exitStatus": 0,
+    "endEpoch": 1791058169.002002
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058169.614591,
+    "pid": 8611,
+    "exitStatus": 0,
+    "endEpoch": 1791058170.580043
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/flat-fresh-view-reset.png"
+    ],
+    "startEpoch": 1791058170.673286,
+    "pid": 8628,
+    "exitStatus": 0,
+    "endEpoch": 1791058171.20471
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-15-left-11-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-15-left-11-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058171.207111,
+    "pid": 8651,
+    "exitStatus": 0,
+    "endEpoch": 1791058171.623481
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058172.631221,
+    "pid": 8680,
+    "exitStatus": 0,
+    "endEpoch": 1791058177.430969
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "106.00000000000006",
+      "-y",
+      "273.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058177.4331741,
+    "pid": 8803,
+    "exitStatus": 0,
+    "endEpoch": 1791058178.599728
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058179.110155,
+    "pid": 8815,
+    "exitStatus": 0,
+    "endEpoch": 1791058180.066425
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058180.669516,
+    "pid": 8819,
+    "exitStatus": 0,
+    "endEpoch": 1791058181.638869
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-15-left.png"
+    ],
+    "startEpoch": 1791058181.7294888,
+    "pid": 8823,
+    "exitStatus": 0,
+    "endEpoch": 1791058182.252478
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "106.00000000000006",
+      "--start-y",
+      "273.0",
+      "--end-x",
+      "161.00000000000006",
+      "--end-y",
+      "273.0",
+      "--duration",
+      "1.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058182.255454,
+    "pid": 8833,
+    "exitStatus": 0,
+    "endEpoch": 1791058184.3103209
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058184.820458,
+    "pid": 8857,
+    "exitStatus": 0,
+    "endEpoch": 1791058185.758687
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058186.3679261,
+    "pid": 8892,
+    "exitStatus": 0,
+    "endEpoch": 1791058187.25915
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/incut-orbit.png"
+    ],
+    "startEpoch": 1791058187.350299,
+    "pid": 8895,
+    "exitStatus": 0,
+    "endEpoch": 1791058187.869167
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-15-left-12-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-15-left-12-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058187.871933,
+    "pid": 8907,
+    "exitStatus": 0,
+    "endEpoch": 1791058188.295656
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058189.302708,
+    "pid": 8926,
+    "exitStatus": 0,
+    "endEpoch": 1791058194.0171762
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058194.6201348,
+    "pid": 9049,
+    "exitStatus": 0,
+    "endEpoch": 1791058195.574186
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/incut-fresh-view-reset.png"
+    ],
+    "startEpoch": 1791058195.665785,
+    "pid": 9051,
+    "exitStatus": 0,
+    "endEpoch": 1791058196.1433
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-10-center-13-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-10-center-13-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058196.146144,
+    "pid": 9061,
+    "exitStatus": 0,
+    "endEpoch": 1791058196.6014552
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058197.605193,
+    "pid": 9075,
+    "exitStatus": 0,
+    "endEpoch": 1791058202.693502
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "201.00000000000003",
+      "-y",
+      "273.3333333333333",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058202.6973078,
+    "pid": 9170,
+    "exitStatus": 0,
+    "endEpoch": 1791058204.267275
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058204.7776709,
+    "pid": 9173,
+    "exitStatus": 0,
+    "endEpoch": 1791058206.240479
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058206.8472269,
+    "pid": 9177,
+    "exitStatus": 0,
+    "endEpoch": 1791058208.2945569
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-10-center.png"
+    ],
+    "startEpoch": 1791058208.4336882,
+    "pid": 9245,
+    "exitStatus": 0,
+    "endEpoch": 1791058209.086399
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "201.00000000000003",
+      "--start-y",
+      "273.3333333333333",
+      "--end-x",
+      "256.0",
+      "--end-y",
+      "273.3333333333333",
+      "--duration",
+      "1.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058209.08882,
+    "pid": 9324,
+    "exitStatus": 0,
+    "endEpoch": 1791058211.158519
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058211.660946,
+    "pid": 9381,
+    "exitStatus": 0,
+    "endEpoch": 1791058212.5701451
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058213.1826189,
+    "pid": 9385,
+    "exitStatus": 0,
+    "endEpoch": 1791058214.093384
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/shallow-incut-orbit.png"
+    ],
+    "startEpoch": 1791058214.1899679,
+    "pid": 9388,
+    "exitStatus": 0,
+    "endEpoch": 1791058214.660495
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-10-center-14-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-10-center-14-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058214.663476,
+    "pid": 9398,
+    "exitStatus": 0,
+    "endEpoch": 1791058215.076013
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058216.084563,
+    "pid": 9444,
+    "exitStatus": 0,
+    "endEpoch": 1791058220.838342
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058221.447482,
+    "pid": 9566,
+    "exitStatus": 0,
+    "endEpoch": 1791058222.401852
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/shallow-incut-fresh-view-reset.png"
+    ],
+    "startEpoch": 1791058222.494785,
+    "pid": 9574,
+    "exitStatus": 0,
+    "endEpoch": 1791058222.9662771
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-35-center-15-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-35-center-15-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058222.969585,
+    "pid": 9584,
+    "exitStatus": 0,
+    "endEpoch": 1791058223.393205
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058224.400953,
+    "pid": 9599,
+    "exitStatus": 0,
+    "endEpoch": 1791058229.210003
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058229.7146509,
+    "pid": 9605,
+    "exitStatus": 0,
+    "endEpoch": 1791058230.6789389
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "201.00000000000003",
+      "-y",
+      "245.33333333333331",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058230.68121,
+    "pid": 9612,
+    "exitStatus": 0,
+    "endEpoch": 1791058231.8917482
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058232.395966,
+    "pid": 9645,
+    "exitStatus": 0,
+    "endEpoch": 1791058233.366781
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058233.969774,
+    "pid": 9740,
+    "exitStatus": 0,
+    "endEpoch": 1791058234.959014
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-35-center.png"
+    ],
+    "startEpoch": 1791058235.054998,
+    "pid": 9776,
+    "exitStatus": 0,
+    "endEpoch": 1791058235.540002
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-32-right-16-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-32-right-16-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058235.5427032,
+    "pid": 9786,
+    "exitStatus": 0,
+    "endEpoch": 1791058235.967996
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058236.975641,
+    "pid": 9813,
+    "exitStatus": 0,
+    "endEpoch": 1791058241.654662
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "280.3333333333333",
+      "-y",
+      "234.66666666666663",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058241.6570618,
+    "pid": 9822,
+    "exitStatus": 0,
+    "endEpoch": 1791058242.86136
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058243.365029,
+    "pid": 9826,
+    "exitStatus": 0,
+    "endEpoch": 1791058244.407286
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058245.0116282,
+    "pid": 9837,
+    "exitStatus": 0,
+    "endEpoch": 1791058245.939465
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-32-right.png"
+    ],
+    "startEpoch": 1791058246.0276952,
+    "pid": 9840,
+    "exitStatus": 0,
+    "endEpoch": 1791058246.513985
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-20-right-17-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-20-right-17-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058246.51694,
+    "pid": 9857,
+    "exitStatus": 0,
+    "endEpoch": 1791058246.927465
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058247.935314,
+    "pid": 9871,
+    "exitStatus": 0,
+    "endEpoch": 1791058252.648312
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "250.33333333333331",
+      "-y",
+      "232.66666666666666",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058252.6507661,
+    "pid": 10023,
+    "exitStatus": 0,
+    "endEpoch": 1791058253.803336
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058254.3100312,
+    "pid": 10055,
+    "exitStatus": 0,
+    "endEpoch": 1791058255.3899038
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058255.997525,
+    "pid": 10218,
+    "exitStatus": 0,
+    "endEpoch": 1791058256.967072
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/top-sloper-20-right.png"
+    ],
+    "startEpoch": 1791058257.056701,
+    "pid": 10245,
+    "exitStatus": 0,
+    "endEpoch": 1791058257.516474
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-30-left-18-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-30-left-18-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058257.520133,
+    "pid": 10258,
+    "exitStatus": 0,
+    "endEpoch": 1791058257.9515488
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058258.9611661,
+    "pid": 10271,
+    "exitStatus": 0,
+    "endEpoch": 1791058263.476372
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058263.986676,
+    "pid": 10281,
+    "exitStatus": 0,
+    "endEpoch": 1791058264.9878552
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "101.00000000000003",
+      "-y",
+      "246.33333333333331",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058264.990197,
+    "pid": 10284,
+    "exitStatus": 0,
+    "endEpoch": 1791058266.185896
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058266.6882482,
+    "pid": 10295,
+    "exitStatus": 0,
+    "endEpoch": 1791058267.643439
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058268.25356,
+    "pid": 10297,
+    "exitStatus": 0,
+    "endEpoch": 1791058269.20534
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-30-left.png"
+    ],
+    "startEpoch": 1791058269.2953432,
+    "pid": 10303,
+    "exitStatus": 0,
+    "endEpoch": 1791058269.87867
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-30-left-19-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-30-left-19-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058269.88146,
+    "pid": 10313,
+    "exitStatus": 0,
+    "endEpoch": 1791058270.309838
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058271.32022,
+    "pid": 10326,
+    "exitStatus": 0,
+    "endEpoch": 1791058276.121098
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058276.62676,
+    "pid": 10333,
+    "exitStatus": 0,
+    "endEpoch": 1791058277.591129
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "145.0",
+      "-y",
+      "246.66666666666663",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058277.59362,
+    "pid": 10341,
+    "exitStatus": 0,
+    "endEpoch": 1791058278.724431
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058279.236058,
+    "pid": 10348,
+    "exitStatus": 0,
+    "endEpoch": 1791058280.195991
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058280.803746,
+    "pid": 10398,
+    "exitStatus": 0,
+    "endEpoch": 1791058281.7732239
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-30-left.png"
+    ],
+    "startEpoch": 1791058281.863534,
+    "pid": 10402,
+    "exitStatus": 0,
+    "endEpoch": 1791058282.376471
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-25-left-20-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-25-left-20-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058282.380333,
+    "pid": 10416,
+    "exitStatus": 0,
+    "endEpoch": 1791058282.8048131
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058283.81042,
+    "pid": 10428,
+    "exitStatus": 0,
+    "endEpoch": 1791058288.56479
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058289.0750022,
+    "pid": 10478,
+    "exitStatus": 0,
+    "endEpoch": 1791058290.0160189
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "165.00000000000006",
+      "-y",
+      "245.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058290.019912,
+    "pid": 10482,
+    "exitStatus": 0,
+    "endEpoch": 1791058291.138054
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058291.6450062,
+    "pid": 10487,
+    "exitStatus": 0,
+    "endEpoch": 1791058292.557378
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058293.160348,
+    "pid": 10489,
+    "exitStatus": 0,
+    "endEpoch": 1791058294.028097
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-25-left.png"
+    ],
+    "startEpoch": 1791058294.127578,
+    "pid": 10493,
+    "exitStatus": 0,
+    "endEpoch": 1791058294.608486
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-25-right-21-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-25-right-21-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058294.611973,
+    "pid": 10503,
+    "exitStatus": 0,
+    "endEpoch": 1791058295.0245152
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058296.027427,
+    "pid": 10515,
+    "exitStatus": 0,
+    "endEpoch": 1791058300.82483
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058301.3295639,
+    "pid": 10579,
+    "exitStatus": 0,
+    "endEpoch": 1791058302.239672
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "233.33333333333337",
+      "-y",
+      "246.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058302.242203,
+    "pid": 10583,
+    "exitStatus": 0,
+    "endEpoch": 1791058303.3143191
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058303.8211358,
+    "pid": 10585,
+    "exitStatus": 0,
+    "endEpoch": 1791058304.8239841
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058305.428565,
+    "pid": 10590,
+    "exitStatus": 0,
+    "endEpoch": 1791058306.374047
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-25-right.png"
+    ],
+    "startEpoch": 1791058306.464923,
+    "pid": 10592,
+    "exitStatus": 0,
+    "endEpoch": 1791058306.975316
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-30-right-22-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-30-right-22-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058306.978807,
+    "pid": 10602,
+    "exitStatus": 0,
+    "endEpoch": 1791058307.396373
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058308.406739,
+    "pid": 10615,
+    "exitStatus": 0,
+    "endEpoch": 1791058313.336972
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058313.842103,
+    "pid": 10663,
+    "exitStatus": 0,
+    "endEpoch": 1791058314.763322
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "267.66666666666663",
+      "-y",
+      "243.66666666666663",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058314.7659268,
+    "pid": 10668,
+    "exitStatus": 0,
+    "endEpoch": 1791058315.942784
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058316.452898,
+    "pid": 10671,
+    "exitStatus": 0,
+    "endEpoch": 1791058317.384685
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058317.9870908,
+    "pid": 10675,
+    "exitStatus": 0,
+    "endEpoch": 1791058318.915445
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-30-right.png"
+    ],
+    "startEpoch": 1791058319.0056949,
+    "pid": 10678,
+    "exitStatus": 0,
+    "endEpoch": 1791058319.5295172
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-30-right-23-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-30-right-23-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058319.532266,
+    "pid": 10688,
+    "exitStatus": 0,
+    "endEpoch": 1791058319.944709
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058320.950977,
+    "pid": 10706,
+    "exitStatus": 0,
+    "endEpoch": 1791058325.466239
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058325.9727669,
+    "pid": 10748,
+    "exitStatus": 0,
+    "endEpoch": 1791058326.9417531
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "301.0",
+      "-y",
+      "246.33333333333331",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058326.944663,
+    "pid": 10752,
+    "exitStatus": 0,
+    "endEpoch": 1791058328.1407301
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058328.653047,
+    "pid": 10754,
+    "exitStatus": 0,
+    "endEpoch": 1791058329.5854158
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058330.194937,
+    "pid": 10761,
+    "exitStatus": 0,
+    "endEpoch": 1791058331.168416
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-30-right.png"
+    ],
+    "startEpoch": 1791058331.2622101,
+    "pid": 10766,
+    "exitStatus": 0,
+    "endEpoch": 1791058331.743018
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-25-lower-left-24-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-25-lower-left-24-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058331.745996,
+    "pid": 10777,
+    "exitStatus": 0,
+    "endEpoch": 1791058332.1545448
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058333.15956,
+    "pid": 10796,
+    "exitStatus": 0,
+    "endEpoch": 1791058337.998496
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058338.503791,
+    "pid": 10803,
+    "exitStatus": 0,
+    "endEpoch": 1791058339.4910579
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "136.33333333333337",
+      "-y",
+      "259.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058339.493836,
+    "pid": 10814,
+    "exitStatus": 0,
+    "endEpoch": 1791058340.648819
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058341.158819,
+    "pid": 10852,
+    "exitStatus": 0,
+    "endEpoch": 1791058342.11992
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058342.7284029,
+    "pid": 10952,
+    "exitStatus": 0,
+    "endEpoch": 1791058343.6455228
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-25-lower-left.png"
+    ],
+    "startEpoch": 1791058343.733093,
+    "pid": 10955,
+    "exitStatus": 0,
+    "endEpoch": 1791058344.209897
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-30-inner-left-25-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-30-inner-left-25-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058344.212916,
+    "pid": 10975,
+    "exitStatus": 0,
+    "endEpoch": 1791058344.630812
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058345.642505,
+    "pid": 11022,
+    "exitStatus": 0,
+    "endEpoch": 1791058350.3472629
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "167.33333333333334",
+      "-y",
+      "259.66666666666663",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058350.3498838,
+    "pid": 11043,
+    "exitStatus": 0,
+    "endEpoch": 1791058351.539365
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058352.0491421,
+    "pid": 11049,
+    "exitStatus": 0,
+    "endEpoch": 1791058353.022906
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058353.634217,
+    "pid": 11058,
+    "exitStatus": 0,
+    "endEpoch": 1791058354.5657961
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-30-inner-left.png"
+    ],
+    "startEpoch": 1791058354.659055,
+    "pid": 11060,
+    "exitStatus": 0,
+    "endEpoch": 1791058355.143015
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-30-center-26-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-30-center-26-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058355.1465878,
+    "pid": 11121,
+    "exitStatus": 0,
+    "endEpoch": 1791058355.602944
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058356.6065018,
+    "pid": 11150,
+    "exitStatus": 0,
+    "endEpoch": 1791058361.2593431
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058361.771808,
+    "pid": 11172,
+    "exitStatus": 0,
+    "endEpoch": 1791058362.72904
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "201.0",
+      "-y",
+      "259.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058362.731816,
+    "pid": 11176,
+    "exitStatus": 0,
+    "endEpoch": 1791058363.844107
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058364.3555672,
+    "pid": 11179,
+    "exitStatus": 0,
+    "endEpoch": 1791058365.287762
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058365.8979242,
+    "pid": 11184,
+    "exitStatus": 0,
+    "endEpoch": 1791058366.8269289
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-30-center.png"
+    ],
+    "startEpoch": 1791058366.914919,
+    "pid": 11192,
+    "exitStatus": 0,
+    "endEpoch": 1791058367.424601
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-30-inner-right-27-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-30-inner-right-27-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058367.428632,
+    "pid": 11202,
+    "exitStatus": 0,
+    "endEpoch": 1791058367.8291771
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058368.831865,
+    "pid": 11215,
+    "exitStatus": 0,
+    "endEpoch": 1791058373.508671
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "234.66666666666666",
+      "-y",
+      "259.66666666666663",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058373.511783,
+    "pid": 11263,
+    "exitStatus": 0,
+    "endEpoch": 1791058374.637504
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058375.1464992,
+    "pid": 11268,
+    "exitStatus": 0,
+    "endEpoch": 1791058376.158632
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058376.763325,
+    "pid": 11270,
+    "exitStatus": 0,
+    "endEpoch": 1791058377.7703218
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-30-inner-right.png"
+    ],
+    "startEpoch": 1791058377.863169,
+    "pid": 11293,
+    "exitStatus": 0,
+    "endEpoch": 1791058378.330657
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-25-lower-right-28-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-25-lower-right-28-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058378.334235,
+    "pid": 11303,
+    "exitStatus": 0,
+    "endEpoch": 1791058378.7423701
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058379.754177,
+    "pid": 11315,
+    "exitStatus": 0,
+    "endEpoch": 1791058385.22635
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "264.00000000000006",
+      "-y",
+      "259.3333333333333",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058385.229835,
+    "pid": 11375,
+    "exitStatus": 0,
+    "endEpoch": 1791058386.49347
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058387.002889,
+    "pid": 11759,
+    "exitStatus": 0,
+    "endEpoch": 1791058387.955154
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058388.562597,
+    "pid": 11769,
+    "exitStatus": 0,
+    "endEpoch": 1791058389.521199
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/sloper-edge-25-lower-right.png"
+    ],
+    "startEpoch": 1791058389.609809,
+    "pid": 12128,
+    "exitStatus": 0,
+    "endEpoch": 1791058390.1363132
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-20-right-29-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-20-right-29-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058390.13923,
+    "pid": 12171,
+    "exitStatus": 0,
+    "endEpoch": 1791058390.5562549
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058391.562646,
+    "pid": 12219,
+    "exitStatus": 0,
+    "endEpoch": 1791058396.172801
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058396.6775098,
+    "pid": 12238,
+    "exitStatus": 0,
+    "endEpoch": 1791058397.651317
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "298.66666666666663",
+      "-y",
+      "260.3333333333333",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058397.654253,
+    "pid": 12241,
+    "exitStatus": 0,
+    "endEpoch": 1791058398.799662
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058399.308085,
+    "pid": 12253,
+    "exitStatus": 0,
+    "endEpoch": 1791058400.2674189
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058400.8776882,
+    "pid": 12257,
+    "exitStatus": 0,
+    "endEpoch": 1791058401.857281
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-20-right.png"
+    ],
+    "startEpoch": 1791058401.9537358,
+    "pid": 12262,
+    "exitStatus": 0,
+    "endEpoch": 1791058402.43196
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-30-left-30-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-30-left-30-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058402.435489,
+    "pid": 12273,
+    "exitStatus": 0,
+    "endEpoch": 1791058402.858231
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058403.864227,
+    "pid": 12288,
+    "exitStatus": 0,
+    "endEpoch": 1791058408.535467
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "168.33333333333334",
+      "-y",
+      "272.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058408.5383239,
+    "pid": 12308,
+    "exitStatus": 0,
+    "endEpoch": 1791058409.743236
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058410.254737,
+    "pid": 12352,
+    "exitStatus": 0,
+    "endEpoch": 1791058411.283626
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058411.891274,
+    "pid": 12357,
+    "exitStatus": 0,
+    "endEpoch": 1791058412.824128
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-30-left.png"
+    ],
+    "startEpoch": 1791058412.919557,
+    "pid": 12360,
+    "exitStatus": 0,
+    "endEpoch": 1791058413.442084
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-30-right-31-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-30-right-31-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058413.445767,
+    "pid": 12384,
+    "exitStatus": 0,
+    "endEpoch": 1791058413.8835351
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058414.886264,
+    "pid": 12509,
+    "exitStatus": 0,
+    "endEpoch": 1791058419.580586
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "233.66666666666669",
+      "-y",
+      "272.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058419.5838668,
+    "pid": 12564,
+    "exitStatus": 0,
+    "endEpoch": 1791058420.7745621
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058421.28134,
+    "pid": 12576,
+    "exitStatus": 0,
+    "endEpoch": 1791058422.21162
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058422.821328,
+    "pid": 12579,
+    "exitStatus": 0,
+    "endEpoch": 1791058423.8231602
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-30-right.png"
+    ],
+    "startEpoch": 1791058423.914867,
+    "pid": 12586,
+    "exitStatus": 0,
+    "endEpoch": 1791058424.388062
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-15-right-32-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-15-right-32-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058424.392142,
+    "pid": 12596,
+    "exitStatus": 0,
+    "endEpoch": 1791058424.795938
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058425.804116,
+    "pid": 12607,
+    "exitStatus": 0,
+    "endEpoch": 1791058430.483871
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "260.66666666666674",
+      "-y",
+      "273.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058430.487349,
+    "pid": 12617,
+    "exitStatus": 0,
+    "endEpoch": 1791058431.8502169
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058432.3577988,
+    "pid": 14908,
+    "exitStatus": 0,
+    "endEpoch": 1791058433.3082712
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058433.920276,
+    "pid": 14910,
+    "exitStatus": 0,
+    "endEpoch": 1791058434.903575
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-15-right.png"
+    ],
+    "startEpoch": 1791058434.996494,
+    "pid": 15022,
+    "exitStatus": 0,
+    "endEpoch": 1791058435.5352309
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-15-right-33-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-15-right-33-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791058435.538199,
+    "pid": 15034,
+    "exitStatus": 0,
+    "endEpoch": 1791058435.949759
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058436.953248,
+    "pid": 15097,
+    "exitStatus": 0,
+    "endEpoch": 1791058441.654609
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "296.00000000000006",
+      "-y",
+      "273.0",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791058441.6577952,
+    "pid": 15134,
+    "exitStatus": 0,
+    "endEpoch": 1791058442.7989461
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058443.302697,
+    "pid": 15145,
+    "exitStatus": 0,
+    "endEpoch": 1791058444.2324722
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791058444.841794,
+    "pid": 15149,
+    "exitStatus": 0,
+    "endEpoch": 1791058445.752943
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v4/edge-incut-15-right.png"
+    ],
+    "startEpoch": 1791058445.847137,
+    "pid": 15151,
+    "exitStatus": 0,
+    "endEpoch": 1791058446.33441
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "terminate",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791058446.338809,
+    "pid": 15161,
+    "exitStatus": 0,
+    "endEpoch": 1791058446.573567
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "4066",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.576268,
+    "pid": 15171,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.589834
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "4242",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.5916722,
+    "pid": 15173,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.6057541
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "4474",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.607616,
+    "pid": 15175,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.620977
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "4815",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.6228611,
+    "pid": 15177,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.635596
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "4997",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.637335,
+    "pid": 15179,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.65143
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "5155",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.6532779,
+    "pid": 15181,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.667692
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "5243",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.669457,
+    "pid": 15183,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.683003
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "5317",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.684823,
+    "pid": 15185,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.698931
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "7644",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.700869,
+    "pid": 15187,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.726175
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "8453",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.7282119,
+    "pid": 15189,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.743701
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "8540",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.745878,
+    "pid": 15191,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.760601
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "8661",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.7625148,
+    "pid": 15193,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.779549
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "8917",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.781833,
+    "pid": 15195,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.796395
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "9071",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.7984588,
+    "pid": 15197,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.813397
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "9410",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.815669,
+    "pid": 15199,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.8279731
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "9595",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.829936,
+    "pid": 15201,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.844147
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "9797",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.846124,
+    "pid": 15203,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.859313
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "9867",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.861203,
+    "pid": 15205,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.8737652
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "10268",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.875689,
+    "pid": 15207,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.888886
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "10324",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.890868,
+    "pid": 15209,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.904993
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "10427",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.9068742,
+    "pid": 15211,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.9217951
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "10513",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.923701,
+    "pid": 15213,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.936943
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "10612",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.939059,
+    "pid": 15215,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.953436
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "10699",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.9555352,
+    "pid": 15217,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.968759
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "10787",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.971166,
+    "pid": 15219,
+    "exitStatus": 1,
+    "endEpoch": 1791058446.983779
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "10985",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058446.985806,
+    "pid": 15221,
+    "exitStatus": 1,
+    "endEpoch": 1791058447.00076
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "11132",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058447.002869,
+    "pid": 15223,
+    "exitStatus": 1,
+    "endEpoch": 1791058447.0161312
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "11212",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058447.01848,
+    "pid": 15225,
+    "exitStatus": 1,
+    "endEpoch": 1791058447.03147
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "11313",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058447.033515,
+    "pid": 15227,
+    "exitStatus": 1,
+    "endEpoch": 1791058447.048071
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "12202",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058447.050207,
+    "pid": 15229,
+    "exitStatus": 1,
+    "endEpoch": 1791058447.063684
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "12286",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058447.065907,
+    "pid": 15231,
+    "exitStatus": 1,
+    "endEpoch": 1791058447.0798311
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "12395",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058447.0817962,
+    "pid": 15233,
+    "exitStatus": 1,
+    "endEpoch": 1791058447.0948339
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "12606",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058447.0969758,
+    "pid": 15235,
+    "exitStatus": 1,
+    "endEpoch": 1791058447.111037
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "15045",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791058447.113499,
+    "pid": 15237,
+    "exitStatus": 1,
+    "endEpoch": 1791058447.126951
+  }
+]

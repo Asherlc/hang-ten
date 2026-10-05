@@ -1,0 +1,1789 @@
+{
+  "lifetimes": [
+    {
+      "token": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+      "constructorSequence": 14,
+      "kind": "pair",
+      "observations": 136,
+      "firstObservedBothDead": {
+        "sequence": 21,
+        "epoch": 1790996041.303059,
+        "event": "highlight-before",
+        "value": {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      },
+      "lastObserved": {
+        "sequence": 164,
+        "epoch": 1790996237.799202,
+        "event": "view-update",
+        "value": {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "token": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+      "constructorSequence": 31,
+      "kind": "pair",
+      "observations": 128,
+      "firstObservedBothDead": null,
+      "lastObserved": {
+        "sequence": 164,
+        "epoch": 1790996237.799202,
+        "event": "view-update",
+        "value": {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "captureBrackets": [
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-0-active-plus-0.25.png",
+      "captureStart": 1790996043.730222,
+      "captureEnd": 1790996044.2322938,
+      "beforeSequence": 28,
+      "afterSequence": 35,
+      "beforeEpoch": 1790996043.4649448,
+      "afterEpoch": 1790996044.419286,
+      "spanSeconds": 0.9543411731719971,
+      "beforeStates": [
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ],
+      "afterStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-0-active-plus-1.png",
+      "captureStart": 1790996044.480039,
+      "captureEnd": 1790996044.979444,
+      "beforeSequence": 35,
+      "afterSequence": 36,
+      "beforeEpoch": 1790996044.419286,
+      "afterEpoch": 1790996045.486933,
+      "spanSeconds": 1.0676469802856445,
+      "beforeStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ],
+      "afterStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-0-active-plus-3.png",
+      "captureStart": 1790996046.50173,
+      "captureEnd": 1790996046.997086,
+      "beforeSequence": 36,
+      "afterSequence": 38,
+      "beforeEpoch": 1790996045.486933,
+      "afterEpoch": 1790996047.609698,
+      "spanSeconds": 2.122765064239502,
+      "beforeStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ],
+      "afterStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-0-active-plus-5.png",
+      "captureStart": 1790996048.486146,
+      "captureEnd": 1790996048.943443,
+      "beforeSequence": 38,
+      "afterSequence": 40,
+      "beforeEpoch": 1790996047.609698,
+      "afterEpoch": 1790996049.743194,
+      "spanSeconds": 2.133496046066284,
+      "beforeStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ],
+      "afterStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-0.25.png",
+      "captureStart": 1790996050.6706629,
+      "captureEnd": 1790996051.1386611,
+      "beforeSequence": 43,
+      "afterSequence": 46,
+      "beforeEpoch": 1790996050.4005752,
+      "afterEpoch": 1790996051.8762798,
+      "spanSeconds": 1.4757046699523926,
+      "beforeStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ],
+      "afterStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-1.png",
+      "captureStart": 1790996051.407052,
+      "captureEnd": 1790996051.884106,
+      "beforeSequence": 45,
+      "afterSequence": 47,
+      "beforeEpoch": 1790996050.809085,
+      "afterEpoch": 1790996052.930351,
+      "spanSeconds": 2.1212661266326904,
+      "beforeStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ],
+      "afterStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-3.png",
+      "captureStart": 1790996053.433554,
+      "captureEnd": 1790996053.9306839,
+      "beforeSequence": 47,
+      "afterSequence": 48,
+      "beforeEpoch": 1790996052.930351,
+      "afterEpoch": 1790996053.974062,
+      "spanSeconds": 1.0437109470367432,
+      "beforeStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ],
+      "afterStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-5.png",
+      "captureStart": 1790996055.409954,
+      "captureEnd": 1790996055.875554,
+      "beforeSequence": 49,
+      "afterSequence": 50,
+      "beforeEpoch": 1790996055.036341,
+      "afterEpoch": 1790996056.067158,
+      "spanSeconds": 1.0308170318603516,
+      "beforeStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ],
+      "afterStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-0.25.png",
+      "captureStart": 1790996231.059691,
+      "captureEnd": 1790996231.549161,
+      "beforeSequence": 160,
+      "afterSequence": 162,
+      "beforeEpoch": 1790996230.7746391,
+      "afterEpoch": 1790996237.7901511,
+      "spanSeconds": 7.015511989593506,
+      "beforeStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ],
+      "afterStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-1.png",
+      "captureStart": 1790996231.793609,
+      "captureEnd": 1790996232.273725,
+      "beforeSequence": 160,
+      "afterSequence": 162,
+      "beforeEpoch": 1790996230.7746391,
+      "afterEpoch": 1790996237.7901511,
+      "spanSeconds": 7.015511989593506,
+      "beforeStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ],
+      "afterStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-3.png",
+      "captureStart": 1790996233.796565,
+      "captureEnd": 1790996234.286531,
+      "beforeSequence": 160,
+      "afterSequence": 162,
+      "beforeEpoch": 1790996230.7746391,
+      "afterEpoch": 1790996237.7901511,
+      "spanSeconds": 7.015511989593506,
+      "beforeStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ],
+      "afterStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-5.png",
+      "captureStart": 1790996235.8199549,
+      "captureEnd": 1790996236.282091,
+      "beforeSequence": 160,
+      "afterSequence": 162,
+      "beforeEpoch": 1790996230.7746391,
+      "afterEpoch": 1790996237.7901511,
+      "spanSeconds": 7.015511989593506,
+      "beforeStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ],
+      "afterStates": [
+        {
+          "camera": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9de0)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "perspectiveComponent": true,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014baa9de0)",
+          "constructedRootID": "ObjectIdentifier(0x000000014baa9d80)",
+          "handLifetimeToken": "B8B3CD5C-E247-4764-9629-D3A956D62ABD",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": true,
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x000000014baa9d80)",
+            "isActive": true,
+            "orthographicComponent": false,
+            "parentEntityID": "ObjectIdentifier(0x0000000149719b80)",
+            "perspectiveComponent": false,
+            "realitySceneID": "ObjectIdentifier(0x0000000104c12200)"
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "B8B3CD5C-E247-4764-9629-D3A956D62ABD"
+              ],
+              "lastSwiftUIEvent": "appeared",
+              "lastSwiftUIEventSequence": 30,
+              "lastSwiftUIEventUptime": 79117.999507375,
+              "viewToken": "D419AA1A-2956-43D9-BC2B-5FAE77AE68CD"
+            }
+          ]
+        },
+        {
+          "camera": {
+            "alive": false
+          },
+          "configuredObserved": true,
+          "constructedCameraID": "ObjectIdentifier(0x000000014a3adf20)",
+          "constructedRootID": "ObjectIdentifier(0x000000014a3adee0)",
+          "handLifetimeToken": "D0F53307-A864-4951-9FF0-5BD416BE2FD7",
+          "kind": "pair",
+          "registrationIssue": "nil",
+          "root": {
+            "alive": false
+          },
+          "viewObservations": [
+            {
+              "allAssociatedLifetimeTokens": [
+                "D0F53307-A864-4951-9FF0-5BD416BE2FD7"
+              ],
+              "lastSwiftUIEvent": "disappeared",
+              "lastSwiftUIEventSequence": 18,
+              "lastSwiftUIEventUptime": 79115.684283375,
+              "viewToken": "5758CA78-C65D-4748-B6CB-E77CD1C0B5FC"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "limits": "Sparse point observations, not continuous hand-only lifetime history, presenting-host identity or GPU proof."
+}

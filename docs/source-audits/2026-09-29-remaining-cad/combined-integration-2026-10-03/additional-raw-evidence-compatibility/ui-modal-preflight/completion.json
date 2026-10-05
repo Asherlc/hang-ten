@@ -1,0 +1,10 @@
+{
+  "setupOnly": true,
+  "newURLCount": 0,
+  "physicalCancelCount": 0,
+  "failure": "Traceback (most recent call last):\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/ui-modal-preflight.py\", line 20, in <module>\n    write_new(out/'app-intent.json',dict(owner=OWNER,simulatorUUID=uid,bundle=bundle,builtApp=str(app),binarySHA256=sha(app/'HangTen.debug.dylib'),registeredBeforeLaunch=True))\n                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/common.py\", line 13, in sha\n    with Path(path).open('rb') as f:\n         ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/HangTen.debug.dylib'\n",
+  "cleanup": {
+    "appPIDAbsent": true
+  },
+  "requiresWholeImageReview": true
+}

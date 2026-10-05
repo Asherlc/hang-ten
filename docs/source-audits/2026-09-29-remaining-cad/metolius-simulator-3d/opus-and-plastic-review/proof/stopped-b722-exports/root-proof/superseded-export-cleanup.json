@@ -1,0 +1,65 @@
+{
+  "status": "pass",
+  "reason": "Normal comparison requires targeted diagnosis; stopped all superseded exports promptly",
+  "resources": [
+    {
+      "name": "compile",
+      "ownedProcessGroup": 93219,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/compile-tmp",
+      "tempFilesBeforeCleanup": {
+        "hangten-freecad-hxok_66e/run.py": "08172f0d4a60d8da80d8a38e4cf56eb1fa526f47fc6cf93724e045a9942b7e5c",
+        "hangten-freecad-hxok_66e/__pycache__/run.cpython-311.pyc": "d2bf3ac59bf61613a86beca011e2363ac881e6b56df0f75fedfd70963b240774"
+      },
+      "tempAbsent": true,
+      "elapsedSeconds": 190.1561341669876,
+      "exitCode": -15
+    },
+    {
+      "name": "compile-check",
+      "ownedProcessGroup": 93218,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/compile-check-tmp",
+      "tempFilesBeforeCleanup": {
+        "hangten-freecad-4ibqbyvz/run.py": "bde3514798538a8488e9278678d9fc7673be33bd322ec1d503caffb2242b2a39",
+        "hangten-freecad-4ibqbyvz/__pycache__/run.cpython-311.pyc": "f9574a10201be218b5abde7be56da72206842ae6e277dcc433bde8b0d65e627c"
+      },
+      "tempAbsent": true,
+      "elapsedSeconds": 190.13024008303182,
+      "exitCode": -15
+    },
+    {
+      "name": "reproduce",
+      "ownedProcessGroup": 93220,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/reproduce-tmp",
+      "tempFilesBeforeCleanup": {
+        "hangten-freecad-7cxr_ntp/run.py": "5e5fcf8e724657ec6a1f4f65ae8263a37d31e16e5c82b0f4c6fd9c45e4e57b28",
+        "hangten-freecad-7cxr_ntp/__pycache__/run.cpython-311.pyc": "7fffad98db52ae8bb405c959c6dba3c1c3a2d0d9289541f95d023263c5a4e84d"
+      },
+      "tempAbsent": true,
+      "elapsedSeconds": 190.14370650000637,
+      "exitCode": -15
+    },
+    {
+      "name": "fresh-native-grasp",
+      "ownedProcessGroup": 93217,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/fresh-native-grasp-tmp",
+      "tempFilesBeforeCleanup": {},
+      "tempAbsent": true,
+      "elapsedSeconds": 4.7700362500036135,
+      "exitCode": 0
+    },
+    {
+      "name": "normal-comparison",
+      "ownedProcessGroup": 93357,
+      "groupAbsent": true,
+      "tempPath": ".context/placid-badger/metolius-simulator-3d-front-fairing/normal-comparison-tmp",
+      "tempFilesBeforeCleanup": {},
+      "tempAbsent": true,
+      "elapsedSeconds": 5.614446374995168,
+      "exitCode": 0
+    }
+  ]
+}

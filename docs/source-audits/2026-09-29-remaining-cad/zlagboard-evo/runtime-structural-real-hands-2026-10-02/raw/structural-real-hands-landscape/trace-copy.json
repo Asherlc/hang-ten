@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/C0DABE75-A621-4F9D-8B17-0F4EF75A2132/Documents/HighlightDiagnostic-placid-badger-cad-second-half-structural-real-hands/events-26090603-C706-4595-80B8-EA8904DE6F91.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-landscape/events-26090603-C706-4595-80B8-EA8904DE6F91.jsonl",
+      "sha256": "710b84b1cd06e61dad9f6703ad9334a19e368d239323f0e4fb73dc0423c52a55"
+    }
+  ],
+  "records": 162,
+  "completeContiguous": true,
+  "copiedEpoch": 1790994233.927684,
+  "includesSamplerEnd": true
+}

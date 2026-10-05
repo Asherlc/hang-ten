@@ -1,0 +1,398 @@
+[
+  {
+    "type": "Application",
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 0,
+      "x": 0,
+      "height": 874,
+      "width": 402
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "Session",
+    "AXValue": null,
+    "frame": {
+      "y": 62,
+      "x": 0,
+      "width": 402,
+      "height": 54
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Train",
+    "AXUniqueId": "BackButton",
+    "AXValue": null,
+    "frame": {
+      "y": 62,
+      "x": 16,
+      "width": 44,
+      "height": 44
+    }
+  },
+  {
+    "type": "Heading",
+    "AXLabel": "Session",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 73.66666666666666,
+      "height": 20.66666666666667,
+      "x": 72,
+      "width": 62.33333333333334
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Turn off spoken cues",
+    "AXUniqueId": "speaker.wave.2.fill",
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "height": 36,
+      "x": 223,
+      "width": 45
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Turn off spoken cues",
+    "AXUniqueId": "speaker.wave.2.fill",
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "height": 36,
+      "x": 223,
+      "width": 45
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "workout.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "height": 36,
+      "x": 284,
+      "width": 43.666666666666686
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "workout.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "x": 284,
+      "width": 43.666666666666686,
+      "height": 36
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "End",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "height": 36,
+      "x": 343.6666666666667,
+      "width": 38.333333333333314
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "End",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "height": 36,
+      "x": 343.6666666666667,
+      "width": 38.333333333333314
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "STEP 9 OF 20",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 138.5,
+      "height": 13.333333333333314,
+      "width": 92,
+      "x": 20
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Hang",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 138,
+      "height": 14.333333333333314,
+      "width": 30.666666666666686,
+      "x": 341.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Routine, current step 9: Abrahang \u00b7 Three-finger drag \u00b7 deep pocket \u00b7 rep 2 of 3",
+    "AXUniqueId": "workout.routinePicker",
+    "AXValue": null,
+    "frame": {
+      "y": 171.33333333333331,
+      "height": 15.666666666666686,
+      "width": 49.33333333333333,
+      "x": 20
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Abrahang \u00b7 Three-finger drag \u00b7 deep pocket \u00b7 rep 2 of 3",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 200,
+      "x": 20,
+      "width": 288,
+      "height": 122.66666666666663
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Hang \u2022 Both hands",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 335.66666666666663,
+      "x": 20,
+      "width": 118.66666666666666,
+      "height": 15.666666666666686
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "00:10",
+    "AXUniqueId": "workout.timer",
+    "AXValue": null,
+    "frame": {
+      "y": 364.3333333333333,
+      "height": 55,
+      "width": 138.33333333333331,
+      "x": 20
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Start",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 455.3333435058594,
+      "width": 362,
+      "height": 51.33331298828125,
+      "x": 20
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "Play",
+    "AXUniqueId": "play.fill",
+    "AXValue": null,
+    "frame": {
+      "y": 473.66666666666663,
+      "height": 14.666666984558105,
+      "width": 13,
+      "x": 172.33333333333331
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Start",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 471.3333333333333,
+      "width": 38,
+      "height": 19.333333333333314,
+      "x": 193.66666666666669
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Skip step 9: Abrahang \u00b7 Three-finger drag \u00b7 deep pocket \u00b7 rep 2 of 3",
+    "AXUniqueId": "workout.skipStep",
+    "AXValue": null,
+    "frame": {
+      "y": 516.6666666666666,
+      "width": 362,
+      "height": 38,
+      "x": 20
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "Forward",
+    "AXUniqueId": "forward.fill",
+    "AXValue": null,
+    "frame": {
+      "y": 529.6666666666666,
+      "width": 22,
+      "height": 12.333333969116211,
+      "x": 153.33333333333331
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Skip step",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 526.6666870117188,
+      "width": 97.50001525878906,
+      "height": 18,
+      "x": 153.3333282470703
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": "Stone Hanger Mini hangboard",
+    "AXUniqueId": "boardModel.3d",
+    "AXValue": "",
+    "frame": {
+      "y": 573.6666666666666,
+      "width": 358,
+      "height": 358,
+      "x": 22
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": "Board renderer diagnostic",
+    "AXUniqueId": "boardModel.renderDiagnostic",
+    "AXValue": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=;tapRevision=0;pickedContact=",
+    "frame": {
+      "y": 573.6666666666666,
+      "width": 1,
+      "height": 1,
+      "x": 22
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Use two boards, one hand on each.",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 950.6666666666666,
+      "width": 212,
+      "height": 15.666666666666629,
+      "x": 20
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Open hand, Exact fingers: index, middle, and ring",
+    "AXUniqueId": "workout.gripCue.left",
+    "AXValue": null,
+    "frame": {
+      "y": 1074.8333333333333,
+      "width": 177,
+      "height": 27,
+      "x": 19.5
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Open hand",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1082.3333333333333,
+      "width": 55,
+      "height": 12,
+      "x": 80.5
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Open hand, Exact fingers: index, middle, and ring",
+    "AXUniqueId": "workout.gripCue.right",
+    "AXValue": null,
+    "frame": {
+      "y": 1074.8333333333333,
+      "width": 177,
+      "height": 27,
+      "x": 205.5
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Open hand",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1082.3333333333333,
+      "width": 55,
+      "height": 12,
+      "x": 266.5
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "INSTRUCTIONS",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1138.8333333333333,
+      "width": 103,
+      "height": 13.333333333333258,
+      "x": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Hang",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1138.3333333333333,
+      "width": 31.666666666666686,
+      "height": 14.333333333333258,
+      "x": 332.3333333333333
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Keep your feet on the ground. Use 70\u201380% of the effort needed to lift off on the three-finger drag \u00b7 deep pocket. Load for 10 seconds, then rest for 50 seconds.",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1163.6666666666665,
+      "width": 321.66666666666663,
+      "height": 82.33333333333326,
+      "x": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Feet supported \u00b7 10s work \u00b7 50s rest \u00b7 70\u201380%",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1256.9999999999998,
+      "width": 274,
+      "height": 14.333333333333258,
+      "x": 38
+    }
+  }
+]

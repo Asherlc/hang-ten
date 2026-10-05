@@ -1,0 +1,259 @@
+{
+  "owner": "placid-badger",
+  "status": "bounded nativeRoutes display feasibility passed above and below; ROOT owns canonical integration and independent final gates",
+  "preferredBelowAuthoringInput": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/immutable-authoring-input.json",
+    "sha256": "bf4d24e0d2a72c1e94f718985450476231271198346fe28ea9be3dcc9574f60a"
+  },
+  "preferredBelowAuthoringInputHasSavedRouteCache": false,
+  "preferredBelowAppliedScratchPackage": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini",
+  "preferredBelowAppliedSidecar": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/Hangboards/nature-stone-hanger-mini/suspension.json",
+    "sha256": "688b6c5407264453b818d78d6aea28734d72c418987288893faec505599b279b"
+  },
+  "aboveAuthoringInput": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/immutable-authoring-input.json",
+    "sha256": "f9a6295944040990176d233c5d15593ec2aa325da8b2194a3ec6c35c367d5d28"
+  },
+  "aboveAppliedSidecar": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/Hangboards/nature-stone-hanger-mini/suspension.json",
+    "sha256": "94dbcb67159a28447229a7d356523f875d7de133e073e7adc33294560182f316"
+  },
+  "exactFrozenSourceModelDescriptor": {
+    "nature-stone-hanger-mini.FCStd": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+      "sha256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4"
+    },
+    "assets/primary.usdz": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/nature-stone-hanger-mini/assets/primary.usdz",
+      "sha256": "0ba3b6b840611ede9a0b23a7b2d531c50759afe00bdbbf18c84d46afcf764754"
+    },
+    "assets/primary.model.json": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/nature-stone-hanger-mini/assets/primary.model.json",
+      "sha256": "ee7b6155b3f16790362938e62c64658c08dbbcab3b711d11e95040e226556268"
+    }
+  },
+  "nativeCollider": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/frozen-package/native-collider.json",
+    "sha256": "b73af61a65e79ed989434bcb0ea734d4bcd10f9d33b289c33c3536b5dc48d62e"
+  },
+  "actualFinalNativeApplyAndCheck": {
+    "above": {
+      "applyExecution": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/apply-execution.json",
+        "sha256": "7a1251f8fda5a65aada40793e81cb9b6147b8beec80a85358e9c8c3804ae4566"
+      },
+      "checkExecution": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/check-execution.json",
+        "sha256": "fd938ecc14a619e4b6a79c04ce8ccb662e4ade1cea23926f56f9bb8cee315ec5"
+      },
+      "applyReport": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/apply-report.json",
+        "sha256": "21607ea2ab1dca4f2dcdfaa6c313d9cc93841eb905290e2dbeda93fe709bbaff"
+      },
+      "checkReport": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/check-report.json",
+        "sha256": "21607ea2ab1dca4f2dcdfaa6c313d9cc93841eb905290e2dbeda93fe709bbaff"
+      }
+    },
+    "below": {
+      "applyExecution": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/apply-execution.json",
+        "sha256": "756a34848a37cec2575aa3edecf53fcd88c03eea82aa6b8a6b1f6cc112c3d2e3"
+      },
+      "checkExecution": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/check-execution.json",
+        "sha256": "87bf96af12f091f2a6d296526a63fbd494a92a418600067dccc455b4198285b8"
+      },
+      "applyReport": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/apply-report.json",
+        "sha256": "9395bcd55846bbcbe23dde78db16c8e10f511623d253fc27fb5d34e9f1a62b82"
+      },
+      "checkReport": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/check-report.json",
+        "sha256": "9395bcd55846bbcbe23dde78db16c8e10f511623d253fc27fb5d34e9f1a62b82"
+      }
+    }
+  },
+  "nativeApplyCheckRawExitCodes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "analyticallyDerivedStationsRuntimeM": {
+    "leftFront": [
+      -0.049320001,
+      0,
+      0.00625
+    ],
+    "leftBack": [
+      -0.049320001,
+      0,
+      -0.00625
+    ],
+    "rightFront": [
+      0.049320001,
+      0,
+      0.00625
+    ],
+    "rightBack": [
+      0.049320001,
+      0,
+      -0.00625
+    ]
+  },
+  "stationSerializationProof": {
+    "sourceBoundPredicateDiagnosis": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/station-boundary-diagnosis.json",
+      "sha256": "b4733fbc20c3bd8c7bbc0ba32e6a66441e30de02f948fa51979bb2015fb47549"
+    },
+    "nativeFloorPlusUnchangedOffsetAbsoluteXBoundM": 0.0493200000018563,
+    "actualOffsetBoundaryAbsoluteXBoundM": 0.04932000000092815,
+    "requiredAbsoluteXBoundM": 0.0493200000018563,
+    "serializationGridM": 1e-09,
+    "formula": "absX=ceil(max(actual source-bound section floor absX+cordR+20\u03bcm, actual offset-boundary absX)/1nm)*1nm; same X at mirrored ends",
+    "derivedStationAbsoluteXM": 0.049320001,
+    "guardAboveQuantifiedBoundM": 9.98143699637577e-10,
+    "deltaFromRejectedAnalyticStationM": 9.999999994736442e-10,
+    "nominalNativeSeatingGapM": 2.000099999999866e-05,
+    "adaptiveStationOrMarginSearch": false,
+    "sharedCodeOrGateChange": false
+  },
+  "analyticInputProof": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/analytic-input-proof.json",
+    "sha256": "f37a6191a85851ea7139ef3b7fe9f4d651aa63d3ef92ab36ec658b280ef29b11"
+  },
+  "sectionMarginM": 2e-05,
+  "cordRadiusM": 0.001,
+  "leadRestLengthM": 0.11,
+  "nativeSolvedTransverseSpanM": 0.0125,
+  "segmentAllowanceM": 0.014,
+  "segmentAllowanceRationale": "Solved shortest native spans12.5mm, rounded up to next mm plus1mm; feasibility/display allowance, not full cord length or hidden connection.",
+  "remainingPoses": [
+    "front-upright",
+    "wood-inverted",
+    "pinch-side"
+  ],
+  "wrongJugOpenUpRemoved": true,
+  "remainingRotationsAndCamerasPreserved": true,
+  "fixedWorldSupportsRuntimeM": {
+    "above": [
+      0,
+      0.045,
+      0
+    ],
+    "below": [
+      0,
+      -0.045,
+      0
+    ]
+  },
+  "belowSolvedPoseSummary": {
+    "front-upright": {
+      "height": 0.0484317,
+      "lengthRatios": {
+        "left-lead": 1.0000000039287504,
+        "left-cross-return": 0.8928571428571429,
+        "right-lead": 0.999999766381788,
+        "right-cross-return": 0.8928571428571429
+      },
+      "minimumClearance": {
+        "left-lead": 0.0009906326763551585,
+        "left-cross-return": 0.0009950541033680901,
+        "right-lead": 0.00099058149738481,
+        "right-cross-return": 0.0009950541033680901
+      }
+    },
+    "wood-inverted": {
+      "height": 0.048431701,
+      "lengthRatios": {
+        "left-lead": 0.9999999965143866,
+        "left-cross-return": 0.8928571428571429,
+        "right-lead": 0.9999998729588213,
+        "right-cross-return": 0.8928571428571429
+      },
+      "minimumClearance": {
+        "left-lead": 0.0009906326763551587,
+        "left-cross-return": 0.0009950541033680901,
+        "right-lead": 0.000990581427477188,
+        "right-cross-return": 0.0009950541033680901
+      }
+    },
+    "pinch-side": {
+      "height": 0.0484317,
+      "lengthRatios": {
+        "left-lead": 1.0000000039287504,
+        "left-cross-return": 0.8928571428571429,
+        "right-lead": 0.999999766381788,
+        "right-cross-return": 0.8928571428571429
+      },
+      "minimumClearance": {
+        "left-lead": 0.0009906326763551585,
+        "left-cross-return": 0.0009950541033680901,
+        "right-lead": 0.00099058149738481,
+        "right-cross-return": 0.0009950541033680901
+      }
+    }
+  },
+  "continuousGateDisposition": "Existing continuous rounded-cache signed-solid and full-radius self/interstrand gates passed. Reported minimumClearance values are certified Lipschitz lower bounds at the unchanged10\u03bcm tolerance, not exact measured overlap or a mathematical zero-overlap proof.",
+  "unchangedNativeSignedSolidToleranceM": 1e-05,
+  "retainedRejectedHypotheses": {
+    "unchanged600MicrometreMargin": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/baseline/experiment-outcomes.json",
+      "sha256": "1be44672024b700883d404fe5aac7f8c26e8cc15ef3725e37f438e15510e8f19"
+    },
+    "exact20MicrometreOffsetBoundaryEquality": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/margin20/experiment-outcomes.json",
+      "sha256": "73b13c5e2ed678d554408d017827f9d55bc65cb39ecedabeaf431f4ef658b74f"
+    },
+    "preciseStationAndSectionDiagnosis": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/station-boundary-diagnosis.json",
+      "sha256": "b4733fbc20c3bd8c7bbc0ba32e6a66441e30de02f948fa51979bb2015fb47549"
+    },
+    "initialOldSourceGuardStopBeforeSolve": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/initial-input-guard-stop/guard-execution.json",
+      "sha256": "91473e83540f0d39900d64548898c118ebd395c04a1849cd394f85e61bcadf7b"
+    }
+  },
+  "rejected20MicrometreSegmentPredicateWorstResidualM": -9.281464692925029e-13,
+  "primaryWholeEvidenceActuallyViewed": [
+    {
+      "url": "https://natureclimbing.com/cdn/shop/files/MiniHanger-86.jpg",
+      "finalURL": "https://natureclimbing.com/cdn/shop/files/MiniHanger-86.jpg",
+      "path": ".context/placid-badger/mini-review10-correction/root/research/MiniHanger-86.jpg",
+      "contentType": "image/jpeg",
+      "bytes": 540727,
+      "sha256": "f544f0d4df04241ec344c8978031d1ff14e609ae5d75c51d58f898fc282e7aca",
+      "primaryManufacturer": true,
+      "humanAdditionalResearchAuthorized": true,
+      "visualReviewPending": true
+    },
+    {
+      "url": "https://natureclimbing.com/cdn/shop/files/Oakminihanger6.jpg",
+      "finalURL": "https://natureclimbing.com/cdn/shop/files/Oakminihanger6.jpg",
+      "path": ".context/placid-badger/mini-review10-correction/root/research/Oakminihanger6.jpg",
+      "contentType": "image/jpeg",
+      "bytes": 616223,
+      "sha256": "930c3434ff332e13a3e93ed2214b1377869c4cb227277efe17998476f7eb52ec",
+      "primaryManufacturer": true,
+      "humanAdditionalResearchAuthorized": true,
+      "visualReviewPending": true
+    }
+  ],
+  "sourceAndPhysicalLimits": [
+    "Maker whole hand photo establishes visible cord loading downward; whole packshot retains above-loop arrangement.",
+    "Only visible vertical-to-transverse open-groove path is represented; all six source features are grooves, zero bores.",
+    "Hidden continuation, complete tied-loop connection and physical equilibrium remain unverified.",
+    "Station/radius/length/support values are display estimates. Native-section solver is a bounded display approximation.",
+    "Edge rotations are preserved, with source-use uncertainty owned by ROOT; no inferred edge swap.",
+    "No authored routepoint/cache, groove collar, bore, hidden join, adaptive station/margin search or shared solver/gate change."
+  ],
+  "producerScopeAndCleanup": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/final-scope-and-lifecycle.json",
+    "sha256": "9174f8a20812a32592413a5b21e0b298111528bb1c29d0f9dfc9a36974033122"
+  },
+  "runtimeVerified": false,
+  "currentAppFrames": 0,
+  "additionalSolveTestsBuildsAfterThisHandoffAuthorized": false
+}

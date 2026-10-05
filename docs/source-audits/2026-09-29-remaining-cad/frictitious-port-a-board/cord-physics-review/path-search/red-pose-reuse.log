@@ -1,0 +1,43 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+____ test_exact_pose_reuse_is_opt_in_and_never_merges_distinct_frames[True] ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10babc320>
+accelerated = True
+
+    @pytest.mark.parametrize("accelerated", [False, True])
+    def test_exact_pose_reuse_is_opt_in_and_never_merges_distinct_frames(monkeypatch, accelerated):
+        import copy
+        import native_cord_routes as native
+        mesh = trimesh.creation.box(extents=[.08, .04, .01]); mesh.apply_translation([0, 0, -.03])
+        descriptor = {"modelBounds": {"min": mesh.bounds[0].tolist(), "max": mesh.bounds[1].tolist()}}
+        original = {"rotation": [0, 0, 0, 1], "translation": [0, -.1, 0]}
+        poses = {key: copy.deepcopy(original) for key in ["first", "duplicate", "rotation", "x", "z"]}
+        poses["duplicate"].update(translation=[0, -.2, 0], camera={"different": True})
+        poses["rotation"]["rotation"] = [0, 0, .1, float(np.sqrt(.99))]
+        poses["x"]["translation"][0] = .005
+        poses["z"]["translation"][2] = .004
+        data = {"suspension": {"strands": [{"id": "lead", "kind": "lead", "radius": .002, "restLength": .25}],
+                 "anchor": {"offsetFromBoardBounds": [0, .1, .05]}, "canonicalPoses": poses},
+                "ropeSolver": {"clearance": .0002, "sectionPlane": "anchor", "terminalsByStrandID": {
+                    "lead": {"points": [[0, 0, 0]], "planeNormal": [1, 0, 0]}}}}
+        if accelerated: data["ropeSolver"]["pathSearch"] = "aStar"
+        before = copy.deepcopy(data)
+        real_seed = native._solve_native_seed
+        solved_ids = []
+        def observed_seed(mesh, data, descriptor):
+            solved_ids.extend(data["suspension"]["canonicalPoses"])
+            return real_seed(mesh, data, descriptor)
+        monkeypatch.setattr(native, "_solve_native_seed", observed_seed)
+        result = native.solve_native_routes(mesh, data, descriptor)
+>       assert solved_ids == (["first", "rotation", "x", "z"] if accelerated else list(poses))
+E       AssertionError: assert ['first', 'du...on', 'x', 'z'] == ['first', 'ro...on', 'x', 'z']
+E         
+E         At index 1 diff: 'duplicate' != 'rotation'
+E         Left contains one more item: 'z'
+E         Use -v to get more diff
+
+Tools/HangboardCAD/tests/test_native_path_search.py:78: AssertionError
+=========================== short test summary info ============================
+FAILED Tools/HangboardCAD/tests/test_native_path_search.py::test_exact_pose_reuse_is_opt_in_and_never_merges_distinct_frames[True]
+1 failed, 1 passed, 10 deselected in 0.78s

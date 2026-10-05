@@ -1,0 +1,46 @@
+[
+  {
+    "args": [
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A"
+    ],
+    "status": 0
+  },
+  {
+    "args": [
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "--label",
+      "Open",
+      "--element-type",
+      "Button",
+      "--tap-style",
+      "physical",
+      "--udid",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A"
+    ],
+    "status": 0
+  },
+  {
+    "args": [
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A"
+    ],
+    "status": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "io",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/setup-confirm/after.png"
+    ],
+    "status": 0
+  }
+]

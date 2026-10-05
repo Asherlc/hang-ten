@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/check-finger-probes.py",
+    ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3/assets/primary.usdz",
+    ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3/assets/primary.model.json",
+    ".context/placid-badger/mini-finger-contact-2026-10-02/root/corrected-finger-probes.json",
+    "corrected"
+  ],
+  "script": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/check-finger-probes.py",
+  "arguments": [
+    ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3/assets/primary.usdz",
+    ".context/placid-badger/mini-finger-contact-2026-10-02/native-author/compile3/assets/primary.model.json",
+    ".context/placid-badger/mini-finger-contact-2026-10-02/root/corrected-finger-probes.json",
+    "corrected"
+  ],
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "XDG_CONFIG_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-corrected-finger-probes-config",
+    "XDG_CACHE_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-corrected-finger-probes-cache",
+    "TMPDIR": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-corrected-finger-probes-tmp",
+    "FREECAD_USER_HOME": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/root/placid-badger-corrected-finger-probes-config",
+    "QT_QPA_PLATFORM": "offscreen",
+    "HANGTEN_CAD_PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "asset": ".context/placid-badger/cad-raster-boards/plateau-lifting-edge/candidate-assets/primary.usdz",
+  "assetBytes": 33622,
+  "assetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+  "board": ".context/placid-badger/cad-raster-boards/plateau-lifting-edge/plateau-lifting-edge.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "edge-18"
+  ],
+  "descriptor": ".context/placid-badger/cad-raster-boards/plateau-lifting-edge/candidate-assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "edge-18": 18.0
+  },
+  "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+  "nodes": [
+    "plateau_body",
+    "plateau_edge_18"
+  ],
+  "package": "plateau-lifting-edge",
+  "presentationID": "depth-18mm",
+  "published": true,
+  "schemaVersion": 1,
+  "source": ".context/placid-badger/cad-raster-boards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "8b538abb1ad3bbdc607d41a06d6deac43ef3bfc437aba8d846b4ab9b3b1e6ef7",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 924
+}

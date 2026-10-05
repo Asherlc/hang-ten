@@ -1,0 +1,116 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+        "deviceName" : "Hang Ten Paseo placid-badger Review CombinedFinal20261003",
+        "exportedFileName" : "66B9D515-FF23-42F1-8393-AEEBF2FF8DEC.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Contact offset task two, same running minute_0_88A91FEC-F492-4BB7-A3A4-770568669F2B.png",
+        "timestamp" : 1791081158.262
+      }
+    ],
+    "testIdentifier" : "GripCueDiagnosticScreenshotUITests/testContactOffsetTaskCanAdvanceWithoutSkippingMinute()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/GripCueDiagnosticScreenshotUITests/testContactOffsetTaskCanAdvanceWithoutSkippingMinute"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+        "deviceName" : "Hang Ten Paseo placid-badger Review CombinedFinal20261003",
+        "exportedFileName" : "6D115F5D-0149-4E3C-8C88-F1B7CDC3B1BA.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Inline manual weight setup in landscape_0_5B0C378E-9447-47D2-BC64-BF2F72FDD8BD.png",
+        "timestamp" : 1791081205.939
+      }
+    ],
+    "testIdentifier" : "GripCueDiagnosticScreenshotUITests/testLandscapePreStartHasNoLegacyLoadAdjustment()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/GripCueDiagnosticScreenshotUITests/testLandscapePreStartHasNoLegacyLoadAdjustment"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+        "deviceName" : "Hang Ten Paseo placid-badger Review CombinedFinal20261003",
+        "exportedFileName" : "3FF1C6F4-9D79-4F00-817F-E21ACE17FA68.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Diagnostic screenshot Max Hangs step 1 landscape grip cues_0_1C1F1F70-F363-48A8-AB1A-3B74BD352B0F.png",
+        "timestamp" : 1791081253.972
+      }
+    ],
+    "testIdentifier" : "GripCueDiagnosticScreenshotUITests/testMaxHangsDeepLinkDefaultsToUntrackedAndAutoStarts()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/GripCueDiagnosticScreenshotUITests/testMaxHangsDeepLinkDefaultsToUntrackedAndAutoStarts"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+        "deviceName" : "Hang Ten Paseo placid-badger Review CombinedFinal20261003",
+        "exportedFileName" : "770AD1C0-1A28-4C78-ACC6-FC3DD36D9824.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "One arm Contact sloper on chosen right side_0_02CD1549-2866-4E22-980E-6E74B59C4EC7.png",
+        "timestamp" : 1791081286.39
+      }
+    ],
+    "testIdentifier" : "GripCueDiagnosticScreenshotUITests/testOneArmTaskLetsAthleteChooseSide()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/GripCueDiagnosticScreenshotUITests/testOneArmTaskLetsAthleteChooseSide"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+        "deviceName" : "Hang Ten Paseo placid-badger Review CombinedFinal20261003",
+        "exportedFileName" : "D0DEF67B-ABBC-4F17-8FD8-2FEA74137867.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Two hands on one-hand Mini Bar require two boards_0_5C3D0836-166C-4219-A113-7155B5544FF7.png",
+        "timestamp" : 1791081303.961
+      }
+    ],
+    "testIdentifier" : "GripCueDiagnosticScreenshotUITests/testTwoHandTaskOnMiniBarExplainsTwoBoards()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/GripCueDiagnosticScreenshotUITests/testTwoHandTaskOnMiniBarExplainsTwoBoards"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+        "deviceName" : "Hang Ten Paseo placid-badger Review CombinedFinal20261003",
+        "exportedFileName" : "CF273B40-2F19-4F76-84ED-315C6450DA63.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Paused workout portrait_0_E8AF63DC-3927-4120-ACD0-640A49CD5309.png",
+        "timestamp" : 1791081328.75
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+        "deviceName" : "Hang Ten Paseo placid-badger Review CombinedFinal20261003",
+        "exportedFileName" : "82B704DE-B307-4B32-9298-0AEF7BDDA7A5.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Paused workout landscape_0_7A12CBF6-8A9E-4300-A633-3B00E5D1F328.png",
+        "timestamp" : 1791081325.209
+      }
+    ],
+    "testIdentifier" : "GripCueDiagnosticScreenshotUITests/testWorkoutPauseSurvivesRotationAndResumes()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/GripCueDiagnosticScreenshotUITests/testWorkoutPauseSurvivesRotationAndResumes"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+        "deviceName" : "Hang Ten Paseo placid-badger Review CombinedFinal20261003",
+        "exportedFileName" : "8B28CE89-FAC9-4DBF-B11F-4AB6C9A4E01E.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Plateau landscape workout board below configuration selector_0_DE4C28BC-2C55-48D4-8ABD-7267F5B2A5FB.png",
+        "timestamp" : 1791081353.204
+      }
+    ],
+    "testIdentifier" : "OwlClimbPokerBoardMapInteractionUITests/testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector"
+  }
+]

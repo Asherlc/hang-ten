@@ -1,0 +1,685 @@
+{
+  "method": "Complete rectangles; uniform aspect-fit and letterboxing only. No crop, registration, tracing, pixel measurements or content edits.",
+  "placements": [
+    {
+      "output": "original-front-side-top-comparison.png",
+      "input": "previews/original-before-front.png",
+      "inputSHA256": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        164
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "original-front-side-top-comparison.png",
+      "input": "previews/original-after-front.png",
+      "inputSHA256": "3ac9d17c03554f4d71168d77fe9d8cc2c801d62fc8ad0342e91097e032703117",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        164
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "original-front-side-top-comparison.png",
+      "input": "previews/original-before-side.png",
+      "inputSHA256": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        776
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "original-front-side-top-comparison.png",
+      "input": "previews/original-after-side.png",
+      "inputSHA256": "cb27db76f9bfa84f7639aeb5705d7e6ab73494b4faf312c710e6b7dce7eda64d",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        776
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "original-front-side-top-comparison.png",
+      "input": "previews/original-before-top.png",
+      "inputSHA256": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        1388
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "original-front-side-top-comparison.png",
+      "input": "previews/original-after-top.png",
+      "inputSHA256": "40eaa5706ac82d3e7c789f516e3d0f495da06992ba0173be0bd8695d5f09859e",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        1388
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "neutral-front-side-top-comparison.png",
+      "input": "previews/neutral-before-front.png",
+      "inputSHA256": "8746bc3b05cce598a4c5742e8505dee6fa2e35847f67ba3064c147ffc3f07443",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        164
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "neutral-front-side-top-comparison.png",
+      "input": "previews/neutral-after-front.png",
+      "inputSHA256": "3ac9d17c03554f4d71168d77fe9d8cc2c801d62fc8ad0342e91097e032703117",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        164
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "neutral-front-side-top-comparison.png",
+      "input": "previews/neutral-before-side.png",
+      "inputSHA256": "0cff71e6a0db501f5e9cfeb4d556aa6ba1891c93d8b246c9c432d5b44130606c",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        776
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "neutral-front-side-top-comparison.png",
+      "input": "previews/neutral-after-side.png",
+      "inputSHA256": "cb27db76f9bfa84f7639aeb5705d7e6ab73494b4faf312c710e6b7dce7eda64d",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        776
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "neutral-front-side-top-comparison.png",
+      "input": "previews/neutral-before-top.png",
+      "inputSHA256": "2acb1cb6e393b86840c04f2534f8464290143161b0baf6ceebc194a5e8c5c862",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        1388
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "neutral-front-side-top-comparison.png",
+      "input": "previews/neutral-after-top.png",
+      "inputSHA256": "40eaa5706ac82d3e7c789f516e3d0f495da06992ba0173be0bd8695d5f09859e",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        1388
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "front-fairing-front-side-top-comparison.png",
+      "input": "previews/front-fairing-before-front.png",
+      "inputSHA256": "1e952c3a45d8409d37f19d45cdfef846c5922c2694ca068e548524d731eef35a",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        164
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "front-fairing-front-side-top-comparison.png",
+      "input": "previews/front-fairing-after-front.png",
+      "inputSHA256": "3ac9d17c03554f4d71168d77fe9d8cc2c801d62fc8ad0342e91097e032703117",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        164
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "front-fairing-front-side-top-comparison.png",
+      "input": "previews/front-fairing-before-side.png",
+      "inputSHA256": "b9c5788f983fed856c4c2c018e761d2d9020a0b4079db1329b8bf29b03f92136",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        776
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "front-fairing-front-side-top-comparison.png",
+      "input": "previews/front-fairing-after-side.png",
+      "inputSHA256": "cb27db76f9bfa84f7639aeb5705d7e6ab73494b4faf312c710e6b7dce7eda64d",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        776
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "front-fairing-front-side-top-comparison.png",
+      "input": "previews/front-fairing-before-top.png",
+      "inputSHA256": "4ffe16c07c91d5ac7f0f1de10379fd669345d51e5e29db548fc3e854fbc121d2",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        1388
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "front-fairing-front-side-top-comparison.png",
+      "input": "previews/front-fairing-after-top.png",
+      "inputSHA256": "40eaa5706ac82d3e7c789f516e3d0f495da06992ba0173be0bd8695d5f09859e",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        1388
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "exact-export-front-side-top-comparison.png",
+      "input": "previews/exact-export-before-front.png",
+      "inputSHA256": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        164
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "exact-export-front-side-top-comparison.png",
+      "input": "previews/exact-export-after-front.png",
+      "inputSHA256": "cc6c12b1f0cb6322db5833c6f9c93fc0f71518acd377a0933d98c8a7810b4b38",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        164
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "exact-export-front-side-top-comparison.png",
+      "input": "previews/exact-export-before-side.png",
+      "inputSHA256": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        776
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "exact-export-front-side-top-comparison.png",
+      "input": "previews/exact-export-after-side.png",
+      "inputSHA256": "cec68218b3ab474a45bda2e1ca2e511442cd5f9e3f713386e105e33b2542642a",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        776
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "exact-export-front-side-top-comparison.png",
+      "input": "previews/exact-export-before-top.png",
+      "inputSHA256": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        1388
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "exact-export-front-side-top-comparison.png",
+      "input": "previews/exact-export-after-top.png",
+      "inputSHA256": "d211af704a2cc589a91c3d0e2d4459e2d3c4a6d4cd2bc316d7a7fea3136e1dc6",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        1388
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "fairing-exact-export-front-side-top-comparison.png",
+      "input": "previews/fairing-exact-export-before-front.png",
+      "inputSHA256": "1e952c3a45d8409d37f19d45cdfef846c5922c2694ca068e548524d731eef35a",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        164
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "fairing-exact-export-front-side-top-comparison.png",
+      "input": "previews/fairing-exact-export-after-front.png",
+      "inputSHA256": "cc6c12b1f0cb6322db5833c6f9c93fc0f71518acd377a0933d98c8a7810b4b38",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        164
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "fairing-exact-export-front-side-top-comparison.png",
+      "input": "previews/fairing-exact-export-before-side.png",
+      "inputSHA256": "b9c5788f983fed856c4c2c018e761d2d9020a0b4079db1329b8bf29b03f92136",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        776
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "fairing-exact-export-front-side-top-comparison.png",
+      "input": "previews/fairing-exact-export-after-side.png",
+      "inputSHA256": "cec68218b3ab474a45bda2e1ca2e511442cd5f9e3f713386e105e33b2542642a",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        776
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "fairing-exact-export-front-side-top-comparison.png",
+      "input": "previews/fairing-exact-export-before-top.png",
+      "inputSHA256": "4ffe16c07c91d5ac7f0f1de10379fd669345d51e5e29db548fc3e854fbc121d2",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        1388
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "fairing-exact-export-front-side-top-comparison.png",
+      "input": "previews/fairing-exact-export-after-top.png",
+      "inputSHA256": "d211af704a2cc589a91c3d0e2d4459e2d3c4a6d4cd2bc316d7a7fea3136e1dc6",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        1388
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "app-before-after.png",
+      "input": "app/before/jug-left-orbit.png",
+      "inputSHA256": "3986ab7e59a6d5c8b34175f9a98012c0a7fa69193ba6ed0914894452068c016d",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        699,
+        1520
+      ],
+      "position": [
+        24,
+        138
+      ],
+      "uniformScale": 0.5797101449275363,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "app-before-after.png",
+      "input": "app/after/jug-left-orbit.png",
+      "inputSHA256": "84acf899a52df1a200b294c47927aa838ea98a20faeccf9504ada53b8af143ff",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        699,
+        1520
+      ],
+      "position": [
+        748,
+        138
+      ],
+      "uniformScale": 0.5797101449275363,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "app-front-fairing-before-after.png",
+      "input": "app/fairing-before/jug-left-orbit.png",
+      "inputSHA256": "2f0ec166c614c546ae122c136efdd20c5b30f698b14c4d062a4325486a0cb52b",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        699,
+        1520
+      ],
+      "position": [
+        24,
+        138
+      ],
+      "uniformScale": 0.5797101449275363,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "app-front-fairing-before-after.png",
+      "input": "app/after/jug-left-orbit.png",
+      "inputSHA256": "84acf899a52df1a200b294c47927aa838ea98a20faeccf9504ada53b8af143ff",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        699,
+        1520
+      ],
+      "position": [
+        748,
+        138
+      ],
+      "uniformScale": 0.5797101449275363,
+      "crop": false,
+      "registration": false
+    }
+  ]
+}

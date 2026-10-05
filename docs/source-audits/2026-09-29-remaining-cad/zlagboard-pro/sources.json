@@ -1,0 +1,35 @@
+{
+  "approvalStatus": "approved",
+  "revisionNotes": "Current Pro 2.0 revision (not older 24-hold Pro 1.0): three seven-pocket rows below seven top surfaces. Manufacturer photo and independent annotated chart cover matching 28-contact layout, including bottom incut row. Preserve all 28 contact IDs. Phone/mounting plate/hardware omitted. Overall dimensions are absent from current package and must remain estimated unless supported separately.",
+  "sources": [
+    {
+      "slug": "zlagboard-pro",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/sources/product-01.png",
+      "url": "https://zlagboard.com/assets/web/Zlagboard-2019-smaller2x-8011f7e115f3707e78d58c5b3587d3a15fd82b009c421a6c6dbc9f560e50dc1b.png",
+      "publisher": "Vertical-Life / Zlagboard",
+      "sha256": "8011f7e115f3707e78d58c5b3587d3a15fd82b009c421a6c6dbc9f560e50dc1b",
+      "bytes": 720548,
+      "support": "Manufacturer gallery",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer"
+    },
+    {
+      "slug": "zlagboard-pro",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/sources/product-02.png",
+      "url": "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+      "publisher": "Vertical-Life / Zlagboard",
+      "sha256": "af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d",
+      "bytes": 139375,
+      "support": "Manufacturer hold chart",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer"
+    }
+  ],
+  "approval": {
+    "reviewer": "asherlc",
+    "date": "2026-09-29",
+    "method": "direct conversation",
+    "quote": "those are fine, feel free to use more searches for individual boards as needed",
+    "consolidatedReview": ".context/placid-badger/source-review.json"
+  }
+}

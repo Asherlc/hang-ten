@@ -1,0 +1,19 @@
+{
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "retainedContactFieldsUnchanged": true,
+  "contactFieldCorrections": [],
+  "retainedContactIDs": [
+    "mono-20"
+  ],
+  "removedContactIDs": [],
+  "positions": [
+    {
+      "id": "front-cup",
+      "presentationID": "primary",
+      "contactIDs": [
+        "mono-20"
+      ]
+    }
+  ],
+  "metadataDecision": "No contact or factual metadata change."
+}

@@ -1,11 +1,183 @@
 import XCTest
+import UIKit
 
 final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        continueAfterFailure = false
+    }
+
     override func tearDown() {
         // Landscape review launches leave the shared simulator in landscape;
         // reset so later cases/suites on the same device are not poisoned.
         XCUIDevice.shared.orientation = .portrait
         super.tearDown()
+    }
+
+    func testSelectedTopSloperAnimatesAndPocketReturnsToFront() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "beastmaker-1000",
+            "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+            "HANGTEN_REVIEW_BOARD_HOLD_ID": "pocket-middle-center",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+        ]
+        app.launch()
+        let diagnostic = app.otherElements["boardModel.renderDiagnostic"]
+        XCTAssertTrue(diagnostic.waitForExistence(timeout: 30))
+        let sloper = app.buttons["boardDetail.holdLegend.sloper-center"]
+        XCTAssertTrue(sloper.waitForExistence(timeout: 10))
+        XCTAssertTrue(sloper.isHittable)
+        sloper.tap()
+        let selected = app.otherElements["boardDetail.selectedHold.sloper-center"]
+        XCTAssertTrue(selected.waitForExistence(timeout: 10))
+        let completed = NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  value.contains("cameraActive=true"),
+                  value.contains("cameraSettled=true"),
+                  value.split(separator: ";").contains(where: { $0 == "selection=sloper-center" }),
+                  let target = self.diagnosticNumber("elevation", in: value),
+                  let actual = self.diagnosticNumber("cameraPitch", in: value) else { return false }
+            return target > 0.05 && abs(actual - target) < 0.025
+        }
+        expectation(for: completed, evaluatedWith: diagnostic)
+        waitForExpectations(timeout: 10)
+        addScreenshot(named: "Beastmaker top sloper pivoted")
+        let beforeDrag = try XCTUnwrap(diagnostic.value as? String)
+        let initialAzimuth = try XCTUnwrap(diagnosticNumber("azimuth", in: beforeDrag))
+        let contact = app.buttons["boardModel.contact.sloper-center"]
+        XCTAssertTrue(contact.waitForExistence(timeout: 10))
+        let start = contact.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        start.press(forDuration: 0.3, thenDragTo: start.withOffset(CGVector(dx: 80, dy: 0)),
+                    withVelocity: .slow, thenHoldForDuration: 0.2)
+        let manuallyOrbited = NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  let azimuth = self.diagnosticNumber("azimuth", in: value) else { return false }
+            return value != beforeDrag && abs(azimuth - initialAzimuth) > 0.05
+                && value.contains("cameraSettled=true")
+        }
+        expectation(for: manuallyOrbited, evaluatedWith: diagnostic)
+        waitForExpectations(timeout: 15)
+        addScreenshot(named: "Beastmaker manual orbit after selection")
+        let pocket = app.buttons["boardDetail.holdLegend.pocket-middle-center"]
+        XCTAssertTrue(pocket.waitForExistence(timeout: 10))
+        // Wrapped names and full-sized row targets can put this hold below
+        // the viewport. Start on the legend so the 3D orbit gesture cannot win.
+        for _ in 0..<3 {
+            if pocket.isHittable { break }
+            try scrollHoldLegend(in: app, upward: true)
+        }
+        XCTAssertTrue(pocket.isHittable)
+        pocket.tap()
+        try scrollHoldLegend(in: app, upward: false)
+        let front = NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  value.contains("cameraSettled=true"),
+                  value.split(separator: ";").contains(where: { $0 == "selection=pocket-middle-center" }),
+                  let azimuth = self.diagnosticNumber("azimuth", in: value),
+                  let elevation = self.diagnosticNumber("elevation", in: value),
+                  let actual = self.diagnosticNumber("cameraPitch", in: value) else { return false }
+            return abs(azimuth) < 0.001 && abs(elevation) < 0.001 && abs(actual) < 0.025
+        }
+        expectation(for: front, evaluatedWith: diagnostic)
+        waitForExpectations(timeout: 10)
+        addScreenshot(named: "Beastmaker pocket returns to front")
+    }
+
+    private func scrollHoldLegend(in app: XCUIApplication, upward: Bool) throws {
+        let viewport = app.scrollViews.firstMatch.frame.intersection(app.frame)
+        let rows = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@", "boardDetail.holdLegend."
+        )).allElementsBoundByIndex.filter {
+            $0.isHittable && viewport.contains(CGPoint(x: $0.frame.midX, y: $0.frame.midY))
+        }
+        let ordered = rows.sorted { $0.frame.midY < $1.frame.midY }
+        let anchor = try XCTUnwrap(upward ? ordered.last : ordered.first,
+                                  "Scrolling needs a visible legend row outside the 3D preview")
+        let destinationY = upward
+            ? max(viewport.minY + 40, anchor.frame.midY - 300)
+            : min(viewport.maxY - 40, anchor.frame.midY + 300)
+        let distance = destinationY - anchor.frame.midY
+        XCTAssertGreaterThan(abs(distance), 44)
+        let start = anchor.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)))
+    }
+
+    func testPivotRotationPresetsPersistWhenSelectingHolds() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "trango.rock-prodigy-pivot",
+            "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+        ]
+        app.launch()
+        let selector = app.segmentedControls["boardDetail.rotationSelector"]
+        XCTAssertTrue(selector.waitForExistence(timeout: 30))
+        guard selector.exists else { return }
+        let contact = app.buttons["boardModel.contact.two-finger-pocket-left"]
+        XCTAssertTrue(contact.waitForExistence(timeout: 120))
+        let map = app.descendants(matching: .any).matching(identifier: "boardDetail.map").firstMatch
+        XCTAssertTrue(map.waitForExistence(timeout: 10))
+        let diagnostic = app.otherElements["boardModel.renderDiagnostic"]
+        XCTAssertTrue(diagnostic.waitForExistence(timeout: 10))
+        addScreenshot(named: "Pivot position 1")
+        for (position, holdID) in [(2, "outer-sloped-crimp-right"),
+                                   (3, "outer-sloped-crimp-left"),
+                                   (5, "upper-sloped-crimp-right")] {
+            waitForStableProjection(of: contact, diagnostic: diagnostic)
+            let previousFrame = contact.frame
+            let preset = selector.buttons["Position \(position)"]
+            preset.tap()
+            XCTAssertTrue(preset.isSelected)
+            let changed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                contact.frame != previousFrame
+            }, object: nil)
+            XCTAssertEqual(XCTWaiter.wait(for: [changed], timeout: 10), .completed)
+            let target = app.buttons["boardModel.contact.\(holdID)"]
+            XCTAssertTrue(target.waitForExistence(timeout: 10))
+            waitForStableProjection(of: target, diagnostic: diagnostic)
+            let selected = app.otherElements["boardDetail.selectedHold.\(holdID)"]
+            XCTAssertFalse(selected.exists, "Native picking must change the selected hold")
+            // Tap the live projected contact through the map, exercising RealityKit picking.
+            let frame = target.frame
+            let viewport = map.frame
+            map.coordinate(withNormalizedOffset: CGVector(
+                dx: (frame.midX - viewport.minX) / viewport.width,
+                dy: (frame.midY - viewport.minY) / viewport.height
+            )).tap()
+            XCTAssertTrue(selected.waitForExistence(timeout: 10),
+                          "Native picking must select \(holdID) after rotation")
+            XCTAssertTrue(preset.isSelected, "Native picking must preserve the chosen rotation")
+            app.buttons["boardDetail.holdLegend.\(holdID)"].tap()
+            XCTAssertTrue(app.otherElements["boardDetail.selectedHold.\(holdID)"].waitForExistence(timeout: 10))
+            XCTAssertTrue(preset.isSelected, "Selecting a hold must preserve the chosen rotation")
+            addScreenshot(named: "Pivot position \(position) selected \(holdID)")
+        }
+    }
+
+    private func waitForStableProjection(of contact: XCUIElement, diagnostic: XCUIElement) {
+        var previousFrame = CGRect.zero
+        var stableSamples = 0
+        let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  value.contains("cameraSettled=true") else {
+                stableSamples = 0
+                return false
+            }
+            let frame = contact.frame
+            stableSamples = frame == previousFrame ? stableSamples + 1 : 0
+            previousFrame = frame
+            return !frame.isEmpty && stableSamples >= 2
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 30), .completed,
+                       "The camera and contact projection must settle before measuring or picking")
+    }
+
+    private func diagnosticNumber(_ key: String, in value: String) -> Float? {
+        value.split(separator: ";").first { $0.hasPrefix(key + "=") }
+            .flatMap { Float($0.dropFirst(key.count + 1)) }
     }
 
     // Named so it sorts before testLandscape* under alphabetical XCTest order.
@@ -74,10 +246,10 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
-    func testLandscapeMultiPresentationSquareBoardDetailKeepsMapInViewport() throws {
+    func testLandscapeMultiPresentationBoardDetailKeepsMapInViewport() throws {
         let (app, map) = try launchLandscapeBoardDetail(
-            boardID: "nature.stone-hanger-mini",
-            expectedBoardName: "Stone Hanger Mini"
+            boardID: "plateau.lifting-edge",
+            expectedBoardName: "Lifting Edge"
         )
         assertMap(map, isInside: app)
 
@@ -90,6 +262,84 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCTAssertLessThanOrEqual(presentationSelector.frame.maxY, map.frame.minY + 1)
 
         XCUIDevice.shared.orientation = .portrait
+    }
+
+    func testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "plateau.lifting-edge",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_LANDSCAPE": "1",
+            "HANGTEN_REVIEW_STEP": "17",
+        ]
+        app.launch()
+        XCTAssertTrue(app.otherElements["train.board"].waitForExistence(timeout: 30))
+        app.open(URL(string: "hangten://plan/research.abrahangs/workout")!)
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 30))
+        pause.tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+
+        let selector = app.segmentedControls["boardMap.presentationSelector"]
+        XCTAssertTrue(selector.waitForExistence(timeout: 5))
+        XCTAssertTrue(selector.isHittable)
+        let board = app.otherElements["boardModel.3d"]
+        XCTAssertTrue(board.waitForExistence(timeout: 5))
+        XCTAssertGreaterThan(board.frame.height, 30, "Configuration controls must not collapse the workout board.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.width, 30)
+        XCTAssertGreaterThanOrEqual(board.frame.minY, selector.frame.maxY)
+        XCTAssertLessThanOrEqual(board.frame.maxY, app.frame.maxY)
+        addScreenshot(named: "Plateau landscape workout board below configuration selector")
+
+        app.buttons["Resume"].tap()
+        let rest = NSPredicate(format: "label BEGINSWITH %@", "Step 18 of ")
+        expectation(for: rest, evaluatedWith: app.buttons["workout.routinePicker"])
+        waitForExpectations(timeout: 20)
+        pause.tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        XCTAssertGreaterThan(board.frame.height, 30)
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThanOrEqual(board.frame.minY, selector.frame.maxY)
+        addScreenshot(named: "Plateau landscape natural Rest board preview")
+    }
+
+    func testMiniPortraitWorkoutShowsBoardDuringHangAndNaturalRest() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger-mini",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+            "HANGTEN_REVIEW_STEP": "17",
+        ]
+        app.launch()
+        XCTAssertTrue(app.otherElements["train.board"].waitForExistence(timeout: 30))
+        app.open(URL(string: "hangten://plan/research.abrahangs/workout")!)
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 30))
+        pause.tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        let board = app.otherElements["boardModel.3d"]
+        XCTAssertTrue(board.waitForExistence(timeout: 5))
+        board.swipeUp()
+        XCTAssertGreaterThan(board.frame.height, 30)
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
+        addScreenshot(named: "Mini portrait paused Hang board and finger cues")
+
+        app.buttons["Resume"].tap()
+        let rest = NSPredicate(format: "label BEGINSWITH %@", "Step 18 of ")
+        expectation(for: rest, evaluatedWith: app.buttons["workout.routinePicker"])
+        waitForExpectations(timeout: 20)
+        pause.tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        board.swipeUp()
+        XCTAssertGreaterThan(board.frame.height, 30)
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
+        XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
+        addScreenshot(named: "Mini portrait natural Rest board and finger cues")
     }
 
     private func launchLandscapeBoardDetail(
@@ -189,16 +439,7 @@ final class BeastmakerBoardPickerInteractionUITests: XCTestCase {
         app.launch()
 
         let search = app.searchFields["Search boards"]
-        if !search.waitForExistence(timeout: 45) {
-            // Picker review route can white-screen under CI load after landscape
-            // board-detail cases; one terminate+relaunch recovers reliably.
-            app.terminate()
-            app.launch()
-            XCTAssertTrue(
-                search.waitForExistence(timeout: 60),
-                "Board picker Search boards must appear after relaunch."
-            )
-        }
+        XCTAssertTrue(search.waitForExistence(timeout: 45), "Board picker Search boards must appear.")
         search.tap()
         search.typeText("Beastmaker 1000")
 
@@ -236,7 +477,9 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
 
     func testDoorMount() throws {
         try review(boardID: "frictitious.doormount-pro-7", target: "edge-35-right",
-                   surfacePoint: CGVector(dx: 0.83197737, dy: 0.46294296))
+                   surfacePoint: CGVector(dx: 0.83197737, dy: 0.46294296),
+                   // Aim within the visible floor after the selection pivot and manual orbit.
+                   reselectionContactOffset: CGVector(dx: 0.50, dy: 0.55))
     }
 
     func testMegalith() throws {
@@ -250,88 +493,158 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     }
 
     func testNatural() throws {
-        try review(boardID: "trango.rock-prodigy-natural", target: "upper-pocket-right")
+        // The projected center of this recessed pocket can fall in empty space
+        // after orbiting; aim at its visible right wall when reselecting the hold.
+        try review(boardID: "trango.rock-prodigy-natural", target: "upper-pocket-right",
+                   reselectionContactOffset: CGVector(dx: 0.82, dy: 0.55))
     }
 
     func testEvo() throws {
         try review(boardID: "zlagboard.evo", target: "edge-35-center")
     }
 
+    /// Exercises Pro picking at its live contact center after the default selection pivot.
     func testPro() throws {
-        try review(boardID: "zlagboard.pro", target: "edge-35-center",
-                   surfacePoint: CGVector(dx: 0.44776505, dy: 0.3821585))
+        // The initial jug selection now pivots the board. Locate the center
+        // edge from its current projection rather than a canonical-view point.
+        try review(boardID: "zlagboard.pro", target: "edge-35-center")
     }
 
-    private func review(boardID: String, target: String, surfacePoint: CGVector? = nil) throws {
+    /// Checks rapid navigation, rendered selection/orbit, physical retap preservation and landscape geometry.
+    private func review(boardID: String, target: String, surfacePoint: CGVector? = nil,
+                        reselectionContactOffset: CGVector = CGVector(dx: 0.5, dy: 0.5)) throws {
         let app = XCUIApplication()
+        XCUIDevice.shared.orientation = .portrait
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": boardID,
-            "HANGTEN_REVIEW_PORTRAIT": "1",
+            "HANGTEN_REVIEW_MODEL_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
         ]
         app.launch()
-        let model = app.descendants(matching: .any).matching(NSPredicate(format: "label ENDSWITH %@", "hangboard")).firstMatch
-        XCTAssertTrue(model.waitForExistence(timeout: 60))
-        if boardID == "zlagboard.evo" || boardID == "zlagboard.pro" {
-            try assertModelBodyIsVisible(model)
-        }
-        capture("\(boardID)-portrait-neutral")
-        app.terminate()
-        app.launchEnvironment["HANGTEN_REVIEW_BOARD_DETAIL"] = "1"
-        app.launch()
+        // Preserve the rapid Train-to-Hold-specs transition, including the
+        // departing interactive Train preview, when validating the detail host.
+        let holdSpecs = app.buttons["View hold specs"]
+        XCTAssertTrue(holdSpecs.waitForExistence(timeout: 30))
+        holdSpecs.tap()
         XCTAssertTrue(app.navigationBars["Hold specs"].waitForExistence(timeout: 30))
         let contact = app.buttons["boardModel.contact.\(target)"]
-        XCTAssertTrue(contact.waitForExistence(timeout: 60))
+        XCTAssertTrue(contact.waitForExistence(timeout: 120))
+        let map = app.descendants(matching: .any).matching(identifier: "boardDetail.map").firstMatch
+        XCTAssertTrue(map.waitForExistence(timeout: 10))
+        captureRendererDiagnostic(app: app, name: "\(boardID)-before-initial")
+        try assertModelBodyIsVisible(in: map)
+        waitForStableProjection(of: contact, in: app)
+        capture("\(boardID)-portrait-neutral")
         let selected = app.otherElements["boardDetail.selectedHold.\(target)"]
         XCTAssertFalse(selected.exists, "The tap must change the initial default contact")
         capture("\(boardID)-portrait-initial")
-        let map = app.descendants(matching: .any).matching(identifier: "boardDetail.map").firstMatch
         XCTAssertTrue(map.exists)
         // The contact's accessibility frame is projected from its live RealityKit
         // bounds. Tap that screen location through the RealityView so this checks
         // native spatial picking without baking in the previous renderer's camera.
+        let tapMapFrame = map.frame
+        let tapContactFrame = contact.frame
+        let initialScreenPoint = surfacePoint.map { point in
+            CGPoint(x: tapMapFrame.minX + tapMapFrame.width * point.dx,
+                    y: tapMapFrame.minY + tapMapFrame.height * point.dy)
+        } ?? CGPoint(x: tapContactFrame.midX, y: tapContactFrame.midY)
         let initialPoint = surfacePoint.map { map.coordinate(withNormalizedOffset: $0) }
             ?? surfaceCoordinate(for: contact, in: map)
         initialPoint.tap()
         XCTAssertTrue(selected.waitForExistence(timeout: 10), "Real coordinate tap must select \(target)")
+        waitForStableProjection(of: contact, in: app, selection: target)
+        // Selection can pivot the camera. Follow the tapped position within the
+        // contact's settled projection rather than sampling its previous screen location.
+        let selectedFrame = contact.frame
+        let selectionViewport = map.frame
+        let tappedOffset = CGPoint(x: (initialScreenPoint.x - tapContactFrame.minX) / tapContactFrame.width,
+                                  y: (initialScreenPoint.y - tapContactFrame.minY) / tapContactFrame.height)
+        let selectedScreenPoint = CGPoint(x: selectedFrame.minX + selectedFrame.width * tappedOffset.x,
+                                          y: selectedFrame.minY + selectedFrame.height * tappedOffset.y)
+        let selectionRendered = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            (try? self.highlightedSurfaceSampleCount(at: selectedScreenPoint, in: selectionViewport)) ?? 0 > 8
+        }, object: nil)
+        let selectionRenderedResult = XCTWaiter.wait(for: [selectionRendered], timeout: 15)
+        if selectionRenderedResult != .completed {
+            capture("\(boardID)-rendered-selection-failure")
+        }
+        XCTAssertEqual(selectionRenderedResult, .completed,
+                       "Selected hold must be highlighted on the rendered surface before orbit")
         capture("\(boardID)-portrait-active")
 
         let initialContactFrame = contact.frame
-        let allContacts = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "boardModel.contact."))
-        let canonicalFrames = contactFrames(allContacts)
-        map.coordinate(withNormalizedOffset: CGVector(dx: 0.55, dy: 0.5))
-            .press(forDuration: 0.1, thenDragTo: map.coordinate(withNormalizedOffset: CGVector(dx: 0.70, dy: 0.65)))
+        captureRendererDiagnostic(app: app, name: "\(boardID)-before-orbit")
+        let initialMapFrame = map.frame
+        let initialMapImage = try mapSnapshot(in: initialMapFrame)
+        // Some models have empty gaps around the projected center. Begin the
+        // orbit on the verified surface point when the test needed one to pick.
+        let orbitStart = surfacePoint != nil
+            ? initialPoint
+            : map.coordinate(withNormalizedOffset: CGVector(dx: 0.55, dy: 0.5))
+        // DoorMount's shallow viewport makes the old gesture only 44 × 11 points.
+        // Give UIKit a sustained drag across the surface rather than a brief
+        // touch that can be synthesized as a contact tap on CI.
+        let orbitEndX = boardID == "frictitious.doormount-pro-7" ? 0.50 : 0.70
+        orbitStart.press(forDuration: 0.3,
+                         thenDragTo: map.coordinate(withNormalizedOffset: CGVector(dx: orbitEndX, dy: 0.65)),
+                         withVelocity: .slow, thenHoldForDuration: 0.2)
         XCTAssertTrue(selected.exists, "Orbit must preserve contact selection")
-        XCTAssertNotEqual(contact.frame, initialContactFrame, "Orbit must change the projected contact")
+        let orbitFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            contact.frame != initialContactFrame
+        }, object: nil)
+        let projectedOrbitResult = XCTWaiter.wait(for: [orbitFinished], timeout: 15)
+        XCTAssertEqual(projectedOrbitResult, .completed,
+                       "Orbit must change the projected contact")
+        let visibleOrbit = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let image = try? self.mapSnapshot(in: initialMapFrame) else {
+                return false
+            }
+            return image != initialMapImage
+        }, object: nil)
+        let visibleOrbitResult = XCTWaiter.wait(for: [visibleOrbit], timeout: 15)
         capture("\(boardID)-portrait-orbit")
+        captureRendererDiagnostic(app: app, name: "\(boardID)-after-orbit")
+        XCTAssertEqual(visibleOrbitResult, .completed,
+                       "Orbit must change the rendered board, not only its accessibility projection")
         // Reproject after orbit; the initial contact offset no longer tracks
         // the visible surface once the camera has moved.
-        let resetPoint = surfaceCoordinate(for: contact, in: map)
-        resetPoint.tap()
-        XCTAssertTrue(selected.exists)
-        let resetFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            let currentFrames = self.contactFrames(allContacts)
-            guard Set(currentFrames.keys) == Set(canonicalFrames.keys) else { return false }
-            return currentFrames.allSatisfy { identifier, frame in
-                guard let canonical = canonicalFrames[identifier] else { return false }
-                return abs(frame.midX - canonical.midX) <= 0.5
-                    && abs(frame.midY - canonical.midY) <= 0.5
-            }
+        waitForStableProjection(of: contact, in: app, selection: target)
+        let orbitFrame = contact.frame
+        let orbitedMapImage = try mapSnapshot(in: initialMapFrame)
+        let diagnostic = app.descendants(matching: .any)
+            .matching(identifier: "boardModel.renderDiagnostic").firstMatch
+        let orbitValue = try XCTUnwrap(diagnostic.value as? String)
+        let orbitAzimuth = try XCTUnwrap(diagnosticNumber("azimuth", in: orbitValue))
+        let orbitElevation = try XCTUnwrap(diagnosticNumber("elevation", in: orbitValue))
+        let priorTapRevision = try XCTUnwrap(diagnosticNumber("tapRevision", in: orbitValue))
+        let reselectionPoint = surfaceCoordinate(for: contact, in: map, offset: reselectionContactOffset)
+        reselectionPoint.tap()
+        let pickedAgain = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  let tapRevision = self.diagnosticNumber("tapRevision", in: value) else { return false }
+            return tapRevision > priorTapRevision
+                && value.split(separator: ";").contains { $0 == "pickedContact=\(target)" }
         }, object: nil)
-        // Reading all 28 Pro frames crosses the UI-test process boundary;
-        // allow traversal time without relaxing the canonical-frame tolerance.
-        XCTAssertEqual(XCTWaiter.wait(for: [resetFinished], timeout: 30), .completed,
-                       "A physical surface tap must finish the canonical camera reset")
-        // A top-edge center may move less than two points despite a visible orbit.
-        // Require every projected contact to return to its canonical frame.
-        let resetFrames = contactFrames(allContacts)
-        XCTAssertEqual(Set(resetFrames.keys), Set(canonicalFrames.keys),
-                       "Reset must preserve the complete canonical contact set")
-        for (identifier, frame) in resetFrames {
-            let canonical = try XCTUnwrap(canonicalFrames[identifier])
-            XCTAssertEqual(frame.midX, canonical.midX, accuracy: 0.5, identifier)
-            XCTAssertEqual(frame.midY, canonical.midY, accuracy: 0.5, identifier)
-        }
-        capture("\(boardID)-portrait-reset")
+        XCTAssertEqual(XCTWaiter.wait(for: [pickedAgain], timeout: 15), .completed,
+                       "A physical retap must pick the same hold before checking camera preservation")
+        XCTAssertTrue(selected.exists, "A physical surface tap must preserve the selected hold")
+        waitForStableProjection(of: contact, in: app, selection: target)
+        let repeatedValue = try XCTUnwrap(diagnostic.value as? String)
+        XCTAssertEqual(try XCTUnwrap(diagnosticNumber("azimuth", in: repeatedValue)),
+                       orbitAzimuth, accuracy: 0.001, "Reselecting a hold must preserve manual orbit")
+        XCTAssertEqual(try XCTUnwrap(diagnosticNumber("elevation", in: repeatedValue)),
+                       orbitElevation, accuracy: 0.001, "Reselecting a hold must preserve manual orbit")
+        XCTAssertEqual(contact.frame.midX, orbitFrame.midX, accuracy: 3)
+        XCTAssertEqual(contact.frame.midY, orbitFrame.midY, accuracy: 3)
+        captureRendererDiagnostic(app: app, name: "\(boardID)-after-reselection")
+        let renderedPreservation = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let image = try? self.mapSnapshot(in: initialMapFrame) else { return false }
+            return image == orbitedMapImage
+        }, object: nil)
+        let renderedPreservationResult = XCTWaiter.wait(for: [renderedPreservation], timeout: 30)
+        capture("\(boardID)-portrait-reselected")
+        XCTAssertEqual(renderedPreservationResult, .completed,
+                       "Retapping the same hold must preserve the rendered orbited board")
 
         XCUIDevice.shared.orientation = .landscapeRight
         XCTAssertTrue(selected.waitForExistence(timeout: 10))
@@ -340,45 +653,154 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCTAssertGreaterThanOrEqual(map.frame.minY, app.frame.minY)
         XCTAssertLessThanOrEqual(map.frame.maxX, app.frame.maxX)
         XCTAssertLessThanOrEqual(map.frame.maxY, app.frame.maxY)
+        try assertModelBodyIsVisible(in: map)
         capture("\(boardID)-landscape-active")
-        app.terminate()
-        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_BOARD_DETAIL")
-        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_PORTRAIT")
-        app.launchEnvironment["HANGTEN_REVIEW_LANDSCAPE"] = "1"
-        app.launch()
-        XCTAssertTrue(model.waitForExistence(timeout: 60))
-        capture("\(boardID)-landscape-neutral")
     }
 
-    private func surfaceCoordinate(for contact: XCUIElement, in map: XCUIElement) -> XCUICoordinate {
+    private func waitForStableProjection(of contact: XCUIElement, in app: XCUIApplication,
+                                        selection: String? = nil) {
+        let diagnostic = app.descendants(matching: .any)
+            .matching(identifier: "boardModel.renderDiagnostic").firstMatch
+        var previousFrame: CGRect?
+        var stableSamples = 0
+        let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let value = diagnostic.value as? String,
+                  value.contains("cameraSettled=true"),
+                  selection.map({ expected in
+                      value.split(separator: ";").contains { $0 == "selection=\(expected)" }
+                  }) ?? true else {
+                stableSamples = 0
+                return false
+            }
+            let frame = contact.frame
+            stableSamples = frame == previousFrame ? stableSamples + 1 : 0
+            previousFrame = frame
+            return stableSamples >= 2
+        }, object: nil)
+        // A cold CI accessibility snapshot can take several seconds per query.
+        // Allow three settled-frame samples without weakening the readiness gate.
+        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 30), .completed,
+                       "The selection animation must settle before physical picking or orbit assertions")
+    }
+
+    private func diagnosticNumber(_ key: String, in value: String) -> Float? {
+        value.split(separator: ";").first { $0.hasPrefix(key + "=") }
+            .flatMap { Float($0.dropFirst(key.count + 1)) }
+    }
+
+    private func surfaceCoordinate(for contact: XCUIElement, in map: XCUIElement,
+                                   offset: CGVector = CGVector(dx: 0.5, dy: 0.5)) -> XCUICoordinate {
         let frame = contact.frame
         let viewport = map.frame
         return map.coordinate(withNormalizedOffset: CGVector(
-            dx: (frame.midX - viewport.minX) / viewport.width,
-            dy: (frame.midY - viewport.minY) / viewport.height
+            dx: (frame.minX + frame.width * offset.dx - viewport.minX) / viewport.width,
+            dy: (frame.minY + frame.height * offset.dy - viewport.minY) / viewport.height
         ))
     }
 
-    private func contactFrames(_ contacts: XCUIElementQuery) -> [String: CGRect] {
-        contacts.allElementsBoundByIndex.reduce(into: [:]) { frames, contact in
-            // SwiftUI may briefly expose the same accessibility identifier twice
-            // while RealityView updates its projected contact elements.
-            frames[contact.identifier] = contact.frame
+    private func captureRendererDiagnostic(app: XCUIApplication, name: String) {
+        let element = app.descendants(matching: .any)
+            .matching(identifier: "boardModel.renderDiagnostic").firstMatch
+        let value = element.exists ? String(describing: element.value ?? "pending") : "missing"
+        let mapFrame = app.descendants(matching: .any)
+            .matching(identifier: "boardDetail.map").firstMatch.frame
+        let screenshot = XCUIScreen.main.screenshot().image
+        let attachment = XCTAttachment(string:
+            "renderer=\(value);map=\(mapFrame);app=\(app.frame);imageSize=\(screenshot.size);scale=\(screenshot.scale);orientation=\(screenshot.imageOrientation.rawValue);rawPixels=\(screenshot.cgImage?.width ?? 0)x\(screenshot.cgImage?.height ?? 0)")
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    private func mapSnapshot(in frame: CGRect) throws -> Data {
+        // RealityView's accessibility element can remain queryable while XCTest
+        // cannot snapshot its hosted view. Crop the screen at the saved viewport
+        // instead, so the assertion observes pixels without that snapshot API.
+        let screenshot = normalizedScreenImage()
+        let image = try XCTUnwrap(screenshot.cgImage)
+        // SpringBoard can retain its landscape frame after the app returns to
+        // portrait. Use the normalized screenshot’s own point-to-pixel scale
+        // so the crop always observes the board rather than a stale header area.
+        let scale = screenshot.scale
+        let region = CGRect(x: frame.minX * scale,
+                            y: frame.minY * scale,
+                            width: frame.width * scale,
+                            height: frame.height * scale).integral
+        let bounds = CGRect(x: 0, y: 0, width: image.width, height: image.height)
+        XCTAssertTrue(region.width > 0 && region.height > 0 && bounds.contains(region),
+                      "Map crop \(region) must fit normalized screenshot \(bounds); map=\(frame), imageSize=\(screenshot.size), scale=\(scale)")
+        let cropped = try XCTUnwrap(image.cropping(to: region))
+        return try XCTUnwrap(UIImage(cgImage: cropped).pngData())
+    }
+
+    /// Counts selected-highlight pixels near the tapped surface within the finite viewport crop.
+    private func highlightedSurfaceSampleCount(at point: CGPoint, in viewport: CGRect) throws -> Int {
+        let screenshot = normalizedScreenImage()
+        guard let image = screenshot.cgImage else { return 0 }
+        let scale = screenshot.scale
+        let region = CGRect(x: point.x - 22, y: point.y - 12, width: 44, height: 24)
+            .intersection(viewport)
+        let crop = CGRect(x: region.minX * scale,
+                          y: region.minY * scale,
+                          width: region.width * scale, height: region.height * scale).integral
+        let bounds = CGRect(x: 0, y: 0, width: image.width, height: image.height)
+        guard crop.minX.isFinite, crop.minY.isFinite,
+              crop.width.isFinite, crop.height.isFinite,
+              crop.width > 0, crop.height > 0, bounds.contains(crop) else { return 0 }
+        guard let cropped = image.cropping(to: crop) else { return 0 }
+        let width = cropped.width
+        let height = cropped.height
+        var pixels = [UInt8](repeating: 0, count: width * height * 4)
+        try pixels.withUnsafeMutableBytes { storage in
+            let context = try XCTUnwrap(CGContext(data: storage.baseAddress, width: width, height: height,
+                bitsPerComponent: 8, bytesPerRow: width * 4,
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+            context.draw(cropped, in: CGRect(x: 0, y: 0, width: width, height: height))
+        }
+        return stride(from: 0, to: pixels.count, by: 4).reduce(0) { count, offset in
+            count + (pixels[offset] > 180 && pixels[offset + 1] < 140 && pixels[offset + 2] < 130 ? 1 : 0)
         }
     }
 
-    private func assertModelBodyIsVisible(_ model: XCUIElement) throws {
+    private func normalizedScreenImage() -> UIImage {
+        let image = XCUIScreen.main.screenshot().image
+        // A screenshot can retain a landscape CGImage with a portrait UIImage
+        // orientation after another test rotates the device. Draw it once to
+        // apply that orientation before converting screen points to pixels.
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = image.scale
+        return UIGraphicsImageRenderer(size: image.size, format: format).image { _ in
+            image.draw(in: CGRect(origin: .zero, size: image.size))
+        }
+    }
+
+    /// Waits for rendered board samples and captures diagnostics if the visibility deadline expires.
+    private func assertModelBodyIsVisible(in viewport: XCUIElement) throws {
+        var lastSampleCount = 0
         let rendered = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            ((try? self.modelBodySampleCount(model)) ?? 0) > 8
+            lastSampleCount = (try? self.modelBodySampleCount(in: viewport)) ?? 0
+            return lastSampleCount > 8
         }, object: nil)
         // On-Demand Resources can still be downloading when the card's accessibility
         // element appears. Wait for the rendered body itself before checking it.
-        XCTAssertEqual(XCTWaiter.wait(for: [rendered], timeout: 90), .completed,
-                       "Native board body must finish loading inside its rounded card")
+        let result = XCTWaiter.wait(for: [rendered], timeout: 90)
+        if result != .completed {
+            capture("board-model-body-visibility-failure")
+            print("Model visibility diagnostic: viewport=\(viewport.frame) samples=\(lastSampleCount)")
+        }
+        XCTAssertEqual(result, .completed,
+                       "Native board body must finish loading inside its map viewport")
     }
 
-    private func modelBodySampleCount(_ model: XCUIElement) throws -> Int {
-        let screenshot = XCUIScreen.main.screenshot().image
+    /// Counts board-body samples from a finite, in-bounds screenshot crop rather than accessibility alone.
+    private func modelBodySampleCount(in viewport: XCUIElement) throws -> Int {
+        guard viewport.exists else { return 0 }
+        let frame = viewport.frame
+        guard frame.minX.isFinite, frame.minY.isFinite,
+              frame.width.isFinite, frame.height.isFinite,
+              frame.width > 0, frame.height > 0 else { return 0 }
+        let screenshot = normalizedScreenImage()
         let cgImage = try XCTUnwrap(screenshot.cgImage)
         let width = cgImage.width
         let height = cgImage.height
@@ -390,16 +812,22 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                 bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
             context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
         }
-        let frame = model.frame
-        let scale = CGFloat(width) / XCUIApplication().frame.width
+        // Ignore the rounded card edge. A blank ODR placeholder can otherwise
+        // satisfy this check from its border even though RealityKit has no mesh.
+        let bodyFrame = frame.insetBy(dx: frame.width * 0.12, dy: frame.height * 0.12)
+        let scale = screenshot.scale
+        guard bodyFrame.minX >= 0, bodyFrame.minY >= 0,
+              bodyFrame.maxX * scale <= CGFloat(width),
+              bodyFrame.maxY * scale <= CGFloat(height) else { return 0 }
         // RealityKit preserves the physical mesh aspect ratio within its card.
-        // Scan inside the viewport so letterbox margins don't have to contain wood.
+        // Scan the inner viewport so the card border and letterbox margins do not
+        // count as visible board geometry.
         var visibleBodySamples = 0
         let sampleCount = 16
         for row in 0..<sampleCount {
             for column in 0..<sampleCount {
-                let x = frame.minX + (CGFloat(column) + 0.5) * frame.width / CGFloat(sampleCount)
-                let y = frame.minY + (CGFloat(row) + 0.5) * frame.height / CGFloat(sampleCount)
+                let x = bodyFrame.minX + (CGFloat(column) + 0.5) * bodyFrame.width / CGFloat(sampleCount)
+                let y = bodyFrame.minY + (CGFloat(row) + 0.5) * bodyFrame.height / CGFloat(sampleCount)
                 let offset = (Int(y * scale) * width + Int(x * scale)) * 4
                 if pixels[offset + 2] < 235 { visibleBodySamples += 1 }
             }

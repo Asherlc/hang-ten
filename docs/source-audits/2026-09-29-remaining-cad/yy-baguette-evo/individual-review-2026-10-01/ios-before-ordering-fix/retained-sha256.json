@@ -1,0 +1,11 @@
+{
+  "build.log": "133f140d4185b068bb836d6077152fdf481ac3b9a56708ec65fdd19280c972f5",
+  "cleanup-verification.json": "e4b90d6489e5c12dacf07536f1c3beebfea88208c9f97eaa3a64a4e80ad7a944",
+  "cleanup.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "failure-status.json": "cd419f4e541e528b8d1a4f4d0070661bda0aadd83be165e222e032ea6f686d65",
+  "generated-board-at-build.json": "1bc3fd7fabea5fd276bce43d574b0e335355d7c51c71405052dc7d8540fc0742",
+  "launch-services.log": "fedb011e24740965a602603a95e50d9fbcba1c6e33ca5009df44d485ca27cdad",
+  "ownership.json": "d779e7332a9711bc28d75e364a6fb57642d806ae0b8c37cc13dd0af45469ef6e",
+  "simulator-uuid": "5d57a2d5f7de58954e4ee2447971ed090cdd58ba68204aae2c4e0122f0d2edfb",
+  "source-package-sha256-before-build.json": "9e0d33b631dc2b0c560267c8e20f082dfe0f43b67f7dde23854888c2d9a7a1c6"
+}

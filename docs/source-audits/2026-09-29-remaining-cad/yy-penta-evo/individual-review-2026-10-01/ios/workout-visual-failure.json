@@ -1,0 +1,18 @@
+{
+  "status": "failed workout highlight validation; route/state transitions succeeded",
+  "evidence": [
+    "workout-settled/active-settled.png",
+    "workout-settled/following-rest.png",
+    "workout-settled/validation.json"
+  ],
+  "observed": "Both settled states show neutral board without contact highlight in primary pose. Existing routine left unchanged. Original validation state booleans are route checks, not visual success. Its expected bilateral resolution text is not an achieved result.",
+  "readOnlyDiagnosis": {
+    "logicalContactMapping": "BoardPackageStore.swift:1597 remaps contact slots to instance logical contact IDs; contactIDs includes both sides.",
+    "frameMapping": "TrainingModels.swift:1120 uses remapped slot facePlaneAABB without instance placement.",
+    "pairBoundary": "WorkoutActivityRecording.swift:611-626 requires leftmost midpoint <0.5 and rightmost >0.5.",
+    "edge20LocalMidpointX": 0.711791447,
+    "inference": "Both logical 20 mm contacts share the same local descriptor frame, so outermostPair rejects the bilateral pair.",
+    "workoutDebugAssignmentRoute": "No existing explicit per-contact workout assignment environment route found."
+  },
+  "pending": "Parent coordinating narrow shared fix; preserve this full run as before evidence."
+}

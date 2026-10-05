@@ -1,0 +1,14 @@
+{
+  "differences": {
+    "HANGTEN_REVIEW_DIAGNOSTIC_RUN": {
+      "on": "placid-badger-cad-second-half-strict-hands-on",
+      "off": "placid-badger-cad-second-half-strict-hands-off"
+    },
+    "HANGTEN_REVIEW_SUPPRESS_ALL_HAND_HOSTS": {
+      "on": null,
+      "off": "1"
+    }
+  },
+  "onlyStrictFlagAndRunID": true,
+  "legacyLandscapeOffAbsent": true
+}

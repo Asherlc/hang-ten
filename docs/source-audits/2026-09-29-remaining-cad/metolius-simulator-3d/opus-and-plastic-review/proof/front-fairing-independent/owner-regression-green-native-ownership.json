@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "owner-regression-green-native",
+  "timeoutSeconds": 120,
+  "command": [
+    "--extra-python-path",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311",
+    "Tools/HangboardCAD/tests/uv_node_normal_checks.py"
+  ],
+  "ownedProcessGroup": 13183,
+  "exitCode": 0,
+  "elapsedSeconds": 1.7071834160014987,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

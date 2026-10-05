@@ -1,0 +1,7 @@
+{
+  "exitCode": 0,
+  "rawLog": ".context/placid-badger-cad-second-half/yy-baguette/groove-removal-independent/minimal-regressions.log",
+  "rawLogSHA256": "10451cf472a048760cedde8c99bb5ac550eae84b228e24f6cdb24451efbc21fe",
+  "summary": "11 passed in 0.25s",
+  "scope": "Six minimal test selections; fixture-specific tests only; no mixed stale asset validation."
+}

@@ -1,0 +1,57 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 11,
+    "boardID": "nature.stone-hanger-mini-karma8a",
+    "package": "nature-stone-hanger-mini-karma8a",
+    "contactID": "pinch-60",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "nature.stone-hanger-mini-karma8a",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "pinch-60",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791055316.291044
+  },
+  "image": "11-live-horizontal-orbit-2.png",
+  "imageSHA256": "9b4e8c6e3c5e7c2f10267bf6d62454f23048144a77a6928402a411515cc2b437",
+  "accessibilitySHA256": "acf920163c30ef5f304df384ca4d85bf82d6fbf82f0e9127a93ffeec520b0146",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=18;rootActive=true;cameraActive=true;sameScene=true;azimuth=-1.0814371;elevation=0.5436766;cameraPitch=0.657406;cameraSettled=true;selection=pinch-60;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "actualPhysicalOrbit": true,
+  "projectedBefore": {
+    "boardModel.contact.pinch-60": [
+      0.4950099800399201,
+      0.6347305389221558
+    ],
+    "boardModel.contact.wood-edge-15": [
+      0.5199600798403193,
+      0.6407185628742516
+    ],
+    "boardModel.contact.granite-edge-15": [
+      0.5049900199600799,
+      0.715568862275449
+    ]
+  },
+  "projectedAfter": {
+    "boardModel.contact.pinch-60": [
+      0.4930139720558882,
+      0.6137724550898205
+    ],
+    "boardModel.contact.wood-edge-15": [
+      0.5309381237524949,
+      0.6137724550898205
+    ],
+    "boardModel.contact.granite-edge-15": [
+      0.5079840319361277,
+      0.6796407185628743
+    ]
+  }
+}

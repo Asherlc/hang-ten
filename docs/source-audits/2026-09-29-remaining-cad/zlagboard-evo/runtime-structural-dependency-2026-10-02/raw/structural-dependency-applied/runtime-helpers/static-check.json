@@ -1,0 +1,57 @@
+{
+  "checks": {
+    "readinessLoopByteExactToReviewedProposal": true,
+    "captureLoopByteExactToReviewedProposal": true,
+    "allASTPassed": true,
+    "exactTwoArmVocabulary": true,
+    "bothUnmountOn": true,
+    "bothObservationOn": true,
+    "retentionModeBoundToArm": true,
+    "conditionalReferenceFullPassGate": true,
+    "ordinaryNaturalLossNarrowlyProspective": true
+  },
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-dependency-runtime-prep/check-constructors.py",
+      "sha256": "8c671fee30985971a5db26847fd625a725f54829875b9fc688a5dbdfc29532c0",
+      "pythonASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-dependency-runtime-prep/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "pythonASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-dependency-runtime-prep/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "pythonASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-dependency-runtime-prep/check-hands.py",
+      "sha256": "9c0395c040a4cb62c79eca1c57b8127e6579b02a738f7483f54e29f802aa1ec6",
+      "pythonASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-dependency-runtime-prep/check-navigation.py",
+      "sha256": "8c9d187da93971ef15967f237478d0df40d9f9c9153bbc5306ec15e5e7c1b90c",
+      "pythonASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-dependency-runtime-prep/check-ownership.py",
+      "sha256": "409edc4fe86d2cc3387f86193add1d0efb52bbcfd0b64af023077408c9220bea",
+      "pythonASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-dependency-runtime-prep/compare-arms.py",
+      "sha256": "180a5b725bb2c63c7257636d352e11687a12aae8f07f1fb5ed0c0707e6b1a2ab",
+      "pythonASTPassed": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/structural-dependency-runtime-prep/workout-structural-dependency.py",
+      "sha256": "010179a029a5595850238e6ad1872c5ee05956a171f34a9e998d002faacdac5e",
+      "pythonASTPassed": true
+    }
+  ],
+  "sourceProposalPatchSHA256": "38d52bfb7b88330e83d80463b77030444a6ee3536fb03dc614b98c6af8325faf",
+  "scope": "AST parsing and source/static inspection only. No Python helper execution, source patch apply, build, device or runtime invocation."
+}

@@ -1,0 +1,292 @@
+{
+  "beforeSHA256": "7f1a6c34c92984b7f8ac89007051ce49ed3cd358290293018cdb8cb2ec8d69a7",
+  "candidateSHA256": "0ce8b0b9ce39637f9b6d4b2c29618ef09430b200513b5548f54d97e83804a448",
+  "oneValidSolid": true,
+  "volumeBefore": 745437.6023551619,
+  "volumeAfter": 754063.949207064,
+  "boundsUnchanged": false,
+  "manifestUnchanged": true,
+  "positionIDs": [
+    "paired-25-20-15-10",
+    "paired-10-15",
+    "paired-12-8-6",
+    "paired-8-6",
+    "central-30-25",
+    "central-25",
+    "central-20-6",
+    "central-6",
+    "rounded-tray"
+  ],
+  "contactInventoryUnchanged": true,
+  "logicalContacts": 19,
+  "contactNodes": 20,
+  "contacts": [
+    {
+      "name": "Region_hold_edge_10mm_left_mesh_001",
+      "contactID": "edge-10-left",
+      "valid": true,
+      "areaMM2": 1736.7878707749146,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 10.0,
+      "midpointSurfaceDistanceMM": 1.7763568394002505e-15
+    },
+    {
+      "name": "Region_hold_edge_20mm_left_mesh_001",
+      "contactID": "edge-20-left",
+      "valid": true,
+      "areaMM2": 2556.787870774914,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 20.0,
+      "midpointSurfaceDistanceMM": 1.7763568394002505e-15
+    },
+    {
+      "name": "Region_hold_edge_15mm_left_mesh_001",
+      "contactID": "edge-15-left",
+      "valid": true,
+      "areaMM2": 1707.0171634635108,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 15.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_25mm_left_mesh_001",
+      "contactID": "edge-25-left",
+      "valid": true,
+      "areaMM2": 2297.01716346351,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 25.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_06mm_left_mesh_001",
+      "contactID": "edge-6-upper",
+      "valid": true,
+      "areaMM2": 2043.980069221865,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 6.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_12mm_left_mesh_001",
+      "contactID": "edge-12-left",
+      "valid": true,
+      "areaMM2": 1398.1385060422622,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 12.0,
+      "midpointSurfaceDistanceMM": 1.7763568394002505e-15
+    },
+    {
+      "name": "Region_hold_edge_08mm_left_mesh_001",
+      "contactID": "edge-8-left",
+      "valid": true,
+      "areaMM2": 1158.1385060422622,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 8.0,
+      "midpointSurfaceDistanceMM": 1.7763568394002505e-15
+    },
+    {
+      "name": "Region_hold_rounded_left_mesh_001",
+      "contactID": "rounded-tray",
+      "valid": true,
+      "areaMM2": 7775.4416125585485,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0
+    },
+    {
+      "name": "Region_hold_edge_10mm_right_mesh_001",
+      "contactID": "edge-10-right",
+      "valid": true,
+      "areaMM2": 1736.7878707749142,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 10.0,
+      "midpointSurfaceDistanceMM": 1.7763568394002505e-15
+    },
+    {
+      "name": "Region_hold_edge_20mm_right_mesh_001",
+      "contactID": "edge-20-right",
+      "valid": true,
+      "areaMM2": 2556.7878707749132,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 20.0,
+      "midpointSurfaceDistanceMM": 1.7763568394002505e-15
+    },
+    {
+      "name": "Region_hold_edge_15mm_right_mesh_001",
+      "contactID": "edge-15-right",
+      "valid": true,
+      "areaMM2": 1707.017163463511,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 15.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_25mm_right_mesh_001",
+      "contactID": "edge-25-right",
+      "valid": true,
+      "areaMM2": 2297.0171634635103,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 25.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_06mm_right_mesh_001",
+      "contactID": "edge-6-lower",
+      "valid": true,
+      "areaMM2": 2043.9800692218741,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 6.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_edge_12mm_right_mesh_001",
+      "contactID": "edge-12-right",
+      "valid": true,
+      "areaMM2": 1398.138506042265,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 12.0,
+      "midpointSurfaceDistanceMM": 1.7763568394002505e-15
+    },
+    {
+      "name": "Region_hold_edge_08mm_right_mesh_001",
+      "contactID": "edge-8-right",
+      "valid": true,
+      "areaMM2": 1158.1385060422647,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 8.0,
+      "midpointSurfaceDistanceMM": 1.7763568394002505e-15
+    },
+    {
+      "name": "Region_hold_rounded_right_mesh_001",
+      "contactID": "rounded-tray",
+      "valid": true,
+      "areaMM2": 7775.441612558531,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0
+    },
+    {
+      "name": "Region_hold_central_20mm_mesh_001",
+      "contactID": "edge-central-20",
+      "valid": true,
+      "areaMM2": 2369.867878229532,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 20.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_central_06mm_mesh_001",
+      "contactID": "edge-central-6",
+      "valid": true,
+      "areaMM2": 1487.867878229532,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 6.0,
+      "midpointSurfaceDistanceMM": 2.4424906541753444e-15
+    },
+    {
+      "name": "Region_hold_central_30mm_mesh_001",
+      "contactID": "edge-central-30",
+      "valid": true,
+      "areaMM2": 2648.7856705130957,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 30.0,
+      "midpointSurfaceDistanceMM": 0.0
+    },
+    {
+      "name": "Region_hold_central_25mm_mesh_001",
+      "contactID": "edge-central-25",
+      "valid": true,
+      "areaMM2": 2338.7856705130953,
+      "solidCount": 0,
+      "surfaceOffFinalSkinMM2": 0.0,
+      "witnessUnchanged": true,
+      "depthMM": 25.0,
+      "midpointSurfaceDistanceMM": 1.7763568394002505e-15
+    }
+  ],
+  "contactOverlapAreas": [
+    {
+      "ids": [
+        "edge-10-left",
+        "edge-15-left"
+      ],
+      "sharedAreaMM2": 0.0
+    },
+    {
+      "ids": [
+        "edge-20-left",
+        "edge-25-left"
+      ],
+      "sharedAreaMM2": 0.0
+    },
+    {
+      "ids": [
+        "edge-10-right",
+        "edge-15-right"
+      ],
+      "sharedAreaMM2": 0.0
+    },
+    {
+      "ids": [
+        "edge-20-right",
+        "edge-25-right"
+      ],
+      "sharedAreaMM2": 0.0
+    }
+  ],
+  "bores": {
+    "LeftOuterBore": {
+      "parametersUnchanged": true,
+      "symmetricDifferenceMM3": 0.0
+    },
+    "LeftInnerBore": {
+      "parametersUnchanged": true,
+      "symmetricDifferenceMM3": 0.0
+    },
+    "RightInnerBore": {
+      "parametersUnchanged": true,
+      "symmetricDifferenceMM3": 0.0
+    },
+    "RightOuterBore": {
+      "parametersUnchanged": true,
+      "symmetricDifferenceMM3": 0.0
+    }
+  },
+  "allSketchesFullyConstrained": true,
+  "materialsAbsent": true,
+  "nativeErrors": [],
+  "sourceBytesUnchanged": true,
+  "candidateBytesUnchanged": true
+}

@@ -1,0 +1,11 @@
+{
+  "owner": "placid-badger",
+  "processName": "placid-badger-karma11-neutral-render",
+  "processPID": 70975,
+  "shellPID": 70973,
+  "processScript": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-review-2026-10-03/placid-badger-karma11-render.py",
+  "temporaryDirectory": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/karma11-review-2026-10-03/placid-badger-karma11-render-tmp",
+  "status": "completed",
+  "startedAtUnixSeconds": 1791034161.221229,
+  "endedAtUnixSeconds": 1791034173.52877
+}

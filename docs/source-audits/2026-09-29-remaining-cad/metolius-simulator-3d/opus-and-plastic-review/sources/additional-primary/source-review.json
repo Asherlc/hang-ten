@@ -1,0 +1,25 @@
+{
+  "owner": "placid-badger",
+  "status": "inspected",
+  "sources": "Complete primary Metolius product gallery photographs, comparison sheet and both complete PDF pages.",
+  "findings": {
+    "blueWhitePhoto": "Full front view confirms forward roof rolling into face; no rear jug view.",
+    "comparisonSheet": "Front product arrangement with mounting backboard; no definitive center-jug back profile.",
+    "mountingPDF": "Both complete pages inspected; mounting/training instructions and exercise sketches, no dimensioned or definitive Simulator jug rear/side shape.",
+    "video": "Product-page embed lookup was throttled; not inspected and not used to justify geometry."
+  },
+  "authoringLimits": "No pixel measurements. User-requested forward anchoring and rounded rear return are explicitly labeled display adaptations; no sourced incut size or material chemistry claim.",
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/mounting-instructions-page-1.png": "8487d02638a213cc85097c6987f7b1b8696f9122f40f5ffb15043eb4a9030ab7",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/sources.json": "c74cdce478c41707c3d6c653acc5bf9cd88549b562f5511bdac11a7ffaf65bc0",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/mounting-instructions-page-2.png": "33c262b90c5d33122f4daacd5ed05d9f18dc2dfd81d4ceb4ff9ecd9c5dc4bf04",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/pdf-render.log": "46f2ad2424bafc5d70983293fec71c3ec7791046b46b535b52b25f9e8b09789b",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/gallery-and-video-web-lookup.json": "191aa0e398e6926c429bc7394bed733e2aa9ad5e2543a9175c2fc6bac763c7fe",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/Training-Board-instructions.pdf": "32d8edecde62767b25ea266704a11a0a065cc610e39817963fa91a55d0775911",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/training-board-comparison.jpg": "7ca8b427b6efe55a9b60cb3cc00c93f4775dcd640ded495cd58fea400366ef4a",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/product-blue-white.jpg": "1c856a0cb9b4c47f40f421c96abc2c6cf50222aa8a17df46d74bbc24b3cf6fc8",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/render_complete_pdf.swift": "73f790e8f858d50dbede7e3328881f336e253a9c783521f29fda7bd8be0f681a",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/pdf-render-command.json": "21c0c9672a79c594bf098d2d362f8ae1370e9ec0bf3b082a27bdf0c4009ddec5",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/product-page-web-lookup.json": "199751d12ec15884f691ddf48bf78aa413516f103b067551417483286f1daee0"
+  }
+}

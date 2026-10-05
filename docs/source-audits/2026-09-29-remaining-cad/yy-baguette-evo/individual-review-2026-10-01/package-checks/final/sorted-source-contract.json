@@ -1,0 +1,14 @@
+{
+  "sourceSHA256": "7f1a6c34c92984b7f8ac89007051ce49ed3cd358290293018cdb8cb2ec8d69a7",
+  "onlyManifestChanges": true,
+  "allContactFactsPreserved": true,
+  "orientationKeysSorted": true,
+  "sidecarMatchesOrientation": true,
+  "posesCoverPositions": true,
+  "bearingProofRebinding": {
+    "priorSourceSHA256": "b07ab992ec2ed39e3b299f205a9d0865a5249659ec88cffad5e6c37d4a785de5",
+    "semanticRotationsUnchangedAfterKeySort": true,
+    "note": "JSON key ordering correction does not change quaternion values, logical contacts or native geometry; original18bearing checks retained in pose-semantic-source-check.json."
+  },
+  "passed": true
+}

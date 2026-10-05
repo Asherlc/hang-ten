@@ -1,0 +1,21 @@
+{
+  "owner": "placid-badger",
+  "simulator": "48059B24-A469-4B02-A47A-A303FB8D978E",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=48059B24-A469-4B02-A47A-A303FB8D978E",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "build-for-testing"
+  ],
+  "timeoutSeconds": 900,
+  "exitCode": 0,
+  "elapsedSeconds": 55.84665516699897
+}

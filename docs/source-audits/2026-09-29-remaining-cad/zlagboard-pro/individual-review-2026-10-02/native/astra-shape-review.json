@@ -1,0 +1,60 @@
+{
+  "timestampUTC": "2026-10-02T13:38:23.850537+00:00",
+  "package": "zlagboard-pro",
+  "status": "authoritative-native-shape-judgment-ready-for-final-export-and-app-review",
+  "humanAccepted": false,
+  "startingSourceSHA256": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+  "candidateSHA256": "0a03a478d96ad7690cabd91c13cd3e4978434c964bc13442e4407e5a9e27994b",
+  "canonicalSourceObservedAfterRootPromotionSHA256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+  "canonicalEditsByThisReview": false,
+  "nativeChecksReusedByExactHash": true,
+  "freshNativeRecomputeRun": false,
+  "wholeImagesReinspected": {
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/sources/product-01.png": "8011f7e115f3707e78d58c5b3587d3a15fd82b009c421a6c6dbc9f560e50dc1b",
+    "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/sources/product-02.png": "af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d",
+    ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/before-after-front-side-top.png": "878167fb54b4b6fac0157f26a8b5d119eac1ba9aa3269c58873d7e619d70e931",
+    ".context/placid-badger-cad-second-half/zlagboard-pro/preparation/rounded-candidate/rounded-oblique.png": "6847c4f024be1e5e4d007b7ca060bd962bdd880946f8f25eaa53fe7b9ca86ae6"
+  },
+  "shapeJudgment": "The existing editable candidate makes a narrow credible correction to the visibly sharp top trough/lip transitions and includes the previously omitted jug crest/corner skins. The whole manufacturer photo supports qualitative softness; numerical radii remain explicit estimates. No additional geometry defect is demonstrated by the approved whole evidence and retained native comparisons.",
+  "preservation": {
+    "contacts": 28,
+    "pockets": 21,
+    "fullyConstrainedSketches": 113,
+    "finalSkinBindingsUnique": true,
+    "reopenRecomputeValid": true,
+    "bearingNormalsCompared": 26,
+    "allMainNormalsIdentical": true,
+    "allPocketDepthExtentsIdentical": true,
+    "radiusEditRestoresExact": true
+  },
+  "orientationJudgment": "Keep the fixed upright wallboard orientation for every contact. Existing flat, sloping and incut main bearings face upward; five incut normals are preserved with native up component about0.992546. No separate loading poses or suspension are evidenced.",
+  "displayEstimates": {
+    "troughRoundMM": 2,
+    "frontLipRoundMM": 1,
+    "pocketSlopeDegrees": 12,
+    "incutDegrees": 7,
+    "centerTopSlopeDegrees": 10,
+    "envelopeMM": [
+      705,
+      152,
+      42
+    ],
+    "cameraRecommendation": [
+      0,
+      -0.35,
+      -1
+    ]
+  },
+  "remainingVerification": [
+    "Root metadata bridge and compiler validation bind final source/export hashes.",
+    "Whole original/prior/final actual export front-side-top comparisons.",
+    "Fresh app wood/default framing, all28 selections, both elevated jug crests/corners and bottom-row incut oblique.",
+    "Human review remains pending; retain known workout highlight limitation unless independently fixed."
+  ],
+  "limits": [
+    "No image measurements, crops, tracing or hidden topology inference.",
+    "No expensive repeat native checks or new source edits were performed in resumed review.",
+    "Current canonical source changed concurrently under root promotion; the initial unchanged-source assertion failed and correctly prevented an obsolete report. Candidate hash stayed exact; raw tool failure is retained in session.",
+    "Camera and unspecified shape dimensions remain display estimates."
+  ]
+}

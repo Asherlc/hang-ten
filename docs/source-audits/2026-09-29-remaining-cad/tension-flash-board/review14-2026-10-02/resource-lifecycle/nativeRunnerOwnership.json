@@ -1,0 +1,14 @@
+{
+  "owner": "placid-badger",
+  "task": "flash-board-review14/direct-native-mouth-experiment",
+  "recordedAt": "2026-10-02T22:15:57.332407+00:00",
+  "authorization": "root: .20 m support / .42 m free leads; remove optional mouthAxis; preserve every other fact",
+  "temporaryResources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-direct-mouth-20261002T151557/placid-badger-tmp"
+  ],
+  "externalResources": [],
+  "canonicalMutation": false,
+  "runtimeVerified": false
+}

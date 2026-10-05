@@ -1,0 +1,35 @@
+{
+  "baselineCommit": "7a6867151307170dd0993a6d6492500d3fd46467",
+  "baselineSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+  "frozenPrototypePath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/pristine-validation-prep/source-restoration/HangTen/Views/GripHandModelView.swift",
+  "frozenPrototypeSHA256": "66f77336b6bc1533e467c6165d7c35d330b1a817afddf8229f3b2bb7090fb542",
+  "candidateSHA256": "b37ab303d8637519fe4bcd0f2b3a0569cbb13ca0bcaeecf6d7af9200b9759b98",
+  "patchSHA256": "f75bb10aba56ec4106d1d4b2681d1fe7c4258c5da0c24c37a024e85f9815178d",
+  "checks": {
+    "singleAndPairFlagBranches": true,
+    "onlyImageLaunchFlag": true,
+    "preservesNeutralEnvironment": true,
+    "preservesVerticalNormalization": true,
+    "preservesTransparentBackground": true,
+    "preservesRevisionGuard": true,
+    "noDiagnosticDependencies": true,
+    "noProofFileWrites": true,
+    "patchAppliesToCurrentPristineGripSource": true,
+    "swiftParseDEBUG": true
+  },
+  "actualSourceModified": false,
+  "buildOrRuntimeExecuted": false,
+  "parseCommand": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "swiftc",
+    "-frontend",
+    "-parse",
+    "-D",
+    "DEBUG",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-clean-candidate/GripHandModelView.swift"
+  ],
+  "parseExitCode": 0,
+  "checkLimit": "Syntax parse only; no type checking, linking, build, install or runtime."
+}

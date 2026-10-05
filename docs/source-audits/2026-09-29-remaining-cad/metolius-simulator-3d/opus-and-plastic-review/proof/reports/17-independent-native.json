@@ -1,0 +1,180 @@
+{
+  "status": "pass",
+  "blockingFindings": [],
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "cavityChecks": [
+    {
+      "contactID": "pocket-4-left",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "edge-5-left",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "edge-6-left",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "edge-7-left",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-8-left",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-9-left",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-10-left",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "edge-11-left",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-12-left",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-13-left",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-15-center",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-16-center",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-17-center",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-18-center",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-13-right",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-12-right",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "edge-11-right",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-10-right",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-9-right",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-8-right",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "edge-7-right",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "edge-6-right",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "edge-5-right",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    },
+    {
+      "contactID": "pocket-4-right",
+      "cutterValid": true,
+      "cutterSolidCount": 1,
+      "bodyIntersectionVolumeMM3": 0.0,
+      "bodyIntersectionSolidCount": 0
+    }
+  ],
+  "sourceBytesUnchanged": true,
+  "limits": [
+    "Native full-cutter intersection detects silently filled cavities directly; exact zero-volume/zero-solid result required.",
+    "This complements published-depth/contact checks and does not infer hole dimensions from images."
+  ]
+}

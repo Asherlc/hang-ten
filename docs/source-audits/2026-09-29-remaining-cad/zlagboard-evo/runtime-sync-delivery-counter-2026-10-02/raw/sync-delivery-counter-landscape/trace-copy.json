@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/47243D09-A17F-4D29-9C25-8459AD2A4DFD/Documents/HighlightDiagnostic-placid-badger-cad-second-half-sync-delivery-counter/events-4305F765-E60E-4DC1-B4BE-F312B66E6E26.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-landscape/events-4305F765-E60E-4DC1-B4BE-F312B66E6E26.jsonl",
+      "sha256": "971954c9adef7692941f9c99981ed61eb50c095b5dcdd96d63b38ee30212ccd3"
+    }
+  ],
+  "records": 165,
+  "completeContiguous": true,
+  "copiedEpoch": 1790997231.616818,
+  "includesSamplerEnd": true
+}

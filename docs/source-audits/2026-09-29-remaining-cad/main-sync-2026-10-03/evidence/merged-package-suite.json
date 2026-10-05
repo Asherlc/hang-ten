@@ -1,0 +1,14 @@
+{
+  "command": [
+    ".context/placid-badger-cad-second-half/yy-baguette/venv/bin/python",
+    "-m",
+    "pytest",
+    "Tools/HangboardPackages/tests",
+    "-q",
+    "--basetemp",
+    ".context/placid-badger-cad-second-half/main-sync-2026-10-03/pytest-placid-badger-cad-second-half"
+  ],
+  "exitCode": 2,
+  "duration": 0.6076779365539551,
+  "nativeExportsRun": false
+}

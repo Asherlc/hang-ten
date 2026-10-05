@@ -1,0 +1,13 @@
+# User grasp feedback — intermediate 21ca3 source
+
+Status: this source is intermediate and must not be promoted. User identified a rear center-jug ridge that obstructs grasp and requested the sloper extend all the way forward.
+
+The retained native sections and whole rear/high-front views diagnose geometry and selection separately. Native X points right, negative Y points forward, Z up; Y = 0 is the rear mounting plane. These are CAD measurements, not image measurements.
+
+At X = 0, the center dome's crest at Z = 222 mm lies only about 6–15 mm forward from the rear plane. Its surface descends toward the front, reaching approximately Z = 193 mm around 87 mm forward. Thus its high rounded silhouette is extruded back toward the mounting wall rather than forming a forward crest with a back return. The full native rear view confirms this attachment to the back.
+
+The center-jug selection has a separate classification issue. The whole-face normal predicate evaluates a broad front-relief face before clipping it to the jug. The face contains much of the board front and its representative normal excludes it from top contacts; the upper curved part should instead be assessed after local clipping. Native sections at X = 0 and 30 mm therefore show orange selection confined to the rear plateau while the forward curved surface remains untagged. At X = 46 mm a long flat strip is selected, causing the current highlight to emphasize a ridge. A correction must address the solid shape and the actual local grasp-surface selection.
+
+Flat-sloper contacts currently occupy Y = 0…−55 mm; round-sloper contacts occupy Y = 0…−65 mm. The forward display envelope reaches about −94 mm. At X = 210 mm the flat support ends at 55 mm forward and joins a steep ramp to about 90 mm forward. At X = 95 mm the round support ends at 65 mm forward, then similarly falls away. The source dimensions establish support depth/span, not anchoring to the rear wall. Repositioning genuine usable 55/65 mm support surfaces toward the front can retain those facts while satisfying the user; extending highlight tags over steep inaccessible solid is insufficient.
+
+The next shape plan should place the center crest forward with an exposed rounded rear return and preserve pocket #15 beneath it. Sloper roof profiles should reach the front body extent, with the published support spans anchored forward. Exact crest position, rear-return clearance, roll radii and transition widths are display estimates requiring native whole-image/section review. The current source remains unchanged; no next export is authorized until that shape gate.

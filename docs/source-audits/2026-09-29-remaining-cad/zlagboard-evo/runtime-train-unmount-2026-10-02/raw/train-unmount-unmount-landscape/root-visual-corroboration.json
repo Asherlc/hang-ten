@@ -1,0 +1,24 @@
+{
+  "reviewer": "/root",
+  "scope": "Exactly three whole images independently opened by parent; no claim other images viewed by parent.",
+  "captures": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/phase-1-preview-plus-1.png",
+      "sha256": "51d2a14985efff42d9dc32dbff63700e7f582a813f1adb168eeca3b987e08477",
+      "observedBoardColor": "blue",
+      "timer": "02:59"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "4841352df29a71adf8646ee93462683b596ece2b587475fa01d6e4e72707f9f3",
+      "observedBoardColor": "red",
+      "timer": "00:07"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-unmount-landscape/phase-2-active-plus-5.png",
+      "sha256": "26e003b8320d2f39151c4a622291d8ea7261ddf0105af6312c8a6d114d4baedc",
+      "observedBoardColor": "red",
+      "timer": "00:02"
+    }
+  ]
+}

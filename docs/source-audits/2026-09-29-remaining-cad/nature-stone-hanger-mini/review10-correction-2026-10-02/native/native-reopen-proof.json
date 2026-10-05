@@ -1,0 +1,66 @@
+{
+  "freecad": [
+    "1",
+    "1",
+    "3",
+    "20260725 (Git shallow)",
+    "Unknown",
+    "2026/07/25 04:52:02",
+    "grafted,grafted",
+    "145529fe741292ff0b3977a01195bf0247425794"
+  ],
+  "occt": "7.8.1",
+  "python": "3.11.14 | packaged by conda-forge | (main, Oct 13 2025, 14:32:40) [Clang 19.1.7 ]",
+  "sourceSHA256": "8caf79583bdad1be28403e745e56b8769bd4fd189b7835c0adfa2b8721be70a4",
+  "bodyEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "unchangedFeatureGeometry": {},
+  "pinchSurfaceEquality": {
+    "aMinusBVolume": 0.0,
+    "bMinusAVolume": 0.0,
+    "aMinusBArea": 0.0,
+    "bMinusAArea": 0.0
+  },
+  "sharedLogicalPinchSpanMm": 60.0,
+  "distinctContactNodeOverlapArea": 0.0,
+  "dimensionEdit": {
+    "property": "LeftFrontOpenGroove.Radius",
+    "beforeMm": 1.7,
+    "editedMm": 1.8,
+    "states": {},
+    "bodyVolumeBefore": 115393.28351132889,
+    "bodyVolumeEdited": 115365.95048687907,
+    "jugEquality": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    },
+    "pinchPrimaryEquality": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    },
+    "contactOffBodyArea": {
+      "nature_jug": 0.0,
+      "nature_pinch": 0.0,
+      "nature_wood": 0.0,
+      "nature_stone": 0.0
+    },
+    "purpose": "Local native radius edit proves solid recompute and retained contact membership. No test dimensions are saved.",
+    "restoredBodyEquality": {
+      "aMinusBVolume": 0.0,
+      "bMinusAVolume": 0.0,
+      "aMinusBArea": 0.0,
+      "bMinusAArea": 0.0
+    }
+  },
+  "passed": true,
+  "editSaved": false,
+  "sourceBytesUnchanged": true
+}

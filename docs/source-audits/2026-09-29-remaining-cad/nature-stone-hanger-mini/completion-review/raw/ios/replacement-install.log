@@ -1,0 +1,67 @@
+{
+  "owner": "placid-badger",
+  "simulator": "CEC83800-5035-404E-B5A2-E40B826FE00E",
+  "builtApp": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app",
+  "installedApp": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/CEC83800-5035-404E-B5A2-E40B826FE00E/data/Containers/Bundle/Application/02FD34CE-B2A3-4C44-8E2C-6C5E2B713BE6/HangTen.app",
+  "builtBinarySHA256": "2ff4e42aa86eb80fdaecc5ef44e244b8eabd26f6a104f643ed1f444e5734f266",
+  "installedBinarySHA256": "2ff4e42aa86eb80fdaecc5ef44e244b8eabd26f6a104f643ed1f444e5734f266",
+  "binaryBytesMatch": true,
+  "nativeSourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+  "generatedManifestSHA256": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f",
+  "generatedManifestBytesMatchSource": true,
+  "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e",
+  "packageSHA256": {
+    "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+    "Hangboards/nature-stone-hanger-mini/assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+    "Hangboards/nature-stone-hanger-mini/suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+  },
+  "contactIDs": [
+    "pull-up-jug",
+    "wood-edge-15-incut",
+    "granite-edge-15",
+    "pinch-60"
+  ],
+  "positions": [
+    {
+      "id": "jug-open-up",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pull-up-jug"
+      ]
+    },
+    {
+      "id": "front-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "granite-edge-15"
+      ]
+    },
+    {
+      "id": "wood-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "wood-edge-15-incut"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-60"
+      ]
+    }
+  ],
+  "models": [
+    {
+      "presentationID": "primary",
+      "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+      "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+      "installedModelPaths": [
+        "/Users/asherlc/Library/Developer/CoreSimulator/Devices/CEC83800-5035-404E-B5A2-E40B826FE00E/data/Containers/Bundle/Application/02FD34CE-B2A3-4C44-8E2C-6C5E2B713BE6/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-nature-stone-hanger-mini-4df27b9222ef66a518b063f8aa7e26c5.assetpack/Hangboards/nature-stone-hanger-mini/assets/primary.usdz"
+      ]
+    }
+  ],
+  "commit": "ac077ec832d99471bbbebb4199ca810308c32140",
+  "dirtyDiffSHA256": "036a7c4c927e28ead862dcd998769dd5a95f1f139ef14d6f1c7ab65d561d06d3"
+}

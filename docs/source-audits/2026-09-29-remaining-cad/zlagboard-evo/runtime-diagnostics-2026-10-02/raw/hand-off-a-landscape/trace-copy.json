@@ -1,0 +1,13 @@
+[
+  {
+    "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/3C6A16BD-0608-43DF-8635-04F2FEA2787D/Documents/HighlightDiagnostic-placid-badger-cad-second-half-hand-off-a/events-368D7578-656D-4592-B248-430720891500.jsonl",
+    "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-off-a-landscape/events-368D7578-656D-4592-B248-430720891500.jsonl",
+    "sha256": "ab5a1cc04498cae0fb08b5b8ce4219c114f37f56192b2effdfad0acfacdf6189",
+    "copyEpoch": 1790967823.03948,
+    "records": 55,
+    "newlineComplete": true,
+    "allComplete": true,
+    "contiguousSequences": true,
+    "limitReached": false
+  }
+]

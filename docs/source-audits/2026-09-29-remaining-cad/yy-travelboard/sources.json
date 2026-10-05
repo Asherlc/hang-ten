@@ -1,0 +1,84 @@
+{
+  "sources": [
+    {
+      "package": "yy-travelboard",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-travelboard-3.webp?v=1753694006",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/yy-travelboard/yy-vertical-agres-nomades-travelboard-3.webp",
+      "snapshotSHA256": "4ead10d77e66fe2a01145e706b1c9751610295a6ba218d49a67701955957b26e",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user in 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved the thirteen new exact source packets including YY Baguette and TravelBoard: those are fine, feel free to use more searches for individual boards as needed."
+      },
+      "supportClaim": "Front: long 25 mm recess, shorter 15 mm recess and two separate mono openings, rounded rectangular board.",
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/evidence/yy-vertical-agres-nomades-travelboard-3.webp"
+    },
+    {
+      "package": "yy-travelboard",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-travelboard-2.webp?v=1753693997",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/yy-travelboard/yy-vertical-agres-nomades-travelboard-2.webp",
+      "snapshotSHA256": "c9f5e9e77d4d1fb89943cff6354252c48aa91c19b3b16701fef539ecd4b43894",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user in 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved the thirteen new exact source packets including YY Baguette and TravelBoard: those are fine, feel free to use more searches for individual boards as needed."
+      },
+      "supportClaim": "Front oblique: face depth, through mono opening, two cord tails at right side with open end-wrap loop.",
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/evidence/yy-vertical-agres-nomades-travelboard-2.webp"
+    },
+    {
+      "package": "yy-travelboard",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-travelboard-1.webp?v=1753693985",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/yy-travelboard/yy-vertical-agres-nomades-travelboard-1.webp",
+      "snapshotSHA256": "bcad579417bf117a0ae71331fa258fff9c3e26c3c98a7d15630948e115c8532e",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user in 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved the thirteen new exact source packets including YY Baguette and TravelBoard: those are fine, feel free to use more searches for individual boards as needed."
+      },
+      "supportClaim": "Manufacturer close-up: rounded recessed walls and engraved 25/15 mm floors; left mono opening.",
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/evidence/yy-vertical-agres-nomades-travelboard-1.webp"
+    },
+    {
+      "package": "yy-travelboard",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-travelboard-4.webp?v=1753694015",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/yy-travelboard/yy-vertical-agres-nomades-travelboard-4.webp",
+      "snapshotSHA256": "7bb95c416973e5f7ebb26235bf46981eca009e77e3a9236c560b12028d8a1143",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user in 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved the thirteen new exact source packets including YY Baguette and TravelBoard: those are fine, feel free to use more searches for individual boards as needed."
+      },
+      "supportClaim": "Reverse oblique: single 10 mm recess, two rear cord-access slots, through mono openings and cord wraps around both ends. Hidden connections from these slots remain unproven.",
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/evidence/yy-vertical-agres-nomades-travelboard-4.webp"
+    },
+    {
+      "package": "yy-travelboard",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/yy-travelboard/product.html",
+      "snapshotSHA256": "3e25178e361d424784a4a3b141c373df022f55f3e6972ba3357231a2e278afbf",
+      "supportClaim": "Exact product identity, gallery association, dimensions and listed contact depths; no training prescriptions are imported.",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user in 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved the thirteen new exact source packets including YY Baguette and TravelBoard: those are fine, feel free to use more searches for individual boards as needed."
+      },
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-travelboard/evidence/product.html"
+    }
+  ]
+}

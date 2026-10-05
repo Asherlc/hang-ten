@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal/workout-control-b.py", line 42, in <module>
+    app=Path(run('xcrun','simctl','get_app_container',uid,'com.hangten.training','app'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal/workout-control-b.py", line 24, in run
+    (out/f'{n:03d}-stdout.txt').write_bytes(r.stdout);(out/f'{n:03d}-stderr.txt').write_bytes(r.stderr);commands.append({'command':cmd,'startEpoch':t,'endEpoch':time.time(),'exitStatus':r.returncode});r.check_returncode();return r.stdout.decode().strip()
+                                                                                                                                                                                                         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py", line 502, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['rtk', 'proxy', 'xcrun', 'simctl', 'get_app_container', 'BDCA0D77-94C2-4A97-900B-443F75C64691', 'com.hangten.training', 'app']' returned non-zero exit status 149.

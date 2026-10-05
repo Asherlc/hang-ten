@@ -1,0 +1,1958 @@
+[
+  {
+    "type": "Application",
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 402,
+      "y": 0,
+      "height": 874,
+      "x": 0
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "Hold specs",
+    "AXValue": null,
+    "frame": {
+      "width": 402,
+      "x": 0,
+      "y": 62,
+      "height": 54
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Back",
+    "AXUniqueId": "BackButton",
+    "AXValue": null,
+    "frame": {
+      "width": 44,
+      "x": 16,
+      "y": 62,
+      "height": 44
+    }
+  },
+  {
+    "type": "Heading",
+    "AXLabel": "Hold specs",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 88.66666666666666,
+      "x": 156.66666666666666,
+      "y": 73.66666666666666,
+      "height": 20.66666666666667
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "boardDetail.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "width": 36,
+      "x": 346,
+      "y": 66,
+      "height": 36
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "boardDetail.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "width": 33.333333333333314,
+      "x": 347.3333333333333,
+      "y": 66,
+      "height": 36
+    }
+  },
+  {
+    "type": "ScrollArea",
+    "AXLabel": null,
+    "AXUniqueId": "boardDetail.screen",
+    "AXValue": null,
+    "frame": {
+      "y": 0,
+      "x": 0,
+      "height": 874,
+      "width": 402
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": null,
+    "AXUniqueId": "AdditionalDimmingOverlay",
+    "AXValue": null,
+    "frame": {
+      "width": 642,
+      "x": -120,
+      "y": 731,
+      "height": 286
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "METOLIUS",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 69.66666666666666,
+      "x": 20,
+      "y": 134,
+      "height": 13.333333333333343
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Contact",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 105,
+      "x": 20,
+      "y": 152.33333333333331,
+      "height": 33.666666666666686
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "32.5 \u00d7 11 \u00d7 2.625 in",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 130.33333333333331,
+      "x": 20,
+      "y": 191,
+      "height": 17
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left outer jug",
+    "AXUniqueId": "boardModel.contact.jug-left",
+    "AXValue": null,
+    "frame": {
+      "x": 100.66666666666669,
+      "width": 44,
+      "height": 44,
+      "y": 265.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left #3 63 mm round sloper",
+    "AXUniqueId": "boardModel.contact.round-sloper-3-left",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "x": 129.00000000000003,
+      "width": 44,
+      "y": 260.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Center 53 mm flat sloper",
+    "AXUniqueId": "boardModel.contact.flat-sloper-center",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 44,
+      "x": 179.00000000000003,
+      "y": 258.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left #4 30 mm 4-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-4-left",
+    "AXValue": null,
+    "frame": {
+      "x": 106.00000000000003,
+      "width": 44,
+      "height": 44,
+      "y": 282.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left #5 40 mm 2-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-5-left",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 44,
+      "x": 132.66666666666669,
+      "y": 281.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Center #16 15 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-16-center",
+    "AXValue": null,
+    "frame": {
+      "x": 179.00000000000003,
+      "width": 44,
+      "height": 44,
+      "y": 273.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left variable-width pinch",
+    "AXUniqueId": "boardModel.contact.pinch-left",
+    "AXValue": null,
+    "frame": {
+      "x": 63.33333333333336,
+      "width": 44,
+      "height": 44,
+      "y": 310
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left #6 20 mm 3-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-6-left",
+    "AXValue": null,
+    "frame": {
+      "x": 81.33333333333336,
+      "width": 44,
+      "height": 44,
+      "y": 303
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left #9 20 mm 4-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-9-left",
+    "AXValue": null,
+    "frame": {
+      "x": 81.66666666666669,
+      "height": 44,
+      "width": 44,
+      "y": 320.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left #7 30 mm 3-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-7-left",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 44,
+      "x": 107.00000000000003,
+      "y": 300
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left #10 25 mm 3-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-10-left",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 44,
+      "x": 107.66666666666669,
+      "y": 318.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left #8 32 mm 2-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-8-left",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "x": 132.66666666666669,
+      "width": 44,
+      "y": 299.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left #12 12 mm 4-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-12-left",
+    "AXValue": null,
+    "frame": {
+      "x": 82.00000000000003,
+      "width": 44,
+      "height": 44,
+      "y": 335.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left #13 17 mm 3-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-13-left",
+    "AXValue": null,
+    "frame": {
+      "x": 108.33333333333336,
+      "width": 44.000000000000014,
+      "height": 44,
+      "y": 334.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left #11 25 mm 2-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-11-left",
+    "AXValue": null,
+    "frame": {
+      "x": 133.00000000000003,
+      "width": 44,
+      "height": 44,
+      "y": 318
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Center #17 35 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-17-center",
+    "AXValue": null,
+    "frame": {
+      "x": 179.00000000000003,
+      "width": 44,
+      "height": 44,
+      "y": 296.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right #5 40 mm 2-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-5-right",
+    "AXValue": null,
+    "frame": {
+      "x": 225.33333333333334,
+      "width": 44.00000000000003,
+      "height": 44,
+      "y": 281.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right #3 63 mm round sloper",
+    "AXUniqueId": "boardModel.contact.round-sloper-3-right",
+    "AXValue": null,
+    "frame": {
+      "x": 229.00000000000003,
+      "width": 43.99999999999997,
+      "height": 44,
+      "y": 260.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left #14 17 mm 2-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-14-left",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 44,
+      "x": 133.33333333333334,
+      "y": 333.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Center #18 28 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-18-center",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "x": 179.00000000000003,
+      "width": 44,
+      "y": 316
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Center #19 23 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-19-center",
+    "AXValue": null,
+    "frame": {
+      "x": 179.00000000000003,
+      "height": 44,
+      "width": 44,
+      "y": 333.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right #14 17 mm 2-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-14-right",
+    "AXValue": null,
+    "frame": {
+      "x": 224.66666666666669,
+      "height": 44,
+      "width": 43.99999999999994,
+      "y": 333.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right #11 25 mm 2-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-11-right",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 43.99999999999997,
+      "x": 225.00000000000003,
+      "y": 318
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right #8 32 mm 2-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-8-right",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 44.00000000000003,
+      "x": 225.33333333333334,
+      "y": 299.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right #13 17 mm 3-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-13-right",
+    "AXValue": null,
+    "frame": {
+      "x": 249.66666666666669,
+      "width": 43.99999999999994,
+      "height": 44,
+      "y": 334.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right #10 25 mm 3-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-10-right",
+    "AXValue": null,
+    "frame": {
+      "x": 250.33333333333334,
+      "width": 44.00000000000003,
+      "height": 44,
+      "y": 318.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right #7 30 mm 3-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-7-right",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 43.99999999999997,
+      "x": 251.00000000000003,
+      "y": 300
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right #4 30 mm 4-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-4-right",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "x": 252.00000000000003,
+      "width": 43.99999999999997,
+      "y": 282.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right outer jug",
+    "AXUniqueId": "boardModel.contact.jug-right",
+    "AXValue": null,
+    "frame": {
+      "x": 257.33333333333337,
+      "height": 44,
+      "width": 44,
+      "y": 265.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right #12 12 mm 4-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-12-right",
+    "AXValue": null,
+    "frame": {
+      "x": 276,
+      "width": 44,
+      "height": 44,
+      "y": 335.66666666666663
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right #9 20 mm 4-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-9-right",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 44,
+      "x": 276.33333333333337,
+      "y": 320.3333333333333
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right #6 20 mm 3-finger pocket",
+    "AXUniqueId": "boardModel.contact.pocket-6-right",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "width": 44,
+      "x": 276.66666666666663,
+      "y": 303
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right variable-width pinch",
+    "AXUniqueId": "boardModel.contact.pinch-right",
+    "AXValue": null,
+    "frame": {
+      "y": 310,
+      "height": 44,
+      "width": 44,
+      "x": 294.66666666666663
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": null,
+    "AXUniqueId": "boardDetail.map",
+    "AXValue": null,
+    "frame": {
+      "y": 242,
+      "height": 167,
+      "x": 34.00000000000003,
+      "width": 334
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "boardDetail.selectedHold.pocket-4-left",
+    "AXValue": null,
+    "frame": {
+      "y": 420.5,
+      "height": 238.6666717529297,
+      "width": 335,
+      "x": 33.50000000000003
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "SELECTED HOLD",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 439,
+      "height": 13.333333333333314,
+      "x": 52,
+      "width": 111.66666666666666
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #4 30 mm 4-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 466.3333333333333,
+      "height": 50.333333333333314,
+      "x": 52,
+      "width": 173.33333333333331
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Kind",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 531.6666666666666,
+      "height": 15.666666666666629,
+      "width": 27.666666666666657,
+      "x": 52
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 530.6666666666666,
+      "height": 17,
+      "x": 303,
+      "width": 47
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Depth",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 562.6666666666666,
+      "height": 15.666666666666629,
+      "width": 37.33333333333333,
+      "x": 52
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "30 mm",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 561.6666666666666,
+      "height": 17,
+      "width": 47.33333333333326,
+      "x": 302.66666666666674
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Grip",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 593.6666666666666,
+      "height": 15.666666666666629,
+      "x": 52,
+      "width": 26
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Four-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 592.6666666666666,
+      "height": 17,
+      "width": 127.66666666666666,
+      "x": 222.33333333333334
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Finger capacity",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 624.6666666666666,
+      "height": 15.666666666666629,
+      "x": 52,
+      "width": 93.66666666666666
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "4",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 623.6666666666666,
+      "height": 17,
+      "width": 9.666666666666629,
+      "x": 340.33333333333337
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "HOLD MAP",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 670.6666666666666,
+      "height": 13.333333333333371,
+      "x": 34,
+      "width": 72
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 1: Left variable-width pinch",
+    "AXUniqueId": "boardDetail.holdLegend.pinch-left",
+    "AXValue": null,
+    "frame": {
+      "y": 696,
+      "height": 38,
+      "width": 163,
+      "x": 34.00000000000003
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "1",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 707.8333333333334,
+      "height": 14.333333333333371,
+      "x": 50.833333333333336,
+      "width": 6.333333333333336
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left variable-width pinch",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 707.1666666666666,
+      "height": 15.666666666666629,
+      "x": 74,
+      "width": 104.33333333333334
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 2: Left outer jug",
+    "AXUniqueId": "boardDetail.holdLegend.jug-left",
+    "AXValue": null,
+    "frame": {
+      "y": 696,
+      "height": 38,
+      "x": 205,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "2",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 707.8333333333334,
+      "height": 14.333333333333371,
+      "width": 8,
+      "x": 221
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left outer jug",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 707.1666666666666,
+      "height": 15.666666666666629,
+      "x": 245,
+      "width": 83
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 3: Center 53 mm flat sloper",
+    "AXUniqueId": "boardDetail.holdLegend.flat-sloper-center",
+    "AXValue": null,
+    "frame": {
+      "y": 742,
+      "height": 38,
+      "x": 34.00000000000003,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "3",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 753.8333333333334,
+      "height": 14.333333333333371,
+      "x": 49.833333333333336,
+      "width": 8.333333333333336
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Center 53 mm flat sloper",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 753.1666666666666,
+      "height": 15.666666666666629,
+      "width": 107,
+      "x": 74
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 4: Left #4 30 mm 4-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-4-left",
+    "AXValue": null,
+    "frame": {
+      "y": 742,
+      "height": 38,
+      "width": 163,
+      "x": 205
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "4",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 753.8333333333334,
+      "height": 14.333333333333371,
+      "width": 8.333333333333343,
+      "x": 220.83333333333334
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #4 30 mm 4-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 753.1666666666666,
+      "height": 15.666666666666629,
+      "x": 245,
+      "width": 102.33333333333337
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 5: Left #5 40 mm 2-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-5-left",
+    "AXValue": null,
+    "frame": {
+      "y": 788,
+      "height": 38,
+      "x": 34.00000000000003,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "5",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 799.8333333333334,
+      "height": 14.333333333333371,
+      "width": 8.333333333333336,
+      "x": 49.833333333333336
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #5 40 mm 2-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 799.1666666666666,
+      "height": 15.666666666666629,
+      "width": 102.33333333333334,
+      "x": 74
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 6: Left #6 20 mm 3-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-6-left",
+    "AXValue": null,
+    "frame": {
+      "y": 788,
+      "height": 38,
+      "x": 205,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "6",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 799.8333333333334,
+      "x": 220.83333333333334,
+      "width": 8.333333333333343,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #6 20 mm 3-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 799.1666666666666,
+      "x": 245,
+      "width": 102,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 7: Left #7 30 mm 3-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-7-left",
+    "AXValue": null,
+    "frame": {
+      "y": 834,
+      "x": 34.00000000000003,
+      "height": 38,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "7",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 845.8333333333334,
+      "x": 50.16666666666667,
+      "width": 7.666666666666664,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #7 30 mm 3-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 845.1666666666666,
+      "x": 74,
+      "height": 15.666666666666629,
+      "width": 101.66666666666666
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 8: Left #8 32 mm 2-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-8-left",
+    "AXValue": null,
+    "frame": {
+      "y": 834,
+      "x": 205,
+      "width": 163,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "8",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 845.8333333333334,
+      "x": 220.66666666666666,
+      "width": 8.666666666666657,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #8 32 mm 2-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 845.1666666666666,
+      "x": 245,
+      "width": 101.66666666666663,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 9: Left #9 20 mm 4-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-9-left",
+    "AXValue": null,
+    "frame": {
+      "y": 880,
+      "x": 34.00000000000003,
+      "height": 38,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "9",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 891.8333333333334,
+      "x": 49.833333333333336,
+      "width": 8.333333333333336,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #9 20 mm 4-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 891.1666666666666,
+      "x": 74,
+      "width": 102,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 10: Left #10 25 mm 3-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-10-left",
+    "AXValue": null,
+    "frame": {
+      "y": 880,
+      "x": 205,
+      "width": 163,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "10",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 891.8333333333334,
+      "x": 217.5,
+      "width": 15,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #10 25 mm 3-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 891.1666666666666,
+      "x": 245,
+      "height": 15.666666666666629,
+      "width": 97
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 11: Left #11 25 mm 2-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-11-left",
+    "AXValue": null,
+    "frame": {
+      "y": 926,
+      "x": 34.00000000000003,
+      "width": 163,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "11",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 937.8333333333334,
+      "x": 47.666666666666664,
+      "height": 14.333333333333371,
+      "width": 12.666666666666664
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #11 25 mm 2-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 937.1666666666666,
+      "x": 74,
+      "width": 106,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 12: Left #12 12 mm 4-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-12-left",
+    "AXValue": null,
+    "frame": {
+      "y": 926,
+      "x": 205,
+      "width": 163,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "12",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 937.8333333333334,
+      "x": 217.83333333333334,
+      "width": 14.333333333333343,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #12 12 mm 4-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 937.1666666666666,
+      "x": 245,
+      "height": 15.666666666666629,
+      "width": 106
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 13: Left #13 17 mm 3-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-13-left",
+    "AXValue": null,
+    "frame": {
+      "y": 972,
+      "x": 34.00000000000003,
+      "width": 163,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "13",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 983.8333333333334,
+      "x": 46.666666666666664,
+      "height": 14.333333333333371,
+      "width": 14.666666666666664
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #13 17 mm 3-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 983.1666666666666,
+      "x": 74,
+      "width": 106,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 14: Left #14 17 mm 2-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-14-left",
+    "AXValue": null,
+    "frame": {
+      "y": 972,
+      "x": 205,
+      "width": 163,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "14",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 983.8333333333334,
+      "x": 217.66666666666666,
+      "width": 14.666666666666657,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #14 17 mm 2-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 983.1666666666666,
+      "x": 245,
+      "width": 106,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 15: Center #16 15 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-16-center",
+    "AXValue": null,
+    "frame": {
+      "y": 1018,
+      "x": 34.00000000000003,
+      "height": 38,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "15",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1029.8333333333335,
+      "x": 46.666666666666664,
+      "height": 14.333333333333258,
+      "width": 14.666666666666664
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Center #16 15 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1029.1666666666665,
+      "x": 74,
+      "height": 15.666666666666742,
+      "width": 98.33333333333334
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 16: Center #17 35 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-17-center",
+    "AXValue": null,
+    "frame": {
+      "y": 1018,
+      "x": 205,
+      "height": 38,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "16",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1029.8333333333335,
+      "x": 217.66666666666666,
+      "width": 14.666666666666657,
+      "height": 14.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Center #17 35 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1029.1666666666665,
+      "x": 245,
+      "width": 99.33333333333337,
+      "height": 15.666666666666742
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 17: Center #18 28 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-18-center",
+    "AXValue": null,
+    "frame": {
+      "x": 34.00000000000003,
+      "width": 163,
+      "y": 1064,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "17",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 47,
+      "width": 14,
+      "y": 1075.8333333333335,
+      "height": 14.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Center #18 28 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 74,
+      "width": 100,
+      "y": 1075.1666666666665,
+      "height": 15.666666666666742
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 18: Center #19 23 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-19-center",
+    "AXValue": null,
+    "frame": {
+      "x": 205,
+      "width": 163,
+      "y": 1064,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "18",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 217.66666666666666,
+      "y": 1075.8333333333335,
+      "width": 14.666666666666657,
+      "height": 14.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Center #19 23 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 245,
+      "width": 100,
+      "y": 1075.1666666666665,
+      "height": 15.666666666666742
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 19: Right #14 17 mm 2-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-14-right",
+    "AXValue": null,
+    "frame": {
+      "x": 34.00000000000003,
+      "width": 163,
+      "y": 1110,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "19",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 46.666666666666664,
+      "y": 1121.8333333333335,
+      "width": 14.666666666666664,
+      "height": 14.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right #14 17 mm 2-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 74,
+      "width": 103,
+      "y": 1121.1666666666665,
+      "height": 15.666666666666742
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 20: Right #13 17 mm 3-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-13-right",
+    "AXValue": null,
+    "frame": {
+      "x": 205,
+      "y": 1110,
+      "width": 163,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "20",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 216.83333333333334,
+      "y": 1121.8333333333335,
+      "width": 16.333333333333343,
+      "height": 14.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right #13 17 mm 3-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 245,
+      "y": 1121.1666666666665,
+      "width": 102.66666666666663,
+      "height": 15.666666666666742
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 21: Right #12 12 mm 4-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-12-right",
+    "AXValue": null,
+    "frame": {
+      "x": 34.00000000000003,
+      "width": 163,
+      "y": 1156,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "21",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 46.833333333333336,
+      "width": 14.333333333333336,
+      "y": 1167.8333333333333,
+      "height": 14.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right #12 12 mm 4-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 74,
+      "width": 102.66666666666666,
+      "y": 1167.1666666666667,
+      "height": 15.666666666666742
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 22: Right #11 25 mm 2-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-11-right",
+    "AXValue": null,
+    "frame": {
+      "x": 205,
+      "width": 163,
+      "y": 1156,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "22",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 217.16666666666666,
+      "y": 1167.8333333333333,
+      "width": 15.666666666666657,
+      "height": 14.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right #11 25 mm 2-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 245,
+      "width": 103,
+      "y": 1167.1666666666667,
+      "height": 15.666666666666742
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 23: Right #10 25 mm 3-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-10-right",
+    "AXValue": null,
+    "frame": {
+      "x": 34.00000000000003,
+      "width": 163,
+      "y": 1202,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "23",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 46,
+      "y": 1213.8333333333333,
+      "width": 16,
+      "height": 14.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right #10 25 mm 3-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 74,
+      "width": 105.33333333333334,
+      "y": 1213.1666666666667,
+      "height": 15.666666666666742
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 24: Right #9 20 mm 4-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-9-right",
+    "AXValue": null,
+    "frame": {
+      "x": 205,
+      "width": 163,
+      "y": 1202,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "24",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 217,
+      "width": 16,
+      "y": 1213.8333333333333,
+      "height": 14.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right #9 20 mm 4-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 245,
+      "y": 1213.1666666666667,
+      "width": 98.66666666666663,
+      "height": 15.666666666666742
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 25: Right #8 32 mm 2-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-8-right",
+    "AXValue": null,
+    "frame": {
+      "x": 34.00000000000003,
+      "y": 1248,
+      "width": 163,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "25",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 46,
+      "width": 16,
+      "y": 1259.8333333333333,
+      "height": 14.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right #8 32 mm 2-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 74,
+      "y": 1259.1666666666667,
+      "width": 98.66666666666666,
+      "height": 15.666666666666742
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 26: Right #7 30 mm 3-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-7-right",
+    "AXValue": null,
+    "frame": {
+      "x": 205,
+      "width": 163,
+      "y": 1248,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "26",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 217,
+      "width": 16,
+      "y": 1259.8333333333333,
+      "height": 14.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right #7 30 mm 3-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 245,
+      "y": 1259.1666666666667,
+      "width": 98.33333333333337,
+      "height": 15.666666666666742
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 27: Right #6 20 mm 3-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-6-right",
+    "AXValue": null,
+    "frame": {
+      "x": 34.00000000000003,
+      "y": 1294,
+      "width": 163,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "27",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "x": 46.333333333333336,
+      "y": 1305.8333333333333,
+      "width": 15.333333333333336,
+      "height": 14.333333333333258
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right #6 20 mm 3-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1305.1666666666667,
+      "x": 74,
+      "height": 15.666666666666742,
+      "width": 98.66666666666666
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 28: Right #5 40 mm 2-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-5-right",
+    "AXValue": null,
+    "frame": {
+      "y": 1294,
+      "x": 205,
+      "height": 38,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "28",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1305.8333333333333,
+      "x": 216.83333333333334,
+      "height": 14.333333333333258,
+      "width": 16.333333333333343
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right #5 40 mm 2-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1305.1666666666667,
+      "x": 245,
+      "height": 15.666666666666742,
+      "width": 99
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 29: Right #4 30 mm 4-finger pocket",
+    "AXUniqueId": "boardDetail.holdLegend.pocket-4-right",
+    "AXValue": null,
+    "frame": {
+      "y": 1340,
+      "x": 34.00000000000003,
+      "height": 38,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "29",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1351.8333333333333,
+      "x": 45.833333333333336,
+      "height": 14.333333333333258,
+      "width": 16.333333333333336
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right #4 30 mm 4-finger pocket",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1351.1666666666667,
+      "x": 74,
+      "height": 15.666666666666742,
+      "width": 99.33333333333334
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 30: Left #3 63 mm round sloper",
+    "AXUniqueId": "boardDetail.holdLegend.round-sloper-3-left",
+    "AXValue": null,
+    "frame": {
+      "y": 1340,
+      "x": 205,
+      "height": 38,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "30",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1351.8333333333333,
+      "x": 216.66666666666666,
+      "height": 14.333333333333258,
+      "width": 16.666666666666657
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left #3 63 mm round sloper",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1351.1666666666667,
+      "x": 245,
+      "height": 15.666666666666742,
+      "width": 102
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 31: Right #3 63 mm round sloper",
+    "AXUniqueId": "boardDetail.holdLegend.round-sloper-3-right",
+    "AXValue": null,
+    "frame": {
+      "y": 1386,
+      "x": 34.00000000000003,
+      "height": 38,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "31",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1397.8333333333333,
+      "x": 46.666666666666664,
+      "height": 14.333333333333258,
+      "width": 14.666666666666664
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right #3 63 mm round sloper",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1397.1666666666667,
+      "x": 74,
+      "height": 15.666666666666742,
+      "width": 99
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 32: Right outer jug",
+    "AXUniqueId": "boardDetail.holdLegend.jug-right",
+    "AXValue": null,
+    "frame": {
+      "y": 1386,
+      "x": 205,
+      "height": 38,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "32",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1397.8333333333333,
+      "x": 217,
+      "height": 14.333333333333258,
+      "width": 16
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right outer jug",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1397.1666666666667,
+      "x": 245,
+      "height": 15.666666666666742,
+      "width": 91.33333333333337
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 33: Right variable-width pinch",
+    "AXUniqueId": "boardDetail.holdLegend.pinch-right",
+    "AXValue": null,
+    "frame": {
+      "y": 1432,
+      "x": 34.00000000000003,
+      "height": 38,
+      "width": 163
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "33",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1443.8333333333333,
+      "x": 45.833333333333336,
+      "height": 14.333333333333258,
+      "width": 16.333333333333336
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right variable-width pinch",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 1443.1666666666667,
+      "x": 74,
+      "height": 15.666666666666742,
+      "width": 102.33333333333334
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Tab Bar",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 791,
+      "x": 0,
+      "height": 83,
+      "width": 402
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "Train",
+    "AXUniqueId": "figure.climbing",
+    "AXValue": 1,
+    "frame": {
+      "y": 795,
+      "x": 68,
+      "height": 54,
+      "width": 94
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "figure.climbing",
+    "AXUniqueId": "figure.climbing",
+    "AXValue": null,
+    "frame": {
+      "y": 797,
+      "x": 100,
+      "height": 35.66666666666663,
+      "width": 30
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "Plans",
+    "AXUniqueId": "list.bullet.rectangle.portrait.fill",
+    "AXValue": 0,
+    "frame": {
+      "width": 94,
+      "y": 795,
+      "height": 54,
+      "x": 154
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "list.bullet.rectangle.portrait.fill",
+    "AXUniqueId": "list.bullet.rectangle.portrait.fill",
+    "AXValue": null,
+    "frame": {
+      "width": 25.333333333333343,
+      "y": 800.6666666666666,
+      "x": 188,
+      "height": 28.66666666666663
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "History",
+    "AXUniqueId": "clock.arrow.circlepath",
+    "AXValue": 0,
+    "frame": {
+      "width": 94,
+      "y": 795,
+      "height": 54,
+      "x": 240
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "clock.arrow.trianglehead.counterclockwise.rotate.90",
+    "AXUniqueId": "clock.arrow.trianglehead.counterclockwise.rotate.90",
+    "AXValue": null,
+    "frame": {
+      "width": 27.666666666666686,
+      "y": 801.3333333333334,
+      "x": 272.66666666666663,
+      "height": 27.33333333333337
+    }
+  }
+]

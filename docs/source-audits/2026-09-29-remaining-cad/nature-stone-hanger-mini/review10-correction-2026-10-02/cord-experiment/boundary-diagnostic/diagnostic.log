@@ -1,0 +1,210 @@
+{
+  "report": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/boundary-diagnostic/station-boundary-diagnosis.json",
+    "sha256": "b4733fbc20c3bd8c7bbc0ba32e6a66441e30de02f948fa51979bb2015fb47549"
+  },
+  "margin20ContainedEndpointCount": 12,
+  "margin20MostNegativeObstacleResidualM": -9.281464692925029e-13,
+  "margin20ContainedEndpointExamples": [
+    {
+      "endpointRole": "nativeAttachmentStation",
+      "endpointM": [
+        0.04932,
+        0.0,
+        0.00625
+      ],
+      "sectionPointM": [
+        0.0,
+        0.0
+      ],
+      "unbufferedNativeBoundaryContains": false,
+      "nativeSectionBoundarySignedExteriorDistanceM": 0.0010199999990718536,
+      "sectionOffsetRadiusM": 0.00102,
+      "sectionClearanceMinusRadiusAndMarginM": -9.28146397764654e-13,
+      "obstacleContains": true,
+      "obstacleCovers": true,
+      "obstacleSignedExteriorDistanceM": -9.281464692925029e-13,
+      "actualSectionFloorNearestPointM": [
+        0.0483000000018563,
+        0.0,
+        0.006250043513592199
+      ],
+      "actualOffsetBoundaryNearestPointM": [
+        0.04932000000092815,
+        0.0,
+        0.0062499999999999604
+      ],
+      "actualFullSolidStationEvidence": {
+        "stationM": [
+          0.04932,
+          0.0,
+          0.00625
+        ],
+        "actualFullSolidExteriorClearanceM": 0.0010197268299336338,
+        "nativeFullRadiusResidualM": 1.9726829933633828e-05,
+        "stationHex": [
+          "0x1.940789613d31cp-5",
+          "0x0.0p+0",
+          "0x1.999999999999ap-8"
+        ],
+        "closestMeshPointM": [
+          0.04830054626697403,
+          -1.6686729846094377e-05,
+          0.006233313270153906
+        ],
+        "closestMeshTriangleIndex": 21900,
+        "closestMeshDistanceM": 0.0010197268299336338
+      }
+    },
+    {
+      "endpointRole": "nativeAttachmentStation",
+      "endpointM": [
+        0.04932,
+        0.0,
+        -0.00625
+      ],
+      "sectionPointM": [
+        0.0125,
+        0.0
+      ],
+      "unbufferedNativeBoundaryContains": false,
+      "nativeSectionBoundarySignedExteriorDistanceM": 0.001019999999940355,
+      "sectionOffsetRadiusM": 0.00102,
+      "sectionClearanceMinusRadiusAndMarginM": -5.964494645253372e-14,
+      "obstacleContains": true,
+      "obstacleCovers": true,
+      "obstacleSignedExteriorDistanceM": -5.964475424461766e-14,
+      "actualSectionFloorNearestPointM": [
+        0.048300000000119296,
+        0.0,
+        -0.0062500110313055395
+      ],
+      "actualOffsetBoundaryNearestPointM": [
+        0.04932000000005965,
+        0.0,
+        -0.00625
+      ],
+      "actualFullSolidStationEvidence": {
+        "stationM": [
+          0.04932,
+          0.0,
+          -0.00625
+        ],
+        "actualFullSolidExteriorClearanceM": 0.0010197268299336338,
+        "nativeFullRadiusResidualM": 1.9726829933633828e-05,
+        "stationHex": [
+          "0x1.940789613d31cp-5",
+          "0x0.0p+0",
+          "-0x1.999999999999ap-8"
+        ],
+        "closestMeshPointM": [
+          0.04830054626697403,
+          1.668672984609416e-05,
+          -0.006266686729846095
+        ],
+        "closestMeshTriangleIndex": 26658,
+        "closestMeshDistanceM": 0.0010197268299336338
+      }
+    },
+    {
+      "endpointRole": "nativeAttachmentStation",
+      "endpointM": [
+        0.04932,
+        0.0,
+        0.00625
+      ],
+      "sectionPointM": [
+        0.0,
+        0.0
+      ],
+      "unbufferedNativeBoundaryContains": false,
+      "nativeSectionBoundarySignedExteriorDistanceM": 0.0010199999990718536,
+      "sectionOffsetRadiusM": 0.00102,
+      "sectionClearanceMinusRadiusAndMarginM": -9.28146397764654e-13,
+      "obstacleContains": true,
+      "obstacleCovers": true,
+      "obstacleSignedExteriorDistanceM": -9.281464692925029e-13,
+      "actualSectionFloorNearestPointM": [
+        0.0483000000018563,
+        0.0,
+        0.006250043513592199
+      ],
+      "actualOffsetBoundaryNearestPointM": [
+        0.04932000000092815,
+        0.0,
+        0.0062499999999999604
+      ],
+      "actualFullSolidStationEvidence": {
+        "stationM": [
+          0.04932,
+          0.0,
+          0.00625
+        ],
+        "actualFullSolidExteriorClearanceM": 0.0010197268299336338,
+        "nativeFullRadiusResidualM": 1.9726829933633828e-05,
+        "stationHex": [
+          "0x1.940789613d31cp-5",
+          "0x0.0p+0",
+          "0x1.999999999999ap-8"
+        ],
+        "closestMeshPointM": [
+          0.04830054626697403,
+          -1.6686729846094377e-05,
+          0.006233313270153906
+        ],
+        "closestMeshTriangleIndex": 21900,
+        "closestMeshDistanceM": 0.0010197268299336338
+      }
+    },
+    {
+      "endpointRole": "nativeAttachmentStation",
+      "endpointM": [
+        0.04932,
+        0.0,
+        -0.00625
+      ],
+      "sectionPointM": [
+        0.0125,
+        0.0
+      ],
+      "unbufferedNativeBoundaryContains": false,
+      "nativeSectionBoundarySignedExteriorDistanceM": 0.001019999999940355,
+      "sectionOffsetRadiusM": 0.00102,
+      "sectionClearanceMinusRadiusAndMarginM": -5.964494645253372e-14,
+      "obstacleContains": true,
+      "obstacleCovers": true,
+      "obstacleSignedExteriorDistanceM": -5.964475424461766e-14,
+      "actualSectionFloorNearestPointM": [
+        0.048300000000119296,
+        0.0,
+        -0.0062500110313055395
+      ],
+      "actualOffsetBoundaryNearestPointM": [
+        0.04932000000005965,
+        0.0,
+        -0.00625
+      ],
+      "actualFullSolidStationEvidence": {
+        "stationM": [
+          0.04932,
+          0.0,
+          -0.00625
+        ],
+        "actualFullSolidExteriorClearanceM": 0.0010197268299336338,
+        "nativeFullRadiusResidualM": 1.9726829933633828e-05,
+        "stationHex": [
+          "0x1.940789613d31cp-5",
+          "0x0.0p+0",
+          "-0x1.999999999999ap-8"
+        ],
+        "closestMeshPointM": [
+          0.04830054626697403,
+          1.668672984609416e-05,
+          -0.006266686729846095
+        ],
+        "closestMeshTriangleIndex": 26658,
+        "closestMeshDistanceM": 0.0010197268299336338
+      }
+    }
+  ]
+}

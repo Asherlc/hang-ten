@@ -1,0 +1,14 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "pid": 14857,
+  "parentPID": 14855,
+  "command": [
+    "rtk",
+    "proxy",
+    "python3",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-awake-prep/capture.py",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-awake-prep/root-live-c-release.json"
+  ],
+  "startEpoch": 1791020990.263215,
+  "startMonotonic": 92553.263409333
+}

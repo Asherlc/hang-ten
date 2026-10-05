@@ -116,11 +116,11 @@ struct LifetimeUnlockPaywall: View {
 
                     VStack(spacing: 12) {
                         Text("Unlock Hang Ten")
-                            .font(.system(size: 30, weight: .bold, design: .rounded))
+                            .font(.system(.largeTitle, design: .rounded, weight: .bold))
                             .foregroundStyle(Color.hangInk)
 
                         Text("You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase.")
-                            .font(.system(size: 16, weight: .medium, design: .rounded))
+                            .font(.system(.callout, design: .rounded, weight: .medium))
                             .foregroundStyle(Color.hangMuted)
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
@@ -129,7 +129,7 @@ struct LifetimeUnlockPaywall: View {
                     VStack(spacing: 12) {
                         Button(action: purchase) {
                             Text(purchaseButtonTitle)
-                                .font(.system(size: 17, weight: .bold, design: .rounded))
+                                .font(.system(.body, design: .rounded, weight: .bold))
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 15)
                                 .foregroundStyle(Color.hangInk)
@@ -143,14 +143,14 @@ struct LifetimeUnlockPaywall: View {
                         .accessibilityIdentifier("paywall.purchase")
 
                         Button("Restore Purchases", action: restore)
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                            .font(.system(.subheadline, design: .rounded, weight: .bold))
                             .foregroundStyle(Color.hangGreenDark)
                             .disabled(isTransacting)
                             .accessibilityIdentifier("paywall.restore")
 
                         if shouldShowProductLoadRetry {
                             Button("Retry Loading Purchase", action: retryProductLoad)
-                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .font(.system(.subheadline, design: .rounded, weight: .bold))
                                 .foregroundStyle(Color.hangGreenDark)
                                 .accessibilityIdentifier("paywall.retryProduct")
                         }
@@ -162,7 +162,7 @@ struct LifetimeUnlockPaywall: View {
                                 ProgressView()
                             }
                             Text(statusMessage)
-                                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                                .font(.system(.subheadline, design: .rounded, weight: .semibold))
                                 .foregroundStyle(Color.hangMuted)
                                 .fixedSize(horizontal: false, vertical: true)
                         }

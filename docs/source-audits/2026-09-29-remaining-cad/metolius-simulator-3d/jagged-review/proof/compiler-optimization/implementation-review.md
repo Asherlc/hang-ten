@@ -1,0 +1,5 @@
+The opt-in compiler passes nine real FreeCAD regressions and84 adjacent tests. Default sources retain the legacy evaluator. New red→green regressions cover internal C0 knot derivative ambiguity and invalid coincident UV witnesses.
+
+The earlier60corner benchmark is historical: a broader213corner check exposed10 C0-knot mismatches. The current guard falls back at those nonsmooth knots and preserves unusable witnesses when determining ambiguity. The exact wider71triangle/213corner comparison now passes, including all ten previous failures: positions exact, maximum normal difference8.54e−7degrees. Three final native compiler runs passed in379–383seconds; two normal exports match model and descriptor bytes, and check-only agrees. Independent final USDZ validation passes; full Python/iOS integration remains parent-owned.
+
+Test subprocess groups are unconditionally cleaned and reaped before temporary-directory removal. Native geometry, tessellation policy, triangle positions/order and material policy are unchanged. See JSON for exact current hashes and pending gates.

@@ -1,0 +1,289 @@
+{
+  "status": "requires-review",
+  "blockingFindings": [
+    "body_board_001 degenerate triangle or inconsistent authored normal"
+  ],
+  "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+  "meshes": [
+    {
+      "node": "body_board_001",
+      "triangles": 238821,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 18168,
+      "minimumNormalWindingCosine": -0.9999999999998592,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_4_left",
+      "triangles": 466,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996617102998868,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_5_left",
+      "triangles": 547,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9985987086682153,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_6_left",
+      "triangles": 434,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996534289967691,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_7_left",
+      "triangles": 472,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9994965598940904,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_8_left",
+      "triangles": 435,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996732303668621,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_9_left",
+      "triangles": 585,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9973627161591383,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_10_left",
+      "triangles": 462,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996538306020348,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_11_left",
+      "triangles": 434,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996759440309619,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_12_left",
+      "triangles": 456,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.999595208826503,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_13_left",
+      "triangles": 583,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9966382961542082,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_15_center",
+      "triangles": 619,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9979179151882406,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_16_center",
+      "triangles": 479,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9988788704064149,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_17_center",
+      "triangles": 610,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9972598245287794,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_18_center",
+      "triangles": 477,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9986242495705095,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_13_right",
+      "triangles": 573,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9972008025770436,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_12_right",
+      "triangles": 463,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9984373414477881,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_11_right",
+      "triangles": 445,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996876675595752,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_10_right",
+      "triangles": 476,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9979679242517234,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_9_right",
+      "triangles": 572,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9973627161591383,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_8_right",
+      "triangles": 454,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996789577152927,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_7_right",
+      "triangles": 475,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9991103501469341,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_6_right",
+      "triangles": 444,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996810655059168,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_edge_5_right",
+      "triangles": 544,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9985988566543855,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_pocket_4_right",
+      "triangles": 467,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996136436071448,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_jug_14_center",
+      "triangles": 1872,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9762241716724618,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_round_sloper_3_center",
+      "triangles": 188,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9996928409633894,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_flat_sloper_2_left",
+      "triangles": 314,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9310846277195637,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_jug_1_left",
+      "triangles": 761,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9789310322497086,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_flat_sloper_2_right",
+      "triangles": 296,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9309330875342299,
+      "usdOrientation": "rightHanded"
+    },
+    {
+      "node": "contact_jug_1_right",
+      "triangles": 737,
+      "zeroAreaTriangles": 0,
+      "normalCornersAgainstWinding": 0,
+      "minimumNormalWindingCosine": 0.9874818533582728,
+      "usdOrientation": "rightHanded"
+    }
+  ],
+  "weldedWholeExportTopology": [
+    {
+      "mode": "exactStoredPositions",
+      "uniqueVertices": 127712,
+      "uniqueEdges": 382682,
+      "boundaryEdges": 591,
+      "nonManifoldEdges": 110,
+      "inconsistentPairedEdgeWinding": 0,
+      "watertight": false,
+      "windingConsistentOnPairedEdges": true
+    },
+    {
+      "mode": "rounded0.0001mm",
+      "uniqueVertices": 127684,
+      "uniqueEdges": 382626,
+      "boundaryEdges": 591,
+      "nonManifoldEdges": 166,
+      "inconsistentPairedEdgeWinding": 28,
+      "watertight": false,
+      "windingConsistentOnPairedEdges": false
+    }
+  ],
+  "actualNativeEnvelopeXYZMM": [
+    711.0000252723694,
+    94.11818308581132,
+    222.00000286102295
+  ],
+  "limits": [
+    "Exact-coordinate topology is reported independently of normals and material gates.",
+    "The secondary0.0001mm positional weld is diagnostic only; it does not repair or rewrite the model.",
+    "No triangle self-intersection/global manufacturing certificate is claimed."
+  ]
+}

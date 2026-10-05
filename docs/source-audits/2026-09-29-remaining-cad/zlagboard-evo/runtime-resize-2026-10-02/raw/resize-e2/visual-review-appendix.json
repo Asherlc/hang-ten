@@ -1,0 +1,53 @@
+{
+  "17WholeFilesEqualPreviouslyReviewedReferences": true,
+  "differentImages": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-e2/phase-0-clear-plus-0.25.png",
+      "targetEpoch": 1790976759.8875258,
+      "startEpoch": 1790976759.897583,
+      "endEpoch": 1790976760.377196,
+      "phase": "clear",
+      "phaseIndex": 0,
+      "offset": 0.25,
+      "sha256": "f16814219e626fa8896c668cbf4020f46fdcb995a0b3e652ee44f7e64a88114a",
+      "priorReference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-0-clear-plus-0.25.png",
+      "wholeFileEqual": false,
+      "wholeImageViewedIndividually": true,
+      "observedBoardColor": "wood/unhighlighted",
+      "expectedMatched": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-e2/phase-2-preview-plus-7.png",
+      "targetEpoch": 1790976782.6375258,
+      "startEpoch": 1790976782.64756,
+      "endEpoch": 1790976783.178136,
+      "phase": "preview",
+      "phaseIndex": 2,
+      "offset": 7,
+      "sha256": "7d35b71fe116d74a7ce3188c327d803b9f56a8f0b971dc287d2737ff4ad87687",
+      "priorReference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-2-preview-plus-7.png",
+      "wholeFileEqual": false,
+      "wholeImageViewedIndividually": true,
+      "observedBoardColor": "blue",
+      "expectedMatched": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-e2/phase-3-active-plus-3.png",
+      "targetEpoch": 1790976786.6375258,
+      "startEpoch": 1790976786.647576,
+      "endEpoch": 1790976787.102016,
+      "phase": "active",
+      "phaseIndex": 3,
+      "offset": 3,
+      "sha256": "ff94b47347846fb7a8c3c963a9885a18aeec5d5b00d9fb51f11165035eda4c00",
+      "priorReference": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/phase-3-active-plus-3.png",
+      "wholeFileEqual": false,
+      "wholeImageViewedIndividually": true,
+      "observedBoardColor": "red",
+      "expectedMatched": true
+    }
+  ],
+  "artifact": "Each differing frame contains transient black rounded capsule at far left. No app input inferred; no pixel analysis.",
+  "boardHighlightSequencePassed": true,
+  "humanAcceptance": false
+}

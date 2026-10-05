@@ -1,0 +1,85 @@
+{
+  "reviewedAt": "2026-09-30T15:13:33.845371+00:00",
+  "reviewer": "cad_wall_boards",
+  "readOnly": true,
+  "status": "blocked: occupied-collar extension does not yet produce a valid complete DUAL solve",
+  "reviewedFileSHA256": {
+    "Tools/HangboardCAD/native_cord_routes.py": "348088d7db9d083363e0f2a8db5898bf6e609285772fab05182aa833083112ec",
+    "Tools/HangboardCAD/tests/test_native_cord_routes.py": "322e499c7ae22678a1fd1c49c653bd362275b7749246efd9944d865edc1521ae",
+    "Tools/HangboardPackages/src/hangboard_packages/cord_paths.py": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250",
+    "Hangboards/captain-fingerfood-dual/suspension.json": "5310ed3e57129763cf4d88a52737b92481a188423bbc943b0e791ba4845150e3",
+    ".context/placid-badger/dual-cord-feedback/failed-occupied-left-pocket-vertical.json": "47ab209df11a6f0a53bed2ff25f59330e0537f2ddffd7dbb4641238afad33c4a"
+  },
+  "findings": [
+    {
+      "priority": "P1",
+      "blocking": true,
+      "location": "Tools/HangboardCAD/native_cord_routes.py:377",
+      "summary": "Collar reservation prevents the opposite-bore shortcut but newly generated free leads still collide at the right exterior lip.",
+      "evidence": {
+        "pose": "left-pocket-vertical",
+        "pair": [
+          "left-lead/0",
+          "right-lead/1"
+        ],
+        "independentCenterlineDistanceMM": 0.13345100003746713,
+        "combinedRadiiMM": 4.0,
+        "distanceFromSupportMM": [
+          291.8465063891663,
+          291.84688418700665
+        ],
+        "closestLeftMM": [
+          59.403328,
+          0.752651,
+          16.610859
+        ],
+        "closestRightMM": [
+          59.403325,
+          0.886102,
+          16.61086
+        ],
+        "closestPointsAreWholeStrandTerminals": false,
+        "method": "Independent bounded least-squares segment minimization; same strict validator error reproduced by the end-to-end synthetic fixture."
+      },
+      "requiredChange": "Couple the free-lead route or section search, retain the sourced front-mouth constraint and existing tube radii, and pass all four DUAL poses plus the new end-to-end fixture before promotion. Do not relax endpoint/shared-support or collision gates."
+    }
+  ],
+  "mathematicalReview": {
+    "parallelCapsuleSection": "Correct: for a capsule axis parallel to the routing plane at perpendicular distance d<R, its planar section is a capsule around the projected segment with radius sqrt(R^2-d^2).",
+    "polygonConservatism": "Correct: quad_segs=8 gives circular edges with angular step pi/16. Inflating polygon vertex radius by sec(pi/32) makes every chord tangent to or outside the exact circular boundary; straight sides are also conservative.",
+    "independentNumericalChecks": "Six cases: plane normals [0,1,0] and [1,2,3], each with segment angles 0,0.31,1.17. R=5 mm,d=3 mm produced cap boundary distance >=4 mm within 1e-12 m.",
+    "obliqueHandling": "Explicit ValueError before obstacle mutation for abs(axis dot normal)>1e-8; conservative fail-closed unsupported case, not a projection approximation.",
+    "tangentAndDisjointHandling": "d>=R skips reservation. Existing positive clearance in exclusion radius means this cannot waive an actual tube overlap.",
+    "graphRebuild": "Obstacle union rebuilds all boundary vertices and clears visibility adjacency cache.",
+    "retryBudget": "Six total iterations accommodate five existing solid-clearance margins and at most one occupied-collar retry; final gates remain mandatory."
+  },
+  "gatePreservation": {
+    "continuousFullCADSolidCheckUnchanged": true,
+    "nineDecimalRuntimeCacheRecheckUnchanged": true,
+    "roundedHangingHeightRecheckUnchanged": true,
+    "interstrandAndSelfTubeGateUnchanged": true,
+    "failedRoutesNotPublished": true
+  },
+  "regressions": {
+    "independentPytest": "1 failed, 2 passed in 5.03s",
+    "passed": [
+      "test_parallel_offset_collar_uses_its_actual_planar_capsule_section",
+      "test_oblique_collar_reservation_fails_explicitly_without_projection"
+    ],
+    "failed": [
+      "test_occupied_front_collar_blocks_the_other_native_through_bore"
+    ],
+    "failure": "native cord tubes intersect: left/0,right/1",
+    "conservativeCapRegression": "Reviewer-requested boundary-distance assertion added by author; current test would reject the ordinary inscribed buffer."
+  },
+  "scope": {
+    "packagePathsChangedFromHEAD": [
+      "Hangboards/captain-fingerfood-dual/suspension.json"
+    ],
+    "unrelatedPackageTreesChanged": false,
+    "codePathForExistingPassingCaches": "Reservation is activated only after an existing strict tube failure with multiple collars; successful baseline route path remains unchanged.",
+    "baguetteEvoFreshCheck": "Author running all five poses; result not yet provided at review time."
+  },
+  "nextReview": "Re-review updated route strategy and regenerated DUAL caches with fresh hashes after the blocking pair is eliminated.",
+  "changesMade": "Only this scratch review report; no package, solver, test, simulator or external resource changes."
+}

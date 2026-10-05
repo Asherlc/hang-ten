@@ -1,0 +1,22 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "pytest",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+    "Tools/HangboardPackages/tests/test_model_delivery_lock.py",
+    "-q"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 0.9824729170068167,
+  "fileSHA256": {
+    "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "31a4896a3e423f23199907fabd8d63481d1890beca90307394e28c1cfac20661",
+    "Hangboards/captain-fingerfood-unlevel/suspension.json": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e"
+  },
+  "sourceUnchangedDuringRun": true,
+  "summary": "31 passed in 0.23s",
+  "scope": "Sidecar authoring/private-runtime boundary and complete delivery-lock behavior; exact native route reproduction separately validates actual UNLEVEL geometry."
+}

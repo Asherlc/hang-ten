@@ -1,0 +1,5 @@
+{"sourceSHA256": "ba5cb01e59edde6ae7881ce4fd238c51b26e472855c455d10480b87760deea87", "faces": [{"face": 14, "bounds": "BoundBox (45.5, -94, 169.595, 61, -80, 192.367)", "bopCheck": "pass", "clipArea": 29.545644688648853, "clipBounds": "BoundBox (45.5, -91.3462, 187.001, 47, -80, 192.367)", "clipValid": true}, {"face": 19, "bounds": "BoundBox (45.5, -80, 179.197, 61, 1e-07, 193.451)", "bopCheck": "pass", "clipArea": 202.35394286342648, "clipBounds": "BoundBox (45.5, -80, 187.826, 47, 1e-07, 193.451)", "clipValid": true}], "solidClip": {"valid": true, "solids": 1, "volume": 111543.6366762258, "bounds": "BoundBox (-47, -93.0479, 187.001, 47, 1e-07, 222)"}, "status": "pass"}
+
+								
+								
+								

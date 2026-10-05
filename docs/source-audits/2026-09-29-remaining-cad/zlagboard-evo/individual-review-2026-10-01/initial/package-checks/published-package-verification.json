@@ -1,0 +1,170 @@
+{
+  "timestampUTC": "2026-10-02T02:38:09.539866+00:00",
+  "package": "zlagboard-evo",
+  "filesBefore": {
+    "Hangboards/zlagboard-evo/zlagboard-evo.FCStd": "8a8e4957b044d01c76c49ee1b0c07f88f388bac05cff36b31d655c0e6d4ae8fb",
+    "Hangboards/zlagboard-evo/assets/primary.usdz": "92e0e754d888a5ab6976f22197b11f9f55353309ef6648a9307c45c404d4dabe",
+    "Hangboards/zlagboard-evo/assets/primary.model.json": "54a24c155967b3349be34fb3918e1c22be8acc8f7117772a15b347e251d99383"
+  },
+  "schemaPassed": true,
+  "boardID": "zlagboard.evo",
+  "usd": {
+    "version": [
+      0,
+      26,
+      8
+    ],
+    "meshes": [
+      {
+        "name": "body_board_001",
+        "faces": 2612
+      },
+      {
+        "name": "contact_edge_30_left",
+        "faces": 1160
+      },
+      {
+        "name": "contact_sloper_edge_30_left",
+        "faces": 922
+      },
+      {
+        "name": "contact_sloper_edge_25_left",
+        "faces": 922
+      },
+      {
+        "name": "contact_edge_35_center",
+        "faces": 1160
+      },
+      {
+        "name": "contact_sloper_edge_25_right",
+        "faces": 922
+      },
+      {
+        "name": "contact_sloper_edge_30_right",
+        "faces": 922
+      },
+      {
+        "name": "contact_edge_30_right",
+        "faces": 1158
+      },
+      {
+        "name": "contact_edge_20_left",
+        "faces": 1162
+      },
+      {
+        "name": "contact_sloper_edge_25_lower_left",
+        "faces": 922
+      },
+      {
+        "name": "contact_edge_30_inner_left",
+        "faces": 1162
+      },
+      {
+        "name": "contact_sloper_edge_30_center",
+        "faces": 922
+      },
+      {
+        "name": "contact_edge_30_inner_right",
+        "faces": 1162
+      },
+      {
+        "name": "contact_sloper_edge_25_lower_right",
+        "faces": 922
+      },
+      {
+        "name": "contact_edge_20_right",
+        "faces": 1160
+      },
+      {
+        "name": "contact_top_jug_left",
+        "faces": 1597
+      },
+      {
+        "name": "contact_top_sloper_32_left",
+        "faces": 3
+      },
+      {
+        "name": "contact_top_sloper_20_left",
+        "faces": 2
+      },
+      {
+        "name": "contact_top_sloper_jug_center",
+        "faces": 2
+      },
+      {
+        "name": "contact_top_sloper_20_right",
+        "faces": 2
+      },
+      {
+        "name": "contact_top_sloper_32_right",
+        "faces": 3
+      },
+      {
+        "name": "contact_top_jug_right",
+        "faces": 1533
+      }
+    ],
+    "materialsOrShaders": [],
+    "materialBindings": [],
+    "members": [
+      "stage.usdc"
+    ],
+    "exactDescriptorNodes": true,
+    "modelHashMatches": true,
+    "unbound": true
+  },
+  "manifest": {
+    "woodFinish": false,
+    "suspensionPresent": false,
+    "contactIDs": [
+      "edge-20-left",
+      "edge-20-right",
+      "edge-30-inner-left",
+      "edge-30-inner-right",
+      "edge-30-left",
+      "edge-30-right",
+      "edge-35-center",
+      "sloper-edge-25-left",
+      "sloper-edge-25-lower-left",
+      "sloper-edge-25-lower-right",
+      "sloper-edge-25-right",
+      "sloper-edge-30-center",
+      "sloper-edge-30-left",
+      "sloper-edge-30-right",
+      "top-jug-left",
+      "top-jug-right",
+      "top-sloper-20-left",
+      "top-sloper-20-right",
+      "top-sloper-32-left",
+      "top-sloper-32-right",
+      "top-sloper-jug-center"
+    ]
+  },
+  "staging": {
+    "ios": {
+      "generatedBoardMatchesSource": true,
+      "descriptorBytesMatch": true,
+      "modelBytesMatch": true,
+      "authoringFilesOmitted": true,
+      "usdzDeliveryLocationCorrect": true,
+      "stagedFiles": [
+        "assets/primary.model.json",
+        "board.json"
+      ]
+    },
+    "android": {
+      "generatedBoardMatchesSource": true,
+      "descriptorBytesMatch": true,
+      "modelBytesMatch": true,
+      "authoringFilesOmitted": true,
+      "usdzDeliveryLocationCorrect": true,
+      "stagedFiles": [
+        "assets/primary.model.json",
+        "assets/primary.usdz",
+        "board.json"
+      ]
+    }
+  },
+  "sourceFilesUnchanged": true,
+  "passed": true
+}

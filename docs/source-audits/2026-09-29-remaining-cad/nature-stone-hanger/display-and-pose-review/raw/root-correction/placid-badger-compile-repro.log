@@ -1,0 +1,72 @@
+[1/10] validating nature-stone-hanger.FCStd
+[2/10] reopening and recomputing the source document
+[3/10] extracting bound components and semantic regions
+[4/10] tessellating with pinned quality
+[5/10] partitioning the surface and preserving normals and materials
+      body_oak_mesh_001: 25955 triangles, role=body
+      edge_front_15mm_incut_mesh_001: 520 triangles, role=contact
+      edge_front_15mm_flat_mesh_001: 520 triangles, role=contact
+      edge_reverse_10mm_incut_mesh_001: 520 triangles, role=contact
+      edge_reverse_10mm_flat_mesh_001: 520 triangles, role=contact
+      edge_reverse_06mm_flat_mesh_001: 520 triangles, role=contact
+      edge_reverse_06mm_incut_mesh_001: 520 triangles, role=contact
+      edge_front_20mm_wood_flat_mesh_001: 576 triangles, role=contact
+      edge_front_20mm_granite_mesh_001: 2277 triangles, role=contact
+[6/10] writing the USDZ directly
+[7/10] reopening the exported asset
+[8/10] deriving the descriptor from the exported bytes
+[9/10] validating the staged package
+[10/10] publishing the asset and descriptor set
+{
+  "asset": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/repro-assets/primary.usdz",
+  "assetBytes": 756536,
+  "assetSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+  "board": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-author/nature-stone-hanger.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "edge-front-15mm-flat",
+    "edge-front-15mm-incut",
+    "edge-front-20mm-granite",
+    "edge-front-20mm-wood-flat",
+    "edge-reverse-06mm-flat",
+    "edge-reverse-06mm-incut",
+    "edge-reverse-10mm-flat",
+    "edge-reverse-10mm-incut"
+  ],
+  "descriptor": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/repro-assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "edge-front-15mm-flat": 15.0,
+    "edge-front-15mm-incut": 15.0,
+    "edge-front-20mm-granite": 20.0,
+    "edge-front-20mm-wood-flat": 20.0,
+    "edge-reverse-06mm-flat": 6.0,
+    "edge-reverse-06mm-incut": 6.0,
+    "edge-reverse-10mm-flat": 10.0,
+    "edge-reverse-10mm-incut": 10.0
+  },
+  "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+  "nodes": [
+    "body_oak_mesh_001",
+    "edge_front_15mm_flat_mesh_001",
+    "edge_front_15mm_incut_mesh_001",
+    "edge_front_20mm_granite_mesh_001",
+    "edge_front_20mm_wood_flat_mesh_001",
+    "edge_reverse_06mm_flat_mesh_001",
+    "edge_reverse_06mm_incut_mesh_001",
+    "edge_reverse_10mm_flat_mesh_001",
+    "edge_reverse_10mm_incut_mesh_001"
+  ],
+  "package": "nature-stone-hanger",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/native-author/nature-stone-hanger.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 31928
+}
+
+								
+								
+								

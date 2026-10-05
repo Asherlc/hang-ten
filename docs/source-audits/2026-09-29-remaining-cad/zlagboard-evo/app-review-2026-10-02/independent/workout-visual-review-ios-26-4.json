@@ -1,0 +1,66 @@
+{
+  "timestampUTC": "2026-10-02T06:40:42.541530+00:00",
+  "board": "zlagboard-evo",
+  "runtimeEvidence": "iOS26.4 baseline captures",
+  "reviewer": "evo_orientation_judgment",
+  "method": "Independent visual inspection of complete landscape screenshots; no crops, pixel measurement, sampling or UI interaction. Phase/timer text read from each image, not inferred from filename.",
+  "observations": {
+    "active-settled.png": {
+      "phase": "Hang",
+      "step": "Max hang set1",
+      "timer": "00:05",
+      "observedBoardHighlight": "red on both outer lower-row pockets",
+      "expectedBoardHighlight": "red",
+      "matchesExpected": true,
+      "sha256": "12e918c6190d82bc332fb3a57eefd9ee3ac9fb0539e38dc03e39870a3951153f"
+    },
+    "following-rest-settled.png": {
+      "phase": "Rest",
+      "step": "2 of9",
+      "timer": "02:55",
+      "nextHoldPreviewLabelVisible": true,
+      "observedBoardHighlight": "red on both outer lower-row pockets",
+      "expectedBoardHighlight": "blue preview",
+      "matchesExpected": false,
+      "sha256": "1b8c132a0747c3d2957526c45e978c1ccb96da2aed37dea1d4d351171b9eaca5"
+    },
+    "next-active-timed-0.png": {
+      "phase": "Rest",
+      "timer": "02:53",
+      "nextHoldPreviewLabelVisible": true,
+      "observedBoardHighlight": "red on both outer lower-row pockets",
+      "expectedBoardHighlight": "blue preview",
+      "matchesExpected": false,
+      "sha256": "5baea989a864cf1c10307a10fee7e1cbec2ead1ebec8a84aebc030338c1b7d99"
+    },
+    "next-active-timed-1.png": {
+      "phase": "Ready",
+      "step": "Max hang set2",
+      "timer": "00:01",
+      "nextHoldPreviewLabelVisible": true,
+      "observedBoardHighlight": "red on both outer lower-row pockets",
+      "expectedBoardHighlight": "blue preview",
+      "matchesExpected": false,
+      "sha256": "f4d56b7e74aa224665d8b5e59bba161b007d9c48e5815b26e811886340696572"
+    },
+    "next-active-timed-2.png": {
+      "phase": "Hang",
+      "step": "3 of9, Max hang set2",
+      "timer": "00:06",
+      "observedBoardHighlight": "red on both outer lower-row pockets",
+      "expectedBoardHighlight": "red",
+      "matchesExpected": true,
+      "sha256": "19d14456897c57e3a2b22bee7f042ab8cd2d5bff59535beab0b88e5320088a8a"
+    }
+  },
+  "basePath": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/baseline-b-landscape",
+  "workoutHighlightTransitionPassed": false,
+  "appWorkflowPassed": false,
+  "humanAccepted": false,
+  "conclusion": "Visible board pockets remain red during settled Rest02:55, Rest02:53 and Ready00:01 while the Next hold preview label is shown. Active captures show red as expected. These images independently demonstrate the unresolved preview-color failure; they do not identify its cause.",
+  "limitations": [
+    "This series does not demonstrate blue during active; red is visible in both inspected active frames.",
+    "No unproven production fix is claimed. Runtime/version comparison and restored-code hashes are owned by separate proofs.",
+    "Static detail-map selection and shape review remain a separate scoped result."
+  ]
+}

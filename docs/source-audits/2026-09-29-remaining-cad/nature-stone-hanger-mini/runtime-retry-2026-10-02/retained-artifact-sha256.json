@@ -1,0 +1,32 @@
+{
+  "algorithm": "sha256",
+  "scope": "All retained packet files except this checksum index.",
+  "files": {
+    "boot-screen.png": "bb44679a0de7ecaeaac36aa63ab4cdb0cbf4a4f4fc3438547576313e699b7169",
+    "boot-screen.txt": "e0232ad8b846edd60ffbe7d62aa9207c30fb4f68d37e748718eec1d5c59eddc3",
+    "boot-ui.txt": "73c108094c35acfef08d0adcc6b86e4a3f369ce01bdd1aed88eeec6173f05c47",
+    "bootstatus.txt": "3af113dbf4665677abf91617d7dc1d4eee4f4aff52181d1ac312c9ef5b892bb9",
+    "build-dirty-diff.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup-receipt.json": "3ce6e842134303ceabe18f98dafd79bacaae1736819a0303bf1af34eca409d17",
+    "final-captures/command-records.json": "9f9f1d2261453f7687c9ef963172e2979ab6c84d402a678ffa8ea15f3477bc85",
+    "final-inputs.json": "a2f85f7059f83c8de1887c59f156eea3f6706d2f9c2453224fbc575e0ec143a8",
+    "final-readiness-harness-failure.json": "8d75c8a27272534bd574799d61e9d352759525600a61b6d73d2ed53ce43e6d2e",
+    "final-readiness.json": "99a6fac36307fecd21fa1d649f8a4cb662b60c2c0e7cf56dcfa3fec82e284e64",
+    "git-status.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "home-screen.png": "9cc73cd2236e432ab2a53e0aeac0b200f4dd6754ade5e3ba46b499ae790fcb08",
+    "home-screen.txt": "74a7e58f4873f846ef31f53353a0335afc2c4e4dd81188d221cf1e32c3ef9143",
+    "home-ui.txt": "73c108094c35acfef08d0adcc6b86e4a3f369ce01bdd1aed88eeec6173f05c47",
+    "installed-app-provenance.json": "607446268f46cc23acdb593e954e04b8415fac4539dd4f39d6348358a3af307c",
+    "ios-build-command.json": "9cb7031f1ff8d55bde0019acaf6d00595d0f862ba30a42020393e48991055903",
+    "ios-build.log": "6a0011962103c567c3b9764045e86676ea454adaf889661aee3c5ca22e341347",
+    "ownership.json": "e5768471d6e9f2048fde770c4aa0222d98f4610ddc3bed0df0e7dc00fb0e2ea6",
+    "process-groups.json": "b5cc7d77933f67a37c781e5263f7c59f1e0ec787a531310d4b643fdb8f8d266e",
+    "retention-provenance.json": "43c2eb08c3254e37ec8d092e1ef474831ea236f3cef925600af4cbe4f9606de9",
+    "review.md": "3e9f21dc0b92de4d690cacf07761dcf985112bac9fb8b63839539e600837fc8b",
+    "runtime-validation.json": "3a9fdbf033b93848b541b121c84c372308b261c4150f228e8a04a0d338471529",
+    "scoped-processes.txt": "c8d1433aed1f502272b93d34c080318d307b9ba0a79e0fea17d0b82dfb6f378f",
+    "session-commands.json": "74ed787403c0eafdc1dc64fa65c6fe374c5f4159ee4de560e509aa4e91acf1e6",
+    "startup-screen.png": "7f8817a16db972678cf27f95b506187f793f4a961956db3c367997237185d7b0",
+    "verified-generated-board.json": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f"
+  }
+}

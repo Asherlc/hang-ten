@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "pytest",
+    "Tools/HangboardCAD/tests",
+    "Tools/HangboardModels/tests",
+    "Tools/HangboardPackages/tests",
+    "-q",
+    "--basetemp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-pinch-review/placid-badger-pytest-tmp"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 116.46971570898313,
+  "summary": "647 passed, 10 skipped in 116.03s (0:01:56)"
+}

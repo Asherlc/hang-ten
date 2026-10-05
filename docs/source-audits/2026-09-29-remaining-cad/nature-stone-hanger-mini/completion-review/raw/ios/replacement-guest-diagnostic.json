@@ -1,0 +1,35 @@
+{
+  "simulatorUUID": "CEC83800-5035-404E-B5A2-E40B826FE00E",
+  "commands": [
+    {
+      "name": "services",
+      "exitCode": 0,
+      "command": [
+        "xcrun",
+        "simctl",
+        "spawn",
+        "CEC83800-5035-404E-B5A2-E40B826FE00E",
+        "launchctl",
+        "list"
+      ]
+    },
+    {
+      "name": "bootlog",
+      "exitCode": 0,
+      "command": [
+        "xcrun",
+        "simctl",
+        "spawn",
+        "CEC83800-5035-404E-B5A2-E40B826FE00E",
+        "log",
+        "show",
+        "--last",
+        "3m",
+        "--style",
+        "compact",
+        "--predicate",
+        "process == \"SpringBoard\" OR process == \"backboardd\""
+      ]
+    }
+  ]
+}

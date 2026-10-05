@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
-  "modelSHA256": "808e8a7f058c8b62b5cf0e9180b86df68861022670598decf8db25f75d3c3274",
+  "modelSHA256": "03f28c204e52ecfb623635c047b82f2a66971d8fe469f6a79f4e6d9db833ade2",
   "modelBounds": {
     "min": [
       -0.284999996,
@@ -23,6 +23,21 @@
       "nodeID": "centre_granite_edge_001",
       "role": "contact",
       "contactID": "edge-22-center"
+    },
+    {
+      "nodeID": "granite_insert_center",
+      "role": "contact",
+      "contactID": "lower-composite-center"
+    },
+    {
+      "nodeID": "granite_insert_left",
+      "role": "contact",
+      "contactID": "lower-composite-left"
+    },
+    {
+      "nodeID": "granite_insert_right",
+      "role": "contact",
+      "contactID": "lower-composite-right"
     },
     {
       "nodeID": "left_granite_edge_001",
@@ -257,6 +272,7 @@
     },
     "lower-composite-center": {
       "nodeIDs": [
+        "granite_insert_center",
         "upper_centre_wood_edge_001"
       ],
       "facePlaneAABB": {
@@ -390,6 +406,7 @@
     },
     "lower-composite-left": {
       "nodeIDs": [
+        "granite_insert_left",
         "left_granite_edge_001"
       ],
       "facePlaneAABB": {
@@ -519,6 +536,7 @@
     },
     "lower-composite-right": {
       "nodeIDs": [
+        "granite_insert_right",
         "right_granite_edge_001"
       ],
       "facePlaneAABB": {

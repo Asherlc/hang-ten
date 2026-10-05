@@ -1,0 +1,14 @@
+{
+  "legacy_unshared": {
+    "accepted": false,
+    "error": "edge region depth 20.000 mm disagrees with the published depth 60.000 mm (expected 60.000 mm, tolerance 0.250 mm); the region has probably bound to the wrong surface"
+  },
+  "same_unshared_plus_unrelated_shared": {
+    "accepted": true,
+    "measured": {
+      "edge": 60.0,
+      "pinch": 60.0,
+      "jug": 40.0
+    }
+  }
+}

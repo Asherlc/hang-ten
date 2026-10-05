@@ -1,0 +1,48 @@
+{
+  "reason": "No eligible firstHang within30s of recorded appearance",
+  "appearance": {
+    "applicationCensus": {
+      "applicationState": 0,
+      "standaloneGate": false,
+      "windowScenes": [
+        {
+          "activationState": 0,
+          "interfaceOrientation": 3,
+          "sceneID": "ObjectIdentifier(0x0000000107572e00)",
+          "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+          "windows": [
+            {
+              "alpha": 1,
+              "bounds": [
+                874,
+                402
+              ],
+              "hidden": false,
+              "key": true,
+              "rendererNamedViewClasses": {},
+              "rendererPlacements": [],
+              "windowID": "ObjectIdentifier(0x0000000105f60800)"
+            }
+          ]
+        }
+      ]
+    },
+    "complete": true,
+    "epoch": 1791003464.506013,
+    "event": "workout-probe-appear-before-autostart",
+    "handLifecycleCounts": {
+      "pair.constructor-entry": 0,
+      "pair.make-entry": 0,
+      "single.constructor-entry": 0,
+      "single.make-entry": 0
+    },
+    "sequence": 17,
+    "state": "plan=research.max-hangs;board=zlagboard.evo;pausedElapsed=0.0;activeStartIsNil=true;routineStartedIsNil=true;prestartHandFlag=true;prestartHandsSuppressed=true",
+    "uptime": 86318.74124166668,
+    "viewportPoints": [
+      0,
+      0
+    ]
+  },
+  "observedEpoch": 1791003494.5374541
+}

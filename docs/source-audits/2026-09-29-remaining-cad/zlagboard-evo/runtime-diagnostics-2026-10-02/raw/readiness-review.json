@@ -1,0 +1,54 @@
+{
+  "createdUTC": "2026-10-02T18:41:17.520358+00:00",
+  "scope": "Read-only production research; scratch SDK typecheck; no source or package edits",
+  "patch": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/diagnostic-preparation-2026-10-02/minimal-real-workout-diagnostic.patch",
+  "patchSHA256": "401b1084a5f8a072a5ca00f17e5f570adf3725d5140ce3875d28d2fdd76c59f6",
+  "productionSHA256": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "HangTen/Views/RootView.swift": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "HangTenTests/BoardModelRealityTests.swift": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+    "HangTenTests/BoardModelTests.swift": "74dfab4632f744e10f74f85216b77d3b073d0e84858d750a4ba8fd118d1c4601"
+  },
+  "readOnlyGitApplyCheck": {
+    "exitCode": 0
+  },
+  "sdkCheck": {
+    "argv": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "swiftc",
+      "-typecheck",
+      "-D",
+      "DEBUG",
+      "-swift-version",
+      "6",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk",
+      "-target",
+      "arm64-apple-ios26.0-simulator",
+      "-module-cache-path",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/module-cache",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/DiagnosticSDKHookCheck.swift"
+    ],
+    "exitCode": 0,
+    "durationSeconds": 12.278783082962036,
+    "scope": "Exact retained recorder helper and representative RealityView hooks against SDK; stub scene domain types, not full app typecheck."
+  },
+  "rootCauseEstablished": false,
+  "productionFixProposed": false,
+  "sourceApplicationRequiresRootGate": true,
+  "findings": [
+    "The unchanged highlight cache compares both IDs and mode; no demonstrated missing-mode cache key.",
+    "Selected material writes occur at applyHighlight; initial applyBoardMaterials also writes materials, but ordinary select/frame has no material write. Loader constructs a new scene per load; source resource cache is not a mutable scene cache.",
+    "Previously retained scene trace has exactly 4096 bytes and ends mid-record. A blue CPU write is proven, persistence through screenshot is not.",
+    "The latest recorder preserves scene lifecycle UUID + view UUID pair keys, samples weak scene ownership, and avoids per-tick full snapshots.",
+    "Direct CPU tests and previous hosted material assertions do not observe rendered pixel transitions. A passing instrumented run cannot establish a fix."
+  ],
+  "limits": [
+    "SDK harness uses stub scene/descriptor/mode types; full application compilation remains necessary after source gate.",
+    "Current SDK is iPhoneSimulator27.0, deployment target iOS26.0. This is no proof of iOS26.4/26.5 runtime behavior.",
+    "No Simulator operations or visual reproducer run in this task."
+  ]
+}

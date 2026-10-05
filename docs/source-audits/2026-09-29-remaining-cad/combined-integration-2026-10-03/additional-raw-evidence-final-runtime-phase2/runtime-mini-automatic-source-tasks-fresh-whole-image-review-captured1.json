@@ -1,0 +1,44 @@
+{
+  "reviewedAtUTC": "2026-10-04T01:10:37.568400+00:00",
+  "reviewer": "pr_readiness_review",
+  "scope": "Only actual original elapsed-001s.png viewed individually through original-detail image output forwarded to vision; file review only.",
+  "captureProtocolOutcome": "INVALID_CAPTURE_DEADLINE as reported by root; first screenshot command consumed 3.108s, no later capture was launched under fixed no-backfill protocol.",
+  "visualResult": "ONE_CAPTURE_OBSERVED_GET_READY_ONLY; no completed-runtime pass claimed",
+  "images": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/runtime-mini-automatic-source-tasks-fresh/elapsed-001s.png",
+      "sha256": "399cef923cc7a0ca1b25018e39fc8b2c3ef31bac2dc999ec4e0c2ea7caadf99d",
+      "wholeImageActuallyViewed": true,
+      "actualPhase": "Get Ready",
+      "actualTimer": "00:03",
+      "selectedContact": "lower horizontal edge on single displayed Mini board",
+      "contactColor": "blue",
+      "material": "tan neutral board, no texture adornment observed",
+      "cord": "whole dark V-shaped cord visible below board",
+      "handsVisible": false,
+      "handQualification": "No hands visible in initial countdown; UI explicitly says Use two boards, one hand on each. No manual Left selector was inferred.",
+      "geometryAndFit": "small complete Mini board and whole cord visible within viewport",
+      "modalVisible": false,
+      "blankBoard": false
+    }
+  ],
+  "sourceTaskAdaptation": "Current MaxHangs contains two tasks for both hands, preserved unchanged. UI explicitly adapts the single-slot Mini to two boards, one hand on each. This frame only proves the initial preview and instruction, not actual Hang/Rest hand rendering.",
+  "rawCompletion": {
+    "captureCompleted": false,
+    "plannedCaptures": 58,
+    "actualCaptures": 1,
+    "errors": [],
+    "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+    "CPUBracketsAvailable": false,
+    "phaseTimingsKnown": false,
+    "noRetries": true
+  },
+  "rawCompletionSHA256": "b038623c921e59dab4f1d50bd005c7155cfd5bb25ba3eae9ab7e67eefe346d1f",
+  "rawCompletionUnchanged": true,
+  "noMissingFrameFailureClaimed": true,
+  "unlaunchedLaterCapturesAreNotMissingImages": true,
+  "CPUOrGPUBracketsClaimed": false,
+  "hardwareClaimed": false,
+  "routineContentChangesMade": false,
+  "productionChangesMade": false
+}

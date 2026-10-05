@@ -1,0 +1,26 @@
+{
+  "status": "pass",
+  "owner": "placid-badger",
+  "passed": 260,
+  "skipped": 0,
+  "failed": 0,
+  "pytestElapsedSeconds": 111.96,
+  "packageBytesStable": true,
+  "packageSHA256": {
+    "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9",
+    "Hangboards/nature-stone-hanger/assets/primary.usdz": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
+    "Hangboards/nature-stone-hanger/assets/primary.model.json": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
+    "Hangboards/nature-stone-hanger/suspension.json": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a"
+  },
+  "ownedTemporaryDirectoryAbsent": true,
+  "ownedProcessGroupAbsent": true,
+  "command": {
+    "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/package-checks/metadata-and-cord-tests-command.json",
+    "sha256": "6aa506e91b3c588d7299e98f27bb00ee26420334749fb107b2d800a991e509d1"
+  },
+  "log": {
+    "path": ".context/placid-badger/nature-stone-review9/granite-seat-correction/package-checks/metadata-and-cord-tests.log",
+    "sha256": "aa92423d23632dffdcbc9606ad9a4bc1f2614c6e53f0b48008fa280e2adf8f7f"
+  },
+  "scope": "Current revised package; metadata, native groove/bore regressions, routed cord and pose/camera checks. Historical test runs are not summed."
+}

@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger",
+  "package": "metolius-simulator-3d",
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df",
+  "surfaceFinish": "plastic",
+  "manifestBytesUnchangedFromPlasticIntermediate": true,
+  "contactsUnchanged": 30,
+  "allOtherPackageFilesUnchanged": 203,
+  "priorDeliveryDigest": "6de82baf4a49ed9a5b5f7a48d67d5f5c3e38a98eb488deeaece1df3908d42847",
+  "deliveryDigest": "ec620b346bf520d2f32f2069e02b07ad5d2f9fd6dc8c8ed6063b2d68f5ff38c7",
+  "priorAssetCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890",
+  "revisionBaseCommit": "b097aa5ba34d55e69b9cdac73122b06774947a16",
+  "humanGeometryAcceptance": "pending corrected review #8"
+}

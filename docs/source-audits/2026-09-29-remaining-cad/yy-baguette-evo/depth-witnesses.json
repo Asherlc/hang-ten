@@ -1,0 +1,272 @@
+{
+  "hold_edge_10mm_left_mesh_001": {
+    "contactID": "edge-10-left",
+    "start": [
+      -176.0,
+      -18,
+      -10
+    ],
+    "end": [
+      -176.0,
+      -8,
+      -10
+    ],
+    "millimeters": 10.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_20mm_left_mesh_001": {
+    "contactID": "edge-20-left",
+    "start": [
+      -176.0,
+      -18,
+      10
+    ],
+    "end": [
+      -176.0,
+      2,
+      10
+    ],
+    "millimeters": 20.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_15mm_left_mesh_001": {
+    "contactID": "edge-15-left",
+    "start": [
+      -96.5,
+      -18,
+      -10
+    ],
+    "end": [
+      -96.5,
+      -3,
+      -10
+    ],
+    "millimeters": 15.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_25mm_left_mesh_001": {
+    "contactID": "edge-25-left",
+    "start": [
+      -96.5,
+      -18,
+      10
+    ],
+    "end": [
+      -96.5,
+      7,
+      10
+    ],
+    "millimeters": 25.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_06mm_left_mesh_001": {
+    "contactID": "edge-6-upper",
+    "start": [
+      -178.5,
+      9,
+      23.323807579381203
+    ],
+    "end": [
+      -178.5,
+      9,
+      17.323807579381203
+    ],
+    "millimeters": 6.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_12mm_left_mesh_001": {
+    "contactID": "edge-12-left",
+    "start": [
+      -96.5,
+      -9,
+      23.323807579381203
+    ],
+    "end": [
+      -96.5,
+      -9,
+      11.323807579381203
+    ],
+    "millimeters": 12.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_08mm_left_mesh_001": {
+    "contactID": "edge-8-left",
+    "start": [
+      -96.5,
+      9,
+      23.323807579381203
+    ],
+    "end": [
+      -96.5,
+      9,
+      15.323807579381203
+    ],
+    "millimeters": 8.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_10mm_right_mesh_001": {
+    "contactID": "edge-10-right",
+    "start": [
+      176.0,
+      -18,
+      -10
+    ],
+    "end": [
+      176.0,
+      -8,
+      -10
+    ],
+    "millimeters": 10.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_20mm_right_mesh_001": {
+    "contactID": "edge-20-right",
+    "start": [
+      176.0,
+      -18,
+      10
+    ],
+    "end": [
+      176.0,
+      2,
+      10
+    ],
+    "millimeters": 20.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_15mm_right_mesh_001": {
+    "contactID": "edge-15-right",
+    "start": [
+      96.5,
+      -18,
+      -10
+    ],
+    "end": [
+      96.5,
+      -3,
+      -10
+    ],
+    "millimeters": 15.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_25mm_right_mesh_001": {
+    "contactID": "edge-25-right",
+    "start": [
+      96.5,
+      -18,
+      10
+    ],
+    "end": [
+      96.5,
+      7,
+      10
+    ],
+    "millimeters": 25.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_06mm_right_mesh_001": {
+    "contactID": "edge-6-lower",
+    "start": [
+      178.5,
+      9,
+      23.323807579381203
+    ],
+    "end": [
+      178.5,
+      9,
+      17.323807579381203
+    ],
+    "millimeters": 6.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_12mm_right_mesh_001": {
+    "contactID": "edge-12-right",
+    "start": [
+      96.5,
+      -9,
+      23.323807579381203
+    ],
+    "end": [
+      96.5,
+      -9,
+      11.323807579381203
+    ],
+    "millimeters": 12.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_edge_08mm_right_mesh_001": {
+    "contactID": "edge-8-right",
+    "start": [
+      96.5,
+      9,
+      23.323807579381203
+    ],
+    "end": [
+      96.5,
+      9,
+      15.323807579381203
+    ],
+    "millimeters": 8.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_central_20mm_mesh_001": {
+    "contactID": "edge-central-20",
+    "start": [
+      0,
+      -19,
+      16.24807680927192
+    ],
+    "end": [
+      0,
+      -19,
+      -3.7519231907280783
+    ],
+    "millimeters": 20.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_central_06mm_mesh_001": {
+    "contactID": "edge-central-6",
+    "start": [
+      0,
+      -1,
+      24.979991993593593
+    ],
+    "end": [
+      0,
+      -1,
+      18.979991993593593
+    ],
+    "millimeters": 6.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_central_30mm_mesh_001": {
+    "contactID": "edge-central-30",
+    "start": [
+      0,
+      22.9128784747792,
+      10
+    ],
+    "end": [
+      0,
+      -7.087121525220802,
+      10
+    ],
+    "millimeters": 30.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  },
+  "hold_central_25mm_mesh_001": {
+    "contactID": "edge-central-25",
+    "start": [
+      0,
+      22.9128784747792,
+      -10
+    ],
+    "end": [
+      0,
+      -2.0871215252208017,
+      -10
+    ],
+    "millimeters": 25.0,
+    "source": "Approved maker depth and analytic lip/floor selected from retained Git cross section"
+  }
+}

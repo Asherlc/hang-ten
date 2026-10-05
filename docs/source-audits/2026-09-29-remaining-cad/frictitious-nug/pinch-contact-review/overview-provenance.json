@@ -1,0 +1,67 @@
+{
+  "method": "Complete generated numeric panels uniformly fitted into labeled overview cells, with no cropping or source-image processing. Actual final USDZ and descriptor memberships only.",
+  "outputs": [
+    {
+      "image": "pinch-60-overview.png",
+      "sha256": "bf118202d8021fbbdc53b6bf42f10d77466e0ccf275b110cd7c30b97ad84152a",
+      "inputs": [
+        {
+          "image": "pinch-60-front.png",
+          "sha256": "180648ea1773fd5950862d1230fa2d309d42a0d930100251206835b620ffc049"
+        },
+        {
+          "image": "pinch-60-side.png",
+          "sha256": "d41e21429c98ac32d2b1e6a33cd8b26bda58399a45c1922d8aac98dd288e185c"
+        },
+        {
+          "image": "pinch-60-top.png",
+          "sha256": "6c304dd556a4e1897944d99682b2f496485921202c6b4e97aeb5c8ed1c4651d5"
+        },
+        {
+          "image": "pinch-60-oblique.png",
+          "sha256": "8accf04eafdc7ad93a10a43056a5d6db6deacb3c61e9968475dc58326d22ae5c"
+        }
+      ]
+    },
+    {
+      "image": "jug-40-overview.png",
+      "sha256": "ed57f4d5d0e05eda79687888de7c2eeef334e8324792797943d0bc336770a4ef",
+      "inputs": [
+        {
+          "image": "jug-40-front.png",
+          "sha256": "90319586e6268c2b1c4c534bba9ce34be1522cbe01ad2c4962e7cc4b5b76ecde"
+        },
+        {
+          "image": "jug-40-side.png",
+          "sha256": "637d2c1b8e337f2c7a31786651e5c612b25a7d145df19313160d5bd248d9f8c4"
+        },
+        {
+          "image": "jug-40-top.png",
+          "sha256": "50526f5eaaa716ef00e8c29b2ba224d57388f668fc932e6876344963e9f3040c"
+        },
+        {
+          "image": "jug-40-oblique.png",
+          "sha256": "cda128c8aef11479064a5f92b27f5ff1acf4ae4b01b3780070bf74acd5d714dc"
+        }
+      ]
+    },
+    {
+      "image": "pinch-60-wraparound-overview.png",
+      "sha256": "dd544b1c4d8e82cf86675c113b4378a5f105e82510bdc910866da218a0d2cbaa",
+      "inputs": [
+        {
+          "path": ".context/placid-badger/nug-pinch-review/previews/pinch-60-front-1.png",
+          "sha256": "6c141523ed046704c9532e445068f273a2076c4de149ae9f53ede77e0bba2e83"
+        },
+        {
+          "path": ".context/placid-badger/nug-pinch-review/previews/pinch-60-rear-1.png",
+          "sha256": "afd13e983bc3d7794d6ca72f08c72037a81e1bfa90cb5b11cb114bf0d1ca7bb8"
+        },
+        {
+          "path": ".context/placid-badger/nug-pinch-review/previews/pinch-60-oblique-1.png",
+          "sha256": "0f27dda4ec984cf70ca43b306905323303980bb930cc6940d9346c75f8459582"
+        }
+      ]
+    }
+  ]
+}

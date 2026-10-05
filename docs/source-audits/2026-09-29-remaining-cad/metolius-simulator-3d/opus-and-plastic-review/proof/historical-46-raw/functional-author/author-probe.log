@@ -1,0 +1,32 @@
+<Exception> Resulting shape is invalid
+ShellWithContinuousShoulders: Resulting shape is invalid
+<Exception> Resulting shape is invalid
+ShellWithContinuousShoulders: Resulting shape is invalid
+<Exception> Resulting shape is invalid
+ShellWithContinuousShoulders: Resulting shape is invalid
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-correction/author-probe-tmp/hangten-freecad-il_xa6cs/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-correction/author_functional_probe.py", line 124, in <module>
+    r={'sourceSHA256':hashlib.sha256((w/'probe-source.FCStd').read_bytes()).hexdigest(),'nativeSolidCount':len(body.Shape.Solids),'nativeFaceCount':len(body.Shape.Faces),'profiles':profiles,'centerStationsYHeightEstimatedMm':center_stations,'centerHeightNormalizationFactor':factor,'initialCapMaxZ':initial_height,'centerCapMaxZ':cap.Shape.optimalBoundingBox().ZMax,'transitionSections':section_report,'envelopeXYZMm':[bounds.XLength,bounds.YLength,bounds.ZLength],'rawManifestExact':True,'triangleCount':len(t),'allNewGeometryValues':'Explicit operator-selected display adaptation for user grasp intent; not manufacturer incut measurements.'};(w/'probe-design.json').write_text(json.dumps(r,indent=2)+'\n');progress('PROBE COMPLETE');print(json.dumps(r));A.closeDocument(d.Name)
+                                                                                                                                                                                                                                                                                                                                          ^^^^^^^^^
+AttributeError: 'Part.Compound' object has no attribute 'Shape'
+
+Opened frozen source; native contacts removed for rebuild
+Simple forward sloper profiles recomputed
+Forward center crest and rear return recomputed
+Transition authored: CenterShoulder
+Transition authored: RoundFlat
+Transition authored: OuterShoulder
+
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								

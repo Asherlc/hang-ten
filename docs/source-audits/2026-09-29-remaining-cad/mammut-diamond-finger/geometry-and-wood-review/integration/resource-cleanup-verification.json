@@ -1,0 +1,27 @@
+{
+  "owner": "placid-badger",
+  "status": "passed",
+  "simulator": {
+    "uuid": "2B43841B-18A2-46B4-8080-B4E90AA24F4A",
+    "name": "Hang Ten Paseo placid-badger Mammut Geometry and Wood Review",
+    "deleted": true,
+    "freshExactUUIDAbsenceVerified": true
+  },
+  "advisor": {
+    "agentId": "b5c60ebf-8de3-4db4-a22d-44bb8ba2db5e",
+    "name": "[Advisor] placid-badger Mammut geometry",
+    "archived": true,
+    "status": "closed",
+    "archivedAt": "2026-10-01T04:00:52.463Z"
+  },
+  "derivedDataRemoved": true,
+  "ownedResultBundlesRemoved": [
+    "placid-badger-mammut-wood-red.xcresult",
+    "placid-badger-mammut-wood-green.xcresult",
+    "placid-badger-mammut-selector-red.xcresult",
+    "placid-badger-mammut-selector-green.xcresult",
+    "placid-badger-mammut-wood-integration-tests.xcresult"
+  ],
+  "rawLogsAndJSONSummariesRetained": true,
+  "scope": "Exact resources owned by this Mammut review; shared and unknown resources left alone."
+}

@@ -33,6 +33,7 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
 
 try:  # The CAD source reader is stdlib only; same direct-file fallback as above.
     from . import cad_source
+    from .cord_paths import validate_cord_paths
 except ImportError:  # pragma: no cover - exercised by direct module consumers
     _cad_path = Path(__file__).with_name("cad_source.py")
     _cad_spec = importlib.util.spec_from_file_location("hangboard_cad_source", _cad_path)
@@ -42,6 +43,21 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
 
     sys.modules[_cad_spec.name] = cad_source
     _cad_spec.loader.exec_module(cad_source)
+    _cord_path = Path(__file__).with_name("cord_paths.py")
+    _cord_spec = importlib.util.spec_from_file_location("hangboard_cord_paths", _cord_path)
+    assert _cord_spec and _cord_spec.loader
+    _cord_module = importlib.util.module_from_spec(_cord_spec)
+    _cord_spec.loader.exec_module(_cord_module)
+    validate_cord_paths = _cord_module.validate_cord_paths
+
+try:
+    from .rope_physics import load_rope_physics
+except ImportError:  # direct-file staging consumers
+    _physics_spec = importlib.util.spec_from_file_location("hangboard_rope_physics", Path(__file__).with_name("rope_physics.py"))
+    assert _physics_spec and _physics_spec.loader
+    _physics_module = importlib.util.module_from_spec(_physics_spec)
+    _physics_spec.loader.exec_module(_physics_module)
+    load_rope_physics = _physics_module.load_rope_physics
 
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
@@ -528,6 +544,7 @@ class PresentationMediaModel:
     suspension: "BoardModelSuspension | None" = None
     orientation: "BoardModelOrientation | None" = None
     instances: "tuple[BoardModelInstance, BoardModelInstance] | None" = None
+    physics_descriptor_path: str | None = None
 
 
 PresentationMedia = PresentationMediaRaster | PresentationMediaModel
@@ -630,7 +647,7 @@ class BoardModelPassage:
 @dataclass(frozen=True)
 class BoardModelPassagePairs:
     left: tuple[BoardModelPassage, BoardModelPassage]
-    right: tuple[BoardModelPassage, BoardModelPassage]
+    right: tuple[BoardModelPassage, ...]
 
 
 @dataclass(frozen=True)
@@ -649,19 +666,39 @@ class BoardModelCordBranch:
 @dataclass(frozen=True)
 class BoardModelTwoBranchSuspension:
     passages: BoardModelPassagePairs
-    branches: tuple[BoardModelCordBranch, BoardModelCordBranch]
+    branches: tuple[BoardModelCordBranch, ...]
     anchor: BoardModelInvisibleAnchor
     canonical_poses: Mapping[str, BoardModelCanonicalPose]
     mesh_wrap_clearance: float | None = None
     internal_loop_clearance: float | None = None
     internal_loop_winding_by_passage_id: Mapping[str, str] | None = None
     internal_loop_channel_length_by_branch_id: Mapping[str, float] | None = None
+    internal_loop_channel_points_by_branch_id: Mapping[str, tuple] | None = None
+
+
+@dataclass(frozen=True)
+class BoardModelCADCordStrand:
+    id: str
+    kind: str
+    rest_length: float
+    radius: float
+    material: str
+    provenance: str
+
+
+@dataclass(frozen=True)
+class BoardModelCADRoutedCord:
+    body_node_id: str
+    strands: tuple[BoardModelCADCordStrand, ...]
+    anchor: BoardModelInvisibleAnchor
+    canonical_poses: Mapping[str, BoardModelCanonicalPose]
 
 
 BoardModelSuspension = (
     BoardModelSingleCordSuspension
     | BoardModelPairedLeadCord
     | BoardModelTwoBranchSuspension
+    | BoardModelCADRoutedCord
 )
 
 
@@ -800,7 +837,31 @@ def _load_model_poses(
 def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
     payload = _mapping(value, source)
     suspension_type = _string(payload.get("type"), f"{source}.type")
-    if suspension_type == "twoBranchCord":
+    if suspension_type == "cadRoutedCord":
+        _closed(payload, {"type", "bodyNodeID", "strands", "anchor", "canonicalPoses"}, source)
+        raw_strands = payload["strands"]
+        if not isinstance(raw_strands, list) or not 1 <= len(raw_strands) <= 8:
+            raise ValueError("cadRoutedCord strands must contain one to eight visible strands")
+        strands = []
+        for item in raw_strands:
+            item = _mapping(item, f"{source}.strands")
+            _closed(item, {"id", "kind", "restLength", "radius", "material", "provenance"}, f"{source}.strands")
+            if item["kind"] not in {"lead", "loop", "segment"}:
+                raise ValueError("cadRoutedCord strand kind must be lead, loop, or segment")
+            strands.append(BoardModelCADCordStrand(_identifier(item["id"], source), item["kind"],
+                _positive_number(item["restLength"], source), _positive_number(item["radius"], source),
+                _string(item["material"], source), _string(item["provenance"], source)))
+        identifiers = {strand.id for strand in strands}
+        if len(identifiers) != len(strands) or len({strand.radius for strand in strands}) != 1:
+            raise ValueError("cadRoutedCord strand IDs must be unique and radii must agree")
+        poses = _load_model_poses(payload["canonicalPoses"], f"{source}.canonicalPoses")
+        for pose in poses.values():
+            if pose.attachment_points is not None or pose.cord_contact_points is not None or pose.wrapped_routes is None or set(pose.wrapped_routes) != identifiers:
+                raise ValueError("cadRoutedCord requires an exact native-generated wrappedRoutes cache for every strand")
+        return BoardModelCADRoutedCord(_string(payload["bodyNodeID"], source), tuple(strands),
+            _load_model_anchor(payload["anchor"], f"{source}.anchor"), poses)
+    if suspension_type in ("twoBranchCord", "threadedLoopCord"):
+        threaded_loop = suspension_type == "threadedLoopCord"
         _closed(payload, {"type", "passages", "branches", "anchor", "canonicalPoses"}, source,
                 optional={"meshWrap", "internalLoop"})
         _canonical_member_order(
@@ -811,13 +872,19 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         passages_payload = _mapping(payload["passages"], passages_source)
         _closed(passages_payload, {"left", "right"}, passages_source)
         _canonical_member_order(passages_payload, ("left", "right"), passages_source)
-        parsed_pairs: dict[str, tuple[BoardModelPassage, BoardModelPassage]] = {}
+        # One sling through one CAD channel has two visible legs, not two
+        # separate loops. Retain the wire type and restrict its one-loop form
+        # to connected mouths with a complete native-solid route cache.
+        single_loop = threaded_loop or ("internalLoop" in payload and passages_payload["right"] == [])
+        parsed_pairs: dict[str, tuple[BoardModelPassage, ...]] = {}
         all_passage_ids: set[str] = set()
         for side in ("left", "right"):
             side_source = f"{passages_source}.{side}"
             raw_passages = passages_payload[side]
-            if not isinstance(raw_passages, list) or len(raw_passages) != 2:
-                raise ValueError(f"{side_source} must contain exactly two passages")
+            expected_count = 0 if single_loop and side == "right" else 2
+            if not isinstance(raw_passages, list) or len(raw_passages) != expected_count:
+                count_label = "zero" if expected_count == 0 else "two"
+                raise ValueError(f"{side_source} must contain exactly {count_label} passages")
             passages: list[BoardModelPassage] = []
             for index, raw_passage in enumerate(raw_passages):
                 passage_source = f"{side_source}[{index}]"
@@ -853,7 +920,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                     _string(passage_payload["provenance"], f"{passage_source}.provenance"),
                     through_bore,
                 ))
-            parsed_pairs[side] = (passages[0], passages[1])
+            parsed_pairs[side] = tuple(passages)
         passage_pairs = BoardModelPassagePairs(parsed_pairs["left"], parsed_pairs["right"])
         all_passages = passage_pairs.left + passage_pairs.right
         if len({passage.is_through_bore for passage in all_passages}) != 1:
@@ -870,13 +937,14 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         internal_loop_clearance = None
         internal_loop_winding_by_passage_id = None
         internal_loop_channel_length_by_branch_id = None
+        channel_points = None
         if "internalLoop" in payload:
             if through_bore or mesh_wrap_clearance is not None:
                 raise ValueError("internalLoop requires paired point mouths and no exterior meshWrap")
             loop_source = f"{source}.internalLoop"
             loop = _mapping(payload["internalLoop"], loop_source)
-            _closed(loop, {"clearance", "windingByPassageID", "channelLengthByBranchID"}, loop_source)
-            _canonical_member_order(loop, ("clearance", "windingByPassageID", "channelLengthByBranchID"), loop_source)
+            _closed(loop, {"clearance", "windingByPassageID", "channelLengthByBranchID"}, loop_source, optional={"channelPointsByBranchID"})
+            _canonical_member_order(loop, tuple(key for key in ("clearance", "windingByPassageID", "channelLengthByBranchID", "channelPointsByBranchID") if key in loop), loop_source)
             internal_loop_clearance = _positive_number(loop["clearance"], f"{loop_source}.clearance")
             winding = _mapping(loop["windingByPassageID"], f"{loop_source}.windingByPassageID")
             if set(winding) != all_passage_ids:
@@ -891,13 +959,34 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                 key: _positive_number(value, f"{loop_source}.channelLengthByBranchID.{key}")
                 for key, value in lengths.items()
             }
+        if threaded_loop:
+            if internal_loop_clearance is None or "channelPointsByBranchID" not in loop:
+                raise ValueError("threadedLoopCord requires a measured connected channel")
+            routes = _mapping(loop["channelPointsByBranchID"], f"{loop_source}.channelPointsByBranchID")
+            if set(routes) != set(internal_loop_channel_length_by_branch_id):
+                raise ValueError("channel points must cover every branch")
+            channel_points = {}
+            for key, route in routes.items():
+                if not isinstance(route, list) or len(route) < 2:
+                    raise ValueError("channel must have at least two points")
+                points = tuple(_finite_vector3(point, f"{loop_source}.{key}") for point in route)
+                if points[0] != all_passages[0].point_in_model or points[-1] != all_passages[-1].point_in_model:
+                    raise ValueError("channel must join its two mouths")
+                length = sum(math.dist(a, b) for a, b in zip(points, points[1:]))
+                if any(math.dist(a, b) < 1e-7 for a,b in zip(points, points[1:])) or abs(length - internal_loop_channel_length_by_branch_id[key]) > 1e-6:
+                    raise ValueError("channel length must match its CAD spine")
+                channel_points[key] = points
+        elif internal_loop_clearance is not None and "channelPointsByBranchID" in loop:
+            raise ValueError("channel points require threadedLoopCord")
         # Exterior contacts may share one continuous body node. Their passage
         # IDs and coordinates, rather than node IDs, distinguish the routes.
 
         branches_source = f"{source}.branches"
         raw_branches = payload["branches"]
-        if not isinstance(raw_branches, list) or len(raw_branches) != 2:
-            raise ValueError(f"{branches_source} must contain exactly two branches")
+        expected_count = 1 if single_loop else 2
+        if not isinstance(raw_branches, list) or len(raw_branches) != expected_count:
+            count_label = "one branch" if single_loop else "two branches"
+            raise ValueError(f"{branches_source} must contain exactly {count_label}")
         branches: list[BoardModelCordBranch] = []
         expected_pairs = (
             tuple(passage.id for passage in passage_pairs.left),
@@ -964,22 +1053,25 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         poses = _load_model_poses(
             payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True
         )
+        if single_loop and any(pose.cord_contact_points is None for pose in poses.values()):
+            raise ValueError("threadedLoopCord requires solved exterior routes")
         if internal_loop_clearance is not None:
             cached_count = sum(pose.cord_contact_points is not None for pose in poses.values())
-            if cached_count not in (0, len(poses)) or any(
+            if (single_loop and (not poses or cached_count != len(poses))) or cached_count not in (0, len(poses)) or any(
                 pose.cord_contact_points is not None and set(pose.cord_contact_points) != all_passage_ids
                 for pose in poses.values()
             ):
                 raise ValueError("internalLoop derived routes must cover every passage and pose")
         return BoardModelTwoBranchSuspension(
             passage_pairs,
-            (branches[0], branches[1]),
+            tuple(branches),
             _load_model_anchor(anchor_payload, anchor_source),
             poses,
             mesh_wrap_clearance,
             internal_loop_clearance,
             internal_loop_winding_by_passage_id,
             internal_loop_channel_length_by_branch_id,
+            channel_points,
         )
 
     if suspension_type == "pairedLeadCord":
@@ -1133,7 +1225,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
 
 def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
     payload = _mapping(value, source)
-    _closed(payload, {"camera"}, source)
+    _closed(payload, {"camera"}, source, optional={"surfaceFinish", "woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"})
     camera_source = f"{source}.camera"
     camera = _mapping(payload["camera"], camera_source)
     _closed(camera, {"type", "viewDirection", "up", "fitPadding"}, camera_source)
@@ -1142,18 +1234,34 @@ def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
     view_direction = _vector3(camera["viewDirection"], f"{camera_source}.viewDirection")
     up = _vector3(camera["up"], f"{camera_source}.up")
     fit_padding = _positive_number(camera["fitPadding"], f"{camera_source}.fitPadding")
-    return MappingProxyType(
-        {
-            "camera": MappingProxyType(
-                {
-                    "type": "orthographic",
-                    "viewDirection": view_direction,
-                    "up": up,
-                    "fitPadding": fit_padding,
-                }
-            )
-        }
-    )
+    result: dict[str, Any] = {
+        "camera": MappingProxyType({
+            "type": "orthographic",
+            "viewDirection": view_direction,
+            "up": up,
+            "fitPadding": fit_padding,
+        })
+    }
+    if "surfaceFinish" in payload:
+        finish = payload["surfaceFinish"]
+        if not isinstance(finish, str) or finish not in {"neutral", "wood", "plastic", "granite"}:
+            raise ValueError(f"{source}.surfaceFinish must be neutral, wood, plastic, or granite")
+        result["surfaceFinish"] = finish
+    for field in ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"):
+        if field in payload:
+            raw_nodes = payload[field]
+            if not isinstance(raw_nodes, list):
+                raise ValueError(f"{source}.{field} must be an array")
+            nodes = tuple(_string(node, f"{source}.{field}") for node in raw_nodes)
+            if len(set(nodes)) != len(nodes):
+                raise ValueError(f"{source}.{field} must contain unique node IDs")
+            result[field] = nodes
+    fields = ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs")
+    for index, field in enumerate(fields):
+        for other in fields[index + 1:]:
+            if set(result.get(field, ())) & set(result.get(other, ())):
+                raise ValueError(f"{source} {field} and {other} must be disjoint")
+    return MappingProxyType(result)
 
 
 def _load_model_orientation(value: Any, source: str) -> BoardModelOrientation:
@@ -1275,7 +1383,7 @@ def _load_media(value: Any, source: str) -> PresentationMedia:
             payload,
             {"type", "assetPath", "descriptorPath", "display"},
             source,
-            optional={"suspension", "orientation", "instances"},
+            optional={"suspension", "orientation", "instances", "physicsDescriptorPath"},
         )
         has_instances = "instances" in payload
         raw_instances = payload.get("instances")
@@ -1309,6 +1417,8 @@ def _load_media(value: Any, source: str) -> PresentationMedia:
             )
             if has_instances
             else None,
+            _typed_asset_path(payload["physicsDescriptorPath"], f"{source}.physicsDescriptorPath", ".physics.json", "a physics descriptor")
+            if "physicsDescriptorPath" in payload else None,
         )
     raise ValueError(f"{source}.type must be raster or model")
 
@@ -1345,11 +1455,23 @@ class BoardPosition:
     presentation_id: str
     contact_ids: tuple[str, ...] = ()
     contact_ids_authored: bool = False
+    effective_depths: Mapping[str, HoldDepth] = field(default_factory=lambda: MappingProxyType({}))
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardPosition":
         payload = _mapping(value, source)
-        _closed(payload, {"id", "presentationID"}, source, optional={"contactIDs"})
+        _closed(payload, {"id", "presentationID"}, source, optional={"contactIDs", "effectiveDepths"})
+        depths = {}
+        if "effectiveDepths" in payload:
+            raw_depths = _mapping(payload["effectiveDepths"], f"{source}.effectiveDepths")
+            if not raw_depths:
+                raise ValueError(f"{source}.effectiveDepths must not be empty")
+            for identifier, raw_depth in raw_depths.items():
+                _identifier(identifier, f"{source}.effectiveDepths")
+                depth = HoldDepth.from_json(raw_depth, f"{source}.effectiveDepths.{identifier}")
+                if depth.range is None or depth.range.minimum <= 0 or depth.range.minimum != depth.range.maximum:
+                    raise ValueError(f"{source}.effectiveDepths must contain exact positive depths")
+                depths[identifier] = depth
         contact_ids: tuple[str, ...] = ()
         if "contactIDs" in payload:
             raw_contact_ids = payload["contactIDs"]
@@ -1366,6 +1488,7 @@ class BoardPosition:
             _identifier(payload["presentationID"], f"{source}.presentationID"),
             contact_ids,
             "contactIDs" in payload,
+            MappingProxyType(depths),
         )
 
 
@@ -1700,8 +1823,6 @@ def _validate_presentation_compatibility(
         isinstance(presentation.media, PresentationMediaModel)
         for presentation in presentations
     )
-    if sum(isinstance(presentation.media, PresentationMediaModel) for presentation in presentations) > 1:
-        raise ValueError("packages may contain only one model presentation")
     has_raster = any(
         isinstance(presentation.media, PresentationMediaRaster)
         for presentation in presentations
@@ -1941,6 +2062,21 @@ def _load_board(value: Mapping[str, Any]) -> BoardRevision:
         else position
         for position in positions
     )
+    configured_ids = {identifier for position in positions for identifier in position.effective_depths}
+    for position in positions:
+        available = set(position.contact_ids) if position.contact_ids_authored or position.presentation_id in model_presentation_ids else {
+            identifier for presentation in presentations if presentation.id == position.presentation_id
+            for identifier in presentation.media.contact_geometry
+        }
+        if not set(position.effective_depths) <= available:
+            raise ValueError("positions.effectiveDepths must reference contacts available in the position")
+        if (configured_ids & available) - set(position.effective_depths):
+            raise ValueError("positions.effectiveDepths must explicitly configure each affected contact in every position")
+        for identifier, depth in position.effective_depths.items():
+            base = contacts_by_id.get(identifier)
+            span = base.depth.range if base and base.depth else None
+            if span is None or span.minimum <= 0 or span.minimum != span.maximum or depth.range.maximum > span.maximum:
+                raise ValueError("positions.effectiveDepths must not exceed an exact positive base contact depth")
     raw_presentations = value["presentations"]
     raw_presentations_by_id = {
         presentation.id: raw_presentations[index]
@@ -2095,14 +2231,41 @@ def _validate_model_suspension(
     )
     if not all(math.isfinite(value) for value in anchor):
         raise ValueError("suspension anchor must be finite")
+    if isinstance(suspension, BoardModelCADRoutedCord):
+        if nodes.get(suspension.body_node_id) not in {"body", "attachment"}:
+            raise ValueError("cadRoutedCord bodyNodeID must reference an unpickable body or attachment")
+        for pose in suspension.canonical_poses.values():
+            qx, qy, qz, qw = pose.rotation
+            paths = {}
+            for strand in suspension.strands:
+                points = []
+                for point in pose.wrapped_routes[strand.id]:
+                    px, py, pz = point
+                    tx, ty, tz = 2*(qy*pz-qz*py), 2*(qz*px-qx*pz), 2*(qx*py-qy*px)
+                    points.append((px+qw*tx+qy*tz-qz*ty+pose.translation[0],
+                                   py+qw*ty+qz*tx-qx*tz+pose.translation[1],
+                                   pz+qw*tz+qx*ty-qy*tx+pose.translation[2]))
+                if strand.kind in {"lead", "loop"}: points.insert(0, anchor)
+                if strand.kind == "loop": points.append(anchor)
+                length = sum(math.dist(a,b) for a,b in zip(points,points[1:]))
+                if length > strand.rest_length + 2e-5:
+                    raise ValueError("cadRoutedCord restLength is shorter than its native route")
+                paths[strand.id] = points
+            validate_cord_paths(paths, {strand.id: strand.radius for strand in suspension.strands})
+        return
     if isinstance(suspension, BoardModelTwoBranchSuspension):
         passages = tuple(
             passage
             for side in (suspension.passages.left, suspension.passages.right)
             for passage in side
         )
-        if len(passages) != 4 or len({passage.id for passage in passages}) != 4:
-            raise ValueError("twoBranchCord suspension requires four distinct passages")
+        expected_count = 2 * len(suspension.branches)
+        if len(passages) != expected_count or len({passage.id for passage in passages}) != expected_count:
+            raise ValueError("twoBranchCord suspension requires distinct paired passages")
+        if suspension.internal_loop_channel_points_by_branch_id is not None:
+            for route in suspension.internal_loop_channel_points_by_branch_id.values():
+                if any(point[axis] < minimum[axis] or point[axis] > maximum[axis] for point in route for axis in range(3)):
+                    raise ValueError("connected channel points must stay inside model bounds")
         if suspension.mesh_wrap_clearance is not None and any(
             side[0].point_in_model[0] == side[1].point_in_model[0]
             for side in (suspension.passages.left, suspension.passages.right)
@@ -2181,10 +2344,7 @@ def _validate_model_suspension(
                 ((attachment,), suspension.cord) for attachment in suspension.attachments
             )
             if isinstance(suspension, BoardModelPairedLeadCord)
-            else (
-                (suspension.passages.left, suspension.branches[0]),
-                (suspension.passages.right, suspension.branches[1]),
-            )
+            else tuple(zip((suspension.passages.left, suspension.passages.right), suspension.branches))
         )
         for branch_endpoints, branch_data in endpoints_by_branch:
             if isinstance(branch_data, BoardModelCord):
@@ -2348,7 +2508,7 @@ def _load_reusable_model_descriptor(
         # in the repository and cannot be hashed here. The descriptor's
         # modelSHA256 remains the contract: prepare_assets.py verifies the
         # compiled bytes against it, and BoardPackageStore re-checks it on device.
-        if not _is_compiled_model_asset(asset_path.parent.parent, "assets/primary.usdz"):
+        if not _is_compiled_model_asset(asset_path.parent.parent, f"assets/{asset_path.name}"):
             raise ValueError("model asset must be readable for SHA-256 validation") from error
         actual_hash = declared_hash
     if declared_hash != actual_hash:
@@ -2493,7 +2653,7 @@ def _load_model_descriptor(
         # in the repository and cannot be hashed here. The descriptor's
         # modelSHA256 remains the contract: prepare_assets.py verifies the
         # compiled bytes against it, and BoardPackageStore re-checks it on device.
-        if not _is_compiled_model_asset(asset_path.parent.parent, "assets/primary.usdz"):
+        if not _is_compiled_model_asset(asset_path.parent.parent, f"assets/{asset_path.name}"):
             raise ValueError("model asset must be readable for SHA-256 validation") from error
         actual_hash = declared_hash
     if declared_hash != actual_hash:
@@ -2516,6 +2676,7 @@ def _load_model_descriptor(
         raise ValueError("model descriptor nodes must be a non-empty array")
     node_ids: set[str] = set()
     node_ids_by_contact: dict[str, list[str]] = {}
+    shared_contact_ids: set[str] = set()
     body_count = 0
     attachment_count = 0
     ordered_node_ids: list[str] = []
@@ -2524,7 +2685,7 @@ def _load_model_descriptor(
         node = _mapping(raw_node, source)
         role = node.get("role")
         expected = {"nodeID", "role", "contactID"} if role == "contact" else {"nodeID", "role"}
-        _closed(node, expected, source)
+        _closed(node, expected, source, optional={"additionalContactIDs"} if role == "contact" else set())
         node_id = _string(node["nodeID"], f"{source}.nodeID")
         if node_id in node_ids:
             raise ValueError(f"model descriptor has duplicate nodeID: {node_id}")
@@ -2535,10 +2696,21 @@ def _load_model_descriptor(
         elif role == "contact":
             contact_id = _identifier(node["contactID"], f"{source}.contactID")
             node_ids_by_contact.setdefault(contact_id, []).append(node_id)
+            if "additionalContactIDs" in node:
+                extra = node["additionalContactIDs"]
+                if not isinstance(extra, list) or not extra:
+                    raise ValueError(f"{source}.additionalContactIDs must be a non-empty array")
+                extra = [_identifier(item, f"{source}.additionalContactIDs") for item in extra]
+                if extra != sorted(set(extra)) or contact_id in extra:
+                    raise ValueError(f"{source}.additionalContactIDs must be sorted, unique and exclude primary")
+                shared_contact_ids.update(extra)
+                for additional_id in extra:
+                    node_ids_by_contact.setdefault(additional_id, []).append(node_id)
         elif role == "attachment":
             attachment_count += 1
             max_attachments = (
-                4 if isinstance(suspension, BoardModelTwoBranchSuspension)
+                8 if isinstance(suspension, BoardModelCADRoutedCord)
+                else 4 if isinstance(suspension, BoardModelTwoBranchSuspension)
                 else 2 if isinstance(suspension, BoardModelPairedLeadCord)
                 else 1
             )
@@ -2564,6 +2736,8 @@ def _load_model_descriptor(
     for contact_id, raw_contact in raw_contacts.items():
         source = f"model descriptor contacts[{contact_id}]"
         contact = _mapping(raw_contact, source)
+        if contact_id in shared_contact_ids and "outline" in contact:
+            raise ValueError(f"{source}: shared contact cannot replace member surfaces with an outline")
         _closed(contact, {"nodeIDs", "facePlaneAABB", "center"}, source, optional={"outline"})
         contact_node_ids = contact["nodeIDs"]
         if (
@@ -2628,9 +2802,13 @@ def _is_compiled_model_asset(root: Path, asset: str) -> bool:
     CAD authoring source. Every other missing asset is still an error, so this
     cannot be used to drop an arbitrary asset.
     """
-    if asset != "assets/primary.usdz":
+    source = root / f"{root.name}{_PACKAGE_SOURCE_SUFFIX}"
+    if not source.is_file():
         return False
-    return (root / f"{root.name}{_PACKAGE_SOURCE_SUFFIX}").is_file()
+    board = cad_source.load_board(source)
+    return any(presentation.get("media", {}).get("type") == "model"
+               and presentation["media"].get("assetPath") == asset
+               for presentation in board.get("presentations", []))
 
 
 def _validate_finished_shape(
@@ -2647,6 +2825,11 @@ def _validate_finished_shape(
     allowed = set(required | {cad_source_name})
     if cad_source.is_cad_package(root) and "suspension.json" in entries:
         allowed.add("suspension.json")
+    if cad_source.is_cad_package(root) and any(
+        isinstance(p.media, PresentationMediaModel) and p.media.physics_descriptor_path
+        for p in board.presentations
+    ):
+        allowed.add("rope-physics.json")
     unknown = entries - allowed
     missing = required - entries
     if unknown:
@@ -2664,6 +2847,8 @@ def _validate_finished_shape(
         expected_assets.add(presentation.asset_path)
         if isinstance(presentation.media, PresentationMediaModel):
             expected_assets.add(presentation.media.descriptor_path)
+            if presentation.media.physics_descriptor_path:
+                expected_assets.add(presentation.media.physics_descriptor_path)
     actual_assets = {
         item.relative_to(root).as_posix() for item in assets.rglob("*") if item.is_file()
     }
@@ -2714,6 +2899,20 @@ def _validate_finished_shape(
     for presentation in board.presentations:
         if not isinstance(presentation.media, PresentationMediaModel):
             continue
+        local_position_ids = {position.id for position in board.positions if position.presentation_id == presentation.id}
+        if not local_position_ids:
+            raise ValueError("every model presentation must own at least one position")
+        if presentation.media.physics_descriptor_path:
+            model_document = _load_json(root / presentation.media.descriptor_path, "model descriptor")
+            physics = load_rope_physics(root / presentation.media.physics_descriptor_path, model_document["modelSHA256"])
+            selected_profiles = [p for p in physics["profiles"] if p["presentationID"] == presentation.id]
+            expected_instances = ({i.equipment_object_id for i in presentation.media.instances}
+                                  if presentation.media.instances else {None})
+            if {p.get("instanceID") for p in selected_profiles} != expected_instances:
+                raise ValueError("physics profiles must cover the presentation instances exactly")
+            if cad_source.is_cad_package(root):
+                if physics["sourceSHA256"] != hashlib.sha256(cad_source.package_source_path(root).read_bytes()).hexdigest():
+                    raise ValueError("rope physics CAD source hash mismatch")
         frames = _load_model_descriptor(
             root / presentation.media.descriptor_path,
             root / presentation.media.asset_path,
@@ -2725,6 +2924,14 @@ def _validate_finished_shape(
             contacts=board.contacts,
             equipment_objects=frozenset(board.equipment_objects),
         )
+        for field in ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"):
+            surface_nodes = presentation.media.display.get(field, ())
+            if surface_nodes:
+                descriptor = _load_json(root / presentation.media.descriptor_path, "model descriptor")
+                eligible_nodes = {node["nodeID"] for node in descriptor["nodes"]
+                                  if node["role"] in {"body", "contact"}}
+                if not set(surface_nodes) <= eligible_nodes:
+                    raise ValueError(f"display.{field} must name body or contact descriptor nodes")
         _validate_model_orientation(
             presentation.media.orientation,
             board.positions,

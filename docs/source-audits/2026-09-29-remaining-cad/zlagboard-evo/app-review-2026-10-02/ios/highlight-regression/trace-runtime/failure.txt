@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/prep/highlight-trace-workout.py", line 18, in <module>
+    run('xcrun','simctl','launch','--terminate-running-process','--console-stdout='+str((out/'console-stdout.log').resolve()),'--console-stderr='+str((out/'console-stderr.log').resolve()),uid,'com.hangten.training',env=env)
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/prep/highlight-trace-workout.py", line 6, in run
+    cmd=['rtk','proxy',*map(str,args)];n=len(commands);commands.append(cmd);r=subprocess.run(cmd,env=env,capture_output=True,timeout=60)
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['rtk', 'proxy', 'xcrun', 'simctl', 'launch', '--terminate-running-process', '--console-stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/trace-runtime/console-stdout.log', '--console-stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/trace-runtime/console-stderr.log', '1684856E-FC2D-4407-8063-9B343B99CAD6', 'com.hangten.training']' timed out after 60 seconds

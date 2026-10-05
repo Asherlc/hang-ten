@@ -1,0 +1,5 @@
+{
+  "reason": "Nested visitor inferred nonisolated; avoid actor-isolated pure identity helper calls using identical ObjectIdentifier conversion inline",
+  "beforeSHA256": "f80b55405f331e3555404d545a75889043051f405dbfa94202b194fff93a44f1",
+  "afterSHA256": "48c2b5cc6a5d2c1b1b7912576b71f9ba1fca1e281b9655bdb5a46fa1cc684186"
+}

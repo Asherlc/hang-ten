@@ -1,0 +1,78 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "exit": 0,
+    "start": 104045.666783875,
+    "end": 104045.952265458
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "openurl",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A",
+      "hangten://plan/research.max-hangs/workout"
+    ],
+    "exit": 0,
+    "start": 104045.9527805,
+    "end": 104046.12297475
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A"
+    ],
+    "exit": 0,
+    "start": 104046.123240791,
+    "end": 104047.037673041
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "--label",
+      "Open",
+      "--element-type",
+      "Button",
+      "--udid",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A"
+    ],
+    "exit": 0,
+    "start": 104047.037896166,
+    "end": 104048.46423675
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "9D5850FF-04D5-4498-AF99-E1F0C56ACA4A",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/setup/after-confirmation.png"
+    ],
+    "exit": 0,
+    "start": 104048.46445475,
+    "end": 104048.917809
+  }
+]

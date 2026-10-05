@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "label": "bootstatus",
+  "command": [
+    "xcrun",
+    "simctl",
+    "bootstatus",
+    "7774F2CB-D5DF-45EA-A5ED-FFACBEAED21B",
+    "-b"
+  ],
+  "timeoutSeconds": 180.0,
+  "ownedProcessGroup": 56860,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 138.54142424999736
+}

@@ -1,0 +1,5 @@
+{
+  "timeoutSeconds": 480,
+  "exactSimulatorUUID": "71029F02-AF9E-46C2-920B-394C8837ECF2",
+  "action": "SIGTERM exact owned bootstatus subprocess group"
+}

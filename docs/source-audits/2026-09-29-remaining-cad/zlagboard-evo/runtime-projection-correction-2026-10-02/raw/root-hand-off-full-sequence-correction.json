@@ -1,0 +1,10 @@
+{
+  "reviewer": "root",
+  "observation": "Rest 02:56 board pockets are RED, so the historical hand-OFF run failed the full workflow even though next-active correctly remained RED.",
+  "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-off-a-landscape/following-rest-settled.png",
+  "sha256": "4540ff67ccf2fbe2ee689fc7826c0226a0243ea0170d192d37bd0a30e6b2f9d2",
+  "method": "Whole image independently opened without pixel measurement or classification.",
+  "correctionScope": "The earlier next-active visual correction remains correct. The inferred full-run PASS and FAIL/PASS/FAIL causal interpretation were too broad and are withdrawn.",
+  "consequence": "Visible hand-host removal is not sufficient to fix the full sequence. This does not yet census hidden retained hosts. No architecture change justified by alleged OFF success.",
+  "priorEvidenceRewritten": false
+}

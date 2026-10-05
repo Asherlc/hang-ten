@@ -1,0 +1,20 @@
+{
+  "compilerSHA256": "34b0a92874d739c70b6bb48c63e8730297b6fda6f610f34c90ccb895c23fe167",
+  "results": {
+    "legacy_unshared": {
+      "accepted": false,
+      "error": "edge region depth 20.000 mm disagrees with the published depth 60.000 mm (expected 60.000 mm, tolerance 0.250 mm); the region has probably bound to the wrong surface"
+    },
+    "same_unshared_plus_unrelated_shared": {
+      "accepted": false,
+      "error": "edge region depth 20.000 mm disagrees with the published depth 60.000 mm (expected 60.000 mm, tolerance 0.250 mm); the region has probably bound to the wrong surface"
+    },
+    "nug_shared": {
+      "accepted": true,
+      "measured": {
+        "pinch": 60.0,
+        "jug": 40.0
+      }
+    }
+  }
+}

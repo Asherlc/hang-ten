@@ -1,0 +1,206 @@
+{
+  "createdUTC": "2026-10-02T22:40:37.098329+00:00",
+  "scope": "Read-only prospective audit, not an authorized next runtime experiment. Timing experiment remains the only active diagnostic.",
+  "finding": "Existing OFF flag suppresses only landscape paired preview; it does not prove no hand host was created earlier or elsewhere.",
+  "callSites": [
+    {
+      "source": "RootView.swift:2339",
+      "route": "portrait with resolved hold -> GripDiagramView -> single or pair cue -> hand model host",
+      "suppressed": false
+    },
+    {
+      "source": "RootView.swift:2376,2381,2385",
+      "route": "portrait without resolved hold -> pair or single cue cards -> hand model host",
+      "suppressed": false
+    },
+    {
+      "source": "RootView.swift:2435",
+      "route": "landscape shared pair preview",
+      "suppressed": true
+    },
+    {
+      "source": "RootView.swift:2553",
+      "route": "landscape single cue card when usesSharedPairPreview=false -> single model host",
+      "suppressed": false
+    },
+    {
+      "source": "GripDiagramView.swift:189",
+      "route": "cue button inspector sheet -> single model host; not expected without input",
+      "suppressed": false
+    },
+    {
+      "source": "RootView.swift:1183",
+      "route": "normal Train first-hold cue -> hand hosts; bypassed only when valid direct-root branch selected from first body evaluation",
+      "suppressed": false
+    }
+  ],
+  "launchBoundary": "Direct gate uses RootView environment before normalBody, but requests landscape in onAppear; WorkoutView independently chooses portrait/landscape using geometry. No synchronous orientation-ready gate. Initial portrait can occur; construction is possible, not established by a blank startup screenshot.",
+  "minimalProspectiveChange": "After explicit technical coordination, add a fresh DEBUG-only strict hand-host suppression gate at both GripHandModelView and GripHandPairModelView body entry, replacing only the GeometryReader/RealityView subtree with flexible Color.clear; leave outer caller frames and cue/card text unchanged. Gate before accessing lazy scene. This needs GripHandModelView.swift outside current reservation. No code authored.",
+  "rootOnlyAlternative": "Replacing all portrait cue containers in RootView or forcing usesSharedPairPreview changes card dimensions/content; hiding/opacity leaves hosts constructed. Not an equivalent minimal host-only discriminator.",
+  "proofRequirement": "Fresh process from direct-root gate; suppression fixed before first view; instrument both hand scene initializers and both RealityView make sites from process start, plus stable board/UI layout census. Verify zero creation events and intact event-stream coverage, not only current visible view counts. Ordinary sparse UIKit census does not establish no past host. Instrumentation also needs coordinated hand file reservation.",
+  "evidence": [
+    {
+      "source": "HangTen/Views/RootView.swift",
+      "ranges": [
+        [
+          193,
+          251
+        ],
+        [
+          1176,
+          1188
+        ],
+        [
+          2012,
+          2073
+        ],
+        [
+          2332,
+          2348
+        ],
+        [
+          2371,
+          2389
+        ],
+        [
+          2431,
+          2450
+        ],
+        [
+          2533,
+          2563
+        ]
+      ],
+      "retained": "RootView.swift.excerpts.txt",
+      "sha256": "e2e43c12cf8e4155301354f76e4683a89f50e741d8f34a024b67eb3dc0ff13ed"
+    },
+    {
+      "source": "HangTen/Views/GripDiagramView.swift",
+      "ranges": [
+        [
+          26,
+          63
+        ],
+        [
+          130,
+          191
+        ],
+        [
+          202,
+          220
+        ]
+      ],
+      "retained": "GripDiagramView.swift.excerpts.txt",
+      "sha256": "15cf1b094f6b9494364523cc0a79fd7030fe731fe07f2c256fdc725357240bfd"
+    },
+    {
+      "source": "HangTen/Views/GripHandModelView.swift",
+      "ranges": [
+        [
+          35,
+          45
+        ],
+        [
+          79,
+          139
+        ],
+        [
+          730,
+          796
+        ]
+      ],
+      "retained": "GripHandModelView.swift.excerpts.txt",
+      "sha256": "45b31c48b4f5a2ffa6537b449e2b8afb7a02f2a493e3f8efa0c6d5c7439e999b"
+    },
+    {
+      "source": "HangTen/Views/WorkoutAccessGate.swift",
+      "ranges": [
+        [
+          27,
+          62
+        ],
+        [
+          97,
+          113
+        ]
+      ],
+      "retained": "WorkoutAccessGate.swift.excerpts.txt",
+      "sha256": "b0f83d44eecc6166873759b80d2e2021a57df1e4a3618776b884e17d91b67af5"
+    },
+    {
+      "source": "HangTen/Models/BoardModelRealityTypes.swift",
+      "ranges": [
+        [
+          1572,
+          1604
+        ],
+        [
+          1717,
+          1725
+        ]
+      ],
+      "retained": "BoardModelRealityTypes.swift.excerpts.txt",
+      "sha256": "2d2ec2009c1861d6a892d448289f649800cc5a99f4c4417606c24bbc5dd58234"
+    }
+  ],
+  "historicalTraceAudit": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/projection-off-a-landscape/events-0918C6CF-86A4-492C-B27E-F5A521DF1C32.jsonl",
+      "sha256": "0544f60ea332f7f133ba3be0ac13b409f3fa102d6a2be7a5aa5fbfaa636f8105",
+      "records": 58,
+      "events": [
+        "highlight-after",
+        "highlight-before",
+        "recorder-open",
+        "sample",
+        "view-disappear",
+        "view-make",
+        "view-update"
+      ],
+      "applicationCensusRecords": 0,
+      "handConstructorLifecycleInstrumentationPresent": false
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-off-a-landscape/events-368D7578-656D-4592-B248-430720891500.jsonl",
+      "sha256": "ab5a1cc04498cae0fb08b5b8ce4219c114f37f56192b2effdfad0acfacdf6189",
+      "records": 55,
+      "events": [
+        "highlight-after",
+        "highlight-before",
+        "recorder-open",
+        "sample",
+        "view-disappear",
+        "view-make",
+        "view-update"
+      ],
+      "applicationCensusRecords": 0,
+      "handConstructorLifecycleInstrumentationPresent": false
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/root-workout-direct-2-landscape/events-E592AD8C-0C2C-4005-A5EE-405F4E2DF54C.jsonl",
+      "sha256": "dd831c2937a6d8519b8d1a855c475b7871e8c6ba29e971ea719b2911f227d7a1",
+      "records": 143,
+      "events": [
+        "highlight-after",
+        "highlight-before",
+        "recorder-open",
+        "sample",
+        "sample-end",
+        "surface-inputs",
+        "view-make",
+        "view-update",
+        "workout-probe-appear-before-autostart"
+      ],
+      "applicationCensusRecords": 132,
+      "handConstructorLifecycleInstrumentationPresent": false
+    }
+  ],
+  "limitations": [
+    "Old OFF logs have no applicationCensus records and no production hand-host construction/destruction events.",
+    "Later UIKit class-name census is sampled, can miss already destroyed hosts, and is not a lifetime registry.",
+    "Do not label historical OFF as single-host or history-free.",
+    "Direct root avoids normal Train history only for the exact configured branch; it does not alone suppress portrait workout hosts.",
+    "No simulator, build, source, index or commit mutations performed.",
+    "Initial explicit GripDiagram.swift/GripHandModel.swift lookup failed (filenames absent); corrected via rg --files to actual View-suffixed names."
+  ]
+}

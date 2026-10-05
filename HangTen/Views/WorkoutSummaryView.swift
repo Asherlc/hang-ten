@@ -107,6 +107,7 @@ struct WorkoutSummaryView: View {
     let onSave: () -> Void
     let onDiscard: () -> Void
     let mode: WorkoutSummaryMode
+    @State private var showsDiscardConfirmation = false
 
     init(
         session: WorkoutSessionRecord,
@@ -128,14 +129,44 @@ struct WorkoutSummaryView: View {
             WorkoutSummaryContent(
                 session: session,
                 unit: unit,
-                loadAdjustmentUnit: loadAdjustmentUnit,
-                mode: mode,
-                onSave: mode.isReadOnly ? nil : onSave,
-                onDiscard: mode.isReadOnly ? nil : onDiscard
+                loadAdjustmentUnit: loadAdjustmentUnit
             )
-            .navigationTitle("Session summary")
+            .navigationTitle("Summary")
             .navigationBarTitleDisplayMode(.inline)
+            .safeAreaInset(edge: .bottom) {
+                Text("Saving adds this session to history and Apple Health, if connected.")
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Color.hangBackground)
+            }
+            .toolbar {
+                if !mode.isReadOnly {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Discard", role: .destructive) {
+                            showsDiscardConfirmation = true
+                        }
+                        .accessibilityIdentifier("workout.summary.discard")
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save session", action: onSave)
+                            .buttonStyle(.borderedProminent)
+                            .tint(.hangGreenDark)
+                            .accessibilityIdentifier("workout.summary.save")
+                    }
+                }
+            }
+            .alert("Discard this session?", isPresented: $showsDiscardConfirmation) {
+                Button("Discard session", role: .destructive, action: onDiscard)
+                    .accessibilityIdentifier("workout.summary.discardConfirm")
+                Button("Keep reviewing", role: .cancel) {}
+            } message: {
+                Text("This session will not be saved to history or Apple Health.")
+            }
         }
+        .interactiveDismissDisabled(!mode.isReadOnly)
     }
 }
 
@@ -174,7 +205,7 @@ struct WorkoutSessionHistoryView: View {
         List {
             if let persistenceError {
                 Label(persistenceError, systemImage: "exclamationmark.triangle.fill")
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .font(.system(.footnote, design: .rounded, weight: .semibold))
                     .foregroundStyle(Color.holdActiveDeep)
             }
 
@@ -184,36 +215,39 @@ struct WorkoutSessionHistoryView: View {
                     systemImage: "clock.arrow.circlepath",
                     description: Text("Save a completed workout to review it here.")
                 )
+                .listRowBackground(Color.hangCream)
             } else {
                 ForEach(sessions) { session in
                     NavigationLink {
                         WorkoutSummaryContent(
                             session: session,
                             unit: unit,
-                            loadAdjustmentUnit: loadAdjustmentUnit,
-                            mode: .history
+                            loadAdjustmentUnit: loadAdjustmentUnit
                         )
                         .navigationTitle("Session summary")
                         .navigationBarTitleDisplayMode(.inline)
                     } label: {
                         VStack(alignment: .leading, spacing: 5) {
                             Text(session.planTitle)
-                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .font(.system(.subheadline, design: .rounded, weight: .bold))
                                 .foregroundStyle(Color.hangInk)
                             Text(session.recordedAt.formatted(date: .abbreviated, time: .shortened))
-                                .font(.system(size: 12, weight: .medium, design: .rounded))
+                                .font(.system(.caption, design: .rounded, weight: .medium))
                                 .foregroundStyle(Color.hangMuted)
                             if session.initialWeight.source != .untracked {
                                 Text(session.initialWeight.source.label)
-                                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                                    .font(.system(.caption, design: .rounded, weight: .medium))
                                     .foregroundStyle(Color.hangMuted)
                             }
                         }
                         .padding(.vertical, 3)
                     }
+                    .listRowBackground(Color.hangCream)
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color.hangBackground)
         .navigationTitle("History")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -223,24 +257,15 @@ private struct WorkoutSummaryContent: View {
     let session: WorkoutSessionRecord
     let unit: MotherboardForceUnit
     let loadAdjustmentUnit: WorkoutLoadAdjustmentDisplayUnit
-    let mode: WorkoutSummaryMode
-    var onSave: (() -> Void)?
-    var onDiscard: (() -> Void)?
 
     init(
         session: WorkoutSessionRecord,
         unit: MotherboardForceUnit,
-        loadAdjustmentUnit: WorkoutLoadAdjustmentDisplayUnit,
-        mode: WorkoutSummaryMode = .history,
-        onSave: (() -> Void)? = nil,
-        onDiscard: (() -> Void)? = nil
+        loadAdjustmentUnit: WorkoutLoadAdjustmentDisplayUnit
     ) {
         self.session = session
         self.unit = unit
         self.loadAdjustmentUnit = loadAdjustmentUnit
-        self.mode = mode
-        self.onSave = onSave
-        self.onDiscard = onDiscard
     }
 
     var body: some View {
@@ -248,10 +273,10 @@ private struct WorkoutSummaryContent: View {
             Section {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(session.planTitle)
-                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .font(.system(.title2, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
                     Text(session.recordedAt.formatted(date: .long, time: .shortened))
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                 }
                 .padding(.vertical, 4)
@@ -270,7 +295,7 @@ private struct WorkoutSummaryContent: View {
             if session.initialWeight.source == .sensor {
                 Section("Scale") {
                     Text(session.forceSensorProfile.label)
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangInk)
                 }
             }
@@ -281,7 +306,7 @@ private struct WorkoutSummaryContent: View {
             ) {
                 Section("Initial weight") {
                     Text(initialWeightText)
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangInk)
                 }
             }
@@ -292,7 +317,7 @@ private struct WorkoutSummaryContent: View {
             ) {
                 Section("Load adjustment") {
                     Text(loadAdjustmentText)
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangInk)
                 }
             }
@@ -304,7 +329,7 @@ private struct WorkoutSummaryContent: View {
             ) {
                 Section("Bodyweight baseline") {
                     Text(bodyweightBaselineText)
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangInk)
                 }
             }
@@ -317,25 +342,14 @@ private struct WorkoutSummaryContent: View {
             ) {
                 Section("Granular scale data") {
                     Text(granularSampleCountText)
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangInk)
                 }
             }
 
-            if !mode.isReadOnly, let onSave, let onDiscard {
-                Section {
-                    Button("Save session", action: onSave)
-                        .frame(maxWidth: .infinity)
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.hangInk)
-
-                    Button("Discard", role: .destructive, action: onDiscard)
-                        .frame(maxWidth: .infinity)
-                } footer: {
-                    Text("Saving logs this completed routine and writes it to Apple Health. Discarding keeps nothing.")
-                }
-            }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color.hangBackground)
     }
 
     @ViewBuilder
@@ -347,12 +361,12 @@ private struct WorkoutSummaryContent: View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .firstTextBaseline) {
                 Text(title)
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 Spacer()
                 if showsMeasuredLoad {
                     Text(statusText(for: step.status))
-                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .font(.system(.caption2, design: .rounded, weight: .bold))
                         .foregroundStyle(statusTint(for: step.status))
                 }
             }
@@ -367,13 +381,16 @@ private struct WorkoutSummaryContent: View {
                 }
             }
 
-            Text(WorkoutSummaryFormatting.semanticText(for: step, unit: unit))
-                .font(.system(size: 12, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangMuted)
+            let semanticText = WorkoutSummaryFormatting.semanticText(for: step, unit: unit)
+            if semanticText.caseInsensitiveCompare(title) != .orderedSame {
+                Text(semanticText)
+                    .font(.system(.caption, design: .rounded, weight: .bold))
+                    .foregroundStyle(Color.hangMuted)
+            }
 
             if step.intervals.count > 1 {
                 Text("\(step.intervals.count) intervals: \(step.intervals.map { $0.duration.durationText }.joined(separator: ", "))")
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .font(.system(.caption, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
             }
         }
@@ -383,10 +400,10 @@ private struct WorkoutSummaryContent: View {
     private func summaryValue(title: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title.uppercased())
-                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .font(.system(.caption2, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangMuted)
             Text(value)
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                .font(.system(.footnote, design: .rounded, weight: .semibold))
                 .foregroundStyle(Color.hangInk)
         }
     }
@@ -437,6 +454,6 @@ private struct WorkoutSummaryContent: View {
 
 private extension TimeInterval {
     var durationText: String {
-        String(format: "%.1fs", self)
+        "\(formatted(.number.precision(.fractionLength(0...1))))s"
     }
 }

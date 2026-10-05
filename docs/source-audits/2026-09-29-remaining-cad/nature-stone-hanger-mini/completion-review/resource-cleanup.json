@@ -1,0 +1,293 @@
+{
+  "status": "pass",
+  "owner": "placid-badger",
+  "verifiedUTC": "2026-10-02T05:27:47.728491+00:00",
+  "exactOwnedProcessAndTemporaryChecks": [
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-author_seat-ownership.json",
+      "processGroup": 43272,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-compile-primary-ownership.json",
+      "processGroup": 51625,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-compile-repro-ownership.json",
+      "processGroup": 51649,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-export_collision-ownership.json",
+      "processGroup": 51682,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-inspect_prior-ownership.json",
+      "processGroup": 38719,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-inspect_seat-ownership.json",
+      "processGroup": 40293,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-mini-continuous-cert-command.json",
+      "processGroup": 64581,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-mini-solve-apply-command.json",
+      "processGroup": 48209,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-mini-solve-apply-venv-command.json",
+      "processGroup": 48908,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-mini-solve-check-command.json",
+      "processGroup": 57180,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-mini-solve-clearance06-command.json",
+      "processGroup": 51721,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-mini-solve-vertical-axis-command.json",
+      "processGroup": 56470,
+      "processGroupAbsentNow": false,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [
+        {
+          "pid": 56470,
+          "startedUTC": "2026-10-02T05:17:11+00:00",
+          "executable": "/Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/FamilyCircle.framework/familycircled",
+          "unrelatedProcessLeftAlone": true
+        }
+      ],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-set_depth_axis-ownership.json",
+      "processGroup": 50195,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-verify_final_native-ownership.json",
+      "processGroup": 55009,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-android-staging-command.json",
+      "processGroup": 82467,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-final-package-validation-command.json",
+      "processGroup": 63690,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-independent-export-command.json",
+      "processGroup": 69312,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-independent-native-command.json",
+      "processGroup": 68702,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-model-tool-tests-command.json",
+      "processGroup": 76253,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-package-validation-command.json",
+      "processGroup": 69029,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-package-validation-venv-command.json",
+      "processGroup": 69310,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-python-tests-command.json",
+      "processGroup": 69030,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-python-tests-venv-command.json",
+      "processGroup": 69311,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/ios/cold-attempt-ios-tests-command.json",
+      "processGroup": 83280,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/ios/ios-build-command.json",
+      "processGroup": 43532,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/ios/ios-tests-command.json",
+      "processGroup": 3948,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/ios/ios26.4-final-bootstatus.json",
+      "processGroup": 51118,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/ios/retired-device-ios-build-command.json",
+      "processGroup": 71229,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/ios/retired-ios26.5-retry1-ios-build-command.json",
+      "processGroup": 3154,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/ios/retired-ios26.5-retry1-ios-tests-command.json",
+      "processGroup": 3948,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    },
+    {
+      "receipt": ".context/placid-badger/nature-stone-mini-review10/completion/ios/xcode-first-launch-status.json",
+      "processGroup": 51119,
+      "processGroupAbsentNow": true,
+      "originalOwnedProcessLifetimeEnded": true,
+      "numericIDReusedAfterVerifiedTeardown": [],
+      "temporaryPathAbsent": true
+    }
+  ],
+  "distinctOwnedProcessLifetimesVerifiedEnded": 30,
+  "emptyCancelledDiagnosticsWithoutResults": [
+    {
+      "path": ".context/placid-badger/nature-stone-mini-review10/completion/ios/cold-attempt-ios-summary.json",
+      "reason": "Cancelled before test startup; no result recorded."
+    }
+  ],
+  "diagnosticProcessesVerifiedAbsent": [
+    {
+      "pid": 86699,
+      "absent": true
+    },
+    {
+      "pid": 97155,
+      "absent": true
+    }
+  ],
+  "simulatorUUID": "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B",
+  "actualSimulatorUUIDAbsent": true,
+  "allOriginalAndReplacementUUIDsVerifiedAbsent": [
+    "AD220AAC-C46B-45D9-984F-FFC7DE4B1B7B",
+    "CEC83800-5035-404E-B5A2-E40B826FE00E",
+    "E9D3D8B4-1440-4417-862B-3023AF3841FA",
+    "FAF5CDF7-28BB-44C6-AA5F-0DF2532E6DE1"
+  ],
+  "pendingAndOwnedSimulatorRecordsConsumed": true,
+  "derivedDataAbsent": true,
+  "ownedIOSTemporaryAbsent": true,
+  "ownedXCResultAbsent": true,
+  "noHTTPServersStarted": true,
+  "unrelatedResourcesLeftAlone": true
+}

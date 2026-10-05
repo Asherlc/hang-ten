@@ -1,0 +1,49 @@
+{
+  "owner": "placid-badger",
+  "failedRun": 37165839403,
+  "failedJob": 111328802127,
+  "failedHead": "bad7500123243937db712f5b0139ab273e373836",
+  "priorGreenRun": 37156649527,
+  "priorGreenJob": 111301436338,
+  "priorGreenHead": "7e12907150374f722446a0e8725123d1bc52b650",
+  "currentEvidenceOnlyHead": "6d9a7de223d0736279b5e780b67b8017c277feef",
+  "executed": 29,
+  "passed": 26,
+  "failed": 3,
+  "failureClassification": "UI test action races with existing autostart/countdown and natural source-duration expiry; no demonstrated production regression",
+  "failedTests": [
+    {
+      "name": "testContactOffsetTaskCanAdvanceWithoutSkippingMinute",
+      "line": 61,
+      "cause": "Transient Start queried during automatic startup disappears before tap; failure hierarchy contains Cancel countdown."
+    },
+    {
+      "name": "testOneArmTaskLetsAthleteChooseSide",
+      "line": 105,
+      "cause": "Right/Hold controls observed during preparation disappear during automatic initial countdown before the tap and assertion."
+    },
+    {
+      "name": "testWorkoutPauseSurvivesRotationAndResumes",
+      "line": 196,
+      "cause": "Paused 00:06 is preserved; after Resume the real 10-second work expires before the delayed Skip, which skips Rest to set 2 countdown."
+    }
+  ],
+  "recommendedTestScope": "HangTenUITests/GripCueDiagnosticScreenshotUITests",
+  "unchangedRequirements": [
+    "All substantive old assertions",
+    "Existing wait timeout values",
+    "Real 10-second work and 180-second rest",
+    "Original 30-second stable-projection gates",
+    "Physics and native assets"
+  ],
+  "trackedFileMutated": false,
+  "externalResourcesCreated": [],
+  "agentVerification": [
+    "Exact failed and green GitHub logs",
+    "Original CI xcresult activities/hierarchies/screenshots/video frames",
+    "Bounded source diff",
+    "git apply --check"
+  ],
+  "actualPatchedTestRunByAgent": false,
+  "artifactSHA256": "e8896d6cf35d18c3c4215e18487fafa7ef2045cf3468651eeccc84702b7c975d"
+}

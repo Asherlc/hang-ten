@@ -1,0 +1,14 @@
+X47 memberships checked
+Join sections checked
+{
+  "status": "fail",
+  "blockingFindings": [
+    "nose no finite step 15",
+    "nose no finite step 38"
+  ],
+  "report": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins.json"
+}
+
+								
+								
+								

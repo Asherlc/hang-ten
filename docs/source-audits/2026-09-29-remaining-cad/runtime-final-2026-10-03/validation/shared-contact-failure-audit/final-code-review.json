@@ -1,0 +1,120 @@
+{
+  "owner": "placid-badger",
+  "reviewedUTC": "2026-10-03T19:24:41.584983+00:00",
+  "decision": "approve within requested scope",
+  "blockers": [],
+  "scope": [
+    "HangTen/Models/BoardModelRealityTypes.swift",
+    "HangTenTests/BoardModelRealityTests.swift",
+    "HangTenTests/BoardPackageStoreTests.swift"
+  ],
+  "codeSHA256": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "dfb079b42c054c29f9c9719721c96face6f573db8e7c66792cc755d22ca5bfc4",
+    "HangTenTests/BoardModelRealityTests.swift": "63a8fbb748940862bad77c732ca353fe3d2c0a614d2e074a5c1e6b4ba5bbf6e6",
+    "HangTenTests/BoardPackageStoreTests.swift": "3926d9d37b0cd20dc1830a858387b8cdd5b6b095fbfd6609ea4c5eca86b4c9b2"
+  },
+  "retainedInputRecord": {
+    "path": ".context/placid-badger/runtime-final-2026-10-03/scene-fix-inputs.json",
+    "sha256": "bd2ad9128997dfc8bc0f3030bb252c8d3029d92d9f537acf27a222c7a7bf5e53",
+    "currentHashesMatch": true
+  },
+  "checks": [
+    {
+      "topic": "Native CAD camera-only orbit",
+      "result": "pass",
+      "detail": "Both single and instanced select paths perform the usual suspension solve then omit only CAD geometric hinge poses. Solved transforms and cord geometry remain; empty geometricCordPoses keeps elevation on camera. Legacy singleCord, pairedLeadCord and twoBranchCord pivot construction is unchanged."
+    },
+    {
+      "topic": "Non-CAD behavior",
+      "result": "pass",
+      "detail": "Rock Rings pivot assertions remain and passed. Clavellium fixed-support and mixed corded/uncorded pivot tests remain substantive and unchanged; no claim they were included in the last focused selection."
+    },
+    {
+      "topic": "Forge hierarchy and normals",
+      "result": "pass",
+      "detail": "Single native paired asset asserted explicitly; full imported hierarchy and triangle/normal buffers traversed. At least20748 nondegenerate triangles, zero inward normal disagreements, equal nonempty side counts, open center gap, mirrored body/contact bounds and disjoint contact entities are checked. Other reusable pairs retain their reflection assertions."
+    },
+    {
+      "topic": "Forge equipment identity",
+      "result": "pass",
+      "detail": "Two physical equipment objects restored independently of asset instancing; existing workout resolver test passed with left-half/right-half. No test weakened to permit primary for both."
+    },
+    {
+      "topic": "Shared material restoration",
+      "result": "pass",
+      "detail": "Primary picking/collision/input/uniqueness and active union PBR0.8 assertions remain. Restored CustomMaterial type, captured roughness, tint and face culling are checked for synthetic plastic and NUG wood shared-contact fixtures."
+    },
+    {
+      "topic": "Flash package identity",
+      "result": "pass",
+      "detail": "Replacement model hash matches accepted current canonical model in frozen input record; route counts/poses/position gates retained. Comment labels barrel wrap inference rather than new manufacturer fact."
+    },
+    {
+      "topic": "Native metadata preservation",
+      "result": "pass",
+      "detail": "Fresh read-only archive/manifest checks reproduce only Simulator capacity and Forge physical-equipment field restorations;509+128 BReps and all nonDocumentXML entries remain identical, all root-reviewed package hashes match retained input record."
+    }
+  ],
+  "nonblockingObservations": [
+    {
+      "location": "HangTenTests/BoardModelRealityTests.swift:125",
+      "detail": "Native CAD test uses yaw0.3 with both pitches; camera!=before can pass from yaw alone. A future elevation-only comparison at fixed yaw would explicitly protect pitch response. Current implementation visibly routes elevation to camera, so this is not a demonstrated defect or blocker."
+    }
+  ],
+  "validation": {
+    "source": "Retained root-run artifacts; reviewer ran no tests/build/app",
+    "focusedResult": {
+      "path": ".context/placid-badger/runtime-final-2026-10-03/hardware-final-summary.json",
+      "sha256": "2e368bbfa6941e88a81fae0f10251179db0adf9402e69625b0a51a905c75ba5e",
+      "passed": 455,
+      "failed": 0,
+      "skipped": 1,
+      "skip": "Existing PlanStorageTests.testBuiltInPlanLibraryVisibleCueFieldsHaveSourceAuditCoverage",
+      "commandPath": ".context/placid-badger/runtime-final-2026-10-03/commands/hardware-final.json",
+      "commandSHA256": "41f62419d42f69980af7f7eead86b01d38abf009a0595445505e2fbf0cc50316",
+      "cleanupVerified": true
+    },
+    "fullAttempt": {
+      "path": ".context/placid-badger/runtime-final-2026-10-03/full-attempt-summary.json",
+      "sha256": "6bc231d780221cad5e2dd7ca6ed6c96f26f235a9215f9b2406c45694cf9f81c7",
+      "passed": false,
+      "exitCode": 124,
+      "limitation": "1200-second owned limit reached during unrelated opt-in Clavellium live-physics determinism test; retained raw logs."
+    }
+  },
+  "metadataProofs": [
+    {
+      "path": ".context/placid-badger/runtime-final-2026-10-03/main-metadata-correction/metadata-preservation.json",
+      "sha256": "b83f997ac89ba3e741a21ca758b8f1152cdc10f5090ab40283e88aaffbacb1d1",
+      "currentSourceSHA256": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e",
+      "independentlyVerifiedBRepCount": 509,
+      "changedArchiveMembers": [
+        "Document.xml"
+      ],
+      "onlyAuthorizedManifestFieldsChanged": true,
+      "modelsAndDescriptorsUnchanged": true
+    },
+    {
+      "path": ".context/placid-badger/runtime-final-2026-10-03/forge-equipment-metadata/metadata-preservation.json",
+      "sha256": "4ddc995fc1eada68462d5c0714baf29e5473efa960c7a8d2c0de0ed99c721bcd",
+      "currentSourceSHA256": "91e9116bf072c355198211c0c3bad12da4b13ad2c5dfa98339a6ce0ba2fbf124",
+      "independentlyVerifiedBRepCount": 128,
+      "changedArchiveMembers": [
+        "Document.xml"
+      ],
+      "onlyAuthorizedManifestFieldsChanged": true,
+      "modelsAndDescriptorsUnchanged": true
+    }
+  ],
+  "limits": [
+    "No new runtime/app visual acceptance implied.",
+    "Opt-in live-physics whole-suite completion remains unverified; timed-out attempt retained.",
+    "No second workspace or its source packages inspected."
+  ],
+  "resourceLifecycle": {
+    "resourcesStarted": [],
+    "canonicalOrRuntimeEdits": false,
+    "buildOrSimulatorStarted": false,
+    "commits": false
+  }
+}

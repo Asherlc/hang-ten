@@ -1,0 +1,14 @@
+{
+  "package": "owl-climb-poker",
+  "independentFreshCompileCheck": true,
+  "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+  "actualAssetSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+  "descriptorModelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+  "compilerReturnedModelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+  "compilerReport": "docs/source-audits/2026-09-29-remaining-cad/owl-climb-poker/compile-final-check.json",
+  "compilerReportSHA256": "00768402cbff04b1781204b013647fb5930da88ab1f715e50b8b521794e79ede",
+  "sourceUnchangedDuringRebuild": true,
+  "sourceBeforeSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+  "sourceAfterSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+  "closure": "passed"
+}

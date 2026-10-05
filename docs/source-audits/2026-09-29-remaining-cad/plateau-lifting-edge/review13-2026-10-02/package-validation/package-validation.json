@@ -1,0 +1,514 @@
+{
+  "owner": "placid-badger",
+  "status": "passed-package-and-compile-only",
+  "startedUTC": "2026-10-02T19:12:28.616471+00:00",
+  "frozenInputPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/frozen-input.json",
+  "frozenCanonical": {
+    "owner": "placid-badger",
+    "package": "plateau-lifting-edge",
+    "frozenSHA256": {
+      "assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+      "assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+      "assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+      "assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+      "assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+      "assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "plateau-lifting-edge.FCStd": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "suspension.json": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+    },
+    "observedSHA256": {
+      "assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+      "assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+      "assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+      "assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+      "assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+      "assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "plateau-lifting-edge.FCStd": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+      "suspension.json": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+    },
+    "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4",
+    "generatedManifestBytes": 20410,
+    "surfaceFinish": "neutral",
+    "woodNodeIDs": [
+      "plateau_body",
+      "plateau_edge_18"
+    ],
+    "presentations": [
+      {
+        "id": "depth-18mm",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+        "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+        "nodes": {
+          "plateau_body": "body",
+          "plateau_edge_18": "contact",
+          "plateau_metal_exterior": "attachment"
+        },
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.12
+          },
+          "surfaceFinish": "neutral",
+          "woodNodeIDs": [
+            "plateau_body",
+            "plateau_edge_18"
+          ]
+        },
+        "cordRadiusMM": 3,
+        "estimatedRestLengthMM": 420
+      },
+      {
+        "id": "depth-15mm",
+        "assetPath": "assets/depth-15mm.usdz",
+        "descriptorPath": "assets/depth-15mm.model.json",
+        "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+        "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+        "nodes": {
+          "plateau_blocker_exterior": "attachment",
+          "plateau_body": "body",
+          "plateau_edge_18": "contact",
+          "plateau_metal_exterior": "attachment"
+        },
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.12
+          },
+          "surfaceFinish": "neutral",
+          "woodNodeIDs": [
+            "plateau_body",
+            "plateau_edge_18"
+          ]
+        },
+        "cordRadiusMM": 3,
+        "estimatedRestLengthMM": 420
+      },
+      {
+        "id": "depth-10mm",
+        "assetPath": "assets/depth-10mm.usdz",
+        "descriptorPath": "assets/depth-10mm.model.json",
+        "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+        "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+        "nodes": {
+          "plateau_blocker_exterior": "attachment",
+          "plateau_body": "body",
+          "plateau_edge_18": "contact",
+          "plateau_metal_exterior": "attachment"
+        },
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.12
+          },
+          "surfaceFinish": "neutral",
+          "woodNodeIDs": [
+            "plateau_body",
+            "plateau_edge_18"
+          ]
+        },
+        "cordRadiusMM": 3,
+        "estimatedRestLengthMM": 420
+      }
+    ],
+    "contactIDs": [
+      "edge-18"
+    ],
+    "contactCount": 1,
+    "positions": [
+      {
+        "id": "depth-18mm",
+        "presentationID": "depth-18mm",
+        "contactIDs": [
+          "edge-18"
+        ],
+        "effectiveDepths": {
+          "edge-18": {
+            "range": {
+              "minimum": 18,
+              "maximum": 18
+            }
+          }
+        }
+      },
+      {
+        "id": "depth-15mm",
+        "presentationID": "depth-15mm",
+        "contactIDs": [
+          "edge-18"
+        ],
+        "effectiveDepths": {
+          "edge-18": {
+            "range": {
+              "minimum": 15,
+              "maximum": 15
+            }
+          }
+        }
+      },
+      {
+        "id": "depth-10mm",
+        "presentationID": "depth-10mm",
+        "contactIDs": [
+          "edge-18"
+        ],
+        "effectiveDepths": {
+          "edge-18": {
+            "range": {
+              "minimum": 10,
+              "maximum": 10
+            }
+          }
+        }
+      }
+    ],
+    "allFactualContactsAndPositionsMatchBaseline": true,
+    "manifestChanges": "Each display gets neutral+two wood selectors; each suspension exactly merges its frozen source-backed sidecar entry",
+    "suspensionSidecarSHA256": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80",
+    "openCurlNativeRoutesPreserved": true,
+    "publishedCordDiameterMM": 6,
+    "restLengthStatus": "420mm display estimate"
+  },
+  "steps": [
+    {
+      "name": "model-tools-pytest",
+      "status": "passed",
+      "command": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-model-tools-pytest-TMP/placid-badger-pytest",
+        "--junitxml",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-model-tools-pytest-junit.xml",
+        "Tools/HangboardModels/test_contact_model_descriptor.py",
+        "Tools/HangboardModels/test_contact_model_package.py"
+      ],
+      "exitCode": 0,
+      "junit": {
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "advertisedSuiteCounts": {
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      "junitSHA256": "1e869d496bf4d78f6630117b72b5a4563d601dd0f0179a08e76a079425a6d617",
+      "cleanup": {
+        "owner": "placid-badger",
+        "jobName": "placid-badger-plateau13-model-tools-pytest",
+        "resources": [
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-model-tools-pytest-TMP",
+            "absent": true
+          }
+        ],
+        "errors": [],
+        "remainingProcesses": [],
+        "processGroupAbsent": true,
+        "allResourcesAbsent": true,
+        "passed": true,
+        "finishedUTC": "2026-10-02T19:12:31.231903+00:00"
+      },
+      "elapsedSeconds": 2.4409484159987187,
+      "logSHA256": "08a4c2b521d5a761fa6c326a5163bdbf8bb90c73d14d41beb7bfe8fb3b2aeaa8"
+    },
+    {
+      "name": "manifest-package-pytest",
+      "status": "passed",
+      "command": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest-TMP/placid-badger-pytest",
+        "--junitxml",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest-junit.xml",
+        "Tools/HangboardCAD/tests/test_board_manifest.py",
+        "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+        "Tools/HangboardPackages/tests/test_board_catalog.py",
+        "Tools/HangboardPackages/tests/test_pose_camera_facing.py"
+      ],
+      "exitCode": 0,
+      "junit": {
+        "tests": 171,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "advertisedSuiteCounts": {
+          "tests": 171,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      "junitSHA256": "709b52d9aa669d889c94250d3ea6e5a6de86e75d083909eb4db15eb6b07fa1ff",
+      "cleanup": {
+        "owner": "placid-badger",
+        "jobName": "placid-badger-plateau13-manifest-package-pytest",
+        "resources": [
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest-TMP",
+            "absent": true
+          }
+        ],
+        "errors": [],
+        "remainingProcesses": [],
+        "processGroupAbsent": true,
+        "allResourcesAbsent": true,
+        "passed": true,
+        "finishedUTC": "2026-10-02T19:12:41.297843+00:00"
+      },
+      "elapsedSeconds": 9.860383958999591,
+      "logSHA256": "6929e8582cf59403e6a79e0c7a0d700842145b21e7ddddeb18163e7a8e933472"
+    },
+    {
+      "name": "native-routes-pytest",
+      "status": "passed",
+      "command": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-TMP/placid-badger-pytest",
+        "--junitxml",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-junit.xml",
+        "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_exterior_wrap_uses_the_closed_solid_and_clearance",
+        "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_a_terminal_inside_wood_cannot_be_promoted_to_a_cord_route",
+        "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_clearance_certifies_thin_obstacles_between_sample_locations",
+        "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_noncoplanar_support_keeps_an_unobstructed_free_span_straight",
+        "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_independent_loop_legs_cannot_retrace_each_other"
+      ],
+      "exitCode": 0,
+      "junit": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "advertisedSuiteCounts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      "junitSHA256": "197477111bae0e2c6134ab6b28a35b95f716736ea7e9b2e57ad0f5e135335377",
+      "cleanup": {
+        "owner": "placid-badger",
+        "jobName": "placid-badger-plateau13-native-routes-pytest",
+        "resources": [
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-TMP",
+            "absent": true
+          }
+        ],
+        "errors": [],
+        "remainingProcesses": [],
+        "processGroupAbsent": true,
+        "allResourcesAbsent": true,
+        "passed": true,
+        "finishedUTC": "2026-10-02T19:12:42.210215+00:00"
+      },
+      "elapsedSeconds": 0.7454779170002439,
+      "logSHA256": "f45f868d8aa06b206a57b1222c20fe0f56111900750d0ced0adc003a189e65c2"
+    },
+    {
+      "name": "canonical-cli",
+      "status": "passed",
+      "command": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "-m",
+        "hangboard_packages.cli",
+        "validate",
+        "--root",
+        "Hangboards",
+        "--final-inventory"
+      ],
+      "exitCode": 0,
+      "cleanup": {
+        "owner": "placid-badger",
+        "jobName": "placid-badger-plateau13-canonical-cli",
+        "resources": [
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-canonical-cli-TMP",
+            "absent": true
+          }
+        ],
+        "errors": [],
+        "remainingProcesses": [],
+        "processGroupAbsent": true,
+        "allResourcesAbsent": true,
+        "passed": true,
+        "finishedUTC": "2026-10-02T19:12:44.609976+00:00"
+      },
+      "elapsedSeconds": 2.2414470829971833,
+      "logSHA256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc"
+    },
+    {
+      "name": "android-staging",
+      "status": "passed",
+      "command": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "scripts/stage-board-packages.py",
+        "--repository-root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--target",
+        "android",
+        "--destination",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-android-stage/Hangboards"
+      ],
+      "exitCode": 0,
+      "byteParity": {
+        "generatedManifest": true,
+        "CADExcluded": true,
+        "suspensionSidecarExcluded": true,
+        "depth-18mmDescriptor": true,
+        "depth-18mmInlineModel": true,
+        "depth-15mmDescriptor": true,
+        "depth-15mmInlineModel": true,
+        "depth-10mmDescriptor": true,
+        "depth-10mmInlineModel": true
+      },
+      "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4",
+      "threePresentationIdentities": [
+        {
+          "id": "depth-18mm",
+          "assetPath": "assets/primary.usdz",
+          "descriptorPath": "assets/primary.model.json",
+          "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+          "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
+        },
+        {
+          "id": "depth-15mm",
+          "assetPath": "assets/depth-15mm.usdz",
+          "descriptorPath": "assets/depth-15mm.model.json",
+          "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+          "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"
+        },
+        {
+          "id": "depth-10mm",
+          "assetPath": "assets/depth-10mm.usdz",
+          "descriptorPath": "assets/depth-10mm.model.json",
+          "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+          "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"
+        }
+      ],
+      "mergedSuspensionInGeneratedManifest": true,
+      "target": "android",
+      "modelInline": true,
+      "cleanup": {
+        "owner": "placid-badger",
+        "jobName": "placid-badger-plateau13-android-staging",
+        "resources": [
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-android-staging-TMP",
+            "absent": true
+          },
+          {
+            "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-android-stage",
+            "absent": true
+          }
+        ],
+        "errors": [],
+        "remainingProcesses": [],
+        "processGroupAbsent": true,
+        "allResourcesAbsent": true,
+        "passed": true,
+        "finishedUTC": "2026-10-02T19:12:47.082873+00:00"
+      },
+      "elapsedSeconds": 2.2882463749992894,
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "appFramesCaptured": 0,
+  "iosUnitTestCasesExecuted": 0,
+  "simulatorsCreated": 0,
+  "simulatorsBooted": 0,
+  "appsInstalled": 0,
+  "appsLaunched": 0,
+  "runtimeEnvironment": "Previously blocked; no guest operations attempted",
+  "currentAppearanceVerified": false,
+  "geometryAcceptance": false,
+  "iosBuild": {
+    "status": "passed-compile-and-staging",
+    "exitCode": 0,
+    "elapsedSeconds": 50.50919920799788,
+    "cleanup": {
+      "owner": "placid-badger",
+      "jobName": "placid-badger-plateau13-ios-build",
+      "resources": [
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-build-TMP",
+          "absent": true
+        },
+        {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-DD",
+          "absent": true
+        }
+      ],
+      "errors": [],
+      "remainingProcesses": [],
+      "processGroupAbsent": true,
+      "allResourcesAbsent": true,
+      "passed": true,
+      "finishedUTC": "2026-10-02T19:13:39.424452+00:00"
+    },
+    "error": null
+  },
+  "frozenFilesUnchanged": true,
+  "finishedUTC": "2026-10-02T19:13:39.437080+00:00"
+}

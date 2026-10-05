@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "label": "flash-landscape-natural",
+  "command": [
+    "python3",
+    ".context/placid-badger/combined-runtime-final-2026-10-03/workout_capture_natural.py",
+    "14",
+    "landscape"
+  ],
+  "timeoutSeconds": 300.0,
+  "ownedProcessGroup": 36521,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 1,
+  "elapsedSeconds": 76.07777425000677
+}

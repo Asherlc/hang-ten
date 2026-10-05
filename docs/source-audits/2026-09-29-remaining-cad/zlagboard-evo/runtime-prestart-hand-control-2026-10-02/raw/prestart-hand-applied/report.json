@@ -1,0 +1,82 @@
+{
+  "status": "SCRATCH_ONLY_UNAPPLIED_UNBUILT",
+  "conditionalGate": "Root decision after final counter audit; no launch/build/source application authorized here.",
+  "patchSHA256": "904dc50c002eb69c03aafcfac197b81036f92f10dde18d32d9bc2bb2e7c72829",
+  "files": [
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "beforeSHA256": "3d8ffd568e1f99e33652eb77bfe4e0d2ce4c014889bfee3a166fe9601d7e136e",
+      "proposedSHA256": "78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "beforeSHA256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221",
+      "proposedSHA256": "5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926"
+    }
+  ],
+  "flag": "HANGTEN_REVIEW_SUPPRESS_PRESTART_HAND_HOSTS=1 plus existing highlight diagnostic gate",
+  "predicate": {
+    "expression": "sessionState.routineStartedAt == nil",
+    "references": [
+      "HangTen/Views/RootView.swift:1635 isFirstStart",
+      "HangTen/Views/RootView.swift:1742 WorkoutSessionState",
+      "HangTen/Views/RootView.swift:1788 toggleRunning",
+      "HangTen/Views/RootView.swift:1801 initial start assigns future routine date and countdown",
+      "HangTen/Views/RootView.swift:3217 beginVisibleCountdown"
+    ],
+    "meaning": "Suppress WorkoutView descendant hand hosts during initial idle/preparation/audio-arming. Allow hands as soon as initial countdown is scheduled, including countdown itself. This is not suppression throughout countdown or until first Hang.",
+    "whyNotOtherPredicates": [
+      "countdown==0 also occurs during active/rest; it does not identify pre-start.",
+      "activeStartUptime==nil also occurs when paused after starting.",
+      "Preparation state is optional and not the authoritative session first-start state."
+    ],
+    "cancellation": "Canceling initial countdown resets routineStartedAt to nil and would suppress again; resumed already-started workouts remain allowed. No passive recipe or cancellation behavior changed."
+  },
+  "implementation": [
+    "DEBUG environment Boolean supplied by existing WorkoutView Group; default false outside workout.",
+    "Single and pair views read environment but use the existing strict all-hand-OFF if/else, adding only OR(flag && prestart). Clear slot and existing handContent are byte-identical.",
+    "Lazy sceneStorage.scene is reached only in existing handContent; ordinary constructors still allocate storage, not actual hand scene. Test injection initializer can accept an already-created scene and is outside no-construction claim.",
+    "All-hand strict OFF remains dominant. With new flag off, condition outcome is exactly previous outcome. Environment propagation and sparse logs exist in the same future binary for both arms.",
+    "No training-plan content, cue text, explicit frame, timer, audio policy, session transition, hand geometry/material/projection or board rendering edit."
+  ],
+  "evidence": {
+    "existingAppearRecord": "Append launch flag and current prestart/effective predicate to workout-probe-appear-before-autostart; existing boundary gate controls that record.",
+    "existingCountdownHook": "Inside already-existing countdown onChange(initial:true), when weak hand census enabled, emit one harnessEvent workout-prestart-hand-state containing flag,routineStartedIsNil,suppressed,countdown. No added observer/timer/body logging; original countdown mutation follows unchanged.",
+    "constructorCorrelation": "Use existing stream-opening, actual hand-lifecycle UUID constructor/make records and weak census. Compare earlier workout-hand construction and actual later hand visibility; no fixed historical constructor count or inference of UIKit host from records.",
+    "orderingLimit": "SwiftUI may evaluate newly allowed child content before invoking the countdown onChange closure. That event is state evidence, not an exact permission-edge timestamp, so do not require constructor sequence strictly after it. Initial appear hook may likewise run after child construction in control.",
+    "scopeLimit": "Environment default false leaves any non-WorkoutView hand host untouched. Unexpected earlier constructors must be mapped using existing UUID/lifecycle evidence rather than assumed suppressed.",
+    "boundedCountdownHook": "Original initial countdown is3seconds (RootView1618). Existing countdown callback emits initial state and value changes3,2,1,0, ordinarily at most5 records for initial countdown (an initial callback already at3 can reduce this). These are bounded countdown ticks, not only semantic predicate changes. Kept to avoid a new observer, remembered state, or dedup machinery. No records on every0.25second Timeline tick while countdown stays0. Cancellation/restart may yield more, outside the passive recipe."
+  },
+  "prospectiveValidity": [
+    "Same-binary flag-off control must reproduce before attributing any changed outcome to pre-start suppression.",
+    "Retain unchanged actual board/camera/frame/semantic/CPU/material/lifecycle checks and natural audio/timing; no timing compensation.",
+    "Verify early prestart state and later allowed countdown/workout state through sparse records; inspect actual constructor/make lifetime path and all captured whole-image hand visibility/pose separately from board colors.",
+    "Empty hand slots are intended only before countdown scheduling; exact rendered placement must be checked in any future run, not assumed from source."
+  ],
+  "checks": {
+    "gitApplyCheck": true,
+    "onlyTwoReservedFiles": true,
+    "singleAndPairSameExistingConditional": true,
+    "singleHandContentByteExact": true,
+    "pairHandContentByteExact": true,
+    "workoutStateTransitionsByteExact": true,
+    "sourceInputsStillExact": true,
+    "noAdditionalOnChangeCallback": true,
+    "noAdditionalTaskOrTimer": true,
+    "singleViewActorAnnotationPreserved": true,
+    "diagnosticEnumExplicitActor": true,
+    "pairViewActorAnnotationPreserved": true
+  },
+  "limits": [
+    "No application/build/runtime actions. Static git apply --check and source invariants only; not typechecked.",
+    "New environment dependency and sparse callback logging may perturb scheduling. Common control must retain them; a single pass is not a production fix.",
+    "This proposal does not establish that the earlier hand host causes stale board pixels."
+  ],
+  "priorRevision": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-hand-suppression-proposal",
+    "patchSHA256": "b818af9a0b0b78c4d6ee91b8f8306dd30ff6c588a56eb7cd5133c2820a591deb",
+    "reportSHA256": "9ba59bb372f5e0d5614c33c31b94f13ae771eebd6eefd5fe181cf9153f0dffe2",
+    "status": "Retained unchanged; actor annotation placement defect identified by root review."
+  },
+  "correction": "Moved DEBUG diagnostic declarations before original GripHandModelView @MainActor, keeping original view annotation explicit in DEBUG and release. Added explicit @MainActor to enum accessing MainActor recorder configuration. No tracked source applied."
+}

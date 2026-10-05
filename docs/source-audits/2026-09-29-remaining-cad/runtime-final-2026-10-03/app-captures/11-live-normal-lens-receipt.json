@@ -1,0 +1,28 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 11,
+    "boardID": "nature.stone-hanger-mini-karma8a",
+    "package": "nature-stone-hanger-mini-karma8a",
+    "contactID": "granite-edge-15",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "nature.stone-hanger-mini-karma8a",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "granite-edge-15"
+    },
+    "launchedAt": 1791055375.5831401
+  },
+  "image": "11-live-normal-lens.png",
+  "imageSHA256": "001d36d5fb928ad741b5e31147a84fde560722051f245caa08b63d0d658262d6",
+  "accessibilitySHA256": "25999310a51e6fb1a1766bea3d62465f0e93af27cfca6d1504c490fd598bda3a",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.2914568;cameraSettled=true;selection=granite-edge-15;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "rawFailureCapture": false
+}

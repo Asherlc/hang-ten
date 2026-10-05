@@ -1,0 +1,36 @@
+{
+  "checks": [
+    {
+      "name": "apply-check",
+      "args": [
+        "rtk",
+        "proxy",
+        "git",
+        "apply",
+        "--check",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/hand-image-prototype.patch"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "swift-parse",
+      "args": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "swiftc",
+        "-frontend",
+        "-parse",
+        "-D",
+        "DEBUG",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/proposed/HangTen/Views/GripHandModelView.swift",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/proposed/HangTen/Models/BoardModelRealityTypes.swift"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "canonicalSourcesUnchanged": true,
+  "typechecked": false,
+  "built": false,
+  "runtimeExecuted": false
+}

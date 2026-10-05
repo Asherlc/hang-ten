@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "resourceName": "placid-badger-cad-second-half-combined-mini-automatic-source-tasks-fresh-idle-sleep-assertion",
+  "parentPID": 63340,
+  "command": [
+    "rtk",
+    "proxy",
+    "caffeinate",
+    "-i",
+    "-w",
+    "63340",
+    "-t",
+    "420"
+  ]
+}

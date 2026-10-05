@@ -1,0 +1,48 @@
+{
+  "candidateSHA256": "0ca4bb1eb3fb4cfd3da92520be3d95b938e4498b5c324d43e71a01914ffc07bf",
+  "status": "physical correction accepted; solver lane all24 rounded-route certificates passed; fresh reproducibility check and native app review pending",
+  "firstShoulderComparison": {
+    "left-front": {
+      "oldShoulderTurn3DDegrees": 12.257561470607286,
+      "newShoulderTurn3DDegrees": 0.8013620458441454,
+      "oldFrontProjectedTurnDegrees": 12.329074055178634,
+      "newFrontProjectedTurnDegrees": 0.010822703392289731,
+      "oldTangentialUnitTension": 0.212762128336169,
+      "newTangentialUnitTension": 5.8670111549844623e-05
+    },
+    "left-rear": {
+      "oldShoulderTurn3DDegrees": 12.257561470607286,
+      "newShoulderTurn3DDegrees": 0.8013620458441454,
+      "oldFrontProjectedTurnDegrees": 12.329074055178634,
+      "newFrontProjectedTurnDegrees": 0.010822703392289731,
+      "oldTangentialUnitTension": 0.212762128336169,
+      "newTangentialUnitTension": 5.8670111549844623e-05
+    },
+    "right-front": {
+      "oldShoulderTurn3DDegrees": 12.25756344092156,
+      "newShoulderTurn3DDegrees": 0.8013620458441454,
+      "oldFrontProjectedTurnDegrees": 12.329074055178664,
+      "newFrontProjectedTurnDegrees": 0.010822703392289731,
+      "oldTangentialUnitTension": 0.21276202818479997,
+      "newTangentialUnitTension": 5.8670111549844623e-05
+    },
+    "right-rear": {
+      "oldShoulderTurn3DDegrees": 12.257561470607286,
+      "newShoulderTurn3DDegrees": 0.8013620458441454,
+      "oldFrontProjectedTurnDegrees": 12.329074055178634,
+      "newFrontProjectedTurnDegrees": 0.010822703392289731,
+      "oldTangentialUnitTension": 0.212762128336169,
+      "newTangentialUnitTension": 5.8670111549844623e-05
+    }
+  },
+  "allSixPoses": {
+    "turnsInspectedAboveOneDegree": 144,
+    "maximumNonMouthTurnDegrees": 1.3865990917191948,
+    "largestTurnDegrees": 11.251701892690765,
+    "allTurnsAboveFiveDegreesWithinNativeMouthBandMM": 5.427,
+    "freeAirTurnsOverFiveDegreesAboveQuarterMMGap": 0
+  },
+  "judgment": "Fixed-X lateral shoulder kink removed. Remaining small upper bearing turns follow actual cylindrical rim normals; larger turns occur around real sharp mouth rims, where the front face and cylindrical well wall supply a normal cone. No artificial collar or added topology is needed. The native section/finite polyline is a display approximation, not an equilibrium or global minimum proof.",
+  "sourceSaved": false,
+  "independentRouteCertificate": ".context/placid-badger/port-cord-physics/solver/anchor-astar/candidate-certificates.json"
+}

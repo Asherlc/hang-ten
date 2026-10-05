@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette/venv/bin/python",
+    "-m",
+    "pytest",
+    "Tools/HangboardPackages/tests/test_ci_xctest_contract.py",
+    "-q",
+    "--basetemp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/main-sync-2026-10-03/pytest-placid-badger-cad-second-half-ci"
+  ],
+  "exitCode": 0,
+  "duration": 4.7426488399505615
+}

@@ -1,0 +1,16 @@
+{
+  "copyAuthorizedByRoot": false,
+  "allIncludedTreesFrozen": false,
+  "owner": "placid-badger-cad-second-half",
+  "destination": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-board-frame-2026-10-03",
+  "runtimeResourcesReferencedOnly": true,
+  "inventoryPath": "ROOT_SUPPLIED",
+  "inventorySHA256": "ROOT_SUPPLIED",
+  "finalCleanupPath": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/ios/cleanup-verification.json",
+  "finalCleanupSHA256": "REQUIRED_AFTER_CLEANUP",
+  "simulatorUUID": "ROOT_SUPPLIED",
+  "frozenControlInventoryPath": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/offline-prep/frozen-control-inventory.json",
+  "frozenControlInventorySHA256": "0a278fbc98b25c448098b1e36ddd6440a4d61a2ae446202060e870d8f919f381",
+  "includedCompletedArmPaths": [],
+  "allIncludedArmsComplete": false
+}

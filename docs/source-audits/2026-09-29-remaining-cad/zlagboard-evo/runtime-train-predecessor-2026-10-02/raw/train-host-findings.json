@@ -1,0 +1,435 @@
+{
+  "status": "BOUNDED_DIAGNOSTIC_FAIL_PASS_FAIL",
+  "createdEpoch": 1790989056.2272708,
+  "productionFix": false,
+  "appWorkflowPassed": false,
+  "humanAccepted": false,
+  "binarySHA256": "aa0cecfd9423ee73bda5884fac0793c11dc5ae7207ad5083bae6eba115202062",
+  "arms": [
+    {
+      "arm": "present-a",
+      "directory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-a-landscape",
+      "visualPass": false,
+      "boardColors": [
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "blue",
+        "blue",
+        "blue",
+        "blue"
+      ],
+      "directlyViewedWholeImages": 12,
+      "checks": {
+        "structural-correspondence.json": {
+          "completeContiguous": true,
+          "captures12": true,
+          "allCPUBrackets": true,
+          "sameScene": true,
+          "naturalFirstHang": true,
+          "naturalRest": true,
+          "freshSession": true,
+          "boundaryAppActive": true,
+          "boundaryWindowActive": true,
+          "boundaryLandscape": true,
+          "lateBoundaryCensus": true,
+          "noAXOrTouch": true
+        },
+        "hand-lifetime-validation.json": {
+          "completeOpeningStream": true,
+          "instrumentationVersion": true,
+          "suppressionFlagCorrect": true,
+          "allFourCountsOnEveryRecord": true,
+          "openingCountsZero": true,
+          "countsMonotonic": true,
+          "finalMarkerAfterLastCapture": true,
+          "noRecorderErrorOrCap": true,
+          "strictOFFZeroAllFourLifetimeCounts": true
+        },
+        "strict-absence-validation.json": {
+          "strictFlagEnabled": true,
+          "perspectiveFlagAbsent": true,
+          "openingStrictEnabled": true,
+          "allFourCountsZeroThroughout": true,
+          "noHandLifecycleEvents": true,
+          "noHandCameraEvents": true
+        },
+        "normal-host-frame-validation.json": {
+          "workoutSceneFromCountdown": true,
+          "hostObserved": true,
+          "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+          "sameHost": true,
+          "sameActualScene": true,
+          "rootCameraActiveSameScene": true,
+          "hostVisible": true,
+          "sampledFramesOnMonotoneOwnEndpointPath": true,
+          "allPostFirstCaptureCensusesFinal": true
+        },
+        "train-constructor-validation.json": {
+          "completeContiguous": true,
+          "openingBeforeConstructors": true,
+          "uniqueConstructorTokens": true,
+          "exactlyOneWorkoutConstructor": true,
+          "exactlyOneWorkoutMake": true,
+          "allSceneRecordsHaveConstructor": true,
+          "markerGateMatches": true,
+          "strictHandsEnabled": true,
+          "observedPredecessorConstruction": true
+        }
+      },
+      "traceRecords": 151,
+      "actualPhaseIntervals": [
+        7.022604942321777,
+        180.22898411750793
+      ],
+      "constructorCount": 2,
+      "makeCount": 2,
+      "predecessorConstructorCount": 1,
+      "workoutToken": "FB14A443-4591-44CA-8C13-A3B5553BB8CF",
+      "postattachmentCensuses": 128,
+      "actualWorkoutFrameEndpoints": [
+        [
+          232,
+          182.33333333333331,
+          410,
+          70
+        ],
+        [
+          332,
+          240,
+          210,
+          36
+        ]
+      ],
+      "reports": [
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-a-landscape/structural-correspondence.json",
+          "sha256": "6e154d1b808f28e5aedaaa0eb9d1dce206284d4eeafad09c36493b5fc230d84b"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-a-landscape/hand-lifetime-validation.json",
+          "sha256": "fb93c2123e5dd339ad86239b96583b3a4d16548b1b7e57ce17df103ede863b3d"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-a-landscape/strict-absence-validation.json",
+          "sha256": "029cb808c2a65b59a39eca1c396edda356eb80f969a4b9804648e30ad08c508a"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-a-landscape/normal-host-frame-validation.json",
+          "sha256": "6f6382919a4bcd2d054e32d378cbedb61802d47a16fe42a23266a59efdaf3f7c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-a-landscape/train-constructor-validation.json",
+          "sha256": "ae7361ee1813a4db09fd82c47939d72bd5ee65c67950278245548a88e9c5c3f7"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-a-landscape/visual-review.json",
+          "sha256": "e0176f7ada39bb3e9dcf83a683f91f29e6c3689d82eab2ac4b19e5f4072c67df"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-a-landscape/captures.json",
+          "sha256": "bed2907d0a177f96d8263bca5ffe883f8c5e5d71541561b6e420199c60eb51a3"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-a-landscape/following-preview-tail.json",
+          "sha256": "45421a3ca165aa5917215f2009c4affa4ed2ab371eea54125618ecbcd8f01816"
+        }
+      ]
+    },
+    {
+      "arm": "suppressed",
+      "directory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape",
+      "visualPass": true,
+      "boardColors": [
+        "red",
+        "red",
+        "red",
+        "red",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "red",
+        "red",
+        "red",
+        "red"
+      ],
+      "directlyViewedWholeImages": 12,
+      "checks": {
+        "structural-correspondence.json": {
+          "completeContiguous": true,
+          "captures12": true,
+          "allCPUBrackets": true,
+          "sameScene": true,
+          "naturalFirstHang": true,
+          "naturalRest": true,
+          "freshSession": true,
+          "boundaryAppActive": true,
+          "boundaryWindowActive": true,
+          "boundaryLandscape": true,
+          "lateBoundaryCensus": true,
+          "noAXOrTouch": true
+        },
+        "hand-lifetime-validation.json": {
+          "completeOpeningStream": true,
+          "instrumentationVersion": true,
+          "suppressionFlagCorrect": true,
+          "allFourCountsOnEveryRecord": true,
+          "openingCountsZero": true,
+          "countsMonotonic": true,
+          "finalMarkerAfterLastCapture": true,
+          "noRecorderErrorOrCap": true,
+          "strictOFFZeroAllFourLifetimeCounts": true
+        },
+        "strict-absence-validation.json": {
+          "strictFlagEnabled": true,
+          "perspectiveFlagAbsent": true,
+          "openingStrictEnabled": true,
+          "allFourCountsZeroThroughout": true,
+          "noHandLifecycleEvents": true,
+          "noHandCameraEvents": true
+        },
+        "normal-host-frame-validation.json": {
+          "workoutSceneFromCountdown": true,
+          "hostObserved": true,
+          "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+          "sameHost": true,
+          "sameActualScene": true,
+          "rootCameraActiveSameScene": true,
+          "hostVisible": true,
+          "sampledFramesOnMonotoneOwnEndpointPath": true,
+          "allPostFirstCaptureCensusesFinal": true
+        },
+        "train-constructor-validation.json": {
+          "completeContiguous": true,
+          "openingBeforeConstructors": true,
+          "uniqueConstructorTokens": true,
+          "exactlyOneWorkoutConstructor": true,
+          "exactlyOneWorkoutMake": true,
+          "allSceneRecordsHaveConstructor": true,
+          "markerGateMatches": true,
+          "strictHandsEnabled": true,
+          "onlyWorkoutConstructor": true,
+          "onlyWorkoutMake": true
+        }
+      },
+      "traceRecords": 144,
+      "actualPhaseIntervals": [
+        7.110424995422363,
+        180.0016269683838
+      ],
+      "constructorCount": 1,
+      "makeCount": 1,
+      "predecessorConstructorCount": 0,
+      "workoutToken": "DA06477F-BF55-49C1-BB9A-3D5BF9A78474",
+      "postattachmentCensuses": 128,
+      "actualWorkoutFrameEndpoints": [
+        [
+          232,
+          182.33333333333331,
+          410,
+          70
+        ],
+        [
+          332,
+          240,
+          210,
+          36
+        ]
+      ],
+      "reports": [
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/structural-correspondence.json",
+          "sha256": "f99f0f24d89ce862ded3581b215ee0b82386efc5510ea7597e5b56ddb1164ed8"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/hand-lifetime-validation.json",
+          "sha256": "d9ae0af84c5502c0cf33302ef6ceece75e0b3d42ea5c893cce5991dc8727b0f5"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/strict-absence-validation.json",
+          "sha256": "eda701f88a816e46e63ada3701f8019e808317e4eceb169edb77992b0710c937"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/normal-host-frame-validation.json",
+          "sha256": "8e326007307b0e4fe2c67b26e470ba520b130e79425a2a47a647fea14e149f2d"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/train-constructor-validation.json",
+          "sha256": "666d04722dad1e70085d262e554d8c2a8c3c16f106d9e124711aa43a39176b35"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/visual-review.json",
+          "sha256": "3fa58560ca81ba22a3f8449ec5f92c78e72b7c225d7fa404c8ec453818e978cf"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/captures.json",
+          "sha256": "18fdbf91cc4d0c0fa8baf554ece795544763ef6041db147026eb1155c92cd08c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/following-preview-tail.json",
+          "sha256": "35ddb5819d47870667073371c9b55d7c79bbe859c67b6bbcf306e686e6c3a4fa"
+        }
+      ]
+    },
+    {
+      "arm": "present-b",
+      "directory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-b-landscape",
+      "visualPass": false,
+      "boardColors": [
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "blue",
+        "blue",
+        "blue",
+        "red"
+      ],
+      "directlyViewedWholeImages": 12,
+      "checks": {
+        "structural-correspondence.json": {
+          "completeContiguous": true,
+          "captures12": true,
+          "allCPUBrackets": true,
+          "sameScene": true,
+          "naturalFirstHang": true,
+          "naturalRest": true,
+          "freshSession": true,
+          "boundaryAppActive": true,
+          "boundaryWindowActive": true,
+          "boundaryLandscape": true,
+          "lateBoundaryCensus": true,
+          "noAXOrTouch": true
+        },
+        "hand-lifetime-validation.json": {
+          "completeOpeningStream": true,
+          "instrumentationVersion": true,
+          "suppressionFlagCorrect": true,
+          "allFourCountsOnEveryRecord": true,
+          "openingCountsZero": true,
+          "countsMonotonic": true,
+          "finalMarkerAfterLastCapture": true,
+          "noRecorderErrorOrCap": true,
+          "strictOFFZeroAllFourLifetimeCounts": true
+        },
+        "strict-absence-validation.json": {
+          "strictFlagEnabled": true,
+          "perspectiveFlagAbsent": true,
+          "openingStrictEnabled": true,
+          "allFourCountsZeroThroughout": true,
+          "noHandLifecycleEvents": true,
+          "noHandCameraEvents": true
+        },
+        "normal-host-frame-validation.json": {
+          "workoutSceneFromCountdown": true,
+          "hostObserved": true,
+          "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+          "sameHost": true,
+          "sameActualScene": true,
+          "rootCameraActiveSameScene": true,
+          "hostVisible": true,
+          "sampledFramesOnMonotoneOwnEndpointPath": true,
+          "allPostFirstCaptureCensusesFinal": true
+        },
+        "train-constructor-validation.json": {
+          "completeContiguous": true,
+          "openingBeforeConstructors": true,
+          "uniqueConstructorTokens": true,
+          "exactlyOneWorkoutConstructor": true,
+          "exactlyOneWorkoutMake": true,
+          "allSceneRecordsHaveConstructor": true,
+          "markerGateMatches": true,
+          "strictHandsEnabled": true,
+          "observedPredecessorConstruction": true
+        }
+      },
+      "traceRecords": 150,
+      "actualPhaseIntervals": [
+        6.932844877243042,
+        180.1658411026001
+      ],
+      "constructorCount": 2,
+      "makeCount": 2,
+      "predecessorConstructorCount": 1,
+      "workoutToken": "00CF65B3-5C2B-48ED-AC83-1B4B08C376F9",
+      "postattachmentCensuses": 128,
+      "actualWorkoutFrameEndpoints": [
+        [
+          232,
+          182.33333333333331,
+          410,
+          70
+        ],
+        [
+          332,
+          240,
+          210,
+          36
+        ]
+      ],
+      "reports": [
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-b-landscape/structural-correspondence.json",
+          "sha256": "25efb04d99b11a71456fdfcc84924fe0a62cdffa7d96d4a9571b5a9438f6a088"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-b-landscape/hand-lifetime-validation.json",
+          "sha256": "68ac6a0844433a7dca00d7320b08d09e4b02979b9adf4e289606944b76851703"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-b-landscape/strict-absence-validation.json",
+          "sha256": "0fbbbea29be6b7628e3a38c8b9a1c170a00f604b93a3303aadbf933731b7c031"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-b-landscape/normal-host-frame-validation.json",
+          "sha256": "dee040eddad66b28e017506e203dcb7150eeab00f5591f54b9476dd6ac5720f5"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-b-landscape/train-constructor-validation.json",
+          "sha256": "02e2989dbdc98945cf774e6e93c0a28ec31fb90f66dbe3164825dd9dd07ea4b5"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-b-landscape/visual-review.json",
+          "sha256": "44170f31f3d2690aec32efa98a9384c34d9d1584057b0b79c8673b956e07ce8b"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-b-landscape/captures.json",
+          "sha256": "8a2b5c6facb1b9e0376eb746e388e4c54da484668746184d1c3fd141fcb99c7a"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-present-b-landscape/following-preview-tail.json",
+          "sha256": "e982faa07bf3e79cf488b4534b5320a158af33fce1e0f8b050111c13fd95b5ee"
+        }
+      ]
+    }
+  ],
+  "comparison": "Train-present A failed, Train-suppressed passed all12 observed colors, Train-present B failed. The same binary and strict all-hand suppression were used in all three fresh normal-route sessions. Suppressed complete opening-through-tail contains exactly one board initialization and one view make, the intended workout token; both present controls contain one additional predecessor.",
+  "interpretation": "This bounded reversal supports the Train board subtree as a contributor to the observed stale-color failure in this normal-route diagnostic configuration. It does not identify a framework mechanism or establish a production fix. Removing the subtree changes its construction/loading/layout work as a bundle; counts alone do not prove overlapping active renderers.",
+  "correspondence": "All per-arm CPU, activation, lifecycle, host, and natural-timing gates pass. Actual workout endpoint/input/root/camera/projection comparisons pass across both comparisons; own sampled frame paths pass. All raw other-host census and constructor histories retained.",
+  "limits": [
+    "Train clear placeholder slot was not directly measured. Its layout preservation is source-derived; actual workout placement correspondence is measured from runtime metadata.",
+    "Existing sampler ends at120s; late app/window/scene evidence is sparse semantic-boundary census, not continuous or screenshot-synchronous.",
+    "36 measured whole images directly inspected; no crop or pixel measurement. No inference about unsampled middle-Rest states or exact recovery instants.",
+    "Constructor marker records completed scene initialization before async USDZ load, not all possible loader attempts or active rendering.",
+    "No frontend actions. Unknown DeviceHub remains untouched; earlier comm-based absence claims unreliable, so no headless/isolation claim.",
+    "Temporary DEBUG patch only. Actual hands were suppressed throughout; normal hands-on workflow transfer is not tested in this comparison."
+  ],
+  "finalParity": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-final-parity.json",
+    "sha256": "5e0ed4273333b200d9d1e7133da0214cac4746cb7b0992ebf376c54c6e44e672",
+    "allEqual": true,
+    "count": 27
+  },
+  "stop": "All three prospectively bounded arms complete. No additional launch, no production adoption. Runtime/source/DD returned to root; exact device/controller90373 remain live; no new resources.",
+  "priorProofs": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-prior-freeze-verification.json"
+}

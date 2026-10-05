@@ -1,0 +1,16 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "swiftc",
+    "-frontend",
+    "-parse",
+    "-D",
+    "DEBUG",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/all-hand-projection-audit/preserved-transform-proposal/source/HangTen/Views/GripHandModelView.swift",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/all-hand-projection-audit/preserved-transform-proposal/source/HangTen/Models/BoardModelRealityTypes.swift"
+  ],
+  "exitStatus": 0,
+  "scope": "Scratch syntax parse only, not typecheck or build"
+}

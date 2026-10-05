@@ -1,0 +1,61 @@
+{
+  "reviewedAtUTC": "2026-10-01T16:38:47.582829+00:00",
+  "status": "native-gates-pass-export-and-visual-closure-pending",
+  "blockingFindings": [],
+  "sourceSHA256": "46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264",
+  "facts": {
+    "exactPlasticManifest": true,
+    "contacts": 30,
+    "publishedDepthChecks": 27,
+    "publishedFaceMM": [
+      711,
+      222
+    ],
+    "measuredDisplayThicknessMM": 94.00150336931881
+  },
+  "restore": {
+    "parameter": "Depth_edge_11_left",
+    "before": 14.0,
+    "after": 16.0,
+    "changedContacts": [
+      "edge-11-left"
+    ],
+    "beforeVolumeMM3": 5733021.114603038,
+    "editedVolumeMM3": 5730386.790728176,
+    "restoredVolumeMM3": 5733021.114603093,
+    "restoreVolumeDeltaMM3": 5.494803190231323e-08
+  },
+  "functionalChecks": {
+    "actualFlatSpansMM": 55,
+    "actualRoundSpanMM": 65,
+    "frontAnchorYMM": -94,
+    "localSloperBodyEdgeMatchesContacts": true,
+    "upperRoofPointsOnContactSurfaces": true,
+    "sampledCenterCrestForwardMM": 66,
+    "centerRearApproachAtCrestMinus5MM": 55.242231027406085,
+    "curvedCenterJugContactCoverage": true,
+    "centerPocket15DepthMM": 50,
+    "maximumMirrorHeightDifferenceMM": 2.842170943040401e-14
+  },
+  "limits": [
+    "Grasp position/return distances are operator display-intent measurements, not manufacturer dimensions or ergonomic certification.",
+    "Finite native samples supplement whole-image Opus/user judgment.",
+    "Actual export topology/materials/normals and functionalmesh probes await authorized export.",
+    "No old21ca scalar-volume exception carried forward; original strictrestoregate passes directly."
+  ],
+  "resources": {
+    "ownedJobsFinished": true,
+    "ownedTemporaryDirectoriesRemoved": true,
+    "simulatorsOrServersCreated": false
+  },
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/native-check.json": "733d4820241f4bcb6213dbd101a71e92e6e05df0fbf1dfee8b3d266330d3a4dc",
+    ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/functional-sections.json": "d9843a85b4f635f79e00c6890e3513fe2eed6875ce5cc644448f7a96b7ffded8",
+    ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/native-check-ownership.json": "1f54972bb5326d5806fe631849ac74a5ef24f136e1df6c3665b621a8ff43ecaa",
+    ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/functional-sections-ownership.json": "f1e1179b8f0269b4f94f544b0c050f475c9934244d60ac7dd359d77795dafec7",
+    ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/check_native_candidate.py": "ef8634bbd8b9fe9ea1b0a78e391051cd9682ce74928276546cc2275ed6f3e086",
+    ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/check_functional_sections.py": "2f5230cd633496b0018b4f3b3826afd33fb908c34d29376415dc334448698196",
+    ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/before-manifest-raw.txt": "07d2eb6277beee925f45c15d561f1e124c687914ce0f2e933c33e4446dd46bf1",
+    ".context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/all-hangboards-baseline.json": "087a32587fd0ff1c4625e8660ef2e54af68f447e9029118a3ec1e9882a4942ea"
+  }
+}

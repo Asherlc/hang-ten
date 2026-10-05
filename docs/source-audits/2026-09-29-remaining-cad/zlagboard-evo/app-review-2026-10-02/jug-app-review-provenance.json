@@ -1,0 +1,8 @@
+{
+  "method": "Whole screenshots scaled proportionally and placed side by side; no cropping or image measurement.",
+  "inputs": {
+    "ios-26-4/elevated-jugs-gentle/left-elevated.png": "244a28e8815265b11ba12d7d3d09311931688fb78bfee3a2698e0d036c651493",
+    "ios-26-4/elevated-jugs-gentle/right-elevated.png": "c6fc06d6178556b4d7c42549816da5262e91079e2b85c1da4073f79ebe2c33b4"
+  },
+  "outputSHA256": "e8229735b2afe0420ae0aaa3dff6d8bd6e1f6719350035429d7e9c2fd97e495b"
+}

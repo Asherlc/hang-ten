@@ -1,0 +1,75 @@
+{
+  "simulatorUUID": "CEC83800-5035-404E-B5A2-E40B826FE00E",
+  "attempts": [
+    {
+      "attempt": 0,
+      "exitCode": 1,
+      "elapsedSeconds": 3.1954089159844443,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 1,
+      "exitCode": 1,
+      "elapsedSeconds": 0.15945066598942503,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 2,
+      "exitCode": 1,
+      "elapsedSeconds": 0.1628120420500636,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 3,
+      "exitCode": 1,
+      "elapsedSeconds": 0.1974936660262756,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 4,
+      "exitCode": 1,
+      "elapsedSeconds": 0.19608258397784084,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 5,
+      "exitCode": 1,
+      "elapsedSeconds": 0.16508750000502914,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 6,
+      "exitCode": 1,
+      "elapsedSeconds": 0.1814390829531476,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 7,
+      "exitCode": 1,
+      "elapsedSeconds": 0.1623195410356857,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 8,
+      "exitCode": 1,
+      "elapsedSeconds": 0.16274370800238103,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "attempt": 9,
+      "exitCode": 1,
+      "elapsedSeconds": 0.17054108396405354,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "owner": "placid-badger",
+  "package": "tension-flash-board",
+  "reviewNumber": 14,
+  "status": "passed-native-export-package-and-compile-only",
+  "canonicalSHA256": {
+    "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "Hangboards/tension-flash-board/suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+    "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+  },
+  "generatedManifestSHA256": "9285d4a38d703c80e9109553e688ea3e94095021207f02ef26001471cb98bc7e",
+  "pythonJUnit": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/python-junit.xml",
+    "sha256": "098dd49af80a51cbe5fd580782eab1d0fce7eb58c2d8813213ed6177f4dd4b9b",
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "canonicalPackagesValidated": 64,
+  "androidStagingExactByteParity": true,
+  "iOSStagingExactByteParity": true,
+  "iOSBuildPassed": true,
+  "genericBuildAttempts": 1,
+  "unitCasesExecuted": 0,
+  "currentAppReviewFrames": 0,
+  "simulatorsCreated": 0,
+  "simulatorsBooted": 0,
+  "appsInstalled": 0,
+  "appsLaunched": 0,
+  "currentAppearanceVerified": false,
+  "appWorkflowPassed": false,
+  "humanAcceptance": "pending",
+  "buildProvenance": {
+    "passed": true,
+    "sourceHEAD": "eb283a5ff69f04a96b5589497950ab6e3568c83b",
+    "pinnedCanonicalWorkingTreeFiles": {
+      "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+      "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+      "Hangboards/tension-flash-board/suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+      "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+    },
+    "app": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app",
+    "selectedPackageParity": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/tension-flash-board",
+      "generatedBoardSHA256": "9285d4a38d703c80e9109553e688ea3e94095021207f02ef26001471cb98bc7e",
+      "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+      "sourceAndSidecarAbsent": true
+    },
+    "binary": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app/HangTen",
+    "binarySHA256": "f90b660af410923c0744af5d8d41b51c37fd92aa3b2729f46351dad596c385a5",
+    "testBundlePresencePassed": true,
+    "testBundles": [
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app/PlugIns/HangTenTests.xctest",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Products/Debug-iphonesimulator/HangTenUITests-Runner.app/PlugIns/HangTenUITests.xctest"
+    ],
+    "buildTimeSourceSnapshot": {
+      "HEAD": "eb283a5ff69f04a96b5589497950ab6e3568c83b",
+      "artifacts": {
+        "build-time-git-head": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-head.log",
+          "sha256": "4e0f1904b0273bb38d24d06dccdd7e2a94ff423d34d8844634befe694dc23218"
+        },
+        "build-time-git-status": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-status.log",
+          "sha256": "eb51c3f13e6bca2c75ffcb452329141fc5d321e5274d66f5604685d3396d17a7"
+        },
+        "build-time-git-binary-diff": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-binary-diff.log",
+          "sha256": "ac6f3970d41df7b0a9f8d1dafe7b42acb41eefb4605ea00c703a633655561e93"
+        }
+      },
+      "diffMode": "binary tracked working tree against HEAD; no textconv; untracked paths retained in NUL status",
+      "canonicalPackageSHA256": {
+        "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+        "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+        "Hangboards/tension-flash-board/suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+        "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+      }
+    },
+    "modelAssets": [
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Intermediates.noindex/HangTen.build/Debug-iphonesimulator/HangTen.build/DerivedSources/HangTenModelODR/tension-flash-board/Hangboards/tension-flash-board/assets/primary.usdz",
+        "sha256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b"
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-tension-flash-board-b53967689e380bd9357de5fa5aabf43f.assetpack/Hangboards/tension-flash-board/assets/primary.usdz",
+        "sha256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b"
+      }
+    ],
+    "mode": "generic build-for-testing; compilation only; no install, launch, or test execution"
+  },
+  "buildTimeSourceSnapshot": {
+    "HEAD": "eb283a5ff69f04a96b5589497950ab6e3568c83b",
+    "artifacts": {
+      "build-time-git-head": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-head.log",
+        "sha256": "4e0f1904b0273bb38d24d06dccdd7e2a94ff423d34d8844634befe694dc23218"
+      },
+      "build-time-git-status": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-status.log",
+        "sha256": "eb51c3f13e6bca2c75ffcb452329141fc5d321e5274d66f5604685d3396d17a7"
+      },
+      "build-time-git-binary-diff": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-binary-diff.log",
+        "sha256": "ac6f3970d41df7b0a9f8d1dafe7b42acb41eefb4605ea00c703a633655561e93"
+      }
+    },
+    "diffMode": "binary tracked working tree against HEAD; no textconv; untracked paths retained in NUL status",
+    "canonicalPackageSHA256": {
+      "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+      "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+      "Hangboards/tension-flash-board/suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+      "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+    }
+  },
+  "rawRuntimeValidation": "package-validation/runtime-validation.json",
+  "sharedReservedFileSHA256": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "HangTen/Views/RootView.swift": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "HangTenTests/BoardModelRealityTests.swift": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+    "HangTenTests/BoardModelTests.swift": "89d5778a9b85181315bf281921f493ec771c6c8ddd92ef1106ec643fd6ec1fd7",
+    "HangTen/Views/GripHandModelView.swift": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc"
+  },
+  "limits": "Native/export/package/staging/compile only; no current Simulator or app operations. Retained review10 startup failures remain the runtime blocker. Earlier Flash app captures are historical and do not validate this revision. Whole CAD inspection cameras differ from the app camera, and painter occlusion lines are offline artifacts. Current wood, picking, highlight, pose-camera and workout behavior remain unverified."
+}

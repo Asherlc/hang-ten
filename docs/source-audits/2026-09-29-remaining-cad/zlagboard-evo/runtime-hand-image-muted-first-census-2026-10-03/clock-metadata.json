@@ -1,0 +1,8 @@
+{
+  "packetDate": "2026-10-03",
+  "basis": "Requested additive packet date; raw epoch/uptime fields preserved unchanged.",
+  "rawFirstCaptureStartEpoch": 1791010243.42006,
+  "rawFirstCaptureStartUTC": "2026-10-03T06:50:43.420060+00:00",
+  "rawFirstCaptureStartAmericaLosAngeles": "2026-10-02T23:50:43.420060-07:00",
+  "limit": "No adjustment or alignment of source timestamps; wall time and monotonic times remain distinct."
+}

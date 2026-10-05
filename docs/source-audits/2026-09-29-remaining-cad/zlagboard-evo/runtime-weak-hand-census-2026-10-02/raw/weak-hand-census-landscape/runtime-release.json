@@ -1,0 +1,18 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "weak-hand-census",
+  "helperSHA256": "06f189db71461a114c8d06fd72b76b71d808067b0bdf62d8da3fa7c4fb966384",
+  "constructorMarkerAuditReady": true,
+  "structuralNavEventAuditReady": true,
+  "rootSourceRuntimeRelease": true,
+  "previousEvidenceFrozen": true,
+  "postbootConfirmationPassed": true,
+  "retainedDetachIntervention": false,
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "binarySHA256": "70707e27453ae150763a302152c04e028564dbe97b41bffbcc91c98642f95c94",
+  "codePackageParityPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-before-parity.json",
+  "codePackageParitySHA256": "6eef9132a6b466830d30272ccb53d3b0708765eb010e2e06dcf751ff8b32d0e5",
+  "priorFrozenManifestPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-real-hands-frozen-manifest.json",
+  "priorFrozenManifestSHA256": "5659ce008315e88a1188ed79d46112b0e37476d28c701a8aca30a9d8a3a435ab",
+  "authorization": "Root authorized exactly one observational weak-hand-census reproduction after helper correction and27parity; no subsequent arm or source intervention."
+}

@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "name": "export-functional-b722",
+  "timeoutSeconds": 180,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_export_functional_sections.py",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/assets/primary.usdz",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/export-functional-b722.json",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/assets/primary.model.json",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/functional-sections-b722.json",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/local-contact-joins-b722.json"
+  ],
+  "ownedProcessGroup": 22976,
+  "exitCode": 0,
+  "elapsedSeconds": 1.0870254170149565,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

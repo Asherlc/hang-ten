@@ -1,0 +1,18 @@
+{
+  "pid": 17780,
+  "terminateCommand": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "terminate",
+    "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "com.hangten.training"
+  ],
+  "terminateExitStatus": 0,
+  "verificationExitStatus": 1,
+  "verificationStdout": "",
+  "verificationStderr": "",
+  "absent": true,
+  "epoch": 1790997296.885689
+}

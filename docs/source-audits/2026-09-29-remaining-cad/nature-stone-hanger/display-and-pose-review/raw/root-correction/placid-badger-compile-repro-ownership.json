@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "placid-badger-compile-repro",
+  "script": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/compile-repro.py",
+  "timeoutSeconds": 300,
+  "startedUTC": "2026-10-01T22:54:55.936516+00:00",
+  "ownedProcessGroup": 82481,
+  "elapsedSeconds": 59.204888374952134,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

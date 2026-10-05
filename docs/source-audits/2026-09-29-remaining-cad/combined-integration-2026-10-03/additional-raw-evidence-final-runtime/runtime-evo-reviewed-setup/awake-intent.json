@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "resourceName": "placid-badger-cad-second-half-combined-evo-reviewed-setup-idle-sleep-assertion",
+  "parentPID": 16002,
+  "command": [
+    "rtk",
+    "proxy",
+    "caffeinate",
+    "-i",
+    "-w",
+    "16002",
+    "-t",
+    "420"
+  ]
+}

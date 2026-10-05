@@ -1,0 +1,14 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "list",
+    "devices",
+    "--json"
+  ],
+  "pid": 84807,
+  "boundSeconds": 30,
+  "startedEpoch": 1791073312.780586
+}

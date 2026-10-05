@@ -1,0 +1,203 @@
+{
+  "status": "pass",
+  "blockingFindings": [],
+  "candidateSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/candidate/metolius-simulator-3d.FCStd": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/candidate/assets/primary.usdz": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/candidate/assets/primary.model.json": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d"
+  },
+  "rawManifestSHA256": "af724c2f6a7471b4a359fcf848a80aa857e098dd8325bbfdbf416419b97f13d4",
+  "contactCount": 30,
+  "meshes": [
+    {
+      "name": "body_board_001",
+      "triangles": 238821,
+      "points": 123377,
+      "normalCount": 123377
+    },
+    {
+      "name": "contact_pocket_4_left",
+      "triangles": 466,
+      "points": 484,
+      "normalCount": 484
+    },
+    {
+      "name": "contact_edge_5_left",
+      "triangles": 547,
+      "points": 557,
+      "normalCount": 557
+    },
+    {
+      "name": "contact_edge_6_left",
+      "triangles": 434,
+      "points": 452,
+      "normalCount": 452
+    },
+    {
+      "name": "contact_edge_7_left",
+      "triangles": 472,
+      "points": 494,
+      "normalCount": 494
+    },
+    {
+      "name": "contact_pocket_8_left",
+      "triangles": 435,
+      "points": 453,
+      "normalCount": 453
+    },
+    {
+      "name": "contact_pocket_9_left",
+      "triangles": 585,
+      "points": 601,
+      "normalCount": 601
+    },
+    {
+      "name": "contact_pocket_10_left",
+      "triangles": 462,
+      "points": 484,
+      "normalCount": 484
+    },
+    {
+      "name": "contact_edge_11_left",
+      "triangles": 434,
+      "points": 452,
+      "normalCount": 452
+    },
+    {
+      "name": "contact_pocket_12_left",
+      "triangles": 456,
+      "points": 478,
+      "normalCount": 478
+    },
+    {
+      "name": "contact_pocket_13_left",
+      "triangles": 583,
+      "points": 595,
+      "normalCount": 595
+    },
+    {
+      "name": "contact_pocket_15_center",
+      "triangles": 619,
+      "points": 645,
+      "normalCount": 645
+    },
+    {
+      "name": "contact_pocket_16_center",
+      "triangles": 479,
+      "points": 503,
+      "normalCount": 503
+    },
+    {
+      "name": "contact_pocket_17_center",
+      "triangles": 610,
+      "points": 611,
+      "normalCount": 611
+    },
+    {
+      "name": "contact_pocket_18_center",
+      "triangles": 477,
+      "points": 501,
+      "normalCount": 501
+    },
+    {
+      "name": "contact_pocket_13_right",
+      "triangles": 573,
+      "points": 585,
+      "normalCount": 585
+    },
+    {
+      "name": "contact_pocket_12_right",
+      "triangles": 463,
+      "points": 485,
+      "normalCount": 485
+    },
+    {
+      "name": "contact_edge_11_right",
+      "triangles": 445,
+      "points": 463,
+      "normalCount": 463
+    },
+    {
+      "name": "contact_pocket_10_right",
+      "triangles": 476,
+      "points": 498,
+      "normalCount": 498
+    },
+    {
+      "name": "contact_pocket_9_right",
+      "triangles": 572,
+      "points": 588,
+      "normalCount": 588
+    },
+    {
+      "name": "contact_pocket_8_right",
+      "triangles": 454,
+      "points": 472,
+      "normalCount": 472
+    },
+    {
+      "name": "contact_edge_7_right",
+      "triangles": 475,
+      "points": 497,
+      "normalCount": 497
+    },
+    {
+      "name": "contact_edge_6_right",
+      "triangles": 444,
+      "points": 462,
+      "normalCount": 462
+    },
+    {
+      "name": "contact_edge_5_right",
+      "triangles": 544,
+      "points": 554,
+      "normalCount": 554
+    },
+    {
+      "name": "contact_pocket_4_right",
+      "triangles": 467,
+      "points": 485,
+      "normalCount": 485
+    },
+    {
+      "name": "contact_jug_14_center",
+      "triangles": 1872,
+      "points": 1157,
+      "normalCount": 1157
+    },
+    {
+      "name": "contact_round_sloper_3_center",
+      "triangles": 188,
+      "points": 192,
+      "normalCount": 192
+    },
+    {
+      "name": "contact_flat_sloper_2_left",
+      "triangles": 314,
+      "points": 180,
+      "normalCount": 180
+    },
+    {
+      "name": "contact_jug_1_left",
+      "triangles": 761,
+      "points": 535,
+      "normalCount": 535
+    },
+    {
+      "name": "contact_flat_sloper_2_right",
+      "triangles": 296,
+      "points": 171,
+      "normalCount": 171
+    },
+    {
+      "name": "contact_jug_1_right",
+      "triangles": 737,
+      "points": 513,
+      "normalCount": 513
+    }
+  ],
+  "forbiddenMaterialPrimsOrBindings": [],
+  "unrelatedPackageChanges": [],
+  "unrelatedFilesExpectedUnchanged": 203,
+  "limits": "Metadata and USD topology inspection only; no factory shape judgment or native physical clearance certification."
+}

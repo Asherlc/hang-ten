@@ -1,0 +1,11 @@
+2026-10-03 11:12:53.635 HangTen[8843:6295875] void * _Nullable NSMapGet(NSMapTable * _Nonnull, const void * _Nullable): map table argument is NULL
+objc[8843]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x148810398) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x115aa4310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+[BoardSimulatorPresentation] window uptime=116051.98951475 attached=true bounds=(0.0, 0.0, 220.0, 37.666666666666664)
+[BoardSimulatorPresentation] configured uptime=116052.04779854168 layer=ObjectIdentifier(0x0000000115d77e40) asynchronous=true viewport=(100.0, 161.66666666666666, 220.0, 37.66666666666666) attempt=0
+[BoardSimulatorPresentation] window uptime=116053.24155775 attached=false bounds=(0.0, 0.0, 220.0, 37.666666666666664)
+[BoardSimulatorPresentation] window uptime=116053.24228375 attached=true bounds=(0.0, 0.0, 220.0, 37.666666666666664)
+[BoardSimulatorPresentation] configured uptime=116054.31338183334 layer=ObjectIdentifier(0x0000000115d77e40) asynchronous=true viewport=(-162.0, 161.66666666666666, 220.0, 37.66666666666666) attempt=0
+[BoardSimulatorPresentation] window uptime=116055.06263558334 attached=true bounds=(0.0, 0.0, 410.0, 70.33333333333333)
+[BoardSimulatorPresentation] window uptime=116055.07467729168 attached=false bounds=(0.0, 0.0, 220.0, 37.666666666666664)
+[BoardSimulatorPresentation] configured uptime=116055.11422470833 layer=ObjectIdentifier(0x0000000115d760c0) asynchronous=true viewport=(232.0, 170.0, 410.0, 70.33333333333331) attempt=0
+[BoardSimulatorPresentation] configured uptime=116056.802735125 layer=ObjectIdentifier(0x0000000115d760c0) asynchronous=true viewport=(257.0, 240.0, 360.0, 61.666666666666686) attempt=0

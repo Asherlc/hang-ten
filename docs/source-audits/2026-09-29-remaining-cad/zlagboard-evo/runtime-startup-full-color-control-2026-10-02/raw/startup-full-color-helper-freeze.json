@@ -1,0 +1,204 @@
+{
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-constructors.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-cpu-semantics.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-frames.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-navigation.py",
+      "sha256": "f10795e290a7eccb7076d0922f0ee4628de9cc33ccd512c1ad57ab0a9717a78d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-navigation.py.diff",
+      "sha256": "734b89efc977c709ec9d0b76b1c3a701ae7104203d3f25d202a7723cae1b1510"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-ownership.py",
+      "sha256": "c99d436af6038ecd6a20754b80655839d126fe863c12711baef163f6ada883ed"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-ownership.py.diff",
+      "sha256": "0473c005a2899dba39218f6c93c09029fd77c985a4c736a36949414e1c5396e3"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-prestart-hands.py",
+      "sha256": "bb61b0a2c6d136a6a4c68b7132a3d165e39f97ad20cbcca09fe0c2a75e203b7f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-prestart-hands.py.diff",
+      "sha256": "2b80bf474139ee6dc11f38e7517f5b013757257110f897b265ea6bf4f3df4fb1"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-real-hands.py",
+      "sha256": "b512f11cf03f78d468123b768166123508d38ad7ff85d1f6eff2f4444ce21277"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-real-hands.py.diff",
+      "sha256": "7fa429c50193a2cc605079290ef979a09f4e3be51f6a970c6c9d0cb61d38c5b0"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-sync-counters.py",
+      "sha256": "5c8248232023d0a62bf77ef2bff380cbc27d826f6e3c49fb56e4a0e95f6aab20"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-sync-counters.py.diff",
+      "sha256": "a10a57b6d2a936ad679d52a2e7d1d1ac1a9a8428450fb6942bcc9cfe4ab7c4d1"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-weak-hand-census.py",
+      "sha256": "301db2caee1541b429be526a1c50699dca8d2b470129c59bf01ed2dabc408efd"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/check-weak-hand-census.py.diff",
+      "sha256": "32384a80e0622f262e6270f65d6f1a01f2f12c402daeb6248f3138460388d8c8"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/compare.py",
+      "sha256": "e2df83e187e7b6bb5ddf50f030131e7239f9879c47640f41c11b1437eb029669"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/action/compare.py.diff",
+      "sha256": "7b58e51c19357173c6181e46a519c62ebecf3dff49a0357e31983a5c870d5f5a"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/capture.diff",
+      "sha256": "dac39f81edba680acf306129da56db8ce90295428675b0773b2b70933ba8ffa7"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/capture.py",
+      "sha256": "92c39f3c28e1fc940ae3aa8f1251098c68d4efe671d2638b5ce755dd3faf4466"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/check-supplemental-timing.py",
+      "sha256": "ba62ecddd10c4515fd84cf0049fc96c6e2c16a7f139fccabfdc1d014baec37a0"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-constructors.py",
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-constructors.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-cpu-semantics.py",
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-cpu-semantics.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-frames.py",
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-frames.py.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-navigation.py",
+      "sha256": "deda8bf3a760533892b428fce4f9810667eefcc1346a8585268adf1369235907"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-navigation.py.diff",
+      "sha256": "a59579d6d82a433abc848d6f00071eb50bb2ee6defe89950b661766577d82cb7"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-ownership.py",
+      "sha256": "2208c5c389d1bac54122d72a77500773a593742dddac3a260ac81f688fa5ced9"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-ownership.py.diff",
+      "sha256": "bb973c686c1dbc574c51748cf2cd8e5552e7b4f7a4691da40d1974a673ec6602"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-prestart-hands.py",
+      "sha256": "03f591bd6ed7a49fe6d53d6dd298dd4c8bcf7842f6e0485a875568d4045644a0"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-prestart-hands.py.diff",
+      "sha256": "3f44e4d802bba5e10f133b788b9a0756b8e72c68b7a3fda6bbcf805057a05dbe"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-real-hands.py",
+      "sha256": "012acaef4cee2bc734bb7524da7a5186df02c7d130c27ed1b2ae0f877e23cc18"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-real-hands.py.diff",
+      "sha256": "56fa89742807ae256468b9a4462f797bfbaaf0e62767e9f29ce68d03e575cad5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-sync-counters.py",
+      "sha256": "850061ffc495b5c4cf786589f6cdf52880067a47c7d4779606f31e5fab48c650"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-sync-counters.py.diff",
+      "sha256": "7793ea658fbeed615b31bdb62d93584779ecc4344ed47edd42efa82593e4ab96"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-weak-hand-census.py",
+      "sha256": "f0217e87e33c4ef3ea58315e27ea0cbcbffcece80ecdcab6f8393ba5d6ed7567"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-weak-hand-census.py.diff",
+      "sha256": "68be9cfc49527ac9a24903f478c342b9484885ea7536ab94146eee4364e08601"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/compare.py",
+      "sha256": "2a95246c411ddccfc8b2b5bd9803454fe3ca1a5b4a84971618ad39e88a2dcbbf"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/compare.py.diff",
+      "sha256": "2a9a051f07dbf1823adf0d481e2642c0b11b709661bc30fefa89136a11a68379"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/marker-schema.json",
+      "sha256": "a4a9065f46d9a8f018dfd47ccf5a13c9d9c8eb4b6b22554e701e3fa678d23707"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/marker_correlations.py",
+      "sha256": "edfdd6480f5054c53607cc5bdbf2420feb80cf606138698a55551bb1b023a0cc"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/prior-full-capture.py.txt",
+      "sha256": "50858c43dced3f368ae696d55dbd57c7619dfd1de8687b34b9caec35e4749c45"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/prior-startup-capture.py.txt",
+      "sha256": "0a1eba05a5b797c3a9c63a47c0df28b3275b4d7273facf3ebee8919c8248c5b5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/report.json",
+      "sha256": "680d617f1515bc5061d2db04ef41b8438d8dc1ed9204d065467895b5f95d7337"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/validate.py",
+      "sha256": "9d21e8b1498943c6d20d176d42defc709f34ff0b5d35bbb2415cc0e22b1f51b5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/validator-copy-provenance.json",
+      "sha256": "4d6db278846f048ee2efa1dc953f6115c1f0acb76fe62af528c76cb7cb1df95f"
+    }
+  ]
+}

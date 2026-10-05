@@ -1,0 +1,9 @@
+{
+  "beforeSHA256": "7b4069461ed1fd1067ead5715c20be962c2be30326823a3bec49a535fa9f6f2b",
+  "afterSHA256": "4b92a95c3fc04e24375d3a20bb0cb40675785a8c530c8aa58cd53db74344b07f",
+  "patchSHA256": "2eafbe0dbe2a22b7c584bddb9c3a8381bf8d7dad6f916c32ddf70c34023edfa9",
+  "scope": "RootView DEBUG branch only; same68pt hand slot, lifecycle, virtual camera, orthographic camera and light rig; static PBR box replaces hand content",
+  "framingAdaptation": "Same camera orientation, projection, near/far and fitting formula; bounds are analytic box corners instead of hand vertices. This necessarily changes fitted center/scale for substitute content.",
+  "customHandMeshOrShaderConstructed": false,
+  "boardAndRoutineChanged": false
+}

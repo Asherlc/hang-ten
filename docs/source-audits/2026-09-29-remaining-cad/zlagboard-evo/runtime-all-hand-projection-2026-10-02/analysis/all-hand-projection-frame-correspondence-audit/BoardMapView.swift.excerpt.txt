@@ -1,0 +1,25 @@
+650:                 case .model:
+651:                     BoardModelSurface(
+652:                         board: board,
+653:                         presentation: content.presentation,
+654:                         positionID: selectedPositionID,
+655:                         highlightedContactIDs: highlightedHoldIDs,
+656:                         highlightMode: highlightMode,
+657:                         onContactTap: onHoldTap.map { callback in
+658:                             { contact in
+659:                                 callback(selectedPositionID.flatMap { positionID in
+660:                                     board.contacts(inPosition: positionID).first { $0.id == contact.id }
+661:                                 } ?? contact)
+662:                             }
+663:                         },
+664:                         isDisplayOnly: isDisplayOnly
+665:                     )
+666:                 }
+667:             }
+668:             .aspectRatio(content.presentation.aspectRatio(for: selectedPositionID), contentMode: .fit)
+669:         }
+670:         .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
+671:         .onChange(of: highlightedHoldIDs) { previousHoldIDs, holdIDs in
+672:             presentationSelection.updateHighlights(
+673:                 from: previousHoldIDs,
+674:                 to: holdIDs,

@@ -1,0 +1,73 @@
+43:     var body: some View {
+44:         Group {
+45:             if case .ready(let model) = result {
+46:                 let realityView = BoardModelRealityView(
+47:                     model: model,
+48:                     boardName: board.name,
+49:                     accessibilityValue: highlightedContactCue,
+50:                     contacts: board.contacts(in: presentation),
+51:                     positionID: positionID,
+52:                     highlightedContactIDs: highlightedContactIDs,
+53:                     highlightMode: highlightMode,
+54:                     onContactTap: onContactTap,
+55:                     onUnavailable: { result = .unavailable },
+56:                     isDisplayOnly: isDisplayOnly
+57:                 )
+58:                 // Display-only picker cards wrap this in a Button; claiming
+59:                 // SwiftUI hits here would intercept the card select tap even
+60:                 // when the hosted RealityView has user interaction disabled.
+61:                 .allowsHitTesting(!isDisplayOnly)
+62:                 #if DEBUG
+63:                 let diagnosticHost = Group {
+64:                     if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SEMANTIC_BOARD_HOST"] == "1" {
+65:                         realityView.id(BoardDiagnosticHostIdentity(
+66:                             scene: ObjectIdentifier(model), contactIDs: highlightedContactIDs,
+67:                             mode: highlightMode, positionID: positionID))
+68:                     } else {
+69:                         realityView
+70:                     }
+71:                 }
+72:                 .onChange(of: BoardDiagnosticSurfaceInputs(
+73:                     boardID: board.id, presentationID: presentation.id, positionID: positionID,
+74:                     ids: highlightedContactIDs, mode: highlightMode, isDisplayOnly: isDisplayOnly),
+75:                     initial: true) { _, inputs in
+76:                     BoardHighlightDiagnostic.shared.surfaceInputs(inputs, scene: model)
+77:                 }
+78:                 #else
+79:                 let diagnosticHost = realityView
+80:                 #endif
+81:                 if onContactTap == nil {
+82:                     diagnosticHost.accessibilityIdentifier("boardModel.3d")
+83:                 } else {
+84:                     // A parent accessibility identifier propagates to the
+85:                     // RealityView's projected contact buttons. Keep their
+86:                     // per-contact identifiers available to UI automation and
+87:                     // assistive technology on interactive board maps.
+88:                     diagnosticHost
+
+109:         .task(id: loadIdentity) {
+110:             guard !Task.isCancelled else { return }
+111:             guard case .model = presentation.media else {
+112:                 result = .unavailable
+113:                 return
+114:             }
+115:             result = .loading
+116:             do {
+117:                 let model = try await BoardModelRealityLoader.load(
+118:                     board: board,
+119:                     presentation: presentation,
+120:                     store: BoardCatalog.packageStore
+121:                 )
+122:                 guard !Task.isCancelled else { return }
+123:                 result = .ready(model)
+124:             } catch {
+125:                 guard !Task.isCancelled else { return }
+126:                 #if DEBUG
+127:                 print("[BoardModelSurface] RealityKit model load failed: \(error)")
+128:                 #endif
+129:                 result = .unavailable
+130:             }
+131:         }
+132:         .onDisappear {
+133:             result = .loading
+134:         }

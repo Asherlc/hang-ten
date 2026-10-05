@@ -1,0 +1,41 @@
+{
+  "createdUTC": "2026-10-02T23:05:44.325524+00:00",
+  "head": "f7f1d87fc09452535b5ab6edd09b8916c6cb45c2",
+  "files": [
+    {
+      "source": "HangTen/Models/BoardModelRealityTypes.swift",
+      "authoritativeFrozenSource": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hand-suppression-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "retained": "HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 86978,
+      "sha256": "6f9fcd3da0677d79c411cf4cf053ae06a88b60f58f2b37522924f91570c3be25",
+      "currentMatchesAppliedFrozen": true
+    },
+    {
+      "source": "HangTen/Views/BoardModelView.swift",
+      "authoritativeFrozenSource": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hand-suppression-applied/source/HangTen/Views/BoardModelView.swift",
+      "retained": "HangTen/Views/BoardModelView.swift",
+      "bytes": 22063,
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+      "currentMatchesAppliedFrozen": true
+    },
+    {
+      "source": "HangTen/Views/RootView.swift",
+      "authoritativeFrozenSource": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hand-suppression-applied/source/HangTen/Views/RootView.swift",
+      "retained": "HangTen/Views/RootView.swift",
+      "bytes": 149223,
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221",
+      "currentMatchesAppliedFrozen": true
+    },
+    {
+      "source": "HangTen/Views/GripHandModelView.swift",
+      "authoritativeFrozenSource": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hand-suppression-applied/source/HangTen/Views/GripHandModelView.swift",
+      "retained": "HangTen/Views/GripHandModelView.swift",
+      "bytes": 41510,
+      "sha256": "b47b76a780061f291a2e32b888e00adfba6b1dcc6a157d5f73df36a5d1797f15",
+      "currentMatchesAppliedFrozen": true
+    }
+  ],
+  "patchSHA256": "586b363f21aaa24dc8859569df12e608362f1069aaeeacf826d3c70f2610e27d",
+  "authority": "Copied from applied frozen source; all four live hashes matched at audit time.",
+  "runtimeStatus": "OFF run pending at request; no overall outcome or new raw runtime copy."
+}

@@ -1,0 +1,98 @@
+{
+  "diagnosticOnly": true,
+  "notPublishedOrResettled": true,
+  "sourceSHA256": "ca72b2f57e9a3506642506e55ce50e07b52d6a980b387254216a22db08b76b86",
+  "selection": "Contiguous existing top-rim bearing nodes with body x>50 mm and z>16 mm; native-mesh measurements only. Actual mouth, bore bearing chain, support and other lead unchanged.",
+  "results": [
+    {
+      "shiftTowardMouthYMM": 0.5,
+      "movedIndices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "gainMM": 0.07375502503037534,
+      "passed": false,
+      "error": "native CAD cord collision: clearance 0.001979231 m < radius 0.002000000 m"
+    },
+    {
+      "shiftTowardMouthYMM": 1.0,
+      "movedIndices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "gainMM": 0.14352745330942218,
+      "passed": false,
+      "error": "native CAD cord collision: clearance 0.001983120 m < radius 0.002000000 m"
+    },
+    {
+      "shiftTowardMouthYMM": 2.0,
+      "movedIndices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "gainMM": 0.27109818056747503,
+      "passed": false,
+      "error": "native CAD cord collision: clearance 0.001983086 m < radius 0.002000000 m"
+    }
+  ],
+  "lateralPlusSmallOutwardTests": [
+    {
+      "shiftYMM": 1,
+      "shiftOutwardZMM": 0.025,
+      "gainMM": 0.12592722588161687,
+      "passed": false,
+      "error": "native CAD cord collision: clearance 0.001959839 m < radius 0.002000000 m"
+    },
+    {
+      "shiftYMM": 1,
+      "shiftOutwardZMM": 0.05,
+      "gainMM": 0.10831786992543391,
+      "passed": false,
+      "error": "native CAD cord collision: clearance 0.001984153 m < radius 0.002000000 m"
+    },
+    {
+      "shiftYMM": 1,
+      "shiftOutwardZMM": 0.1,
+      "gainMM": 0.07307178027982086,
+      "passed": true,
+      "changedSpanCertificateMM": 1.9911166289586462,
+      "maxWorldLateralOffsetFromMouthMM": 9.367052000000001
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "label": "forge-landscape-natural",
+  "command": [
+    "python3",
+    ".context/placid-badger/combined-runtime-final-2026-10-03/workout_capture_natural.py",
+    "15",
+    "landscape"
+  ],
+  "timeoutSeconds": 300.0,
+  "ownedProcessGroup": 45379,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 1,
+  "elapsedSeconds": 68.65098291699542
+}

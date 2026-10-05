@@ -1,0 +1,75 @@
+{
+  "package": "yy-baguette",
+  "sourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+  "sidecarSHA256": "7765417f4b49ff1efeded274a70a5c69907a3126aeb73f4a7d12d2fec14c688b",
+  "algorithm": "Tools/HangboardCAD/native_cord_routes.py",
+  "algorithmSHA256": "98f73d58191ef3f99f612222723c7d1d0e59b886de4ad5a833448d788c2f3de7",
+  "method": "adaptive signed-distance 1-Lipschitz lower bound on each complete rounded runtime polyline",
+  "numericalToleranceMM": 0.01,
+  "runtimeSupportReconstructed": true,
+  "presentations": {
+    "primary": {
+      "modelSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+      "collisionFixtureSHA256": "0ac2ba91b105f8349de4867094966895488568e4d6e6b3a7e60f83f28e0f3afd",
+      "poses": {
+        "front-20-25": {
+          "strands": {
+            "left-exterior-wrap": {
+              "certifiedMinimumClearanceMM": 1.1906236293901842,
+              "radiusMM": 1.2,
+              "runtimeRouteLengthMM": 899.999993926462,
+              "restLengthMM": 900.0,
+              "vertexCountWithSupport": 24
+            },
+            "right-exterior-wrap": {
+              "certifiedMinimumClearanceMM": 1.1906236293901842,
+              "radiusMM": 1.2,
+              "runtimeRouteLengthMM": 899.999993926462,
+              "restLengthMM": 900.0,
+              "vertexCountWithSupport": 24
+            }
+          }
+        },
+        "reverse-10-15-30": {
+          "strands": {
+            "left-exterior-wrap": {
+              "certifiedMinimumClearanceMM": 1.1906236293901842,
+              "radiusMM": 1.2,
+              "runtimeRouteLengthMM": 899.999993926462,
+              "restLengthMM": 900.0,
+              "vertexCountWithSupport": 24
+            },
+            "right-exterior-wrap": {
+              "certifiedMinimumClearanceMM": 1.1906236293901842,
+              "radiusMM": 1.2,
+              "runtimeRouteLengthMM": 899.999993926462,
+              "restLengthMM": 900.0,
+              "vertexCountWithSupport": 24
+            }
+          }
+        },
+        "outer-upper": {
+          "strands": {
+            "left-exterior-wrap": {
+              "certifiedMinimumClearanceMM": 1.1906236293901842,
+              "radiusMM": 1.2,
+              "runtimeRouteLengthMM": 899.999993926462,
+              "restLengthMM": 900.0,
+              "vertexCountWithSupport": 24
+            },
+            "right-exterior-wrap": {
+              "certifiedMinimumClearanceMM": 1.1906236293901842,
+              "radiusMM": 1.2,
+              "runtimeRouteLengthMM": 899.999993926462,
+              "restLengthMM": 900.0,
+              "vertexCountWithSupport": 24
+            }
+          }
+        }
+      }
+    }
+  },
+  "minimumCertifiedClearanceMM": 1.1906236293901842,
+  "certifiedSidecarSHA256": "8678ecb04120073cb6bb5d347c02d77f21891415f77ccccbbe004f95fe5b0840",
+  "cameraOnlyRebindingProof": "camera-correction-proof.json"
+}

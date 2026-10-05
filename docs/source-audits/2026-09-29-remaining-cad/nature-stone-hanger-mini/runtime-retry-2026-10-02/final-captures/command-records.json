@@ -1,0 +1,23 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "2397F02F-15E4-48C9-8E5C-37DE8CC995B2",
+      "com.hangten.training"
+    ],
+    "reviewEnvironment": {
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger-mini",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL": "1",
+      "SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_HOLD_ID": "pull-up-jug"
+    },
+    "startedMonotonic": 31656.507329208,
+    "errorType": "TimeoutExpired",
+    "error": "Command '['rtk', 'proxy', 'xcrun', 'simctl', 'launch', '--terminate-running-process', '2397F02F-15E4-48C9-8E5C-37DE8CC995B2', 'com.hangten.training']' timed out after 30 seconds",
+    "exitCode": null
+  }
+]

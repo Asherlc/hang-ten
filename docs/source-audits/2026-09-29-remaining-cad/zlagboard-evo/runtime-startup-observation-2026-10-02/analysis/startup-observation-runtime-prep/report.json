@@ -1,0 +1,34 @@
+{
+  "status": "PREPARATION_ONLY_NO_RUNTIME",
+  "sourceMarkerSchemaPending": true,
+  "binaryPending": true,
+  "scope": "One future ACTION startup observation, no build/install/source/runtime action performed.",
+  "capture": {
+    "setupBoundSeconds": 90,
+    "trainReadinessSeconds": 20,
+    "appearanceArrivalBoundSecondsFromOpenURLStart": 30,
+    "windowSecondsFromRecordedAppearance": 30,
+    "externalPollSeconds": 0.03,
+    "commandMaxSeconds": 20,
+    "clock": "Recorded appearance epoch converted once to host monotonic deadline at first external observation; deadline never reset.",
+    "end": "Fixed deadline or earlier command/setup failure; no extension/retry.",
+    "initialScreenshot": "Same command/location, now externally polled asynchronously to discover appearance while command is in flight. This is an observation-method difference.",
+    "cleanup": "Python signal/finally/atexit handlers installed before Popen; direct owned child PID registered immediately; only exact still-unreaped Popen child terminated/killed. No group/service action. stdout/stderr/image partials retained; pipe drain bounded1s. Executor must terminate exact launched app after helper exit and verify; device/DD unchanged.",
+    "flags": "Previous action environment plus STARTUP_OBSERVATION=1 and fresh run ID. Real orthographic hands, ordinary TrainUNMOUNT, prestart suppression, counters and old sampler policy unchanged."
+  },
+  "schema": "Release must bind reviewed actual event names, required fields, and any span pairing identities. No context/attempt fields or desired ordering guessed before source schema is final.",
+  "validator": "Exact environment/new binary/parity/trace/capture intervals and marker schema; missing completed spans right-censored. No Hang/phase/color prerequisite.",
+  "files": {
+    "check-observation.py": "8792a02d465782bcefb1c16462c22ea2c44b3f3defa4e858b342ef558afe0d32",
+    "reference-capture.py.txt": "50858c43dced3f368ae696d55dbd57c7619dfd1de8687b34b9caec35e4749c45",
+    "capture.py": "301d619992de07d5eb64c512e84a0421fa0205be1abc4803394c40889de3de64",
+    "capture.diff": "b2b052c9546f91fb7a9d3eb5517ddfbb678ac13e5f7f4ad3f84dc5daaca597e0"
+  },
+  "ASTPassed": true,
+  "limitations": [
+    "Public command return/timeout and external trace observation are not GPU presentation proof.",
+    "Exact direct command child cleanup does not imply unrelated/shared process ownership.",
+    "A timed-out initial screenshot may create a partial image; retained as such.",
+    "No automatic retry even if appearance or window incomplete."
+  ]
+}

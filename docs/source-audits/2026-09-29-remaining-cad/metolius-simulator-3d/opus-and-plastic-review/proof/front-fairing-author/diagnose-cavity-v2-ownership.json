@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "diagnose-cavity-v2",
+  "script": ".context/placid-badger/metolius-simulator-3d-front-fairing/diagnose_cavity_binding_v2.py",
+  "timeoutSeconds": 120,
+  "startedUTC": "2026-10-01T18:08:50.719003+00:00",
+  "ownedProcessGroup": 46265,
+  "elapsedSeconds": 27.773846208001487,
+  "exitCode": 3,
+  "ownedProcessGroupExited": true
+}

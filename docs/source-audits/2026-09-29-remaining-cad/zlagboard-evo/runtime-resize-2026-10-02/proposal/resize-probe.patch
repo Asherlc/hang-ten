@@ -1,0 +1,127 @@
+--- a/HangTen/Views/RootView.swift
++++ b/HangTen/Views/RootView.swift
+@@ -3793,6 +3793,13 @@
+         CGSize(width: Double(env["HANGTEN_REVIEW_STANDALONE_WIDTH"] ?? "210") ?? 210,
+                height: Double(env["HANGTEN_REVIEW_STANDALONE_HEIGHT"] ?? "36") ?? 36)
+     }
++    private var isResizeDriver: Bool { ["F", "G"].contains(driver) }
++    private var initialViewport: CGSize {
++        isResizeDriver ? CGSize(width: 410, height: 410 * 120 / 700) : viewport
++    }
++    private func viewport(for phase: Selection) -> CGSize {
++        isResizeDriver && phase == .clear ? initialViewport : viewport
++    }
+     var body: some View {
+         driverContent
+         .frame(maxWidth: .infinity, maxHeight: .infinity)
+@@ -3804,7 +3811,7 @@
+                 scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+             }
+             BoardHighlightDiagnostic.shared.harnessEvent("standalone-appear", state: selection.rawValue,
+-                                                         viewport: viewport)
++                                                         viewport: initialViewport)
+         }
+     }
+     @ViewBuilder
+@@ -3814,7 +3821,7 @@
+         } else {
+             TimelineView(.periodic(from: .now, by: 0.25)) { _ in
+                 // Production also reads monotonic uptime rather than context.date.
+-                let phase = ["C", "D", "E"].contains(driver) ? derivedPhase(at: ProcessInfo.processInfo.systemUptime) : selection
++                let phase = ["C", "D", "E", "F", "G"].contains(driver) ? derivedPhase(at: ProcessInfo.processInfo.systemUptime) : selection
+                 fixedContent(phase: phase)
+             }
+         }
+@@ -3831,8 +3838,9 @@
+     }
+ 
+     private func fixedContent(phase: Selection) -> some View {
+-        VStack(spacing: 24) {
+-            Text(driver == "D" || driver == "E" ? "Standalone board" : "Standalone board: \(phase.rawValue)")
++        let renderViewport = viewport(for: phase)
++        return VStack(spacing: 24) {
++            Text(["D", "E", "F", "G"].contains(driver) ? "Standalone board" : "Standalone board: \(phase.rawValue)")
+                 .accessibilityIdentifier("standalone.state")
+             if let board = BoardCatalog.all.first(where: { $0.id == "zlagboard.evo" }) {
+                 let semantic = SemanticSelection(
+@@ -3841,7 +3849,7 @@
+                     positionID: board.position(presentationID: board.defaultPresentation.id,
+                                                containingContactID: "edge-20-left")?.id)
+                 Group {
+-                    if driver == "E" {
++                    if ["E", "F", "G"].contains(driver) {
+                         // Controlled workout-equivalent inputs; verify actual Surface resolution.
+                         BoardMapView(board: board,
+                             highlightedHoldIDs: semantic.ids, highlightMode: semantic.mode,
+@@ -3855,12 +3863,21 @@
+                             onContactTap: nil, isDisplayOnly: false)
+                     }
+                 }
+-                    .frame(width: viewport.width, height: viewport.height)
++                    .frame(width: renderViewport.width, height: renderViewport.height)
++                    // Experimental resize arms; this is not a production repair.
++                    .animation(driver == "G" ? .easeInOut(duration: 0.18) : nil,
++                               value: renderViewport)
++                    .transaction { transaction in
++                        if driver == "F" {
++                            transaction.animation = nil
++                            transaction.disablesAnimations = true
++                        }
++                    }
+                     .onChange(of: semantic, initial: true) { _, observed in
+                         BoardHighlightDiagnostic.shared.harnessObservedSelection(
+                             state: observed.ids.isEmpty ? "clear" : (observed.mode == .preview ? "preview" : "active"),
+                             ids: observed.ids, mode: observed.mode, positionID: observed.positionID,
+-                            viewport: viewport)
++                            viewport: renderViewport)
+                     }
+             } else {
+                 Text("Missing Evo catalog entry")
+@@ -3875,7 +3892,7 @@
+ 
+     private func runScript() async {
+         let recorder = BoardHighlightDiagnostic.shared
+-        guard ["A", "B", "C", "D", "E"].contains(driver),
++        guard ["A", "B", "C", "D", "E", "F", "G"].contains(driver),
+               env["HANGTEN_REVIEW_SCENE_UPDATE_COUNTER"] != "1" else {
+             recorder.harnessEvent("standalone-driver-invalid", state: driver, viewport: viewport)
+             return
+@@ -3892,26 +3909,32 @@
+             }
+             guard viewport.width.isFinite, viewport.height.isFinite,
+                   viewport.width > 0, viewport.height > 0,
+-                  recorder.standaloneViewportMatches(viewport) else {
++                  (!isResizeDriver || viewport == CGSize(width: 210, height: 36)),
++                  recorder.standaloneViewportMatches(initialViewport) else {
+                 recorder.harnessEvent("standalone-viewport-invalid", state: selection.rawValue,
+-                                      viewport: viewport)
++                                      viewport: initialViewport)
+                 return
+             }
+             // Future epoch lets host schedule screenshots before the first state window.
+             let baseUptime = ProcessInfo.processInfo.systemUptime + 2
+             scriptEpoch = baseUptime // Established once, before the measurement window.
+-            recorder.standaloneSchedule(baseUptime: baseUptime, viewport: viewport)
++            recorder.standaloneSchedule(baseUptime: baseUptime, viewport: initialViewport)
+             defer { recorder.finishStandaloneObservation() }
+             let phases: [Selection] = [.clear, .active, .preview, .active, .preview]
+             for (index, phase) in phases.enumerated() {
+                 let start = baseUptime + Double(index * 8)
+                 try await sleepUntil(start)
+                 recorder.harnessEvent("standalone-intended-\(index)", state: phase.rawValue,
+-                                      viewport: viewport)
+-                // C/D/E tasks observe only: no state writes after epoch establishment.
++                                      viewport: viewport(for: phase))
++                // C/D/E/F/G tasks observe only: no state writes after epoch establishment.
+                 if ["A", "B"].contains(driver), selection != phase { selection = phase }
+                 // Predetermined sparse snapshots, no 1 Hz sampler in standalone mode.
+-                for offset in [0.15, 0.85, 1.75, 2.85, 3.75, 6.85, 7.75] {
++                let regularOffsets = [0.15, 0.85, 1.75, 2.85, 3.75, 6.85, 7.75]
++                // Same sparse extra observation in every arm; no observable writes.
++                let offsets = index == 1
++                    ? ([0.025, 0.075, 0.225, 0.325, 0.45, 0.60] + regularOffsets).sorted()
++                    : regularOffsets
++                for offset in offsets {
+                     try await sleepUntil(start + offset)
+                     recorder.standaloneSnapshot("standalone-snapshot-\(index)-\(offset)")
+                 }

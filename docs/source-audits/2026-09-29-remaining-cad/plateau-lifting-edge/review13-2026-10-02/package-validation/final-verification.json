@@ -1,0 +1,295 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "checkedUTC": "2026-10-02T19:16:32.046678+00:00",
+  "frozenCanonicalEightFileHashes": {
+    "assets/depth-10mm.model.json": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+    "assets/depth-10mm.usdz": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+    "assets/depth-15mm.model.json": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+    "assets/depth-15mm.usdz": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+    "assets/primary.model.json": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+    "assets/primary.usdz": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+    "plateau-lifting-edge.FCStd": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+    "suspension.json": "b59eab42fe4416ebd42636adbaa88e69fc4b344d588a5a7537906490483b7d80"
+  },
+  "generatedManifestSHA256": "5aea5c9c3e9bc261ecea2f4ecca442ec512318dd1feb4be45af071d4f4c138d4",
+  "rawJUnit": [
+    {
+      "scope": "model-tools-pytest",
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-model-tools-pytest-junit.xml",
+      "sha256": "1e869d496bf4d78f6630117b72b5a4563d601dd0f0179a08e76a079425a6d617",
+      "testcaseElements": 15,
+      "failureElements": 0,
+      "errorElements": 0,
+      "skippedElements": 0
+    },
+    {
+      "scope": "manifest-package-pytest",
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest-junit.xml",
+      "sha256": "709b52d9aa669d889c94250d3ea6e5a6de86e75d083909eb4db15eb6b07fa1ff",
+      "testcaseElements": 171,
+      "failureElements": 0,
+      "errorElements": 0,
+      "skippedElements": 0
+    },
+    {
+      "scope": "native-routes-pytest",
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-junit.xml",
+      "sha256": "197477111bae0e2c6134ab6b28a35b95f716736ea7e9b2e57ad0f5e135335377",
+      "testcaseElements": 5,
+      "failureElements": 0,
+      "errorElements": 0,
+      "skippedElements": 0
+    }
+  ],
+  "hostTestcasesPassed": 191,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "canonicalCLIPackagesValidated": 64,
+  "canonicalCLILogSHA256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc",
+  "genericIOSBuild": {
+    "attempts": 1,
+    "rawLogPath": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-build.log",
+    "rawLogSHA256": "bbef5cc0b8aba9de0736319772af641953ae64cae759fd9decdf81adab4209ec",
+    "exitCode": 0,
+    "rawSuccessMarker": true,
+    "elapsedSeconds": 50.50919920799788,
+    "sourceCommitAtBuildStart": "8b1bbd0858ca3e81bc7c43ad842a80ff9ca2138b",
+    "dirtyDiffSHA256": "daa47e94f2e4ef52e20ca0cbb6f1b1e9475d8e1c1af2f4a3bd8319eca269bb9f",
+    "builtBinarySHA256MeasuredBeforeDDCleanup": "df835a5cc51ef664913fca7f91a4c6b91a5ad14b8d05f921404c1c342e137fc7",
+    "binaryProvenanceLimit": "Measured from actual built executable before exact Derived Data removal; binary hash retained in build report."
+  },
+  "androidIdentities": [
+    {
+      "id": "depth-18mm",
+      "assetPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "descriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
+    },
+    {
+      "id": "depth-15mm",
+      "assetPath": "assets/depth-15mm.usdz",
+      "descriptorPath": "assets/depth-15mm.model.json",
+      "modelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+      "descriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b"
+    },
+    {
+      "id": "depth-10mm",
+      "assetPath": "assets/depth-10mm.usdz",
+      "descriptorPath": "assets/depth-10mm.model.json",
+      "modelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+      "descriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e"
+    }
+  ],
+  "iosIdentities": [
+    {
+      "id": "depth-18mm",
+      "assetPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "stagedDescriptorSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55",
+      "odrModelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+      "odrModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-plateau-lifting-edge-b1e489df2ef99e2459e1fb8a0ba804dd.assetpack/Hangboards/plateau-lifting-edge/assets/primary.usdz",
+      "stagedDescriptorMatchesCanonical": true,
+      "odrModelMatchesCanonical": true,
+      "modelAbsentFromBundledMetadata": true
+    },
+    {
+      "id": "depth-15mm",
+      "assetPath": "assets/depth-15mm.usdz",
+      "descriptorPath": "assets/depth-15mm.model.json",
+      "stagedDescriptorSHA256": "f93353974ce23439616a6245035e7f868c5f44ee887a36263ca11c530b816a9b",
+      "odrModelSHA256": "d7f3eb0be0c35a3a3fd06b57849dc8488ec3573ab78eaed77e8d8178c0803dad",
+      "odrModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-plateau-lifting-edge-b1e489df2ef99e2459e1fb8a0ba804dd.assetpack/Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz",
+      "stagedDescriptorMatchesCanonical": true,
+      "odrModelMatchesCanonical": true,
+      "modelAbsentFromBundledMetadata": true
+    },
+    {
+      "id": "depth-10mm",
+      "assetPath": "assets/depth-10mm.usdz",
+      "descriptorPath": "assets/depth-10mm.model.json",
+      "stagedDescriptorSHA256": "ede7d1ba99d952db42c3640b7df0fa91148c6aa276e82c8b46a9157d9f7da51e",
+      "odrModelSHA256": "4dbb21a4ec4f3a9fb2c0daaaf0c36ff3fefa62a33bf9e92cd5845a7e5a43b431",
+      "odrModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-plateau-lifting-edge-b1e489df2ef99e2459e1fb8a0ba804dd.assetpack/Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz",
+      "stagedDescriptorMatchesCanonical": true,
+      "odrModelMatchesCanonical": true,
+      "modelAbsentFromBundledMetadata": true
+    }
+  ],
+  "mergedSuspensionStagedAsGeneratedManifest": true,
+  "modelsODROnlyOnIOSAndInlineOnAndroid": true,
+  "processGroupsFreshlyVerifiedAbsent": 12,
+  "exactOwnedPathsFreshlyVerifiedAbsent": 17,
+  "ownedProcessGroups": [
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-android-staging-ownership.json",
+      "processGroup": 35752,
+      "freshlyAbsent": true,
+      "logSHA256Matches": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-canonical-cli-ownership.json",
+      "processGroup": 35744,
+      "freshlyAbsent": true,
+      "logSHA256Matches": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-build-ownership.json",
+      "processGroup": 35869,
+      "freshlyAbsent": true,
+      "logSHA256Matches": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest-ownership.json",
+      "processGroup": 35680,
+      "freshlyAbsent": true,
+      "logSHA256Matches": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-model-tools-pytest-ownership.json",
+      "processGroup": 35671,
+      "freshlyAbsent": true,
+      "logSHA256Matches": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-ownership.json",
+      "processGroup": 35738,
+      "freshlyAbsent": true,
+      "logSHA256Matches": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-author-command.json",
+      "processGroup": 17424,
+      "freshlyAbsent": true,
+      "logSHA256Matches": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-10mm-command.json",
+      "processGroup": 25181,
+      "freshlyAbsent": true,
+      "logSHA256Matches": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-15mm-command.json",
+      "processGroup": 25084,
+      "freshlyAbsent": true,
+      "logSHA256Matches": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-18mm-command.json",
+      "processGroup": 22315,
+      "freshlyAbsent": true,
+      "logSHA256Matches": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-native-verify-command.json",
+      "processGroup": 22187,
+      "freshlyAbsent": true,
+      "logSHA256Matches": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-preserve-finish-command.json",
+      "processGroup": 21007,
+      "freshlyAbsent": true,
+      "logSHA256Matches": true
+    }
+  ],
+  "ownedPaths": [
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-android-staging-TMP",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-android-stage",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-canonical-cli-TMP",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-build-TMP",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-ios-DD",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-manifest-package-pytest-TMP",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-model-tools-pytest-TMP",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/package-validation-2026-10-02/placid-badger-plateau13-native-routes-pytest-TMP",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-author-tmp",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-10mm-tmp",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-10mm-staging",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-15mm-tmp",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-15mm-staging",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-export-18mm-tmp",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-18mm-staging",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-material-native-verify-tmp",
+      "freshlyAbsent": true
+    },
+    {
+      "path": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-preserve-finish-tmp",
+      "freshlyAbsent": true
+    }
+  ],
+  "other198PackageFilesUnchanged": true,
+  "fiveReservedSharedFilesUnchanged": {
+    "HangTen/Models/BoardModelRealityTypes.swift": true,
+    "HangTen/Views/BoardModelView.swift": true,
+    "HangTen/Views/RootView.swift": true,
+    "HangTenTests/BoardModelRealityTests.swift": true,
+    "HangTenTests/BoardModelTests.swift": true
+  },
+  "changedPackagePaths": [
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json",
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz",
+    "Hangboards/plateau-lifting-edge/assets/primary.model.json",
+    "Hangboards/plateau-lifting-edge/assets/primary.usdz",
+    "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+    "Hangboards/plateau-lifting-edge/suspension.json"
+  ],
+  "sharedModelCADPackageToolsUnchanged": true,
+  "currentAppFrames": 0,
+  "IOSUnitCasesExecuted": 0,
+  "SimulatorGuestOperations": 0,
+  "HTTPResources": 0,
+  "humanAcceptance": "pending",
+  "currentAppearanceVerified": false,
+  "limits": "Fresh read-only raw result/provenance/scope/cleanup audit. No additional tests/builds or native geometry judgment."
+}

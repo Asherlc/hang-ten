@@ -1,0 +1,9 @@
+from pathlib import Path
+import json,subprocess,sys,time
+s=Path('.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis');label,service=sys.argv[1:];uid=json.loads((s/'ownership.json').read_text())['simulator'];helper=s.parent/'prep/bounded-command.py'
+def run(name,seconds,args):
+ return subprocess.run(['rtk','proxy','python3',str(helper),str(seconds),str(s/(name+'.json')),*map(str,args)],capture_output=True,timeout=seconds+25)
+r=run(label+'-launchctl',20,['xcrun','simctl','spawn',uid,'launchctl','list']);assert r.returncode==0,r.stderr.decode();rows=[x.split() for x in (s/(label+'-launchctl.stdout')).read_text().splitlines()];matches=[x for x in rows if len(x)==3 and x[2]==service and x[0].isdigit()];assert len(matches)==1,matches;pid=int(matches[0][0]);coordinator=next(int(x[0]) for x in rows if len(x)==3 and x[2]=='com.apple.datamigrator' and x[0].isdigit())
+r=run(label+'-identity',10,['ps','-p',str(pid)+','+str(coordinator),'-o','pid=,ppid=,comm=']);assert r.returncode==0;rtext=(s/(label+'-identity.stdout')).read_text();parts=[x.strip().split(None,2) for x in rtext.splitlines()];byid={int(x[0]):x for x in parts};assert pid in byid and coordinator in byid;assert byid[pid][1]==byid[coordinator][1],parts
+record={'simulator':uid,'service':service,'pid':pid,'coordinatorPID':coordinator,'verifiedCommonDeviceLaunchdPID':int(byid[pid][1]),'identity':parts,'verificationTimeEpoch':time.time()};(s/(label+'-ownership.json')).write_text(json.dumps(record,indent=2)+'\n')
+r=run(label+'-sample-command',45,['/usr/bin/sample',str(pid),'2','10','-file',s/(label+'-sample.txt')]);record.update(sampleCommandExit=r.returncode,stackFileExists=(s/(label+'-sample.txt')).exists());(s/(label+'-result.json')).write_text(json.dumps(record,indent=2)+'\n');print(json.dumps(record,indent=2))

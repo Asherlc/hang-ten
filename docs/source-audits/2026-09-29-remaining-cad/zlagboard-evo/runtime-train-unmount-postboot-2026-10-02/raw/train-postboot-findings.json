@@ -1,0 +1,375 @@
+{
+  "status": "Completed bounded post-boot CONTROL failure then UNMOUNT visual pass",
+  "debugDylibSHA256": "9855fc146d9bf381797b8a982a70f96e7f001c9838e5fd49df2d590e8d6d2242",
+  "arms": {
+    "control": {
+      "valid": true,
+      "visualFailure": true,
+      "visualReview": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-postboot-control-landscape/visual-review.json",
+      "visualReviewSHA256": "72d25238483f69fc3980f2e5daea3fa341d206b7e0652cb48dac27d6884ac7a3",
+      "traceRecords": 155,
+      "traceSHA256": "52890cd831f5f32216fcff681f0261d6a4deff64e06e61697fb845f09ea8be3a",
+      "checks": {
+        "structural-correspondence.json": {
+          "completeContiguous": true,
+          "captures12": true,
+          "allCPUBrackets": true,
+          "sameScene": true,
+          "naturalFirstHang": true,
+          "naturalRest": true,
+          "freshSession": true,
+          "boundaryAppActive": true,
+          "boundaryWindowActive": true,
+          "boundaryLandscape": true,
+          "lateBoundaryCensus": true,
+          "noAXOrTouch": true
+        },
+        "hand-lifetime-validation.json": {
+          "completeOpeningStream": true,
+          "instrumentationVersion": true,
+          "suppressionFlagCorrect": true,
+          "allFourCountsOnEveryRecord": true,
+          "openingCountsZero": true,
+          "countsMonotonic": true,
+          "finalMarkerAfterLastCapture": true,
+          "noRecorderErrorOrCap": true,
+          "strictOFFZeroAllFourLifetimeCounts": true
+        },
+        "strict-absence-validation.json": {
+          "strictFlagEnabled": true,
+          "perspectiveFlagAbsent": true,
+          "openingStrictEnabled": true,
+          "allFourCountsZeroThroughout": true,
+          "noHandLifecycleEvents": true,
+          "noHandCameraEvents": true
+        },
+        "normal-host-frame-validation.json": {
+          "workoutSceneFromCountdown": true,
+          "hostObserved": true,
+          "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+          "sameHost": true,
+          "sameActualScene": true,
+          "rootCameraActiveSameScene": true,
+          "hostVisible": true,
+          "sampledFramesOnMonotoneOwnEndpointPath": true,
+          "allPostFirstCaptureCensusesFinal": true
+        },
+        "train-constructor-validation.json": {
+          "completeContiguous": true,
+          "openingBeforeConstructors": true,
+          "uniqueConstructorTokens": true,
+          "exactlyOneWorkoutConstructor": true,
+          "exactlyOneWorkoutMake": true,
+          "allSceneRecordsHaveConstructor": true,
+          "markerGateMatches": true,
+          "strictHandsEnabled": true,
+          "observedPredecessorConstruction": true
+        },
+        "guarded-detach-validation.json": {
+          "commonTrial": true,
+          "normalTrainPresentHandsOff": true,
+          "exactTwoConstructorsAndMakes": true,
+          "oneBeforeAfterTrainOnly": true,
+          "actionFlagCorrect": true,
+          "allHostsRetainedCurrentValid": true,
+          "tagMatchesExactPredecessor": true,
+          "oneStableOwnerPerHost": true,
+          "beforeOwnershipObserved": true,
+          "actionBeforeFirstHang": true,
+          "commonDetachEnabledBothArms": true,
+          "structuralFlagMatchesArm": true,
+          "exactEnvironmentAllowlist": true,
+          "postActionEveryTrialHasPredecessor": true,
+          "bothHostsPresentFromFirstHang": true,
+          "workoutAttachedUnmarkedUnchanged": true,
+          "expectedPredecessorAttachmentThroughout": true,
+          "weakPredecessorAliveEveryPostObservation": true,
+          "weakMembershipMatchesAction": true,
+          "weakEntityIDsPreserved": true,
+          "observationsThroughTail": true
+        },
+        "train-navigation-validation.json": {
+          "readinessPassedWithinBound": true,
+          "readinessEvidenceInCompleteTrace": true,
+          "readinessBeforeOpenURL": true,
+          "initialTrainConstructorAndMakeBeforeOpenURL": true,
+          "exactlyInitialFalseThenTrue": true,
+          "initialBoardMapBeforeOpenURL": true,
+          "navigationTrueAfterOpenURLBeforeFirstHang": true,
+          "requestedBranchMatchesAction": true,
+          "expectedBoardPlanPresentation": true,
+          "navFlagsCorrect": true,
+          "sameReadyPredecessorIsDetached": true,
+          "distinctWorkoutExactlyOne": true
+        }
+      },
+      "lifecycleOrder": [
+        {
+          "sequence": 3,
+          "epoch": 1790992027.315443,
+          "event": "board-scene-constructed",
+          "role": "predecessor"
+        },
+        {
+          "sequence": 7,
+          "epoch": 1790992027.967358,
+          "event": "view-make",
+          "role": "predecessor"
+        },
+        {
+          "sequence": 10,
+          "epoch": 1790992028.568006,
+          "event": "board-scene-constructed",
+          "role": "workout"
+        },
+        {
+          "sequence": 14,
+          "epoch": 1790992028.684133,
+          "event": "view-make",
+          "role": "workout"
+        },
+        {
+          "sequence": 16,
+          "epoch": 1790992029.071825,
+          "event": "detach-trial-before",
+          "role": "predecessor"
+        },
+        {
+          "sequence": 17,
+          "epoch": 1790992029.072685,
+          "event": "detach-trial-after",
+          "role": "predecessor"
+        },
+        {
+          "sequence": 18,
+          "epoch": 1790992029.073093,
+          "event": "view-disappear",
+          "role": "predecessor"
+        }
+      ],
+      "weakLifetime": {
+        "counts": {
+          "observations": 135,
+          "parentAlive": 135,
+          "sceneAlive": 135
+        },
+        "lastObservedAliveBeforeNil": null,
+        "firstObservedNil": null,
+        "allLaterNil": false
+      },
+      "readinessSeconds": 4.445518250009627
+    },
+    "unmount": {
+      "valid": true,
+      "visualFailure": false,
+      "visualReview": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-postboot-unmount-landscape/visual-review.json",
+      "visualReviewSHA256": "5826e5b611dfc47b255148d5e03ca17e37971e41af63bfd2c6247903ec1717e7",
+      "traceRecords": 154,
+      "traceSHA256": "40b5f6bd364e7cf889ccb1f07a7c3b62fb10bdd1c17b2ddcf1882c86a70296db",
+      "checks": {
+        "structural-correspondence.json": {
+          "completeContiguous": true,
+          "captures12": true,
+          "allCPUBrackets": true,
+          "sameScene": true,
+          "naturalFirstHang": true,
+          "naturalRest": true,
+          "freshSession": true,
+          "boundaryAppActive": true,
+          "boundaryWindowActive": true,
+          "boundaryLandscape": true,
+          "lateBoundaryCensus": true,
+          "noAXOrTouch": true
+        },
+        "hand-lifetime-validation.json": {
+          "completeOpeningStream": true,
+          "instrumentationVersion": true,
+          "suppressionFlagCorrect": true,
+          "allFourCountsOnEveryRecord": true,
+          "openingCountsZero": true,
+          "countsMonotonic": true,
+          "finalMarkerAfterLastCapture": true,
+          "noRecorderErrorOrCap": true,
+          "strictOFFZeroAllFourLifetimeCounts": true
+        },
+        "strict-absence-validation.json": {
+          "strictFlagEnabled": true,
+          "perspectiveFlagAbsent": true,
+          "openingStrictEnabled": true,
+          "allFourCountsZeroThroughout": true,
+          "noHandLifecycleEvents": true,
+          "noHandCameraEvents": true
+        },
+        "normal-host-frame-validation.json": {
+          "workoutSceneFromCountdown": true,
+          "hostObserved": true,
+          "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+          "sameHost": true,
+          "sameActualScene": true,
+          "rootCameraActiveSameScene": true,
+          "hostVisible": true,
+          "sampledFramesOnMonotoneOwnEndpointPath": true,
+          "allPostFirstCaptureCensusesFinal": true
+        },
+        "train-constructor-validation.json": {
+          "completeContiguous": true,
+          "openingBeforeConstructors": true,
+          "uniqueConstructorTokens": true,
+          "exactlyOneWorkoutConstructor": true,
+          "exactlyOneWorkoutMake": true,
+          "allSceneRecordsHaveConstructor": true,
+          "markerGateMatches": true,
+          "strictHandsEnabled": true,
+          "observedPredecessorConstruction": true
+        },
+        "guarded-detach-validation.json": {
+          "commonTrial": true,
+          "normalTrainPresentHandsOff": true,
+          "exactTwoConstructorsAndMakes": true,
+          "oneBeforeAfterTrainOnly": true,
+          "actionFlagCorrect": true,
+          "allHostsRetainedCurrentValid": true,
+          "tagMatchesExactPredecessor": true,
+          "oneStableOwnerPerHost": true,
+          "beforeOwnershipObserved": true,
+          "actionBeforeFirstHang": true,
+          "commonDetachEnabledBothArms": true,
+          "structuralFlagMatchesArm": true,
+          "exactEnvironmentAllowlist": true,
+          "postActionEveryTrialHasPredecessor": true,
+          "bothHostsPresentFromFirstHang": true,
+          "workoutAttachedUnmarkedUnchanged": true,
+          "expectedPredecessorAttachmentThroughout": true,
+          "weakPredecessorAliveEveryPostObservation": true,
+          "weakMembershipMatchesAction": true,
+          "weakEntityIDsPreserved": true,
+          "observationsThroughTail": true
+        },
+        "train-navigation-validation.json": {
+          "readinessPassedWithinBound": true,
+          "readinessEvidenceInCompleteTrace": true,
+          "readinessBeforeOpenURL": true,
+          "initialTrainConstructorAndMakeBeforeOpenURL": true,
+          "exactlyInitialFalseThenTrue": true,
+          "initialBoardMapBeforeOpenURL": true,
+          "navigationTrueAfterOpenURLBeforeFirstHang": true,
+          "requestedBranchMatchesAction": true,
+          "expectedBoardPlanPresentation": true,
+          "navFlagsCorrect": true,
+          "sameReadyPredecessorIsDetached": true,
+          "distinctWorkoutExactlyOne": true
+        }
+      },
+      "lifecycleOrder": [
+        {
+          "sequence": 3,
+          "epoch": 1790992272.984116,
+          "event": "board-scene-constructed",
+          "role": "predecessor"
+        },
+        {
+          "sequence": 7,
+          "epoch": 1790992273.550756,
+          "event": "view-make",
+          "role": "predecessor"
+        },
+        {
+          "sequence": 9,
+          "epoch": 1790992273.7573571,
+          "event": "detach-trial-before",
+          "role": "predecessor"
+        },
+        {
+          "sequence": 10,
+          "epoch": 1790992273.758157,
+          "event": "detach-trial-after",
+          "role": "predecessor"
+        },
+        {
+          "sequence": 11,
+          "epoch": 1790992273.7585459,
+          "event": "view-disappear",
+          "role": "predecessor"
+        },
+        {
+          "sequence": 13,
+          "epoch": 1790992274.0998812,
+          "event": "board-scene-constructed",
+          "role": "workout"
+        },
+        {
+          "sequence": 17,
+          "epoch": 1790992274.260826,
+          "event": "view-make",
+          "role": "workout"
+        }
+      ],
+      "weakLifetime": {
+        "counts": {
+          "observations": 138,
+          "parentAlive": 2,
+          "sceneAlive": 2
+        },
+        "lastObservedAliveBeforeNil": {
+          "sequence": 11,
+          "epoch": 1790992273.7585459,
+          "event": "view-disappear",
+          "recordedParentID": "ObjectIdentifier(0x0000000117ad11c0)",
+          "recordedActualSceneID": "ObjectIdentifier(0x0000000106eccf00)",
+          "currentRootParentID": "nil",
+          "currentRootSceneID": "nil"
+        },
+        "firstObservedNil": {
+          "sequence": 15,
+          "epoch": 1790992274.258075,
+          "event": "highlight-before",
+          "recordedParentID": "nil",
+          "recordedActualSceneID": "nil",
+          "currentRootParentID": "nil",
+          "currentRootSceneID": "nil"
+        },
+        "allLaterNil": true
+      },
+      "readinessSeconds": 4.078423540995573
+    }
+  },
+  "crossArmChecks": {
+    "sameBinary": true,
+    "onlyActionAndRunIDEnvironmentDifference": true,
+    "sameNormalFrameEndpoints": true,
+    "sameResolvedWorkoutInputs": true,
+    "sameRootCameraTransformSets": true,
+    "sameConstructorAndMakeCounts": true
+  },
+  "sourceBuildInstalledPackageParity": {
+    "checkCount": 27,
+    "allEqual": true,
+    "proof": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-postboot-final-parity.json"
+  },
+  "previousEvidencePreserved": [
+    {
+      "manifest": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-frozen-manifest.json",
+      "sha256": "b8155db6e5ded1f79f565ca27cde8c91e301a59d30ecaf9006cc12bac4b7fdde",
+      "fileCount": 230,
+      "changed": []
+    },
+    {
+      "manifest": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-unmount-reversal-frozen-manifest.json",
+      "sha256": "371ffaa0e171a6f6b988ee17eab66f6624e6e67f0677cef9f85a4be992825174",
+      "fileCount": 11,
+      "changed": []
+    }
+  ],
+  "environmentEpoch": "New post-boot pair following exact-owned Simulator recovery; failed preboot CONTROL-B never launched. Unknown shutdown cause retained as limitation.",
+  "limitations": [
+    "Structural intervention changes Train/workout construction-detachment order as well as old weak Scene/parent liveness; does not isolate ongoing host interference or deallocation mechanism.",
+    "Same sampled frame endpoints, input/transform sets and constructor counts do not prove identical animation timing or framework lifetime.",
+    "Common DEBUG retention, guarded entity detachment, strict hands suppression and readiness startup remain diagnostic adaptations, not ordinary production.",
+    "No backing UIView/GPU destruction observation or frontend/headless-isolation claim.",
+    "No production fix or acceptance claim; no extra reversal beyond this authorized pair."
+  ],
+  "productionFix": false,
+  "humanAcceptance": false,
+  "appTerminatedAndPIDAbsent": true,
+  "ownership": "Handed source/runtime/DD back to root; root controllerPID96137 and exact registered Simulator/DD remain root-owned. No further launch or resource action."
+}

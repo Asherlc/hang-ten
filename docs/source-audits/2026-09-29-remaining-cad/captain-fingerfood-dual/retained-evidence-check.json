@@ -1,0 +1,26 @@
+{
+  "package": "captain-fingerfood-dual",
+  "allRetainedBytesAndHashesMatch": true,
+  "sources": [
+    {
+      "path": "evidence/captain-fingerfood-dual.html",
+      "bytes": 590737,
+      "sha256": "c93df995f581f2a731e45f38a8504744ee393059d7a714019dc679b702e3ffb2"
+    },
+    {
+      "path": "evidence/captain-fingerfood-dual-title.jpg",
+      "bytes": 197112,
+      "sha256": "f57fb751f63c5258e8cb85a9d0f0ad27f6b9cb5eede94b5e1caccc496ec9468e"
+    },
+    {
+      "path": "evidence/DualP1.jpg",
+      "bytes": 250426,
+      "sha256": "b67f397ceefa3054f7d6ac038a8459fe8389753713ebb97274acc1a17a6de5c8"
+    },
+    {
+      "path": "evidence/DualP2.jpg",
+      "bytes": 255166,
+      "sha256": "5b9f30b16919157e9017f51cebe979bd5aae99f69b4c48827c7b5fdb1145649b"
+    }
+  ]
+}

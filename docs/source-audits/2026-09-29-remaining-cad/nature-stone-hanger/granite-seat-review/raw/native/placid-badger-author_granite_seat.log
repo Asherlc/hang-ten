@@ -1,0 +1,191 @@
+issing element reference prior#CordSeat_Right ;#2aeb:4;:H1274,F.Face30
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2aec:1;:H1274,F.Face31
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2aed:4;:H1274,F.Face32
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2aee:5;:H1274,F.Face33
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2aef:6;:H1274,F.Face34
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2af0:1;:H1274,F.Face35
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2af1:6;:H1274,F.Face36
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b18:4;:H1274,F.Face88
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b19:5;:H1274,F.Face89
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b1a:3;:H1274,F.Face90
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b19:9;:H1274,F.Face91
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b1b:4;:H1274,F.Face92
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b1c:5;:H1274,F.Face93
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b1d:6;:H1274,F.Face94
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b19:1;:H1274,F.Face95
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b1e:6;:H1274,F.Face96
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b41:4;:H1274,F.Face134
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b19:6;:H1274,F.Face135
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b42:5;:H1274,F.Face136
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b43:a;:H1274,F.Face137
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b42:1;:H1274,F.Face138
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b19:2;:H1274,F.Face139
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b44:6;:H1274,F.Face140
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b5c:4;:H1274,F.Face164
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b42:7;:H1274,F.Face165
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b5d:6;:H1274,F.Face166
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b42:3;:H1274,F.Face167
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b5e:6;:H1274,F.Face168
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b71:1;:H1274,F.Face187
+<PropertyLinks> PropertyLinks.cpp(516): prior#BodySkin.Support missing element reference prior#CordSeat_Right ;#2b19:c;:H1274,F.Face188
+
+{
+  "status": "native-author-pass",
+  "priorSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "red": {
+    "woodSource": "Cavity3",
+    "combinedBody": "CordSeat_Right",
+    "combinedBodyContainsStoneExpected": true,
+    "woodStoneOverlapMM3": 4332.251475033639,
+    "woodStoneMustNotOverlap": false,
+    "graniteContactAreaMM2": 2371.0352227826147
+  },
+  "woodSeatStoneOverlapMM3": 0.0,
+  "woodSeatValid": true,
+  "combinedBodyValid": true,
+  "combinedSolidCount": 1,
+  "combinedEnvelopeMM": [
+    105.0000002,
+    35.000000200000045,
+    105.0000002
+  ],
+  "manifestRawPreserved": true,
+  "contacts": {
+    "edge-front-15mm-incut": {
+      "areaMM2": 1576.9854096792426,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 0.0,
+      "bboxYDepthMM": 15.000000000000629,
+      "valid": true
+    },
+    "edge-front-15mm-flat": {
+      "areaMM2": 1579.0272289811758,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 0.0,
+      "bboxYDepthMM": 15.00000000000042,
+      "valid": true
+    },
+    "edge-reverse-10mm-incut": {
+      "areaMM2": 1101.876119262868,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 0.0,
+      "bboxYDepthMM": 10.000000000000696,
+      "valid": true
+    },
+    "edge-reverse-10mm-flat": {
+      "areaMM2": 1105.6849440428584,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 0.0,
+      "bboxYDepthMM": 10.00000000000141,
+      "valid": true
+    },
+    "edge-reverse-06mm-flat": {
+      "areaMM2": 671.3059239625056,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 0.0,
+      "bboxYDepthMM": 6.000000000000334,
+      "valid": true
+    },
+    "edge-reverse-06mm-incut": {
+      "areaMM2": 665.4460045322277,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 0.0,
+      "bboxYDepthMM": 6.000000000001178,
+      "valid": true
+    },
+    "edge-front-20mm-wood-flat": {
+      "areaMM2": 2144.3440540053684,
+      "oldMinusNewAreaMM2": 0.0,
+      "newMinusOldAreaMM2": 0.0,
+      "bboxYDepthMM": 20.00000000000078,
+      "valid": true
+    },
+    "edge-front-20mm-granite": {
+      "areaMM2": 2555.120681586958,
+      "oldMinusNewAreaMM2": 327.8579017226714,
+      "newMinusOldAreaMM2": 511.9433605270148,
+      "bboxYDepthMM": 20.00000000000001,
+      "valid": true
+    }
+  },
+  "exposedStoneFaceSelection": [
+    "Face2",
+    "Face4",
+    "Face6"
+  ],
+  "stoneFaceExposure": [
+    {
+      "face": 1,
+      "area": 210.76389342116934,
+      "exposedArea": 0.0
+    },
+    {
+      "face": 2,
+      "area": 845.5277868423387,
+      "exposedArea": 845.5277868423387
+    },
+    {
+      "face": 3,
+      "area": 75.39822368615505,
+      "exposedArea": 0.0
+    },
+    {
+      "face": 4,
+      "area": 301.5928947446202,
+      "exposedArea": 301.5928947446202
+    },
+    {
+      "face": 5,
+      "area": 1037.5277868423386,
+      "exposedArea": 0.0
+    },
+    {
+      "face": 6,
+      "area": 1407.9999999999998,
+      "exposedArea": 1408.0
+    },
+    {
+      "face": 7,
+      "area": 1503.9999999999998,
+      "exposedArea": 0.0
+    },
+    {
+      "face": 8,
+      "area": 75.39822368615505,
+      "exposedArea": 0.0
+    },
+    {
+      "face": 9,
+      "area": 210.76389342116934,
+      "exposedArea": 0.0
+    }
+  ],
+  "changedExistingObjects": [
+    "FrontTwentyProfile0\u20264",
+    "FrontTwentyLower0\u20264",
+    "StoneRoundover",
+    "InsertUnion",
+    "BodySkin",
+    "StoneSkin"
+  ],
+  "addedObjects": [
+    "GraniteInsertSeat"
+  ],
+  "stoneFilletEdges": [
+    4,
+    8,
+    10
+  ],
+  "removedBodyVolumeMM3": 28.946941458147705,
+  "addedBodyVolumeMM3": 245.13073850545626,
+  "estimates": "80x20x13 insert and existing placement retained; 2.4mm bottom corner and front lip radius retained from existing author as display estimates; lower sidewalls at x=+-40 chosen to meet existing insert and upper rail endpoints retained verbatim. Source-supported 20mm granite grip depth preserved.",
+  "sourceSHA256": "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9"
+}
+
+								
+								
+								
+								
+								
+								
+								

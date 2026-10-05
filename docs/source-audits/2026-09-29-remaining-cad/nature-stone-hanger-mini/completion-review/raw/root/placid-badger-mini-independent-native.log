@@ -1,0 +1,11 @@
+<TopoShape> TopoShapeExpansion.cpp(922): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+
+{"status": "pass", "owner": "placid-badger", "sourceSHA256": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0", "priorSourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371", "modelSHA256": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57", "descriptorSHA256": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71", "sidecarSHA256": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e", "nativeEnvelopeMM": [100.0000002, 25.00000020000001, 60.00000020000002], "priorWoodStoneOverlapMM3": 377.77549472552914, "correctedWoodStoneOverlapMM3": 0.0, "removedCombinedMaterialMM3": 0.0, "addedCombinedMaterialMM3": 34.105693266271615, "gapWitnessVolumeMM3": 62.0, "gapWitnessMaterialMM3": 62.0, "otherThreeContactsPreserved": true, "contacts": {"wood-edge-15-incut": {"areaMM2": 1151.538758905897, "symmetricDifferenceAreasMM2": [0.0, 0.0], "YExtentMM": 15.000000000000096, "ZExtentMM": 30.000000000000007}, "granite-edge-15": {"areaMM2": 1980.8141502220528, "symmetricDifferenceAreasMM2": [0.0, 870.8141502220527], "YExtentMM": 15.000000000000002, "ZExtentMM": 10.000000000000002}, "pinch-60": {"areaMM2": 4679.468914507713, "symmetricDifferenceAreasMM2": [0.0, 0.0], "YExtentMM": 25.000000000000014, "ZExtentMM": 60.0}, "pull-up-jug": {"areaMM2": 2158.247779607694, "symmetricDifferenceAreasMM2": [0.0, 0.0], "YExtentMM": 0.0, "ZExtentMM": 30.000000000000004}}, "logicalContactsPreserved": true, "allExposedStoneAssignedToGranite": true, "nativeSketchesConstrained": true, "outerCordBearingSlabsPreserved": true, "jugPoseID": "jug-open-up", "jugPosedNormal": [0.0, 1.0000000000000002, -2.2000000000000005e-16], "jugPoseEstimate": "Opening-up display adaptation; no sourced exact angle or hand-placement claim.", "graniteVertexMaximumErrorMM": 1.7962569620788761e-06, "graniteVerticesChecked": 270}
+
+								
+								
+								
+								
+								
+								

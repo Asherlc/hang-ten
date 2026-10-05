@@ -1,0 +1,3099 @@
+{
+  "sourceSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+  "sourceBytesUnchanged": true,
+  "cordRadiusMM": 1.5,
+  "checks": [
+    {
+      "strandID": "left-upper-visible-lead",
+      "bendChecks": [
+        {
+          "index": 0,
+          "bendDegrees": 6.937647469648795,
+          "pointNativeMM": [
+            -166.957817,
+            8.598095,
+            50.32063
+          ],
+          "distanceToActualSolidMM": 1.6857025043302523,
+          "nearestSolidPointNativeMM": [
+            -166.09495707536627,
+            8.598095,
+            48.87250511465125
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 1,
+          "bendDegrees": 1.4136525125659196,
+          "pointNativeMM": [
+            -167.029546,
+            8.591645999999999,
+            50.277637999999996
+          ],
+          "distanceToActualSolidMM": 1.685846572456135,
+          "nearestSolidPointNativeMM": [
+            -166.1541405492031,
+            8.591645999999999,
+            48.83689376087316
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 3,
+          "bendDegrees": 1.4126747653331422,
+          "pointNativeMM": [
+            -167.361286,
+            8.560135,
+            50.067566
+          ],
+          "distanceToActualSolidMM": 1.6865374999610785,
+          "nearestSolidPointNativeMM": [
+            -166.42782449354812,
+            8.560135,
+            48.66291004399243
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 4,
+          "bendDegrees": 1.4116505635101453,
+          "pointNativeMM": [
+            -167.43071500000002,
+            8.553175999999999,
+            50.021175
+          ],
+          "distanceToActualSolidMM": 1.686687451954382,
+          "nearestSolidPointNativeMM": [
+            -166.48509567542973,
+            8.553175999999999,
+            48.62449370006805
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 5,
+          "bendDegrees": 1.411022465935871,
+          "pointNativeMM": [
+            -167.751748,
+            8.519262,
+            49.795079
+          ],
+          "distanceToActualSolidMM": 1.6874073761633952,
+          "nearestSolidPointNativeMM": [
+            -166.74987602082481,
+            8.519262,
+            48.43728807703938
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 6,
+          "bendDegrees": 1.4105344743869652,
+          "pointNativeMM": [
+            -167.818714,
+            8.511812,
+            49.745414000000004
+          ],
+          "distanceToActualSolidMM": 1.6875626782587605,
+          "nearestSolidPointNativeMM": [
+            -166.80510047222393,
+            8.511812,
+            48.39617146829519
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 8,
+          "bendDegrees": 1.4087653603070334,
+          "pointNativeMM": [
+            -168.128266,
+            8.475576,
+            49.503837000000004
+          ],
+          "distanceToActualSolidMM": 1.688302941657282,
+          "nearestSolidPointNativeMM": [
+            -167.06034217708034,
+            8.475576,
+            48.196203438466306
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 9,
+          "bendDegrees": 1.4096692484465057,
+          "pointNativeMM": [
+            -168.192612,
+            8.467654999999999,
+            49.451031
+          ],
+          "distanceToActualSolidMM": 1.6884625377561882,
+          "nearestSolidPointNativeMM": [
+            -167.11339088188015,
+            8.467654999999999,
+            48.15249816652592
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 11,
+          "bendDegrees": 1.4074238386225422,
+          "pointNativeMM": [
+            -168.489937,
+            8.429183,
+            49.194556
+          ],
+          "distanceToActualSolidMM": 1.689216598936416,
+          "nearestSolidPointNativeMM": [
+            -167.3584823365079,
+            8.429182999999998,
+            47.94025816352562
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 12,
+          "bendDegrees": 1.4079707237408545,
+          "pointNativeMM": [
+            -168.55151500000002,
+            8.420812,
+            49.138746
+          ],
+          "distanceToActualSolidMM": 1.6893778565881723,
+          "nearestSolidPointNativeMM": [
+            -167.40923481112497,
+            8.420811999999998,
+            47.89407997554443
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 13,
+          "bendDegrees": 1.4059607131921177,
+          "pointNativeMM": [
+            -168.83589700000002,
+            8.380199,
+            48.867990999999996
+          ],
+          "distanceToActualSolidMM": 1.690138707505183,
+          "nearestSolidPointNativeMM": [
+            -167.64359062865054,
+            8.380198999999998,
+            47.6700868437977
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 14,
+          "bendDegrees": 1.4062917424613488,
+          "pointNativeMM": [
+            -168.894566,
+            8.371399,
+            48.809323
+          ],
+          "distanceToActualSolidMM": 1.6903003073529737,
+          "nearestSolidPointNativeMM": [
+            -167.69193175139756,
+            8.371399,
+            47.621557874595986
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 16,
+          "bendDegrees": 1.405425621677083,
+          "pointNativeMM": [
+            -169.165321,
+            8.328741,
+            48.524941000000005
+          ],
+          "distanceToActualSolidMM": 1.6910618657875858,
+          "nearestSolidPointNativeMM": [
+            -167.91499350575464,
+            8.328741,
+            47.386357937129716
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 17,
+          "bendDegrees": 1.404243587693083,
+          "pointNativeMM": [
+            -169.22094900000002,
+            8.319535,
+            48.463565
+          ],
+          "distanceToActualSolidMM": 1.6912216448612136,
+          "nearestSolidPointNativeMM": [
+            -167.9608163054068,
+            8.319534999999998,
+            47.335603899578395
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 19,
+          "bendDegrees": 1.4032129933950357,
+          "pointNativeMM": [
+            -169.47742399999998,
+            8.274936,
+            48.16624
+          ],
+          "distanceToActualSolidMM": 1.6919753101922368,
+          "nearestSolidPointNativeMM": [
+            -168.17205369240807,
+            8.274936,
+            47.089769466098815
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 20,
+          "bendDegrees": 1.403629127692352,
+          "pointNativeMM": [
+            -169.529889,
+            8.265346999999998,
+            48.102312
+          ],
+          "distanceToActualSolidMM": 1.6921328972350138,
+          "nearestSolidPointNativeMM": [
+            -168.21525856472573,
+            8.265346999999998,
+            47.036919790268975
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 22,
+          "bendDegrees": 1.4017487945099536,
+          "pointNativeMM": [
+            -169.771466,
+            8.218914000000002,
+            47.792759999999994
+          ],
+          "distanceToActualSolidMM": 1.6928712055177986,
+          "nearestSolidPointNativeMM": [
+            -168.41417044359446,
+            8.218914000000002,
+            46.78104774296589
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 23,
+          "bendDegrees": 1.401795569507938,
+          "pointNativeMM": [
+            -169.820653,
+            8.208966,
+            47.726440000000004
+          ],
+          "distanceToActualSolidMM": 1.6930247301866013,
+          "nearestSolidPointNativeMM": [
+            -168.4546646420034,
+            8.208966,
+            46.726235749438565
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 24,
+          "bendDegrees": 1.4000340605814905,
+          "pointNativeMM": [
+            -170.046749,
+            8.160811,
+            47.405407
+          ],
+          "distanceToActualSolidMM": 1.6937399544577243,
+          "nearestSolidPointNativeMM": [
+            -168.64077975089452,
+            8.160811,
+            46.460946569968
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 25,
+          "bendDegrees": 1.4002661527326807,
+          "pointNativeMM": [
+            -170.092552,
+            8.150529,
+            47.336859000000004
+          ],
+          "distanceToActualSolidMM": 1.693887860842286,
+          "nearestSolidPointNativeMM": [
+            -168.67847791612218,
+            8.150529,
+            46.40430842742288
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 26,
+          "bendDegrees": 1.39884181977748,
+          "pointNativeMM": [
+            -170.302624,
+            8.100767999999999,
+            47.005119
+          ],
+          "distanceToActualSolidMM": 1.6945748483126974,
+          "nearestSolidPointNativeMM": [
+            -168.85135687116392,
+            8.100767999999999,
+            46.130243216077595
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 27,
+          "bendDegrees": 1.398711263729296,
+          "pointNativeMM": [
+            -170.344946,
+            8.090176,
+            46.934509999999996
+          ],
+          "distanceToActualSolidMM": 1.6947157092416019,
+          "nearestSolidPointNativeMM": [
+            -168.88618109104124,
+            8.090176,
+            46.071917236558974
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 28,
+          "bendDegrees": 1.39798213890116,
+          "pointNativeMM": [
+            -170.538488,
+            8.038929,
+            46.592862
+          ],
+          "distanceToActualSolidMM": 1.6953678979803586,
+          "nearestSolidPointNativeMM": [
+            -169.04541640077724,
+            8.038929,
+            45.78973715970633
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 29,
+          "bendDegrees": 1.397199314053296,
+          "pointNativeMM": [
+            -170.57724,
+            8.028054,
+            46.520362000000006
+          ],
+          "distanceToActualSolidMM": 1.6954999163861504,
+          "nearestSolidPointNativeMM": [
+            -169.07729571365684,
+            8.028054,
+            45.72986398967235
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 30,
+          "bendDegrees": 1.39595090615761,
+          "pointNativeMM": [
+            -170.753784,
+            7.9754439999999995,
+            46.16962899999999
+          ],
+          "distanceToActualSolidMM": 1.6961095453948567,
+          "nearestSolidPointNativeMM": [
+            -169.22251245946995,
+            7.9754439999999995,
+            45.44024908586587
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 31,
+          "bendDegrees": 1.3967507852834473,
+          "pointNativeMM": [
+            -170.788887,
+            7.964312,
+            46.095412
+          ],
+          "distanceToActualSolidMM": 1.6962329875324758,
+          "nearestSolidPointNativeMM": [
+            -169.25138268546215,
+            7.964312,
+            45.37897161115326
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 33,
+          "bendDegrees": 1.3962550895837087,
+          "pointNativeMM": [
+            -170.948009,
+            7.9104659999999996,
+            45.736439
+          ],
+          "distanceToActualSolidMM": 1.6967954224476836,
+          "nearestSolidPointNativeMM": [
+            -169.3822400990626,
+            7.9104659999999996,
+            45.08261757598829
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 34,
+          "bendDegrees": 1.3945563728579822,
+          "pointNativeMM": [
+            -170.979389,
+            7.899102,
+            45.66068
+          ],
+          "distanceToActualSolidMM": 1.6969069746863619,
+          "nearestSolidPointNativeMM": [
+            -169.40804384197193,
+            7.899102,
+            45.02008053459203
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 36,
+          "bendDegrees": 1.3934029241107895,
+          "pointNativeMM": [
+            -171.12070500000002,
+            7.844149999999999,
+            45.294332
+          ],
+          "distanceToActualSolidMM": 1.697416306586481,
+          "nearestSolidPointNativeMM": [
+            -169.52423508418855,
+            7.844149999999999,
+            44.717698731991106
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 37,
+          "bendDegrees": 1.3945431431277142,
+          "pointNativeMM": [
+            -171.148301,
+            7.832581,
+            45.217209000000004
+          ],
+          "distanceToActualSolidMM": 1.697517462540712,
+          "nearestSolidPointNativeMM": [
+            -169.54692201202033,
+            7.832581,
+            44.65404750230342
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 38,
+          "bendDegrees": 1.3933273637848094,
+          "pointNativeMM": [
+            -171.27147100000002,
+            7.776655000000001,
+            44.844368
+          ],
+          "distanceToActualSolidMM": 1.6979690566254815,
+          "nearestSolidPointNativeMM": [
+            -169.64817536196688,
+            7.776655000000001,
+            44.346361786383945
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 39,
+          "bendDegrees": 1.3931519518147266,
+          "pointNativeMM": [
+            -171.29522599999999,
+            7.764909,
+            44.766059
+          ],
+          "distanceToActualSolidMM": 1.6980569591313848,
+          "nearestSolidPointNativeMM": [
+            -169.66770171729948,
+            7.764909,
+            44.281742837070524
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 41,
+          "bendDegrees": 1.3920452604465996,
+          "pointNativeMM": [
+            -171.39995299999998,
+            7.708143,
+            44.387623
+          ],
+          "distanceToActualSolidMM": 1.698446266920184,
+          "nearestSolidPointNativeMM": [
+            -169.75378054694116,
+            7.708142999999999,
+            43.96948907838468
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 42,
+          "bendDegrees": 1.3924032539202236,
+          "pointNativeMM": [
+            -171.41982,
+            7.696246,
+            44.30831
+          ],
+          "distanceToActualSolidMM": 1.6985207061953504,
+          "nearestSolidPointNativeMM": [
+            -169.77010868800448,
+            7.6962459999999995,
+            43.90405120114903
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 44,
+          "bendDegrees": 1.3926691105308275,
+          "pointNativeMM": [
+            -171.505853,
+            7.638779,
+            43.925191000000005
+          ],
+          "distanceToActualSolidMM": 1.6988453768523568,
+          "nearestSolidPointNativeMM": [
+            -169.8408120807345,
+            7.638779,
+            43.58797541372893
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 45,
+          "bendDegrees": 1.3913709773721123,
+          "pointNativeMM": [
+            -171.521793,
+            7.626758,
+            43.845054000000005
+          ],
+          "distanceToActualSolidMM": 1.6989054123527316,
+          "nearestSolidPointNativeMM": [
+            -169.8539114221057,
+            7.626758,
+            43.521865754170655
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 47,
+          "bendDegrees": 1.3910541151937073,
+          "pointNativeMM": [
+            -171.588923,
+            7.568726,
+            43.458175000000004
+          ],
+          "distanceToActualSolidMM": 1.6991607178432804,
+          "nearestSolidPointNativeMM": [
+            -169.90907442732401,
+            7.568726,
+            43.202722620993335
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 48,
+          "bendDegrees": 1.3917284702243367,
+          "pointNativeMM": [
+            -171.600906,
+            7.556609,
+            43.377396
+          ],
+          "distanceToActualSolidMM": 1.6992069656056172,
+          "nearestSolidPointNativeMM": [
+            -169.91892040992283,
+            7.556609,
+            43.13608958331079
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 49,
+          "bendDegrees": 1.3904428468351369,
+          "pointNativeMM": [
+            -171.64897100000002,
+            7.498152999999999,
+            42.98769
+          ],
+          "distanceToActualSolidMM": 1.6993903362500786,
+          "nearestSolidPointNativeMM": [
+            -169.95841442853444,
+            7.498152999999999,
+            42.814640892476426
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 50,
+          "bendDegrees": 1.391466496774069,
+          "pointNativeMM": [
+            -171.656973,
+            7.485968,
+            42.906451999999994
+          ],
+          "distanceToActualSolidMM": 1.6994217740560833,
+          "nearestSolidPointNativeMM": [
+            -169.96498861474845,
+            7.485968,
+            42.747633845493404
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 52,
+          "bendDegrees": 1.3899797846415856,
+          "pointNativeMM": [
+            -171.685858,
+            7.427228,
+            42.514857000000006
+          ],
+          "distanceToActualSolidMM": 1.6995320983340902,
+          "nearestSolidPointNativeMM": [
+            -169.98872184909914,
+            7.427228,
+            42.42464481360987
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 53,
+          "bendDegrees": 1.3911555019456128,
+          "pointNativeMM": [
+            -171.689863,
+            7.415002,
+            42.433344
+          ],
+          "distanceToActualSolidMM": 1.6995480297334065,
+          "nearestSolidPointNativeMM": [
+            -169.9920119744106,
+            7.415002,
+            42.35741376705109
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 54,
+          "bendDegrees": 0.6949380294086432,
+          "pointNativeMM": [
+            -171.699499,
+            7.35612,
+            42.040802
+          ],
+          "distanceToActualSolidMM": 1.6995848186510036,
+          "nearestSolidPointNativeMM": [
+            -169.99992921870154,
+            7.35612,
+            42.03365257442487
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 55,
+          "bendDegrees": 0.6957071204440132,
+          "pointNativeMM": [
+            -171.7,
+            7.35,
+            42.0
+          ],
+          "distanceToActualSolidMM": 1.6999999999999886,
+          "nearestSolidPointNativeMM": [
+            -170.0,
+            7.35,
+            42.0
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 56,
+          "bendDegrees": 5.624999264817503,
+          "pointNativeMM": [
+            -171.7,
+            0.519183,
+            -3.538783
+          ],
+          "distanceToActualSolidMM": 1.700000001088744,
+          "nearestSolidPointNativeMM": [
+            -170.0,
+            0.5191920253613014,
+            -3.538722830976804
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 57,
+          "bendDegrees": 11.250038284117817,
+          "pointNativeMM": [
+            -171.667335,
+            0.46998500000000004,
+            -3.8667670000000003
+          ],
+          "distanceToActualSolidMM": 1.7000118559586335,
+          "nearestSolidPointNativeMM": [
+            -170.0,
+            0.5191916392753333,
+            -3.5387227730638804
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 58,
+          "bendDegrees": 11.249977302695811,
+          "pointNativeMM": [
+            -171.570595,
+            0.422678,
+            -4.182147
+          ],
+          "distanceToActualSolidMM": 1.7000230211380971,
+          "nearestSolidPointNativeMM": [
+            -170.0,
+            0.5191916453213065,
+            -3.5387227739707767
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 59,
+          "bendDegrees": 0.8231272388231426,
+          "pointNativeMM": [
+            -171.413498,
+            0.37908000000000003,
+            -4.472803
+          ],
+          "distanceToActualSolidMM": 1.7000334519700606,
+          "nearestSolidPointNativeMM": [
+            -170.0,
+            0.5191921880186934,
+            -3.538722855375438
+          ],
+          "insideSolid": false
+        }
+      ]
+    },
+    {
+      "strandID": "left-lower-visible-lead",
+      "bendChecks": [
+        {
+          "index": 0,
+          "bendDegrees": 7.989948131042193,
+          "pointNativeMM": [
+            -166.957817,
+            -12.198095,
+            50.32063
+          ],
+          "distanceToActualSolidMM": 1.685702504330246,
+          "nearestSolidPointNativeMM": [
+            -166.09495707536627,
+            -12.198095000000004,
+            48.872505114651254
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 1,
+          "bendDegrees": 1.4142956199851402,
+          "pointNativeMM": [
+            -167.029546,
+            -12.191646,
+            50.277637999999996
+          ],
+          "distanceToActualSolidMM": 1.685846572456114,
+          "nearestSolidPointNativeMM": [
+            -166.15414054920313,
+            -12.191646000000004,
+            48.83689376087317
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 3,
+          "bendDegrees": 1.4126026266290286,
+          "pointNativeMM": [
+            -167.361286,
+            -12.160135,
+            50.067566
+          ],
+          "distanceToActualSolidMM": 1.6865374999610725,
+          "nearestSolidPointNativeMM": [
+            -166.42782449354812,
+            -12.160135000000002,
+            48.66291004399244
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 4,
+          "bendDegrees": 1.4096448498538448,
+          "pointNativeMM": [
+            -167.43071500000002,
+            -12.153176,
+            50.021175
+          ],
+          "distanceToActualSolidMM": 1.68668745195436,
+          "nearestSolidPointNativeMM": [
+            -166.48509567542976,
+            -12.153176,
+            48.62449370006806
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 6,
+          "bendDegrees": 1.4109377223465402,
+          "pointNativeMM": [
+            -167.751748,
+            -12.119262,
+            49.795079
+          ],
+          "distanceToActualSolidMM": 1.6874073761633952,
+          "nearestSolidPointNativeMM": [
+            -166.74987602082481,
+            -12.119262,
+            48.43728807703938
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 7,
+          "bendDegrees": 1.4105514613857433,
+          "pointNativeMM": [
+            -167.818714,
+            -12.111812,
+            49.745414000000004
+          ],
+          "distanceToActualSolidMM": 1.6875626782587547,
+          "nearestSolidPointNativeMM": [
+            -166.80510047222393,
+            -12.111811999999999,
+            48.396171468295194
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 8,
+          "bendDegrees": 1.408841893213368,
+          "pointNativeMM": [
+            -168.128266,
+            -12.075576,
+            49.503837000000004
+          ],
+          "distanceToActualSolidMM": 1.688302941657282,
+          "nearestSolidPointNativeMM": [
+            -167.06034217708034,
+            -12.075576,
+            48.196203438466306
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 9,
+          "bendDegrees": 1.409668236406371,
+          "pointNativeMM": [
+            -168.192612,
+            -12.067655,
+            49.451031
+          ],
+          "distanceToActualSolidMM": 1.6884625377561882,
+          "nearestSolidPointNativeMM": [
+            -167.11339088188015,
+            -12.067655,
+            48.15249816652592
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 10,
+          "bendDegrees": 1.4074193704082687,
+          "pointNativeMM": [
+            -168.489937,
+            -12.029183,
+            49.194556
+          ],
+          "distanceToActualSolidMM": 1.689216598936416,
+          "nearestSolidPointNativeMM": [
+            -167.3584823365079,
+            -12.029183000000002,
+            47.94025816352562
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 11,
+          "bendDegrees": 1.4087858631859989,
+          "pointNativeMM": [
+            -168.55151500000002,
+            -12.020812000000001,
+            49.138746
+          ],
+          "distanceToActualSolidMM": 1.6893778565881723,
+          "nearestSolidPointNativeMM": [
+            -167.40923481112497,
+            -12.020812000000001,
+            47.89407997554443
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 13,
+          "bendDegrees": 1.4059988738122382,
+          "pointNativeMM": [
+            -168.83589700000002,
+            -11.980199,
+            48.867990999999996
+          ],
+          "distanceToActualSolidMM": 1.690138707505183,
+          "nearestSolidPointNativeMM": [
+            -167.64359062865054,
+            -11.980199,
+            47.6700868437977
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 14,
+          "bendDegrees": 1.4062047299731213,
+          "pointNativeMM": [
+            -168.894566,
+            -11.971399,
+            48.809323
+          ],
+          "distanceToActualSolidMM": 1.6903003073529737,
+          "nearestSolidPointNativeMM": [
+            -167.69193175139756,
+            -11.971399,
+            47.621557874595986
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 15,
+          "bendDegrees": 1.4050447221901396,
+          "pointNativeMM": [
+            -169.165321,
+            -11.928741,
+            48.524941000000005
+          ],
+          "distanceToActualSolidMM": 1.6910618657875858,
+          "nearestSolidPointNativeMM": [
+            -167.91499350575464,
+            -11.928741,
+            47.386357937129716
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 16,
+          "bendDegrees": 1.4042239117544981,
+          "pointNativeMM": [
+            -169.22094900000002,
+            -11.919535,
+            48.463565
+          ],
+          "distanceToActualSolidMM": 1.6912216448612136,
+          "nearestSolidPointNativeMM": [
+            -167.9608163054068,
+            -11.919535000000002,
+            47.335603899578395
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 17,
+          "bendDegrees": 1.4032085002617285,
+          "pointNativeMM": [
+            -169.47742399999998,
+            -11.874936000000002,
+            48.16624
+          ],
+          "distanceToActualSolidMM": 1.6919753101922368,
+          "nearestSolidPointNativeMM": [
+            -168.17205369240807,
+            -11.874936000000003,
+            47.089769466098815
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 18,
+          "bendDegrees": 1.4030765812298582,
+          "pointNativeMM": [
+            -169.529889,
+            -11.865347,
+            48.102312
+          ],
+          "distanceToActualSolidMM": 1.6921328972350138,
+          "nearestSolidPointNativeMM": [
+            -168.21525856472573,
+            -11.865346999999998,
+            47.036919790268975
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 19,
+          "bendDegrees": 1.4016205879763524,
+          "pointNativeMM": [
+            -169.771466,
+            -11.818914,
+            47.792759999999994
+          ],
+          "distanceToActualSolidMM": 1.6928712055177986,
+          "nearestSolidPointNativeMM": [
+            -168.41417044359446,
+            -11.818913999999998,
+            46.78104774296589
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 20,
+          "bendDegrees": 1.401795569508198,
+          "pointNativeMM": [
+            -169.820653,
+            -11.808966,
+            47.726440000000004
+          ],
+          "distanceToActualSolidMM": 1.6930247301866013,
+          "nearestSolidPointNativeMM": [
+            -168.4546646420034,
+            -11.808966,
+            46.726235749438565
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 21,
+          "bendDegrees": 1.4000340605820114,
+          "pointNativeMM": [
+            -170.046749,
+            -11.760811,
+            47.405407
+          ],
+          "distanceToActualSolidMM": 1.6937399544577243,
+          "nearestSolidPointNativeMM": [
+            -168.64077975089452,
+            -11.760811000000002,
+            46.460946569968
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 22,
+          "bendDegrees": 1.400266152732941,
+          "pointNativeMM": [
+            -170.092552,
+            -11.750528999999998,
+            47.336859000000004
+          ],
+          "distanceToActualSolidMM": 1.693887860842286,
+          "nearestSolidPointNativeMM": [
+            -168.67847791612218,
+            -11.750528999999998,
+            46.40430842742288
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 23,
+          "bendDegrees": 1.3988418197780013,
+          "pointNativeMM": [
+            -170.302624,
+            -11.700768,
+            47.005119
+          ],
+          "distanceToActualSolidMM": 1.6945748483126974,
+          "nearestSolidPointNativeMM": [
+            -168.85135687116392,
+            -11.700768000000002,
+            46.130243216077595
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 24,
+          "bendDegrees": 1.3987112637295565,
+          "pointNativeMM": [
+            -170.344946,
+            -11.690176,
+            46.934509999999996
+          ],
+          "distanceToActualSolidMM": 1.6947157092416019,
+          "nearestSolidPointNativeMM": [
+            -168.88618109104124,
+            -11.690176,
+            46.071917236558974
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 25,
+          "bendDegrees": 1.39798213890116,
+          "pointNativeMM": [
+            -170.538488,
+            -11.638929,
+            46.592862
+          ],
+          "distanceToActualSolidMM": 1.6953678979803586,
+          "nearestSolidPointNativeMM": [
+            -169.04541640077724,
+            -11.638929,
+            45.78973715970633
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 26,
+          "bendDegrees": 1.3971993140538177,
+          "pointNativeMM": [
+            -170.57724,
+            -11.628054,
+            46.520362000000006
+          ],
+          "distanceToActualSolidMM": 1.6954999163861504,
+          "nearestSolidPointNativeMM": [
+            -169.07729571365684,
+            -11.628054,
+            45.72986398967235
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 27,
+          "bendDegrees": 1.39595090615761,
+          "pointNativeMM": [
+            -170.753784,
+            -11.575444000000001,
+            46.16962899999999
+          ],
+          "distanceToActualSolidMM": 1.696109545394831,
+          "nearestSolidPointNativeMM": [
+            -169.22251245946998,
+            -11.575444000000003,
+            45.44024908586587
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 28,
+          "bendDegrees": 1.3966257699969142,
+          "pointNativeMM": [
+            -170.788887,
+            -11.564312000000001,
+            46.095412
+          ],
+          "distanceToActualSolidMM": 1.6962329875324758,
+          "nearestSolidPointNativeMM": [
+            -169.25138268546215,
+            -11.564312,
+            45.37897161115326
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 29,
+          "bendDegrees": 1.3957525988494168,
+          "pointNativeMM": [
+            -170.948009,
+            -11.510466000000001,
+            45.736439
+          ],
+          "distanceToActualSolidMM": 1.6967954224476862,
+          "nearestSolidPointNativeMM": [
+            -169.3822400990626,
+            -11.510466,
+            45.08261757598828
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 30,
+          "bendDegrees": 1.3946604867863697,
+          "pointNativeMM": [
+            -170.979389,
+            -11.499102,
+            45.66068
+          ],
+          "distanceToActualSolidMM": 1.6969069746863619,
+          "nearestSolidPointNativeMM": [
+            -169.40804384197193,
+            -11.499101999999999,
+            45.02008053459203
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 31,
+          "bendDegrees": 1.3938160111841147,
+          "pointNativeMM": [
+            -171.12070500000002,
+            -11.44415,
+            45.294332
+          ],
+          "distanceToActualSolidMM": 1.697416306586481,
+          "nearestSolidPointNativeMM": [
+            -169.52423508418855,
+            -11.444149999999999,
+            44.717698731991106
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 32,
+          "bendDegrees": 1.3949818651993513,
+          "pointNativeMM": [
+            -171.148301,
+            -11.432581,
+            45.217209000000004
+          ],
+          "distanceToActualSolidMM": 1.697517462540712,
+          "nearestSolidPointNativeMM": [
+            -169.54692201202033,
+            -11.432581,
+            44.65404750230342
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 34,
+          "bendDegrees": 1.3933570190360076,
+          "pointNativeMM": [
+            -171.27147100000002,
+            -11.376655,
+            44.844368
+          ],
+          "distanceToActualSolidMM": 1.6979690566254815,
+          "nearestSolidPointNativeMM": [
+            -169.64817536196688,
+            -11.376654999999998,
+            44.346361786383945
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 35,
+          "bendDegrees": 1.393281984006173,
+          "pointNativeMM": [
+            -171.29522599999999,
+            -11.364908999999999,
+            44.766059
+          ],
+          "distanceToActualSolidMM": 1.6980569591313848,
+          "nearestSolidPointNativeMM": [
+            -169.66770171729948,
+            -11.364908999999999,
+            44.281742837070524
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 36,
+          "bendDegrees": 1.392547477246577,
+          "pointNativeMM": [
+            -171.39995299999998,
+            -11.308143,
+            44.387623
+          ],
+          "distanceToActualSolidMM": 1.698446266920184,
+          "nearestSolidPointNativeMM": [
+            -169.75378054694116,
+            -11.308143,
+            43.96948907838468
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 37,
+          "bendDegrees": 1.3909638873558952,
+          "pointNativeMM": [
+            -171.41982,
+            -11.296246,
+            44.30831
+          ],
+          "distanceToActualSolidMM": 1.6985207061953504,
+          "nearestSolidPointNativeMM": [
+            -169.77010868800448,
+            -11.296246000000002,
+            43.90405120114903
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 39,
+          "bendDegrees": 1.3921921686520964,
+          "pointNativeMM": [
+            -171.505853,
+            -11.238779000000001,
+            43.925191000000005
+          ],
+          "distanceToActualSolidMM": 1.6988453768523568,
+          "nearestSolidPointNativeMM": [
+            -169.8408120807345,
+            -11.238779,
+            43.58797541372893
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 40,
+          "bendDegrees": 1.3915293761282157,
+          "pointNativeMM": [
+            -171.521793,
+            -11.226758,
+            43.845054000000005
+          ],
+          "distanceToActualSolidMM": 1.6989054123527316,
+          "nearestSolidPointNativeMM": [
+            -169.8539114221057,
+            -11.226758000000002,
+            43.521865754170655
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 41,
+          "bendDegrees": 1.3910959326517334,
+          "pointNativeMM": [
+            -171.588923,
+            -11.168726,
+            43.458175000000004
+          ],
+          "distanceToActualSolidMM": 1.6991607178432815,
+          "nearestSolidPointNativeMM": [
+            -169.90907442732401,
+            -11.168725999999998,
+            43.20272262099333
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 42,
+          "bendDegrees": 1.3917284702240749,
+          "pointNativeMM": [
+            -171.600906,
+            -11.156609,
+            43.377396
+          ],
+          "distanceToActualSolidMM": 1.6992069656056172,
+          "nearestSolidPointNativeMM": [
+            -169.91892040992283,
+            -11.156609000000001,
+            43.13608958331079
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 43,
+          "bendDegrees": 1.3904428468351369,
+          "pointNativeMM": [
+            -171.64897100000002,
+            -11.098153,
+            42.98769
+          ],
+          "distanceToActualSolidMM": 1.6993903362500786,
+          "nearestSolidPointNativeMM": [
+            -169.95841442853444,
+            -11.098153000000002,
+            42.814640892476426
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 44,
+          "bendDegrees": 1.3928275489154716,
+          "pointNativeMM": [
+            -171.656973,
+            -11.085968,
+            42.906451999999994
+          ],
+          "distanceToActualSolidMM": 1.699421774056084,
+          "nearestSolidPointNativeMM": [
+            -169.96498861474845,
+            -11.085968,
+            42.7476338454934
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 46,
+          "bendDegrees": 1.3904290705153337,
+          "pointNativeMM": [
+            -171.685858,
+            -11.027228000000001,
+            42.514857000000006
+          ],
+          "distanceToActualSolidMM": 1.6995320983340902,
+          "nearestSolidPointNativeMM": [
+            -169.98872184909914,
+            -11.027228,
+            42.42464481360987
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 47,
+          "bendDegrees": 1.3911555019456128,
+          "pointNativeMM": [
+            -171.689863,
+            -11.015001999999999,
+            42.433344
+          ],
+          "distanceToActualSolidMM": 1.699548029733407,
+          "nearestSolidPointNativeMM": [
+            -169.9920119744106,
+            -11.015002,
+            42.357413767051085
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 48,
+          "bendDegrees": 0.6949380294096921,
+          "pointNativeMM": [
+            -171.699499,
+            -10.95612,
+            42.040802
+          ],
+          "distanceToActualSolidMM": 1.6995848186510036,
+          "nearestSolidPointNativeMM": [
+            -169.99992921870154,
+            -10.95612,
+            42.03365257442487
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 49,
+          "bendDegrees": 0.6957071205566494,
+          "pointNativeMM": [
+            -171.7,
+            -10.95,
+            42.0
+          ],
+          "distanceToActualSolidMM": 1.6999999999999886,
+          "nearestSolidPointNativeMM": [
+            -170.0,
+            -10.950000000000001,
+            42.0
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 50,
+          "bendDegrees": 5.624999264815167,
+          "pointNativeMM": [
+            -171.7,
+            -0.519183,
+            -27.538783000000002
+          ],
+          "distanceToActualSolidMM": 1.700000001088744,
+          "nearestSolidPointNativeMM": [
+            -170.0,
+            -0.5191920253613023,
+            -27.538722830976806
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 51,
+          "bendDegrees": 11.250038284117753,
+          "pointNativeMM": [
+            -171.667335,
+            -0.46998500000000004,
+            -27.866767
+          ],
+          "distanceToActualSolidMM": 1.700011855958633,
+          "nearestSolidPointNativeMM": [
+            -170.0,
+            -0.5191916392753342,
+            -27.53872277306388
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 52,
+          "bendDegrees": 11.249977302695811,
+          "pointNativeMM": [
+            -171.570595,
+            -0.422678,
+            -28.182147
+          ],
+          "distanceToActualSolidMM": 1.7000230211380982,
+          "nearestSolidPointNativeMM": [
+            -170.0,
+            -0.5191916453213073,
+            -27.538722773970775
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 53,
+          "bendDegrees": 0.8231272388226999,
+          "pointNativeMM": [
+            -171.413498,
+            -0.37908000000000003,
+            -28.472803000000003
+          ],
+          "distanceToActualSolidMM": 1.7000334519700608,
+          "nearestSolidPointNativeMM": [
+            -170.0,
+            -0.5191921880186943,
+            -27.53872285537544
+          ],
+          "insideSolid": false
+        }
+      ]
+    },
+    {
+      "strandID": "right-upper-visible-lead",
+      "bendChecks": [
+        {
+          "index": 0,
+          "bendDegrees": 6.937647469648795,
+          "pointNativeMM": [
+            166.957817,
+            8.598095,
+            50.32063
+          ],
+          "distanceToActualSolidMM": 1.6857025043302523,
+          "nearestSolidPointNativeMM": [
+            166.09495707536627,
+            8.598095,
+            48.87250511465125
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 1,
+          "bendDegrees": 1.413630930042363,
+          "pointNativeMM": [
+            167.029546,
+            8.591645999999999,
+            50.277637999999996
+          ],
+          "distanceToActualSolidMM": 1.685846572456126,
+          "nearestSolidPointNativeMM": [
+            166.15414054920313,
+            8.591645999999999,
+            48.83689376087315
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 2,
+          "bendDegrees": 1.4125754535745785,
+          "pointNativeMM": [
+            167.361286,
+            8.560135,
+            50.067566
+          ],
+          "distanceToActualSolidMM": 1.6865374999610785,
+          "nearestSolidPointNativeMM": [
+            166.42782449354812,
+            8.560135,
+            48.66291004399243
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 3,
+          "bendDegrees": 1.4116505635101453,
+          "pointNativeMM": [
+            167.43071500000002,
+            8.553175999999999,
+            50.021175
+          ],
+          "distanceToActualSolidMM": 1.6866874519543658,
+          "nearestSolidPointNativeMM": [
+            166.48509567542976,
+            8.553175999999999,
+            48.62449370006805
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 4,
+          "bendDegrees": 1.411022465935871,
+          "pointNativeMM": [
+            167.751748,
+            8.519262,
+            49.795079
+          ],
+          "distanceToActualSolidMM": 1.6874073761633952,
+          "nearestSolidPointNativeMM": [
+            166.74987602082481,
+            8.519262,
+            48.43728807703938
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 5,
+          "bendDegrees": 1.4105344743869652,
+          "pointNativeMM": [
+            167.818714,
+            8.511812,
+            49.745414000000004
+          ],
+          "distanceToActualSolidMM": 1.6875626782587605,
+          "nearestSolidPointNativeMM": [
+            166.80510047222393,
+            8.511812,
+            48.39617146829519
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 7,
+          "bendDegrees": 1.4087653603070334,
+          "pointNativeMM": [
+            168.128266,
+            8.475576,
+            49.503837000000004
+          ],
+          "distanceToActualSolidMM": 1.688302941657282,
+          "nearestSolidPointNativeMM": [
+            167.06034217708034,
+            8.475576,
+            48.196203438466306
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 8,
+          "bendDegrees": 1.4099997773914663,
+          "pointNativeMM": [
+            168.192612,
+            8.467654999999999,
+            49.451031
+          ],
+          "distanceToActualSolidMM": 1.6884625377561937,
+          "nearestSolidPointNativeMM": [
+            167.11339088188015,
+            8.467654999999999,
+            48.152498166525916
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 10,
+          "bendDegrees": 1.4074930914255677,
+          "pointNativeMM": [
+            168.489937,
+            8.429183,
+            49.194556
+          ],
+          "distanceToActualSolidMM": 1.689216598936416,
+          "nearestSolidPointNativeMM": [
+            167.3584823365079,
+            8.429182999999998,
+            47.94025816352562
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 11,
+          "bendDegrees": 1.4079707237408545,
+          "pointNativeMM": [
+            168.55151500000002,
+            8.420812,
+            49.138746
+          ],
+          "distanceToActualSolidMM": 1.6893778565881723,
+          "nearestSolidPointNativeMM": [
+            167.40923481112497,
+            8.420811999999998,
+            47.89407997554443
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 12,
+          "bendDegrees": 1.4059607131921177,
+          "pointNativeMM": [
+            168.83589700000002,
+            8.380199,
+            48.867990999999996
+          ],
+          "distanceToActualSolidMM": 1.690138707505183,
+          "nearestSolidPointNativeMM": [
+            167.64359062865054,
+            8.380198999999998,
+            47.6700868437977
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 13,
+          "bendDegrees": 1.406204729972862,
+          "pointNativeMM": [
+            168.894566,
+            8.371399,
+            48.809323
+          ],
+          "distanceToActualSolidMM": 1.6903003073529737,
+          "nearestSolidPointNativeMM": [
+            167.69193175139756,
+            8.371399,
+            47.621557874595986
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 14,
+          "bendDegrees": 1.4050447221906583,
+          "pointNativeMM": [
+            169.165321,
+            8.328741,
+            48.524941000000005
+          ],
+          "distanceToActualSolidMM": 1.6910618657875858,
+          "nearestSolidPointNativeMM": [
+            167.91499350575464,
+            8.328741,
+            47.386357937129716
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 15,
+          "bendDegrees": 1.404243587693083,
+          "pointNativeMM": [
+            169.22094900000002,
+            8.319535,
+            48.463565
+          ],
+          "distanceToActualSolidMM": 1.6912216448612136,
+          "nearestSolidPointNativeMM": [
+            167.9608163054068,
+            8.319534999999998,
+            47.335603899578395
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 17,
+          "bendDegrees": 1.4032129933950357,
+          "pointNativeMM": [
+            169.47742399999998,
+            8.274936,
+            48.16624
+          ],
+          "distanceToActualSolidMM": 1.6919753101922368,
+          "nearestSolidPointNativeMM": [
+            168.17205369240807,
+            8.274936,
+            47.089769466098815
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 18,
+          "bendDegrees": 1.403629127692352,
+          "pointNativeMM": [
+            169.529889,
+            8.265346999999998,
+            48.102312
+          ],
+          "distanceToActualSolidMM": 1.6921328972350138,
+          "nearestSolidPointNativeMM": [
+            168.21525856472573,
+            8.265346999999998,
+            47.036919790268975
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 20,
+          "bendDegrees": 1.4017487945099536,
+          "pointNativeMM": [
+            169.771466,
+            8.218914000000002,
+            47.792759999999994
+          ],
+          "distanceToActualSolidMM": 1.6928712055177986,
+          "nearestSolidPointNativeMM": [
+            168.41417044359446,
+            8.218914000000002,
+            46.78104774296589
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 21,
+          "bendDegrees": 1.40243816976133,
+          "pointNativeMM": [
+            169.820653,
+            8.208966,
+            47.726440000000004
+          ],
+          "distanceToActualSolidMM": 1.6930247301866013,
+          "nearestSolidPointNativeMM": [
+            168.4546646420034,
+            8.208966,
+            46.726235749438565
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 23,
+          "bendDegrees": 1.400184956519513,
+          "pointNativeMM": [
+            170.046749,
+            8.160811,
+            47.405407
+          ],
+          "distanceToActualSolidMM": 1.6937399544577243,
+          "nearestSolidPointNativeMM": [
+            168.64077975089452,
+            8.160811,
+            46.460946569968
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 24,
+          "bendDegrees": 1.4002661527326807,
+          "pointNativeMM": [
+            170.092552,
+            8.150529,
+            47.336859000000004
+          ],
+          "distanceToActualSolidMM": 1.693887860842286,
+          "nearestSolidPointNativeMM": [
+            168.67847791612218,
+            8.150529,
+            46.40430842742288
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 25,
+          "bendDegrees": 1.39884181977748,
+          "pointNativeMM": [
+            170.302624,
+            8.100767999999999,
+            47.005119
+          ],
+          "distanceToActualSolidMM": 1.6945748483126974,
+          "nearestSolidPointNativeMM": [
+            168.85135687116392,
+            8.100767999999999,
+            46.130243216077595
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 26,
+          "bendDegrees": 1.398711263729296,
+          "pointNativeMM": [
+            170.344946,
+            8.090176,
+            46.934509999999996
+          ],
+          "distanceToActualSolidMM": 1.6947157092416019,
+          "nearestSolidPointNativeMM": [
+            168.88618109104124,
+            8.090176,
+            46.071917236558974
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 27,
+          "bendDegrees": 1.39798213890116,
+          "pointNativeMM": [
+            170.538488,
+            8.038929,
+            46.592862
+          ],
+          "distanceToActualSolidMM": 1.6953678979803586,
+          "nearestSolidPointNativeMM": [
+            169.04541640077724,
+            8.038929,
+            45.78973715970633
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 28,
+          "bendDegrees": 1.397199314053296,
+          "pointNativeMM": [
+            170.57724,
+            8.028054,
+            46.520362000000006
+          ],
+          "distanceToActualSolidMM": 1.6954999163861504,
+          "nearestSolidPointNativeMM": [
+            169.07729571365684,
+            8.028054,
+            45.72986398967235
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 29,
+          "bendDegrees": 1.39595090615761,
+          "pointNativeMM": [
+            170.753784,
+            7.9754439999999995,
+            46.16962899999999
+          ],
+          "distanceToActualSolidMM": 1.696109545394831,
+          "nearestSolidPointNativeMM": [
+            169.22251245946998,
+            7.9754439999999995,
+            45.44024908586587
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 30,
+          "bendDegrees": 1.397075169472616,
+          "pointNativeMM": [
+            170.788887,
+            7.964312,
+            46.095412
+          ],
+          "distanceToActualSolidMM": 1.6962329875324726,
+          "nearestSolidPointNativeMM": [
+            169.25138268546215,
+            7.964312,
+            45.37897161115327
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 32,
+          "bendDegrees": 1.3958635199712195,
+          "pointNativeMM": [
+            170.948009,
+            7.9104659999999996,
+            45.736439
+          ],
+          "distanceToActualSolidMM": 1.6967954224476836,
+          "nearestSolidPointNativeMM": [
+            169.3822400990626,
+            7.9104659999999996,
+            45.08261757598829
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 33,
+          "bendDegrees": 1.394396431575387,
+          "pointNativeMM": [
+            170.979389,
+            7.899102,
+            45.66068
+          ],
+          "distanceToActualSolidMM": 1.6969069746863619,
+          "nearestSolidPointNativeMM": [
+            169.40804384197193,
+            7.899102,
+            45.02008053459203
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 35,
+          "bendDegrees": 1.3937499655171282,
+          "pointNativeMM": [
+            171.12070500000002,
+            7.844149999999999,
+            45.294332
+          ],
+          "distanceToActualSolidMM": 1.697416306586481,
+          "nearestSolidPointNativeMM": [
+            169.52423508418855,
+            7.844149999999999,
+            44.717698731991106
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 36,
+          "bendDegrees": 1.3946381605934617,
+          "pointNativeMM": [
+            171.148301,
+            7.832581,
+            45.217209000000004
+          ],
+          "distanceToActualSolidMM": 1.6975174625407095,
+          "nearestSolidPointNativeMM": [
+            169.54692201202033,
+            7.832581,
+            44.65404750230343
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 38,
+          "bendDegrees": 1.3936993337994485,
+          "pointNativeMM": [
+            171.27147100000002,
+            7.776655000000001,
+            44.844368
+          ],
+          "distanceToActualSolidMM": 1.6979690566254795,
+          "nearestSolidPointNativeMM": [
+            169.64817536196688,
+            7.776655000000001,
+            44.34636178638395
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 39,
+          "bendDegrees": 1.3931519518147266,
+          "pointNativeMM": [
+            171.29522599999999,
+            7.764909,
+            44.766059
+          ],
+          "distanceToActualSolidMM": 1.6980569591313848,
+          "nearestSolidPointNativeMM": [
+            169.66770171729948,
+            7.764909,
+            44.281742837070524
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 41,
+          "bendDegrees": 1.3920452604465996,
+          "pointNativeMM": [
+            171.39995299999998,
+            7.708143,
+            44.387623
+          ],
+          "distanceToActualSolidMM": 1.6984462669201565,
+          "nearestSolidPointNativeMM": [
+            169.7537805469412,
+            7.708142999999999,
+            43.96948907838468
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 42,
+          "bendDegrees": 1.3924032539202236,
+          "pointNativeMM": [
+            171.41982,
+            7.696246,
+            44.30831
+          ],
+          "distanceToActualSolidMM": 1.6985207061953504,
+          "nearestSolidPointNativeMM": [
+            169.77010868800448,
+            7.6962459999999995,
+            43.90405120114903
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 44,
+          "bendDegrees": 1.3926691105308275,
+          "pointNativeMM": [
+            171.505853,
+            7.638779,
+            43.925191000000005
+          ],
+          "distanceToActualSolidMM": 1.6988453768523275,
+          "nearestSolidPointNativeMM": [
+            169.84081208073454,
+            7.638779,
+            43.587975413728934
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 45,
+          "bendDegrees": 1.3915293761276917,
+          "pointNativeMM": [
+            171.521793,
+            7.626758,
+            43.845054000000005
+          ],
+          "distanceToActualSolidMM": 1.6989054123527316,
+          "nearestSolidPointNativeMM": [
+            169.8539114221057,
+            7.626758,
+            43.521865754170655
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 46,
+          "bendDegrees": 1.3910959326517334,
+          "pointNativeMM": [
+            171.588923,
+            7.568726,
+            43.458175000000004
+          ],
+          "distanceToActualSolidMM": 1.6991607178432524,
+          "nearestSolidPointNativeMM": [
+            169.90907442732404,
+            7.568726,
+            43.202722620993335
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 47,
+          "bendDegrees": 1.3916365804047581,
+          "pointNativeMM": [
+            171.600906,
+            7.556609,
+            43.377396
+          ],
+          "distanceToActualSolidMM": 1.699206965605589,
+          "nearestSolidPointNativeMM": [
+            169.91892040992286,
+            7.556609,
+            43.13608958331079
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 49,
+          "bendDegrees": 1.390102025365419,
+          "pointNativeMM": [
+            171.64897100000002,
+            7.498152999999999,
+            42.98769
+          ],
+          "distanceToActualSolidMM": 1.6993903362500786,
+          "nearestSolidPointNativeMM": [
+            169.95841442853444,
+            7.498152999999999,
+            42.814640892476426
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 50,
+          "bendDegrees": 1.391466496774069,
+          "pointNativeMM": [
+            171.656973,
+            7.485968,
+            42.906451999999994
+          ],
+          "distanceToActualSolidMM": 1.6994217740560555,
+          "nearestSolidPointNativeMM": [
+            169.96498861474848,
+            7.485968,
+            42.7476338454934
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 52,
+          "bendDegrees": 1.3899797846415856,
+          "pointNativeMM": [
+            171.685858,
+            7.427228,
+            42.514857000000006
+          ],
+          "distanceToActualSolidMM": 1.6995320983340616,
+          "nearestSolidPointNativeMM": [
+            169.98872184909916,
+            7.427228,
+            42.42464481360987
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 53,
+          "bendDegrees": 1.3911555019456128,
+          "pointNativeMM": [
+            171.689863,
+            7.415002,
+            42.433344
+          ],
+          "distanceToActualSolidMM": 1.6995480297334065,
+          "nearestSolidPointNativeMM": [
+            169.9920119744106,
+            7.415002,
+            42.35741376705109
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 54,
+          "bendDegrees": 0.6949380294086432,
+          "pointNativeMM": [
+            171.699499,
+            7.35612,
+            42.040802
+          ],
+          "distanceToActualSolidMM": 1.6995848186510036,
+          "nearestSolidPointNativeMM": [
+            169.99992921870154,
+            7.35612,
+            42.03365257442487
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 55,
+          "bendDegrees": 0.6957071204440132,
+          "pointNativeMM": [
+            171.7,
+            7.35,
+            42.0
+          ],
+          "distanceToActualSolidMM": 1.6999999999999886,
+          "nearestSolidPointNativeMM": [
+            170.0,
+            7.35,
+            42.0
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 56,
+          "bendDegrees": 5.624999264817503,
+          "pointNativeMM": [
+            171.7,
+            0.519183,
+            -3.538783
+          ],
+          "distanceToActualSolidMM": 1.700000001088744,
+          "nearestSolidPointNativeMM": [
+            170.0,
+            0.5191920253613043,
+            -3.5387228309768046
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 57,
+          "bendDegrees": 11.250038284117817,
+          "pointNativeMM": [
+            171.667335,
+            0.46998500000000004,
+            -3.8667670000000003
+          ],
+          "distanceToActualSolidMM": 1.7000118559586335,
+          "nearestSolidPointNativeMM": [
+            170.0,
+            0.5191916392753346,
+            -3.538722773063881
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 58,
+          "bendDegrees": 11.249977302695811,
+          "pointNativeMM": [
+            171.570595,
+            0.422678,
+            -4.182147
+          ],
+          "distanceToActualSolidMM": 1.7000230211380971,
+          "nearestSolidPointNativeMM": [
+            170.0,
+            0.5191916453213062,
+            -3.5387227739707767
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 59,
+          "bendDegrees": 0.8231272388231426,
+          "pointNativeMM": [
+            171.413498,
+            0.37908000000000003,
+            -4.472803
+          ],
+          "distanceToActualSolidMM": 1.7000334519700606,
+          "nearestSolidPointNativeMM": [
+            170.0,
+            0.5191921880186963,
+            -3.538722855375438
+          ],
+          "insideSolid": false
+        }
+      ]
+    },
+    {
+      "strandID": "right-lower-visible-lead",
+      "bendChecks": [
+        {
+          "index": 0,
+          "bendDegrees": 7.989948131042193,
+          "pointNativeMM": [
+            166.957817,
+            -12.198095,
+            50.32063
+          ],
+          "distanceToActualSolidMM": 1.6857025043302378,
+          "nearestSolidPointNativeMM": [
+            166.0949570753663,
+            -12.198095000000004,
+            48.87250511465125
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 1,
+          "bendDegrees": 1.4135998440191966,
+          "pointNativeMM": [
+            167.029546,
+            -12.191646,
+            50.277637999999996
+          ],
+          "distanceToActualSolidMM": 1.68584657245612,
+          "nearestSolidPointNativeMM": [
+            166.15414054920313,
+            -12.191646000000004,
+            48.83689376087316
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 3,
+          "bendDegrees": 1.4118375381978305,
+          "pointNativeMM": [
+            167.361286,
+            -12.160135,
+            50.067566
+          ],
+          "distanceToActualSolidMM": 1.6865374999610785,
+          "nearestSolidPointNativeMM": [
+            166.42782449354812,
+            -12.160135000000002,
+            48.66291004399243
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 4,
+          "bendDegrees": 1.4096448498538448,
+          "pointNativeMM": [
+            167.43071500000002,
+            -12.153176,
+            50.021175
+          ],
+          "distanceToActualSolidMM": 1.6866874519543658,
+          "nearestSolidPointNativeMM": [
+            166.48509567542976,
+            -12.153176,
+            48.62449370006805
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 6,
+          "bendDegrees": 1.4109377223465402,
+          "pointNativeMM": [
+            167.751748,
+            -12.119262,
+            49.795079
+          ],
+          "distanceToActualSolidMM": 1.6874073761633952,
+          "nearestSolidPointNativeMM": [
+            166.74987602082481,
+            -12.119262,
+            48.43728807703938
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 7,
+          "bendDegrees": 1.4105514613857433,
+          "pointNativeMM": [
+            167.818714,
+            -12.111812,
+            49.745414000000004
+          ],
+          "distanceToActualSolidMM": 1.6875626782587605,
+          "nearestSolidPointNativeMM": [
+            166.80510047222393,
+            -12.111811999999999,
+            48.39617146829519
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 8,
+          "bendDegrees": 1.408841893213368,
+          "pointNativeMM": [
+            168.128266,
+            -12.075576,
+            49.503837000000004
+          ],
+          "distanceToActualSolidMM": 1.688302941657282,
+          "nearestSolidPointNativeMM": [
+            167.06034217708034,
+            -12.075576,
+            48.196203438466306
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 9,
+          "bendDegrees": 1.409668236406371,
+          "pointNativeMM": [
+            168.192612,
+            -12.067655,
+            49.451031
+          ],
+          "distanceToActualSolidMM": 1.6884625377561882,
+          "nearestSolidPointNativeMM": [
+            167.11339088188015,
+            -12.067655,
+            48.15249816652592
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 10,
+          "bendDegrees": 1.4074193704082687,
+          "pointNativeMM": [
+            168.489937,
+            -12.029183,
+            49.194556
+          ],
+          "distanceToActualSolidMM": 1.689216598936416,
+          "nearestSolidPointNativeMM": [
+            167.3584823365079,
+            -12.029183000000002,
+            47.94025816352562
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 11,
+          "bendDegrees": 1.4079707237408545,
+          "pointNativeMM": [
+            168.55151500000002,
+            -12.020812000000001,
+            49.138746
+          ],
+          "distanceToActualSolidMM": 1.6893778565881723,
+          "nearestSolidPointNativeMM": [
+            167.40923481112497,
+            -12.020812000000001,
+            47.89407997554443
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 12,
+          "bendDegrees": 1.4059607131921177,
+          "pointNativeMM": [
+            168.83589700000002,
+            -11.980199,
+            48.867990999999996
+          ],
+          "distanceToActualSolidMM": 1.690138707505183,
+          "nearestSolidPointNativeMM": [
+            167.64359062865054,
+            -11.980199,
+            47.6700868437977
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 13,
+          "bendDegrees": 1.406205155918183,
+          "pointNativeMM": [
+            168.894566,
+            -11.971399,
+            48.809323
+          ],
+          "distanceToActualSolidMM": 1.6903003073529737,
+          "nearestSolidPointNativeMM": [
+            167.69193175139756,
+            -11.971399,
+            47.621557874595986
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 15,
+          "bendDegrees": 1.4050533121578626,
+          "pointNativeMM": [
+            169.165321,
+            -11.928741,
+            48.524941000000005
+          ],
+          "distanceToActualSolidMM": 1.6910618657875858,
+          "nearestSolidPointNativeMM": [
+            167.91499350575464,
+            -11.928741,
+            47.386357937129716
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 16,
+          "bendDegrees": 1.4042568138597071,
+          "pointNativeMM": [
+            169.22094900000002,
+            -11.919535,
+            48.463565
+          ],
+          "distanceToActualSolidMM": 1.6912216448612136,
+          "nearestSolidPointNativeMM": [
+            167.9608163054068,
+            -11.919535000000002,
+            47.335603899578395
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 18,
+          "bendDegrees": 1.403840817656284,
+          "pointNativeMM": [
+            169.47742399999998,
+            -11.874936000000002,
+            48.16624
+          ],
+          "distanceToActualSolidMM": 1.6919753101922368,
+          "nearestSolidPointNativeMM": [
+            168.17205369240807,
+            -11.874936000000003,
+            47.089769466098815
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 19,
+          "bendDegrees": 1.4030765812298582,
+          "pointNativeMM": [
+            169.529889,
+            -11.865347,
+            48.102312
+          ],
+          "distanceToActualSolidMM": 1.6921328972349918,
+          "nearestSolidPointNativeMM": [
+            168.21525856472576,
+            -11.865346999999998,
+            47.036919790268975
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 20,
+          "bendDegrees": 1.4016205879763524,
+          "pointNativeMM": [
+            169.771466,
+            -11.818914,
+            47.792759999999994
+          ],
+          "distanceToActualSolidMM": 1.6928712055177944,
+          "nearestSolidPointNativeMM": [
+            168.41417044359446,
+            -11.818913999999998,
+            46.781047742965896
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 21,
+          "bendDegrees": 1.401795569508198,
+          "pointNativeMM": [
+            169.820653,
+            -11.808966,
+            47.726440000000004
+          ],
+          "distanceToActualSolidMM": 1.6930247301866013,
+          "nearestSolidPointNativeMM": [
+            168.4546646420034,
+            -11.808966,
+            46.726235749438565
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 22,
+          "bendDegrees": 1.4000340605820114,
+          "pointNativeMM": [
+            170.046749,
+            -11.760811,
+            47.405407
+          ],
+          "distanceToActualSolidMM": 1.6937399544577243,
+          "nearestSolidPointNativeMM": [
+            168.64077975089452,
+            -11.760811000000002,
+            46.460946569968
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 23,
+          "bendDegrees": 1.400266152732941,
+          "pointNativeMM": [
+            170.092552,
+            -11.750528999999998,
+            47.336859000000004
+          ],
+          "distanceToActualSolidMM": 1.693887860842286,
+          "nearestSolidPointNativeMM": [
+            168.67847791612218,
+            -11.750528999999998,
+            46.40430842742288
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 24,
+          "bendDegrees": 1.3988418197780013,
+          "pointNativeMM": [
+            170.302624,
+            -11.700768,
+            47.005119
+          ],
+          "distanceToActualSolidMM": 1.6945748483126974,
+          "nearestSolidPointNativeMM": [
+            168.85135687116392,
+            -11.700768000000002,
+            46.130243216077595
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 25,
+          "bendDegrees": 1.3987112637295565,
+          "pointNativeMM": [
+            170.344946,
+            -11.690176,
+            46.934509999999996
+          ],
+          "distanceToActualSolidMM": 1.6947157092416019,
+          "nearestSolidPointNativeMM": [
+            168.88618109104124,
+            -11.690176,
+            46.071917236558974
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 26,
+          "bendDegrees": 1.39798213890116,
+          "pointNativeMM": [
+            170.538488,
+            -11.638929,
+            46.592862
+          ],
+          "distanceToActualSolidMM": 1.6953678979803586,
+          "nearestSolidPointNativeMM": [
+            169.04541640077724,
+            -11.638929,
+            45.78973715970633
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 27,
+          "bendDegrees": 1.397914045574459,
+          "pointNativeMM": [
+            170.57724,
+            -11.628054,
+            46.520362000000006
+          ],
+          "distanceToActualSolidMM": 1.6954999163861504,
+          "nearestSolidPointNativeMM": [
+            169.07729571365684,
+            -11.628054,
+            45.72986398967235
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 29,
+          "bendDegrees": 1.3959942527063731,
+          "pointNativeMM": [
+            170.753784,
+            -11.575444000000001,
+            46.16962899999999
+          ],
+          "distanceToActualSolidMM": 1.696109545394831,
+          "nearestSolidPointNativeMM": [
+            169.22251245946998,
+            -11.575444000000003,
+            45.44024908586587
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 30,
+          "bendDegrees": 1.3966802581499547,
+          "pointNativeMM": [
+            170.788887,
+            -11.564312000000001,
+            46.095412
+          ],
+          "distanceToActualSolidMM": 1.6962329875324758,
+          "nearestSolidPointNativeMM": [
+            169.25138268546215,
+            -11.564312,
+            45.37897161115326
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 32,
+          "bendDegrees": 1.3965908152469106,
+          "pointNativeMM": [
+            170.948009,
+            -11.510466000000001,
+            45.736439
+          ],
+          "distanceToActualSolidMM": 1.6967954224476836,
+          "nearestSolidPointNativeMM": [
+            169.3822400990626,
+            -11.510466,
+            45.08261757598829
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 33,
+          "bendDegrees": 1.3946604867863697,
+          "pointNativeMM": [
+            170.979389,
+            -11.499102,
+            45.66068
+          ],
+          "distanceToActualSolidMM": 1.6969069746863619,
+          "nearestSolidPointNativeMM": [
+            169.40804384197193,
+            -11.499101999999999,
+            45.02008053459203
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 34,
+          "bendDegrees": 1.3938160111841147,
+          "pointNativeMM": [
+            171.12070500000002,
+            -11.44415,
+            45.294332
+          ],
+          "distanceToActualSolidMM": 1.697416306586481,
+          "nearestSolidPointNativeMM": [
+            169.52423508418855,
+            -11.444149999999999,
+            44.717698731991106
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 35,
+          "bendDegrees": 1.3949818651993513,
+          "pointNativeMM": [
+            171.148301,
+            -11.432581,
+            45.217209000000004
+          ],
+          "distanceToActualSolidMM": 1.697517462540712,
+          "nearestSolidPointNativeMM": [
+            169.54692201202033,
+            -11.432581,
+            44.65404750230342
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 37,
+          "bendDegrees": 1.3933570190360076,
+          "pointNativeMM": [
+            171.27147100000002,
+            -11.376655,
+            44.844368
+          ],
+          "distanceToActualSolidMM": 1.6979690566254815,
+          "nearestSolidPointNativeMM": [
+            169.64817536196688,
+            -11.376654999999998,
+            44.346361786383945
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 38,
+          "bendDegrees": 1.393281984006173,
+          "pointNativeMM": [
+            171.29522599999999,
+            -11.364908999999999,
+            44.766059
+          ],
+          "distanceToActualSolidMM": 1.6980569591313848,
+          "nearestSolidPointNativeMM": [
+            169.66770171729948,
+            -11.364908999999999,
+            44.281742837070524
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 39,
+          "bendDegrees": 1.392547477246577,
+          "pointNativeMM": [
+            171.39995299999998,
+            -11.308143,
+            44.387623
+          ],
+          "distanceToActualSolidMM": 1.6984462669201565,
+          "nearestSolidPointNativeMM": [
+            169.7537805469412,
+            -11.308143,
+            43.96948907838468
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 40,
+          "bendDegrees": 1.3909638873558952,
+          "pointNativeMM": [
+            171.41982,
+            -11.296246,
+            44.30831
+          ],
+          "distanceToActualSolidMM": 1.6985207061953504,
+          "nearestSolidPointNativeMM": [
+            169.77010868800448,
+            -11.296246000000002,
+            43.90405120114903
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 42,
+          "bendDegrees": 1.3921921686520964,
+          "pointNativeMM": [
+            171.505853,
+            -11.238779000000001,
+            43.925191000000005
+          ],
+          "distanceToActualSolidMM": 1.6988453768523275,
+          "nearestSolidPointNativeMM": [
+            169.84081208073454,
+            -11.238779,
+            43.587975413728934
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 43,
+          "bendDegrees": 1.3915375117086402,
+          "pointNativeMM": [
+            171.521793,
+            -11.226758,
+            43.845054000000005
+          ],
+          "distanceToActualSolidMM": 1.6989054123527316,
+          "nearestSolidPointNativeMM": [
+            169.8539114221057,
+            -11.226758000000002,
+            43.521865754170655
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 45,
+          "bendDegrees": 1.3910965357834388,
+          "pointNativeMM": [
+            171.588923,
+            -11.168726,
+            43.458175000000004
+          ],
+          "distanceToActualSolidMM": 1.6991607178432524,
+          "nearestSolidPointNativeMM": [
+            169.90907442732404,
+            -11.168725999999998,
+            43.202722620993335
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 46,
+          "bendDegrees": 1.3917284702240749,
+          "pointNativeMM": [
+            171.600906,
+            -11.156609,
+            43.377396
+          ],
+          "distanceToActualSolidMM": 1.699206965605589,
+          "nearestSolidPointNativeMM": [
+            169.91892040992286,
+            -11.156609000000001,
+            43.13608958331079
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 47,
+          "bendDegrees": 1.3904428468351369,
+          "pointNativeMM": [
+            171.64897100000002,
+            -11.098153,
+            42.98769
+          ],
+          "distanceToActualSolidMM": 1.6993903362500786,
+          "nearestSolidPointNativeMM": [
+            169.95841442853444,
+            -11.098153000000002,
+            42.814640892476426
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 48,
+          "bendDegrees": 1.3928275489154716,
+          "pointNativeMM": [
+            171.656973,
+            -11.085968,
+            42.906451999999994
+          ],
+          "distanceToActualSolidMM": 1.6994217740560555,
+          "nearestSolidPointNativeMM": [
+            169.96498861474848,
+            -11.085968,
+            42.7476338454934
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 50,
+          "bendDegrees": 1.3904290705153337,
+          "pointNativeMM": [
+            171.685858,
+            -11.027228000000001,
+            42.514857000000006
+          ],
+          "distanceToActualSolidMM": 1.6995320983340616,
+          "nearestSolidPointNativeMM": [
+            169.98872184909916,
+            -11.027228,
+            42.42464481360987
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 51,
+          "bendDegrees": 1.3911555019456128,
+          "pointNativeMM": [
+            171.689863,
+            -11.015001999999999,
+            42.433344
+          ],
+          "distanceToActualSolidMM": 1.699548029733407,
+          "nearestSolidPointNativeMM": [
+            169.9920119744106,
+            -11.015002,
+            42.357413767051085
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 52,
+          "bendDegrees": 0.6949380294096921,
+          "pointNativeMM": [
+            171.699499,
+            -10.95612,
+            42.040802
+          ],
+          "distanceToActualSolidMM": 1.6995848186510036,
+          "nearestSolidPointNativeMM": [
+            169.99992921870154,
+            -10.95612,
+            42.03365257442487
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 53,
+          "bendDegrees": 0.6957071205566494,
+          "pointNativeMM": [
+            171.7,
+            -10.95,
+            42.0
+          ],
+          "distanceToActualSolidMM": 1.6999999999999886,
+          "nearestSolidPointNativeMM": [
+            170.0,
+            -10.950000000000001,
+            42.0
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 54,
+          "bendDegrees": 5.624999264815167,
+          "pointNativeMM": [
+            171.7,
+            -0.519183,
+            -27.538783000000002
+          ],
+          "distanceToActualSolidMM": 1.700000001088744,
+          "nearestSolidPointNativeMM": [
+            170.0,
+            -0.5191920253613023,
+            -27.538722830976806
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 55,
+          "bendDegrees": 11.250038284117753,
+          "pointNativeMM": [
+            171.667335,
+            -0.46998500000000004,
+            -27.866767
+          ],
+          "distanceToActualSolidMM": 1.700011855958633,
+          "nearestSolidPointNativeMM": [
+            170.0,
+            -0.5191916392753337,
+            -27.53872277306388
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 56,
+          "bendDegrees": 11.249977302695811,
+          "pointNativeMM": [
+            171.570595,
+            -0.422678,
+            -28.182147
+          ],
+          "distanceToActualSolidMM": 1.700023021138098,
+          "nearestSolidPointNativeMM": [
+            170.0,
+            -0.5191916453213068,
+            -27.538722773970775
+          ],
+          "insideSolid": false
+        },
+        {
+          "index": 57,
+          "bendDegrees": 0.8231272388226999,
+          "pointNativeMM": [
+            171.413498,
+            -0.37908000000000003,
+            -28.472803000000003
+          ],
+          "distanceToActualSolidMM": 1.7000334519700608,
+          "nearestSolidPointNativeMM": [
+            170.0,
+            -0.5191921880186944,
+            -27.53872285537544
+          ],
+          "insideSolid": false
+        }
+      ]
+    }
+  ]
+}

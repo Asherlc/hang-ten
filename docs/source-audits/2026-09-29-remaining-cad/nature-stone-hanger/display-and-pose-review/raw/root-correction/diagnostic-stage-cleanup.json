@@ -1,0 +1,27 @@
+[
+  {
+    "name": "placid-badger-vertical-flat",
+    "ownedProcessGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  },
+  {
+    "name": "placid-badger-vertical-convergence",
+    "ownedProcessGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  },
+  {
+    "name": "placid-badger-native-symmetry",
+    "ownedProcessGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  },
+  {
+    "name": "placid-badger-native-isometry",
+    "ownedProcessGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  },
+  {
+    "name": "placid-badger-planar-candidate",
+    "ownedProcessGroupAbsent": true,
+    "temporaryDirectoryAbsent": true
+  }
+]

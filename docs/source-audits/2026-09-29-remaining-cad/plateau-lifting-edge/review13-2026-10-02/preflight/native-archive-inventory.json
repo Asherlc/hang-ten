@@ -1,0 +1,382 @@
+[
+  {
+    "path": "Document.xml",
+    "bytes": 186028,
+    "sha256": "7723790222804c3ba97601512e59b4cb34d1c0c11e3abcce6da1e1980f74552f"
+  },
+  {
+    "path": "Depth18BackPlate.Shape.brp",
+    "bytes": 8942,
+    "sha256": "ecadd1fb285778529109b2e89a0590dc9d78b985f809277a479f1d127714a467"
+  },
+  {
+    "path": "Depth18CurlBridge.Shape.brp",
+    "bytes": 8944,
+    "sha256": "8d5ee08661c3d61fe3c276408aeb4eba6598a02668c2db90a71adcd059829372"
+  },
+  {
+    "path": "Depth18CurlOuter.Shape.brp",
+    "bytes": 2655,
+    "sha256": "3967f2facc2e91803ad7911cefceba728699f73fb567b54e2c99670fd43c6e44"
+  },
+  {
+    "path": "Depth18CurlInnerVoid.Shape.brp",
+    "bytes": 2655,
+    "sha256": "681121ddc93a03cecf5ec2bb69cb58bcc5d8de3a3b91f259e3fc982c143a5028"
+  },
+  {
+    "path": "Depth18CurlTube.Shape.brp",
+    "bytes": 6119,
+    "sha256": "0367465c1135c70f8ee5e771ceedf1d2bfb44f5423af05e1844be5b42611b63c"
+  },
+  {
+    "path": "Depth18CurlTube.Shape.Map.txt",
+    "bytes": 569,
+    "sha256": "4f01cef6ff8253cfacbbc72022c4ffdd05703fe1a5399506054d384e2f0317a3"
+  },
+  {
+    "path": "Depth18CurlOpening.Shape.brp",
+    "bytes": 8969,
+    "sha256": "d064d3724423a17e936b5ad8501b1ba4575f6a23052f3155dc35776b0a67a878"
+  },
+  {
+    "path": "Depth18OpenCurl.Shape.brp",
+    "bytes": 14596,
+    "sha256": "9f12d356910d3934542ac70c535448c87846e2c9d5d0931c5765ef789335fe45"
+  },
+  {
+    "path": "Depth18OpenCurl.Shape.Map.txt",
+    "bytes": 2146,
+    "sha256": "798f8911699dc84b9a780b0e589d64c674f37bf581604982842f49df39a4b48c"
+  },
+  {
+    "path": "Depth18MetalBacking.Shape.brp",
+    "bytes": 17735,
+    "sha256": "dee2c6739238737ed1570695624ecfdcaea11905633a0063363e93a453a39d86"
+  },
+  {
+    "path": "Depth18MetalBacking.Shape.Map.txt",
+    "bytes": 973,
+    "sha256": "f19a249a97b8292b9c77533c8423f263c181527f4c78156feebd41497049b11c"
+  },
+  {
+    "path": "Depth18MetalCurl.Shape.brp",
+    "bytes": 30636,
+    "sha256": "d8eae0885fdbf730baa515e2943136cc3d44f5c8b27acb4f69f99d8d86a59287"
+  },
+  {
+    "path": "Depth18MetalCurl.Shape.Map.txt",
+    "bytes": 3673,
+    "sha256": "76af9dcecf62bd624c7ca007fffc59a417dd06e9bbccf41ef2a2b806f1ec77de"
+  },
+  {
+    "path": "Depth18OakRail.Shape.brp",
+    "bytes": 8968,
+    "sha256": "b488ca03f24d9132862ca45187cb6c38b86037103bbb8b7d749e9b48137fba19"
+  },
+  {
+    "path": "Edges",
+    "bytes": 24,
+    "sha256": "1fd3445c52f71113d6f28d2d94e67508419c9591251df76dbc0c3365524918b8"
+  },
+  {
+    "path": "Depth18OakRound.Shape.brp",
+    "bytes": 12000,
+    "sha256": "521705ec7edb715f58958466516802cf564b3c644e3e4ec11c5094c5278a51c2"
+  },
+  {
+    "path": "Depth18OakRound.Shape.Map.txt",
+    "bytes": 748,
+    "sha256": "033a95ece2a7c9d8e75b538ef69966bd29fabb6a137ea330cbb8779c7d6f79b9"
+  },
+  {
+    "path": "Depth18WoodAndBacking.Shape.brp",
+    "bytes": 42135,
+    "sha256": "1b6aef7d036e4cb15ebfb6bf3a0e8e83a17c31f8d74dc60c37dfc89b42bfedf3"
+  },
+  {
+    "path": "Depth18WoodAndBacking.Shape.Map.txt",
+    "bytes": 5294,
+    "sha256": "06b3af7f3f728d8a3a110f15ead9ee87b18a7c29e178aaec658eedae8299b3c7"
+  },
+  {
+    "path": "Depth18OakContact.Shape.brp",
+    "bytes": 8212,
+    "sha256": "a140deffe04edf3cb7f3602a20f296146b450cdf9e0a53e6c3d126f6b41c6dd5"
+  },
+  {
+    "path": "Depth18OakContact.Shape.Map.txt",
+    "bytes": 1011,
+    "sha256": "cb851c21b5f15e5e237c44d5264b547f2cf7133b11f285cfd393490344469d7e"
+  },
+  {
+    "path": "Depth15BackPlate.Shape.brp",
+    "bytes": 8942,
+    "sha256": "ecadd1fb285778529109b2e89a0590dc9d78b985f809277a479f1d127714a467"
+  },
+  {
+    "path": "Depth15CurlBridge.Shape.brp",
+    "bytes": 8944,
+    "sha256": "8d5ee08661c3d61fe3c276408aeb4eba6598a02668c2db90a71adcd059829372"
+  },
+  {
+    "path": "Depth15CurlOuter.Shape.brp",
+    "bytes": 2655,
+    "sha256": "3967f2facc2e91803ad7911cefceba728699f73fb567b54e2c99670fd43c6e44"
+  },
+  {
+    "path": "Depth15CurlInnerVoid.Shape.brp",
+    "bytes": 2655,
+    "sha256": "681121ddc93a03cecf5ec2bb69cb58bcc5d8de3a3b91f259e3fc982c143a5028"
+  },
+  {
+    "path": "Depth15CurlTube.Shape.brp",
+    "bytes": 6119,
+    "sha256": "0367465c1135c70f8ee5e771ceedf1d2bfb44f5423af05e1844be5b42611b63c"
+  },
+  {
+    "path": "Depth15CurlTube.Shape.Map.txt",
+    "bytes": 569,
+    "sha256": "39a70245fcbe4683d42f1b9fca32f4c56edad8d83a269adfbd209f8402f8cb61"
+  },
+  {
+    "path": "Depth15CurlOpening.Shape.brp",
+    "bytes": 8969,
+    "sha256": "d064d3724423a17e936b5ad8501b1ba4575f6a23052f3155dc35776b0a67a878"
+  },
+  {
+    "path": "Depth15OpenCurl.Shape.brp",
+    "bytes": 14596,
+    "sha256": "9f12d356910d3934542ac70c535448c87846e2c9d5d0931c5765ef789335fe45"
+  },
+  {
+    "path": "Depth15OpenCurl.Shape.Map.txt",
+    "bytes": 2146,
+    "sha256": "6f4411f4bce609ae23c25577342ad865c3ca196d9d3e2733cd8c2a0d63bd7748"
+  },
+  {
+    "path": "Depth15MetalBacking.Shape.brp",
+    "bytes": 17735,
+    "sha256": "dee2c6739238737ed1570695624ecfdcaea11905633a0063363e93a453a39d86"
+  },
+  {
+    "path": "Depth15MetalBacking.Shape.Map.txt",
+    "bytes": 975,
+    "sha256": "d0125b4726ba6b6c5e5ade7dfc3a01351a3aba911f727f98f4b604de8607b52b"
+  },
+  {
+    "path": "Depth15MetalCurl.Shape.brp",
+    "bytes": 30636,
+    "sha256": "d8eae0885fdbf730baa515e2943136cc3d44f5c8b27acb4f69f99d8d86a59287"
+  },
+  {
+    "path": "Depth15MetalCurl.Shape.Map.txt",
+    "bytes": 3675,
+    "sha256": "95a247cf9d072f8a2753e5b5515030c42cca3e240164df8760b82a462dd3f37c"
+  },
+  {
+    "path": "Depth15OakRail.Shape.brp",
+    "bytes": 8968,
+    "sha256": "b488ca03f24d9132862ca45187cb6c38b86037103bbb8b7d749e9b48137fba19"
+  },
+  {
+    "path": "Edges1",
+    "bytes": 24,
+    "sha256": "1fd3445c52f71113d6f28d2d94e67508419c9591251df76dbc0c3365524918b8"
+  },
+  {
+    "path": "Depth15OakRound.Shape.brp",
+    "bytes": 12000,
+    "sha256": "521705ec7edb715f58958466516802cf564b3c644e3e4ec11c5094c5278a51c2"
+  },
+  {
+    "path": "Depth15OakRound.Shape.Map.txt",
+    "bytes": 750,
+    "sha256": "6ff8858d332921a42a9797dab167ea3a41e3203a71e71a830696949a8f796c1f"
+  },
+  {
+    "path": "Depth15WoodAndBacking.Shape.brp",
+    "bytes": 42135,
+    "sha256": "1b6aef7d036e4cb15ebfb6bf3a0e8e83a17c31f8d74dc60c37dfc89b42bfedf3"
+  },
+  {
+    "path": "Depth15WoodAndBacking.Shape.Map.txt",
+    "bytes": 5296,
+    "sha256": "eb3171fbac89bf2aff59186caa51dad9dd139ed6f0bf91ea863d53dd3d96d64b"
+  },
+  {
+    "path": "Depth15ReversibleBlockerUpper.Shape.brp",
+    "bytes": 8941,
+    "sha256": "428082c3daf732266b8e57447f2917a2b4329ef24ac96705bf76c1150c6d0254"
+  },
+  {
+    "path": "Depth15ReversibleBlockerLower.Shape.brp",
+    "bytes": 8943,
+    "sha256": "ffb7799bbd99fa19846c9c0229855fe6ad9e2a1dcfec7be8a3d0ca9736d9ce9e"
+  },
+  {
+    "path": "Depth15BlockerUpperAttached.Shape.brp",
+    "bytes": 49253,
+    "sha256": "56cfb524d4ff666f9d6e400aab9a4f11b0bd2a169fffef32b932360552c296cd"
+  },
+  {
+    "path": "Depth15BlockerUpperAttached.Shape.Map.txt",
+    "bytes": 6599,
+    "sha256": "a16a2e381a87eeba7e566fa9df75a92adb763b11a280094bf6badaad8f34fad9"
+  },
+  {
+    "path": "Depth15BlockerAttached.Shape.brp",
+    "bytes": 57028,
+    "sha256": "b46cf147429871f7315aee261ecf3fb20aa941a8d7e766a633757dbe03710643"
+  },
+  {
+    "path": "Depth15BlockerAttached.Shape.Map.txt",
+    "bytes": 8067,
+    "sha256": "f670f449e740261db51b437af15772912c416cddd6ba48c600e60ad397befec9"
+  },
+  {
+    "path": "Depth15OakContact.Shape.brp",
+    "bytes": 9888,
+    "sha256": "d7080efc686be9fb7e547d7a30f17f9c489f431fbf200ab1abb9eacb5079882d"
+  },
+  {
+    "path": "Depth15OakContact.Shape.Map.txt",
+    "bytes": 1207,
+    "sha256": "75d1f97a2fdbeab58e666d15d2ca81419d0d1a584fbdf4e4b661550a936051f9"
+  },
+  {
+    "path": "Depth10BackPlate.Shape.brp",
+    "bytes": 8942,
+    "sha256": "ecadd1fb285778529109b2e89a0590dc9d78b985f809277a479f1d127714a467"
+  },
+  {
+    "path": "Depth10CurlBridge.Shape.brp",
+    "bytes": 8944,
+    "sha256": "8d5ee08661c3d61fe3c276408aeb4eba6598a02668c2db90a71adcd059829372"
+  },
+  {
+    "path": "Depth10CurlOuter.Shape.brp",
+    "bytes": 2655,
+    "sha256": "3967f2facc2e91803ad7911cefceba728699f73fb567b54e2c99670fd43c6e44"
+  },
+  {
+    "path": "Depth10CurlInnerVoid.Shape.brp",
+    "bytes": 2655,
+    "sha256": "681121ddc93a03cecf5ec2bb69cb58bcc5d8de3a3b91f259e3fc982c143a5028"
+  },
+  {
+    "path": "Depth10CurlTube.Shape.brp",
+    "bytes": 6119,
+    "sha256": "0367465c1135c70f8ee5e771ceedf1d2bfb44f5423af05e1844be5b42611b63c"
+  },
+  {
+    "path": "Depth10CurlTube.Shape.Map.txt",
+    "bytes": 571,
+    "sha256": "16169fa9b10c0c7be05ad8b4159a6da9300e3bab9bf91a6bd489851841b1d280"
+  },
+  {
+    "path": "Depth10CurlOpening.Shape.brp",
+    "bytes": 8969,
+    "sha256": "d064d3724423a17e936b5ad8501b1ba4575f6a23052f3155dc35776b0a67a878"
+  },
+  {
+    "path": "Depth10OpenCurl.Shape.brp",
+    "bytes": 14596,
+    "sha256": "9f12d356910d3934542ac70c535448c87846e2c9d5d0931c5765ef789335fe45"
+  },
+  {
+    "path": "Depth10OpenCurl.Shape.Map.txt",
+    "bytes": 2148,
+    "sha256": "f11672c5eff355ea6b88f949d1dce3148793943831fe29f63a8ee9a14483e16a"
+  },
+  {
+    "path": "Depth10MetalBacking.Shape.brp",
+    "bytes": 17735,
+    "sha256": "dee2c6739238737ed1570695624ecfdcaea11905633a0063363e93a453a39d86"
+  },
+  {
+    "path": "Depth10MetalBacking.Shape.Map.txt",
+    "bytes": 975,
+    "sha256": "d3dccb87847e67c03c21d9b01979962eb7ad6c9bdffcc7a44e1ef52194db13c8"
+  },
+  {
+    "path": "Depth10MetalCurl.Shape.brp",
+    "bytes": 30636,
+    "sha256": "d8eae0885fdbf730baa515e2943136cc3d44f5c8b27acb4f69f99d8d86a59287"
+  },
+  {
+    "path": "Depth10MetalCurl.Shape.Map.txt",
+    "bytes": 3675,
+    "sha256": "63b5087217bf64492b54210a84586beef9aac44437e49fcaaa0cc44145dd5b1a"
+  },
+  {
+    "path": "Depth10OakRail.Shape.brp",
+    "bytes": 8968,
+    "sha256": "b488ca03f24d9132862ca45187cb6c38b86037103bbb8b7d749e9b48137fba19"
+  },
+  {
+    "path": "Edges2",
+    "bytes": 24,
+    "sha256": "1fd3445c52f71113d6f28d2d94e67508419c9591251df76dbc0c3365524918b8"
+  },
+  {
+    "path": "Depth10OakRound.Shape.brp",
+    "bytes": 12000,
+    "sha256": "521705ec7edb715f58958466516802cf564b3c644e3e4ec11c5094c5278a51c2"
+  },
+  {
+    "path": "Depth10OakRound.Shape.Map.txt",
+    "bytes": 750,
+    "sha256": "c43febae4806c78a2f1419d69e3815fb45a05bdf03f164aec917866521db7ba7"
+  },
+  {
+    "path": "Depth10WoodAndBacking.Shape.brp",
+    "bytes": 42135,
+    "sha256": "1b6aef7d036e4cb15ebfb6bf3a0e8e83a17c31f8d74dc60c37dfc89b42bfedf3"
+  },
+  {
+    "path": "Depth10WoodAndBacking.Shape.Map.txt",
+    "bytes": 5296,
+    "sha256": "cccb0293fb8cd114f4530154f26be9f35b33fa126981ad73f4aeb12249ed04ae"
+  },
+  {
+    "path": "Depth10ReversibleBlockerUpper.Shape.brp",
+    "bytes": 8941,
+    "sha256": "02a3cb2d3322c3cbf1920bc99d616519ba1805bbbd5f66261c566e57e932511a"
+  },
+  {
+    "path": "Depth10ReversibleBlockerLower.Shape.brp",
+    "bytes": 8943,
+    "sha256": "ce922b96dea6fca19ed11c5f4369bccba9562a1e6bb2445eeb7264d5e4fd52d7"
+  },
+  {
+    "path": "Depth10BlockerUpperAttached.Shape.brp",
+    "bytes": 49253,
+    "sha256": "9f0236f226981a6f1b492fbfb0887ff05e3de796605f5929a27374a652d89956"
+  },
+  {
+    "path": "Depth10BlockerUpperAttached.Shape.Map.txt",
+    "bytes": 6599,
+    "sha256": "11809b8abdaaf8beae6074cbf2f313c1fd914324cd092d145c8d8f0a71436dca"
+  },
+  {
+    "path": "Depth10BlockerAttached.Shape.brp",
+    "bytes": 56433,
+    "sha256": "a77e8406754dc327cec0eec9fdb2c068451af363bd999fc833a530c64c8f806c"
+  },
+  {
+    "path": "Depth10BlockerAttached.Shape.Map.txt",
+    "bytes": 8073,
+    "sha256": "d107e69752620dad72b6c87e874583da1b0540a4d625b1dda5aa4a037a7f350b"
+  },
+  {
+    "path": "Depth10OakContact.Shape.brp",
+    "bytes": 9888,
+    "sha256": "9660eb0cff1139632cd678ed3ab538a0e4034b4fdb9d2881ee315dcb923c381c"
+  },
+  {
+    "path": "Depth10OakContact.Shape.Map.txt",
+    "bytes": 1206,
+    "sha256": "388c02ffe0b41c6ca9f6578073c33f9ab918ffab2d124278c165d496018dc1a7"
+  }
+]

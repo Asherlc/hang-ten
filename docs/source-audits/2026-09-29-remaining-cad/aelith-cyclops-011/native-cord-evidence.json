@@ -1,0 +1,64 @@
+{
+  "nativeSource": "Hangboards/aelith-cyclops-011/aelith-cyclops-011.FCStd",
+  "nativeFrame": "mm; x right, y depth (front negative), z up",
+  "runtimeFrame": "metres; x=native x/1000, y=native z/1000, z=-native y/1000",
+  "solidFeature": "FinalSolid",
+  "attachmentNodeID": "cyclops_body",
+  "evidencedGraph": "Single visible tip eye with doubled cord and exterior knot; source supports one eye, not two independent branches.",
+  "nativeFeatures": {
+    "eye": {
+      "cutterFeature": "SingleTipEye",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "axisPoint": [
+        0,
+        0,
+        22
+      ],
+      "cutterFrom": [
+        0,
+        -14,
+        22
+      ],
+      "cutterTo": [
+        0,
+        18,
+        22
+      ],
+      "radiusMM": 3,
+      "radiusStatus": "display estimate",
+      "through": true,
+      "measuredNativeAxisEndsMM": [
+        [
+          0.0,
+          -12.499999999999996,
+          22.0
+        ],
+        [
+          0.0,
+          11.187978054049552,
+          21.999999999999556
+        ]
+      ],
+      "measuredNativePassageLengthMM": 23.687978054049548
+    }
+  },
+  "positions": [
+    {
+      "id": "front-cup",
+      "presentationID": "primary",
+      "contactIDs": [
+        "mono-20"
+      ]
+    }
+  ],
+  "notes": "One actual native eye: axis ends measured by intersection with the uncut native TeardropBody. This is a display-model measurement, not a published manufacturer dimension. Front-cup upright; source-visible eye above the cup.",
+  "sourceRegister": "docs/source-audits/2026-09-29-remaining-cad/aelith-cyclops-011/sources.json",
+  "sourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+  "modelSHA256ByPresentation": {
+    "primary": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d"
+  }
+}

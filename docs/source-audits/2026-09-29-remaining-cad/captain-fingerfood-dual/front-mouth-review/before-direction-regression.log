@@ -1,0 +1,88 @@
+F.FF                                                                     [100%]
+=================================== FAILURES ===================================
+_ test_captain_dual_cached_leads_enter_the_front_recess_mouth[curved-lip-front] _
+
+pose_id = 'curved-lip-front'
+
+    @pytest.mark.parametrize("pose_id", [
+        "curved-lip-front", "exterior-jug-back", "left-pocket-vertical", "straight-lip-inverted",
+    ])
+    def test_captain_dual_cached_leads_enter_the_front_recess_mouth(pose_id):
+        # Retained Captain DualP1/title evidence shows each visible lead descending
+        # into the FRONT recess opening. A collision-free rear-to-front bore path
+        # is geometrically possible, but contradicts that sourced entry direction.
+        package = Path(__file__).resolve().parents[3] / "Hangboards/captain-fingerfood-dual"
+        data = json.loads((package / "suspension.json").read_text())
+        routes = data["suspension"]["canonicalPoses"][pose_id]["wrappedRoutes"]
+        for strand_id, x in [("left-lead", -.026), ("right-lead", .026)]:
+            route = np.asarray(routes[strand_id])
+            mouth = np.array([x, .001, -.005])
+            assert np.allclose(route[-1], mouth, atol=1e-9, rtol=0)
+            outward_approach = np.dot(route[-2] - mouth, [0, 0, 1])
+>           assert outward_approach > 1e-5, (
+                f"{pose_id}/{strand_id} enters from the rear bore instead of the front recess: "
+                f"outward approach {outward_approach * 1000:.6f} mm"
+            )
+E           AssertionError: curved-lip-front/left-lead enters from the rear bore instead of the front recess: outward approach -10.000000 mm
+E           assert np.float64(-0.009999999999999998) > 1e-05
+
+Tools/HangboardCAD/tests/test_native_cord_routes.py:26: AssertionError
+_ test_captain_dual_cached_leads_enter_the_front_recess_mouth[left-pocket-vertical] _
+
+pose_id = 'left-pocket-vertical'
+
+    @pytest.mark.parametrize("pose_id", [
+        "curved-lip-front", "exterior-jug-back", "left-pocket-vertical", "straight-lip-inverted",
+    ])
+    def test_captain_dual_cached_leads_enter_the_front_recess_mouth(pose_id):
+        # Retained Captain DualP1/title evidence shows each visible lead descending
+        # into the FRONT recess opening. A collision-free rear-to-front bore path
+        # is geometrically possible, but contradicts that sourced entry direction.
+        package = Path(__file__).resolve().parents[3] / "Hangboards/captain-fingerfood-dual"
+        data = json.loads((package / "suspension.json").read_text())
+        routes = data["suspension"]["canonicalPoses"][pose_id]["wrappedRoutes"]
+        for strand_id, x in [("left-lead", -.026), ("right-lead", .026)]:
+            route = np.asarray(routes[strand_id])
+            mouth = np.array([x, .001, -.005])
+            assert np.allclose(route[-1], mouth, atol=1e-9, rtol=0)
+            outward_approach = np.dot(route[-2] - mouth, [0, 0, 1])
+>           assert outward_approach > 1e-5, (
+                f"{pose_id}/{strand_id} enters from the rear bore instead of the front recess: "
+                f"outward approach {outward_approach * 1000:.6f} mm"
+            )
+E           AssertionError: left-pocket-vertical/left-lead enters from the rear bore instead of the front recess: outward approach -10.000000 mm
+E           assert np.float64(-0.009999999999999998) > 1e-05
+
+Tools/HangboardCAD/tests/test_native_cord_routes.py:26: AssertionError
+_ test_captain_dual_cached_leads_enter_the_front_recess_mouth[straight-lip-inverted] _
+
+pose_id = 'straight-lip-inverted'
+
+    @pytest.mark.parametrize("pose_id", [
+        "curved-lip-front", "exterior-jug-back", "left-pocket-vertical", "straight-lip-inverted",
+    ])
+    def test_captain_dual_cached_leads_enter_the_front_recess_mouth(pose_id):
+        # Retained Captain DualP1/title evidence shows each visible lead descending
+        # into the FRONT recess opening. A collision-free rear-to-front bore path
+        # is geometrically possible, but contradicts that sourced entry direction.
+        package = Path(__file__).resolve().parents[3] / "Hangboards/captain-fingerfood-dual"
+        data = json.loads((package / "suspension.json").read_text())
+        routes = data["suspension"]["canonicalPoses"][pose_id]["wrappedRoutes"]
+        for strand_id, x in [("left-lead", -.026), ("right-lead", .026)]:
+            route = np.asarray(routes[strand_id])
+            mouth = np.array([x, .001, -.005])
+            assert np.allclose(route[-1], mouth, atol=1e-9, rtol=0)
+            outward_approach = np.dot(route[-2] - mouth, [0, 0, 1])
+>           assert outward_approach > 1e-5, (
+                f"{pose_id}/{strand_id} enters from the rear bore instead of the front recess: "
+                f"outward approach {outward_approach * 1000:.6f} mm"
+            )
+E           AssertionError: straight-lip-inverted/left-lead enters from the rear bore instead of the front recess: outward approach -10.000000 mm
+E           assert np.float64(-0.009999999999999998) > 1e-05
+
+Tools/HangboardCAD/tests/test_native_cord_routes.py:26: AssertionError
+=========================== short test summary info ============================
+FAILED Tools/HangboardCAD/tests/test_native_cord_routes.py::test_captain_dual_cached_leads_enter_the_front_recess_mouth[curved-lip-front]
+FAILED Tools/HangboardCAD/tests/test_native_cord_routes.py::test_captain_dual_cached_leads_enter_the_front_recess_mouth[left-pocket-vertical]
+FAILED Tools/HangboardCAD/tests/test_native_cord_routes.py::test_captain_dual_cached_leads_enter_the_front_recess_mouth[straight-lip-inverted]
+3 failed, 1 passed, 10 deselected in 2.27s

@@ -1,0 +1,60 @@
+{
+  "rule": "ceil maximum solved segment length across both wraps and all poses to mm, then add 1 mm",
+  "maximumSolvedNativeOrRoundedCacheLengthM": 0.10734523960943354,
+  "finalVisibleWrapAllowanceEstimateM": 0.109,
+  "marginAboveMaximumM": 0.0016547603905664593,
+  "provisionalAllowanceM": 0.13,
+  "lengths": [
+    {
+      "pose": "three-edge-upright",
+      "strandID": "left-barrel-wrap",
+      "roundedCacheLengthM": 0.10734523909363883,
+      "nativeLengthM": 0.10734523960943354
+    },
+    {
+      "pose": "three-edge-upright",
+      "strandID": "right-barrel-wrap",
+      "roundedCacheLengthM": 0.10734521797876741,
+      "nativeLengthM": 0.10734521838522498
+    },
+    {
+      "pose": "three-edge-inverted",
+      "strandID": "left-barrel-wrap",
+      "roundedCacheLengthM": 0.10734523909363883,
+      "nativeLengthM": 0.10734523960943354
+    },
+    {
+      "pose": "three-edge-inverted",
+      "strandID": "right-barrel-wrap",
+      "roundedCacheLengthM": 0.10734521797876741,
+      "nativeLengthM": 0.10734521838522498
+    },
+    {
+      "pose": "two-edge-upright",
+      "strandID": "left-barrel-wrap",
+      "roundedCacheLengthM": 0.10734523909363883,
+      "nativeLengthM": 0.10734523960943354
+    },
+    {
+      "pose": "two-edge-upright",
+      "strandID": "right-barrel-wrap",
+      "roundedCacheLengthM": 0.10734521797876741,
+      "nativeLengthM": 0.10734521838522498
+    },
+    {
+      "pose": "two-edge-inverted",
+      "strandID": "left-barrel-wrap",
+      "roundedCacheLengthM": 0.10734523909363883,
+      "nativeLengthM": 0.10734523960943354
+    },
+    {
+      "pose": "two-edge-inverted",
+      "strandID": "right-barrel-wrap",
+      "roundedCacheLengthM": 0.10734521797876741,
+      "nativeLengthM": 0.10734521838522498
+    }
+  ],
+  "scope": "conditional display wrap allowance; not measured maker or full continuous cord length",
+  "sourceApplyReport": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-20261002T234319/provisional-native-apply.json",
+  "sourceApplyReportSHA256": "eaed6fc73aef63762eee592d46d42f9c29ce3eac144d16d1afe398d85dbeae53"
+}

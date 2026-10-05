@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/root-classification-diagnosis-tmp/hangten-freecad-hz0u6cy4/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/diagnose_root_classification.py", line 8
+    if not (45.4<abs(b.XMin)<61.1 and45.4<abs(b.XMax)<61.1 and b.XLength>10 and b.ZMax>187):continue
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?
+
+

@@ -1,0 +1,243 @@
+
+FILE HangTen/Views/RootView.swift
+1872:     private enum LandscapeLayout {
+1873:         static let sideCueSlotWidth: CGFloat = 142
+1874:         static let boardMaxHeight: CGFloat = 132
+1875:         static let normalCueRowHeight: CGFloat = 149
+1876:         static let previewLabelHeight: CGFloat = 13
+1877:     }
+
+
+FILE HangTen/Views/RootView.swift
+2359: 		let showsPairedHandCue: Bool = {
+2360: 			guard let holdCue else { return false }
+2361: 			return WorkoutLandscapeHandCuePolicy.showsHandCue(
+2362: 				for: .left, holdCue: holdCue, cueStep: cueStep, countdown: countdown,
+2363: 				isComplete: isComplete, isSkipCountdown: isSkipCountdown
+2364: 			) && WorkoutLandscapeHandCuePolicy.showsHandCue(
+2365: 				for: .right, holdCue: holdCue, cueStep: cueStep, countdown: countdown,
+2366: 				isComplete: isComplete, isSkipCountdown: isSkipCountdown
+2367: 			)
+2368: 		}()
+2369: 		return VStack(spacing: 9) {
+2370: 			landscapeHeader(
+2371: 				step: step,
+2372: 				stepElapsed: stepElapsed,
+2373: 				countdown: countdown,
+2374: 				canNavigate: canNavigate,
+2375: 				isResting: isResting,
+2376: 				isComplete: isComplete
+2377: 			)
+2378: 
+2379: 			ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
+2380: 				.tint(Color.hangGreenDark)
+2381: 
+2382: 			VStack(spacing: 2) {
+2383: 				if showsPairedHandCue, let holdCue {
+2384: 					Group {
+2385: 						#if DEBUG
+2386: 						if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_WORKOUT_HAND_HOST"] == "1" {
+2387: 							Color.clear
+2388: 						} else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAIN_SECOND_HOST"] == "1" {
+2389: 							WorkoutPlainSecondHostProbe(posture: holdCue.gripType,
+2390: 								fingerConfiguration: holdCue.fingerConfiguration)
+2391: 						} else {
+2392: 							GripHandPairModelView(posture: holdCue.gripType,
+2393: 								fingerConfiguration: holdCue.fingerConfiguration)
+2394: 						}
+2395: 						#else
+2396: 						GripHandPairModelView(posture: holdCue.gripType,
+2397: 							fingerConfiguration: holdCue.fingerConfiguration)
+2398: 						#endif
+2399: 					}
+2400: 						.frame(height: 68)
+2401: 						.accessibilityHidden(true)
+2402: 				}
+2403: 				HStack(spacing: 12) {
+2404: 				landscapeHandCueSlot(
+2405: 					holdCue: holdCue,
+2406: 					cueStep: cueStep,
+2407: 					countdown: countdown,
+2408: 					isComplete: isComplete,
+2409: 					isSkipCountdown: isSkipCountdown,
+2410: 					side: .left,
+2411: 					usesSharedPairPreview: showsPairedHandCue
+2412: 				)
+2413: 
+2414: 				VStack(alignment: .leading, spacing: 4) {
+2415: 					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+2416: 						.frame(maxWidth: .infinity, minHeight: LandscapeLayout.previewLabelHeight, alignment: .center)
+2417: 						.opacity(showsHoldPreview ? 1 : 0)
+2418: 						.accessibilityHidden(!showsHoldPreview)
+2419: 					BoardMapView(
+2420: 						board: board,
+2421: 						highlightedHoldIDs: highlightedHoldIDs,
+2422: 						highlightMode: highlightMode,
+2423: 						selectedPresentationID: WorkoutHighlightResolver.presentationID(for: cueStep, on: board),
+2424: 						activeHoldID: holdCue?.hold?.id
+2425: 					)
+2426: 						.frame(maxWidth: .infinity)
+2427: 						.frame(maxHeight: LandscapeLayout.boardMaxHeight)
+2428: 				}
+2429: 				.frame(maxWidth: .infinity)
+2430: 
+2431: 				landscapeHandCueSlot(
+2432: 					holdCue: holdCue,
+2433: 					cueStep: cueStep,
+2434: 					countdown: countdown,
+2435: 					isComplete: isComplete,
+2436: 					isSkipCountdown: isSkipCountdown,
+2437: 					side: .right,
+2438: 					usesSharedPairPreview: showsPairedHandCue
+2439: 				)
+2440: 				}
+2441: 			}
+2442: 			.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
+
+
+FILE HangTen/Views/RootView.swift
+2484: 	private func landscapeHandCueSlot(
+2485: 		holdCue: WorkoutHoldCue?,
+2486: 		cueStep: WorkoutStep?,
+2487: 		countdown: Int,
+2488: 		isComplete: Bool,
+2489: 		isSkipCountdown: Bool,
+2490: 		side: GripCueSide,
+2491: 		usesSharedPairPreview: Bool = false
+2492: 	) -> some View {
+2493: 		ZStack {
+2494: 			Color.clear
+2495: 				.accessibilityHidden(true)
+2496: 			if let holdCue, WorkoutLandscapeHandCuePolicy.showsHandCue(
+2497: 				for: side == .left ? .left : .right,
+2498: 				holdCue: holdCue,
+2499: 				cueStep: cueStep,
+2500: 				countdown: countdown,
+2501: 				isComplete: isComplete,
+2502: 				isSkipCountdown: isSkipCountdown
+2503: 			) {
+2504: 				GripHandCueCard(
+2505: 					posture: holdCue.gripType,
+2506: 					fingerConfiguration: holdCue.fingerConfiguration,
+2507: 					side: side,
+2508: 					usesSharedPairPreview: usesSharedPairPreview
+2509: 				)
+2510: 			}
+2511: 		}
+2512: 		.frame(width: LandscapeLayout.sideCueSlotWidth)
+2513: 		.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
+2514: 	}
+
+
+FILE HangTen/Views/BoardMapView.swift
+650:                 case .model:
+651:                     BoardModelSurface(
+652:                         board: board,
+653:                         presentation: content.presentation,
+654:                         positionID: selectedPositionID,
+655:                         highlightedContactIDs: highlightedHoldIDs,
+656:                         highlightMode: highlightMode,
+657:                         onContactTap: onHoldTap.map { callback in
+658:                             { contact in
+659:                                 callback(selectedPositionID.flatMap { positionID in
+660:                                     board.contacts(inPosition: positionID).first { $0.id == contact.id }
+661:                                 } ?? contact)
+662:                             }
+663:                         },
+664:                         isDisplayOnly: isDisplayOnly
+665:                     )
+666:                 }
+667:             }
+668:             .aspectRatio(content.presentation.aspectRatio(for: selectedPositionID), contentMode: .fit)
+669:         }
+670:         .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
+671:         .onChange(of: highlightedHoldIDs) { previousHoldIDs, holdIDs in
+672:             presentationSelection.updateHighlights(
+673:                 from: previousHoldIDs,
+674:                 to: holdIDs,
+675:                 activeHoldID: activeHoldID,
+676:                 on: board
+677:             )
+678:             selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
+679:                 board: board,
+680:                 presentationID: presentationSelection.presentationID,
+681:                 activeHoldID: activeHoldID,
+682:                 highlightedHoldIDs: holdIDs
+683:             )
+684:         }
+
+
+FILE HangTen/Views/GripDiagramView.swift
+130: struct GripHandCueCard: View {
+131:     let posture: GripType?
+132:     let fingerConfiguration: FingerConfiguration?
+133:     let side: GripCueSide
+134:     var usesSharedPairPreview = false
+135:     @State private var showsModel = false
+136: 
+137:     var body: some View {
+138:         VStack(spacing: 3) {
+139:             Button {
+140:                 showsModel = true
+141:             } label: {
+142:                 Group {
+143:                     if usesSharedPairPreview {
+144:                         Image(systemName: "arrow.up.left.and.arrow.down.right")
+145:                             .font(.system(size: 9, weight: .semibold))
+146:                             .foregroundStyle(Color.hangMuted)
+147:                             .frame(maxWidth: .infinity, minHeight: 28)
+148:                     } else {
+149:                         GripHandModelView(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
+150:                             .frame(height: 88)
+151:                             .overlay(alignment: .topTrailing) {
+152:                                 Image(systemName: "arrow.up.left.and.arrow.down.right")
+153:                                     .font(.system(size: 9, weight: .semibold))
+154:                                     .foregroundStyle(Color.hangMuted)
+155:                             }
+156:                     }
+157:                 }
+158:                 .contentShape(Rectangle())
+159:             }
+160:             .buttonStyle(.plain)
+161:             .accessibilityLabel("Explore \(side.accessibilityIdentifier) hand in 3D")
+162:             .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier).model")
+163: 
+164:             Text(posture?.label ?? "Grip not specified")
+165:                 .font(.system(size: 10, weight: .bold, design: .rounded))
+166:                 .foregroundStyle(Color.hangMuted)
+167:                 .lineLimit(1)
+168:                 .minimumScaleFactor(0.68)
+169:             if fingerConfiguration == nil {
+170:                 Text("Fingers not specified")
+171:                     .font(.system(size: 10, weight: .semibold, design: .rounded))
+172:                     .foregroundStyle(Color.hangMuted)
+173:                     .lineLimit(1)
+174:                     .minimumScaleFactor(0.68)
+175:                     .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier).fingers")
+176:             }
+177:         }
+178:         .frame(maxWidth: .infinity)
+179:         .padding(.horizontal, 8)
+180:         .padding(.vertical, 7)
+181:         .background(Color.hangBackground.opacity(usesSharedPairPreview ? 0.48 : 0.88), in: RoundedRectangle(cornerRadius: 15))
+
+
+FILE HangTen/Views/BoardModelView.swift
+265:                     BoardHighlightDiagnostic.shared.disappear(view: diagnosticViewToken, scene: model)
+266:                 }
+267:                 #endif
+268:             }
+269:     }
+270: 
+271:     private func applySync(size: CGSize) {
+272:         let priorCameraTransform = model.camera.transform.matrix
+273:         let priorInstanceTransforms = model.instanceEntities.map { $0.transform.matrix }
+274:         var camera = model.camera.camera
+275:         camera.fieldOfViewInDegrees = Float(fieldOfViewDegrees)
+276:         camera.fieldOfViewOrientation = .vertical
+277:         camera.near = 0.001
+278:         camera.far = 1000
+279:         model.camera.camera = camera
+280:         model.frame(in: size)
+281:         let didSelect = model.select(positionID: positionID)
+282:         model.highlight(highlightedContactIDs, mode: highlightMode)

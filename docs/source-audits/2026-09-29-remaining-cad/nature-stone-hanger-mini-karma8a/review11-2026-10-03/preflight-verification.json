@@ -1,0 +1,93 @@
+{
+  "owner": "placid-badger",
+  "canonical4": {
+    "nature-stone-hanger-mini-karma8a.FCStd": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+    "assets/primary.usdz": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d",
+    "assets/primary.model.json": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+    "suspension.json": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf"
+  },
+  "canonical4MatchesFrozenPacket": true,
+  "humanReviewPath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/human-review.json",
+  "humanReviewSHA256": "de0454c3d9103370577316deb0bb6443a8b2f331405d12144824962014c46dcf",
+  "humanIdentityMatches": true,
+  "queueEntry11": {
+    "number": 11,
+    "package": "nature-stone-hanger-mini-karma8a",
+    "boardID": "nature.stone-hanger-mini-karma8a",
+    "name": "Nature Climbing Stone Hanger Mini x KARMA8A",
+    "humanReview": "Pending #11 geometry review; current app finishes, contacts and workout appearance unverified",
+    "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8",
+    "reviewPage": "nature-stone-hanger-mini-karma8a/completion-review/index.html",
+    "sourceAudit": "nature-stone-hanger-mini-karma8a/native-authoring.md",
+    "comparisons": [
+      "nature-stone-hanger-mini-karma8a/completion-review/comparison-front.png",
+      "nature-stone-hanger-mini-karma8a/completion-review/comparison-side.png",
+      "nature-stone-hanger-mini-karma8a/completion-review/comparison-top.png",
+      "nature-stone-hanger-mini-karma8a/completion-review/comparison-oblique.png"
+    ],
+    "presentations": {
+      "primary": {
+        "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c",
+        "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d"
+      }
+    },
+    "appReview": "nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
+    "appReviewPage": "nature-stone-hanger-mini-karma8a/completion-review/index.html",
+    "suspensionSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf",
+    "humanReviewRecord": "nature-stone-hanger-mini-karma8a/human-review.json",
+    "latestRevision": "nature-stone-hanger-mini-karma8a/completion-review/review.md",
+    "runtimeRevision": "nature-stone-hanger-mini-karma8a/completion-review/runtime-validation.json",
+    "historicalMigrationReview": {
+      "number": 11,
+      "package": "nature-stone-hanger-mini-karma8a",
+      "boardID": "nature.stone-hanger-mini-karma8a",
+      "name": "Nature Climbing Stone Hanger Mini x KARMA8A",
+      "humanReview": "pending",
+      "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+      "reviewPage": "nature-stone-hanger-mini-karma8a/review/index.html",
+      "sourceAudit": "nature-stone-hanger-mini-karma8a/native-authoring.md",
+      "comparisons": [
+        "nature-stone-hanger-mini-karma8a/review/prior-primary.png",
+        "nature-stone-hanger-mini-karma8a/review/primary-front.png",
+        "nature-stone-hanger-mini-karma8a/review/primary-side.png",
+        "nature-stone-hanger-mini-karma8a/review/primary-top.png"
+      ],
+      "presentations": {
+        "primary": {
+          "descriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4",
+          "modelSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46"
+        }
+      },
+      "appReview": "nature-stone-hanger-mini-karma8a/app-review/validation.json",
+      "appReviewPage": "nature-stone-hanger-mini-karma8a/app-review/index.html"
+    }
+  },
+  "queueEntry11Matches": true,
+  "queueEntry11SnapshotSHA256": "4854b9e9502ad6b1f56f51ababc48552882fb3793d8b37321a8fa4df5dc07950",
+  "retainedComparisonHashes": {
+    "before-front.png": "17db1ebd584e7f280c4d9b4e034ed01bbd02e598de3991dc8c3add2fc568e2b6",
+    "after-front.png": "ab8fddea3011beb22567c97566f1ba7b48cff5054a366eabb7f7bcf950358867",
+    "comparison-front.png": "2edfc62ebabf46dcffabc4d00aa2fe1869b4a4b37878659aa421fce11a73e0c2",
+    "before-side.png": "2ff9aeb6a333c2f20fed05101eaef8446a686e7d83dc1bf772461338a29b63e2",
+    "after-side.png": "2ff9aeb6a333c2f20fed05101eaef8446a686e7d83dc1bf772461338a29b63e2",
+    "comparison-side.png": "08b6ccb3090e3a95405f8129c31b3c9b7e3a95f5b94bdf83e84b1cd0fc8dfb90",
+    "before-top.png": "fc61ed13a1f1af92ee0d94aa762dc947cbd65322ce34b55a115d8c89cea6944e",
+    "after-top.png": "fc61ed13a1f1af92ee0d94aa762dc947cbd65322ce34b55a115d8c89cea6944e",
+    "comparison-top.png": "ad5c34bf1421033ede710dd8d029d38dff0379cb2e9857724f6d4f25ce8319bc",
+    "before-oblique.png": "3d0159d5f43ec8f3906c25a3acba75590219d7803345c13863e66277e42873e2",
+    "after-oblique.png": "3ce17d0ac31569ef2a7f4e3e207c56f9265c82816c6d500d9143d938ebdb6aff",
+    "comparison-oblique.png": "7aa8a95bf4465419c85772fa6c605acffe8eabaaafa396f8584f7a872c81ce58",
+    "comparison-front-side-top.png": "ae28af4c07af1d83b74f47caf5a1fbe6c7477d3ddd5bd8708b26fec0a8c55468"
+  },
+  "retainedComparisonProvenanceSHA256": "b72ed75e9260ed320e4f781c3d2252c42d4a9f6f5ff89fbbe056c5634dfa2888",
+  "retainedComparisonFigureProvenanceSHA256": "29c7f6807281879f8db384be4731cf377846e43057615578ddc0e4f548d9937c",
+  "retainedGeneratedBoardSHA256": "024c2c5df652271ae699487abfc963c33761a18e0c3dbd5d43aff0ac3cfe16a4",
+  "retainedGeneratedSuspensionMatchesCurrentSidecar": true,
+  "routeCertificateSHA256": "6fdd270f7a81477f442a7e9a6984618c273943d8eaecdb2e50d417eecf40a38c",
+  "routeCertificateExactCurrentIdentity": true,
+  "routeProvenanceSHA256": "d3f742b9ce233d21495d8336b284f7fe15966d6f13b9b4061e0b994660b64dd0",
+  "cachedPoseRoutesMatchRetainedProof": true,
+  "runtimeVerified": false,
+  "sourceAuditSHA256": "dd9f85f4cbe84b2f6155db5df76bd0732f1115d06348d51ac27d128674a81476",
+  "reviewMarkdownSHA256": "6d8066bcedc3e9461b8160f41bbe26f89d60cda676e1a024451f2b872ab66e41"
+}

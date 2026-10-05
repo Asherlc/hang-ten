@@ -1,0 +1,6 @@
+error: positions[0].contactIDs must follow canonical board contact order
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/root/run-final-checks.py", line 28, in <module>
+    assert code == 0
+           ^^^^^^^^^
+AssertionError

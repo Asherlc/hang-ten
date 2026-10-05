@@ -1,0 +1,14 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "b083be4185475e8c11936fc1625ed625a71ea2c148fea9b5b1f4006baa61120d",
+  "boardFieldChanges": {},
+  "changedContacts": {},
+  "humanAcceptance": "pending one-by-one review",
+  "package": "zlagboard-evo",
+  "positionsAfter": [],
+  "positionsBefore": [],
+  "removedContacts": [],
+  "sourceAudit": "zlagboard-evo/source-audit.md",
+  "sourceSHA256": "8a8e4957b044d01c76c49ee1b0c07f88f388bac05cff36b31d655c0e6d4ae8fb"
+}

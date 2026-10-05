@@ -1,0 +1,58 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "43FADF46-7A23-4A88-8EF8-20E572101661",
+        "deviceName" : "Hang Ten Paseo placid-badger Port A Board Cord Review",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 0,
+      "passedTests" : 1264,
+      "skippedTests" : 3,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "HangTen · Built with macOS 27.0",
+  "expectedFailures" : 0,
+  "failedTests" : 0,
+  "finishTime" : 1790820855.781,
+  "passedTests" : 1264,
+  "result" : "Passed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/HangTenTests/WorkoutSessionStoreTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/HangTenTests/WorkoutSessionStoreTests.swift"
+    }
+  ],
+  "skippedTests" : 3,
+  "startTime" : 1790820813.447,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+
+  ],
+  "title" : "Test - HangTen",
+  "topInsights" : [
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "60% of duration",
+      "text" : "5 longest test runs with outlier durations exceeding 1.14s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 1267
+}

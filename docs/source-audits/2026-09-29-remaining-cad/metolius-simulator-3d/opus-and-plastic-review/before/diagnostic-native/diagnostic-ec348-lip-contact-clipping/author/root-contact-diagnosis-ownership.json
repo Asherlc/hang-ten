@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "root-contact-diagnosis",
+  "script": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/inspect_root_contacts.py",
+  "timeoutSeconds": 120,
+  "startedUTC": "2026-10-01T16:51:02.593536+00:00",
+  "ownedProcessGroup": 16465,
+  "elapsedSeconds": 2.4979925000225194,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

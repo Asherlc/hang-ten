@@ -1,0 +1,31 @@
+{
+  "method": "Root direct inspection of three complete screenshots; no cropping or pixel measurement",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-1-preview-plus-5.png",
+      "sha256": "1b8c132a0747c3d2957526c45e978c1ccb96da2aed37dea1d4d351171b9eaca5",
+      "observedColor": "red",
+      "expectedColor": "blue",
+      "visibleTimer": "02:55",
+      "bothHandsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "16bbfe5b3839e6ea2b21df7867df19b39bdde8c3c244e0821a41e55f9dc0fa58",
+      "observedColor": "blue",
+      "expectedColor": "red",
+      "visibleTimer": "00:07",
+      "bothHandsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-2-active-plus-5.png",
+      "sha256": "67ae3730d936cd8e150128749f9bcc743988bba99f75f7ad8b32f948bf18823b",
+      "observedColor": "blue",
+      "expectedColor": "red",
+      "visibleTimer": "00:02",
+      "bothHandsVisible": true
+    }
+  ],
+  "scope": "Three only; runtime worker independently reviewed all12",
+  "prospectiveChecker": "Failed and unchanged; independent supplemental timing audit pending"
+}

@@ -1,0 +1,225 @@
+{
+  "createdAt": "2026-10-01T02:28:07.567265+00:00",
+  "status": "hash closure verified; source/app evidence ready for individual human review",
+  "blockingFindings": [],
+  "humanAcceptance": "pending; no acceptance inferred from technical proof",
+  "actualPackageSHA256": {
+    "source": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
+    "model": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+    "descriptor": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46"
+  },
+  "proofHashMatches": {
+    "queue": {
+      "source": true,
+      "model": true,
+      "descriptor": true
+    },
+    "app": {
+      "source": true,
+      "model": true,
+      "descriptor": true
+    },
+    "packageVerification": {
+      "source": true,
+      "model": true,
+      "descriptor": true
+    },
+    "reproducibility": {
+      "source": true,
+      "model": true,
+      "descriptor": true
+    }
+  },
+  "descriptorBindsCurrentModel": true,
+  "sourceFiles": [
+    {
+      "file": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources/product-01.jpg",
+      "publisher": "Mammut",
+      "url": "https://static.mammut.com/master/2060-00020-7458_main_75743.jpg",
+      "expectedSHA256": "d08c0f36233171789ff450f4429646079f67ca2506da2f794ecf61089982014f",
+      "actualSHA256": "d08c0f36233171789ff450f4429646079f67ca2506da2f794ecf61089982014f",
+      "matches": true
+    },
+    {
+      "file": "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources/manual.pdf",
+      "publisher": "Mammut",
+      "url": "https://static.mammut.com/file/2060-00020_man_en_070420_DiamondFingerHangboard_Manual.pdf",
+      "expectedSHA256": "0ada1438277dae39cf96e45dc72f9d0aabe383502718368f143212bf8e51b024",
+      "actualSHA256": "0ada1438277dae39cf96e45dc72f9d0aabe383502718368f143212bf8e51b024",
+      "matches": true
+    }
+  ],
+  "distinctReferences": "Manufacturer product photograph and manufacturer manual drawn topology are materially distinct. Manualpage2 supports hardware/mount context; no duplicate accessory photo counted.",
+  "inventory": {
+    "count": 16,
+    "embeddedManifestOrderMatchesRetainedAudit": true,
+    "descriptorIDsMatchManifest": true,
+    "contacts": [
+      {
+        "id": "mam-jug-l",
+        "equipmentObjectID": "primary",
+        "name": "Jug left",
+        "kind": "jug",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-jug-r",
+        "equipmentObjectID": "primary",
+        "name": "Jug right",
+        "kind": "jug",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-sloper-c",
+        "equipmentObjectID": "primary",
+        "name": "Sloper centre",
+        "kind": "sloper",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-mid-edge-c",
+        "equipmentObjectID": "primary",
+        "name": "Middle edge centre",
+        "kind": "edge",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-mono-l",
+        "equipmentObjectID": "primary",
+        "name": "Mono pocket left",
+        "kind": "pocket",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-mono-r",
+        "equipmentObjectID": "primary",
+        "name": "Mono pocket right",
+        "kind": "pocket",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-upper-pocket-l",
+        "equipmentObjectID": "primary",
+        "name": "Upper pocket left",
+        "kind": "pocket",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-upper-pocket-r",
+        "equipmentObjectID": "primary",
+        "name": "Upper pocket right",
+        "kind": "pocket",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-lateral-ledge-l",
+        "equipmentObjectID": "primary",
+        "name": "Lateral ledge left",
+        "kind": "edge",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-lateral-ledge-r",
+        "equipmentObjectID": "primary",
+        "name": "Lateral ledge right",
+        "kind": "edge",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-upper-pocket-c",
+        "equipmentObjectID": "primary",
+        "name": "Upper pocket centre",
+        "kind": "pocket",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-lower-edge-c",
+        "equipmentObjectID": "primary",
+        "name": "Lower edge centre",
+        "kind": "edge",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-upper-open-bay-l",
+        "equipmentObjectID": "primary",
+        "name": "Upper open bay left",
+        "kind": "edge",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-upper-open-bay-r",
+        "equipmentObjectID": "primary",
+        "name": "Upper open bay right",
+        "kind": "edge",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-upper-inset-l",
+        "equipmentObjectID": "primary",
+        "name": "Upper inset step left",
+        "kind": "pocket",
+        "gripTypes": []
+      },
+      {
+        "id": "mam-upper-inset-r",
+        "equipmentObjectID": "primary",
+        "name": "Upper inset step right",
+        "kind": "pocket",
+        "gripTypes": []
+      }
+    ],
+    "sourceSupport": "Qualitative symmetric channel/pocket/top-jug/central-edge regions and small nested upper steps are visible in photo/manual. Existing names are retained operator labels, not a fully sourced factory21-surface taxonomy.",
+    "unresolved": "Inherited subtitle states21 documented contact surfaces while logical inventory has16. Two lower recesses exist only as body geometry and cannot be selected."
+  },
+  "displayEstimates": [
+    "Width850mm approximates inherited33.5in package metadata; this review did not independently locate dimensional text in the retained photograph/manual.",
+    "Height196mm, thickness78mm, all pocket depths/opening dimensions/relief curves/transition radii are display estimates. No new factory grip depths or finger capacities are asserted.",
+    "CAD side relief is visibly different from prior mesh; profile fidelity is for explicit user review, not certified by hash/recompute checks."
+  ],
+  "intentionalOmissions": [
+    "Phone cradle and mounting plate/hardware",
+    "Logos, colored inserts, materials and textures",
+    "Selectable contact IDs for two modeled lower recesses"
+  ],
+  "visualReview": {
+    "physicallyViewedImages": [
+      "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources/product-01.jpg",
+      "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources/manual-page-1.png",
+      "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources/manual-page-2.png",
+      "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/review/comparison-front.png",
+      "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/review/comparison-side.png",
+      "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/review/comparison-top.png",
+      "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/app-review/default.png",
+      "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/app-review/contact-selection.png"
+    ],
+    "appSelections": [
+      "mam-jug-l",
+      "mam-upper-inset-r"
+    ],
+    "assessment": "Both retained app screenshots show the named selected surface and whole model without obvious clipping. Tiny right inset is visible as a small selected patch. Source topology is recognizable, but dimensions/relief and inventory completeness remain qualified as above.",
+    "limits": "Retained screenshots show two selections only; no new simulator session, orbit validation, full-contact visual sweep, geometry test or new source research performed."
+  },
+  "linkedQueueProofsExist": true,
+  "fileSHA256": {
+    "Hangboards/mammut-diamond-finger/mammut-diamond-finger.FCStd": "0d56461a022ec6499608bf807d7ae8e8520b3c08af139d63e2e12c9a774dc405",
+    "Hangboards/mammut-diamond-finger/assets/primary.usdz": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+    "Hangboards/mammut-diamond-finger/assets/primary.model.json": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/source-audit.md": "a7c996b56b3deed670ca789f3be29f2d9b0eaefa6f5fc03e5d44ee8d8a7a6c64",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources.json": "9536e90376755b7da3732dc2e568e4f3b7ad9e5bb7fa036b5532925ad2666d50",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/metadata-preservation.json": "e3aa1a4787a87e30615a76dd722563e0b3eecfcf33f4e5055389232087210e56",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/package-verification.json": "0fe6baf38f61466d59f744e63816c31a1cd0549c6f271a285eb5705c582c70f7",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/native-check.json": "9afd742e412d802a39b7acaf87ad64f723a25c371af2471f746486f5c1c876d2",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/compile.json": "7147595a453fdb20950cd00084ba31868a8e02d64b26b8f8e9900c9db209c395",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/reproducibility-final.json": "5618a8e82a42d13d2a0caef8a3baa0b206daec0d96ef7c68654062c01a30c8a7",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/app-review/validation.json": "b9c90cedbd60290164822b20a02eca30c5187a541652956c2db75e912449890f",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json": "c06dd72611b01489a86e9f0f2026f8269ff9c8233ceb709e8cea0bcc256b65b1",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources/product-01.jpg": "d08c0f36233171789ff450f4429646079f67ca2506da2f794ecf61089982014f",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources/manual-page-1.png": "4c52fcf599cdff271cf68aeb5f8593883fe69a3e650382ee98f028c461802eb3",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/sources/manual-page-2.png": "36704319dc324cae1a1889490d7102be5c3b3a0f6f5185096da89858fa95fa44",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/review/comparison-front.png": "1762738f77b05abe5c16432b19b96197ec6422e9b1c7c8df5dcd7c5e7301e159",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/review/comparison-side.png": "5c84ef5443c97949c3934e8fb004e3da3f28a661a31f5f9c166aa34ee8249b0d",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/review/comparison-top.png": "11f9c0d9359639e6f7d384103d04be47084c7ae0aad5a57ad0f476b1f76169b8",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/app-review/default.png": "7b7a36dc324ab17992c20693b3bae50a641e4288b3cfd9f82123a8df6818d488",
+    "docs/source-audits/2026-09-29-remaining-cad/mammut-diamond-finger/app-review/contact-selection.png": "bd12caf893824d7bb573844571f3bfa7f027cd70c309923ffaef09a8703ed9a1"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "pytest",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+    "Tools/HangboardPackages/tests/test_model_delivery_lock.py",
+    "-q"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 1.0350099579663947,
+  "fileSHA256": {
+    "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+    "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "31a4896a3e423f23199907fabd8d63481d1890beca90307394e28c1cfac20661",
+    "Hangboards/frictitious-nug/suspension.json": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3"
+  },
+  "sourceUnchangedDuringRun": true,
+  "summary": "31 passed in 0.71s",
+  "scope": "Sidecar authoring/private-runtime boundary and complete delivery-lock behavior; exact native route reproduction separately validates actual The NUG geometry."
+}

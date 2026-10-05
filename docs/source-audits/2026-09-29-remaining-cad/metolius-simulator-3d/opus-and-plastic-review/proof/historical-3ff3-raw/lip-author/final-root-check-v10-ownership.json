@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "final-root-check-v10",
+  "script": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/check_final_root.py",
+  "timeoutSeconds": 180,
+  "startedUTC": "2026-10-01T17:23:45.592385+00:00",
+  "ownedProcessGroup": 66361,
+  "elapsedSeconds": 2.8992190419812687,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

@@ -1,0 +1,12 @@
+{
+  "owner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/usr/bin/swift",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/render_complete_pdf.swift",
+    ".context/placid-badger/metolius-simulator-3d-plastic-review/additional-primary-sources/Training-Board-instructions.pdf"
+  ],
+  "exitCode": 0,
+  "method": "macOS PDFKit whole MediaBox pages; Poppler unavailable; no cropping, measurement or editing."
+}

@@ -1,0 +1,214 @@
+{
+  "owner": "placid-badger",
+  "passed": true,
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "migratedPackages": 21,
+  "migratedPresentationAssets": 23,
+  "nativeCADPackages": 57,
+  "catalogPackages": 64,
+  "unchangedPackageTrees": 43,
+  "skippedActiveMigrations": 7,
+  "python": {
+    "passed": 590,
+    "subtestsPassed": 24,
+    "deselected": 2,
+    "command": "pytest Tools/HangboardPackages/tests Tools/HangboardCAD/tests Tools/HangboardModels -q -k \"not test_committed_asset_rebuilds_byte_identically and not test_exported_cd_relief_has_correct_ownership_and_no_geometric_ridge\"",
+    "separateChecks": "All 21 new packages have current-source independent fresh native rebuild proofs; Poker production and verifier regressions separately passed all six tests.",
+    "reports": [
+      "test-results/python.log",
+      "test-results/python-junit.xml",
+      "test-results/poker.log"
+    ]
+  },
+  "iOS": {
+    "passed": 1258,
+    "skipped": 3,
+    "failed": 0,
+    "total": 1261,
+    "device": "iPhone 17 Pro",
+    "runtime": "iOS 26.5",
+    "command": "xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination \"platform=iOS Simulator,id=D7168911-6A46-4FED-9019-968CCEFEB9DB\" -derivedDataPath .context/DerivedData -parallel-testing-enabled NO -only-testing:HangTenTests test",
+    "reports": [
+      "test-results/ios-summary.json",
+      "test-results/ios-tests.log"
+    ]
+  },
+  "sourceAndExportContracts": "native-source-contracts.json",
+  "unboundUSDZContracts": "export-contracts.json",
+  "deliveryValidation": "delivery-validation.json",
+  "installedPackageValidation": "installed-delivery-validation.json",
+  "independentReview": "final-independent-review.json",
+  "exclusionsProof": "exclusions-proof.json",
+  "metadataAudit": "metadata-audit.json",
+  "historicalReportNotes": "validation-notes.md",
+  "appCaptures": "All 21 current-source packages; representative DEBUG contact review routes, plus physical selector taps for all three Plateau depths. RealityKit tests cover all authored presentation positions and transient non-pickable cords.",
+  "geometryAcceptance": "pending requested one-by-one user review",
+  "testArtifactSHA256": {
+    "test-results/ios-summary.json": "6d38d38ec0659f98565df7ec135a99648db9f4964945c9fb58bdbda699a3febe",
+    "test-results/ios-tests.log": "47c5b2b6d584d6df47cbf8e84e5bf2391f4ff3b4c82aa2fe6f8ad883f877e681",
+    "test-results/poker.log": "8ba7f0f48d09ad9030a1a969ecb50b7e6d2225ffa6857eb381c611e962c557dc",
+    "test-results/python-junit.xml": "61ff06f867591250470e2a4b0f6d8202055bcd5afaa8204652c03cec6852012c",
+    "test-results/python.log": "618eea0c484017ff9e1b2a47cb28140d0d6910d1a97338c7130ff4e92c013ac9"
+  },
+  "resourceCleanup": "resource-cleanup.json",
+  "authoredDiffValidation": "authored-diff-validation.json",
+  "reviewRevisions": [
+    {
+      "package": "aelith-cyclops-011",
+      "date": "2026-09-30",
+      "feedback": "cord is way too long",
+      "report": "aelith-cyclops-011/shorter-cord-runtime-validation.json",
+      "geometryAcceptance": "pending user review",
+      "acceptedScope": "User accepted revised display cord length on 2026-09-30; broader geometry approval is not implied.",
+      "humanReviewRecord": "aelith-cyclops-011/human-review.json"
+    },
+    {
+      "package": "captain-fingerfood-dual",
+      "date": "2026-09-30",
+      "feedback": "Cord doesn\u2019t go through holes",
+      "report": "captain-fingerfood-dual/cord-entry-runtime-validation.json",
+      "suspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+      "nativeAndCanonicalAppValidation": "passed",
+      "physicalUIOrbit": "unverified",
+      "geometryAcceptance": "pending revised user review",
+      "acceptedScope": "General front-hole entry accepted with y; immediate vertical-pose follow-up qualified overall acceptance.",
+      "humanReviewRecord": "captain-fingerfood-dual/human-review.json"
+    },
+    {
+      "package": "captain-fingerfood-dual",
+      "date": "2026-09-30",
+      "revision": "vertical-tightening",
+      "feedback": "the 90 degree position tho, why does the bottom cord jut out to the side?",
+      "report": "captain-fingerfood-dual/vertical-tightening-review/runtime-validation.json",
+      "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+      "nativeAndCanonicalAppValidation": "passed",
+      "physicalUIOrbit": "unverified",
+      "geometryAcceptance": "accepted shown revised 90 degree cord routing with lgtm",
+      "humanReviewRecord": "captain-fingerfood-dual/human-review.json"
+    },
+    {
+      "package": "captain-fingerfood-unlevel",
+      "date": "2026-09-30",
+      "revision": "front-entry",
+      "feedback": "Manufacturer reference audit: visible leads must approach the front floor holes; the prior routes entered from the rear in three poses.",
+      "report": "captain-fingerfood-unlevel/front-entry-review/runtime-validation.json",
+      "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+      "nativeAndCanonicalAppValidation": "passed",
+      "physicalUIOrbit": "unverified",
+      "geometryAcceptance": "pending revised user review"
+    },
+    {
+      "package": "frictitious-nug",
+      "date": "2026-09-30",
+      "revision": "cord-diameter",
+      "report": "frictitious-nug/cord-diameter-review/runtime-validation.json",
+      "suspensionSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+      "nativeAndCanonicalAppValidation": "passed",
+      "physicalUIOrbit": "unverified",
+      "geometryAcceptance": "pending review #4"
+    },
+    {
+      "package": "mammut-diamond-finger",
+      "date": "2026-09-30",
+      "revision": "geometry-and-wood",
+      "report": "mammut-diamond-finger/geometry-and-wood-review/runtime-validation.json",
+      "sourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "modelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+      "descriptorSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
+      "postPromotionTests": {
+        "iOSPassed": 1278,
+        "iOSSkipped": 3,
+        "pythonPassed": 706,
+        "pythonSkipped": 10,
+        "failures": 0
+      },
+      "allOtherPackageTreesUnchanged": true,
+      "boardFactsAndContactsUnchanged": true,
+      "onlyDisplayMetadataChange": "surfaceFinish: wood",
+      "geometryAcceptance": "reviewed; shown revised geometry and wood finish accepted",
+      "humanReviewRecord": "mammut-diamond-finger/human-review.json",
+      "answer": "Good enough",
+      "revisionCommit": "e60142f3ef60456248054bf3cf917c7ab81bf5e6"
+    },
+    {
+      "package": "metolius-contact",
+      "date": "2026-09-30",
+      "revision": "forward-projecting-pinch-rails",
+      "feedback": "The pinch rails need to extend forward otherwise there\u2019s nothing to pinch",
+      "sourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+      "modelSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+      "descriptorSHA256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+      "report": "metolius-contact/pinch-rails-review/runtime-validation.json",
+      "postIntegrationTests": {
+        "iOSPassed": 1278,
+        "iOSSkipped": 3,
+        "pythonPassed": 706,
+        "pythonSkipped": 10,
+        "failures": 0
+      },
+      "allOtherPackageFilesUnchanged": 203,
+      "boardFactsAndContactIDsUnchanged": true,
+      "geometryAcceptance": "reviewed; projecting pinch rails and highlights accepted",
+      "humanReviewRecord": "metolius-contact/human-review.json",
+      "answer": "Y",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed forward-projecting Contact pinch rails and their highlights in the prior-versus-revised front/side/top and actual-app images.",
+      "revisionCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890"
+    },
+    {
+      "package": "metolius-simulator-3d",
+      "date": "2026-10-01",
+      "revision": "rounded-outline-and-shoulder-transitions",
+      "feedback": "Jagged",
+      "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+      "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+      "descriptorSHA256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d",
+      "report": "metolius-simulator-3d/jagged-review/runtime-validation.json",
+      "postIntegrationTests": {
+        "iOSPassed": 1278,
+        "iOSSkipped": 3,
+        "pythonPassed": 706,
+        "pythonSkipped": 11,
+        "separateNativeCompilerRegressionCases": 9,
+        "failures": 0
+      },
+      "allOtherPackageFilesUnchanged": 203,
+      "boardFactsAndContactIDsUnchanged": true,
+      "geometryAcceptance": "pending revised human review #8",
+      "humanReviewRecord": "metolius-simulator-3d/human-review.json",
+      "limits": "Rounded outline and positionally continuous shoulder joins; thickness94.1183246265mm is estimated and residual roof-normal changes reach6.77degrees. Representative app review only."
+    },
+    {
+      "package": "metolius-simulator-3d",
+      "date": "2026-10-01",
+      "revision": "forward-grasp-fair-face-and-plastic",
+      "feedback": [
+        "Jagged",
+        "Tag as plastic",
+        "Center jug rear ridge prevents grasp",
+        "Sloper should extend all the way forward",
+        "Why does it look kind of wavy?"
+      ],
+      "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+      "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+      "report": "metolius-simulator-3d/opus-and-plastic-review/runtime-validation.json",
+      "postIntegrationTests": {
+        "iOSPassed": 1278,
+        "iOSSkipped": 3,
+        "pythonPassed": 706,
+        "pythonSkipped": 11,
+        "failures": 0
+      },
+      "allOtherPackageFilesUnchanged": 203,
+      "boardFactsAndContactIDsUnchanged": true,
+      "surfaceFinish": "plastic",
+      "geometryAcceptance": "reviewed; corrected Simulator geometry and plastic display accepted",
+      "humanReviewRecord": "metolius-simulator-3d/human-review.json",
+      "limits": "Lower face taper, rear jug return, forward anchoring, rolls, thickness and blends are display adaptations; mint is the app palette. Native/export checks and representative app views do not certify manufacturer-exact estimated geometry or a visual sweep of all 30 contacts.",
+      "answer": "lgtm",
+      "acceptedDate": "2026-10-01",
+      "acceptedScope": "Displayed corrected Simulator 3-D, including its smooth front taper, forward center-jug crest and rear return, forward-reaching slopers, and existing plastic appearance."
+    }
+  ]
+}

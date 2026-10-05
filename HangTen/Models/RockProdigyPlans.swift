@@ -90,7 +90,7 @@ extension LegacyPlanSeedCatalog {
         id: "rock-prodigy.rptc-intermediate", title: "Rock Prodigy · RPTC Intermediate",
         subtitle: "Strength · jug warm-up and six working grips, 7/3 repeaters.", level: "Intermediate",
         sourceLabel: "Trango · RPTC intermediate workout table", sourceURL: rptcPublishedURL,
-        provenance: .adapted, boardID: "trango.rock-prodigy-training-center",
+        provenance: .adapted, boardID: BundledPlanContactRequirements.publishedRockProdigyTrainingCenterBoardID,
         steps: rockNumbered({
             let pair = ContactSelectionPolicy.bilateralPair
             let grips: [(String, ContactRequirement?, GripType?)] = [
@@ -169,7 +169,7 @@ extension LegacyPlanSeedCatalog {
         id: "rock-prodigy.pivot-introductory", title: "Rock Prodigy Pivot · Introductory",
         subtitle: "Strength and endurance · six exercises with rotation breaks.", level: "Introductory",
         sourceLabel: "Trango · Pivot Quick Start Guide, pp. 16–17", sourceURL: pivotPublishedURL,
-        provenance: .adapted, boardID: "trango.rock-prodigy-pivot",
+        provenance: .adapted, boardID: BundledPlanContactRequirements.publishedRockProdigyPivotBoardID,
         steps: pivotSteps("rp-pivot-intro", [
             .init(orientation: "1", name: "Jug", hang: 10, rest: 10, repeats: 3, pause: 20, nextOrientation: nil),
             .init(orientation: "1", name: "Sloper rail", hang: 10, rest: 10, repeats: 3, pause: 0, nextOrientation: "3"),
@@ -184,7 +184,7 @@ extension LegacyPlanSeedCatalog {
         id: "rock-prodigy.pivot-intermediate", title: "Rock Prodigy Pivot · Intermediate",
         subtitle: "Strength and endurance · ten exercises with rotation breaks.", level: "Intermediate",
         sourceLabel: "Trango · Pivot Quick Start Guide, pp. 18–19", sourceURL: pivotPublishedURL,
-        provenance: .adapted, boardID: "trango.rock-prodigy-pivot",
+        provenance: .adapted, boardID: BundledPlanContactRequirements.publishedRockProdigyPivotBoardID,
         steps: pivotSteps("rp-pivot-intermediate", [
             .init(orientation: "1", name: "Jug", hang: 10, rest: 5, repeats: 5, pause: 15, nextOrientation: nil),
             .init(orientation: "1", name: "Sloper rail", hang: 10, rest: 5, repeats: 5, pause: 15, nextOrientation: nil),

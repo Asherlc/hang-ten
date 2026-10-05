@@ -1,0 +1,6 @@
+{
+  "previousPatchSHA256": "03bb7d03c34f69677da05a038d505d974fe29a54d1b81d9d57acf4d3006ca21d",
+  "newPatchSHA256": "28be03d79f73f860bc4f7c2fdfd87a427af04f6ef6111258d6c677e9c5b5a029",
+  "change": "Bounded progress records for first8steps plus every120; max18progress records for1200bound. Original diagnostic patch bytes retained.",
+  "behavior": "Numerical steps, tolerances,30s assertions and delivery policy unchanged. Parent shared-file notification sent; no parent production integration."
+}

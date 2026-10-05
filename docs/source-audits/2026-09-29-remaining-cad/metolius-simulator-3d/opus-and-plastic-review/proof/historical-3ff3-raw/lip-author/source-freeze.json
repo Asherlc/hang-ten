@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "scope": "Native authoring and strict independent native/functional/local checks pass",
+  "sourceSHA256": "3ff3a89170bf35daa24a19f2f3e2226390d47359dcbcf9bdadcd1eed0330af6d",
+  "sourceBytes": 8294771,
+  "rawPlasticManifestExact": true,
+  "normalFlagsPreserved": true,
+  "frozenPriorSourceSHA256": "46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264",
+  "nativeVisualGate": "pass",
+  "exportGate": "pass within compiler/reproducibility/independent technical scope; actual app and human gates pending",
+  "actualAppGate": "pending",
+  "humanAcceptance": "pending",
+  "modelSHA256": "78fd9fa2c09bea9905bcf47ccd71b77389c5e2999a5dace5994a2867f622ff6a",
+  "descriptorSHA256": "e93ca8f6f13d2e30b3de7eadad91b0ba8bd05f6f282e21ce9b250304500115df"
+}

@@ -1,0 +1,71 @@
+{
+  "atUTC": "2026-10-02T04:13:28.615719+00:00",
+  "deviceUUID": "71029F02-AF9E-46C2-920B-394C8837ECF2",
+  "ownedLaunchdPID": 11622,
+  "ownedPIDs": {
+    "datamigrator": 11794,
+    "migrationPluginWrapper": 12425,
+    "contactsd": 11817,
+    "runningboardd": 11628
+  },
+  "findings": [
+    "AddressBookLegacy entered performMigration at21:10:26; read simulator-local main images database and scanned seeded record IDs1\u20136, then no further plugin progress through21:11:45 snapshot.",
+    "Datamigrator remained responsive to status requests and updated plugin-duration timer; this is not evidence the entire service is dead.",
+    "Contactsd reported RunningBoard assertion invalidation time in the past at21:11:39. RunningBoard logged Contacts shared filesystem lock assertions and memorystatus permission errors. These are observed symptoms; no causal relationship established.",
+    "Read-only two-second datamigrator sample command timed out after15 seconds and produced no stack; failure retained separately."
+  ],
+  "supportedNarrowFix": null,
+  "limitation": "No reliable root cause or supported narrow repair established by bounded read-only diagnostics. Do not modify migration database, TCC, Contacts, or shared RunningBoard based on these symptoms.",
+  "privacy": "Only simulator-specific unified logs and simulator data-path system.log read; no host contact database or contact contents read. Process snapshot contains process identity/commands only.",
+  "resourceChanges": "No device/service configuration changes, restarts, installation or launch. Timed-out diagnostic sample subprocess was automatically killed by subprocess.run; sampled service was not signaled.",
+  "rawEvidence": {
+    "system-log-snapshot.log": {
+      "bytes": 298,
+      "sha256": "f33af7dc9b53c4f29222a83c604f14f9f4e73cf05044797599397ea2a5cc6cae"
+    },
+    "runningboard-unified.log": {
+      "bytes": 66589,
+      "sha256": "0bd192f936f9ad55dbf2b7a8538fe39031ecaf6a262c4a6a15da0e18fbff4b35"
+    },
+    "runningboard-unified.stderr.log": {
+      "bytes": 44,
+      "sha256": "01562c2fa7aa7c8f4aa278ea839a127c3959b336c823fd752343aa15fa57ca36"
+    },
+    "migration-unified.stderr.log": {
+      "bytes": 44,
+      "sha256": "01562c2fa7aa7c8f4aa278ea839a127c3959b336c823fd752343aa15fa57ca36"
+    },
+    "owned-process-selected.txt": {
+      "bytes": 35344,
+      "sha256": "8641bcaeee1a2630f5d41a37acb873b0a8730f5443b4124440ffd3e88ab42b0c"
+    },
+    "migration-unified.log": {
+      "bytes": 1397314,
+      "sha256": "252571c4976f5e12d0bbaf7a41394af4b6c6f02a2da01ee01ba110299df7f037"
+    },
+    "migration-evidence-selected.txt": {
+      "bytes": 5263,
+      "sha256": "f87f841d628e72d627e7697fd466784998432030a8c58291726015cb6059c3f5"
+    },
+    "system-log-selected.txt": {
+      "bytes": 80,
+      "sha256": "acdcad4abe9dbb2d19c7c625cc0e7cbd4e65297c5720611950b91db4a60ad6d0"
+    },
+    "migration-unified-command.json": {
+      "bytes": 390,
+      "sha256": "ab424290eac28fbae0f08245f032bf0da7b29d04f8bd0f8434094a69b6de04ea"
+    },
+    "process-snapshot.log": {
+      "bytes": 313489,
+      "sha256": "e6e74bbb5c276de4311bff2808a1b6e216cd223616ad0f9156356e2d4f8d1b9e"
+    },
+    "sample-timeout.json": {
+      "bytes": 299,
+      "sha256": "b7276ac194c344ee4a95c1fc747cfeb7a6e3d3999a9eb3ec6b1457bc8632d382"
+    },
+    "runningboard-unified-command.json": {
+      "bytes": 423,
+      "sha256": "d1950b26b0694782f67747a7e2d96851e1bcde892f5e29f09d1db52b6a52323f"
+    }
+  }
+}

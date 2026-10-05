@@ -1,0 +1,406 @@
+{
+  "results": {
+    "planID": "research.max-hangs",
+    "mode": "landscape",
+    "activeStateCaptured": true,
+    "followingRestCaptured": true,
+    "nextActiveTimedSeriesCaptured": true,
+    "routine": "Existing bundled routine unchanged; Rest skipped via visible UI only after settled preview capture",
+    "visualHighlightReview": "Timed next-active images require visible Hang timer and red bilateral surfaces; AX may describe a later state. Inspect all screenshots before claiming red/blue/red."
+  },
+  "events": [
+    {
+      "capture": "active-settled",
+      "epoch": 1790922498.095189
+    },
+    {
+      "capture": "following-rest",
+      "epoch": 1790922503.139644
+    },
+    {
+      "capture": "following-rest-settled",
+      "epoch": 1790922507.022985
+    },
+    {
+      "uiAction": "Skip step 2 after settled rest capture",
+      "epoch": 1790922508.903309
+    },
+    {
+      "capture": "next-active-timed-0",
+      "epoch": 1790922509.913446
+    },
+    {
+      "capture": "next-active-timed-1",
+      "epoch": 1790922512.4429922
+    },
+    {
+      "capture": "next-active-timed-2",
+      "epoch": 1790922514.9524622
+    },
+    {
+      "capture": "after-next-active-series",
+      "epoch": 1790922531.166673
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "launch",
+        "--terminate-running-process",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+        "com.hangten.training"
+      ],
+      "startEpoch": 1790922488.27405,
+      "endEpoch": 1790922488.669905,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "openurl",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+        "hangten://plan/research.max-hangs/workout"
+      ],
+      "startEpoch": 1790922488.670218,
+      "endEpoch": 1790922491.77013,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922491.7705238,
+      "endEpoch": 1790922494.04701,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922494.301318,
+      "endEpoch": 1790922494.6907399,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922494.952713,
+      "endEpoch": 1790922495.328266,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922495.584675,
+      "endEpoch": 1790922496.07627,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922496.337224,
+      "endEpoch": 1790922496.779157,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922497.039955,
+      "endEpoch": 1790922497.422822,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922497.6832352,
+      "endEpoch": 1790922498.0944672,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/baseline-b-landscape/active-settled.png"
+      ],
+      "startEpoch": 1790922498.095629,
+      "endEpoch": 1790922498.5549812,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922498.815561,
+      "endEpoch": 1790922499.1911712,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922499.445776,
+      "endEpoch": 1790922499.846687,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922500.0993412,
+      "endEpoch": 1790922500.522403,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922500.7828789,
+      "endEpoch": 1790922501.182584,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922501.435123,
+      "endEpoch": 1790922501.8344378,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922502.0929642,
+      "endEpoch": 1790922502.49227,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922502.7512581,
+      "endEpoch": 1790922503.139004,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/baseline-b-landscape/following-rest.png"
+      ],
+      "startEpoch": 1790922503.14006,
+      "endEpoch": 1790922503.594762,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922506.6058612,
+      "endEpoch": 1790922507.022329,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/baseline-b-landscape/following-rest-settled.png"
+      ],
+      "startEpoch": 1790922507.023395,
+      "endEpoch": 1790922507.925741,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "tap",
+        "--id",
+        "workout.skipStep",
+        "--tap-style",
+        "physical",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922507.926375,
+      "endEpoch": 1790922508.902474,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/baseline-b-landscape/next-active-timed-0.png"
+      ],
+      "startEpoch": 1790922509.913783,
+      "endEpoch": 1790922510.432121,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/baseline-b-landscape/next-active-timed-1.png"
+      ],
+      "startEpoch": 1790922512.4433548,
+      "endEpoch": 1790922512.95022,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/baseline-b-landscape/next-active-timed-2.png"
+      ],
+      "startEpoch": 1790922514.952641,
+      "endEpoch": 1790922515.4802592,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+      ],
+      "startEpoch": 1790922515.481013,
+      "endEpoch": 1790922531.165971,
+      "exitStatus": 0
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "io",
+        "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+        "screenshot",
+        ".context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/baseline-b-landscape/after-next-active-series.png"
+      ],
+      "startEpoch": 1790922531.1671019,
+      "endEpoch": 1790922531.627318,
+      "exitStatus": 0
+    }
+  ]
+}

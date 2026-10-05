@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-jug-wrap-2026-10-02/root/placid-badger-mini10-jugwrap-xcode-stage",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-jug-wrap-2026-10-02/root/placid-badger-mini10-jugwrap-android-stage",
+      "absent": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "README.md": "68e278f0a8b28cf5ccad9634c538bea4e76a458d4aff1a86e4317c17bac24b05",
+  "affected-ios-summary.json": "ca73c5a7881d9edede353c4edd9e10aee4398103e243b5219862ef32de21a45a",
+  "commands/affected-unit-and-ui-tests.json": "12366bd32d5d62c3fb1f2638c4bbe1fa6da0dff3d11bb19586c8205fa6cae66e",
+  "commands/affected-unit-and-ui-tests.log": "f22dd488625d8077f208ec9dbd1fd8da062aedc94003f915563dd9c770d61344",
+  "commands/targeted-build.json": "71963e5e5ae78a3cf86d0982fc349521a2841f45360bf79cc9b6990c1eaa940d",
+  "ios-cleanup.json": "f4fb10b2f5da5312d11915927024f17c26886929ad5ef0c9ad0f1d13b67dd192",
+  "ownership.json": "02a9b1d600cbedb1431d9728d72b0ce6e0dd4566247b2acf97dda8bd23911746",
+  "python/diagnosis.json": "5aaa67f5c2bba6be63187b9c5300e70058a051f0855a7f588924397cd89540d9",
+  "python/final-result.json": "1674ad5cdfee6d13b32f1c3cff1c203a067ce9c1d5555b1471d5ef1bbbc1efed",
+  "python/final-tracked.patch": "93dd0bf0f2290c0f8014f6bee0facf1f034d0fc8a0464c2edc2338654af3af68",
+  "python/full-package-receipt.json": "acb178335c5fb622047fb67711330a71529018d8e854641e31d9b0688d4819ed",
+  "swift/diagnosis.md": "752a1621135cefb977e3a9b4c9776b41c41477d41a7f1126773c7d01665cdc2b",
+  "swift/penta-authored-framing.patch": "e6af93e77d87da37eac1bb66c665fac9e0360d731e59079af830f2f42500f0a0",
+  "swift/unit-failure-summary.json": "867b158b6037c064c98e8d5e49d4f2e938138ad673034e58284b8fef871bf066",
+  "ui/diagnosis.json": "8d795be4e285563426a46ac490cdcbc5111aadc351e766ddf14cf29a3deb95eb",
+  "ui/diagnosis.md": "0042fec5ab222882d4de0725873b1633a32ff27ba34a4586fff2dbcd7b5cdb0e",
+  "ui/stale-presentation-fixture.patch": "5a5ffd6a1a6fafc003adb7d46727c667752cb27998e2bedaa90b443a8d06063c",
+  "verified-inputs.json": "a56037f2c7fabe6ee28fc6e3041aacd567d343dc4629678271b08874f1cd86e0"
+}

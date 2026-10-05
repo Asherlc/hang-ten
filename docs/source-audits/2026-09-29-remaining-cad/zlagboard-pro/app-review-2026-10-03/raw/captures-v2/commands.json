@@ -1,0 +1,212 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v2/top-jug-left-0-app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v2/top-jug-left-0-app.stderr",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791057831.383994,
+    "pid": 98864,
+    "exitStatus": 0,
+    "endEpoch": 1791057831.731741
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057832.734422,
+    "pid": 99839,
+    "exitStatus": 0,
+    "endEpoch": 1791057837.547151
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057838.057386,
+    "pid": 99918,
+    "exitStatus": 0,
+    "endEpoch": 1791057838.977267
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "tap",
+      "-x",
+      "86.0",
+      "-y",
+      "234.66666666666663",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "--tap-style",
+      "physical"
+    ],
+    "startEpoch": 1791057838.9787269,
+    "pid": 99921,
+    "exitStatus": 0,
+    "endEpoch": 1791057840.120956
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057840.630292,
+    "pid": 99928,
+    "exitStatus": 0,
+    "endEpoch": 1791057841.6198232
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057842.2218208,
+    "pid": 99930,
+    "exitStatus": 0,
+    "endEpoch": 1791057843.191783
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v2/top-jug-left.png"
+    ],
+    "startEpoch": 1791057843.281663,
+    "pid": 99932,
+    "exitStatus": 0,
+    "endEpoch": 1791057843.821816
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "167.6",
+      "--start-y",
+      "259.6",
+      "--end-x",
+      "211.02",
+      "--end-y",
+      "248.8",
+      "--duration",
+      ".5",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057843.823421,
+    "pid": 99944,
+    "exitStatus": 0,
+    "endEpoch": 1791057845.403528
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057845.913038,
+    "pid": 99946,
+    "exitStatus": 0,
+    "endEpoch": 1791057846.8847208
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "790E10AD-5154-463E-8232-288E28FA57D7"
+    ],
+    "startEpoch": 1791057847.487137,
+    "pid": 99957,
+    "exitStatus": 0,
+    "endEpoch": 1791057848.399719
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pro-app-review-2026-10-03/captures-v2/jug-orbit.png"
+    ],
+    "startEpoch": 1791057848.491904,
+    "pid": 99959,
+    "exitStatus": 0,
+    "endEpoch": 1791057848.9686852
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "terminate",
+      "790E10AD-5154-463E-8232-288E28FA57D7",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791057848.972616,
+    "pid": 99970,
+    "exitStatus": 0,
+    "endEpoch": 1791057849.168601
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "98874",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791057849.169288,
+    "pid": 99980,
+    "exitStatus": 1,
+    "endEpoch": 1791057849.194598
+  }
+]

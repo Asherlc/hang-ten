@@ -1,0 +1,22 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/root/inspect_export.py",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/owl-climb-poker.FCStd",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/compile-1/assets/primary.usdz",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/compile-1/assets/primary.model.json",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Hangboards/owl-climb-poker/assets/primary.usdz"
+  ],
+  "startedUTC": "2026-10-02T15:18:21.037107+00:00",
+  "timeoutSeconds": 180,
+  "ownedTemporaryDirectory": ".context/placid-badger/poker-review12/root/placid-badger-poker12-independent-export-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 25900,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 5.809310625001672
+}

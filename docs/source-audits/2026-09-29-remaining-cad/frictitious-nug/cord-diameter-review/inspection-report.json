@@ -1,0 +1,51 @@
+{
+  "owner": "placid-badger",
+  "status": "Preview packet ready. Final human acceptance remains pending.",
+  "beforeSHA256": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088",
+  "afterSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+  "verified": {
+    "retainedBeforeFiles": 46,
+    "oldAuditFilesUnchanged": 45,
+    "immutablePackageFiles": {
+      "frictitious-nug.FCStd": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+      "assets/primary.usdz": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+      "assets/primary.model.json": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d"
+    },
+    "pairedImages": 48,
+    "exactSavedCameraAfterViews": 6,
+    "allRenderedImageHashesMatch": true
+  },
+  "previewMeshMethod": "Original native USDZ triangles; exact cached route coordinates/radii, cylindrical segments with disk end caps and analytic constant-radius spheres at interior route vertices. Preview-only joint closure; no package/app or solver modification.",
+  "solvedHeightChangeMM": 1.148031,
+  "humanApproval": "Pending user review.",
+  "physicallyInspectedFinalArtifacts": [
+    {
+      "image": "body-prior-raster-overview.png",
+      "sha256": "a2acffc9e3790dda8b50ab46fa64e087fd2853bad9f2a3190f397a5bba23a353"
+    },
+    {
+      "image": "six-pose-overview.png",
+      "sha256": "5f3cae930c25f1b3315ba858887b740a9a8c47ef9dc83b80429c1ef5609db2c5"
+    },
+    {
+      "image": "default-inverted-three-view-overview.png",
+      "sha256": "1bbdc438840eaeae8153e253361cbc8eadd9171a32e1e0e06e06ea3bfe752d9e"
+    },
+    {
+      "image": "front-25-side-detail.png",
+      "sha256": "4399f2d029649992dc84facce76de06342dbe1971cb33e16ec4a421c60babb92"
+    },
+    {
+      "image": "reverse-inverted-8-canonical-camera-detail.png",
+      "sha256": "a1578e774dabc6aa1d92e35ef31f8a7fc2a49775c25293622db4f39103b046e4"
+    }
+  ],
+  "observations": [
+    "All six saved-camera pairs show thicker 6 mm cord with unchanged native body geometry; default, reverse, inverted, jug (outer-upper) and pinch (outer-lower) presentations inspected in the final six-pose overview.",
+    "Default and inverted orthographic front/side/top views were inspected in the final three-view overview. Analytic joint closure eliminates the earlier per-segment white fan gaps without moving the exact cached points.",
+    "The body overview contains complete prior raster primary/reverse views and unchanged current CAD front/side/top/oblique. It explicitly states no prior CAD side/top existed and uses independently fitted image cells.",
+    "A thin white horizontal pocket strip appears identically before and after in inverted canonical technical projections. Body bytes are unchanged; this preview task does not diagnose or change the underlying mesh.",
+    "Native mouth wells are visible in the oblique body render and saved-camera views; strict head-on front projection provides little well shading. Prior native/export ray audit remains retained.",
+    "Top-view cord crossings collapse height; these technical images are not 3D collision certificates. Fresh Simulator proof and native clearance remain integration-owned."
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "owner": "placid-badger",
+  "recordedAt": "2026-10-03T01:55:51.381539+00:00",
+  "source": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/stable-bindings/candidate-package/trango-rock-prodigy-forge.FCStd",
+    "sha256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e"
+  },
+  "handoff": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/stable-bindings/native-shape-handoff.json",
+    "sha256": "c70616117e46a7540bb94ad0648e416b04930f37cfa4b41d20e347ea7fa11e50"
+  },
+  "runner": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/run-forge-verification.py",
+    "sha256": "924d6a1e2d55083f764202687ca33cd5572a59394763f2fb36c01dd88de2eb2a"
+  },
+  "checksSHA256": {
+    "check-forge-native.py": "dfb3754443729a6be4ec2ed5d56d722a0798fe3697ab545854ff7dc0cb049eb8",
+    "check-forge-reimport.py": "a1fc055da8f84638347ecc0f47d35300e914ec2ab1a758cbc6d5a77d0a950116",
+    "check-forge-normals.py": "8159911d5be485808796fa7f401616f0ccd0be1db00064467681ab819b37cbe4",
+    "run-forge-verification.py": "924d6a1e2d55083f764202687ca33cd5572a59394763f2fb36c01dd88de2eb2a"
+  },
+  "argv": [
+    "rtk",
+    "proxy",
+    "env",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/run-forge-verification.py",
+    "--source",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/stable-bindings/candidate-package/trango-rock-prodigy-forge.FCStd",
+    "--source-sha",
+    "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+    "--handoff",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/stable-bindings/native-shape-handoff.json",
+    "--handoff-sha",
+    "c70616117e46a7540bb94ad0648e416b04930f37cfa4b41d20e347ea7fa11e50"
+  ],
+  "nativeCheckCount": 1,
+  "freshCompileProcessCount": 2,
+  "nativeNormalCheckCount": 1,
+  "freshEmptyStageReimportCount": 1,
+  "canonicalInstallationStagingAppTestsOrBuild": false,
+  "scope": "20 exact source contact facts/surfaces; two solids; genuine paired 7.5 to9.5 depth edit/restore; published depths/planes; independent source-bound asset pair; exact descriptor rebuild; every imported vertex native normal; root-owned physical review/promotion",
+  "priorCompletedCheckerFailure": {
+    "job": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743",
+    "reportSHA256": "b7b8ef4c4b8315156aed10faae0a381c9deb5c24f001397bbc6d8b469ad89791",
+    "cleanupSHA256": "a696750a6a417f2362d630213c21944f1a9f39963e277d697c933c54b93b3612",
+    "noCancellationSignalSent": true
+  },
+  "membershipMethod": "exact finite per-face common-area coverage against actual valid separated native solid boundary faces; AABB pruning only; whole-contact missing/excess area each <1e-4 mm2",
+  "preservationMethod": "bidirectional finite common-area coverage against immutable baseline pressure sheets; same whole-contact missing/excess tolerance",
+  "toleranceWeakened": false,
+  "authorFreshForcedCheck": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/stable-bindings/fresh-native-check.json",
+    "sha256": "0144f0c3e81a2a69d41fcfc60891396a1222c3875748dc5caf923751310799ec"
+  },
+  "priorRealBindingFailure": {
+    "job": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220",
+    "reportSHA256": "b4bfdac2f79bf3b8a01b0668dbb2d8a995d9dde5137b8c5cec31d385536b990b",
+    "cleanupSHA256": "815e18c28aa30a80ea1870e781ff77059866177e3310b3a5b80dfc60e6ea4770",
+    "sourceSHA256": "3befc7e58894d76f7f7f70bdab82c33f3bf9901bf61512b4aa555b495bf862a4",
+    "classification": "completed strict preservation failure; no export; replaced by stable upstream native binders; no tolerance weakening"
+  }
+}

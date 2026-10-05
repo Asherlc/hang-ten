@@ -1,0 +1,52 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "39548DD5-880E-4F33-82E3-E8A14AB72569",
+        "deviceName" : "Hang Ten Paseo placid-badger Review PlateauCompatibility20261003",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 1,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "HangTen · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1791069950.3,
+  "passedTests" : 1,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791069935.647,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertEqual failed: (\"CustomRoutineDefinition(id: \"custom.saved-plateau-blockers\", title: \"Saved Plateau routine\", subtitle: \"User-authored lifting rows\", difficulty: Optional(\"Custom difficulty\"), category: Optional(\"strength\"), tags: [\"custom\", \"lifting\"], targetMode: HangTen.CustomRoutineTargetMode.boardSpecific(boardID: \"plateau.lifting-edge\"), steps: [HangTen.WorkoutStepDefinition(id: \"saved-ten\", title: \"Saved 10 mm lift\", instruction: \"Saved cue: retain my chosen fingers.\", accessory: \"Saved load and repetition note\", duration: 6.75, phase: HangTen.WorkoutPhase.pull, segments: [HangTen.WorkoutSegmentDefinition(kind: HangTen.WorkoutSegmentKind.work, target: Optional(HangTen.WorkoutSegmentTarget.requirements([HangTen.ContactRequirement(contactID: Optional(\"blocker-edge-10\"), kind: Optional(HangTen.HoldKind.edge), shape: nil, depth: Optional(HangTen.HoldDepth.range(HangTen.MillimeterRange(minimum: 10.0, maximum: 10.0))), fingerCapacity: nil, handCapacity: Optional(1), selection: HangTen.ContactSelectionPolicy.single)])), timing: HangTen.WorkoutSegmentTiming.fixed, duration: Optional(6.75))], gripType: nil, fingerConfiguration: nil, activeDuration: Optional(6.75), handUse: HangTen.WorkoutHandUse.single, side: HangTen.WorkoutSide.left, action: HangTen.WorkoutAction.loadedLift, repetitions: Optional(4), externalLoadKGF: Optional(9.5)), HangTen.WorkoutStepDefinition(id: \"saved-rest\", title: \"Saved rest\", instruction: \"Saved recovery note.\", accessory: \"Saved rest note\", duration: 7.25, phase: HangTen.WorkoutPhase.rest, segments: [HangTen.WorkoutSegmentDefinition(kind: HangTen.WorkoutSegmentKind.rest, target: nil, timing: HangTen.WorkoutSegmentTiming.fixed, duration: Optional(7.25))], gripType: nil, fingerConfiguration: nil, activeDuration: nil, handUse: HangTen.WorkoutHandUse.double, side: HangTen.WorkoutSide.both, action: HangTen.WorkoutAction.hang, repetitions: nil, externalLoadKGF: nil), HangTen.WorkoutStepDefinition(id: \"saved-fifteen\", title: \"Saved 15 mm hang\", instruction: \"Saved cue: use the same finger choice.\", accessory: \"Saved 15 mm note\", duration: 9.5, phase: HangTen.WorkoutPhase.hang, segments: [HangTen.WorkoutSegmentDefinition(kind: HangTen.WorkoutSegmentKind.work, target: Optional(HangTen.WorkoutSegmentTarget.requirements([HangTen.ContactRequirement(contactID: Optional(\"blocker-edge-15\"), kind: Optional(HangTen.HoldKind.edge), shape: nil, depth: Optional(HangTen.HoldDepth.range(HangTen.MillimeterRange(minimum: 15.0, maximum: 15.0))), fingerCapacity: nil, handCapacity: Optional(1), selection: HangTen.ContactSelectionPolicy.single)])), timing: HangTen.WorkoutSegmentTiming.fixed, duration: Optional(9.5))], gripType: nil, fingerConfiguration: nil, activeDuration: Optional(9.5), handUse: HangTen.WorkoutHandUse.single, side: HangTen.WorkoutSide.right, action: HangTen.WorkoutAction.hang, repetitions: nil, externalLoadKGF: Optional(4.5))])\") is not equal to (\"CustomRoutineDefinition(id: \"custom.saved-plateau-blockers\", title: \"Saved Plateau routine\", subtitle: \"User-authored lifting rows\", difficulty: Optional(\"Custom difficulty\"), category: Optional(\"strength\"), tags: [\"custom\", \"lifting\"], targetMode: HangTen.CustomRoutineTargetMode.boardSpecific(boardID: \"plateau.lifting-edge\"), steps: [HangTen.WorkoutStepDefinition(id: \"saved-ten\", title: \"Saved 10 mm lift\", instruction: \"Saved cue: retain my chosen fingers.\", accessory: \"Saved load and repetition note\", duration: 6.75, phase: HangTen.WorkoutPhase.pull, segments: [HangTen.WorkoutSegmentDefinition(kind: HangTen.WorkoutSegmentKind.work, target: Optional(HangTen.WorkoutSegmentTarget.requirements([HangTen.ContactRequirement(contactID: Optional(\"edge-18\"), kind: Optional(HangTen.HoldKind.edge), shape: nil, depth: Optional(HangTen.HoldDepth.range(HangTen.MillimeterRange(minimum: 10.0, maximum: 10.0))), fingerCapacity: nil, handCapacity: Optional(1), selection: HangTen.ContactSelectionPolicy.single)])), timing: HangTen.WorkoutSegmentTiming.fixed, duration: Optional(6.75))], gripType: nil, fingerConfiguration: nil, activeDuration: Optional(6.75), handUse: HangTen.WorkoutHandUse.single, side: HangTen.WorkoutSide.left, action: HangTen.WorkoutAction.loadedLift, repetitions: Optional(4), externalLoadKGF: Optional(9.5)), HangTen.WorkoutStepDefinition(id: \"saved-rest\", title: \"Saved rest\", instruction: \"Saved recovery note.\", accessory: \"Saved rest note\", duration: 7.25, phase: HangTen.WorkoutPhase.rest, segments: [HangTen.WorkoutSegmentDefinition(kind: HangTen.WorkoutSegmentKind.rest, target: nil, timing: HangTen.WorkoutSegmentTiming.fixed, duration: Optional(7.25))], gripType: nil, fingerConfiguration: nil, activeDuration: nil, handUse: HangTen.WorkoutHandUse.double, side: HangTen.WorkoutSide.both, action: HangTen.WorkoutAction.hang, repetitions: nil, externalLoadKGF: nil), HangTen.WorkoutStepDefinition(id: \"saved-fifteen\", title: \"Saved 15 mm hang\", instruction: \"Saved cue: use the same finger choice.\", accessory: \"Saved 15 mm note\", duration: 9.5, phase: HangTen.WorkoutPhase.hang, segments: [HangTen.WorkoutSegmentDefinition(kind: HangTen.WorkoutSegmentKind.work, target: Optional(HangTen.WorkoutSegmentTarget.requirements([HangTen.ContactRequirement(contactID: Optional(\"edge-18\"), kind: Optional(HangTen.HoldKind.edge), shape: nil, depth: Optional(HangTen.HoldDepth.range(HangTen.MillimeterRange(minimum: 15.0, maximum: 15.0))), fingerCapacity: nil, handCapacity: Optional(1), selection: HangTen.ContactSelectionPolicy.single)])), timing: HangTen.WorkoutSegmentTiming.fixed, duration: Optional(9.5))], gripType: nil, fingerConfiguration: nil, activeDuration: Optional(9.5), handUse: HangTen.WorkoutHandUse.single, side: HangTen.WorkoutSide.right, action: HangTen.WorkoutAction.hang, repetitions: nil, externalLoadKGF: Optional(4.5))])\") - Migration must change only the retired contact identities",
+      "targetName" : "HangTenTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "CustomRoutineStoreTests/testLoadMigratesPlateauBlockerTargetsAndPreservesEditSaveRoundTrip()",
+      "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenTests/CustomRoutineStoreTests/testLoadMigratesPlateauBlockerTargetsAndPreservesEditSaveRoundTrip",
+      "testName" : "testLoadMigratesPlateauBlockerTargetsAndPreservesEditSaveRoundTrip()"
+    }
+  ],
+  "title" : "Test - HangTen",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 2
+}

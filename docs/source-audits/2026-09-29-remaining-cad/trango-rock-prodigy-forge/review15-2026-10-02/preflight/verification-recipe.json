@@ -1,0 +1,44 @@
+{
+  "owner": "placid-badger",
+  "recordedAt": "2026-10-03T01:27:32.303063+00:00",
+  "source": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/setback-correction/candidate-package/trango-rock-prodigy-forge.FCStd",
+    "sha256": "3befc7e58894d76f7f7f70bdab82c33f3bf9901bf61512b4aa555b495bf862a4"
+  },
+  "handoff": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/setback-correction/native-shape-handoff.json",
+    "sha256": "6fbd76612d6f2105004f9ced98940d9f213ff3bacb5f36a265e8934a14b78656"
+  },
+  "runner": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/run-forge-verification.py",
+    "sha256": "690bc5a31e9fa8881658749e24e328a6a1001678c9daad9270a10b5d0b4b8563"
+  },
+  "checksSHA256": {
+    "check-forge-native.py": "9f9e5446318f95bff1cc0688ad71a2a066aeec35e18886b23151e96a2c5bd0ed",
+    "check-forge-reimport.py": "a1fc055da8f84638347ecc0f47d35300e914ec2ab1a758cbc6d5a77d0a950116",
+    "check-forge-normals.py": "8159911d5be485808796fa7f401616f0ccd0be1db00064467681ab819b37cbe4",
+    "run-forge-verification.py": "690bc5a31e9fa8881658749e24e328a6a1001678c9daad9270a10b5d0b4b8563"
+  },
+  "argv": [
+    "rtk",
+    "proxy",
+    "env",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/run-forge-verification.py",
+    "--source",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/setback-correction/candidate-package/trango-rock-prodigy-forge.FCStd",
+    "--source-sha",
+    "3befc7e58894d76f7f7f70bdab82c33f3bf9901bf61512b4aa555b495bf862a4",
+    "--handoff",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/setback-correction/native-shape-handoff.json",
+    "--handoff-sha",
+    "6fbd76612d6f2105004f9ced98940d9f213ff3bacb5f36a265e8934a14b78656"
+  ],
+  "nativeCheckCount": 1,
+  "freshCompileProcessCount": 2,
+  "nativeNormalCheckCount": 1,
+  "freshEmptyStageReimportCount": 1,
+  "canonicalInstallationStagingAppTestsOrBuild": false,
+  "scope": "20 exact source contact facts/surfaces; two solids; genuine paired 7.5 to9.5 depth edit/restore; published depths/planes; independent source-bound asset pair; exact descriptor rebuild; every imported vertex native normal; root-owned physical review/promotion"
+}

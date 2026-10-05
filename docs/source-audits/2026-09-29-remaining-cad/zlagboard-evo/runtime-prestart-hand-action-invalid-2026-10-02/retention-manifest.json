@@ -1,0 +1,319 @@
+{
+  "purpose": "Exact frozen invalid action with additive timing correction and qualified source audit",
+  "originalFreezeFiles": 44,
+  "postfreezeSupplements": [
+    "raw/prestart-hand-action-timeline-correction.json",
+    "analysis/prestart-suppression-source-audit/"
+  ],
+  "status": "invalid comparison; zero qualified phase images; no color or suppression conclusion",
+  "entryCount": 51,
+  "entries": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-app-termination-verification.json",
+      "retained": "raw/prestart-hand-action-app-termination-verification.json",
+      "sha256": "f5826f9e3b5967c6acea6515614cd2350ee2f03f7a9d70f4c92e332c3a767791",
+      "bytes": 182
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-final-parity.json",
+      "retained": "raw/prestart-hand-action-final-parity.json",
+      "sha256": "d41c248d904a4c5f0810eec69a5584fb132ee6ff2b46e489ad7052463b543942",
+      "bytes": 12855
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-findings.json",
+      "retained": "raw/prestart-hand-action-findings.json",
+      "sha256": "beee2dd3d01ad9c5527ad868c4f3037ce9e98d7eacafe68b305541c37e1a1bec",
+      "bytes": 73054
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/000-stderr.txt",
+      "retained": "raw/prestart-hand-action-landscape/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/000-stdout.txt",
+      "retained": "raw/prestart-hand-action-landscape/000-stdout.txt",
+      "sha256": "0ad7dfad7e51988d35748c327dd84223e1513590bf6085156ae7064e9d77e8a0",
+      "bytes": 176
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/001-stderr.txt",
+      "retained": "raw/prestart-hand-action-landscape/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/001-stdout.txt",
+      "retained": "raw/prestart-hand-action-landscape/001-stdout.txt",
+      "sha256": "988727e57a22c18cf041def9f3601cd0167646033b49dc2aa13ad91bade45180",
+      "bytes": 162
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/002-stderr.txt",
+      "retained": "raw/prestart-hand-action-landscape/002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/002-stdout.txt",
+      "retained": "raw/prestart-hand-action-landscape/002-stdout.txt",
+      "sha256": "4d44c1b5d419c0ca1774a62e66d722b1f31e4f39e6edcbfce87803628511dfc5",
+      "bytes": 28
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/003-stderr.txt",
+      "retained": "raw/prestart-hand-action-landscape/003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/003-stdout.txt",
+      "retained": "raw/prestart-hand-action-landscape/003-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/004-stderr.txt",
+      "retained": "raw/prestart-hand-action-landscape/004-stderr.txt",
+      "sha256": "99e24423c91d035aa62dc36fbc039f471cf4c29d0ae65ce71c3e8627228bbb71",
+      "bytes": 368
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/004-stdout.txt",
+      "retained": "raw/prestart-hand-action-landscape/004-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/capture-process-status.json",
+      "retained": "raw/prestart-hand-action-landscape/capture-process-status.json",
+      "sha256": "35afbbe868c888aac821ab29ed4ce82fb810643a832d33eabe3957253c92cf0d",
+      "bytes": 103
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/captures.json",
+      "retained": "raw/prestart-hand-action-landscape/captures.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/commands.json",
+      "retained": "raw/prestart-hand-action-landscape/commands.json",
+      "sha256": "f34a7e9f081f85f70338d4a4800182f2833bd2d1f5db8400b805fb9d87c66ca7",
+      "bytes": 1603
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/events-C45FEE4D-E02E-4D42-BAEE-FB53473F019E.jsonl",
+      "retained": "raw/prestart-hand-action-landscape/events-C45FEE4D-E02E-4D42-BAEE-FB53473F019E.jsonl",
+      "sha256": "2635675c7b101b5ff2ecb80422ecd00c0b6f4d8f91efadc89292d9b161f30a44",
+      "bytes": 1581182
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/excluded-prestart-candidates.jsonl",
+      "retained": "raw/prestart-hand-action-landscape/excluded-prestart-candidates.jsonl",
+      "sha256": "54760c03c1159dc83caea3eee77e412db77e32860653b902560415dfb5bba009",
+      "bytes": 36399
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/failure.txt",
+      "retained": "raw/prestart-hand-action-landscape/failure.txt",
+      "sha256": "6412f7e4d35b9500328329f101f4b02807017db806dfe48b805a9bb306d484ac",
+      "bytes": 660
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/installed-binary-gate.json",
+      "retained": "raw/prestart-hand-action-landscape/installed-binary-gate.json",
+      "sha256": "65f528935b3bbffcf17b112cac01e5124c53841aed68efd77e4e4092555d4e5a",
+      "bytes": 374
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/launch-initial-capture.json",
+      "retained": "raw/prestart-hand-action-landscape/launch-initial-capture.json",
+      "sha256": "96bb2d7e63d69ad629db91ef1ebcb4b7c69d51301651ab2fb8a58902a7037b0c",
+      "bytes": 152
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/launch-initial.png",
+      "retained": "raw/prestart-hand-action-landscape/launch-initial.png",
+      "sha256": "4ac226f2dec13e680c20f0687ac394424c3b165a5ea43d424bb854c7133ed859",
+      "bytes": 716598
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/launch-review-environment.json",
+      "retained": "raw/prestart-hand-action-landscape/launch-review-environment.json",
+      "sha256": "e6ddfba3120ad76421a73102d9c43c6c4b893265aa0eb8d595508273f6f1a3ca",
+      "bytes": 620
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/original-prestart-checker-status.json",
+      "retained": "raw/prestart-hand-action-landscape/original-prestart-checker-status.json",
+      "sha256": "14cc779d935b75f83da8a0c751e55782c361d4e93a0641070cc5272851366fe6",
+      "bytes": 479
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/original-prestart-checker.stderr",
+      "retained": "raw/prestart-hand-action-landscape/original-prestart-checker.stderr",
+      "sha256": "a348d4cf9bc758ccf38131abe3b4c13156db63d936d8a4af403560101e3ea4cf",
+      "bytes": 2393
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/original-prestart-checker.stdout",
+      "retained": "raw/prestart-hand-action-landscape/original-prestart-checker.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/protocol.json",
+      "retained": "raw/prestart-hand-action-landscape/protocol.json",
+      "sha256": "3fadc1942f127e6e4f4a4b27bc09a1f130171de649b155b24c4c4deb4bbc54d2",
+      "bytes": 1317
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/runtime-release.json",
+      "retained": "raw/prestart-hand-action-landscape/runtime-release.json",
+      "sha256": "86ad82445007fbc14c2508e05e2e4688e1578c25c5e7b6d242199f7b4981cc87",
+      "bytes": 1733
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/trace-copy.json",
+      "retained": "raw/prestart-hand-action-landscape/trace-copy.json",
+      "sha256": "ee5d93251c89d677b83cdbb7050f758772a275e5ff833099e7d32ceedc3ddc16",
+      "bytes": 715
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/train-startup-readiness.json",
+      "retained": "raw/prestart-hand-action-landscape/train-startup-readiness.json",
+      "sha256": "c020bdab5d4a95be3d1f3b4ce62c011630b0168a82037cc42981f79621b35282",
+      "bytes": 22496
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-landscape/workout-openurl-timing.json",
+      "retained": "raw/prestart-hand-action-landscape/workout-openurl-timing.json",
+      "sha256": "1ebaa562cdbf5abadc67db42214d90c575e21e8c07eefe095a4b6d0b8f297def",
+      "bytes": 153
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-prelaunch-parity.json",
+      "retained": "raw/prestart-hand-action-prelaunch-parity.json",
+      "sha256": "d41c248d904a4c5f0810eec69a5584fb132ee6ff2b46e489ad7052463b543942",
+      "bytes": 12855
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-prior-freeze-verification.json",
+      "retained": "raw/prestart-hand-action-prior-freeze-verification.json",
+      "sha256": "088722e4065f25f2b581173c9871fa0d56d0ee9731f67fa26a8454be130d0f71",
+      "bytes": 1062
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-runtime-release.json",
+      "retained": "raw/prestart-hand-action-runtime-release.json",
+      "sha256": "86ad82445007fbc14c2508e05e2e4688e1578c25c5e7b6d242199f7b4981cc87",
+      "bytes": 1733
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-supplemental-helpers/capture-action.py",
+      "retained": "raw/prestart-hand-action-supplemental-helpers/capture-action.py",
+      "sha256": "54e3e6a5f06e5ce8f61108d56e3997e0f6f1c88ef1adcf471fc3603c384bcfca",
+      "bytes": 13370
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-supplemental-helpers/capture-release-gate.patch",
+      "retained": "raw/prestart-hand-action-supplemental-helpers/capture-release-gate.patch",
+      "sha256": "73501384dd77fc2236381f4e1be32776e2821de6f8ba548701b9f8f2c6a94d55",
+      "bytes": 930
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-supplemental-helpers/check-supplemental-timing.py",
+      "retained": "raw/prestart-hand-action-supplemental-helpers/check-supplemental-timing.py",
+      "sha256": "cd6e98044a0afb60116cf58b592476c7780f6d941f302bef9f350338b5090c1c",
+      "bytes": 6251
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-supplemental-helpers/original-action-capture.py",
+      "retained": "raw/prestart-hand-action-supplemental-helpers/original-action-capture.py",
+      "sha256": "38af1958b95229f33e5c77715b076153585b990b44a048ca5e011f3899466353",
+      "bytes": 13177
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-supplemental-helpers/original-action-check-prestart-hands.py",
+      "retained": "raw/prestart-hand-action-supplemental-helpers/original-action-check-prestart-hands.py",
+      "sha256": "8f780e261d5fe843676805afb4c42968fdf2f211842fb8a55dba1c9447742f40",
+      "bytes": 8320
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-supplemental-helpers/prestart-hand-control-root-gate.json",
+      "retained": "raw/prestart-hand-action-supplemental-helpers/prestart-hand-control-root-gate.json",
+      "sha256": "f72c6d594b4c49606bba61dcee28bc47afc038e80389ebf1c4472a248b09ea60",
+      "bytes": 2088
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-supplemental-helpers/report.json",
+      "retained": "raw/prestart-hand-action-supplemental-helpers/report.json",
+      "sha256": "e620e6d42d9f8425e7659add7e5286b4d9aaf3aa8dec92458e78bccaa543adeb",
+      "bytes": 2105
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-supplemental-validate.py",
+      "retained": "raw/prestart-hand-action-supplemental-validate.py",
+      "sha256": "c1ea65549f7f8e88d712b10bf4992db23fbcf96f2695499c1c462e156a32caf7",
+      "bytes": 1568
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-termination.stderr",
+      "retained": "raw/prestart-hand-action-termination.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-termination.stdout",
+      "retained": "raw/prestart-hand-action-termination.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-frozen-manifest.json",
+      "retained": "raw/prestart-hand-action-frozen-manifest.json",
+      "sha256": "2b7052ebde5e5bca2b6950675d749aafa6ae8f080805e33051c1314740567ab1",
+      "bytes": 11761
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-suppression-source-audit/README.md",
+      "retained": "analysis/prestart-suppression-source-audit/README.md",
+      "sha256": "63d90bebef7e80917d6afde130ee3d0b1aed9cc49a34d2d94a8f265123b661b9",
+      "bytes": 5563
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-suppression-source-audit/inventory.json",
+      "retained": "analysis/prestart-suppression-source-audit/inventory.json",
+      "sha256": "811db9e569c846a6859c9e8cc1a3b96c5991dbe07c9a0cbd79653c83a57e1c9b",
+      "bytes": 617
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-suppression-source-audit/report.json",
+      "retained": "analysis/prestart-suppression-source-audit/report.json",
+      "sha256": "e5008e3eb6f2e834c5ea893a6fa43ed00af06eec3bce8770a36fe69c7a9a6776",
+      "bytes": 8553
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-suppression-source-audit/source-excerpts.txt",
+      "retained": "analysis/prestart-suppression-source-audit/source-excerpts.txt",
+      "sha256": "4eafd8bb964852895e65787fb0a054c59b3caa6546c2fe51879935995b5730e8",
+      "bytes": 30734
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-suppression-source-audit/source-hashes.json",
+      "retained": "analysis/prestart-suppression-source-audit/source-hashes.json",
+      "sha256": "5a3c41941d607732a4d589fe63952e3177d5cadc3872d5c79ec6874be537e2e2",
+      "bytes": 422
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-timeline-correction.json",
+      "retained": "raw/prestart-hand-action-timeline-correction.json",
+      "sha256": "beda0eb04ad8da029716a9587487884d1746840d552d5ad6d401f01288606ef5",
+      "bytes": 27998
+    }
+  ],
+  "mappingNote": "raw paths preserve their evo-relative paths; analysis paths identify the separate source audit. Scratch paths in original records remain unmodified; these entries map them to retained paths."
+}

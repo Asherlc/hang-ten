@@ -1,0 +1,15 @@
+{
+  "sourceSHA256": "40e42ed072a72946d11756cd6f92047fd0d5acd79eb33946cb2188441babbbde",
+  "compilerSHA256": "0f3c473cd36aaff03cfc701043e7d5272abd66eda27a7d3b8f8658916c85e815",
+  "triangles": 254770,
+  "points": 127387,
+  "fastPathTriangles": 254486,
+  "fallbackTriangles": 284,
+  "openTessellateAndIndexSeconds": 20.191033500013873,
+  "legacy20TriangleSeconds": 0.18721787497634068,
+  "comparedCorners": 60,
+  "maximumNormalAngleDegrees": 8.537736462515939e-07,
+  "defaultCylinderOutputExactlyMatchesPreChange": true,
+  "sourceBytesUnchanged": true,
+  "limits": "Bounded native cache construction and60corner comparison, not a whole-catalog or full optimized export validation."
+}

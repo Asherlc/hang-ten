@@ -1,0 +1,46 @@
+{
+  "owner": "placid-badger",
+  "number": 12,
+  "boardID": "owl-climb.poker",
+  "sourceSHA256": "26476221de9031703c0536e31c7341eb6ba1d6d5176c1c72acd0b06c3d546553",
+  "presentations": {
+    "primary": {
+      "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+      "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032"
+    }
+  },
+  "sourcePlanID": "research.abrahangs",
+  "workStep": 17,
+  "naturalRestStep": 18,
+  "routineDurationsOrTasksChanged": false,
+  "technicalCapturedWorkflowPassed": true,
+  "automationResult": "Physical-driver sequence completed with expected Hang and natural Rest frames.",
+  "frames": [
+    {
+      "image": "screenshots/12-landscape-hang.png",
+      "sourceArtifact": "app-captures/12-workout-landscape-natural-work-highlight.png",
+      "sha256": "1e89e7f2ec38ba2eafc88f20d403a51078270d2bb3967c384f4d8ed7eef18d28",
+      "orientation": "landscape",
+      "observedHighlight": "red",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": true
+    },
+    {
+      "image": "screenshots/12-landscape-rest.png",
+      "sourceArtifact": "app-captures/12-workout-landscape-natural-rest-live.png",
+      "sha256": "0ad85794aa05be5b16fae6354a1d3f4cd5cda4c3c0774ce95f8dd56b6553e53c",
+      "orientation": "landscape",
+      "observedHighlight": "blue",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": true
+    }
+  ],
+  "geometryAndSuspensionUnchanged": true,
+  "bodyHumanApprovalUnchanged": true,
+  "currentAppHumanAcceptance": "pending",
+  "limits": "Scope is the selected source-task Hang/Rest and supplied whole frames, not all contacts. No continuous or hardware GPU timing claim.",
+  "priorTouchAndContactCoverage": "Four representative contacts, one from each face A–D; not all 34 contacts.",
+  "priorTouchRecord": "runtime-final-2026-10-03/boards/12.json"
+}

@@ -1,0 +1,50 @@
+{
+  "builtApp": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-26-4/Products-placid-badger-cad-second-half/HangTen.app",
+  "installedApp": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1/data/Containers/Bundle/Application/08EDB882-036F-4CA5-A4F7-350C13A642BA/HangTen.app",
+  "builtMachO": {
+    "__preview.dylib": {
+      "sha256": "4b70d70369efcc069f93a9aa643143c8a5e897cf88ea024069f2d7151eecab5d",
+      "bytes": 16800
+    },
+    "HangTen": {
+      "sha256": "a714df47ea8ec52095287bc2f5d672ec7a02ad81e2f279032be74c8ead5db616",
+      "bytes": 40496
+    },
+    "HangTen.debug.dylib": {
+      "sha256": "872970cc1b183e34f3edac1337df30ea142e0e72897b7de4caf412d9964bcdfb",
+      "bytes": 25252352
+    },
+    "Frameworks/Sentry.framework/Sentry": {
+      "sha256": "a582d66c06d6eea8bb3fa29e6adba9c98e4a82fc1a646833a646266b6ae1ec6a",
+      "bytes": 33184
+    },
+    "Frameworks/AmplitudeCore.framework/AmplitudeCore": {
+      "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+      "bytes": 1687328
+    }
+  },
+  "installedMachO": {
+    "__preview.dylib": {
+      "sha256": "4b70d70369efcc069f93a9aa643143c8a5e897cf88ea024069f2d7151eecab5d",
+      "bytes": 16800
+    },
+    "HangTen": {
+      "sha256": "a714df47ea8ec52095287bc2f5d672ec7a02ad81e2f279032be74c8ead5db616",
+      "bytes": 40496
+    },
+    "HangTen.debug.dylib": {
+      "sha256": "872970cc1b183e34f3edac1337df30ea142e0e72897b7de4caf412d9964bcdfb",
+      "bytes": 25252352
+    },
+    "Frameworks/Sentry.framework/Sentry": {
+      "sha256": "a582d66c06d6eea8bb3fa29e6adba9c98e4a82fc1a646833a646266b6ae1ec6a",
+      "bytes": 33184
+    },
+    "Frameworks/AmplitudeCore.framework/AmplitudeCore": {
+      "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+      "bytes": 1687328
+    }
+  },
+  "allCodeEqual": true,
+  "different": []
+}

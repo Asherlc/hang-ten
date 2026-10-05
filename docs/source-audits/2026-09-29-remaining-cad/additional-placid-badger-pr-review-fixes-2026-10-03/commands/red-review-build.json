@@ -1,0 +1,29 @@
+{
+  "owner": "placid-badger",
+  "label": "red-review-build",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-xcconfig",
+    ".context/placid-badger/pr-review-fixes-2026-10-03/ci-debug-optimized.xcconfig",
+    "-destination",
+    "platform=iOS Simulator,id=7774F2CB-D5DF-45EA-A5ED-FFACBEAED21B",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "-parallel-testing-enabled",
+    "NO",
+    "build-for-testing"
+  ],
+  "timeoutSeconds": 600.0,
+  "ownedProcessGroup": 61549,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 121.4143125829869
+}

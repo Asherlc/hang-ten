@@ -1,0 +1,45 @@
+{
+  "status": "pass-with-explicit-surface-continuity-limits",
+  "sourceSHA256": "40e42ed072a72946d11756cd6f92047fd0d5acd79eb33946cb2188441babbbde",
+  "blockingFindings": [],
+  "rawFindingsPreserved": [
+    "x63/y-65 no finite roof step",
+    "x132/y-65 roof exists"
+  ],
+  "disposition": [
+    {
+      "finding": "x63/y-65 no finite roof step",
+      "reason": "Linear-in-epsilon extrapolation is invalid at this grazing support-depth boundary. Four decreasing epsilons show height differences shrinking approximately with sqrt(epsilon), reaching0.003764892mm at0.00001mm. InteriorY\u221264.9 has continuous heights and near-equal normals."
+    },
+    {
+      "finding": "x132/y-65 roof exists",
+      "reason": "One OCCT line/solid intersection misses a tangent boundary; smaller and larger probes find the surface, with final difference0.001878242mm. Adjacent interior slices have no missing surface."
+    }
+  ],
+  "outline": {
+    "allThreeSketchesG1": true,
+    "maximumTangentAngleDegrees": 0.0,
+    "maximumGapMM": 1.4210854715202004e-14
+  },
+  "oldSeams": {
+    "sampleCount": 12,
+    "maximumExtrapolatedStepMM": 4.581986938079541e-09,
+    "maximumHeightDifferenceAcross002MM": 0.0171430169893938
+  },
+  "symmetryMaximumVertexToShellGapMM": 9.41365350115575e-07,
+  "remainingDerivativeCreases": {
+    "maximumMeasuredInteriorNormalAngleDegrees": 6.769760661326405,
+    "authorAcknowledgement": "Roof transitions are positional-continuity corrections, not a blanket G1 surface claim; finite residual normal changes at endpoint joins are a limitation of the local loft bridge and will be reported explicitly."
+  },
+  "limits": [
+    "Finite sampled probes establish local behavior, not global curvature continuity.",
+    "Exact55/65mm support lip includes intended front-facing incident surfaces; their normal change is not the same as a cross-strip discontinuity.",
+    "Revised shape and app review remain subject to human acceptance; technical review does not advance review8."
+  ],
+  "fileSHA256": {
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/continuity-check.json": "019ab11a709281b6f52e642cbbe59045ba2edb491df2b0536a9b4b8778e53b26",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/continuity-interior.json": "e3c328d8f1a350b679f960c3cbaf8a13d63afa26200fb6f1396254b5d9656a5f",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/check_continuity.py": "c6209301989c0551df7b2a4a6ea8eb9889de58485c4a9b43a7919ec260fce2cb",
+    ".context/placid-badger/metolius-simulator-3d-jagged/independent-validation/check_continuity_interior.py": "d33864f4abe9ac5bc2fd6a441d44a68ed9ec283ee42cd7a6f209ddd6e8070a6c"
+  }
+}

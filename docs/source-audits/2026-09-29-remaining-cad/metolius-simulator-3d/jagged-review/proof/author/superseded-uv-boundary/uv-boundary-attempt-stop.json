@@ -1,0 +1,8 @@
+{
+  "reason": "Expanded native normal comparison found derivative-ambiguous boundary cases; worker requested conservative guard fix",
+  "stoppedOwnedProcesses": [
+    "30548 04:07   4:43.05 /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-jagged/native-author/compile-check-tmp/hangten-freecad-js3yk_9l/run.py",
+    "30557 04:06   4:41.44 /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-jagged/native-author/compile-tmp/hangten-freecad-s2epxgpe/run.py"
+  ],
+  "atUTC": "2026-10-01T14:42:26.542347+00:00"
+}

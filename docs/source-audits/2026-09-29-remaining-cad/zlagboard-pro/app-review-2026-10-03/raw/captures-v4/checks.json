@@ -1,0 +1,362 @@
+[
+  {
+    "image": "top-jug-left.png",
+    "sha256": "23e5764556a99742dd1300db957086159487f8cc7f2ddde0f013acdba751488b",
+    "contactID": "top-jug-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=11;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.20943952;cameraPitch=0.5461143;cameraSettled=true;selection=top-jug-left;tapRevision=1;pickedContact=top-jug-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "jug-orbit.png",
+    "sha256": "40af3313b37fcd3ca16d662a14a3b56bea3e146e5e163442802c5ccbc2ed012b",
+    "contactID": "top-jug-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=12;rootActive=true;cameraActive=true;sameScene=true;azimuth=-0.1482036;elevation=0.20943952;cameraPitch=0.5419744;cameraSettled=true;selection=top-jug-left;tapRevision=1;pickedContact=top-jug-left",
+    "actualOrbitConfirmed": true
+  },
+  {
+    "image": "jug-fresh-view-reset.png",
+    "sha256": "23e5764556a99742dd1300db957086159487f8cc7f2ddde0f013acdba751488b",
+    "contactID": "top-jug-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=10;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.20943952;cameraPitch=0.5461143;cameraSettled=true;selection=top-jug-left;tapRevision=0;pickedContact=",
+    "freshViewResetConfirmed": true
+  },
+  {
+    "image": "top-jug-right.png",
+    "sha256": "95290a83b197c52f17a877b2b00cd2a23868517c68c3ccd841772b16914d54ff",
+    "contactID": "top-jug-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=12;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.20943952;cameraPitch=0.5461143;cameraSettled=true;selection=top-jug-right;tapRevision=1;pickedContact=top-jug-right",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "jug-right-orbit.png",
+    "sha256": "c248317288bea039bee6f0738416b8651180b29aba0fd0db3b0379c523ad3e05",
+    "contactID": "top-jug-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=13;rootActive=true;cameraActive=true;sameScene=true;azimuth=-0.1482036;elevation=0.20943952;cameraPitch=0.5419744;cameraSettled=true;selection=top-jug-right;tapRevision=1;pickedContact=top-jug-right",
+    "actualOrbitConfirmed": true
+  },
+  {
+    "image": "jug-right-fresh-view-reset.png",
+    "sha256": "937e8e4662817d20497ebc5cbe4601755890b7c772191397a3739bd41279fbc3",
+    "contactID": "top-jug-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=11;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.20943952;cameraPitch=0.5461143;cameraSettled=true;selection=top-jug-right;tapRevision=0;pickedContact=",
+    "freshViewResetConfirmed": true
+  },
+  {
+    "image": "top-sloper-32-left.png",
+    "sha256": "cc3ce38eca6bc88c83f56ec2a8831c46a121faf22a57ab54b2bacac91ffb1936",
+    "contactID": "top-sloper-32-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=top-sloper-32-left;tapRevision=1;pickedContact=top-sloper-32-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "sloper-orbit.png",
+    "sha256": "1fae3bd49abb1dcfb738c4771f03802eadfb6ccd9147f2597aba1f171126066e",
+    "contactID": "top-sloper-32-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=3;rootActive=true;cameraActive=true;sameScene=true;azimuth=-0.1482036;elevation=0.0;cameraPitch=0.33284068;cameraSettled=true;selection=top-sloper-32-left;tapRevision=1;pickedContact=top-sloper-32-left",
+    "actualOrbitConfirmed": true
+  },
+  {
+    "image": "sloper-fresh-view-reset.png",
+    "sha256": "cc3ce38eca6bc88c83f56ec2a8831c46a121faf22a57ab54b2bacac91ffb1936",
+    "contactID": "top-sloper-32-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=top-sloper-32-left;tapRevision=0;pickedContact=",
+    "freshViewResetConfirmed": true
+  },
+  {
+    "image": "top-sloper-20-left.png",
+    "sha256": "e5712fd3109feb0ec2e69e8763a54bdbc850fafcaaa4a0e349bb0941e8ad46fb",
+    "contactID": "top-sloper-20-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=top-sloper-20-left;tapRevision=1;pickedContact=top-sloper-20-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "top-sloper-jug-center.png",
+    "sha256": "b949b07a7808c1d0247a04f98dcadca14ef9d4a60faed9c1a7fef5e53550ab1a",
+    "contactID": "top-sloper-jug-center",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=top-sloper-jug-center;tapRevision=1;pickedContact=top-sloper-jug-center",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "edge-20-left.png",
+    "sha256": "34e576b33be0fe5c1a2869d2da84479696d4a986469d5621c79d71c364b9f874",
+    "contactID": "edge-20-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-20-left;tapRevision=1;pickedContact=edge-20-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "edge-15-left.png",
+    "sha256": "d554fe2f8b5f9984891137dafceed55cde38482047f8ef3c6fd9b31678aa3e66",
+    "contactID": "edge-15-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-15-left;tapRevision=1;pickedContact=edge-15-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "flat-orbit.png",
+    "sha256": "03d73f5e27748dfc1286c5c7efae35b7cd17b923e9bf70d2f0011e1173a379b0",
+    "contactID": "edge-15-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=3;rootActive=true;cameraActive=true;sameScene=true;azimuth=-0.1482036;elevation=0.0;cameraPitch=0.33284068;cameraSettled=true;selection=edge-15-left;tapRevision=1;pickedContact=edge-15-left",
+    "actualOrbitConfirmed": true
+  },
+  {
+    "image": "flat-fresh-view-reset.png",
+    "sha256": "d554fe2f8b5f9984891137dafceed55cde38482047f8ef3c6fd9b31678aa3e66",
+    "contactID": "edge-15-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-15-left;tapRevision=0;pickedContact=",
+    "freshViewResetConfirmed": true
+  },
+  {
+    "image": "edge-incut-15-left.png",
+    "sha256": "d062d91cabc5522d185e058f2cba1daf286a1d6de0166492d30fb487c1bfc705",
+    "contactID": "edge-incut-15-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-incut-15-left;tapRevision=1;pickedContact=edge-incut-15-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "incut-orbit.png",
+    "sha256": "287b3768dbccbd4717c7b0e62e087f837668bed1169b5b5345c53ade27d1b472",
+    "contactID": "edge-incut-15-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=3;rootActive=true;cameraActive=true;sameScene=true;azimuth=-0.1482036;elevation=0.0;cameraPitch=0.33284068;cameraSettled=true;selection=edge-incut-15-left;tapRevision=1;pickedContact=edge-incut-15-left",
+    "actualOrbitConfirmed": true
+  },
+  {
+    "image": "incut-fresh-view-reset.png",
+    "sha256": "d062d91cabc5522d185e058f2cba1daf286a1d6de0166492d30fb487c1bfc705",
+    "contactID": "edge-incut-15-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-incut-15-left;tapRevision=0;pickedContact=",
+    "freshViewResetConfirmed": true
+  },
+  {
+    "image": "edge-incut-10-center.png",
+    "sha256": "9eb6c48f381d3f5d31c5e62d961dca4e2bcdb8c727634af487d2bc35bbe565c4",
+    "contactID": "edge-incut-10-center",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-incut-10-center;tapRevision=1;pickedContact=edge-incut-10-center",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "shallow-incut-orbit.png",
+    "sha256": "ac6b224c1462c98bcf5885c8e6becbe245f312ffd39112027c442410980a197a",
+    "contactID": "edge-incut-10-center",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=3;rootActive=true;cameraActive=true;sameScene=true;azimuth=-0.1482036;elevation=0.0;cameraPitch=0.33284068;cameraSettled=true;selection=edge-incut-10-center;tapRevision=1;pickedContact=edge-incut-10-center",
+    "actualOrbitConfirmed": true
+  },
+  {
+    "image": "shallow-incut-fresh-view-reset.png",
+    "sha256": "9eb6c48f381d3f5d31c5e62d961dca4e2bcdb8c727634af487d2bc35bbe565c4",
+    "contactID": "edge-incut-10-center",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-incut-10-center;tapRevision=0;pickedContact=",
+    "freshViewResetConfirmed": true
+  },
+  {
+    "image": "edge-35-center.png",
+    "sha256": "7695a0c9e025a8fb28f0f984f5add11092371af8338d664ff13313a6bcacd313",
+    "contactID": "edge-35-center",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=12;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=-0.13962634;cameraPitch=0.19704847;cameraSettled=true;selection=edge-35-center;tapRevision=1;pickedContact=edge-35-center",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "top-sloper-32-right.png",
+    "sha256": "cefaa4714eddd6c97eeee4c2a9117f54ea060333e7bd86b06c0535f707097471",
+    "contactID": "top-sloper-32-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=top-sloper-32-right;tapRevision=1;pickedContact=top-sloper-32-right",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "top-sloper-20-right.png",
+    "sha256": "80fc734028d402773ad867a0bc92bb843e2a7e0f257cb833332a78c9054cb29e",
+    "contactID": "top-sloper-20-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=top-sloper-20-right;tapRevision=1;pickedContact=top-sloper-20-right",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "edge-30-left.png",
+    "sha256": "15f3d5bade5a4928e115550282f4da6bbb13e2c63f8badc1fb89a36d21621697",
+    "contactID": "edge-30-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-30-left;tapRevision=1;pickedContact=edge-30-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "sloper-edge-30-left.png",
+    "sha256": "9ea038ce19ca10dc10b312cd1881b9485a15d7785fd8b44416fd2e9ac142db47",
+    "contactID": "sloper-edge-30-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=11;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.06981317;elevation=-0.13962634;cameraPitch=0.19623591;cameraSettled=true;selection=sloper-edge-30-left;tapRevision=1;pickedContact=sloper-edge-30-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "sloper-edge-25-left.png",
+    "sha256": "dd2163853e056bcfcf91d897d0680effcf7c3d5bb8ad829d2aaf597f062b77ad",
+    "contactID": "sloper-edge-25-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=11;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=-0.13962634;cameraPitch=0.19704847;cameraSettled=true;selection=sloper-edge-25-left;tapRevision=1;pickedContact=sloper-edge-25-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "sloper-edge-25-right.png",
+    "sha256": "59d377127fe49e7ac762d9e137ad53c644a56cd6e07310ca2b65fd3473f7fba9",
+    "contactID": "sloper-edge-25-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=11;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.06981317;elevation=-0.06981317;cameraPitch=0.26602948;cameraSettled=true;selection=sloper-edge-25-right;tapRevision=1;pickedContact=sloper-edge-25-right",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "sloper-edge-30-right.png",
+    "sha256": "a0d1d19868ff5a7dfd8ec5f7d7334feb1a1dad4c65dd52f86465d3a5049a1c43",
+    "contactID": "sloper-edge-30-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=11;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=-0.27925268;cameraPitch=0.057422135;cameraSettled=true;selection=sloper-edge-30-right;tapRevision=1;pickedContact=sloper-edge-30-right",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "edge-30-right.png",
+    "sha256": "079100475b2506d0adee124681bd8e2208174c8023c09ccdde89d2238b20b786",
+    "contactID": "edge-30-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-30-right;tapRevision=1;pickedContact=edge-30-right",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "sloper-edge-25-lower-left.png",
+    "sha256": "176f763017a700a0af2e90b85947bb9ab8d6fef9fe9671cd32ae3a5a1e589deb",
+    "contactID": "sloper-edge-25-lower-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=12;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=-0.20943952;cameraPitch=0.12723532;cameraSettled=true;selection=sloper-edge-25-lower-left;tapRevision=1;pickedContact=sloper-edge-25-lower-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "edge-30-inner-left.png",
+    "sha256": "909b8c36412cc30e598b55b358e81cc1f201dded5cdf2576cd58304317ec15c4",
+    "contactID": "edge-30-inner-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-30-inner-left;tapRevision=1;pickedContact=edge-30-inner-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "sloper-edge-30-center.png",
+    "sha256": "9a1e1273d2ef1017ec67f68de0b119c1f8d1b7c692edb8e33761403c24fdbf78",
+    "contactID": "sloper-edge-30-center",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=11;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=-0.06981317;cameraPitch=0.2668617;cameraSettled=true;selection=sloper-edge-30-center;tapRevision=1;pickedContact=sloper-edge-30-center",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "edge-30-inner-right.png",
+    "sha256": "6175f51e0172903adc92aa302ff411ed058d273296b03f98e9028168cb04086d",
+    "contactID": "edge-30-inner-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-30-inner-right;tapRevision=1;pickedContact=edge-30-inner-right",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "sloper-edge-25-lower-right.png",
+    "sha256": "73510fe4f0335aafe334f74ee43d4ac09458aae31df82e05bdbdb0972e83f864",
+    "contactID": "sloper-edge-25-lower-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=12;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=-0.13962634;cameraPitch=0.19704847;cameraSettled=true;selection=sloper-edge-25-lower-right;tapRevision=1;pickedContact=sloper-edge-25-lower-right",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "edge-20-right.png",
+    "sha256": "ea3d2ed4e58c1049773701a03a8c304477b047c8f0b73b42be9615072096115b",
+    "contactID": "edge-20-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-20-right;tapRevision=1;pickedContact=edge-20-right",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "edge-incut-30-left.png",
+    "sha256": "569279eee63b8046e0096fe993e0e527ee9ce3b1d6e67fb9378845674e5a84bc",
+    "contactID": "edge-incut-30-left",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-incut-30-left;tapRevision=1;pickedContact=edge-incut-30-left",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "edge-incut-30-right.png",
+    "sha256": "c941342d1f1945598ffcba5680ca8d691ea276810e2ebb67c77247f4d6475437",
+    "contactID": "edge-incut-30-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-incut-30-right;tapRevision=1;pickedContact=edge-incut-30-right",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "edge-15-right.png",
+    "sha256": "c7e79d1197d0a653db338ea07115557ecfc1ba5ceb8d7805a1c791139741520f",
+    "contactID": "edge-15-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-15-right;tapRevision=1;pickedContact=edge-15-right",
+    "physicalTargetedTapConfirmed": true
+  },
+  {
+    "image": "edge-incut-15-right.png",
+    "sha256": "48a64f319b57fdb00d60f45fa26007fd650d83d4dfd14ce84d9314b920a881be",
+    "contactID": "edge-incut-15-right",
+    "contactsAvailable": 28,
+    "selectedAXConfirmed": true,
+    "diagnostic": "revision=2;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.3366748;cameraSettled=true;selection=edge-incut-15-right;tapRevision=1;pickedContact=edge-incut-15-right",
+    "physicalTargetedTapConfirmed": true
+  }
+]

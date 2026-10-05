@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "Hangboards/zlagboard-evo/assets/primary.usdz": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/comparison/original-d0e4.usdz": "35cabe2a3aa0505b4cca5545b368cca02396a30f826e1186449f546ff2f40884",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/comparison-final/prior-review.usdz": "92e0e754d888a5ab6976f22197b11f9f55353309ef6648a9307c45c404d4dabe",
+    "Hangboards/zlagboard-evo/assets/primary.model.json": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe"
+  },
+  "source": "Actual USDZ triangles through existing preview.py; original LFS hash matches d0e4 pointer. No asset export or modification.",
+  "images": {
+    "comparison-front-side-top.png": "df96773be1b8946a86de9091095811a74a763b6368662f254b7eb0d4576099cc",
+    "comparison-front.png": "6413878f5ef107f426509430c7e6b6e427ed77fa9d0af9b97987e5524345ca84",
+    "comparison-side.png": "73b07fa5249ca41d93478a274828cfbc351cdbdf1980181f8997d0767a18bb42",
+    "comparison-top.png": "e5a5305cf7185f2c2d7db30393ae7217cdbd505ef9dad47cc1c121197712c66e",
+    "native-front.png": "dff91c7c3ed04e5c1e53cb5ffdafb8aee2abe645aba3c0828a29513b1cfa8673",
+    "native-side.png": "7b2331285d6ee2a377154dec436a2bc2714b6d7eb61a22b4c857b8cc8a274139",
+    "native-top.png": "8fc270e5a2410b480d81132cd3c5bcc0a123fb8d41630ac8011e5c133eb7592a",
+    "original-front.png": "76f6942c3a95d4074bebcd897a0cda68d6400dbe53ab77404b5b15a9b25ce3d6",
+    "original-side.png": "c82d697b6b1800d4594c28f1e60c968c088e8e07ac87c35d49314f2babe598c9",
+    "original-top.png": "60110561675160bca19e2cb7837859ad06ab933219ba06b7cc5a62e502a090f7",
+    "prior-front.png": "85e9735221d295f11576370145f1a36e3f1f172e65401442a2b78291d2fe6136",
+    "prior-side.png": "3847e5cac9af152de6ff457d1b9b0978260a7284ccefd35fd546472fa3936792",
+    "prior-top.png": "ae3be7949519d9dc2147a01bb009b44e6d48b116454e68cabaddf964a3e88caf"
+  },
+  "limits": [
+    "Whole mesh views with uniform letterboxing, no image crop or measurement.",
+    "Neutral triangle shading is diagnostic; final material/highlight appearance requires fresh app views.",
+    "Original estimated display geometry and native estimated display geometry do not establish manufacturing accuracy."
+  ]
+}

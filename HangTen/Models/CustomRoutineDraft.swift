@@ -81,6 +81,17 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
 /// Both-hands preview also includes the capacity-aware materialization (paired
 /// holds on two-hand boards, one hold on one-hand boards).
 enum CustomRoutineBoardPreview {
+    static func presentationID(for step: CustomRoutineStepDraft, on board: BoardRevision) -> String? {
+        guard !step.targets.isEmpty else { return nil }
+        for resolved in resolvedSteps(for: step, boardIsOneHanded: board.isOneHanded) {
+            if let selection = try? ContactResolver.resolveSelection(resolved.workRequirements, step: resolved, board: board),
+               let position = board.position(id: selection.positionID) {
+                return position.presentationID
+            }
+        }
+        return nil
+    }
+
     static func contactIDs(
         for step: CustomRoutineStepDraft,
         on board: BoardRevision
@@ -99,7 +110,14 @@ enum CustomRoutineBoardPreview {
         in step: inout CustomRoutineStepDraft,
         on board: BoardRevision
     ) {
-        if contactIDs(for: step, on: board).contains(hold.id) {
+        let selected = contactIDs(for: step, on: board).contains(hold.id)
+        let configured = board.positions.contains { !$0.effectiveDepths.isEmpty }
+        let selectedDepth = resolvedSteps(for: step, boardIsOneHanded: board.isOneHanded).lazy.compactMap { resolved in
+            let selection = try? ContactResolver.resolveSelection(
+                resolved.workRequirements, step: resolved, board: board)
+            return selection?.contacts.first { $0.id == hold.id }?.depth
+        }.first
+        if selected && (!configured || selectedDepth == hold.depth) {
             step.targets = []
             return
         }

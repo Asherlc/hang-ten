@@ -1,0 +1,22 @@
+{
+  "HangTen/Views/BoardModelView.swift": {
+    "sha256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "headSHA256": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "identicalToHEAD": true
+  },
+  "HangTen/Models/BoardModelRealityTypes.swift": {
+    "sha256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "headSHA256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "identicalToHEAD": true
+  },
+  "HangTen/Views/RootView.swift": {
+    "sha256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "headSHA256": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "identicalToHEAD": true
+  },
+  "HangTenTests/BoardModelRealityTests.swift": {
+    "sha256": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+    "headSHA256": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+    "identicalToHEAD": true
+  }
+}

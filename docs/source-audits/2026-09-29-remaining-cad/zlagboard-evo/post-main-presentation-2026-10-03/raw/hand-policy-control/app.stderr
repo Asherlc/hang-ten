@@ -1,0 +1,11 @@
+2026-10-03 11:18:15.681 HangTen[18201:6316222] void * _Nullable NSMapGet(NSMapTable * _Nonnull, const void * _Nullable): map table argument is NULL
+objc[18201]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x146284398) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x1151ac310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+[SimulatorDrawablePresentation] window role=board uptime=116374.07714420834 attached=true bounds=(0.0, 0.0, 220.0, 37.666666666666664)
+[SimulatorDrawablePresentation] configured role=board uptime=116374.13078466668 layer=ObjectIdentifier(0x000000011562ba00) asynchronous=true viewport=(100.0, 161.66666666666666, 220.0, 37.66666666666666) attempt=0
+[SimulatorDrawablePresentation] window role=board uptime=116375.44473304167 attached=false bounds=(0.0, 0.0, 220.0, 37.666666666666664)
+[SimulatorDrawablePresentation] window role=board uptime=116375.44533675001 attached=true bounds=(0.0, 0.0, 220.0, 37.666666666666664)
+[SimulatorDrawablePresentation] configured role=board uptime=116376.54042995835 layer=ObjectIdentifier(0x000000011562ba00) asynchronous=true viewport=(-162.0, 161.66666666666666, 220.0, 37.66666666666666) attempt=0
+[SimulatorDrawablePresentation] window role=board uptime=116377.30216854168 attached=true bounds=(0.0, 0.0, 410.0, 70.33333333333333)
+[SimulatorDrawablePresentation] window role=board uptime=116377.31496833335 attached=false bounds=(0.0, 0.0, 220.0, 37.666666666666664)
+[SimulatorDrawablePresentation] configured role=board uptime=116377.354280125 layer=ObjectIdentifier(0x000000014a8a9d80) asynchronous=true viewport=(232.0, 170.0, 410.0, 70.33333333333331) attempt=0
+[SimulatorDrawablePresentation] configured role=board uptime=116378.79588758334 layer=ObjectIdentifier(0x000000014a8a9d80) asynchronous=true viewport=(257.0, 240.0, 360.0, 61.666666666666686) attempt=0

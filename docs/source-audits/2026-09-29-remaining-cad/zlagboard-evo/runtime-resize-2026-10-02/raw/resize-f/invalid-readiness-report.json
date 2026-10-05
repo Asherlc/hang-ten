@@ -1,0 +1,70 @@
+{
+  "status": "INVALID readiness; no measurement begun",
+  "rawFailureRetained": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/resize-f/failure.txt",
+  "captures": 0,
+  "traceSummary": [
+    {
+      "event": "recorder-open",
+      "epoch": 1790976561.8768349,
+      "sequence": 1
+    },
+    {
+      "event": "standalone-appear",
+      "viewportPoints": [
+        410,
+        70
+      ],
+      "epoch": 1790976561.882797,
+      "sequence": 2
+    },
+    {
+      "event": "standalone-observed-selection",
+      "viewportPoints": [
+        410,
+        70
+      ],
+      "epoch": 1790976561.88629,
+      "sequence": 3
+    },
+    {
+      "event": "surface-inputs",
+      "epoch": 1790976562.5716128,
+      "sequence": 4
+    },
+    {
+      "event": "highlight-before",
+      "epoch": 1790976562.576498,
+      "sequence": 5
+    },
+    {
+      "event": "highlight-after",
+      "epoch": 1790976562.5770202,
+      "sequence": 6
+    },
+    {
+      "event": "view-make",
+      "viewportPoints": [
+        408.3333333333333,
+        70
+      ],
+      "epoch": 1790976562.5829759,
+      "sequence": 7
+    },
+    {
+      "event": "standalone-viewport-invalid",
+      "viewportPoints": [
+        410,
+        70
+      ],
+      "epoch": 1790976563.6482182,
+      "sequence": 8
+    }
+  ],
+  "scheduled": false,
+  "diagnosis": "Requested initialViewport is recorded as410x70 rather than410x70.28571428571429. Approved Swift literal expression410*120/700 uses integer arithmetic before conversion; aspect-fit descendant consequently resolves to408.33333333333337x70 (UIKit408x70). Readiness correctly rejects mismatch.",
+  "sourceExpression": "CGSize(width: 410, height: 410 * 120 / 700)",
+  "noRendererFailureConclusion": true,
+  "noTuningOrRetryPerformed": true,
+  "gNotRun": true,
+  "candidateCorrectionForRootReviewOnly": "Use explicitly floating arithmetic410.0*120.0/700.0 to express the previously authorized measured initial size. Requires new root gate; not applied."
+}

@@ -2,22 +2,23 @@
 
 Checked directly against the primary pages and manufacturer PDFs below on
 2026-10-05. This audit distinguishes published prescriptions from runnable
-presets. Existing plan IDs and history are retained. The previous August audit
-is historical: the current catalog now includes Contact, Simulator 3D, Rock
-Rings, and the Rock Prodigy Training Center routine.
+presets. Existing plan IDs and history are retained. The previous August
+audit is historical: the current catalog now includes Contact, Simulator
+3D, Rock Rings, and the Rock Prodigy Training Center routine.
 
 All new guided presets use `adapted` provenance. Range selections, manual
 timing, and any explicit grip allocation are app choices, not additional
-manufacturer prescriptions. Optional general warm-ups stay outside the timed
-program; explicitly prescribed workout warm-ups remain included. A targetless
-step means the climber selects the grip or orientation manually, as disclosed;
-it does not imply an automatically guessed highlight. Recovery timers are minimum presets where
-the source also requires complete recovery; the user can pause longer.
+manufacturer prescriptions. Optional general warm-ups stay outside the
+timed program; explicitly prescribed workout warm-ups remain included. A
+targetless step means the climber selects the grip or orientation manually,
+as disclosed; it does not imply an automatically guessed highlight.
+Recovery timers are minimum presets where the source also requires complete
+recovery; the user can pause longer.
 
 ## Beastmaker
 
-Source/version: [Training](https://www.beastmaker.co.uk/pages/training), current
-undated manufacturer page, sections Repeaters and Maximum Hangs.
+Source/version: [Training](https://www.beastmaker.co.uk/pages/training),
+current undated manufacturer page, sections Repeaters and Maximum Hangs.
 
 | Field | Published prescription | App preset / mapping |
 |---|---|---|
@@ -31,12 +32,21 @@ undated manufacturer page, sections Repeaters and Maximum Hangs.
 | Progression | Added weight, longer hangs, less rest, smaller holds, fewer fingers, one arm | Guidance, never an invented timed exercise |
 | Frequency | At most two fingerboard sessions weekly | Source guidance outside timer |
 
-The page provides no exact total grip count. A preset must explicitly disclose
-that its one grip block is not a prescribed complete multi-grip session.
+The page provides no exact total grip count. A preset must explicitly
+disclose that its one grip block is not a prescribed complete multi-grip
+session.
+
+The adapted repeater preset interprets the source's hang/rest instruction
+as a complete cycle repeated six times before the three-minute recovery.
+This retains the last 3s rest, yielding 183s from the sixth hang to the
+next grip. Omitting that final short rest is another plausible boundary
+interpretation, but is not selected here; the difference is 3s, not an
+additional three-minute break.
 
 ## Tension
 
-Source/version: [Hangboarding: A Way](https://tensionclimbing.com/blogs/blog/hangboarding-a-way),
+Source/version:
+[Hangboarding: A Way](https://tensionclimbing.com/blogs/blog/hangboarding-a-way),
 current manufacturer article, named workout sections.
 
 | Program | Source | Guided choice |
@@ -46,21 +56,25 @@ current manufacturer article, named workout sections.
 | Single Hangs | Main recipe 6s, explicitly flexible 4–8s; 4–8 hangs; 2–4m recovery | Four 4s hangs, 120s recovery; disclose selected range |
 | Long Hangs | 3–5 hangs; 15–30s to failure; 2–4m recovery | Three stopwatch hangs, nominal 15s estimate, 120s recovery |
 
-Failure means inability to maintain grip/shoulder form. For these manual tasks,
-pause the routine, start its independent stopwatch, then stop the stopwatch at
-form failure, skip to recovery, and resume the routine. Leaving the routine
-running instead auto-advances after the nominal 15s long hang or 72s repeater
-set estimate; those are not failure-based endpoints. A repeater set's stopwatch
-includes its 6s intra-set rests, not only active hanging. The source normally divides sets/hangs between half and open
-crimp, optionally substituting special grips. Disclose any chosen allocation;
-keep alternatives in guidance. Load for 6 and 10 approaches failure on rep
-five without failing. Single-hang loading varies with training phase. Longer
-repeater ranges favor strength endurance; single hangs emphasize strength.
+Failure means inability to maintain grip/shoulder form. For these manual
+tasks, pause the routine, start its independent stopwatch, then stop the
+stopwatch at form failure, skip to recovery, and resume the routine.
+Leaving the routine running instead auto-advances after the nominal 15s
+long hang or 72s repeater set estimate; those are not failure-based
+endpoints. A repeater set's stopwatch includes its 6s intra-set rests, not
+only active hanging. The source normally divides sets/hangs between half
+and open crimp, optionally substituting special grips. Disclose any chosen
+allocation; keep alternatives in guidance. Load for 6 and 10 approaches
+failure on rep five without failing. Single-hang loading varies with
+training phase. Longer repeater ranges favor strength endurance; single
+hangs emphasize strength.
 
 ## Cameron Hörst
 
-Source/version: [Advanced Hangboard Training Techniques](https://trainingforclimbing.com/advanced-hangboard-training-technique/),
-Eric Hörst, 2023-09-21 republication of 2020 article with Cameron's protocols.
+Source/version:
+[Advanced Hangboard Training Techniques](https://trainingforclimbing.com/advanced-hangboard-training-technique/),
+Eric Hörst, 2023-09-21 republication of 2020 article with Cameron's
+protocols.
 
 | Field | Two-handed 7/53 | One-handed |
 |---|---|---|
@@ -74,15 +88,17 @@ Eric Hörst, 2023-09-21 republication of 2020 article with Cameron's protocols.
 | Grips | No fixed sequence | Half and open crimp; advanced alternatives optional |
 | Progression | Consider +5–10lb if last set is easy | After five unassisted hangs, initially +2–5lb |
 
-Both describe a 20–30-minute progressive warm-up and twice-weekly frequency.
-The one-arm method is advanced (source cites 5.13/8a/V9 or above). Warm-up is
-guidance, not an invented exact exercise circuit. New source versions remain
-separate from the pre-existing adapted 7/53 entry. Exact-sized semantic targets
-must resolve; do not substitute undocumented small edges.
+Both describe a 20–30-minute progressive warm-up and twice-weekly
+frequency. The one-arm method is advanced (source cites 5.13/8a/V9 or
+above). Warm-up is guidance, not an invented exact exercise circuit. New
+source versions remain separate from the pre-existing adapted 7/53 entry.
+Exact-sized semantic targets must resolve; do not substitute undocumented
+small edges.
 
 ## REI Hangboard Training 101
 
-Source/version: [Dave Sheldon, 2017-01-12](https://www.rei.com/blog/uncategorized/hangboard-training-101).
+Source/version:
+[Dave Sheldon, 2017-01-12](https://www.rei.com/blog/uncategorized/hangboard-training-101).
 This differs from the existing REI Expert Advice sample workout.
 
 | Field | Published prescription | Guided choice |
@@ -102,7 +118,8 @@ rest; no recovery is added after the completed workout.
 
 ## Rock Prodigy: original Anderson versions
 
-Source/version: [The Making of a Rockprodigy](https://rockclimberstrainingmanual.com/tools-for-rock-climbing-training/the-making-of-a-rock-prodigy/),
+Source/version:
+[The Making of a Rockprodigy](https://rockclimberstrainingmanual.com/tools-for-rock-climbing-training/the-making-of-a-rock-prodigy/),
 original online beginner/advanced protocols, not the current app database.
 
 | Field | Beginner | Advanced |
@@ -117,13 +134,15 @@ original online beginner/advanced protocols, not the current app database.
 | Loading | Record adjusted resistance for each grip | Increase resistance between sets |
 
 Example grip lists are examples, not a mandatory sequence. The app does not
-invent highlights from them. Warm-up recommendations precede the routine and
-stay guidance. These versions deliberately retain their two-minute set recovery
-instead of borrowing the Training Center PDF's three-minute prescription.
+invent highlights from them. Warm-up recommendations precede the routine
+and stay guidance. These versions deliberately retain their two-minute set
+recovery instead of borrowing the Training Center PDF's three-minute
+prescription.
 
 ## Rock Prodigy Training Center intermediate
 
-Source/version: [Using the Rock Prodigy Training Center](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155),
+Source/version:
+[Using the Rock Prodigy Training Center](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155),
 two-page manufacturer PDF. Existing `rptc.seven-three-repeaters` is a
 self-selected one-set template, not this complete intermediate workout;
 retain it under its existing ID and add the distinct source version.
@@ -138,35 +157,38 @@ retain it under its existing ID and add the distinct source version.
 | Wide Pinch | Seven, baseline | Six, baseline +10lb |
 | Sloper | Seven, baseline | Six, baseline +10lb |
 
-This table is restricted to the Training Center package. Jug, pinch and sloper
-pairs resolve semantically. The package lacks the depth and finger-capacity facts
-needed for the source edge and pocket prescriptions; those remain explicit manual
-instructions without substituted highlights. Semi-closed crimp is not translated
-into an unsupported half-crimp cue.
+This table is restricted to the Training Center package. Jug, pinch and
+sloper pairs resolve semantically. The package lacks the depth and
+finger-capacity facts needed for the source edge and pocket prescriptions;
+those remain explicit manual instructions without substituted highlights.
+Semi-closed crimp is not translated into an unsupported half-crimp cue.
 
-Every repetition is a two-handed 7s dead hang / 3s rest. The workout table gives
-67s or 57s set work cycles and 3m recovery between sets (including between
-grips). Baseline is individualized, often below bodyweight. No pull-ups or
-lock-offs. The general warm-up precedes this explicit jug warm-up. The source
-recommends 48h without further finger training.
+Every repetition is a two-handed 7s dead hang / 3s rest. The workout table
+gives 67s or 57s set work cycles and 3m recovery between sets (including
+between grips). Baseline is individualized, often below bodyweight. No
+pull-ups or lock-offs. The general warm-up precedes this explicit jug
+warm-up. The source recommends 48h without further finger training.
 
-**Timing conflict:** page 1's example timeline ends the seventh hang at 1:07,
-then rests to 4:00 (173s), while prose and page 2 say three minutes. Guided
-presets use the explicit three-minute recovery and disclose that selection;
-do not silently claim the example timeline is identical.
+**Timing conflict:** page 1's example timeline ends the seventh hang at
+1:07, then rests to 4:00 (173s), while prose and page 2 say three minutes.
+Guided presets use the explicit three-minute recovery and disclose that
+selection; do not silently claim the example timeline is identical.
 
 ## Rock Prodigy Pivot
 
-Source/version: [Pivot Quick Start Guide, 2020-11-20](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507),
-pages 16–19, checked as rendered PDF tables as well as text. Both routines are
-restricted to Pivot. Instructions retain orientation and factual hold names.
-The current resolver cannot enforce rotating-board orientation; these presets
-therefore disclose manual orientation changes. Even the unique sloper and two-/three-finger pocket pairs do not resolve under
-the current bilateral resolver because model contacts lack usable pair frames.
-All Pivot work therefore retains manual source instructions without highlights. The display does not
-automatically rotate to the source orientation. Each table row gives a complete on/off cycle, including the last
-cycle's off time. The extra rest marked “once done” is an additional cycle
-before another exercise in the same orientation.
+Source/version:
+[Pivot Quick Start Guide, 2020-11-20](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507),
+pages 16–19, checked as rendered PDF tables as well as text. Both routines
+are restricted to Pivot. Instructions retain orientation and factual hold
+names. The current resolver cannot enforce rotating-board orientation;
+these presets therefore disclose manual orientation changes. Even the
+unique sloper and two-/three-finger pocket pairs do not resolve under the
+current bilateral resolver because model contacts lack usable pair frames.
+All Pivot work therefore retains manual source instructions without
+highlights. The display does not automatically rotate to the source
+orientation. Each table row gives a complete on/off cycle, including the
+last cycle's off time. The extra rest marked “once done” is an additional
+cycle before another exercise in the same orientation.
 
 | Introductory order | Orientation | On/off × reps | After row |
 |---|---|---|---|
@@ -191,82 +213,127 @@ before another exercise in the same orientation.
 | Sloper | 3 | 10/5s ×5 | Finish |
 
 Source drawings pp7/11/15 specify all four fingers on rails/crimps/slopers/
-pinches, I/M/R on the three-finger pocket, M/R on the two-finger pocket, and M
-on deep mono; pinch drawings include thumb support. No added pull-up, accessory
-exercise, or invented resistance progression belongs in these sample routines.
+pinches, I/M/R on the three-finger pocket, M/R on the two-finger pocket,
+and M on deep mono; pinch drawings include thumb support. No added pull-up,
+accessory exercise, or invented resistance progression belongs in these
+sample routines.
 
 ## Existing Metolius entries
 
-Primary sources: [10 Minute Sequences](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide)
-and [Contact Training Guide](https://www.metoliusclimbing.com/pages/contact-training-guide).
+Primary sources:
+[10 Minute Sequences](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide)
+and
+[Contact Training Guide](https://www.metoliusclimbing.com/pages/contact-training-guide).
 Both have three levels and ten minute cycles, completing tasks then resting
 for the unused minute. They are different prescriptions, not duplicate URLs
-for the same program. Retain existing generic `metolius.generic-ten-minute.entry`,
-`metolius.generic-ten-minute.intermediate`, `metolius.generic-ten-minute.advanced`, and Contact-specific IDs.
+for the same program. Retain existing generic
+`metolius.generic-ten-minute.entry`,
+`metolius.generic-ten-minute.intermediate`,
+`metolius.generic-ten-minute.advanced`, and Contact-specific IDs.
 
 The generic guide is already expanded as adapted task steps, documented in
-`ADDING_A_ROUTINE.md`: source hangs, counted exercises, stay-on transitions,
-switches, alternatives, and maximum efforts remain present; counted movement
-timing is expressly app supplied. The Contact entries retain source minute
-structure and numbered product compatibility. Current Contact HTML has
-inconsistent hold labels/numbers (e.g. round sloper versus outer jug at 2,
-pinch versus pocket at 11). The existing catalog preserves diagram-based hold
-identities. This unresolved text/diagram inconsistency is retained rather than
-rewriting existing routines from ambiguous HTML; it is not a claim of verbatim
-source agreement. No new Contact import or mapping correction ships here.
-No new duplicate Metolius routine is warranted by this request.
+`ADDING_A_ROUTINE.md`: source hangs, counted exercises, stay-on
+transitions, switches, alternatives, and maximum efforts remain present;
+counted movement timing is expressly app supplied. The Contact entries
+retain source minute structure and numbered product compatibility. Current
+Contact HTML has inconsistent hold labels/numbers (e.g. round sloper versus
+outer jug at 2, pinch versus pocket at 11). The existing catalog preserves
+diagram-based hold identities. This unresolved text/diagram inconsistency
+is retained rather than rewriting existing routines from ambiguous HTML; it
+is not a claim of verbatim source agreement. No new Contact import or
+mapping correction ships here. No new duplicate Metolius routine is
+warranted by this request.
 
 ## Implementation acceptance
 
 - Every preset discloses chosen ranges and manual/failure timing.
-- Exported JSON and seed resolve to identical task order, cues, and provenance.
+- Exported JSON and seed resolve to identical task order, cues, and
+  provenance.
 - Variable total duration on stopwatch plans is an estimate, not a promised
   fixed workout length.
-- Pivot rotation recovery remains distinct from within-set and between-exercise
-  rest; manual orientation selection is clearly disclosed on its package.
-- New catalog assertions and timeline tests cover volume, recovery boundaries,
-  manual progression, hand cues, compatibility, and retained history IDs.
+- Pivot rotation recovery remains distinct from within-set and
+  between-exercise rest; manual orientation selection is clearly disclosed
+  on its package.
+- New catalog assertions and timeline tests cover volume, recovery
+  boundaries, manual progression, hand cues, compatibility, and retained
+  history IDs.
 
 ## Validation record
 
-Validated with Xcode on a workspace-owned iPhone 17 Pro simulator running iOS
-26.5, named `Hang Ten Paseo mindless-snail Review`, UUID
+Validated with Xcode on a workspace-owned iPhone 17 Pro simulator running
+iOS 26.5, named `Hang Ten Paseo mindless-snail Review`, UUID
 `FFB242F0-5EC2-4B3A-9F54-10F52035A4E2`. Build/test commands use
 `xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug`
 with that explicit simulator destination, `.context/DerivedData`, and
 `-parallel-testing-enabled NO`.
 
-- Source exporter `scripts/export-plan-library.sh --check` validates the bundled
-  packages and reproduces all 40 plans. The previous 26 plan definitions and
-  52 blocks compare equal to the committed versions by ID.
-- Catalog, compatibility, plan filters, activity recording and timeline suites:
-  249 tests, one existing skip, zero failures.
-- Clock, countdown scheduling, audio coach, audio cue policy and session state:
-  71 additional tests, zero failures. The repeated catalog suite also passes.
+- Source exporter `scripts/export-plan-library.sh --check` validates the
+  bundled packages and reproduces all 40 plans. The previous 26 plan
+  definitions and 52 blocks compare equal to the committed versions by ID.
+- Catalog, compatibility, plan filters, activity recording and timeline
+  suites: 249 tests, one existing skip, zero failures.
+- Clock, countdown scheduling, audio coach, audio cue policy and session
+  state: 71 additional tests, zero failures. The repeated catalog suite
+  also passes.
 - Runtime screenshots cover paired half-crimp work, one-hand work, Training
-  Center jug highlighting, manual Pivot orientation, and portrait plan details.
-  Spoken-cue toggles are exercised; physical-device audio quality is not assessed.
-- The long-hang UI test pauses the routine and runs its independent stopwatch
-  beyond the nominal 15-second estimate, then stops and skips to recovery.
-  This verifies the documented manual flow rather than automatic failure detection.
-- Screenshot review shortened timed instructions that clipped in landscape. Full
-  loading, progression, recovery and adaptation disclosures stay in plan notes.
+  Center jug highlighting, manual Pivot orientation, and portrait plan
+  details. Spoken-cue toggles are exercised; physical-device audio quality
+  is not assessed.
+- The long-hang UI test pauses the routine and runs its independent
+  stopwatch beyond the nominal 15-second estimate, then stops and skips to
+  recovery. This verifies the documented manual flow rather than automatic
+  failure detection.
+- Screenshot review shortened timed instructions that clipped in landscape.
+  Full loading, progression, recovery and adaptation disclosures stay in
+  plan notes.
 - One cold simulator launch produced a `libusd_ms.dylib` crash on
-  `com.apple.RealityKit.load-queue` during USD schema initialization. The test
-  relaunched successfully and all visual checkpoints completed. No model assets
-  or renderer code change in this import; this observation is recorded rather
-  than represented as a verified fix. The crash attachment remains in
-  `.context/workout-final-images`.
+  `com.apple.RealityKit.load-queue` during USD schema initialization. The
+  test relaunched successfully and all visual checkpoints completed. No
+  model assets or renderer code change in this import; this observation is
+  recorded rather than represented as a verified fix. The crash attachment
+  remains in `.context/workout-final-images`.
 
 Representative images are retained under `.context/workout-review-images`;
-XCTest result bundles and logs are workspace-local. The validation runner owns
-its simulator through the pending/owned manifests and deletes that exact resource
-and `.context/DerivedData` on exit.
+XCTest result bundles and logs are workspace-local. The validation runner
+owns its simulator through the pending/owned manifests and deletes that
+exact resource and `.context/DerivedData` on exit.
 
-Final verification: both new UI tests pass, including spoken-cue toggling and
-the shortened stopwatch instructions. Across the selected unit suites, 319 tests
-pass and one existing test is skipped. Cleanup exited successfully; all four
-simulator UUIDs created by the validation attempts are absent from `simctl list`,
-and `.context/DerivedData` is removed. Retained screenshots include
-`rptc-jug.png`, `pivot-plan.png`, `pivot-workout.png`, `horst-one-arm.png`,
-`tension-half-crimp.png` and `tension-stopwatch.png`.
+Final verification: both new UI tests pass, including spoken-cue toggling
+and the shortened stopwatch instructions. Across the selected unit suites,
+319 tests pass and one existing test is skipped. Cleanup exited
+successfully; all four simulator UUIDs created by the validation attempts
+are absent from `simctl list`, and `.context/DerivedData` is removed.
+Retained screenshots include `rptc-jug.png`, `pivot-plan.png`,
+`pivot-workout.png`, `horst-one-arm.png`, `tension-half-crimp.png` and
+`tension-stopwatch.png`.
+
+
+## Review and current-main integration verification
+
+The branch incorporates main `39c1833bf`. Its 31 existing plan definitions
+and blocks compare equal by ID to the regenerated library; the 14 additions
+produce 45 routines. Existing IDs and current hand-task schema are retained.
+Package restrictions reside in the canonical source-requirement owner.
+The CLI exporter includes the current pure suspension validator and its
+result-type shim, preserving package validation without UI dependencies.
+The tracked-source manifest includes both new Swift files.
+
+After reconciling the current hand-task schema, the selected catalog,
+compatibility, source-boundary, filter, activity and timeline suites pass:
+307 tests pass and one existing test is skipped. Both revised UI tests pass,
+using observable countdown/stopwatch state instead of fixed sleeps. The
+stopwatch label reaches at least 16 seconds while the routine stays paused;
+stopping and skipping then enters recovery. Exporter `--check` and the
+manifest verification script pass. The iOS test build succeeds.
+
+Representative plan and single-hand screenshots were inspected in
+`.context/workout-merge-images`. Results are retained in
+`.context/workout-merge-review.xcresult`,
+`.context/workout-merge-verified.xcresult`, and
+`.context/workout-boundary-verified.xcresult`. This review run produced no
+RealityKit crash attachment. Physical-device audio quality remains untested.
+
+The review simulator, `Hang Ten Paseo mindless-snail Review`, UUID
+`4C02EAF6-6C72-4FF0-9C84-EEF9685316FC`, was shut down and deleted by the
+runner's exit cleanup. Its absence from `simctl list` and removal of
+`.context/DerivedData` were verified before publishing the review fixes.

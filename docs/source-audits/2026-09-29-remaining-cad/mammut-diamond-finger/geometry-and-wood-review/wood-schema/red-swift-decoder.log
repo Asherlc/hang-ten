@@ -1,0 +1,6 @@
+FAIL valid finish neutral DecodingError.dataCorrupted: Data was corrupted. Path: woodNodeIDs. Debug description: Unknown key woodNodeIDs
+FAIL valid finish wood DecodingError.dataCorrupted: Data was corrupted. Path: woodNodeIDs. Debug description: Unknown key woodNodeIDs
+FAIL valid finish plastic DecodingError.dataCorrupted: Data was corrupted. Path: woodNodeIDs. Debug description: Unknown key woodNodeIDs
+FAIL valid finish granite DecodingError.dataCorrupted: Data was corrupted. Path: woodNodeIDs. Debug description: Unknown key woodNodeIDs
+FAIL neutral default
+Production decoder probe failures: 5

@@ -1,0 +1,46 @@
+{
+  "scope": "Conditional root-navigation diagnostic proposal only. No source edit, runtime authorization, production fix or navigation-bug conclusion.",
+  "evidenceFromParent": "Direct-root2 real workout12frames correct through natural7s/180s; direct leaf frame[257,182.6667,360,61.6667]. Same-binary normal2 early Rest red at+.25/+1/+3 thenblue+5; next Hang pending at task assignment. Final normal result must be settled before selecting this experiment.",
+  "minimalAmendment": {
+    "path": "HangTen/Views/RootView.swift:217\u2013240 existing diagnosticRootWorkout",
+    "change": "Wrap only its existing WorkoutAccessGate(plan:) in optional NavigationStack under fixed process environment HANGTEN_REVIEW_ROOT_NAVIGATION_STACK=1. Preserve outer exact plan/board checks, same audioCoach/deepLink environment modifiers and same orientation onAppear. No navigation path, destination push, TabView, Train screen or extra board instance.",
+    "identity": "The flag is launch-time immutable; no toggling inside a run. Both branches contain one access gate. Group adds common structure to direct-control too, so rerun that control on the same compiled binary. Do not key stack/gate by clock, mode, phase or scene; no .id reset.",
+    "toolbar": "Actual WorkoutView already owns navigationTitle Session, inline title and toolbar items at2120\u20132148. Stack allows those existing modifiers to take effect. Do not add compensating frames, fake bar padding, custom toolbar or ignoresSafeArea; measure resultant board frame instead.",
+    "state": "Access gate launchesOnAppear branch retains pendingPlan/showsWorkout and access decision (WorkoutAccessGate:28\u201355). WorkoutView sessionState/countdown/plan/source resolver are untouched. Root-owned @StateObject coach/deepLink at195\u2013196 are injected outside both branches."
+  },
+  "startupRules": [
+    "Use existing production WorkoutSessionPolicy.shouldAutoStart path at RootView:2233\u20132240; HANGTEN_REVIEW_AUTOSTART must be absent, not1. Keep HANGTEN_REVIEW_STEP absent and do not Skip/seek. Preserve failed first root run with possible double-toggle as invalid historical evidence.",
+    "Why: DEBUG explicit auto-start at2227\u20132230 and production shouldAutoStart below are distinct calls. Audio readiness can defer activeStartUptime, so they cannot be assumed mutually exclusive merely from activeStart guard. This proposal changes neither path; it avoids the explicit DEBUG trigger.",
+    "Keep real research.max-hangs7s work/180s rest, same audio preference/access state/board and diagnostic environment. Root direct and rootNav start immediately after gate launch; normal route may warm audio/ODR through prior Train/navigation time. Do not equalize startup with new delays or pretend warm state matches; record appearance, preparation/countdown and real activeStart timing.",
+    "Each arm is a fresh app process on the same installed binary; preserve app storage/settings consistently and do not clear unrelated state. Verify actual exact selected plan/board before interpreting captures."
+  ],
+  "boundedOrderIfNormalFinalFails": [
+    "Apply only after root gate; one build of optional stack patch. Run fresh direct-root control with stackflag absent and explicit AUTOSTART absent through initial Hang/early+late natural Rest/next Hang.",
+    "Run rootNav with only stackflag1 changed, same natural sequence/capture strategy. Require actual UIKit/frame+scene census and same package/code payload. No Train/Tab history occurs in either arm.",
+    "If control passes/rootNav fails, one confirmation pair may establish reproducibility; conclusion is stack/toolbars/safe-area/lifecycle boundary sufficient in this setup, not a specific NavigationStack defect.",
+    "If both pass, do not alter production navigation. Remaining normal-only differences include Tab/Train predecessor host/history, destination push transition and warm startup. Parent decides a single next boundary; no automatic growing matrix.",
+    "If direct control now fails, prior direct2 success may be intermittent or new common structure/environment matters; stop causal comparison and retain both raw outcomes."
+  ],
+  "ifNormalUnexpectedlyPasses": "Do not launch rootNav automatically. Preserve early Rest stale frames as latency failure if expected settled gate was exceeded, distinguish eventual correction from all-frame success, and compare capture timestamps against current update/material evidence. If overall normal sequence actually satisfies the agreed gate, repeat one matched normal natural cycle to test reproducibility before expanding architecture experiments.",
+  "requiredEvidence": [
+    "Whole expected red/blue/red board frames; CPUmode/RGBA brackets alone do not pass.",
+    "Per-phase actual UIKit board frame and root/camera/view IDs; initial viewport, safe-area geometry and toolbar visibility. No claim260/210/360 size is inherently wrong.",
+    "Root branch flag, absence of explicit AUTOSTART/STEP/standalone flags, exact source/binary hashes, same cue/hand/material configuration.",
+    "Initial root/access gate/workout appear count and disappear events; navigation destination is not pushed in rootNav.",
+    "Audio preparation/countdown readiness and background/foreground events; no interaction used to repair stale frames."
+  ],
+  "limits": [
+    "NavigationStack introduces native containment, toolbar, safe-area geometry and startup lifecycle as a bundle. This experiment cannot assign causality among them.",
+    "RootNav root has no pushed-back navigation item, unlike normal deep-link destination; a pass does not exclude push/history-dependent behavior.",
+    "Actual toolbar actions/End dismissal not part of probe and should not be exercised.",
+    "Patch only passes git apply --check; no compile or runtime verification performed."
+  ],
+  "patchVerification": {
+    "sourceSHA256": "0253224a9df668442a2f925d6b686fce57c4cffd94347954abb7b8b9df4c0cd9",
+    "patchSHA256": "49e59135c34270ed4171170bdacb1ba5a88642cef4cd9a5ffbc9c1489a825d5c",
+    "proposedSHA256": "24a647a6157cec20c15b986cfaafacfd660e190c42880d5facddea4bbc6d23e8",
+    "applyCheckExit": 0,
+    "sourceUnchanged": true,
+    "status": "Scratch-only unapplied; no typecheck/build/runtime"
+  }
+}

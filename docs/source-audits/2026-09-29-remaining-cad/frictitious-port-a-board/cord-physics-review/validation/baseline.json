@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger",
+  "baselineCommit": "3fd0418d9a66d489cdb515ca3a3e82b4ec52121e",
+  "boardID": "frictitious.port-a-board",
+  "reviewNumber": 5,
+  "hashes": {
+    "frictitious-port-a-board.FCStd": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+    "assets/primary.usdz": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+    "assets/primary.model.json": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+    "suspension.json": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305"
+  },
+  "collisionSolidSHA256": "4fb0c5f1cb2c47d3f75920ad7f97a6f27c0eaacbbf3b497c2982d8ea70fd7f0f",
+  "collisionSourceFeature": "RightBackEntryCut",
+  "feedback": "Rope physics are off. They go up and then it's coming to a point that there should be no bend.",
+  "scope": "Correct unsupported cord bends; native board body and contacts frozen."
+}

@@ -1,0 +1,11 @@
+{
+  "commandExitStatus": 0,
+  "ownedPID": 14856,
+  "ownedLines": [
+    "   pid 14856(caffeinate): [0x0001698900019c0f] 00:01:27 PreventUserIdleSystemSleep named: \"caffeinate command-line tool\"  ",
+    "\tDetails: caffeinate asserting on behalf of Process ID 14855 for 360 secs",
+    "\tCreated for PID: 14855. ",
+    "\tLocalized=THE CAFFEINATE TOOL IS PREVENTING SLEEP."
+  ],
+  "preventsIdleSystemSleep": true
+}

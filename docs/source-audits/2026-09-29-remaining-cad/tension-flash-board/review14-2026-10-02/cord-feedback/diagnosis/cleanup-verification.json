@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "checks": [
+    {
+      "receipt": "render-lifecycle.json",
+      "pid": 76121,
+      "exactProcessAbsent": true,
+      "externalResources": []
+    },
+    {
+      "receipt": "matched-render-lifecycle.json",
+      "pid": 77159,
+      "exactProcessAbsent": true,
+      "externalResources": []
+    }
+  ],
+  "noSharedResourcesTouched": true
+}

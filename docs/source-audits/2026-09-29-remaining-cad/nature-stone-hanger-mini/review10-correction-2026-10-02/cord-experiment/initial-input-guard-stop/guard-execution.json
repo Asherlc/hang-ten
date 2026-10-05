@@ -1,0 +1,12 @@
+{
+  "owner": "placid-badger",
+  "rawExitCode": 1,
+  "toolChunkID": "344037",
+  "outcome": "Input guard stopped before launching solver",
+  "reason": "Root-authorized canonical3 installation occurred before initial snapshot. Actual3 equal8caf/0ba3/ee7, sidecar unchangedc28c; old source/model/descriptor guard expected98be/66dd/c98d.",
+  "nativeSolveRan": false,
+  "childProcessLaunched": false,
+  "temporaryResourcesCreated": false,
+  "canonicalOrSharedEditByThisLane": false,
+  "disposition": "Use root-authorized final frozen3+old sidecar and fresh source-bound collider for baseline-margin and20\u03bcm hypotheses."
+}

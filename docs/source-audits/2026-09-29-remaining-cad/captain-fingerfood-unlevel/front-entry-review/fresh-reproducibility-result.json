@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "package": "captain-fingerfood-unlevel",
+  "applyAndCheckReportsByteIdentical": true,
+  "reportSHA256": "136f3256918b5b283a8871352a6dfe569021e4868a2b909d25e3763845d9e82c",
+  "sidecarSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+  "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+  "modelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+  "allFourPosesPassed": true
+}

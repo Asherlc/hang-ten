@@ -1,0 +1,36 @@
+{
+  "owner": "placid-badger",
+  "task": "mini10-offline-preview",
+  "exitCode": 0,
+  "processGroups": [
+    {
+      "pid": 17613,
+      "pgid": 17613,
+      "absent": true
+    }
+  ],
+  "temporaryPaths": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/placid-badger-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/placid-badger-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/placid-badger-tmp",
+      "absent": true
+    }
+  ],
+  "externalResources": [],
+  "canonical4After": {
+    "nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+    "assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+    "suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+  },
+  "canonicalFourBytesUnchanged": true,
+  "completedAt": "2026-10-03T03:10:21.698692+00:00",
+  "unknownOrSharedResourcesModified": false
+}

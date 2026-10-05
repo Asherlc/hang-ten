@@ -1,0 +1,562 @@
+
+FILE HangTen/Views/RootView.swift
+193: struct RootView: View {
+194:     @EnvironmentObject private var store: AppStore
+195:     @StateObject private var workoutAudioCoach = WorkoutAudioCoach()
+196:     @StateObject private var deepLinkManager = DeepLinkManager()
+197:     @State private var selectedTab = RootTab.initial(
+198:         environment: ProcessInfo.processInfo.environment
+199:     )
+200: 
+201:     var body: some View {
+202:         #if DEBUG
+203:         if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STANDALONE_BOARD"] == "1" {
+204:             StandaloneBoardHighlightProbe()
+205:         } else {
+206:             normalBody
+207:         }
+208:         #else
+209:         normalBody
+210:         #endif
+211:     }
+212: 
+213:     private var normalBody: some View {
+214: 		TabView(selection: $selectedTab) {
+215: 			TrainView { selectedTab = .plans }
+216: 				.tabItem { Label("Train", systemImage: "figure.climbing") }
+217: 				.tag(RootTab.train)
+218: 
+219: 			PlansView()
+220: 				.tabItem {
+221: 					Label("Plans", systemImage: "list.bullet.rectangle.portrait.fill")
+222: 				}
+223: 				.tag(RootTab.plans)
+224: 
+225: 			HistoryView()
+226: 				.tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
+227: 				.tag(RootTab.history)
+228: 		}
+229: 		.tint(.hangGreenDark)
+230: 		.environmentObject(workoutAudioCoach)
+231: 		.environmentObject(deepLinkManager)
+
+
+FILE HangTen/Views/RootView.swift
+238:         .onAppear {
+239:             #if DEBUG
+240:             let environment = ProcessInfo.processInfo.environment
+241:             let orientationMask: UIInterfaceOrientationMask?
+242:             if environment["HANGTEN_REVIEW_LANDSCAPE"] == "1" {
+243:                 orientationMask = .landscapeRight
+244:             } else if environment["HANGTEN_REVIEW_PORTRAIT"] == "1" {
+245:                 orientationMask = .portrait
+246:             } else {
+247:                 orientationMask = nil
+248:             }
+249: 
+250:             guard let orientationMask,
+251:                   let windowScene = UIApplication.shared.connectedScenes
+252:                     .compactMap({ $0 as? UIWindowScene })
+253:                     .first else { return }
+254: 
+255:             windowScene.requestGeometryUpdate(
+256:                 .iOS(interfaceOrientations: orientationMask)
+257:             )
+258:             #endif
+
+
+FILE HangTen/Views/RootView.swift
+1866: struct WorkoutView: View {
+1867:     private enum PendingCountdownStart: Equatable {
+1868:         case initial
+1869:         case skip(targetElapsed: TimeInterval)
+1870:     }
+1871: 
+1872:     private enum LandscapeLayout {
+1873:         static let sideCueSlotWidth: CGFloat = 142
+1874:         static let boardMaxHeight: CGFloat = 132
+1875:         static let normalCueRowHeight: CGFloat = 149
+1876:         static let previewLabelHeight: CGFloat = 13
+1877:     }
+1878: 
+1879:     @EnvironmentObject private var store: AppStore
+1880: 	@EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
+1881: 	@EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
+1882: 	@EnvironmentObject private var audioCoach: WorkoutAudioCoach
+1883: 	@Environment(\.dismiss) private var dismiss
+1884: 	@Environment(\.scenePhase) private var scenePhase
+1885:     @AppStorage("workoutAudioCuesEnabled") private var audioCuesEnabled = true
+1886: 
+1887:     let plan: TrainingPlan
+1888:     let initialWeight: WorkoutInitialWeightConfiguration
+1889: 
+1890:     init(
+1891:         plan: TrainingPlan,
+1892:         initialWeight: WorkoutInitialWeightConfiguration = .untracked
+1893:     ) {
+1894:         self.plan = plan
+1895:         self.initialWeight = initialWeight
+1896:     }
+
+
+FILE HangTen/Views/RootView.swift
+1925:     private var board: BoardRevision {
+1926:         store.board(for: plan)
+1927:     }
+1928: 
+1929:     private var boardIsOneHanded: Bool {
+1930:         board.isOneHanded
+1931:     }
+1932: 
+1933:     private var planNeedsHandChoice: Bool {
+1934:         WorkoutSessionHandResolver.needsHandChoice(plan: plan, board: board)
+1935:     }
+1936: 
+1937: 	/// Session-expanded steps when a preference is chosen; otherwise authored plan steps.
+1938: 	private var activeSteps: [WorkoutStep] {
+1939: 		sessionSteps ?? plan.steps
+1940: 	}
+1941: 
+1942: 	private var sessionDuration: TimeInterval {
+1943: 		activeSteps.reduce(0) { $0 + $1.duration }
+1944: 	}
+1945: 
+1946: 	private var timeline: WorkoutTimeline {
+1947: 		WorkoutTimeline(steps: activeSteps)
+1948: 	}
+
+
+FILE HangTen/Views/RootView.swift
+1950:     var body: some View {
+1951: 		GeometryReader { geometry in
+1952: 			TimelineView(.periodic(from: .now, by: 0.25)) { context in
+1953: 				let monotonicTime = WorkoutClock.monotonicTime
+1954: 				let elapsed = currentElapsed(at: monotonicTime)
+1955: 				let step = step(at: elapsed)
+1956: 				// Session steps are already preference-materialized / alternate-expanded.
+1957: 				let presentedStep = step
+1958: 				let stepElapsed = elapsedInStep(at: elapsed)
+1959: 				let countdown = countdownRemaining(at: monotonicTime)
+1960: 				let canNavigate = canNavigate(at: monotonicTime)
+1961: 				let isComplete = elapsed >= sessionDuration
+1962: 				let isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)
+1963: 				let boardCue = timeline.boardCue(
+1964: 					currentStep: step,
+1965: 					stepElapsed: stepElapsed,
+1966: 					countdown: countdown,
+1967: 					isComplete: isComplete,
+1968: 					isSkipCountdown: sessionState.countdownKind == .skip
+1969: 				)
+1970: 				let isResting = boardCue.isResting
+1971: 				let highlightedStep = boardCue.step
+1972: 				let resolvedHighlightedStep = highlightedStep
+1973: 				let previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
+1974: 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
+1975: 				let highlightMode = boardCue.mode
+1976: 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
+1977: 				let activeHold = resolvedHighlightedStep.flatMap { WorkoutHighlightResolver.contacts(for: $0, on: board).first }
+1978: 				let holdCue = WorkoutHoldCuePolicy.resolve(step: resolvedHighlightedStep, hold: activeHold, on: board)
+1979: 				let isLandscape = geometry.size.width > geometry.size.height
+1980: 				let audioMoment = audioMoment(
+1981: 					step: step,
+1982: 					stepElapsed: stepElapsed,
+1983: 					elapsed: elapsed,
+1984: 					countdown: countdown,
+1985: 					isTimedResting: isTimedResting,
+1986: 					isComplete: isComplete
+1987: 				)
+1988: 				let audioCountdownStartUptime = audioCountdownStartUptime(
+1989: 					step: step,
+1990: 					elapsed: elapsed,
+1991: 					countdown: countdown,
+1992: 					isTimedResting: isTimedResting,
+1993: 					moment: audioMoment
+1994: 				)
+1995: 
+1996: 				Group {
+1997: 					if isLandscape {
+1998: 						landscapeSession(
+1999: 							step: presentedStep,
+2000: 							stepElapsed: stepElapsed,
+2001: 							elapsed: elapsed,
+2002: 							monotonicTime: monotonicTime,
+2003: 							countdown: countdown,
+2004: 							canNavigate: canNavigate,
+2005: 							isResting: isResting,
+2006: 							isComplete: isComplete,
+2007: 							highlightedHoldIDs: highlightedHoldIDs,
+2008: 							highlightMode: highlightMode,
+2009: 							showsHoldPreview: showsHoldPreview,
+2010: 							holdCue: holdCue,
+2011: 							cueStep: resolvedHighlightedStep,
+2012: 							isSkipCountdown: sessionState.countdownKind == .skip
+2013: 						)
+2014: 					} else {
+2015: 						portraitSession(
+2016: 							step: presentedStep,
+2017: 							stepElapsed: stepElapsed,
+2018: 							elapsed: elapsed,
+2019: 							monotonicTime: monotonicTime,
+2020: 							countdown: countdown,
+2021: 							canNavigate: canNavigate,
+2022: 							isResting: isResting,
+2023: 							isComplete: isComplete,
+2024: 							highlightedHoldIDs: highlightedHoldIDs,
+2025: 							highlightMode: highlightMode,
+2026: 							showsHoldPreview: showsHoldPreview,
+2027: 							holdCue: holdCue,
+2028: 							cueStep: resolvedHighlightedStep,
+2029: 							isSkipCountdown: sessionState.countdownKind == .skip
+2030: 						)
+2031: 					}
+2032: 				}
+
+
+FILE HangTen/Views/RootView.swift
+2085: 		}
+2086:         .navigationTitle("Session")
+2087:         .navigationBarTitleDisplayMode(.inline)
+2088: 		.toolbar(.hidden, for: .tabBar)
+2089:         .toolbar {
+2090: 			ToolbarItemGroup(placement: .topBarTrailing) {
+2091: 				Button {
+2092: 					audioCuesEnabled.toggle()
+2093: 					if !audioCuesEnabled {
+2094: 						audioCoach.stop()
+2095: 					}
+2096: 				} label: {
+2097: 					Image(systemName: audioCuesEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill")
+2098: 				}
+2099: 				.accessibilityLabel(audioCuesEnabled ? "Turn off spoken cues" : "Turn on spoken cues")
+2100: 
+2101: 				Button {
+2102: 					showsReportProblem = true
+2103: 				} label: {
+2104: 					Image(systemName: "exclamationmark.bubble")
+2105: 				}
+2106: 				.accessibilityLabel("Report a problem")
+2107: 				.accessibilityIdentifier("workout.reportProblem")
+2108: 
+2109: 				Button("End") {
+2110: 					showEndConfirmation = true
+2111: 				}
+2112: 				.font(.system(size: 13, weight: .bold, design: .rounded))
+2113: 				.foregroundStyle(Color.hangGreenDark)
+2114: 			}
+2115:         }
+
+
+FILE HangTen/Views/RootView.swift
+2163: 		.onAppear {
+2164: 			UIApplication.shared.isIdleTimerDisabled = true
+2165: 			configureRecorder()
+2166: 			if planNeedsHandChoice {
+2167: 				bothHandsResolvable = WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board)
+2168: 				if handPreference == nil {
+2169: 					applyHandPreference(
+2170: 						WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board)
+2171: 					)
+2172: 				}
+2173: 			}
+2174: 			#if DEBUG
+2175: 			if !didApplyReviewStep {
+2176: 				didApplyReviewStep = true
+2177: 				if let rawStep = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STEP"],
+2178: 				   let requestedStep = Int(rawStep),
+2179: 				   requestedStep > 1 {
+2180: 						sessionState.pausedElapsed = activeSteps
+2181: 							.prefix(min(requestedStep - 1, activeSteps.count))
+2182: 							.reduce(0) { $0 + $1.duration }
+2183: 				}
+2184: 			}
+2185: 
+2186: 				if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_AUTOSTART"] == "1",
+2187: 				   sessionState.activeStartUptime == nil {
+2188: 					didCompleteWorkoutPreparation = true
+2189: 					toggleRunning()
+2190: 				}
+2191: 			#endif
+2192: 			if !planNeedsHandChoice,
+2193: 			   WorkoutSessionPolicy.shouldAutoStart(
+2194: 				didAutoStart: didAutoStart,
+2195: 				isRunning: sessionState.activeStartUptime != nil,
+2196: 				routineStartedAt: sessionState.routineStartedAt
+2197: 			) {
+2198: 				didAutoStart = true
+2199: 				toggleRunning()
+2200: 			}
+2201: 			initializeStopwatches()
+
+
+FILE HangTen/Views/TrainView.swift
+46:     var body: some View {
+47:         NavigationStack {
+48:             ScrollView(showsIndicators: false) {
+49:                 VStack(alignment: .leading, spacing: 22) {
+50:                     selectedBoardCard
+
+
+FILE HangTen/Views/TrainView.swift
+88:             .navigationDestination(isPresented: $showsDeepLinkedBoardDetail) {
+89:                 BoardDetailView(board: store.selectedBoard, initialHoldID: deepLinkManager.pendingHoldID)
+90:                     .onAppear { deepLinkManager.clearPending() }
+91:             }
+92:             .navigationDestination(isPresented: $showsDeepLinkedWorkout) {
+93:                 if let plan = deepLinkedWorkoutPlan {
+94:                     WorkoutAccessGate(plan: plan)
+95:                 } else {
+96:                     noCompatiblePlan
+97:                 }
+98:             }
+
+
+FILE HangTen/Views/TrainView.swift
+135:     private var reviewPlan: TrainingPlan? {
+136:         store.featuredPlan
+137:     }
+138: 
+139:     private var selectedBoardCard: some View {
+140:         VStack(alignment: .leading, spacing: 16) {
+141:             BoardMapView(board: store.selectedBoard)
+
+
+FILE HangTen/Views/WorkoutAccessGate.swift
+28:     var body: some View {
+29:         Group {
+30:             if launchesOnAppear {
+31:                 if showsWorkout, let pendingPlan {
+32:                     WorkoutView(plan: pendingPlan, initialWeight: pendingInitialWeight)
+33:                 } else {
+34:                     Color.clear
+35:                 }
+36:             } else {
+37:                 Button(action: requestLaunch) {
+38:                     label
+39:                 }
+40:                 .navigationDestination(isPresented: $showsWorkout) {
+41:                     if let pendingPlan {
+42:                         WorkoutView(plan: pendingPlan, initialWeight: pendingInitialWeight)
+43:                     }
+44:                 }
+45:             }
+46:         }
+47:         .sheet(isPresented: $showsPaywall, onDismiss: continuePendingLaunchIfAllowed) {
+48:             LifetimeUnlockPaywall(
+49:                 purchaseManager: store.purchaseManager,
+50:                 onAccessChange: accessDecisionDidChange
+51:             )
+52:         }
+53:         .task {
+54:             guard launchesOnAppear, pendingPlan == nil else { return }
+55:             requestLaunch()
+56:         }
+57:     }
+58: 
+59:     private func requestLaunch() {
+60:         pendingPlan = plan
+61:         pendingInitialWeight = initialWeight
+62: 
+63:         switch store.workoutLaunchDecision {
+64:         case .allowed:
+65:             showsWorkout = true
+66:         case .requiresPurchase:
+67:             showsPaywall = true
+68:         }
+
+
+FILE HangTen/Views/WorkoutAccessGate.swift
+87: extension WorkoutAccessGate where Label == EmptyView {
+88:     init(
+89:         plan: TrainingPlan,
+90:         initialWeight: WorkoutInitialWeightConfiguration = .untracked,
+91:         launchesOnAppear: Bool = true
+92:     ) {
+93:         self.init(
+94:             plan: plan,
+95:             initialWeight: initialWeight,
+96:             launchesOnAppear: launchesOnAppear
+97:         ) {
+98:             EmptyView()
+99:         }
+100:     }
+
+
+FILE HangTen/HangTenApp.swift
+80:     var body: some Scene {
+81:         WindowGroup {
+82:             Group {
+83:                 #if DEBUG
+84:                 if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GRIP_MODEL"] == "1" {
+85:                     GripHandModelReviewView()
+86:                 } else {
+87:                     RootView()
+88:                 }
+89:                 #else
+90:                 RootView()
+91:                 #endif
+92:             }
+93:                 .environmentObject(store)
+94: 				.environmentObject(motherboardBluetoothService)
+95: 				.environmentObject(motherboardSettingsStore)
+96: 				.task {
+97: 					await purchaseManager.prepare()
+98: 				}
+99:         }
+
+
+FILE HangTen/Models/AppStore.swift
+57:         let persistedBoardID = defaults.string(forKey: Self.selectedBoardIDKey)
+58:         selectedBoard = BoardCatalog.all.first { $0.id == persistedBoardID }
+59:             ?? BoardCatalog.defaultBoard
+60:         #if DEBUG
+61:         if let reviewBoardID = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_ID"],
+62:            let reviewBoard = BoardCatalog.all.first(where: { $0.id == reviewBoardID }) {
+63:             selectedBoard = reviewBoard
+64:         }
+
+
+FILE HangTen/Models/AppStore.swift
+315:     var featuredPlan: TrainingPlan? {
+316:         #if DEBUG
+317:         if let reviewPlanID = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAN_ID"],
+318:            let reviewPlan = plans.first(where: { $0.id == reviewPlanID }) {
+319:             return reviewPlan
+320:         }
+321:         #endif
+322:         return plans.first
+323:     }
+324: 
+325:     func board(for plan: TrainingPlan) -> BoardRevision {
+326:         BoardCatalog.board(for: plan.boardID ?? selectedBoard.id)
+
+
+FILE HangTen/Resources/PlanLibrary.json
+4580:           "accessory" : "7s hang · 3m recovery · half crimp",
+4581:           "action" : "hang",
+4582:           "activeDuration" : 7,
+4583:           "duration" : 187,
+4584:           "fingerConfiguration" : {
+4585:             "engagedFingers" : [
+4586:               "index",
+4587:               "middle",
+4588:               "ring",
+4589:               "pinky"
+4590:             ]
+4591:           },
+4592:           "gripType" : "halfCrimp",
+4593:           "handUse" : "double",
+4594:           "id" : "max-hangs-1",
+4595:           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+4596:           "phase" : "hang",
+4597:           "segments" : [
+4598:             {
+4599:               "duration" : 7,
+4600:               "kind" : "work",
+4601:               "target" : {
+4602:                 "kind" : "requirements",
+4603:                 "requirements" : [
+4604:                   {
+4605:                     "depth" : {
+4606:                       "range" : {
+4607:                         "maximum" : 20,
+4608:                         "minimum" : 20
+4609:                       }
+4610:                     },
+4611:                     "kind" : "edge",
+4612:                     "selection" : "bilateralPair"
+4613:                   }
+4614:                 ]
+4615:               },
+4616:               "timing" : "fixed"
+4617:             },
+4618:             {
+4619:               "duration" : 180,
+4620:               "kind" : "rest",
+4621:               "timing" : "fixed"
+4622:             }
+4623:           ],
+4624:           "side" : "both",
+4625:           "title" : "Max hang · set 1"
+4626:         }
+4627:       ],
+4628:       "title" : "Max hang · set 1"
+
+
+FILE HangTen/Resources/PlanLibrary.json
+4631:       "id" : "research.max-hangs.main",
+4632:       "steps" : [
+4633:         {
+4634:           "accessory" : "7s hang · 3m recovery · half crimp",
+4635:           "action" : "hang",
+4636:           "activeDuration" : 7,
+4637:           "duration" : 187,
+4638:           "fingerConfiguration" : {
+4639:             "engagedFingers" : [
+4640:               "index",
+4641:               "middle",
+4642:               "ring",
+4643:               "pinky"
+4644:             ]
+4645:           },
+4646:           "gripType" : "halfCrimp",
+4647:           "handUse" : "double",
+4648:           "id" : "max-hangs-2",
+4649:           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+4650:           "phase" : "hang",
+4651:           "segments" : [
+4652:             {
+4653:               "duration" : 7,
+4654:               "kind" : "work",
+4655:               "target" : {
+4656:                 "kind" : "requirements",
+4657:                 "requirements" : [
+4658:                   {
+4659:                     "depth" : {
+4660:                       "range" : {
+4661:                         "maximum" : 20,
+4662:                         "minimum" : 20
+4663:                       }
+4664:                     },
+4665:                     "kind" : "edge",
+4666:                     "selection" : "bilateralPair"
+4667:                   }
+4668:                 ]
+4669:               },
+4670:               "timing" : "fixed"
+4671:             },
+4672:             {
+4673:               "duration" : 180,
+4674:               "kind" : "rest",
+4675:               "timing" : "fixed"
+4676:             }
+
+
+FILE HangTen/Resources/PlanLibrary.json
+19831:     {
+19832:       "blocks" : [
+19833:         {
+19834:           "blockID" : "research.max-hangs.warm-up"
+19835:         },
+19836:         {
+19837:           "blockID" : "research.max-hangs.main"
+19838:         }
+19839:       ],
+19840:       "id" : "research.max-hangs",
+19841:       "metadata" : {
+19842:         "category" : "research",
+19843:         "level" : "Advanced",
+19844:         "notes" : [
+19845:           "Preserved from the original Hang Ten routine catalog."
+19846:         ],
+19847:         "provenance" : "adapted",
+19848:         "sourceLabel" : "Lattice max hang protocol",
+19849:         "sourceURL" : "https:\/\/latticetraining.com\/workout\/1c4cc25a-ebe8-4930-8541-5b604a831c5f\/half-4-hang-max\/",
+19850:         "subtitle" : "Five near-maximal 7-second half-crimp hangs on a 20 mm edge.",
+19851:         "tags" : [
+19852:           "built-in",
+19853:           "research"
+19854:         ],
+19855:         "title" : "Max Hangs",
+19856:         "workoutLabels" : [
+19857:           "max-effort"
+19858:         ]

@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 3,
+  "id": "captain-fingerfood.unlevel",
+  "manufacturer": "Captain Fingerfood",
+  "name": "UNLEVEL",
+  "subtitle": "Compact board with two curved edge depths plus an outer jug.",
+  "productURL": "https://en.captainfingerfood.rocks/products/unlevel-hangboard",
+  "dimensions": "12 \u00d7 7 \u00d7 3 cm",
+  "aspectRatio": 1.7142857142857142,
+  "handCapacity": 1,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "aspectRatio": 1.7142857142857142,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          }
+        },
+        "orientation": {
+          "pivot": "modelBoundsCenter",
+          "rotations": {
+            "edge20-front": [
+              0.207911694,
+              0.0,
+              0.0,
+              0.9781476
+            ],
+            "edge25-inverted": [
+              9e-09,
+              0.207911694,
+              -0.9781476,
+              4.3e-08
+            ],
+            "jug-reverse": [
+              9e-09,
+              0.9781476,
+              0.207911694,
+              4.3e-08
+            ],
+            "pocket-right-end": [
+              0.147015774,
+              0.147015759,
+              -0.691654772,
+              0.691654831
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "positions": [
+    {
+      "id": "edge20-front",
+      "presentationID": "primary",
+      "contactIDs": [
+        "curved-edge-20"
+      ]
+    },
+    {
+      "id": "edge25-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "curved-edge-25"
+      ]
+    },
+    {
+      "id": "jug-reverse",
+      "presentationID": "primary",
+      "contactIDs": [
+        "outer-jug"
+      ]
+    },
+    {
+      "id": "pocket-right-end",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pocket-end-wall-20-25"
+      ]
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "curved-edge-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm curved edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "outer-jug",
+      "equipmentObjectID": "primary",
+      "name": "Outer jug",
+      "kind": "jug",
+      "handCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "curved-edge-25",
+      "equipmentObjectID": "primary",
+      "name": "25 mm curved edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-end-wall-20-25",
+      "equipmentObjectID": "primary",
+      "name": "25/20 mm Pocket \u2014 short end-wall",
+      "kind": "pocket",
+      "handCapacity": 1,
+      "gripTypes": []
+    }
+  ]
+}

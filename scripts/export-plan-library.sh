@@ -21,6 +21,9 @@ xcrun swiftc \
   "$repo_root/HangTen/Views/DesignSystem.swift" \
   "$repo_root/HangTen/Models/BoardStorage.swift" \
   "$repo_root/HangTen/Models/BoardPackageStore.swift" \
+  "$repo_root/HangTen/Models/RopePhysicsDescriptor.swift" \
+  "$repo_root/HangTen/Models/SuspensionProfiles.swift" \
+  "$repo_root/HangTen/Views/SuspendedBoardPresentation.swift" \
   "$repo_root/HangTen/Models/TrainingModels.swift" \
   "$repo_root/HangTen/Models/PublishedHangboardPlans.swift" \
   "$repo_root/HangTen/Models/RockProdigyPlans.swift" \

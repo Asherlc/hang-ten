@@ -1,0 +1,18 @@
+{
+  "recordedAtUTC": "2026-10-01T15:19:50.229527+00:00",
+  "status": "harmless reviewed-before-report-refresh; original review retained unchanged",
+  "originalCompilerReviewSHA256": "038070a8f843df92c902904eddfd4bccfc642679f5c626919caf4dd964bdb4b0",
+  "originalImplementationReviewSHA256": "72a24c138c7f95cac9a749087dea11a7f6db0bbda1d1d32018ff34d1798a1b07",
+  "refreshedImplementationReviewSHA256": "75e3048ae6941c7c69f16b2784f310e00a23291c924a1ced0473adcef2055bbf",
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "reviewedSourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+  "explanation": "The implementation report was refreshed after the independent code review to include completed export evidence. Compiler/docs/test source bytes did not change; the original review remains an earlier hash-bound snapshot. This disposition records the current report identity without changing historical review inputs.",
+  "unchangedReviewedCodeSHA256": {
+    "Tools/HangboardCAD/compile_board.py": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+    "Tools/HangboardCAD/README.md": "7f8532019f23e2aceee349f5ef798ad007a6bfc19782c11fc5ec6385a80d85d7",
+    "Tools/HangboardCAD/tests/test_uv_node_normals.py": "829e79fc508ac55c28ab17c859ffaca4fa92c29438533f699f96cc308fd05f2f",
+    "Tools/HangboardCAD/tests/uv_node_normal_checks.py": "f43f4019875fc92af8782f4b05bbfd16e65f81aa51a79bf9ae47591989d31756",
+    "Tools/HangboardCAD/run_freecad.py": "b5c030eec4b3f22e1e2ecc93c21e18880b1bdcdb66e1eaaa24cdb1f167816350"
+  },
+  "blockingFindings": []
+}

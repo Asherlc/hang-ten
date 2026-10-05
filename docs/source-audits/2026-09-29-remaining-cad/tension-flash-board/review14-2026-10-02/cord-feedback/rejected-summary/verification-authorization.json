@@ -1,0 +1,27 @@
+{
+  "owner": "placid-badger",
+  "task": "flash-board-review14/task3",
+  "executionAuthorized": true,
+  "genericIOSBuildAuthorized": true,
+  "canonicalPackageSHA256": {
+    "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "Hangboards/tension-flash-board/suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+    "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+  },
+  "generatedBoardSHA256": "9285d4a38d703c80e9109553e688ea3e94095021207f02ef26001471cb98bc7e",
+  "deliveryLockPath": "docs/model-delivery-lock.json",
+  "deliveryLockFileSHA256": "db045c8125015bc93fc2b3c6487b8bca3611677c0eb3b2adbd884020adc52db0",
+  "deliveryLockManifestSHA256": "5d9950bab01d9004754a96f4130b10403509306618b4d65c6e8757f5499f91d1",
+  "reservedPathSHA256": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "HangTen/Views/RootView.swift": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "HangTenTests/BoardModelRealityTests.swift": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+    "HangTenTests/BoardModelTests.swift": "89d5778a9b85181315bf281921f493ec771c6c8ddd92ef1106ec643fd6ec1fd7",
+    "HangTen/Views/GripHandModelView.swift": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc"
+  },
+  "verificationRunnerSHA256": "83ecca17986c472a65c2b7929c75b723b3d858fec010311f262aede8eab7048a",
+  "physicalGateSHA256": "6af53720288b4d2ba34a3764a71662ebd5bc9aa9b8f70648946dc367bb48f7c7",
+  "scope": "One scoped package/delivery/staging/focused-host-test/generic-iOS-build pass; no Simulator, app launch, server or shared code mutation"
+}

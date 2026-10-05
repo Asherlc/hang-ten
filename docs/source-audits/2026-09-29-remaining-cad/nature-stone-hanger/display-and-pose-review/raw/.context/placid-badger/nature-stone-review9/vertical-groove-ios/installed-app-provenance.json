@@ -1,0 +1,99 @@
+{
+  "owner": "placid-badger",
+  "simulator": "0D6DAFB9-5767-461F-8BF7-CF03A4B85B9E",
+  "builtApp": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app",
+  "installedApp": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/0D6DAFB9-5767-461F-8BF7-CF03A4B85B9E/data/Containers/Bundle/Application/0545D9CE-D30D-43A3-84A3-B3974865DF0B/HangTen.app",
+  "builtBinarySHA256": "9e1dfb3a260c0492db0c37b8185eaa8cc42f364c65c39d1d002cc52799eba45a",
+  "installedBinarySHA256": "9e1dfb3a260c0492db0c37b8185eaa8cc42f364c65c39d1d002cc52799eba45a",
+  "binaryBytesMatch": true,
+  "nativeSourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "generatedManifestSHA256": "946b91c96e6141f10035e01d6720d5a694d66084da41bae9af86726df58b59af",
+  "generatedManifestBytesMatchSource": true,
+  "sidecarSHA256": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae",
+  "packageSHA256": {
+    "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+    "Hangboards/nature-stone-hanger/assets/primary.usdz": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+    "Hangboards/nature-stone-hanger/assets/primary.model.json": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+    "Hangboards/nature-stone-hanger/suspension.json": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae"
+  },
+  "contactIDs": [
+    "edge-front-15mm-incut",
+    "edge-front-15mm-flat",
+    "edge-front-20mm-wood-flat",
+    "edge-front-20mm-granite",
+    "edge-reverse-10mm-incut",
+    "edge-reverse-10mm-flat",
+    "edge-reverse-06mm-flat",
+    "edge-reverse-06mm-incut"
+  ],
+  "positions": [
+    {
+      "id": "edge-front-15mm-incut",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-front-15mm-incut"
+      ]
+    },
+    {
+      "id": "edge-front-15mm-flat",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-front-15mm-flat"
+      ]
+    },
+    {
+      "id": "edge-front-20mm-wood-flat",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-front-20mm-wood-flat"
+      ]
+    },
+    {
+      "id": "edge-front-20mm-granite",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-front-20mm-granite"
+      ]
+    },
+    {
+      "id": "edge-reverse-10mm-incut",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-reverse-10mm-incut"
+      ]
+    },
+    {
+      "id": "edge-reverse-10mm-flat",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-reverse-10mm-flat"
+      ]
+    },
+    {
+      "id": "edge-reverse-06mm-flat",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-reverse-06mm-flat"
+      ]
+    },
+    {
+      "id": "edge-reverse-06mm-incut",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-reverse-06mm-incut"
+      ]
+    }
+  ],
+  "models": [
+    {
+      "presentationID": "primary",
+      "descriptorSHA256": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+      "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+      "installedModelPaths": [
+        "/Users/asherlc/Library/Developer/CoreSimulator/Devices/0D6DAFB9-5767-461F-8BF7-CF03A4B85B9E/data/Containers/Bundle/Application/0545D9CE-D30D-43A3-84A3-B3974865DF0B/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-nature-stone-hanger-5a51ec4499f6e1126bec59f152966771.assetpack/Hangboards/nature-stone-hanger/assets/primary.usdz"
+      ]
+    }
+  ],
+  "commit": "9399160729fcc418cedf47344b41163d244b5d96",
+  "dirtyDiffSHA256": "a7a9e51240363f76f9784141a3457c7920fe3c1af5613fd9ef9446e725908044"
+}

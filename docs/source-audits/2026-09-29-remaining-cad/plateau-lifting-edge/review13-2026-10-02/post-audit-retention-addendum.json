@@ -1,0 +1,11 @@
+{
+  "owner": "placid-badger",
+  "status": "pass",
+  "auditedArtifactIndexSnapshotSHA256": "f13fecf742b9d06e2b1e1f690a823cb263a0bbd73307e1bc8f4d24d01adf5079",
+  "auditedArtifacts": 228,
+  "retainedOriginalBuildDirtyDiffPatch": "package-validation/ios-build/build-dirty-diff.patch",
+  "buildDirtyDiffPatchSHA256": "daa47e94f2e4ef52e20ca0cbb6f1b1e9475d8e1c1af2f4a3bd8319eca269bb9f",
+  "matchesActualBuildReportExactly": true,
+  "canonicalThreeModelsRetainedInHangboards": true,
+  "scope": "The independent audit inspected its exact 228-entry snapshot. This addendum retains the omitted original build patch and audit snapshot/report; final artifact index also includes refreshed bookkeeping. No canonical/model/native/runtime change or new test/build."
+}

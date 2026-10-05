@@ -1,0 +1,28 @@
+Showing 1 of 86 activities (limited to 1)
+
+**Yes. C → D → E is a sensible bounded order.** The passing Timeline comparisons substantially narrow the search: both task-driven and monotonic timeline-derived semantics can render correctly in isolation. They do not explain the workout failure.
+
+The proposed comparisons separate two remaining differences:
+
+| Comparison | Changed condition | Interpretation if failure appears |
+|---|---|---|
+| C → D | Changing caption becomes constant | Unrelated changing UI/layout activity may be helping presentation |
+| D → E | Direct Surface becomes normal BoardMapView | The wrapper introduces a relevant difference |
+
+Keep these safeguards:
+
+- **Run C in the new comparison binary.** Prior passing captures remain evidence, but are not its same-binary control.
+- **Keep the caption present in D**, changing only its content to a constant value. Removing it or simultaneously changing its frame would broaden the intervention.
+- **Record leaf placement as well as size**, sparsely. A 210 × 36 viewport can remain unchanged while its screen position or ancestor layout changes. Stable geometry also would not exclude a caption-triggered invalidation effect.
+- **For E, verify resolved inputs at BoardModelSurface.** Matching requested presentation and active hold is insufficient if BoardMapView resolves a different position during neutral or selected phases. Preserve its normal resolution path; classify any mismatch as an additional difference rather than silently overriding it.
+- Preserve the driver, epoch, capture schedule, host lifetime, and absence of sampler/counter throughout.
+
+A D failure would show dependence on the changing-caption condition in this reproduction—not prove that intrinsic sizing specifically caused it. Caption changes also affect SwiftUI invalidation and compositing.
+
+An E failure would implicate the **wrapper as a bundle**: selection state, change handlers, aspect-ratio layout, and animation transaction. It would justify separating those contributions afterward, not immediately selecting one as the cause.
+
+Because captions and potentially wrapper chrome differ, old whole-file hashes will not necessarily transfer across these arms. Establish visually reviewed references for each arm, then use exact correspondence within compatible presentations. Continue evaluating every phase and capture.
+
+If D fails, stop escalating into E until that narrower result is confirmed. If C/D/E all pass, **capture the fresh actual workout in the same binary and stop adding isolated context**. That provides the missing current failing boundary—or establishes that the current reproduction changed.
+
+The original uninstrumented failure removes the 1 Hz sampler as a necessary cause of the historical defect. It can remain excluded; there is no reason to prioritize a sampler experiment now. No production fix or framework root cause follows from the current results.

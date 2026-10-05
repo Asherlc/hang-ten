@@ -1,0 +1,37 @@
+{
+  "method": "Checked passive frozen final source hashes against previously retained CDE copies; did not read changing live Swift files.",
+  "debugDylibSHA256": "57b71dd01b35fb95de9519f85dde8c5232655788baeffe32deb982bd68640267",
+  "references": [
+    {
+      "sourcePath": "HangTen/Views/RootView.swift",
+      "retainedPath": "../runtime-caption-boardmap-2026-10-02/frozen-source/RootView.swift",
+      "sha256": "ce690c12d0182a57c659f3e4f01bf4b25c37c2dc6d98fbe9dafaa57686f4152f",
+      "matchesPassiveFrozenFinalSourceHash": true
+    },
+    {
+      "sourcePath": "HangTen/Views/BoardModelView.swift",
+      "retainedPath": "../runtime-caption-boardmap-2026-10-02/frozen-source/BoardModelView.swift",
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+      "matchesPassiveFrozenFinalSourceHash": true
+    },
+    {
+      "sourcePath": "HangTen/Models/BoardModelRealityTypes.swift",
+      "retainedPath": "../runtime-caption-boardmap-2026-10-02/frozen-source/BoardModelRealityTypes.swift",
+      "sha256": "48c2b5cc6a5d2c1b1b7912576b71f9ba1fca1e281b9655bdb5a46fa1cc684186",
+      "matchesPassiveFrozenFinalSourceHash": true
+    },
+    {
+      "retainedPath": "../runtime-caption-boardmap-2026-10-02/frozen-source/snapshot.json",
+      "sha256": "f2972cc674312cc2dfb04b0111bfbfc375d11832738427a07c1ed1cb78e93d0e"
+    },
+    {
+      "retainedPath": "../runtime-caption-boardmap-2026-10-02/frozen-source/current-three-file-diff.patch",
+      "sha256": "7ca977687acc548f560120ae97df559c2c552471442552b0f46ab29f39de9c14"
+    },
+    {
+      "retainedPath": "../runtime-caption-boardmap-2026-10-02/raw/caption-code-parity/mach-o-parity.json",
+      "sha256": "85603abeca4853bbbf566b1cdfe6bb391b4e9c1e2254294c5bf44546f577c419"
+    }
+  ],
+  "installedFiveMachOUnchanged": true
+}

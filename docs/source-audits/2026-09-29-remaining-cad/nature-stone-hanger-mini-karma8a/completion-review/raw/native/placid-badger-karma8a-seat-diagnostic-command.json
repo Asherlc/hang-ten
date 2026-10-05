@@ -1,0 +1,19 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "python3",
+    "Tools/HangboardCAD/run_freecad.py",
+    ".context/placid-badger/karma8a-review11/refinement-2026-10-02/inspect_seat.py"
+  ],
+  "startedUTC": "2026-10-02T13:45:48.070774+00:00",
+  "timeoutSeconds": 300,
+  "ownedTemporaryDirectory": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/placid-badger-karma8a-seat-diagnostic-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 94301,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 0.5998422920019948
+}

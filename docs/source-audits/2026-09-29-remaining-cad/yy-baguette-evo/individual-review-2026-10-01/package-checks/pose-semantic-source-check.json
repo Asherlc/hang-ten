@@ -1,0 +1,403 @@
+{
+  "sourceSHA256": "b07ab992ec2ed39e3b299f205a9d0865a5249659ec88cffad5e6c37d4a785de5",
+  "baselineSourceSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+  "onlyDocumentXMLChanged": true,
+  "nonManifestXMLUnchanged": true,
+  "contactFactsExact": true,
+  "equipmentFactsExact": true,
+  "originalPositionIDsRetained": true,
+  "all19ContactsInExactlyOnePosition": true,
+  "newPositionCount": 9,
+  "bearingChecks": [
+    {
+      "contactID": "edge-10-left",
+      "positionID": "paired-10-15",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0
+    },
+    {
+      "contactID": "edge-10-right",
+      "positionID": "paired-10-15",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0
+    },
+    {
+      "contactID": "edge-15-left",
+      "positionID": "paired-10-15",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0
+    },
+    {
+      "contactID": "edge-15-right",
+      "positionID": "paired-10-15",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0
+    },
+    {
+      "contactID": "edge-20-left",
+      "positionID": "paired-25-20-15-10",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0
+    },
+    {
+      "contactID": "edge-20-right",
+      "positionID": "paired-25-20-15-10",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0
+    },
+    {
+      "contactID": "edge-25-left",
+      "positionID": "paired-25-20-15-10",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0
+    },
+    {
+      "contactID": "edge-25-right",
+      "positionID": "paired-25-20-15-10",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0
+    },
+    {
+      "contactID": "edge-12-left",
+      "positionID": "paired-12-8-6",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0000000000000002
+    },
+    {
+      "contactID": "edge-12-right",
+      "positionID": "paired-12-8-6",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0000000000000002
+    },
+    {
+      "contactID": "edge-8-left",
+      "positionID": "paired-8-6",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0000000000000002
+    },
+    {
+      "contactID": "edge-8-right",
+      "positionID": "paired-8-6",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0000000000000002
+    },
+    {
+      "contactID": "edge-6-upper",
+      "positionID": "paired-8-6",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0000000000000002
+    },
+    {
+      "contactID": "edge-6-lower",
+      "positionID": "paired-8-6",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0000000000000002
+    },
+    {
+      "contactID": "edge-central-25",
+      "positionID": "central-25",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0
+    },
+    {
+      "contactID": "edge-central-30",
+      "positionID": "central-30-25",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0
+    },
+    {
+      "contactID": "edge-central-20",
+      "positionID": "central-20-6",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0000000000000002
+    },
+    {
+      "contactID": "edge-central-6",
+      "positionID": "central-6",
+      "positionContainsContact": true,
+      "worldUpDot": 1.0000000000000002
+    }
+  ],
+  "nativeNormalChecks": [
+    {
+      "contactID": "edge-10-left",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-10-right",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-15-left",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-15-right",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-20-left",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-20-right",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-25-left",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-25-right",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-12-left",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-12-right",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-8-left",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-8-right",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-6-upper",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-6-lower",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-central-25",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-central-30",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-central-20",
+      "measuredFaceHasChosenNormal": true
+    },
+    {
+      "contactID": "edge-central-6",
+      "measuredFaceHasChosenNormal": true
+    }
+  ],
+  "manifestDiff": [
+    {
+      "path": "/positions",
+      "before": [
+        {
+          "id": "paired-25-20-15-10",
+          "presentationID": "primary",
+          "contactIDs": [
+            "edge-20-left",
+            "edge-10-left",
+            "edge-25-left",
+            "edge-15-left",
+            "edge-15-right",
+            "edge-25-right",
+            "edge-10-right",
+            "edge-20-right"
+          ]
+        },
+        {
+          "id": "paired-12-8-6",
+          "presentationID": "primary",
+          "contactIDs": [
+            "edge-12-left",
+            "edge-12-right",
+            "edge-8-left",
+            "edge-8-right",
+            "edge-6-upper",
+            "edge-6-lower"
+          ]
+        },
+        {
+          "id": "central-30-25",
+          "presentationID": "primary",
+          "contactIDs": [
+            "edge-central-30",
+            "edge-central-25"
+          ]
+        },
+        {
+          "id": "central-20-6",
+          "presentationID": "primary",
+          "contactIDs": [
+            "edge-central-20",
+            "edge-central-6"
+          ]
+        },
+        {
+          "id": "rounded-tray",
+          "presentationID": "primary",
+          "contactIDs": [
+            "rounded-tray"
+          ]
+        }
+      ],
+      "after": [
+        {
+          "id": "paired-25-20-15-10",
+          "presentationID": "primary",
+          "contactIDs": [
+            "edge-20-left",
+            "edge-25-left",
+            "edge-25-right",
+            "edge-20-right"
+          ]
+        },
+        {
+          "id": "paired-10-15",
+          "presentationID": "primary",
+          "contactIDs": [
+            "edge-10-left",
+            "edge-15-left",
+            "edge-15-right",
+            "edge-10-right"
+          ]
+        },
+        {
+          "id": "paired-12-8-6",
+          "presentationID": "primary",
+          "contactIDs": [
+            "edge-12-left",
+            "edge-12-right"
+          ]
+        },
+        {
+          "id": "paired-8-6",
+          "presentationID": "primary",
+          "contactIDs": [
+            "edge-8-left",
+            "edge-8-right",
+            "edge-6-upper",
+            "edge-6-lower"
+          ]
+        },
+        {
+          "id": "central-30-25",
+          "presentationID": "primary",
+          "contactIDs": [
+            "edge-central-30"
+          ]
+        },
+        {
+          "id": "central-25",
+          "presentationID": "primary",
+          "contactIDs": [
+            "edge-central-25"
+          ]
+        },
+        {
+          "id": "central-20-6",
+          "presentationID": "primary",
+          "contactIDs": [
+            "edge-central-20"
+          ]
+        },
+        {
+          "id": "central-6",
+          "presentationID": "primary",
+          "contactIDs": [
+            "edge-central-6"
+          ]
+        },
+        {
+          "id": "rounded-tray",
+          "presentationID": "primary",
+          "contactIDs": [
+            "rounded-tray"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/presentations/0/media/display/surfaceFinish",
+      "before": null,
+      "after": "wood"
+    },
+    {
+      "path": "/presentations/0/media/orientation/rotations/central-20-6/0",
+      "before": 0.5,
+      "after": 0.707106781
+    },
+    {
+      "path": "/presentations/0/media/orientation/rotations/central-20-6/3",
+      "before": 0.866025404,
+      "after": 0.707106781
+    },
+    {
+      "path": "/presentations/0/media/orientation/rotations/central-25",
+      "before": null,
+      "after": [
+        0.0,
+        0,
+        0,
+        1.0
+      ]
+    },
+    {
+      "path": "/presentations/0/media/orientation/rotations/central-6",
+      "before": null,
+      "after": [
+        -0.707106781,
+        0,
+        0,
+        0.707106781
+      ]
+    },
+    {
+      "path": "/presentations/0/media/orientation/rotations/paired-10-15",
+      "before": null,
+      "after": [
+        0.0,
+        0,
+        0,
+        1.0
+      ]
+    },
+    {
+      "path": "/presentations/0/media/orientation/rotations/paired-25-20-15-10/0",
+      "before": 0,
+      "after": 1.0
+    },
+    {
+      "path": "/presentations/0/media/orientation/rotations/paired-25-20-15-10/3",
+      "before": 1,
+      "after": 0.0
+    },
+    {
+      "path": "/presentations/0/media/orientation/rotations/paired-8-6",
+      "before": null,
+      "after": [
+        -0.707106781,
+        0,
+        0,
+        0.707106781
+      ]
+    },
+    {
+      "path": "/presentations/0/media/orientation/rotations/rounded-tray/0",
+      "before": -0.707106781,
+      "after": 1.0
+    },
+    {
+      "path": "/presentations/0/media/orientation/rotations/rounded-tray/3",
+      "before": 0.707106781,
+      "after": 0.0
+    }
+  ],
+  "solverSidecarNotInspected": "Solver was still running; this report covers embedded manifest orientation only.",
+  "passed": true
+}

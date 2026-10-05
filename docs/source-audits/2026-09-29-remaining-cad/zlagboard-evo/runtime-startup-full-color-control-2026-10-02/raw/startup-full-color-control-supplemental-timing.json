@@ -1,0 +1,453 @@
+{
+  "checks": {
+    "completeStream": true,
+    "allAmendedCommonCriteria": true
+  },
+  "errors": [],
+  "arm": "control",
+  "criterion": "SUPPLEMENTAL_POST_CONTROL_REVIEW_IDENTICAL_FOR_BOTH_ARMS",
+  "originalProspectiveCheckPassed": true,
+  "originalProspectiveErrors": [],
+  "originalReportPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/prestart-hand-validation.json",
+  "originalReportSHA256": "29c62a371d128c853c69dc6ae3a801129c225147fcf3173354b3888304638884",
+  "traceSHA256": "5987710aae1a7c33171a2e6c122db1d62aa1141056ea4d8e226bfe3b625b7bc7",
+  "supplementalTimingCheckPassed": true,
+  "incompleteFirstOwnershipBracket": false,
+  "requiredAttachedPointCount": 24,
+  "actualFirstCapture": {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 0.25,
+    "targetEpoch": 1791002741.603941,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-0.25.png",
+    "sha256": "947fd784666b3a807892701021752eee92b19037f1ed680b69e6c24db4957b1c",
+    "startEpoch": 1791002741.636359,
+    "endEpoch": 1791002742.1263769,
+    "startDelayFromTarget": 0.032418012619018555,
+    "traceReadBefore": {
+      "observedEpoch": 1791002741.633684,
+      "lastSequence": 57
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791002742.130782,
+      "lastSequence": 57
+    }
+  },
+  "timingMargins": [
+    {
+      "event": "constructor-entry",
+      "sequence": 53,
+      "epoch": 1791002741.357747,
+      "secondsAfterLastPositive": 1.0729432106018066,
+      "secondsBeforeFirstScreenshotStart": 0.2786118984222412,
+      "secondsRelativeToFirstHang": 0.0038061141967773438,
+      "secondsRelativeToZeroCallback": 0.00033211708068847656,
+      "lastPositive": {
+        "applicationCensus": {
+          "applicationState": 0,
+          "standaloneGate": false,
+          "windowScenes": [
+            {
+              "activationState": 0,
+              "interfaceOrientation": 3,
+              "sceneID": "ObjectIdentifier(0x0000000107576e00)",
+              "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+              "windows": [
+                {
+                  "alpha": 1,
+                  "bounds": [
+                    874,
+                    402
+                  ],
+                  "hidden": false,
+                  "key": true,
+                  "rendererNamedViewClasses": {
+                    "RealityKit.ARRenderView": 1,
+                    "RealityKit.ARView": 1,
+                    "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>": 1
+                  },
+                  "rendererPlacements": [
+                    {
+                      "alpha": 1,
+                      "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+                      "frameInWindow": [
+                        232,
+                        182.33333333333331,
+                        410,
+                        70
+                      ],
+                      "hidden": false,
+                      "viewID": "ObjectIdentifier(0x0000000116609b00)"
+                    },
+                    {
+                      "alpha": 1,
+                      "class": "RealityKit.ARView",
+                      "frameInWindow": [
+                        232,
+                        182.33333333333331,
+                        410,
+                        70
+                      ],
+                      "hidden": false,
+                      "realitySceneID": "ObjectIdentifier(0x0000000116560100)",
+                      "viewID": "ObjectIdentifier(0x000000014c8b0700)"
+                    },
+                    {
+                      "alpha": 1,
+                      "class": "RealityKit.ARRenderView",
+                      "frameInWindow": [
+                        232,
+                        182.33333333333331,
+                        410,
+                        70
+                      ],
+                      "hidden": false,
+                      "viewID": "ObjectIdentifier(0x0000000107553640)"
+                    }
+                  ],
+                  "windowID": "ObjectIdentifier(0x0000000105f6c800)"
+                }
+              ]
+            }
+          ]
+        },
+        "complete": true,
+        "epoch": 1791002740.2848039,
+        "event": "workout-prestart-hand-state",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "sequence": 46,
+        "state": "flag=false;routineStartedIsNil=false;suppressed=false;countdown=1",
+        "uptime": 85814.83791616667,
+        "viewportPoints": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "event": "make-entry",
+      "sequence": 55,
+      "epoch": 1791002741.369827,
+      "secondsAfterLastPositive": 1.0850231647491455,
+      "secondsBeforeFirstScreenshotStart": 0.26653194427490234,
+      "secondsRelativeToFirstHang": 0.01588606834411621,
+      "secondsRelativeToZeroCallback": 0.012412071228027344,
+      "lastPositive": {
+        "applicationCensus": {
+          "applicationState": 0,
+          "standaloneGate": false,
+          "windowScenes": [
+            {
+              "activationState": 0,
+              "interfaceOrientation": 3,
+              "sceneID": "ObjectIdentifier(0x0000000107576e00)",
+              "sessionID": "117EB182-0350-48CF-9620-7ADD4286C3E9",
+              "windows": [
+                {
+                  "alpha": 1,
+                  "bounds": [
+                    874,
+                    402
+                  ],
+                  "hidden": false,
+                  "key": true,
+                  "rendererNamedViewClasses": {
+                    "RealityKit.ARRenderView": 1,
+                    "RealityKit.ARView": 1,
+                    "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>": 1
+                  },
+                  "rendererPlacements": [
+                    {
+                      "alpha": 1,
+                      "class": "SwiftUI.UIKitPlatformViewHost<SwiftUI.(unknown context at $1d374ce44).PlatformViewRepresentableAdaptor<_RealityKit_SwiftUI.ViewAdaptor<RealityKit.ARView>.Representation>>",
+                      "frameInWindow": [
+                        232,
+                        182.33333333333331,
+                        410,
+                        70
+                      ],
+                      "hidden": false,
+                      "viewID": "ObjectIdentifier(0x0000000116609b00)"
+                    },
+                    {
+                      "alpha": 1,
+                      "class": "RealityKit.ARView",
+                      "frameInWindow": [
+                        232,
+                        182.33333333333331,
+                        410,
+                        70
+                      ],
+                      "hidden": false,
+                      "realitySceneID": "ObjectIdentifier(0x0000000116560100)",
+                      "viewID": "ObjectIdentifier(0x000000014c8b0700)"
+                    },
+                    {
+                      "alpha": 1,
+                      "class": "RealityKit.ARRenderView",
+                      "frameInWindow": [
+                        232,
+                        182.33333333333331,
+                        410,
+                        70
+                      ],
+                      "hidden": false,
+                      "viewID": "ObjectIdentifier(0x0000000107553640)"
+                    }
+                  ],
+                  "windowID": "ObjectIdentifier(0x0000000105f6c800)"
+                }
+              ]
+            }
+          ]
+        },
+        "complete": true,
+        "epoch": 1791002740.2848039,
+        "event": "workout-prestart-hand-state",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "sequence": 46,
+        "state": "flag=false;routineStartedIsNil=false;suppressed=false;countdown=1",
+        "uptime": 85814.83791616667,
+        "viewportPoints": [
+          0,
+          0
+        ]
+      }
+    }
+  ],
+  "ownershipPoints": [
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-0.25.png",
+      "side": "before",
+      "sequence": 57,
+      "epoch": 1791002741.431773,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-0.25.png",
+      "side": "after",
+      "sequence": 59,
+      "epoch": 1791002742.43441,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-1.png",
+      "side": "before",
+      "sequence": 57,
+      "epoch": 1791002741.431773,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-1.png",
+      "side": "after",
+      "sequence": 60,
+      "epoch": 1791002743.48321,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-3.png",
+      "side": "before",
+      "sequence": 60,
+      "epoch": 1791002743.48321,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-3.png",
+      "side": "after",
+      "sequence": 63,
+      "epoch": 1791002745.535821,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-5.png",
+      "side": "before",
+      "sequence": 63,
+      "epoch": 1791002745.535821,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-0-active-plus-5.png",
+      "side": "after",
+      "sequence": 65,
+      "epoch": 1791002747.610002,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-0.25.png",
+      "side": "before",
+      "sequence": 68,
+      "epoch": 1791002748.266284,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-0.25.png",
+      "side": "after",
+      "sequence": 72,
+      "epoch": 1791002749.737589,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-1.png",
+      "side": "before",
+      "sequence": 71,
+      "epoch": 1791002748.674814,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-1.png",
+      "side": "after",
+      "sequence": 73,
+      "epoch": 1791002750.797665,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-3.png",
+      "side": "before",
+      "sequence": 73,
+      "epoch": 1791002750.797665,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-3.png",
+      "side": "after",
+      "sequence": 74,
+      "epoch": 1791002751.8636642,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-5.png",
+      "side": "before",
+      "sequence": 75,
+      "epoch": 1791002753.038638,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-1-preview-plus-5.png",
+      "side": "after",
+      "sequence": 76,
+      "epoch": 1791002755.041357,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-0.25.png",
+      "side": "before",
+      "sequence": 187,
+      "epoch": 1791002928.786408,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-0.25.png",
+      "side": "after",
+      "sequence": 191,
+      "epoch": 1791002935.8048038,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-1.png",
+      "side": "before",
+      "sequence": 187,
+      "epoch": 1791002928.786408,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-1.png",
+      "side": "after",
+      "sequence": 191,
+      "epoch": 1791002935.8048038,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-3.png",
+      "side": "before",
+      "sequence": 187,
+      "epoch": 1791002928.786408,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-3.png",
+      "side": "after",
+      "sequence": 191,
+      "epoch": 1791002935.8048038,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-5.png",
+      "side": "before",
+      "sequence": 187,
+      "epoch": 1791002928.786408,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    },
+    {
+      "image": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/phase-2-active-plus-5.png",
+      "side": "after",
+      "sequence": 191,
+      "epoch": 1791002935.8048038,
+      "currentLifetimePresent": true,
+      "currentLiveActiveAttached": true,
+      "firstBeforePredatesConstructorException": false
+    }
+  ],
+  "limitations": [
+    "This is an explicitly amended supplemental criterion after the original control checker failed; original check/report remain unmodified.",
+    "The first before-census may lack the current hand only if it is strictly before its constructor, which must precede actual screenshot START. First after and every remaining point require current root/camera live active attached.",
+    "An incomplete first ownership bracket is not equivalent to complete ownership proof at screenshot time. Actual constructor/make timing plus later census and whole image visibility are separate evidence.",
+    "Last positive/zero callbacks are sparse state observations; no requirement ctor follows zero callback, no exact permission-edge inference.",
+    "No GPU commit/presenting-host proof or continuous lifetime assertion."
+  ]
+}

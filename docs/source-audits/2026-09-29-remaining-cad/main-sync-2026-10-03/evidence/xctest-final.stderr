@@ -1,0 +1,15 @@
+Testing failed:
+	Extra argument 'isSkipCountdown' in call
+	Generic parameter 'T' could not be inferred
+	Type 'Equatable' has no member 'preview'
+	Type 'Equatable' has no member 'right'
+	Testing cancelled because the build failed.
+
+** TEST FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ MotherboardBluetoothServiceTests.swift,\ AppStoreTests.swift,\ WorkoutSummaryTests.swift,\ SimulatedMotherboardTransportTests.swift,\ MotherboardWorkoutPreparationTests.swift,\ WorkoutTimelineTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/MotherboardBluetoothServiceTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/AppStoreTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/WorkoutSummaryTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/SimulatedMotherboardTransportTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/MotherboardWorkoutPreparationTests.swift /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/WorkoutTimelineTests.swift (in target 'HangTenTests' from project 'HangTen')
+	SwiftCompile normal arm64 /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/WorkoutTimelineTests.swift (in target 'HangTenTests' from project 'HangTen')
+	Testing project HangTen with scheme HangTen
+(3 failures)

@@ -1,0 +1,18 @@
+{
+  "atUTC": "2026-10-02T05:21:12.404673+00:00",
+  "command": [
+    "xcrun",
+    "simctl",
+    "spawn",
+    "1684856E-FC2D-4407-8063-9B343B99CAD6",
+    "log",
+    "show",
+    "--last",
+    "8m",
+    "--style",
+    "compact",
+    "--predicate",
+    "process == \"locationd\" AND (messageType == 16 OR messageType == 17 OR eventMessage CONTAINS[c] \"migrat\" OR eventMessage CONTAINS[c] \"synchron\" OR eventMessage CONTAINS[c] \"xpc\" OR eventMessage CONTAINS[c] \"wait\" OR eventMessage CONTAINS[c] \"lock\" OR eventMessage CONTAINS[c] \"TCC\")"
+  ],
+  "exitCode": 0
+}

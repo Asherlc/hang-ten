@@ -1,0 +1,21 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "placid-badger-stone-vertical-native-bearing",
+  "command": [
+    "/opt/homebrew/opt/python@3.12/bin/python3.12",
+    "-B",
+    "Tools/HangboardCAD/run_freecad.py",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/native-bearing/check_new_native_bearing.py"
+  ],
+  "timeoutSeconds": 90,
+  "temporaryRoot": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/native-bearing/placid-badger-stone-vertical-native-bearing-tmp",
+  "startedUTC": "2026-10-01T23:50:14.636333+00:00",
+  "resourceScope": "Exact owned process group and exclusive temporary root only.",
+  "ownedProcessGroup": 63530,
+  "exitCode": 0,
+  "ownedProcessGroupAbsent": true,
+  "temporaryRootAbsent": true,
+  "elapsedSeconds": 3.452391874976456,
+  "logSHA256": "f7ae16e036d7060e7a8bf6e719a027005e8747502d48437f2d846e13bca8a4df",
+  "status": "pass"
+}

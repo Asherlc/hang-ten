@@ -1,0 +1,24 @@
+{
+  "preparedOnly": true,
+  "executed": false,
+  "resourcesCreated": false,
+  "sourceFilesChanged": false,
+  "priorHelper": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/prior-capture.py",
+  "priorHelperSHA256": "80850dcc61154263f178e7e4596cbb33d10c9ea77b899d825638d6ab817a4142",
+  "helperSHA256": "e3b6c1fc9b3767789a58bb86d35f078c9e79f4b5ce3bd242650b897aea045003",
+  "releaseHelperSHA256": "8ce208182ea1acd2e9ecab82e11a734f54d93a7e8d6fb248502ee9295ed11d31",
+  "scheduleSHA256": "f7575614479464f5776fb8f938957e28270aeb99fa95ba6d43721c94658f97b7",
+  "scheduleCaptureCount": 58,
+  "protocol": "Exact58 deadlines, matched prior offsets; normal Train\u2192workout MaxHangs10s/180s/10s; muted; no taps/AX/Skip after measurement anchor; no retries or capture backfill.",
+  "miniEvidence": {
+    "manifest": "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+    "boardHandCapacity": 1,
+    "defaultPosition": "front-upright",
+    "defaultEdgeContact": "granite-edge-15",
+    "depthMM": 15,
+    "selectedHand": "left",
+    "planChoice": "research.max-hangs matches15mm range; Abrahangs first task14mm does not",
+    "setup": "Root authorized normal hand selection and Start before measurement; readiness/preparation preserved, no AUTOSTART flag."
+  },
+  "freshBinding": "At release-generation time read current ownershipUUID/controller/installedApp; derive binaryhash from build/parity; verify all81 canonical files,66 native package parity and every frozen source. Verify same before/after capture; never reuse old22-only proof."
+}

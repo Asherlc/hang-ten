@@ -1,0 +1,19 @@
+{
+  "owner": "placid-badger",
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "pytest",
+    "Tools/HangboardCAD/tests",
+    "Tools/HangboardModels/tests",
+    "Tools/HangboardPackages/tests",
+    "-q",
+    "--basetemp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-wood-integration/placid-badger-full-pytest-tmp"
+  ],
+  "timeoutSeconds": 900,
+  "meshoptimizerSHA256": "0743a9ce1b521e1eb215964c72016d2a3f1b895f1412bdf2f0e59cefa803b569",
+  "exitCode": 0,
+  "elapsedSeconds": 114.44107066700235,
+  "summary": "706 passed, 10 skipped in 114.05s (0:01:54)"
+}

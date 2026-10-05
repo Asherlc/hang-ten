@@ -1,0 +1,4 @@
+{
+  "attempt1": "Retained but not authoritative: concurrent rendering scripts shared intermediate frame names; source-to-frame isolation was not guaranteed.",
+  "attempt2": "Separate per-render output directories; no shared frame files."
+}

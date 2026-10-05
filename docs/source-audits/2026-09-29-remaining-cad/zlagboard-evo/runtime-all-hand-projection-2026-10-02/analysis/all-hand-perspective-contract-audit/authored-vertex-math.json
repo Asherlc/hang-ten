@@ -1,0 +1,3151 @@
+{
+  "scope": "Offline authored-vertex arithmetic audit, not an app test, build or runtime execution",
+  "assetPath": "HangTen/Resources/GripHand/hand-mesh.json",
+  "assetSHA256": "d53dca888e264a1ed581bcd76e5eec91576c3c5cd14456fc34eb82c934e3d433",
+  "poses": 21,
+  "perPoseVertices": 18642,
+  "method": "Sphere around exact per-pose AABB center; camera aims at same center and remains distance D/zoom for every quaternion orientation. Triangle interiors lie inside the convex sphere. Thus every point depth lies between D/zoom-radius and D/zoom+radius regardless of orbit.",
+  "precision": "Python double arithmetic on authored JSON numbers; not bitwise RealityKit Float computation. Margins are several world units, far exceeding Float rounding.",
+  "summary": [
+    {
+      "kind": "single-right",
+      "poses": 21,
+      "maximumBoundingRadius": 2.1903344427763196,
+      "largestRadiusPose": "Neutral",
+      "canonicalDistance": 11.38255243783221,
+      "minimumCameraDistance": 8.431520324320156,
+      "minimumAllAnglesNearDepthBound": 6.241185881543836,
+      "maximumAllAnglesFarDepthBound": 17.3670710265526,
+      "allAuthoredPosesClipsSafe": true,
+      "relativeMaxZoomGainBounds": [
+        0.9465381049152247,
+        1.0909866323391353
+      ]
+    },
+    {
+      "kind": "single-left",
+      "poses": 21,
+      "maximumBoundingRadius": 2.1903344427763196,
+      "largestRadiusPose": "Neutral",
+      "canonicalDistance": 11.38255243783221,
+      "minimumCameraDistance": 8.431520324320156,
+      "minimumAllAnglesNearDepthBound": 6.241185881543836,
+      "maximumAllAnglesFarDepthBound": 17.3670710265526,
+      "allAuthoredPosesClipsSafe": true,
+      "relativeMaxZoomGainBounds": [
+        0.9465381049152247,
+        1.0909866323391353
+      ]
+    },
+    {
+      "kind": "pair",
+      "poses": 21,
+      "maximumBoundingRadius": 2.544979974805745,
+      "largestRadiusPose": "Neutral",
+      "canonicalDistance": 9.79400326730597,
+      "minimumCameraDistance": 7.254817235041458,
+      "minimumAllAnglesNearDepthBound": 4.709837260235713,
+      "maximumAllAnglesFarDepthBound": 15.60365099788037,
+      "allAuthoredPosesClipsSafe": true,
+      "relativeMaxZoomGainBounds": [
+        0.9326710942105226,
+        1.1400918092581322
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "pose": "Neutral",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.11072700000000002,
+        1.6599424999999999,
+        0.09999000000000002
+      ],
+      "boundingRadius": 2.1903344427763196,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.241185881543836,
+      "allAnglesFarDepthUpperBound": 17.3670710265526,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.031983423635975,
+      "canonicalActualMaximumDepth": 12.732419790424546,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9465381049152247,
+        1.0909866323391353
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 23.22696977941374,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 23.22696977941374,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 23.22696977941374,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 23.22696977941374,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Neutral",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.11072700000000002,
+        1.6599424999999999,
+        0.09999000000000002
+      ],
+      "boundingRadius": 2.1903344427763196,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.241185881543836,
+      "allAnglesFarDepthUpperBound": 17.3670710265526,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.031983423635975,
+      "canonicalActualMaximumDepth": 12.732419790424546,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9465381049152247,
+        1.0909866323391353
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 23.22696977941374,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 23.22696977941374,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 23.22696977941374,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 23.22696977941374,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Neutral",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.6599424999999999,
+        0.09999000000000002
+      ],
+      "boundingRadius": 2.544979974805745,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.709837260235713,
+      "allAnglesFarDepthUpperBound": 15.60365099788037,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 9.013584957612832,
+      "canonicalActualMaximumDepth": 11.047851074973478,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9326710942105226,
+        1.1400918092581322
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 32.45255393890845,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 35.65369153269088,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 26.907092882028312,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 26.907092882028312,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "OpenHand",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.23173599999999994,
+        1.47899,
+        0.09999000000000002
+      ],
+      "boundingRadius": 2.1073014669666987,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.324218857353457,
+      "allAnglesFarDepthUpperBound": 17.28403805074298,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.049926044688279,
+      "canonicalActualMaximumDepth": 12.75036241147685,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9481595354602703,
+        1.086388126294283
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 20.746504795363503,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 20.746504795363503,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.746504795363503,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.746504795363503,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "OpenHand",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.23173599999999994,
+        1.47899,
+        0.09999000000000002
+      ],
+      "boundingRadius": 2.1073014669666987,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.324218857353457,
+      "allAnglesFarDepthUpperBound": 17.28403805074298,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.049926044688279,
+      "canonicalActualMaximumDepth": 12.75036241147685,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9481595354602703,
+        1.086388126294283
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 20.746504795363503,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 20.746504795363503,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.746504795363503,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.746504795363503,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "OpenHand",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.47899,
+        0.09999000000000002
+      ],
+      "boundingRadius": 2.396543715047568,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.85827351999389,
+      "allAnglesFarDepthUpperBound": 15.455214738122194,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.605635790561038,
+      "canonicalActualMaximumDepth": 10.99704249737568,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9356229498037856,
+        1.1278903186057025
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 30.203081978745253,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 33.20745263930465,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 23.59232056265442,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 23.59232056265442,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "HalfCrimp",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.24817899999999993,
+        1.211261,
+        0.115284
+      ],
+      "boundingRadius": 1.9763021958845262,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.45521812843563,
+      "allAnglesFarDepthUpperBound": 17.153038779660807,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.006252031085872,
+      "canonicalActualMaximumDepth": 12.70668839787444,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9507702362926733,
+        1.079373714905222
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 18.35194646876913,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 18.682964510146803,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 18.35194646876913,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 18.35194646876913,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "HalfCrimp",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.24817899999999993,
+        1.211261,
+        0.115284
+      ],
+      "boundingRadius": 1.9763021958845262,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.45521812843563,
+      "allAnglesFarDepthUpperBound": 17.153038779660807,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.006252031085872,
+      "canonicalActualMaximumDepth": 12.70668839787444,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9507702362926733,
+        1.079373714905222
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 18.35194646876913,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 18.682964510146803,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 18.35194646876913,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 18.35194646876913,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "HalfCrimp",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.211261,
+        0.115284
+      ],
+      "boundingRadius": 2.3687506006183936,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.886066634423065,
+      "allAnglesFarDepthUpperBound": 15.427421623693018,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.617657412035584,
+      "canonicalActualMaximumDepth": 10.936547198994695,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9361857746967144,
+        1.1256881193063721
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 29.363509099165007,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 32.29307305613749,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.05784763079034,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.05784763079034,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        }
+      ]
+    },
+    {
+      "pose": "FullCrimp",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.248282,
+        1.171057,
+        0.147077
+      ],
+      "boundingRadius": 1.826672317895577,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.604848006424579,
+      "allAnglesFarDepthUpperBound": 17.003408901671857,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.022846780025677,
+      "canonicalActualMaximumDepth": 12.723283146814248,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9538338059573903,
+        1.071702136307504
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 18.49278589491531,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 20.395656482983522,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 17.93125781672199,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 17.93125781672199,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "FullCrimp",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.248282,
+        1.171057,
+        0.147077
+      ],
+      "boundingRadius": 1.826672317895577,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.604848006424579,
+      "allAnglesFarDepthUpperBound": 17.003408901671857,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.022846780025677,
+      "canonicalActualMaximumDepth": 12.723283146814248,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9538338059573903,
+        1.071702136307504
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 18.49278589491531,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 20.395656482983522,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 17.93125781672199,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 17.93125781672199,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "FullCrimp",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.171057,
+        0.147077
+      ],
+      "boundingRadius": 2.1846582949445437,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 5.070158940096915,
+      "allAnglesFarDepthUpperBound": 15.24332931801917,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.777172582427163,
+      "canonicalActualMaximumDepth": 10.95577255504788,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9399974194029445,
+        1.111711072172245
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 28.75165032641049,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 31.626244966677213,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.569302309792214,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.569302309792214,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Sloper",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.23852099999999998,
+        1.4681339999999998,
+        0.15293299999999999
+      ],
+      "boundingRadius": 2.1242291136101588,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.307291210709996,
+      "allAnglesFarDepthUpperBound": 17.300965697386438,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.09448223740252,
+      "canonicalActualMaximumDepth": 12.79491860419109,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.947826909900629,
+        1.0873157823371737
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 20.568024590593158,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.02534714481095,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.568024590593158,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.568024590593158,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Sloper",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.23852099999999998,
+        1.4681339999999998,
+        0.15293299999999999
+      ],
+      "boundingRadius": 2.1242291136101588,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.307291210709996,
+      "allAnglesFarDepthUpperBound": 17.300965697386438,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.09448223740252,
+      "canonicalActualMaximumDepth": 12.79491860419109,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.947826909900629,
+        1.0873157823371737
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 20.568024590593158,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.02534714481095,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.568024590593158,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.568024590593158,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Sloper",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.4681339999999998,
+        0.15293299999999999
+      ],
+      "boundingRadius": 2.397177083330516,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.857640151710942,
+      "allAnglesFarDepthUpperBound": 15.455848106405142,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.533613081281912,
+      "canonicalActualMaximumDepth": 11.044807459999454,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9356101615440685,
+        1.1279407974916877
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 30.476012064994165,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 33.50454388163433,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 23.337436832301158,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 23.337436832301158,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket0",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.23173599999999994,
+        1.5207789999999999,
+        0.09999000000000002
+      ],
+      "boundingRadius": 2.109537034454242,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.321983289865914,
+      "allAnglesFarDepthUpperBound": 17.286273618230524,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.060022176520542,
+      "canonicalActualMaximumDepth": 12.760458543309113,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9481155456878976,
+        1.086510353453367
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket0",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.23173599999999994,
+        1.5207789999999999,
+        0.09999000000000002
+      ],
+      "boundingRadius": 2.109537034454242,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.321983289865914,
+      "allAnglesFarDepthUpperBound": 17.286273618230524,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.060022176520542,
+      "canonicalActualMaximumDepth": 12.760458543309113,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9481155456878976,
+        1.086510353453367
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket0",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.5207789999999999,
+        0.09999000000000002
+      ],
+      "boundingRadius": 2.428180787689829,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.826636447351629,
+      "allAnglesFarDepthUpperBound": 15.486851810764454,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.61736947563991,
+      "canonicalActualMaximumDepth": 11.00877618245455,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9349862149216407,
+        1.1304279614242443
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 30.165528009034112,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 33.16656812083028,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 24.568836256402964,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 24.568836256402964,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket1",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.2485235,
+        1.5207789999999999,
+        0.271045
+      ],
+      "boundingRadius": 2.1501419996193856,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.2813783247007695,
+      "allAnglesFarDepthUpperBound": 17.326878583395665,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.209837827211695,
+      "canonicalActualMaximumDepth": 12.910274194000266,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9473197872830997,
+        1.0887455257919207
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.373815506165084,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.373815506165084,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.373815506165084,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.373815506165084,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket1",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.2485235,
+        1.5207789999999999,
+        0.271045
+      ],
+      "boundingRadius": 2.1501419996193856,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.2813783247007695,
+      "allAnglesFarDepthUpperBound": 17.326878583395665,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.209837827211695,
+      "canonicalActualMaximumDepth": 12.910274194000266,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9473197872830997,
+        1.0887455257919207
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.373815506165084,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.373815506165084,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.373815506165084,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.373815506165084,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket1",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.5207789999999999,
+        0.271045
+      ],
+      "boundingRadius": 2.4614309164577417,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.793386318583717,
+      "allAnglesFarDepthUpperBound": 15.520101939532367,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.886624000886293,
+      "canonicalActualMaximumDepth": 11.172949805447663,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9343214843663489,
+        1.1331310922394473
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 28.060884857866387,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 30.872972649850876,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 24.761818941128922,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 24.761818941128922,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        }
+      ]
+    },
+    {
+      "pose": "Pocket2",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.2485235,
+        1.47899,
+        0.2630785
+      ],
+      "boundingRadius": 2.112596302131219,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.318924022188936,
+      "allAnglesFarDepthUpperBound": 17.2893328859075,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.193162757974223,
+      "canonicalActualMaximumDepth": 12.893599124762794,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9480553780076385,
+        1.0866777556560425
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 20.8721723547929,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 20.8721723547929,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.8721723547929,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.8721723547929,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket2",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.2485235,
+        1.47899,
+        0.2630785
+      ],
+      "boundingRadius": 2.112596302131219,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.318924022188936,
+      "allAnglesFarDepthUpperBound": 17.2893328859075,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.193162757974223,
+      "canonicalActualMaximumDepth": 12.893599124762794,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9480553780076385,
+        1.0866777556560425
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 20.8721723547929,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 20.8721723547929,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.8721723547929,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.8721723547929,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket2",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.47899,
+        0.2630785
+      ],
+      "boundingRadius": 2.4287022612385507,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.826114973802907,
+      "allAnglesFarDepthUpperBound": 15.487373284313176,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.762163398134698,
+      "canonicalActualMaximumDepth": 11.153570104949338,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9349757544814274,
+        1.13047006808332
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 28.11680201217285,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 30.933967180747445,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 23.80092679723709,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 23.80092679723709,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket3",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.2485235,
+        1.5207789999999999,
+        0.237645
+      ],
+      "boundingRadius": 2.141101442971876,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.2904188813482795,
+      "allAnglesFarDepthUpperBound": 17.317838026748156,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.182255261551246,
+      "canonicalActualMaximumDepth": 12.882691628339817,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.947496431223795,
+        1.088245375160905
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.351247203574026,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.351247203574026,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.351247203574026,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.351247203574026,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket3",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.2485235,
+        1.5207789999999999,
+        0.237645
+      ],
+      "boundingRadius": 2.141101442971876,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.2904188813482795,
+      "allAnglesFarDepthUpperBound": 17.317838026748156,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.182255261551246,
+      "canonicalActualMaximumDepth": 12.882691628339817,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.947496431223795,
+        1.088245375160905
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.351247203574026,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.351247203574026,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.351247203574026,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.351247203574026,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket3",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.5207789999999999,
+        0.237645
+      ],
+      "boundingRadius": 2.4536179910181617,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.801199244023296,
+      "allAnglesFarDepthUpperBound": 15.512289014092786,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.74948674828974,
+      "canonicalActualMaximumDepth": 11.140893455104381,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9344772697098434,
+        1.1324925608218468
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 28.153496823121845,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 30.973992282751272,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 24.7246951971265,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 24.7246951971265,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket4",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.24852049999999992,
+        1.3623855,
+        0.271045
+      ],
+      "boundingRadius": 2.107136549763802,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.324383774556353,
+      "allAnglesFarDepthUpperBound": 17.283873133540084,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.171568772236625,
+      "canonicalActualMaximumDepth": 12.872005139025196,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9481627813129307,
+        1.086379113052512
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 19.73946225222472,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 19.73946225222472,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 19.73946225222472,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 19.73946225222472,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        }
+      ]
+    },
+    {
+      "pose": "Pocket4",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.24852049999999992,
+        1.3623855,
+        0.271045
+      ],
+      "boundingRadius": 2.107136549763802,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.324383774556353,
+      "allAnglesFarDepthUpperBound": 17.283873133540084,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.171568772236625,
+      "canonicalActualMaximumDepth": 12.872005139025196,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9481627813129307,
+        1.086379113052512
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 19.73946225222472,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 19.73946225222472,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 19.73946225222472,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 19.73946225222472,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        }
+      ]
+    },
+    {
+      "pose": "Pocket4",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.3623855,
+        0.271045
+      ],
+      "boundingRadius": 2.4329212149404364,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.821896020101022,
+      "allAnglesFarDepthUpperBound": 15.491592238015063,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.778624779716854,
+      "canonicalActualMaximumDepth": 11.128475435456993,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9348911662636007,
+        1.1308110646501208
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 28.189534087200325,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 31.01329887714746,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 22.19721403838293,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 22.19721403838293,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket5",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.24852049999999992,
+        1.5207789999999999,
+        0.271045
+      ],
+      "boundingRadius": 2.1501406458781362,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.281379678442019,
+      "allAnglesFarDepthUpperBound": 17.326877229654418,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.209836298556317,
+      "canonicalActualMaximumDepth": 12.910272665344888,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9473198137113302,
+        1.0887454507911318
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.373814258625345,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.373814258625345,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.373814258625345,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.373814258625345,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket5",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.24852049999999992,
+        1.5207789999999999,
+        0.271045
+      ],
+      "boundingRadius": 2.1501406458781362,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.281379678442019,
+      "allAnglesFarDepthUpperBound": 17.326877229654418,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.209836298556317,
+      "canonicalActualMaximumDepth": 12.910272665344888,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9473198137113302,
+        1.0887454507911318
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.373814258625345,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.373814258625345,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.373814258625345,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.373814258625345,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket5",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.5207789999999999,
+        0.271045
+      ],
+      "boundingRadius": 2.4614309164577417,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.793386318583717,
+      "allAnglesFarDepthUpperBound": 15.520101939532367,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.823099149707524,
+      "canonicalActualMaximumDepth": 11.172949805447663,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9343214843663489,
+        1.1331310922394473
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 28.060884857866387,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 30.872972649850876,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 24.761818941128922,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 24.761818941128922,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        }
+      ]
+    },
+    {
+      "pose": "Pocket6",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.24852049999999992,
+        1.47899,
+        0.2630785
+      ],
+      "boundingRadius": 2.1125949243308573,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.318925399989299,
+      "allAnglesFarDepthUpperBound": 17.28933150810714,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.193161229318845,
+      "canonicalActualMaximumDepth": 12.893597596107416,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9480554050974583,
+        1.0866776802267386
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 20.872171031617995,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 20.872171031617995,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.872171031617995,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.872171031617995,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket6",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.24852049999999992,
+        1.47899,
+        0.2630785
+      ],
+      "boundingRadius": 2.1125949243308573,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.318925399989299,
+      "allAnglesFarDepthUpperBound": 17.28933150810714,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.193161229318845,
+      "canonicalActualMaximumDepth": 12.893597596107416,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9480554050974583,
+        1.0866776802267386
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 20.872171031617995,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 20.872171031617995,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.872171031617995,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.872171031617995,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket6",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.47899,
+        0.2630785
+      ],
+      "boundingRadius": 2.4287022612385507,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.826114973802907,
+      "allAnglesFarDepthUpperBound": 15.487373284313176,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.762163398134698,
+      "canonicalActualMaximumDepth": 11.153570104949338,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9349757544814274,
+        1.13047006808332
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 28.11680201217285,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 30.933967180747445,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 23.80092679723709,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 23.80092679723709,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket7",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.24852049999999992,
+        1.5207789999999999,
+        0.18888400000000005
+      ],
+      "boundingRadius": 2.1300254398394514,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.301494884480704,
+      "allAnglesFarDepthUpperBound": 17.306762023615732,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.141985664507573,
+      "canonicalActualMaximumDepth": 12.842422031296142,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9477132580715475,
+        1.0876345736780935
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.318088266423533,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.318088266423533,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.318088266423533,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.318088266423533,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        }
+      ]
+    },
+    {
+      "pose": "Pocket7",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.24852049999999992,
+        1.5207789999999999,
+        0.18888400000000005
+      ],
+      "boundingRadius": 2.1300254398394514,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.301494884480704,
+      "allAnglesFarDepthUpperBound": 17.306762023615732,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.141985664507573,
+      "canonicalActualMaximumDepth": 12.842422031296142,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9477132580715475,
+        1.0876345736780935
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.318088266423533,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.318088266423533,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.318088266423533,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.318088266423533,
+          "maximumNormalizedCoordinate": 0.925925925925926
+        }
+      ]
+    },
+    {
+      "pose": "Pocket7",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.5207789999999999,
+        0.18888400000000005
+      ],
+      "boundingRadius": 2.4433798393547,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.811437395686758,
+      "allAnglesFarDepthUpperBound": 15.502050862429325,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.702687356101455,
+      "canonicalActualMaximumDepth": 11.094094062916096,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9346817926692266,
+        1.1316589607521415
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 28.28978247962372,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 31.122635181027146,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 24.67001645036192,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 24.67001645036192,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket8",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.23173599999999994,
+        1.206885,
+        0.271045
+      ],
+      "boundingRadius": 2.0981617861480557,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.333358538172099,
+      "allAnglesFarDepthUpperBound": 17.274898369924337,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.125447616382765,
+      "canonicalActualMaximumDepth": 12.825883983171336,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.948339573334124,
+        1.0858893219457344
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 18.370810775462918,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 18.370810775462918,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 18.370810775462918,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 18.370810775462918,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket8",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.23173599999999994,
+        1.206885,
+        0.271045
+      ],
+      "boundingRadius": 2.0981617861480557,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.333358538172099,
+      "allAnglesFarDepthUpperBound": 17.274898369924337,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.125447616382765,
+      "canonicalActualMaximumDepth": 12.825883983171336,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.948339573334124,
+        1.0858893219457344
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 18.370810775462918,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 18.370810775462918,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 18.370810775462918,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 18.370810775462918,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket8",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.206885,
+        0.271045
+      ],
+      "boundingRadius": 2.504236932426722,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.750580302614736,
+      "allAnglesFarDepthUpperBound": 15.562907955501348,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.798487569190224,
+      "canonicalActualMaximumDepth": 11.084813373751592,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.933472383596876,
+        1.1366668008439482
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 29.92436301959261,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 32.90398005871429,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.397496934636163,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.397496934636163,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket9",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.23173599999999994,
+        1.5207789999999999,
+        0.271045
+      ],
+      "boundingRadius": 2.1426190544392156,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.28890126988094,
+      "allAnglesFarDepthUpperBound": 17.319355638215498,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.201283726492036,
+      "canonicalActualMaximumDepth": 12.901720093280607,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.947466757432333,
+        1.0883292335322672
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket9",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.23173599999999994,
+        1.5207789999999999,
+        0.271045
+      ],
+      "boundingRadius": 2.1426190544392156,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.28890126988094,
+      "allAnglesFarDepthUpperBound": 17.319355638215498,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.201283726492036,
+      "canonicalActualMaximumDepth": 12.901720093280607,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.947466757432333,
+        1.0883292335322672
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket9",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.5207789999999999,
+        0.271045
+      ],
+      "boundingRadius": 2.4614309164577417,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.793386318583717,
+      "allAnglesFarDepthUpperBound": 15.520101939532367,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.886624000886293,
+      "canonicalActualMaximumDepth": 11.172949805447663,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9343214843663489,
+        1.1331310922394473
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 29.649496987828783,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 32.604624030096794,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 24.761818941128922,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 24.761818941128922,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        }
+      ]
+    },
+    {
+      "pose": "Pocket10",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.23173599999999994,
+        1.47899,
+        0.2630785
+      ],
+      "boundingRadius": 2.1049391748212702,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.326581149498885,
+      "allAnglesFarDepthUpperBound": 17.28167575859755,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.184608657254566,
+      "canonicalActualMaximumDepth": 12.885045024043137,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9482060391069289,
+        1.0862590644701025
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket10",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.23173599999999994,
+        1.47899,
+        0.2630785
+      ],
+      "boundingRadius": 2.1049391748212702,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.326581149498885,
+      "allAnglesFarDepthUpperBound": 17.28167575859755,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.184608657254566,
+      "canonicalActualMaximumDepth": 12.885045024043137,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9482060391069289,
+        1.0862590644701025
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket10",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.47899,
+        0.2630785
+      ],
+      "boundingRadius": 2.4287022612385507,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.826114973802907,
+      "allAnglesFarDepthUpperBound": 15.487373284313176,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.762163398134698,
+      "canonicalActualMaximumDepth": 11.153570104949338,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9349757544814274,
+        1.13047006808332
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 29.70951115874626,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 32.66999196611142,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 23.80092679723709,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 23.80092679723709,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket11",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.23173599999999994,
+        1.5207789999999999,
+        0.237645
+      ],
+      "boundingRadius": 2.1335439061898867,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.297976418130268,
+      "allAnglesFarDepthUpperBound": 17.310280489966168,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.17370116083159,
+      "canonicalActualMaximumDepth": 12.87413752762016,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9476443303469445,
+        1.0878283715263755
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.34422447550974,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.34422447550974,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.34422447550974,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.34422447550974,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket11",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.23173599999999994,
+        1.5207789999999999,
+        0.237645
+      ],
+      "boundingRadius": 2.1335439061898867,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.297976418130268,
+      "allAnglesFarDepthUpperBound": 17.310280489966168,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.17370116083159,
+      "canonicalActualMaximumDepth": 12.87413752762016,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9476443303469445,
+        1.0878283715263755
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.34422447550974,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.34422447550974,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.34422447550974,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.34422447550974,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket11",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.5207789999999999,
+        0.237645
+      ],
+      "boundingRadius": 2.4536179910181617,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.801199244023296,
+      "allAnglesFarDepthUpperBound": 15.512289014092786,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.74948674828974,
+      "canonicalActualMaximumDepth": 11.140893455104381,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9344772697098434,
+        1.1324925608218468
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 29.74889626927659,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 32.71288854889035,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 24.7246951971265,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 24.7246951971265,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket12",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.23173599999999994,
+        1.3623855,
+        0.271045
+      ],
+      "boundingRadius": 2.0991912666032246,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.332329057716931,
+      "allAnglesFarDepthUpperBound": 17.275927850379507,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.163016200172347,
+      "canonicalActualMaximumDepth": 12.863452566960918,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9483192785099019,
+        1.08594543458853
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 19.73127866534748,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 19.73127866534748,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 19.73127866534748,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 19.73127866534748,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket12",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.23173599999999994,
+        1.3623855,
+        0.271045
+      ],
+      "boundingRadius": 2.0991912666032246,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.332329057716931,
+      "allAnglesFarDepthUpperBound": 17.275927850379507,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.163016200172347,
+      "canonicalActualMaximumDepth": 12.863452566960918,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9483192785099019,
+        1.08594543458853
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 19.73127866534748,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 19.73127866534748,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 19.73127866534748,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 19.73127866534748,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket12",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.3623855,
+        0.271045
+      ],
+      "boundingRadius": 2.4329212149404364,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.821896020101022,
+      "allAnglesFarDepthUpperBound": 15.491592238015063,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.778624779716854,
+      "canonicalActualMaximumDepth": 11.128475435456993,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9348911662636007,
+        1.1308110646501208
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 29.787576928689703,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 32.75501632234729,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 22.19721403838293,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 22.19721403838293,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket13",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.23173599999999994,
+        1.5207789999999999,
+        0.271045
+      ],
+      "boundingRadius": 2.1426190544392156,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.28890126988094,
+      "allAnglesFarDepthUpperBound": 17.319355638215498,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.201283726492036,
+      "canonicalActualMaximumDepth": 12.901720093280607,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.947466757432333,
+        1.0883292335322672
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket13",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.23173599999999994,
+        1.5207789999999999,
+        0.271045
+      ],
+      "boundingRadius": 2.1426190544392156,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.28890126988094,
+      "allAnglesFarDepthUpperBound": 17.319355638215498,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.201283726492036,
+      "canonicalActualMaximumDepth": 12.901720093280607,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.947466757432333,
+        1.0883292335322672
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.3668289045668,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket13",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.5207789999999999,
+        0.271045
+      ],
+      "boundingRadius": 2.4614309164577417,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.793386318583717,
+      "allAnglesFarDepthUpperBound": 15.520101939532367,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.823099149707524,
+      "canonicalActualMaximumDepth": 11.172949805447663,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9343214843663489,
+        1.1331310922394473
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 29.649496987828783,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 32.604624030096794,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 24.761818941128922,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 24.761818941128922,
+          "maximumNormalizedCoordinate": 0.9259259259259257
+        }
+      ]
+    },
+    {
+      "pose": "Pocket14",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.23173599999999994,
+        1.47899,
+        0.2630785
+      ],
+      "boundingRadius": 2.1049391748212702,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.326581149498885,
+      "allAnglesFarDepthUpperBound": 17.28167575859755,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.184608657254566,
+      "canonicalActualMaximumDepth": 12.885045024043137,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9482060391069289,
+        1.0862590644701025
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket14",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.23173599999999994,
+        1.47899,
+        0.2630785
+      ],
+      "boundingRadius": 2.1049391748212702,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.326581149498885,
+      "allAnglesFarDepthUpperBound": 17.28167575859755,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.184608657254566,
+      "canonicalActualMaximumDepth": 12.885045024043137,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9482060391069289,
+        1.0862590644701025
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 20.86476215708126,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        }
+      ]
+    },
+    {
+      "pose": "Pocket14",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.47899,
+        0.2630785
+      ],
+      "boundingRadius": 2.4287022612385507,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.826114973802907,
+      "allAnglesFarDepthUpperBound": 15.487373284313176,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.762163398134698,
+      "canonicalActualMaximumDepth": 11.153570104949338,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9349757544814274,
+        1.13047006808332
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 29.70951115874626,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 32.66999196611142,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 23.80092679723709,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 23.80092679723709,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket15",
+      "kind": "single-right",
+      "vertices": 18642,
+      "canonicalCenter": [
+        -0.23173599999999994,
+        1.5207789999999999,
+        0.09999000000000002
+      ],
+      "boundingRadius": 2.109537034454242,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.321983289865914,
+      "allAnglesFarDepthUpperBound": 17.286273618230524,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.060022176520542,
+      "canonicalActualMaximumDepth": 12.760458543309113,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9481155456878976,
+        1.086510353453367
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket15",
+      "kind": "single-left",
+      "vertices": 18642,
+      "canonicalCenter": [
+        0.23173599999999994,
+        1.5207789999999999,
+        0.09999000000000002
+      ],
+      "boundingRadius": 2.109537034454242,
+      "canonicalDistance": 11.38255243783221,
+      "minimumDistanceAtZoom1_35": 8.431520324320156,
+      "maximumDistanceAtZoom0_75": 15.17673658377628,
+      "allAnglesNearDepthLowerBound": 6.321983289865914,
+      "allAnglesFarDepthUpperBound": 17.286273618230524,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 10.060022176520542,
+      "canonicalActualMaximumDepth": 12.760458543309113,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9481155456878976,
+        1.086510353453367
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 21.249816733848807,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    },
+    {
+      "pose": "Pocket15",
+      "kind": "pair",
+      "vertices": 37284,
+      "canonicalCenter": [
+        0.0,
+        1.5207789999999999,
+        0.09999000000000002
+      ],
+      "boundingRadius": 2.428180787689829,
+      "canonicalDistance": 9.79400326730597,
+      "minimumDistanceAtZoom1_35": 7.254817235041458,
+      "maximumDistanceAtZoom0_75": 13.058671023074625,
+      "allAnglesNearDepthLowerBound": 4.826636447351629,
+      "allAnglesFarDepthUpperBound": 15.486851810764454,
+      "insideFixedClipsAtEveryOrbitOrientationAndAllowedZoom": true,
+      "canonicalActualMinimumDepth": 8.61736947563991,
+      "canonicalActualMaximumDepth": 11.00877618245455,
+      "perspectiveZoomGainRelativeToOrthographicAtMaxZoomSphereBounds": [
+        0.9349862149216407,
+        1.1304279614242443
+      ],
+      "exampleCanonicalFits": [
+        {
+          "aspectLabel": "fallback",
+          "aspect": 0.85,
+          "verticalFOVDegrees": 30.165528009034112,
+          "maximumNormalizedCoordinate": 0.9259259259259259
+        },
+        {
+          "aspectLabel": "singleExistingTest200x260",
+          "aspect": 0.7692307692307693,
+          "verticalFOVDegrees": 33.16656812083028,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "pairExistingTest360x260",
+          "aspect": 1.3846153846153846,
+          "verticalFOVDegrees": 24.568836256402964,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        },
+        {
+          "aspectLabel": "retainedLandscapePair718x67.6667",
+          "aspect": 10.610837438423644,
+          "verticalFOVDegrees": 24.568836256402964,
+          "maximumNormalizedCoordinate": 0.9259259259259258
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "No manufacturing or anatomical accuracy claim.",
+    "Near/far safety does not imply no horizontal/vertical screen-edge clipping during zoom or orbit.",
+    "Example aspects are labeled inputs, not a complete or measured runtime viewport inventory.",
+    "Conditional on unchanged root/hand transforms, exact source vertices, look-at canonicalCenter and current zoom clamp .75..1.35."
+  ]
+}

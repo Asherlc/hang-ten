@@ -1,0 +1,7 @@
+{
+  "pid": 36138,
+  "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination platform=iOS Simulator,id=0C1CF662-98B1-43FF-9405-7AC58CD2132A -derivedDataPath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/main-sync-2026-10-03/ios/DerivedData-placid-badger-cad-second-half -resultBundlePath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/main-sync-2026-10-03/ios/tests-placid-badger-cad-second-half.xcresult -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1 test -only-testing:HangTenTests/BoardModelRealityTests -only-testing:HangTenTests/SuspendedBoardPresentationTests -only-testing:HangTenTests/WorkoutActivityRecordingTests\n",
+  "signal": "SIGTERM",
+  "timeUTC": 1791042175.826428,
+  "reason": "Exact owned xcodebuild remained waiting after SIGINT; app process has exited, preserve incomplete raw bundle."
+}
